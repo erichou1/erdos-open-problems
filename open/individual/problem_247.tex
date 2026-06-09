@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#247}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, irrationality
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $1\leq a_1&#60;a_2&#60;\cdots$ be a sequence of integers such that\[\limsup \frac{a_n}{n}=\infty.\]Is\[\sum_{n=1}^\infty \frac{1}{2^{a_n}}\]transcendental?
+
+
+
+
+Erd\H{o}s \cite{Er75c} proved the answer is yes under the stronger condition that $\limsup n_k/k^t=\infty$ for all $t\geq 1$. Erd\H{o}s \cite{Er88c} says 'many of these problems seem hopeless at present, but perhaps one can prove that if $a_n&gt;cn^2$ then $\sum_{n=1}^\infty \frac{1}{2^{a_n}}$ is not the root of any quadratic polynomial'. This problem has been formalised in Lean as part of the Google DeepMind Formal Conjectures project .
+
+
+
+
+References
+
+[Er75c] Erd\H{o}s, P., Some problems and results on the irrationality of the sum of infinite series . J. Math. Sci. (1975), 1-7 (1976).
+
+[Er88c] Erd\H{o}s, P., On the irrationality of certain series: problems and results . New advances in transcendence theory (Durham, 1986) (1988), 102-109.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/247}}
+\end{document}

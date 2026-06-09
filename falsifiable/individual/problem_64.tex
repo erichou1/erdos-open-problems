@@ -1,0 +1,38 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#64}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} FALSIFIABLE \quad \textbf{Prize: \$1000}
+
+\noindent\textbf{Tags:} graph theory, cycles
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Does every finite graph with minimum degree at least 3 contain a cycle of length $2^k$ for some $k\geq 2$?
+
+
+
+
+Conjectured by Erd\H{o}s and Gy\'{a}rf\'{a}s, who believed the answer must be negative, and in fact for every $r$ there must be a graph of minimum degree at least $r$ without a cycle of length $2^k$ for any $k\geq 2$. This was solved in the affirmative if the minimum degree is larger than some absolute constant by Liu and Montgomery \cite{LiMo20} (therefore disproving the above stronger conjecture of Erd\H{o}s and Gy\'{a}rf\'{a}s). Liu and Montgomery prove a much stronger result: if the average degree of $G$ is sufficiently large then there is some large integer $\ell$ such that for every even integer $m\in [(\log \ell)^8,\ell]$, $G$ contains a cycle of length $m$. An infinite tree with minimum degree $3$ shows that the answer is trivially false for infinite graphs. The conjecture has been confirmed for various families of graphs; see the comment by Alfaiz for a list. This problem is #69 in Extremal Graph Theory in the graphs problem collection.
+
+
+
+
+References
+
+[LiMo20] Liu, Hong and Montgomery, Richard, A solution to Erd\H{o}s and Hajnal's odd cycle problem . arXiv:2010.15802 (2020).
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/64}}
+\end{document}

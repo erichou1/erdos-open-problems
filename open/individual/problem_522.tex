@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#522}
+\date{Last updated: 2025-12-08}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} analysis, polynomials, probability
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $f(z)=\sum_{0\leq k\leq n} \epsilon_k z^k$ be a random polynomial, where $\epsilon_k\in \{-1,1\}$ independently uniformly at random for $0\leq k\leq n$. Is it true that, if $R_n$ is the number of roots of $f(z)$ in $\{ z\in \mathbb{C} : \lvert z\rvert \leq 1\}$, then\[\frac{R_n}{n/2}\to 1\]almost surely?
+
+
+
+
+Random polynomials with independently identically distributed coefficients are sometimes called Kac polynomials - this problem considers the case of Rademacher coefficients, i.e. independent uniform $\pm 1$ values. Erd\H{o}s and Offord \cite{EO56} showed that the number of real roots of a random degree $n$ polynomial with $\pm 1$ coefficients is $(\frac{2}{\pi}+o(1))\log n$. There is some ambiguity whether Erd\H{o}s intended the coefficients to be in $\{-1,1\}$ or $\{0,1\}$ - see the comments section. A weaker version of this was solved by Yakir \cite{Ya21}, who proved that\[\frac{R_n}{n/2}\to 1\]in probability. (This weaker claim was also asked by Erd\H{o}s, and also appears in a book of Hayman \cite{Ha67}.) More precisely,\[\lim_{n\to \infty} \mathbb{P}(\lvert R_n-n/2\rvert \geq n^{9/10}) =0.\]See also [521] .
+
+
+
+
+References
+
+[EO56] Erd\H{o}s, Paul and Offord, A. C., On the number of real roots of a random algebraic equation . Proc. London Math. Soc. (3) (1956), 139-160.
+
+[Ha67] Hayman, W. K., Research problems in function theory . (1967), vii+56.
+
+[Ya21] Yakir, Oren, Approximately half of the roots of a random {L}ittlewood polynomial are inside the disk . Studia Math. (2021), 227--240.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/522}}
+\end{document}

@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#676}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Is every sufficiently large integer of the form\[ap^2+b\]for some prime $p$ and integer $a\geq 1$ and $0\leq b&#60;p$?
+
+
+
+
+The sieve of Eratosthenes implies that almost all integers are of this form, and the Brun-Selberg sieve implies the number of exceptions in $[1,x]$ is $\ll x/(\log x)^c$ for some constant $c&#62;0$. Erd\H{o}s \cite{Er79} believed it is 'rather unlikely' that all large integers are of this form. What if the condition that $p$ is prime is omitted? Selfridge and Wagstaff made a 'preliminary computer search' and suggested that there are infinitely many $n$ not of this form even without the condition that $p$ is prime. It should be true that the number of exceptions in $[1,x]$ is $&#60;x^c$ for some constant $c&#60;1$. Most generally, given some infinite set $A\subseteq \mathbb{N}$ and function $f:A\to \mathbb{N}$ one can ask for sufficient conditions on $A$ and $f$ that guarantee every large number (or almost all numbers) can be written as\[am^2+b\]for some $m\in A$ and $a\geq 1$ and $0\leq b&#60;f(m)$. In another direction, one can ask what is the minimal $c_n$ such that $n$ can be written as $n=ap^2+b$ with $0\leq b&#60;c_np$ for some $p\leq \sqrt{n}$. This problem asks whether $c_n\leq 1$ eventually, but in \cite{Er79d} Erd\H{o}s suggests that in fact $\limsup c_n=\infty$. Is it true that $c_n&#60;n^{o(1)}$?
+
+
+
+
+References
+
+[Er79] Erd\H{o}s, Paul, Some unconventional problems in number theory . Math. Mag. (1979), 67-70.
+
+[Er79d] Erd\H{o}s, P., Some unconventional problems in number theory . Acta Math. Acad. Sci. Hungar. (1979), 71-80.
+
+\noindent\textbf{Related OEIS sequences:} A390181, in progress
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/676}}
+\end{document}

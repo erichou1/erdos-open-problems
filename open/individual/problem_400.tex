@@ -1,0 +1,34 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#400}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, factorials
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+For any $k\geq 2$ let $g_k(n)$ denote the maximum value of\[(a_1+\cdots+a_k)-n\]where $a_1,\ldots,a_k$ are integers such that $a_1!\cdots a_k! \mid n!$. Can one show that\[\sum_{n\leq x}g_k(n) \sim c_k x\log x\]for some constant $c_k$? Is it true that there is a constant $c_k$ such that for almost all $n&#60;x$ we have\[g_k(n)=c_k\log x+o(\log x)?\]
+
+
+
+
+Erd\H{o}s and Graham write that it is easy to show that $g_k(n) \ll_k \log n$ always, but the best possible constant is unknown. See also [401] .
+
+\noindent\textbf{Related OEIS sequences:} possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/400}}
+\end{document}

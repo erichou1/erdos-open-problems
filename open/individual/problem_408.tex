@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#408}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, iterated functions
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $\phi(n)$ be the Euler totient function and $\phi_k(n)$ be the iterated $\phi$ function, so that $\phi_1(n)=\phi(n)$ and $\phi_k(n)=\phi(\phi_{k-1}(n))$. Let\[f(n) = \min \{ k : \phi_k(n)=1\}.\]Does $f(n)/\log n$ have a distribution function? Is $f(n)/\log n$ almost always constant? What can be said about the largest prime factor of $\phi_k(n)$ when, say, $k=\log\log n$?
+
+
+
+
+Pillai \cite{Pi29} was the first to investigate this function, and proved\[\log_3 n &#60; f(n) &#60; \log_2 n\]for all large $n$. Shapiro \cite{Sh50} proved that $f(n)$ is essentially multiplicative. Erd\H{o}s, Granville, Pomerance, and Spiro \cite{EGPS90} have proved that the answer to the first two questions is yes, conditional on a form of the Elliott-Halberstam conjecture. It is likely true that, if $k\to \infty$ however slowly with $n$, then for almost all $n$ the largest prime factor of $\phi_k(n)$ is $\leq n^{o(1)}$. This is discussed in problem B41 of Guy's collection \cite{Gu04}.
+
+
+
+
+References
+
+[EGPS90] Erd\H{o}s, P. and Granville, A. and Pomerance, C. and Spiro, C., On the normal behavior of the iterates of some arithmetic functions . Analytic number theory (Allerton Park, IL, 1989) (1990), 165-204.
+
+[Gu04] Guy, Richard K., Unsolved problems in number theory . (2004), xviii+437.
+
+[Pi29] Pillai, S. Sivasankaranarayana, On some functions connected with {$\phi(n)$} . Bull. Amer. Math. Soc. (1929), 832-836.
+
+[Sh50] Shapiro, Harold N., On the iterates of a certain class of arithmetic functions . Comm. Pure Appl. Math. (1950), 259-272.
+
+\noindent\textbf{Related OEIS sequences:} A049108
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/408}}
+\end{document}
