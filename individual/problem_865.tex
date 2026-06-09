@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#865}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, additive combinatorics
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+There exists a constant $C&#62;0$ such that, for all large $N$, if $A\subseteq \{1,\ldots,N\}$ has size at least $\frac{5}{8}N+C$ then there are distinct $a,b,c\in A$ such that $a+b,a+c,b+c\in A$.
+
+
+
+
+A problem of Erd\H{o}s and S\'{o}s (also earlier considered by Choi, Erd\H{o}s, and Szemer\'{e}di \cite{CES75}, but Erd\H{o}s had forgotten this). Taking all integers in $[N/8,N/4]$ and $[N/2,N]$ shows that $\frac{5}{8}$ would be best possible here. It is a classical folklore fact that if $A\subseteq \{1,\ldots,2N\}$ has size $\geq N+2$ then there are distinct $a,b\in A$ such that $a+b\in A$, which establishes the $k=2$ case. In general, one can define $f_k(N)$ to be minimal such that if $A\subseteq \{1,\ldots,N\}$ has size at least $f_k(N)$ then there are $k$ distinct $a_i\in A$ such that all $\binom{k}{2}$ pairwise sums are elements of $A$. Erd\H{o}s and S\'{o}s conjectured that\[f_k(N)\sim \frac{1}{2}\left(1+\sum_{1\leq r\leq k-2}\frac{1}{4^r}\right) N,\]and a similar example shows that this would be best possible. Choi, Erd\H{o}s, and Szemer\'{e}di \cite{CES75} have proved that, for all $k\geq 3$, there exists $\epsilon_k&#62;0$ such that (for large enough $N$)\[f_k(N)\leq \left(\frac{2}{3}-\epsilon_k\right)N.\]
+
+
+
+
+References
+
+[CES75] Choi, S. L. G. and Erd\H{o}s, P. and Szemer\'{e}di, E., Some additive and multiplicative problems in number theory . Acta Arith. (1975), 37--50.
+
+\noindent\textbf{Related OEIS sequences:} possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/865}}
+\end{document}

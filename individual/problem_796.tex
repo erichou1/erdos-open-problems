@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#796}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $k\geq 2$ and let $g_k(n)$ be the largest possible size of $A\subseteq \{1,\ldots,n\}$ such that every $m$ has $&#60;k$ solutions to $m=a_1a_2$ with $a_1&#60;a_2\in A$. Is it true that\[g_3(n)=\frac{\log\log n}{\log n}n+(c+o(1))\frac{n}{\log n}\]for some constant $c$?
+
+
+
+
+Erd\H{o}s \cite{Er64d} proved that if $2^{r-1}&lt;k\leq 2^r$ then\[g_k(n) \sim \frac{(\log\log n)^{r-1}}{(r-1)!\log n}n\](which is the asymptotic count of those integers $\leq n$ with $r$ distinct prime factors). In particular the asymptotics of $g_k(n)$ are known; in \cite{Er69b} Erd\H{o}s discussed the second order terms, and this question is implicit (especially when compared to the explicit question [425] he asked on several occasions). In \cite{Er69} this question actually appears with a denominator of $(\log n)^2$ in the second term. Furthermore, for $k=3$ he claims he could prove the existence of some $0&lt;c_1\leq c_2$ such that\[\frac{\log\log n}{\log n}n+c_1\frac{n}{(\log n)^2}\leq g_3(n)\leq \frac{\log\log n}{\log n}n+c_2\frac{n}{(\log n)^2}.\]This is strange, since in \cite{Er64d} both the upper and lower bound techniques that he used in fact prove\[\frac{\log\log n}{\log n}n+c_1\frac{n}{\log n}\leq g_3(n)\leq \frac{\log\log n}{\log n}n+c_2\frac{n}{\log n}\]for some constants $0&lt;c_1\leq c_2$. My best guess is that the denominator of $(\log n)^2$ in \cite{Er69} is just an unfortunate repeated typo, and $\log n$ was intended in both the reported bounds and the main question. This correction is thanks to Tang, who noted independently (see the comments) the improved lower bound given above (indeed with an improvement in the constant $c_1$). The special case $k=2$ is the subject of [425] .
+
+
+
+
+References
+
+[Er64d] P. Erd\H{o}s, On the multiplicative representation of integers . Israel Journal of Mathematics (1964).
+
+[Er69] Erd\H{o}s, Paul, Some applications of graph theory to number theory . The Many Facets of Graph Theory (Proc. Conf., Western Mich. Univ., Kalamazoo, Mich., 1968) (1969), 77-82.
+
+[Er69b] Erd\H{o}s, P., Problems and results in chromatic graph theory . Proof Techniques in Graph Theory (Proc. Second Ann Arbor Graph Theory Conf., Ann Arbor, Mich., 1968) (1969), 27-35.
+
+\noindent\textbf{Related OEIS sequences:} possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/796}}
+\end{document}

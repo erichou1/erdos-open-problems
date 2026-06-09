@@ -1,0 +1,39 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#890}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, primes
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+If $\omega_k(n)$ counts the number of distinct prime factors of $n$ which are $&#62;k$, then is it true that, for every $k\geq 1$,\[\liminf_{n\to \infty}\sum_{0\leq i&#60;k}\omega_k(n+i)\leq k?\]Is it true that\[\limsup_{n\to \infty}\left(\sum_{0\leq i&#60;k}\omega(n+i)\right) \frac{\log\log n}{\log n}=1,\]where $\omega$ counts the number of distinct prime factors without restriction?
+
+
+
+
+A question of Erd\H{o}s and Selfridge \cite{ErSe67}, who observe that\[\liminf_{n\to \infty}\sum_{0\leq i&lt;k}\omega_k(n+i)\geq k-1\]for every $k$. This follows from P\'{o}lya's theorem that the set of $k$-smooth integers has unbounded gaps - indeed, provided $n$ is large, all but at most one of $n,n+1,\ldots,n+k-1$ has a prime factor $&gt;k$ by P\'{o}lya's theorem. It is a classical fact that\[\limsup_{n\to \infty}\omega(n)\frac{\log\log n}{\log n}=1.\](There appears to be an error in \cite{ErSe67}, who ask the first question with $\omega_k$ replaced by $\omega$, have a bound of $k+\pi(k)$ rather than $k$, but as explained by Meza and Tao in the comments this formulation is obviously false, and the version given here is most likely what was intended.)
+
+
+
+
+References
+
+[ErSe67] Erd\H{o}s, P. and Selfridge, J. L., Some problems on the prime factors of consecutive integers . Illinois J. Math. (1967), 428--430.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/890}}
+\end{document}

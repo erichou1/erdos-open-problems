@@ -1,0 +1,39 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#680}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, primes
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Is it true that, for all sufficiently large $n$, there exists some $k$ such that\[p(n+k)&#62;k^2+1,\]where $p(m)$ denotes the least prime factor of $m$? Can one prove this is false if we replace $k^2+1$ by $e^{(1+\epsilon)\sqrt{k}}+C_\epsilon$, for all $\epsilon&#62;0$, where $C_\epsilon&#62;0$ is some constant?
+
+
+
+
+This follows from 'plausible assumptions on the distribution of primes' (as does the question with $k^2$ replaced by $k^d$ for any $d$); the challenge is to prove this unconditionally. Erd\H{o}s observed that Cramer's conjecture\[\limsup_{k\to \infty} \frac{p_{k+1}-p_k}{(\log k)^2}=1\]implies that for all $\epsilon&gt;0$ and all sufficiently large $n$ there exists some $k$ such that\[p(n+k)&gt;e^{(1-\epsilon)\sqrt{k}}.\]There is now evidence, however, that Cramer's conjecture is false; a more refined heuristic by Granville \cite{Gr95} suggests this $\limsup$ is $2e^{-\gamma}\approx 1.119\cdots$, and so perhaps the $1+\epsilon$ in the second question should be replaced by $2e^{-\gamma}+\epsilon$. See also [681] and [682] .
+
+
+
+
+References
+
+[Gr95] Granville, Andrew, Harald {C}ram\'{e}r and the distribution of prime numbers . Scand. Actuar. J. (1995), 12--28.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/680}}
+\end{document}
