@@ -47,13 +47,15 @@ GREEN_THRESHOLD = 60  # completeness >= this counts as a strong result
 FNAME_RE = re.compile(r"Erdős\s+#(\d+)\s+\[([^\]]+)\]\s+(\d+|\?)\s*%", re.UNICODE)
 
 
-def total_open_problems() -> int:
-    """Count of open Erdős problems (one .tex per problem), for the headline %."""
+def all_problem_numbers() -> list:
+    """Every open Erdős problem number (one problem_N.tex per problem)."""
+    nums = []
     if PROBLEMS_DIR.is_dir():
-        n = sum(1 for _ in PROBLEMS_DIR.glob("problem_*.tex"))
-        if n:
-            return n
-    return 0
+        for f in PROBLEMS_DIR.glob("problem_*.tex"):
+            m = re.search(r"(\d+)", f.stem)
+            if m:
+                nums.append(int(m.group(1)))
+    return sorted(set(nums))
 
 
 def scan_outputs() -> dict:
@@ -99,12 +101,32 @@ def scan_outputs() -> dict:
 
 def build():
     records = scan_outputs()
-    problems = sorted(records.values(), key=lambda r: r["n"])
 
-    total = total_open_problems() or len(problems)
-    run = len(problems)
-    solved = sum(1 for r in problems if r["status"] == "solved")
-    scored = [r["completeness"] for r in problems if r["completeness"] is not None]
+    # Include every open problem, not just the ones that have been run, so the
+    # site can show what is still pending. Problems with no output file get a
+    # lightweight "not run" record.
+    numbers = all_problem_numbers()
+    if not numbers:
+        numbers = sorted(records)
+    else:
+        numbers = sorted(set(numbers) | set(records))
+
+    problems = []
+    for n in numbers:
+        rec = records.get(n)
+        if rec:
+            problems.append(rec)
+        else:
+            problems.append({
+                "n": n, "run": False, "status": None,
+                "completeness": None, "path": None, "blob": None,
+            })
+
+    total = len(numbers)
+    run_recs = [r for r in problems if r["run"]]
+    run = len(run_recs)
+    solved = sum(1 for r in run_recs if r["status"] == "solved")
+    scored = [r["completeness"] for r in run_recs if r["completeness"] is not None]
     green = sum(1 for c in scored if c >= GREEN_THRESHOLD)
     avg = round(sum(scored) / len(scored), 1) if scored else 0
 
@@ -117,6 +139,7 @@ def build():
         "totals": {
             "total": total,
             "run": run,
+            "pending": total - run,
             "solved": solved,
             "green": green,
             "avg_completeness": avg,
@@ -131,10 +154,12 @@ def build():
         w.writerow(["problem", "run", "status", "completeness", "link"])
         for r in problems:
             comp = "" if r["completeness"] is None else r["completeness"]
-            w.writerow([r["n"], "yes", r["status"], comp, r["blob"]])
+            w.writerow([r["n"], "yes" if r["run"] else "no",
+                        r["status"] or "", comp, r["blob"] or ""])
 
     print(f"wrote {DATA_OUT.name} and {CSV_OUT.name} "
-          f"({run}/{total} run, {solved} solved, {green} >= {GREEN_THRESHOLD}%)")
+          f"({run}/{total} run, {total - run} pending, {solved} solved, "
+          f"{green} >= {GREEN_THRESHOLD}%)")
 
 
 if __name__ == "__main__":

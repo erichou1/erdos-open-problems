@@ -15,6 +15,7 @@
     --ink: #161a26; --muted: #646b80; --faint: #9aa1b4;
     --accent: #2f6df6; --accent-ink: #ffffff;
     --green: #128a4b; --green-bg: #d8f6e4; --amber: #9a6500; --amber-bg: #fdf0d6;
+    --low: #7a8194; --low-bg: #eceef4;
     --red: #c1121f; --shadow: 0 1px 2px rgba(20,26,46,.06), 0 6px 24px rgba(20,26,46,.06);
     --radius: 14px;
   }
@@ -23,6 +24,7 @@
     --ink: #eef1f8; --muted: #9aa2b6; --faint: #6b7488;
     --accent: #5b8bff; --accent-ink: #0c0e14;
     --green: #34d27e; --green-bg: #11331f; --amber: #f0b65a; --amber-bg: #3a2e12;
+    --low: #8b93a6; --low-bg: #20242f;
     --red: #ff6b6b; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
   }
   * { box-sizing: border-box; }
@@ -35,7 +37,7 @@
   }
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; }
-  .wrap { max-width: 1120px; margin: 0 auto; padding: 0 1.25rem 4rem; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 1.25rem 4rem; }
 
   /* Header */
   header.top {
@@ -43,7 +45,7 @@
     background: color-mix(in srgb, var(--bg) 82%, transparent);
     border-bottom: 1px solid var(--line);
   }
-  .top .row { max-width: 1120px; margin: 0 auto; padding: .7rem 1.25rem;
+  .top .row { max-width: 1180px; margin: 0 auto; padding: .7rem 1.25rem;
     display: flex; align-items: center; gap: .9rem; }
   .brand { display: flex; align-items: center; gap: .6rem; font-weight: 700;
     letter-spacing: -.01em; font-size: 1.02rem; }
@@ -83,6 +85,7 @@
     overflow: hidden; }
   .stat .fill { height: 100%; border-radius: 6px; background: var(--accent); }
   .stat.good .fill { background: var(--green); }
+  .stat.pending .fill { background: var(--low); }
 
   /* Controls */
   .controls { display: flex; gap: .6rem; flex-wrap: wrap; align-items: center;
@@ -94,7 +97,7 @@
   .search:focus-within { border-color: var(--accent); }
   .search input { border: 0; background: transparent; font: inherit; color: var(--ink);
     padding: .42rem 0; width: 100%; outline: none; }
-  .segmented { display: inline-flex; background: var(--panel-2); border-radius: 10px; padding: 3px; }
+  .segmented { display: inline-flex; background: var(--panel-2); border-radius: 10px; padding: 3px; flex-wrap: wrap; }
   .segmented button { font: inherit; font-size: .85rem; border: 0; background: transparent;
     color: var(--muted); padding: .36rem .7rem; border-radius: 8px; cursor: pointer; white-space: nowrap; }
   .segmented button[aria-pressed="true"] { background: var(--panel); color: var(--ink);
@@ -108,35 +111,56 @@
   /* Table */
   .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
     box-shadow: var(--shadow); }
-  table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: .9rem; }
+  .scroll { overflow-x: auto; }
+  table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: .9rem; min-width: 880px; }
   thead th { position: sticky; top: 116px; background: var(--panel-2); color: var(--muted);
     text-align: left; font-weight: 600; font-size: .76rem; letter-spacing: .04em; text-transform: uppercase;
-    padding: .6rem .8rem; border-bottom: 1px solid var(--line); z-index: 5; }
+    padding: .6rem .8rem; border-bottom: 1px solid var(--line); z-index: 5; white-space: nowrap; }
   thead th:first-child { border-top-left-radius: var(--radius); }
   thead th:last-child { border-top-right-radius: var(--radius); }
-  thead th.c { text-align: center; } thead th.r { text-align: right; }
-  tbody td { padding: .55rem .8rem; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  thead th.c { text-align: center; }
+  tbody td { padding: .5rem .8rem; border-bottom: 1px solid var(--line); vertical-align: middle; }
   tbody tr:last-child td { border-bottom: 0; }
   tbody tr:last-child td:first-child { border-bottom-left-radius: var(--radius); }
   tbody tr:last-child td:last-child { border-bottom-right-radius: var(--radius); }
   tbody tr:hover td { background: color-mix(in srgb, var(--accent) 5%, transparent); }
+  tr.pending td { color: var(--faint); }
+  tr.pending { background: repeating-linear-gradient(135deg, transparent, transparent 9px,
+    color-mix(in srgb, var(--low) 6%, transparent) 9px, color-mix(in srgb, var(--low) 6%, transparent) 10px); }
   .pn { font-weight: 700; font-variant-numeric: tabular-nums; }
   .pn a { color: var(--ink); }
+  tr.pending .pn a { color: var(--muted); }
   .pn a:hover { color: var(--accent); }
-  .badge { display: inline-block; font-size: .74rem; font-weight: 700; padding: .16rem .5rem;
+  .badge { display: inline-block; font-size: .72rem; font-weight: 700; padding: .14rem .5rem;
     border-radius: 999px; letter-spacing: .01em; }
-  .badge.solved { color: var(--green); background: var(--green-bg); }
-  .badge.unsolved { color: var(--amber); background: var(--amber-bg); }
-  .comp { display: flex; align-items: center; gap: .55rem; min-width: 150px; }
+  .badge.pending { color: var(--low); background: var(--low-bg); }
+  .comp { display: flex; align-items: center; gap: .55rem; min-width: 140px; }
   .comp .bar { flex: 1; height: 7px; border-radius: 6px; background: var(--panel-2); overflow: hidden; }
   .comp .bar i { display: block; height: 100%; border-radius: 6px; background: var(--amber); }
   .comp.green .bar i { background: var(--green); }
   .comp .pct { font-variant-numeric: tabular-nums; font-weight: 650; width: 2.6rem; text-align: right;
     font-size: .85rem; }
   td.c { text-align: center; }
-  .sol { font-size: .82rem; display: inline-flex; align-items: center; gap: .3rem; }
+  .muted { color: var(--faint); }
+  .sol { font-size: .82rem; display: inline-flex; align-items: center; gap: .3rem; white-space: nowrap; }
   td.chk input { width: 1.05rem; height: 1.05rem; cursor: pointer; accent-color: var(--accent); }
-  tr.skibidi td { background: #ffd70022 !important; }
+
+  /* Verdict dropdown */
+  select.verdict { font: inherit; font-size: .8rem; font-weight: 700; padding: .22rem 1.4rem .22rem .55rem;
+    border-radius: 999px; border: 1px solid transparent; cursor: pointer; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='3'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right .45rem center; }
+  select.verdict.v-High   { color: var(--green); background-color: var(--green-bg); }
+  select.verdict.v-Medium { color: var(--amber); background-color: var(--amber-bg); }
+  select.verdict.v-Low    { color: var(--low);   background-color: var(--low-bg); }
+  select.verdict option { color: var(--ink); background: var(--panel); font-weight: 600; }
+
+  /* Notes */
+  input.notes { font: inherit; font-size: .82rem; width: 100%; min-width: 120px;
+    padding: .32rem .5rem; border-radius: 8px; border: 1px solid var(--line);
+    background: var(--panel-2); color: var(--ink); }
+  input.notes:focus { outline: none; border-color: var(--accent); background: var(--panel); }
+  input.notes::placeholder { color: var(--faint); }
 
   .state { padding: 3rem 1rem; text-align: center; color: var(--muted); }
   .spin { width: 26px; height: 26px; border: 3px solid var(--line); border-top-color: var(--accent);
@@ -148,10 +172,6 @@
     padding: 1.1rem 1.2rem; box-shadow: var(--shadow); }
   footer code { background: var(--panel-2); padding: .08rem .35rem; border-radius: 5px; font-size: .85em; }
   .hide { display: none !important; }
-  @media (max-width: 720px) {
-    .col-opt { display: none; }
-    thead th { top: 100px; }
-  }
 </style>
 </head>
 <body>
@@ -176,9 +196,10 @@
     <h1>Every open Erdős problem, handed to a frontier model.</h1>
     <p>A transparent, automated log of large-language-model attempts at the open
        problems on <a href="https://www.erdosproblems.com" target="_blank" rel="noopener">erdosproblems.com</a>.
-       Each entry shows the model's self-reported verdict and a
-       <strong>completeness score</strong> — how much of the argument it actually
-       established, not how confident it sounds — and links to the full reasoning transcript.</p>
+       Each entry shows a <strong>completeness score</strong> — how much of the
+       argument the model actually established, not how confident it sounds — and
+       links to the full reasoning transcript. Problems not yet attempted are
+       listed too, so you can see what's left.</p>
     <div class="meta">
       <span><span class="dot"></span> Live feed</span>
       <span id="updated">updating…</span>
@@ -195,9 +216,10 @@
     </label>
     <div class="segmented" id="filter" role="group" aria-label="Filter">
       <button data-f="all" aria-pressed="true">All</button>
-      <button data-f="solved" aria-pressed="false">Solved</button>
+      <button data-f="run" aria-pressed="false">Run</button>
+      <button data-f="pending" aria-pressed="false">Pending</button>
+      <button data-f="high" aria-pressed="false">High</button>
       <button data-f="green" aria-pressed="false">≥60%</button>
-      <button data-f="unsolved" aria-pressed="false">Unsolved</button>
     </div>
     <select class="sort" id="sort" aria-label="Sort">
       <option value="num-asc">Problem # ↑</option>
@@ -205,25 +227,28 @@
       <option value="comp-desc">Completeness ↓</option>
       <option value="comp-asc">Completeness ↑</option>
     </select>
-    <button class="ghost primary" id="sync" title="Sync Fable/Cooked marks to GitHub">Connect GitHub</button>
+    <button class="ghost primary" id="sync" title="Sync your marks to GitHub">Connect GitHub</button>
     <span id="syncMsg"></span>
   </div>
 
   <div class="panel">
-    <table id="t" class="hide">
-      <thead>
-        <tr>
-          <th>Problem</th>
-          <th>Verdict</th>
-          <th>Completeness</th>
-          <th>Solution</th>
-          <th class="c col-opt" title="Run through Fable">Fable</th>
-          <th class="c col-opt" title="Cooked">Cooked</th>
-          <th class="c col-opt">Skibidi</th>
-        </tr>
-      </thead>
-      <tbody id="rows"></tbody>
-    </table>
+    <div class="scroll">
+      <table id="t" class="hide">
+        <thead>
+          <tr>
+            <th>Problem</th>
+            <th>Verdict</th>
+            <th>Completeness</th>
+            <th>Solution</th>
+            <th class="c">Checked</th>
+            <th class="c">Fable</th>
+            <th class="c">Works</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
     <div class="state" id="state"><div class="spin"></div>Loading attempts…</div>
   </div>
 
@@ -231,15 +256,15 @@
     <div class="card">
       <strong>How this works.</strong> Every open problem is submitted to the model
       under an identical adversarial "research-mode" prompt that forbids appeals to
-      authority or literature status and demands the model attack the problem from
-      first principles. The model returns a verdict (PROVED / DISPROVED /
-      RESOURCE_EXHAUSTED) and self-scored metrics; the
-      <em>completeness score</em> shown here measures how much of the argument was
-      rigorously established. <strong>These are machine attempts, not peer-reviewed
-      proofs</strong> — a high score is an invitation to verify, not a claim of truth.
-      Marks: tick <code>Fable</code> once a solution has been formalised in Fable and
-      <code>Cooked</code> once a human has reviewed it. Marks sync to the repo for
-      everyone when you <strong>Connect GitHub</strong> (a fine-grained token with
+      authority or literature status and demands it attack the problem from first
+      principles. The <em>completeness score</em> measures how much of the argument
+      was rigorously established. <strong>These are machine attempts, not
+      peer-reviewed proofs</strong> — a high score is an invitation to verify, not a
+      claim of truth. The <b>Verdict</b> dropdown is a human likelihood rating
+      (High / Medium / Low); tick <b>Checked</b> once a person has read it,
+      <b>Fable</b> once it's been formalised in Fable, and <b>Works</b> if it holds
+      up — and leave <b>Notes</b>. These sync to the repo for everyone when you
+      <strong>Connect GitHub</strong> (a fine-grained token with
       <em>Contents: Read &amp; write</em> on this repo only; stored only in your
       browser, never committed). Without a token they persist locally.
     </div>
@@ -248,9 +273,10 @@
 
 <script>
 const $ = (s) => document.querySelector(s);
-const LS_MARKS = "erdos_marks_v2";
+const LS_MARKS = "erdos_marks_v3";
 const LS_TOKEN = "erdos_gh_token_v1";
 const LS_THEME = "erdos_theme";
+const VERDICTS = ["High", "Medium", "Low"];
 
 let DATA = null;            // data.json
 let MARKS = loadLocalMarks();
@@ -274,6 +300,15 @@ function loadLocalMarks() {
   catch (e) { return {}; }
 }
 function saveLocalMarks() { localStorage.setItem(LS_MARKS, JSON.stringify(MARKS)); }
+
+// The effective verdict for a problem: explicit human mark wins; otherwise seed
+// from the model — a claimed proof defaults to High, any other attempt to Low.
+function effVerdict(p) {
+  const m = MARKS[p.n];
+  if (m && m.verdict) return m.verdict;
+  if (!p.run) return null;
+  return p.status === "solved" ? "High" : "Low";
+}
 
 /* ---------- load feed ---------- */
 async function boot() {
@@ -310,14 +345,15 @@ async function boot() {
 function renderStats() {
   const t = DATA.totals, g = DATA.green_threshold;
   const pct = (a, b) => b ? Math.round(100 * a / b) : 0;
+  const pending = t.pending != null ? t.pending : (t.total - t.run);
   const cards = [
-    { k: "Attempted", v: t.run, sub: pct(t.run, t.total) + "% of " + t.total + " open", fill: pct(t.run, t.total), good: false },
-    { k: "Solved", v: t.solved, sub: "model returned a proof", fill: pct(t.solved, t.run), good: true },
-    { k: "≥" + g + "% complete", v: t.green, sub: "strong partial results", fill: pct(t.green, t.run), good: true },
-    { k: "Avg completeness", v: t.avg_completeness + "%", sub: "across all attempts", fill: t.avg_completeness, good: false },
+    { k: "Attempted", v: t.run, sub: pct(t.run, t.total) + "% of " + t.total + " open", fill: pct(t.run, t.total) },
+    { k: "Pending", v: pending, sub: "not yet run", fill: pct(pending, t.total), cls: "pending" },
+    { k: "≥" + g + "% complete", v: t.green, sub: "strong partial results", fill: pct(t.green, t.run), cls: "good" },
+    { k: "Avg completeness", v: t.avg_completeness + "%", sub: "across all attempts", fill: t.avg_completeness },
   ];
   $("#stats").innerHTML = cards.map(c => `
-    <div class="stat ${c.good ? "good" : ""}">
+    <div class="stat ${c.cls || ""}">
       <div class="k">${c.k}</div>
       <div class="v">${c.v}</div>
       <div class="sub">${c.sub}</div>
@@ -332,8 +368,9 @@ function visible() {
   const g = DATA.green_threshold;
   let list = DATA.problems.filter(p => {
     if (ui.q && !String(p.n).includes(ui.q)) return false;
-    if (ui.filter === "solved") return p.status === "solved";
-    if (ui.filter === "unsolved") return p.status !== "solved";
+    if (ui.filter === "run") return p.run;
+    if (ui.filter === "pending") return !p.run;
+    if (ui.filter === "high") return effVerdict(p) === "High";
     if (ui.filter === "green") return (p.completeness ?? -1) >= g;
     return true;
   });
@@ -347,30 +384,55 @@ function visible() {
   return list.sort(cmp);
 }
 
+function esc(s) { return (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+
 function render() {
   const g = DATA.green_threshold;
   const rows = visible().map(p => {
+    const m = MARKS[p.n] || {};
+    const probLink = `<a href="https://www.erdosproblems.com/${p.n}" target="_blank" rel="noopener">#${p.n}</a>`;
+
+    if (!p.run) {
+      return `<tr class="pending" data-id="${p.n}">
+        <td class="pn">${probLink}</td>
+        <td><span class="badge pending">not run</span></td>
+        <td class="muted">—</td>
+        <td class="muted">—</td>
+        <td class="c muted">—</td><td class="c muted">—</td><td class="c muted">—</td>
+        <td class="muted">—</td></tr>`;
+    }
+
     const comp = p.completeness;
     const has = comp !== null && comp !== undefined;
     const green = has && comp >= g;
     const compCell = has
       ? `<div class="comp ${green ? "green" : ""}"><div class="bar"><i style="width:${comp}%"></i></div><span class="pct">${comp}%</span></div>`
       : `<div class="comp"><span class="pct" style="width:auto;color:var(--faint)">—</span></div>`;
-    const m = MARKS[p.n] || {};
+
+    const ev = effVerdict(p);
+    const opts = VERDICTS.map(v =>
+      `<option value="${v}"${v === ev ? " selected" : ""}>${v}</option>`).join("");
+    const verdictCell =
+      `<select class="verdict v-${ev}" data-id="${p.n}" data-kind="verdict">${opts}</select>`;
+
     const ck = (kind) => `<input type="checkbox" data-id="${p.n}" data-kind="${kind}"${m[kind] ? " checked" : ""}>`;
-    return `<tr data-id="${p.n}" class="${m.skibidi ? "skibidi" : ""}">
-      <td class="pn"><a href="https://www.erdosproblems.com/${p.n}" target="_blank" rel="noopener">#${p.n}</a></td>
-      <td><span class="badge ${p.status}">${p.status}</span></td>
+    const notes = `<input class="notes" type="text" data-id="${p.n}" data-kind="notes" placeholder="add a note…" value="${esc(m.notes)}">`;
+
+    return `<tr data-id="${p.n}">
+      <td class="pn">${probLink}</td>
+      <td>${verdictCell}</td>
       <td>${compCell}</td>
       <td><a class="sol" href="${p.blob}" target="_blank" rel="noopener">transcript
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg></a></td>
-      <td class="c chk col-opt">${ck("fable")}</td>
-      <td class="c chk col-opt">${ck("cooked")}</td>
-      <td class="c chk col-opt">${ck("skibidi")}</td>
+      <td class="c chk">${ck("checked")}</td>
+      <td class="c chk">${ck("fable")}</td>
+      <td class="c chk">${ck("works")}</td>
+      <td>${notes}</td>
     </tr>`;
   }).join("");
   $("#rows").innerHTML = rows ||
-    `<tr><td colspan="7" class="state">No problems match this view.</td></tr>`;
+    `<tr><td colspan="8" class="state">No problems match this view.</td></tr>`;
 }
 
 /* ---------- controls ---------- */
@@ -384,15 +446,33 @@ $("#filter").addEventListener("click", e => {
   render();
 });
 
-/* ---------- marks: edit + GitHub sync ---------- */
-$("#rows").addEventListener("change", e => {
-  const cb = e.target; if (cb.type !== "checkbox") return;
-  const id = cb.dataset.id, kind = cb.dataset.kind;
+/* ---------- edits + GitHub sync ---------- */
+function setMark(id, kind, value) {
   MARKS[id] = MARKS[id] || {};
-  MARKS[id][kind] = cb.checked;
-  if (kind === "skibidi") cb.closest("tr").classList.toggle("skibidi", cb.checked);
+  MARKS[id][kind] = value;
   saveLocalMarks();
   scheduleCommit();
+}
+$("#rows").addEventListener("change", e => {
+  const el = e.target, id = el.dataset.id, kind = el.dataset.kind;
+  if (!id) return;
+  if (el.type === "checkbox") setMark(id, kind, el.checked);
+  else if (el.tagName === "SELECT" && kind === "verdict") {
+    setMark(id, kind, el.value);
+    el.className = "verdict v-" + el.value;   // recolor pill
+  }
+});
+let notesTimer = null;
+$("#rows").addEventListener("input", e => {
+  const el = e.target;
+  if (el.dataset.kind !== "notes") return;
+  const id = el.dataset.id, val = el.value;
+  MARKS[id] = MARKS[id] || {};
+  MARKS[id].notes = val;
+  saveLocalMarks();
+  setSync("saving…");
+  clearTimeout(notesTimer);
+  notesTimer = setTimeout(scheduleCommit, 700);
 });
 
 const API = () => `https://api.github.com/repos/${CFG.repo}/contents/status_state.json`;
@@ -417,7 +497,7 @@ async function commit() {
     if (get.ok) { const j = await get.json(); sha = j.sha; try { remote = JSON.parse(b64d(j.content)); } catch (e) {} }
     else if (get.status !== 404) throw new Error("GET " + get.status);
     MARKS = Object.assign({}, remote, MARKS);
-    const body = { message: "Update Fable/Cooked marks [skip ci]",
+    const body = { message: "Update review marks [skip ci]",
       content: b64e(JSON.stringify(MARKS, null, 2)), branch: CFG.branch };
     if (sha) body.sha = sha;
     const put = await fetch(API(), { method: "PUT", headers, body: JSON.stringify(body) });
