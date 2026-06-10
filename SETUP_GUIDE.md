@@ -1,0 +1,94 @@
+# Setup Guide
+
+How to set up and run the Erdős solver pipeline on your own machine.
+
+## 1. Requirements
+
+- Python 3.9+
+- A ChatGPT account (and optionally a DeepSeek account)
+
+## 2. Install
+
+```bash
+git clone https://github.com/erichou1/erdos-open-problems.git
+cd erdos-open-problems
+
+# (recommended) create a virtual environment
+python3 -m venv .venv
+source .venv/bin/activate        # Windows: .venv\Scripts\activate
+
+# install Python dependencies
+pip install -r requirements.txt
+
+# install the Chromium browser used by Playwright
+playwright install chromium
+```
+
+## 3. Configure your ChatGPT Project URL
+
+The pipeline opens new chats inside a ChatGPT Project. The URL is read from a
+local `.env` file (which is never committed).
+
+```bash
+cp .env.example .env
+```
+
+Then edit `.env` and set your own project URL:
+
+```
+CHATGPT_PROJECT_URL=https://chatgpt.com/g/g-p-<your-project-id>/project
+```
+
+To find it: open your project in ChatGPT and copy the URL from the address bar.
+If you leave it unset, chats are created at plain `https://chatgpt.com`.
+
+## 4. Log in (one time)
+
+This opens a real browser window so you can sign in. Your session is saved in a
+local profile folder (git-ignored), so you only do this once.
+
+```bash
+python3 solve_submit.py --login
+python3 deepseek_submit.py --login      # optional, for DeepSeek
+```
+
+## 5. (Optional) Fetch the problem set
+
+The problems are already included under `erdos_problems/`. To re-download them:
+
+```bash
+python3 fetch_erdos.py
+python3 fetch_categories.py
+```
+
+## 6. Run the pipeline
+
+Submit a batch of problems (opens one chat per problem and sends the prompt):
+
+```bash
+python3 solve_submit.py --reverse --start 0 --limit 50
+python3 deepseek_submit.py --reverse --start 0 --limit 50 --delay 60
+```
+
+Then collect answers and label each chat `[solved]/[unsolved] + confidence`:
+
+```bash
+python3 solve_rename.py --watch --interval 60
+python3 deepseek_rename.py --watch --interval 45
+```
+
+Solutions are written to:
+
+- `erdos_problems/solutions/<category>/` (ChatGPT)
+- `erdos_problems/solutions_deepseek/<category>/` (DeepSeek)
+
+## 7. Privacy
+
+These files stay local and are git-ignored:
+
+- `.env` — your project URL
+- `.chatgpt_profile/`, `.deepseek_profile/` — browser sessions / cookies
+- `.chatgpt_chat_map.json`, `.deepseek_chat_map.json` — conversation IDs
+- `*.log`
+
+See `PIPELINE_GUIDE.pdf` for a one-page overview of how the pipeline works.

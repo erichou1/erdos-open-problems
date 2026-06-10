@@ -15,7 +15,7 @@ warnings.filterwarnings('ignore')
 
 BASE_URL = "https://www.erdosproblems.com"
 YAML_URL = "https://raw.githubusercontent.com/teorth/erdosproblems/main/data/problems.yaml"
-OUT_DIR = "/Users/eric/workspace/erdos/erdos_problems"
+OUT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "erdos_problems")
 INDIVIDUAL_DIR = os.path.join(OUT_DIR, "individual")
 
 os.makedirs(INDIVIDUAL_DIR, exist_ok=True)

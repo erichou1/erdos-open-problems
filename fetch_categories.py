@@ -14,7 +14,7 @@ warnings.filterwarnings('ignore')
 
 BASE_URL = "https://www.erdosproblems.com"
 YAML_URL = "https://raw.githubusercontent.com/teorth/erdosproblems/main/data/problems.yaml"
-REPO_DIR = "/Users/eric/workspace/erdos/erdos_problems"
+REPO_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "erdos_problems")
 
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (research bot; collecting Erdos problems for personal study)"

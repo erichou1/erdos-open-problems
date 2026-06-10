@@ -29,8 +29,8 @@ from erdos_common import (  # noqa: F401
 )
 
 # ── DeepSeek-specific paths / URLs ────────────────────────────────────────────
-DS_PROFILE_DIR   = Path("/Users/eric/workspace/erdos/.deepseek_profile")
-DS_CHAT_MAP_FILE = Path("/Users/eric/workspace/erdos/.deepseek_chat_map.json")
+DS_PROFILE_DIR   = Path(__file__).resolve().parent / ".deepseek_profile"
+DS_CHAT_MAP_FILE = Path(__file__).resolve().parent / ".deepseek_chat_map.json"
 
 DEEPSEEK_URL = "https://chat.deepseek.com"
 

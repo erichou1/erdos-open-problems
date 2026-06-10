@@ -18,14 +18,23 @@ from pathlib import Path
 
 from playwright.sync_api import sync_playwright  # noqa: F401  (re-exported)
 
+# ── Load .env (no third-party library needed) ────────────────────────────────
+_ENV_FILE = Path(__file__).parent / ".env"
+if _ENV_FILE.exists():
+    for _line in _ENV_FILE.read_text().splitlines():
+        _line = _line.strip()
+        if _line and not _line.startswith("#") and "=" in _line:
+            _k, _v = _line.split("=", 1)
+            os.environ.setdefault(_k.strip(), _v.strip())
+
 # ── Paths ────────────────────────────────────────────────────────────────────
-REPO_DIR      = Path("/Users/eric/workspace/erdos/erdos_problems")
-PROFILE_DIR   = Path("/Users/eric/workspace/erdos/.chatgpt_profile")
-CHAT_MAP_FILE = Path("/Users/eric/workspace/erdos/.chatgpt_chat_map.json")
+REPO_DIR      = Path(__file__).resolve().parent / "erdos_problems"
+PROFILE_DIR   = Path(__file__).resolve().parent / ".chatgpt_profile"
+CHAT_MAP_FILE = Path(__file__).resolve().parent / ".chatgpt_chat_map.json"
 
 CHATGPT_URL = "https://chatgpt.com"
-# The ChatGPT Project URL is private (it embeds your project id). Set it via the
-# CHATGPT_PROJECT_URL environment variable; falls back to the public new-chat URL.
+# The ChatGPT Project URL is set in .env (CHATGPT_PROJECT_URL=...).
+# Edit .env to change it. Falls back to plain chatgpt.com if not set.
 PROJECT_URL = os.environ.get("CHATGPT_PROJECT_URL", "https://chatgpt.com")
 
 # ── Prompt ───────────────────────────────────────────────────────────────────
