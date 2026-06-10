@@ -54,7 +54,7 @@ python3 deepseek_submit.py --login      # optional, for DeepSeek
 
 ## 5. (Optional) Fetch the problem set
 
-The problems are already included under `erdos_problems/`. To re-download them:
+The problems are already included in the repository. To re-download them:
 
 ```bash
 python3 fetch_erdos.py
@@ -70,7 +70,7 @@ python3 solve_submit.py --reverse --start 0 --limit 50
 python3 deepseek_submit.py --reverse --start 0 --limit 50 --delay 60
 ```
 
-Then collect answers and label each chat `[solved]/[unsolved] + confidence`:
+Then collect answers and label each saved file `[solved]/[unsolved] + completeness`:
 
 ```bash
 python3 solve_rename.py --watch --interval 60
@@ -79,11 +79,11 @@ python3 deepseek_rename.py --watch --interval 45
 
 Solutions are written to:
 
-- `erdos_problems/solutions/<category>/` (ChatGPT)
-- `erdos_problems/solutions_deepseek/<category>/` (DeepSeek)
+- `solutions/<category>/` (ChatGPT)
+- `solutions_deepseek/<category>/` (DeepSeek)
 
 A second, human-named copy of every answer is also written to an `outputs/`
-folder, using the same name as the chat tab:
+folder, named by verdict and completeness score:
 
 - `outputs/chatgpt/<category>/Erdős #N [solved] 88%.md`
 - `outputs/deepseek/<category>/Erdős #N [unsolved] 0%.md`

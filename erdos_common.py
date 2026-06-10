@@ -28,14 +28,34 @@ if _ENV_FILE.exists():
             os.environ.setdefault(_k.strip(), _v.strip())
 
 # ── Paths ────────────────────────────────────────────────────────────────────
-REPO_DIR      = Path(__file__).resolve().parent / "erdos_problems"
-PROFILE_DIR   = Path(__file__).resolve().parent / ".chatgpt_profile"
-CHAT_MAP_FILE = Path(__file__).resolve().parent / ".chatgpt_chat_map.json"
+_SCRIPT_DIR = Path(__file__).resolve().parent
+
+
+def _detect_repo_dir() -> Path:
+    """Locate the directory that holds the problem categories.
+
+    Two layouts are supported transparently:
+      * dev layout  — problems live under  <script_dir>/erdos_problems/<category>
+      * clone layout — problems live directly at <script_dir>/<category>
+    A directory qualifies if it contains a category folder with an
+    'individual' subfolder (e.g. open/individual).
+    """
+    categories = ("open", "falsifiable", "verifiable")
+    for base in (_SCRIPT_DIR / "erdos_problems", _SCRIPT_DIR):
+        if any((base / c / "individual").is_dir() for c in categories):
+            return base
+    # Default to the dev layout; fetch scripts will create it.
+    return _SCRIPT_DIR / "erdos_problems"
+
+
+REPO_DIR      = _detect_repo_dir()
+PROFILE_DIR   = _SCRIPT_DIR / ".chatgpt_profile"
+CHAT_MAP_FILE = _SCRIPT_DIR / ".chatgpt_chat_map.json"
 
 # Human-named output copies live here, one subfolder per platform.
 #   outputs/chatgpt/<category>/Erdős #N [solved] 88%.md
 #   outputs/deepseek/<category>/Erdős #N [unsolved] 0%.md
-OUTPUTS_DIR   = Path(__file__).resolve().parent / "outputs"
+OUTPUTS_DIR   = _SCRIPT_DIR / "outputs"
 
 CHATGPT_URL = "https://chatgpt.com"
 # The ChatGPT Project URL is set in .env (CHATGPT_PROJECT_URL=...).
