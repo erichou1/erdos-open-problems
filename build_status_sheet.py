@@ -94,6 +94,7 @@ def scan_category(category: str, state: dict) -> list:
             "link": link or "",
             "fable": "yes" if marks.get("fable") else "no",
             "cooked": "yes" if marks.get("cooked") else "no",
+            "skibidi": "yes" if marks.get("skibidi") else "no",
         })
     return rows
 
@@ -102,7 +103,7 @@ def write_csv(rows: list):
     with CSV_OUT.open("w", newline="", encoding="utf-8") as fh:
         w = csv.DictWriter(fh, fieldnames=[
             "problem", "category", "run", "status", "completeness",
-            "fable", "cooked", "link"])
+            "fable", "cooked", "skibidi", "link"])
         w.writeheader()
         w.writerows(rows)
 
@@ -115,6 +116,7 @@ def write_state_if_missing(rows: list):
         str(r["problem"]): {
             "fable": r["fable"] == "yes",
             "cooked": r["cooked"] == "yes",
+            "skibidi": r["skibidi"] == "yes",
         }
         for r in rows if r["run"] == "yes"
     }
@@ -158,8 +160,10 @@ def write_html(rows: list, state: dict):
                          f'data-id="{pid}">')
             cooked_box = (f'<input type="checkbox" data-kind="cooked" '
                           f'data-id="{pid}">')
+            skibidi_box = (f'<input type="checkbox" data-kind="skibidi" '
+                           f'data-id="{pid}">')
         else:
-            fable_box = cooked_box = ""
+            fable_box = cooked_box = skibidi_box = ""
 
         cells.append(
             f'<tr class="{" ".join(row_class)}" data-id="{pid}">'
@@ -169,6 +173,7 @@ def write_html(rows: list, state: dict):
             f'<td class="comp">{comp_disp}</td>'
             f'<td class="chk">{fable_box}</td>'
             f'<td class="chk">{cooked_box}</td>'
+            f'<td class="chk">{skibidi_box}</td>'
             f"</tr>"
         )
 
@@ -220,6 +225,8 @@ def write_html(rows: list, state: dict):
   tr.amber td.comp {{ background: #fdeede; }}
   tr.notrun td {{ color: #9aa0ad; }}
   tr:hover td {{ background: #fafbff; }}
+  tr.skibidi td {{ background: #ffd700 !important; }}
+  tr.skibidi:hover td {{ background: #f4cf00 !important; }}
 </style>
 </head>
 <body>
@@ -255,6 +262,7 @@ def write_html(rows: list, state: dict):
         <th>Completeness</th>
         <th>Fable</th>
         <th>Cooked</th>
+        <th>Skibidi</th>
       </tr>
     </thead>
     <tbody>
@@ -282,6 +290,11 @@ function applyState() {{
   document.querySelectorAll('input[type=checkbox]').forEach(cb => {{
     const id = cb.dataset.id, kind = cb.dataset.kind;
     cb.checked = !!(state[id] && state[id][kind]);
+  }});
+  document.querySelectorAll('tbody tr').forEach(tr => {{
+    const id = tr.dataset.id;
+    const on = !!(state[id] && state[id].skibidi);
+    tr.classList.toggle('skibidi', on);
   }});
 }}
 
@@ -417,6 +430,10 @@ document.querySelector('tbody').addEventListener('change', e => {{
   const id = cb.dataset.id, kind = cb.dataset.kind;
   state[id] = state[id] || {{}};
   state[id][kind] = cb.checked;
+  if (kind === 'skibidi') {{
+    const tr = cb.closest('tr');
+    if (tr) tr.classList.toggle('skibidi', cb.checked);
+  }}
   saveLocal();
   scheduleCommit();
 }});
