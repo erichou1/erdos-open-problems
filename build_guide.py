@@ -1,20 +1,40 @@
 #!/usr/bin/env python3
-"""Generate PIPELINE_GUIDE.pdf — a short guide to the Erdős solver pipeline."""
+"""Render SETUP_GUIDE.md to SETUP_GUIDE.pdf.
+
+A small, dependency-light Markdown renderer (headings, paragraphs, bullet
+lists, and fenced code blocks) good enough for the setup guide.
+"""
+
+import re
+from pathlib import Path
 
 from fpdf import FPDF
+
+BASE_DIR = Path(__file__).resolve().parent
+SRC = BASE_DIR / "SETUP_GUIDE.md"
+OUT = BASE_DIR / "SETUP_GUIDE.pdf"
 
 NAVY = (20, 40, 80)
 GREY = (90, 90, 90)
 CODE_BG = (244, 244, 246)
 
 
-class Guide(FPDF):
+def ascii_safe(text: str) -> str:
+    """Map the few non-latin-1 chars used in the guide to ASCII equivalents."""
+    return (text.replace("\u0151", "o").replace("\u0150", "O")  # Erdos
+                .replace("\u2014", "-").replace("\u2013", "-")
+                .replace("\u2019", "'").replace("\u2018", "'")
+                .replace("\u201c", '"').replace("\u201d", '"')
+                .replace("\u2192", "->"))
+
+
+class Doc(FPDF):
     def header(self):
         if self.page_no() == 1:
             return
         self.set_font("Helvetica", "I", 8)
         self.set_text_color(*GREY)
-        self.cell(0, 6, "Erdos Solver Pipeline Guide", align="R")
+        self.cell(0, 6, "Erdos Solver - Setup Guide", align="R")
         self.ln(8)
 
     def footer(self):
@@ -24,111 +44,101 @@ class Guide(FPDF):
         self.cell(0, 6, f"Page {self.page_no()}", align="C")
 
 
+def render_inline(text: str) -> str:
+    # Strip markdown emphasis / inline-code markers (keep the text).
+    text = re.sub(r"`([^`]*)`", r"\1", text)
+    text = re.sub(r"\*\*([^*]*)\*\*", r"\1", text)
+    text = re.sub(r"\*([^*]*)\*", r"\1", text)
+    return ascii_safe(text)
+
+
 def h1(pdf, text):
-    pdf.set_font("Helvetica", "B", 18)
+    pdf.set_x(pdf.l_margin)
+    pdf.set_font("Helvetica", "B", 20)
     pdf.set_text_color(*NAVY)
-    pdf.multi_cell(0, 9, text)
-    pdf.ln(1)
+    pdf.multi_cell(0, 10, text)
+    pdf.ln(2)
 
 
 def h2(pdf, text):
-    pdf.ln(2)
-    pdf.set_font("Helvetica", "B", 13)
+    pdf.ln(3)
+    pdf.set_x(pdf.l_margin)
+    pdf.set_font("Helvetica", "B", 14)
     pdf.set_text_color(*NAVY)
-    pdf.multi_cell(0, 7, text)
-    pdf.ln(0.5)
-
-
-def body(pdf, text):
-    pdf.set_font("Helvetica", "", 10.5)
-    pdf.set_text_color(30, 30, 30)
-    pdf.multi_cell(0, 5.4, text)
+    pdf.multi_cell(0, 7.5, text)
     pdf.ln(1)
 
 
-def bullet(pdf, label, text):
-    pdf.set_x(pdf.l_margin + 2)
-    pdf.set_font("Helvetica", "B", 10.5)
-    pdf.set_text_color(*NAVY)
-    w = pdf.get_string_width(label + "  ") + 1
-    pdf.cell(w, 5.4, f"- {label}")
+def para(pdf, text):
+    pdf.set_x(pdf.l_margin)
     pdf.set_font("Helvetica", "", 10.5)
     pdf.set_text_color(30, 30, 30)
     pdf.multi_cell(0, 5.4, text)
+    pdf.ln(1.5)
 
 
-def code(pdf, lines):
+def bullet(pdf, text):
+    pdf.set_x(pdf.l_margin)
+    pdf.set_font("Helvetica", "", 10.5)
+    pdf.set_text_color(30, 30, 30)
+    pdf.multi_cell(0, 5.4, "-  " + text)
+
+
+def code_block(pdf, lines):
     pdf.ln(1)
     pdf.set_font("Courier", "", 9)
-    pdf.set_fill_color(*CODE_BG)
     pdf.set_text_color(20, 20, 20)
+    pdf.set_fill_color(*CODE_BG)
     for ln in lines:
         pdf.set_x(pdf.l_margin)
-        pdf.cell(0, 5.2, "  " + ln, fill=True, new_x="LMARGIN", new_y="NEXT")
+        pdf.multi_cell(0, 5.0, "  " + ascii_safe(ln), fill=True)
     pdf.ln(2)
 
 
 def build():
-    pdf = Guide(format="A4")
+    md = SRC.read_text(encoding="utf-8").splitlines()
+
+    pdf = Doc(format="A4")
     pdf.set_auto_page_break(auto=True, margin=15)
     pdf.set_margins(18, 16, 18)
     pdf.add_page()
 
-    h1(pdf, "Erdos Solver Pipeline")
-    pdf.set_font("Helvetica", "I", 10)
-    pdf.set_text_color(*GREY)
-    pdf.multi_cell(0, 5, "Browser automation that submits open Erdos problems to "
-                         "ChatGPT and DeepSeek, extracts the answers, saves them, "
-                         "and labels each chat [solved]/[unsolved] + confidence.")
-    pdf.ln(3)
+    in_code = False
+    code_lines: list[str] = []
 
-    h2(pdf, "Overview")
-    body(pdf, "The pipeline runs in two stages per platform. A submit stage opens "
-              "one chat per problem and sends the research-mode prompt. A rename "
-              "stage revisits each chat, waits for generation to finish, extracts "
-              "the answer, writes it to disk, and renames the chat with the verdict "
-              "and confidence. ChatGPT and DeepSeek share the prompt and parsing "
-              "logic via the common modules.")
+    for raw in md:
+        line = raw.rstrip("\n")
 
-    h2(pdf, "Components")
-    bullet(pdf, "erdos_common.py", "Shared prompt, answer parsing (is_solved, "
-                "extract_confidence), browser launch, and ChatGPT page helpers.")
-    bullet(pdf, "deepseek_common.py", "DeepSeek page helpers; re-uses the prompt "
-                "and parsers from erdos_common.")
-    bullet(pdf, "solve_submit.py / deepseek_submit.py", "Submit problems to chats "
-                "(no waiting). Record each problem -> chat URL in a chat map.")
-    bullet(pdf, "solve_rename.py / deepseek_rename.py", "Watch the chats, save "
-                "answers, and rename with the result label.")
-    bullet(pdf, "fetch_erdos.py / fetch_categories.py", "Download and categorize "
-                "the Erdos problem set into erdos_problems/.")
+        if line.strip().startswith("```"):
+            if in_code:
+                code_block(pdf, code_lines)
+                code_lines = []
+            in_code = not in_code
+            continue
 
-    h2(pdf, "How to run")
-    body(pdf, "1. One-time login (opens a browser to authenticate):")
-    code(pdf, ["python3 solve_submit.py --login",
-               "python3 deepseek_submit.py --login"])
-    body(pdf, "2. Submit a batch of open problems (reverse order shown):")
-    code(pdf, ["python3 solve_submit.py --reverse --start 0 --limit 208",
-               "python3 deepseek_submit.py --reverse --start 0 --limit 208 --delay 60"])
-    body(pdf, "3. Collect answers and rename chats (run as a watch loop):")
-    code(pdf, ["python3 solve_rename.py --watch --interval 60",
-               "python3 deepseek_rename.py --watch --interval 45"])
+        if in_code:
+            code_lines.append(line)
+            continue
 
-    h2(pdf, "Output")
-    body(pdf, "Solutions are written to erdos_problems/solutions/<category>/ "
-              "(ChatGPT) and erdos_problems/solutions_deepseek/<category>/ "
-              "(DeepSeek). Each chat title becomes:")
-    code(pdf, ["Erdos #<n> [solved]  88%",
-               "Erdos #<n> [unsolved]  12%"])
+        if not line.strip():
+            continue
 
-    h2(pdf, "Configuration & privacy")
-    body(pdf, "The private ChatGPT project URL is read from the "
-              "CHATGPT_PROJECT_URL environment variable (it is not committed). "
-              "Browser profiles, chat maps, and logs are git-ignored because they "
-              "contain session cookies and private conversation IDs.")
-    code(pdf, ['export CHATGPT_PROJECT_URL="https://chatgpt.com/g/<your-project>/project"'])
+        if line.startswith("# "):
+            h1(pdf, render_inline(line[2:]))
+        elif line.startswith("## "):
+            h2(pdf, render_inline(line[3:]))
+        elif line.startswith("### "):
+            h2(pdf, render_inline(line[4:]))
+        elif line.lstrip().startswith(("- ", "* ")):
+            bullet(pdf, render_inline(line.lstrip()[2:]))
+        else:
+            para(pdf, render_inline(line))
 
-    pdf.output("PIPELINE_GUIDE.pdf")
-    print("wrote PIPELINE_GUIDE.pdf")
+    if in_code and code_lines:
+        code_block(pdf, code_lines)
+
+    pdf.output(str(OUT))
+    print(f"wrote {OUT.name}")
 
 
 if __name__ == "__main__":
