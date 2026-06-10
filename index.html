@@ -20,7 +20,10 @@
   button { font: inherit; padding: .45rem .8rem; border: 1px solid #c9ccd6;
             background: #fff; border-radius: 8px; cursor: pointer; }
   button.primary { background: #1c2331; color: #fff; border-color: #1c2331; }
-  #saved { color: #1a7f37; font-size: .85rem; }
+  #saved { font-size: .85rem; }
+  #saved.ok { color: #1a7f37; }
+  #saved.warn { color: #b26a00; }
+  #saved.err { color: #c1121f; }
   input[type=search] { font: inherit; padding: .45rem .6rem; border: 1px solid #c9ccd6;
             border-radius: 8px; min-width: 12rem; }
   table { border-collapse: collapse; width: 100%; font-size: .9rem; }
@@ -56,9 +59,15 @@
   <div class="bar">
     <input type="search" id="filter" placeholder="Filter by problem #...">
     <button id="onlyrun">Show only run</button>
-    <button class="primary" id="save">Save marks (download JSON)</button>
+    <button class="primary" id="connect">Connect GitHub</button>
+    <button id="save">Download JSON</button>
     <span id="saved"></span>
   </div>
+  <p class="sub" style="font-size:.8rem">Tick a box and it saves automatically to
+     the repo once you <b>Connect GitHub</b> (paste a fine-grained token with
+     <i>Contents: Read &amp; write</i> on this repo only). The token is stored
+     just in this browser and is never committed. Without a token, marks still
+     persist locally in your browser.</p>
   <table id="t">
     <thead>
       <tr>
@@ -698,6 +707,11 @@
 
 <script>
 const LS_KEY = "erdos_chatgpt_marks_v1";
+const TOKEN_KEY = "erdos_gh_token_v1";
+const REPO = "erichou1/erdos-open-problems";
+const BRANCH = "main";
+const STATE_PATH = "status_state.json";
+const API = `https://api.github.com/repos/${REPO}/contents/${STATE_PATH}`;
 const INITIAL_STATE = {"196": {"fable": false, "cooked": false}, "197": {"fable": false, "cooked": false}, "200": {"fable": false, "cooked": false}, "201": {"fable": false, "cooked": false}, "203": {"fable": false, "cooked": false}, "208": {"fable": false, "cooked": false}, "212": {"fable": false, "cooked": false}, "213": {"fable": false, "cooked": false}, "217": {"fable": false, "cooked": false}, "218": {"fable": false, "cooked": false}, "222": {"fable": false, "cooked": false}, "233": {"fable": false, "cooked": false}, "234": {"fable": false, "cooked": false}, "236": {"fable": false, "cooked": false}, "238": {"fable": false, "cooked": false}, "243": {"fable": false, "cooked": false}, "244": {"fable": false, "cooked": false}, "247": {"fable": false, "cooked": false}, "249": {"fable": false, "cooked": false}, "251": {"fable": false, "cooked": false}, "252": {"fable": false, "cooked": false}, "254": {"fable": false, "cooked": false}, "256": {"fable": false, "cooked": false}, "257": {"fable": false, "cooked": false}, "260": {"fable": false, "cooked": false}, "261": {"fable": false, "cooked": false}, "263": {"fable": false, "cooked": false}, "264": {"fable": false, "cooked": false}, "265": {"fable": false, "cooked": false}, "267": {"fable": false, "cooked": false}, "269": {"fable": false, "cooked": false}, "271": {"fable": false, "cooked": false}, "272": {"fable": false, "cooked": false}, "273": {"fable": false, "cooked": false}, "274": {"fable": false, "cooked": false}, "276": {"fable": false, "cooked": false}, "278": {"fable": false, "cooked": false}, "279": {"fable": false, "cooked": false}, "282": {"fable": false, "cooked": false}, "288": {"fable": false, "cooked": false}, "289": {"fable": false, "cooked": false}, "291": {"fable": false, "cooked": false}, "293": {"fable": false, "cooked": false}, "295": {"fable": false, "cooked": false}, "301": {"fable": false, "cooked": false}, "302": {"fable": false, "cooked": false}, "304": {"fable": false, "cooked": false}, "306": {"fable": false, "cooked": false}, "311": {"fable": false, "cooked": false}, "312": {"fable": false, "cooked": false}, "313": {"fable": false, "cooked": false}, "317": {"fable": false, "cooked": false}, "319": {"fable": false, "cooked": false}, "320": {"fable": false, "cooked": false}, "321": {"fable": false, "cooked": false}, "322": {"fable": false, "cooked": false}, "323": {"fable": false, "cooked": false}, "324": {"fable": false, "cooked": false}, "325": {"fable": false, "cooked": false}, "326": {"fable": false, "cooked": false}, "327": {"fable": false, "cooked": false}, "329": {"fable": false, "cooked": false}, "332": {"fable": false, "cooked": false}, "334": {"fable": false, "cooked": false}, "335": {"fable": false, "cooked": false}, "336": {"fable": false, "cooked": false}, "338": {"fable": false, "cooked": false}, "340": {"fable": false, "cooked": false}, "341": {"fable": false, "cooked": false}, "342": {"fable": false, "cooked": false}, "345": {"fable": false, "cooked": false}, "346": {"fable": false, "cooked": false}, "348": {"fable": false, "cooked": false}, "349": {"fable": false, "cooked": false}, "352": {"fable": false, "cooked": false}, "354": {"fable": false, "cooked": false}, "357": {"fable": false, "cooked": false}, "359": {"fable": false, "cooked": false}, "361": {"fable": false, "cooked": false}, "365": {"fable": false, "cooked": false}, "367": {"fable": false, "cooked": false}, "368": {"fable": false, "cooked": false}, "371": {"fable": false, "cooked": false}, "373": {"fable": false, "cooked": false}, "374": {"fable": false, "cooked": false}, "376": {"fable": false, "cooked": false}, "377": {"fable": false, "cooked": false}, "382": {"fable": false, "cooked": false}, "383": {"fable": false, "cooked": false}, "385": {"fable": false, "cooked": false}, "386": {"fable": false, "cooked": false}, "387": {"fable": false, "cooked": false}, "388": {"fable": false, "cooked": false}, "389": {"fable": false, "cooked": false}, "390": {"fable": false, "cooked": false}, "393": {"fable": false, "cooked": false}, "394": {"fable": false, "cooked": false}, "396": {"fable": false, "cooked": false}, "400": {"fable": false, "cooked": false}, "404": {"fable": false, "cooked": false}, "406": {"fable": false, "cooked": false}, "408": {"fable": false, "cooked": false}, "409": {"fable": false, "cooked": false}, "410": {"fable": false, "cooked": false}, "1210": {"fable": false, "cooked": false}, "1212": {"fable": false, "cooked": false}};
 
 function loadLocal() {
@@ -705,12 +719,27 @@ function loadLocal() {
   catch (e) { return {}; }
 }
 let state = Object.assign({}, INITIAL_STATE, loadLocal());
+let remoteSha = null;
 
 function applyState() {
   document.querySelectorAll('input[type=checkbox]').forEach(cb => {
     const id = cb.dataset.id, kind = cb.dataset.kind;
     cb.checked = !!(state[id] && state[id][kind]);
   });
+}
+
+function setStatus(msg, cls) {
+  const s = document.getElementById('saved');
+  s.textContent = msg;
+  s.className = cls || '';
+}
+
+function b64encode(str) {
+  return btoa(unescape(encodeURIComponent(str)));
+}
+function b64decode(str) {
+  return decodeURIComponent(escape(atob((str || '').replace(/
+/g, ''))));
 }
 
 // Pull the freshest committed marks (works when served via GitHub Pages).
@@ -726,9 +755,105 @@ fetch('status_state.json', {cache: 'no-store'})
 
 function saveLocal() {
   localStorage.setItem(LS_KEY, JSON.stringify(state));
-  const s = document.getElementById('saved');
-  s.textContent = 'saved locally';
-  setTimeout(() => { s.textContent = ''; }, 1500);
+}
+
+// --- Auto-commit to GitHub (token lives only in this browser) ---
+let saveTimer = null;
+let saving = false;
+let pending = false;
+
+function scheduleCommit() {
+  if (!localStorage.getItem(TOKEN_KEY)) {
+    setStatus('saved locally (connect GitHub to sync)', 'warn');
+    return;
+  }
+  setStatus('saving…');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(commitToGitHub, 1200);
+}
+
+async function commitToGitHub() {
+  const token = localStorage.getItem(TOKEN_KEY);
+  if (!token) return;
+  if (saving) { pending = true; return; }
+  saving = true;
+  setStatus('saving to GitHub…');
+  const headers = {
+    'Authorization': 'Bearer ' + token,
+    'Accept': 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+  };
+  try {
+    // Fetch current file: get its sha and merge remote marks so concurrent
+    // edits from other machines are not clobbered (local edits win on keys).
+    const getRes = await fetch(API + '?ref=' + BRANCH,
+                              {headers, cache: 'no-store'});
+    let remote = {};
+    if (getRes.ok) {
+      const j = await getRes.json();
+      remoteSha = j.sha;
+      try { remote = JSON.parse(b64decode(j.content)); } catch (e) {}
+    } else if (getRes.status === 404) {
+      remoteSha = null;
+    } else {
+      throw new Error('GET ' + getRes.status);
+    }
+    const merged = Object.assign({}, remote, state);
+    state = merged;
+    const payload = {
+      message: 'Update Fable/Cooked marks',
+      content: b64encode(JSON.stringify(merged, null, 2)),
+      branch: BRANCH,
+    };
+    if (remoteSha) payload.sha = remoteSha;
+    const putRes = await fetch(API, {
+      method: 'PUT', headers, body: JSON.stringify(payload),
+    });
+    if (putRes.ok) {
+      const j = await putRes.json();
+      remoteSha = j.content && j.content.sha ? j.content.sha : null;
+      setStatus('saved to GitHub ✓', 'ok');
+    } else if (putRes.status === 401 || putRes.status === 403) {
+      setStatus('GitHub rejected the token (need Contents: write)', 'err');
+    } else if (putRes.status === 409) {
+      // sha was stale; retry once with a fresh fetch
+      saving = false; pending = false; return commitToGitHub();
+    } else {
+      setStatus('GitHub save failed (' + putRes.status + ')', 'err');
+    }
+  } catch (e) {
+    setStatus('GitHub save error — saved locally', 'err');
+  } finally {
+    saving = false;
+    if (pending) { pending = false; commitToGitHub(); }
+  }
+}
+
+document.getElementById('connect').addEventListener('click', () => {
+  const has = !!localStorage.getItem(TOKEN_KEY);
+  if (has) {
+    if (confirm('Disconnect GitHub and forget the token in this browser?')) {
+      localStorage.removeItem(TOKEN_KEY);
+      updateConnectButton();
+      setStatus('disconnected (marks save locally only)', 'warn');
+    }
+    return;
+  }
+  const tok = prompt('Paste a GitHub fine-grained token with Contents: Read & '
+    + 'write on ' + REPO + ' only.
+It is stored only in this browser and is '
+    + 'never committed.');
+  if (tok && tok.trim()) {
+    localStorage.setItem(TOKEN_KEY, tok.trim());
+    updateConnectButton();
+    commitToGitHub();
+  }
+});
+
+function updateConnectButton() {
+  const b = document.getElementById('connect');
+  b.textContent = localStorage.getItem(TOKEN_KEY)
+    ? 'GitHub connected ✓' : 'Connect GitHub';
 }
 
 document.querySelector('tbody').addEventListener('change', e => {
@@ -738,6 +863,7 @@ document.querySelector('tbody').addEventListener('change', e => {
   state[id] = state[id] || {};
   state[id][kind] = cb.checked;
   saveLocal();
+  scheduleCommit();
 });
 
 document.getElementById('save').addEventListener('click', () => {
@@ -749,6 +875,8 @@ document.getElementById('save').addEventListener('click', () => {
   a.click();
   URL.revokeObjectURL(a.href);
 });
+
+updateConnectButton();
 
 document.getElementById('filter').addEventListener('input', e => {
   const q = e.target.value.trim();

@@ -198,7 +198,10 @@ def write_html(rows: list, state: dict):
   button {{ font: inherit; padding: .45rem .8rem; border: 1px solid #c9ccd6;
             background: #fff; border-radius: 8px; cursor: pointer; }}
   button.primary {{ background: #1c2331; color: #fff; border-color: #1c2331; }}
-  #saved {{ color: #1a7f37; font-size: .85rem; }}
+  #saved {{ font-size: .85rem; }}
+  #saved.ok {{ color: #1a7f37; }}
+  #saved.warn {{ color: #b26a00; }}
+  #saved.err {{ color: #c1121f; }}
   input[type=search] {{ font: inherit; padding: .45rem .6rem; border: 1px solid #c9ccd6;
             border-radius: 8px; min-width: 12rem; }}
   table {{ border-collapse: collapse; width: 100%; font-size: .9rem; }}
@@ -234,9 +237,15 @@ def write_html(rows: list, state: dict):
   <div class="bar">
     <input type="search" id="filter" placeholder="Filter by problem #...">
     <button id="onlyrun">Show only run</button>
-    <button class="primary" id="save">Save marks (download JSON)</button>
+    <button class="primary" id="connect">Connect GitHub</button>
+    <button id="save">Download JSON</button>
     <span id="saved"></span>
   </div>
+  <p class="sub" style="font-size:.8rem">Tick a box and it saves automatically to
+     the repo once you <b>Connect GitHub</b> (paste a fine-grained token with
+     <i>Contents: Read &amp; write</i> on this repo only). The token is stored
+     just in this browser and is never committed. Without a token, marks still
+     persist locally in your browser.</p>
   <table id="t">
     <thead>
       <tr>
@@ -255,6 +264,11 @@ def write_html(rows: list, state: dict):
 
 <script>
 const LS_KEY = "erdos_chatgpt_marks_v1";
+const TOKEN_KEY = "erdos_gh_token_v1";
+const REPO = "{REPO}";
+const BRANCH = "{BRANCH}";
+const STATE_PATH = "status_state.json";
+const API = `https://api.github.com/repos/${{REPO}}/contents/${{STATE_PATH}}`;
 const INITIAL_STATE = {initial_state};
 
 function loadLocal() {{
@@ -262,12 +276,26 @@ function loadLocal() {{
   catch (e) {{ return {{}}; }}
 }}
 let state = Object.assign({{}}, INITIAL_STATE, loadLocal());
+let remoteSha = null;
 
 function applyState() {{
   document.querySelectorAll('input[type=checkbox]').forEach(cb => {{
     const id = cb.dataset.id, kind = cb.dataset.kind;
     cb.checked = !!(state[id] && state[id][kind]);
   }});
+}}
+
+function setStatus(msg, cls) {{
+  const s = document.getElementById('saved');
+  s.textContent = msg;
+  s.className = cls || '';
+}}
+
+function b64encode(str) {{
+  return btoa(unescape(encodeURIComponent(str)));
+}}
+function b64decode(str) {{
+  return decodeURIComponent(escape(atob((str || '').replace(/\n/g, ''))));
 }}
 
 // Pull the freshest committed marks (works when served via GitHub Pages).
@@ -283,9 +311,104 @@ fetch('status_state.json', {{cache: 'no-store'}})
 
 function saveLocal() {{
   localStorage.setItem(LS_KEY, JSON.stringify(state));
-  const s = document.getElementById('saved');
-  s.textContent = 'saved locally';
-  setTimeout(() => {{ s.textContent = ''; }}, 1500);
+}}
+
+// --- Auto-commit to GitHub (token lives only in this browser) ---
+let saveTimer = null;
+let saving = false;
+let pending = false;
+
+function scheduleCommit() {{
+  if (!localStorage.getItem(TOKEN_KEY)) {{
+    setStatus('saved locally (connect GitHub to sync)', 'warn');
+    return;
+  }}
+  setStatus('saving\u2026');
+  clearTimeout(saveTimer);
+  saveTimer = setTimeout(commitToGitHub, 1200);
+}}
+
+async function commitToGitHub() {{
+  const token = localStorage.getItem(TOKEN_KEY);
+  if (!token) return;
+  if (saving) {{ pending = true; return; }}
+  saving = true;
+  setStatus('saving to GitHub\u2026');
+  const headers = {{
+    'Authorization': 'Bearer ' + token,
+    'Accept': 'application/vnd.github+json',
+    'X-GitHub-Api-Version': '2022-11-28',
+  }};
+  try {{
+    // Fetch current file: get its sha and merge remote marks so concurrent
+    // edits from other machines are not clobbered (local edits win on keys).
+    const getRes = await fetch(API + '?ref=' + BRANCH,
+                              {{headers, cache: 'no-store'}});
+    let remote = {{}};
+    if (getRes.ok) {{
+      const j = await getRes.json();
+      remoteSha = j.sha;
+      try {{ remote = JSON.parse(b64decode(j.content)); }} catch (e) {{}}
+    }} else if (getRes.status === 404) {{
+      remoteSha = null;
+    }} else {{
+      throw new Error('GET ' + getRes.status);
+    }}
+    const merged = Object.assign({{}}, remote, state);
+    state = merged;
+    const payload = {{
+      message: 'Update Fable/Cooked marks',
+      content: b64encode(JSON.stringify(merged, null, 2)),
+      branch: BRANCH,
+    }};
+    if (remoteSha) payload.sha = remoteSha;
+    const putRes = await fetch(API, {{
+      method: 'PUT', headers, body: JSON.stringify(payload),
+    }});
+    if (putRes.ok) {{
+      const j = await putRes.json();
+      remoteSha = j.content && j.content.sha ? j.content.sha : null;
+      setStatus('saved to GitHub \u2713', 'ok');
+    }} else if (putRes.status === 401 || putRes.status === 403) {{
+      setStatus('GitHub rejected the token (need Contents: write)', 'err');
+    }} else if (putRes.status === 409) {{
+      // sha was stale; retry once with a fresh fetch
+      saving = false; pending = false; return commitToGitHub();
+    }} else {{
+      setStatus('GitHub save failed (' + putRes.status + ')', 'err');
+    }}
+  }} catch (e) {{
+    setStatus('GitHub save error \u2014 saved locally', 'err');
+  }} finally {{
+    saving = false;
+    if (pending) {{ pending = false; commitToGitHub(); }}
+  }}
+}}
+
+document.getElementById('connect').addEventListener('click', () => {{
+  const has = !!localStorage.getItem(TOKEN_KEY);
+  if (has) {{
+    if (confirm('Disconnect GitHub and forget the token in this browser?')) {{
+      localStorage.removeItem(TOKEN_KEY);
+      updateConnectButton();
+      setStatus('disconnected (marks save locally only)', 'warn');
+    }}
+    return;
+  }}
+  const tok = prompt('Paste a GitHub fine-grained token with Contents: Read & '
+    + 'write on ' + REPO + ' only.\nIt is stored only in this browser and is '
+    + 'never committed.');
+  if (tok && tok.trim()) {{
+    localStorage.setItem(TOKEN_KEY, tok.trim());
+    updateConnectButton();
+    commitToGitHub();
+  }}
+}});
+
+function updateConnectButton() {{
+  const b = document.getElementById('connect');
+  b.textContent = localStorage.getItem(TOKEN_KEY)
+    ? 'GitHub connected \u2713' : 'Connect GitHub';
 }}
 
 document.querySelector('tbody').addEventListener('change', e => {{
@@ -295,6 +418,7 @@ document.querySelector('tbody').addEventListener('change', e => {{
   state[id] = state[id] || {{}};
   state[id][kind] = cb.checked;
   saveLocal();
+  scheduleCommit();
 }});
 
 document.getElementById('save').addEventListener('click', () => {{
@@ -306,6 +430,8 @@ document.getElementById('save').addEventListener('click', () => {{
   a.click();
   URL.revokeObjectURL(a.href);
 }});
+
+updateConnectButton();
 
 document.getElementById('filter').addEventListener('input', e => {{
   const q = e.target.value.trim();
