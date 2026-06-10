@@ -1,492 +1,141 @@
 #!/usr/bin/env python3
-"""Build a visual status spreadsheet of the ChatGPT runs.
+"""Build the data feed for the Erdős × ChatGPT status website.
 
-Scans the saved ChatGPT solutions and produces, for every open Erdős problem:
-  * whether it has been run,
-  * the verdict ([solved] / [unsolved]),
-  * the model's completeness score (>= 60% is shown green),
-  * a link to the full solution rendered on GitHub,
-  * editable "Fable" and "Cooked" checkboxes that persist across computers.
+The website (index.html) is a static single-page app that loads everything at
+runtime from ``data.json``. This script (re)generates that feed by scanning the
+committed solution copies in ``outputs/chatgpt/open/`` — the filenames already
+encode each problem's number, verdict and completeness score, e.g.
 
-Files written next to this script:
-  * status.csv         — plain spreadsheet (incl. fable/cooked columns)
-  * index.html         — interactive, color-coded table (GitHub Pages home)
-  * status_state.json  — the checkbox state (created if missing). Commit this
-                         file to share Fable/Cooked marks with other computers.
+    outputs/chatgpt/open/Erdős #117 [solved] 82%.md
 
-DeepSeek is intentionally excluded; this only reports the ChatGPT pipeline.
+so no parsing of file *contents* is required. A GitHub Action re-runs this on
+every push that touches ``outputs/``, keeping the site in sync automatically.
+
+Outputs written next to this script:
+  * data.json    — the feed the website renders from (problems + totals)
+  * status.csv   — the same data as a plain spreadsheet
+
+This script is intentionally self-contained (Python standard library only) and
+does NOT import the solving pipeline, so CI can run it with no dependencies.
+``status_state.json`` (the Fable/Cooked marks) is owned by the website and is
+left untouched here.
 """
 
 import csv
-import html
 import json
 import re
+from datetime import datetime, timezone
 from pathlib import Path
 from urllib.parse import quote
 
-import erdos_common as C
-
 BASE_DIR = Path(__file__).resolve().parent
-SOLUTIONS_DIR = C.REPO_DIR / "solutions"
-OUTPUTS_DIR = BASE_DIR / "outputs" / "chatgpt"
+CATEGORY = "open"
+OUTPUTS_DIR = BASE_DIR / "outputs" / "chatgpt" / CATEGORY
+PROBLEMS_DIR = BASE_DIR / CATEGORY / "individual"
+
+DATA_OUT = BASE_DIR / "data.json"
 CSV_OUT = BASE_DIR / "status.csv"
-HTML_OUT = BASE_DIR / "index.html"
-STATE_OUT = BASE_DIR / "status_state.json"
 
 # Repo the solution links point at, and the branch they live on.
 REPO = "erichou1/erdos-open-problems"
 BRANCH = "main"
 BLOB_BASE = f"https://github.com/{REPO}/blob/{BRANCH}/"
 
-GREEN_THRESHOLD = 60  # completeness >= this is shown green
+GREEN_THRESHOLD = 60  # completeness >= this counts as a strong result
+
+# "Erdős #117 [solved] 82%.md"  ->  (117, "solved", "82")
+FNAME_RE = re.compile(r"Erdős\s+#(\d+)\s+\[([^\]]+)\]\s+(\d+|\?)\s*%", re.UNICODE)
 
 
-def load_state() -> dict:
-    """Persisted Fable/Cooked marks: {"349": {"fable": true, "cooked": false}}."""
-    if STATE_OUT.exists():
-        try:
-            return json.loads(STATE_OUT.read_text(encoding="utf-8"))
-        except (ValueError, OSError):
-            return {}
-    return {}
+def total_open_problems() -> int:
+    """Count of open Erdős problems (one .tex per problem), for the headline %."""
+    if PROBLEMS_DIR.is_dir():
+        n = sum(1 for _ in PROBLEMS_DIR.glob("problem_*.tex"))
+        if n:
+            return n
+    return 0
 
 
-def find_output_file(category: str, num: int):
-    """Repo-relative path to the human-named output copy for a problem, if any."""
-    cat_dir = OUTPUTS_DIR / category
-    if not cat_dir.is_dir():
-        return None
-    for f in cat_dir.glob(f"Erd\u0151s #{num} *.md"):
-        return f"outputs/chatgpt/{category}/{f.name}"
-    return None
+def scan_outputs() -> dict:
+    """Map problem number -> best record parsed from the output filenames.
 
-
-def scan_category(category: str, state: dict) -> list:
-    """Return one row per open problem in *category*, in numeric order."""
-    files = C.get_problem_files(category)
-    sol_dir = SOLUTIONS_DIR / category
-    rows = []
-    for f in files:
-        num = C.problem_number(f)
-        sol = sol_dir / f"solution_{num}.md"
-        status = ""
-        completeness = ""
-        run = False
-        link = None
-        if sol.exists():
-            text = sol.read_text(encoding="utf-8", errors="ignore")
-            head = text.splitlines()[0] if text else ""
-            m = re.search(r"(\[[^\]]+\])", head)
-            status = m.group(1).strip("[]") if m else (
-                "solved" if C.is_solved(text) else "unsolved")
-            completeness = C.extract_completeness(text)
-            run = True
-            rel = find_output_file(category, num)
-            if rel:
-                link = BLOB_BASE + quote(rel)
-        marks = state.get(str(num), {})
-        rows.append({
-            "problem": num,
-            "category": category,
-            "run": "yes" if run else "no",
-            "status": status,
-            "completeness": completeness,
-            "link": link or "",
-            "fable": "yes" if marks.get("fable") else "no",
-            "cooked": "yes" if marks.get("cooked") else "no",
-            "skibidi": "yes" if marks.get("skibidi") else "no",
-        })
-    return rows
-
-
-def write_csv(rows: list):
-    with CSV_OUT.open("w", newline="", encoding="utf-8") as fh:
-        w = csv.DictWriter(fh, fieldnames=[
-            "problem", "category", "run", "status", "completeness",
-            "fable", "cooked", "skibidi", "link"])
-        w.writeheader()
-        w.writerows(rows)
-
-
-def write_state_if_missing(rows: list):
-    """Create status_state.json from current marks if it does not yet exist."""
-    if STATE_OUT.exists():
-        return
-    state = {
-        str(r["problem"]): {
-            "fable": r["fable"] == "yes",
-            "cooked": r["cooked"] == "yes",
-            "skibidi": r["skibidi"] == "yes",
+    A problem can have more than one committed copy (e.g. an old "?%" file next
+    to a scored one). Keep the most informative: a numeric completeness beats
+    "?", a higher score beats a lower one, and "solved" beats "unsolved".
+    """
+    best = {}
+    if not OUTPUTS_DIR.is_dir():
+        return best
+    for f in sorted(OUTPUTS_DIR.glob("*.md")):
+        m = FNAME_RE.search(f.name)
+        if not m:
+            continue
+        num = int(m.group(1))
+        status = m.group(2).strip().lower()
+        comp = m.group(3)
+        comp_val = int(comp) if comp.isdigit() else -1
+        rel = f"outputs/chatgpt/{CATEGORY}/{f.name}"
+        rec = {
+            "n": num,
+            "run": True,
+            "status": "solved" if status == "solved" else "unsolved",
+            "completeness": comp_val if comp_val >= 0 else None,
+            "path": rel,
+            "blob": BLOB_BASE + quote(rel),
         }
-        for r in rows if r["run"] == "yes"
+        prev = best.get(num)
+        if prev is None:
+            best[num] = rec
+            continue
+        # Prefer the better-scored / solved record.
+        prev_score = prev["completeness"] if prev["completeness"] is not None else -1
+        new_score = rec["completeness"] if rec["completeness"] is not None else -1
+        better = (new_score, rec["status"] == "solved") > (
+            prev_score, prev["status"] == "solved")
+        if better:
+            best[num] = rec
+    return best
+
+
+def build():
+    records = scan_outputs()
+    problems = sorted(records.values(), key=lambda r: r["n"])
+
+    total = total_open_problems() or len(problems)
+    run = len(problems)
+    solved = sum(1 for r in problems if r["status"] == "solved")
+    scored = [r["completeness"] for r in problems if r["completeness"] is not None]
+    green = sum(1 for c in scored if c >= GREEN_THRESHOLD)
+    avg = round(sum(scored) / len(scored), 1) if scored else 0
+
+    feed = {
+        "generated": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "repo": REPO,
+        "branch": BRANCH,
+        "category": CATEGORY,
+        "green_threshold": GREEN_THRESHOLD,
+        "totals": {
+            "total": total,
+            "run": run,
+            "solved": solved,
+            "green": green,
+            "avg_completeness": avg,
+        },
+        "problems": problems,
     }
-    STATE_OUT.write_text(json.dumps(state, indent=2, ensure_ascii=False),
-                         encoding="utf-8")
+    DATA_OUT.write_text(
+        json.dumps(feed, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
+    with CSV_OUT.open("w", newline="", encoding="utf-8") as fh:
+        w = csv.writer(fh)
+        w.writerow(["problem", "run", "status", "completeness", "link"])
+        for r in problems:
+            comp = "" if r["completeness"] is None else r["completeness"]
+            w.writerow([r["n"], "yes", r["status"], comp, r["blob"]])
 
-def write_html(rows: list, state: dict):
-    total = len(rows)
-    run_rows = [r for r in rows if r["run"] == "yes"]
-    run = len(run_rows)
-    solved = sum(1 for r in run_rows if r["status"] == "solved")
-    green = sum(1 for r in run_rows
-                if r["completeness"].isdigit()
-                and int(r["completeness"]) >= GREEN_THRESHOLD)
-
-    cells = []
-    for r in rows:
-        run_yes = r["run"] == "yes"
-        comp = r["completeness"]
-        is_green = comp.isdigit() and int(comp) >= GREEN_THRESHOLD
-        comp_disp = f"{comp}%" if comp else ("\u2014" if run_yes else "")
-        status_disp = r["status"] if run_yes else "not run"
-        row_class = []
-        if not run_yes:
-            row_class.append("notrun")
-        elif is_green:
-            row_class.append("green")
-        else:
-            row_class.append("amber")
-
-        if run_yes and r["link"]:
-            prob_cell = (f'<a href="{html.escape(r["link"])}" target="_blank" '
-                         f'rel="noopener">#{r["problem"]}</a>')
-        else:
-            prob_cell = f'#{r["problem"]}'
-
-        pid = r["problem"]
-        if run_yes:
-            fable_box = (f'<input type="checkbox" data-kind="fable" '
-                         f'data-id="{pid}">')
-            cooked_box = (f'<input type="checkbox" data-kind="cooked" '
-                          f'data-id="{pid}">')
-            skibidi_box = (f'<input type="checkbox" data-kind="skibidi" '
-                           f'data-id="{pid}">')
-        else:
-            fable_box = cooked_box = skibidi_box = ""
-
-        cells.append(
-            f'<tr class="{" ".join(row_class)}" data-id="{pid}">'
-            f'<td class="num">{prob_cell}</td>'
-            f'<td class="run">{"&#10003;" if run_yes else ""}</td>'
-            f'<td class="status">{html.escape(status_disp)}</td>'
-            f'<td class="comp">{comp_disp}</td>'
-            f'<td class="chk">{fable_box}</td>'
-            f'<td class="chk">{cooked_box}</td>'
-            f'<td class="chk">{skibidi_box}</td>'
-            f"</tr>"
-        )
-
-    rows_html = "\n".join(cells)
-    pct_run = (100 * run / total) if total else 0
-    initial_state = json.dumps(state, ensure_ascii=False)
-
-    html_doc = f"""<!doctype html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Erdős x ChatGPT - Run Status</title>
-<style>
-  :root {{ color-scheme: light; }}
-  body {{ font-family: -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
-          margin: 2rem; color: #1c2331; }}
-  h1 {{ margin: 0 0 .25rem; font-size: 1.4rem; }}
-  .sub {{ color: #5a5a6a; margin: 0 0 1rem; max-width: 60rem; }}
-  .cards {{ display: flex; gap: .75rem; flex-wrap: wrap; margin-bottom: 1rem; }}
-  .card {{ background: #f4f4f6; border-radius: 10px; padding: .6rem 1rem;
-           min-width: 88px; }}
-  .card b {{ display: block; font-size: 1.4rem; }}
-  .card span {{ color: #5a5a6a; font-size: .8rem; }}
-  .bar {{ display: flex; gap: .5rem; align-items: center; margin-bottom: 1rem;
-          flex-wrap: wrap; }}
-  button {{ font: inherit; padding: .45rem .8rem; border: 1px solid #c9ccd6;
-            background: #fff; border-radius: 8px; cursor: pointer; }}
-  button.primary {{ background: #1c2331; color: #fff; border-color: #1c2331; }}
-  #saved {{ font-size: .85rem; }}
-  #saved.ok {{ color: #1a7f37; }}
-  #saved.warn {{ color: #b26a00; }}
-  #saved.err {{ color: #c1121f; }}
-  input[type=search] {{ font: inherit; padding: .45rem .6rem; border: 1px solid #c9ccd6;
-            border-radius: 8px; min-width: 12rem; }}
-  table {{ border-collapse: collapse; width: 100%; font-size: .9rem; }}
-  th, td {{ padding: .35rem .6rem; text-align: left;
-            border-bottom: 1px solid #ececf1; }}
-  th {{ position: sticky; top: 0; background: #1c2331; color: #fff;
-        font-weight: 600; }}
-  td.num a {{ font-weight: 600; color: #0b62d6; text-decoration: none; }}
-  td.num a:hover {{ text-decoration: underline; }}
-  td.run {{ text-align: center; color: #1a7f37; font-weight: 700; }}
-  td.comp {{ text-align: right; font-variant-numeric: tabular-nums; }}
-  td.chk {{ text-align: center; }}
-  td.chk input {{ width: 1.05rem; height: 1.05rem; cursor: pointer; }}
-  tr.green td.status {{ color: #1a7f37; font-weight: 700; }}
-  tr.green td.comp {{ background: #d7f4dd; font-weight: 700; }}
-  tr.amber td.comp {{ background: #fdeede; }}
-  tr.notrun td {{ color: #9aa0ad; }}
-  tr:hover td {{ background: #fafbff; }}
-  tr.skibidi td {{ background: #ffd700 !important; }}
-  tr.skibidi:hover td {{ background: #f4cf00 !important; }}
-</style>
-</head>
-<body>
-  <h1>Erdos Problems x ChatGPT - Run Status</h1>
-  <p class="sub">Each problem links to its full solution on GitHub. Completeness =
-     how much of the argument the model rigorously established (not its confidence);
-     {GREEN_THRESHOLD}%+ is green. Tick <b>Fable</b> once a solution has been run
-     through Fable, and <b>Cooked</b> if it's cooked. DeepSeek excluded.</p>
-  <div class="cards">
-    <div class="card"><b>{total}</b><span>open problems</span></div>
-    <div class="card"><b>{run}</b><span>run ({pct_run:.0f}%)</span></div>
-    <div class="card"><b>{solved}</b><span>solved</span></div>
-    <div class="card"><b>{green}</b><span>&ge;{GREEN_THRESHOLD}% complete</span></div>
-  </div>
-  <div class="bar">
-    <input type="search" id="filter" placeholder="Filter by problem #...">
-    <button id="onlyrun">Show only run</button>
-    <button class="primary" id="connect">Connect GitHub</button>
-    <button id="save">Download JSON</button>
-    <span id="saved"></span>
-  </div>
-  <p class="sub" style="font-size:.8rem">Tick a box and it saves automatically to
-     the repo once you <b>Connect GitHub</b> (paste a fine-grained token with
-     <i>Contents: Read &amp; write</i> on this repo only). The token is stored
-     just in this browser and is never committed. Without a token, marks still
-     persist locally in your browser.</p>
-  <table id="t">
-    <thead>
-      <tr>
-        <th>Problem</th>
-        <th>Run</th>
-        <th>Status</th>
-        <th>Completeness</th>
-        <th>Fable</th>
-        <th>Cooked</th>
-        <th>Skibidi</th>
-      </tr>
-    </thead>
-    <tbody>
-{rows_html}
-    </tbody>
-  </table>
-
-<script>
-const LS_KEY = "erdos_chatgpt_marks_v1";
-const TOKEN_KEY = "erdos_gh_token_v1";
-const REPO = "{REPO}";
-const BRANCH = "{BRANCH}";
-const STATE_PATH = "status_state.json";
-const API = `https://api.github.com/repos/${{REPO}}/contents/${{STATE_PATH}}`;
-const INITIAL_STATE = {initial_state};
-
-function loadLocal() {{
-  try {{ return JSON.parse(localStorage.getItem(LS_KEY)) || {{}}; }}
-  catch (e) {{ return {{}}; }}
-}}
-let state = Object.assign({{}}, INITIAL_STATE, loadLocal());
-let remoteSha = null;
-
-function applyState() {{
-  document.querySelectorAll('input[type=checkbox]').forEach(cb => {{
-    const id = cb.dataset.id, kind = cb.dataset.kind;
-    cb.checked = !!(state[id] && state[id][kind]);
-  }});
-  document.querySelectorAll('tbody tr').forEach(tr => {{
-    const id = tr.dataset.id;
-    const on = !!(state[id] && state[id].skibidi);
-    tr.classList.toggle('skibidi', on);
-  }});
-}}
-
-function setStatus(msg, cls) {{
-  const s = document.getElementById('saved');
-  s.textContent = msg;
-  s.className = cls || '';
-}}
-
-function b64encode(str) {{
-  return btoa(unescape(encodeURIComponent(str)));
-}}
-function b64decode(str) {{
-  return decodeURIComponent(escape(atob((str || '').replace(/\\s/g, ''))));
-}}
-
-// Pull the freshest committed marks (works when served via GitHub Pages).
-fetch('status_state.json', {{cache: 'no-store'}})
-  .then(r => r.ok ? r.json() : null)
-  .then(remote => {{
-    if (remote) {{
-      state = Object.assign({{}}, remote, loadLocal());
-      applyState();
-    }}
-  }})
-  .catch(() => {{}});
-
-function saveLocal() {{
-  localStorage.setItem(LS_KEY, JSON.stringify(state));
-}}
-
-// --- Auto-commit to GitHub (token lives only in this browser) ---
-let saveTimer = null;
-let saving = false;
-let pending = false;
-
-function scheduleCommit() {{
-  if (!localStorage.getItem(TOKEN_KEY)) {{
-    setStatus('saved locally (connect GitHub to sync)', 'warn');
-    return;
-  }}
-  setStatus('saving\u2026');
-  clearTimeout(saveTimer);
-  saveTimer = setTimeout(commitToGitHub, 1200);
-}}
-
-async function commitToGitHub() {{
-  const token = localStorage.getItem(TOKEN_KEY);
-  if (!token) return;
-  if (saving) {{ pending = true; return; }}
-  saving = true;
-  setStatus('saving to GitHub\u2026');
-  const headers = {{
-    'Authorization': 'Bearer ' + token,
-    'Accept': 'application/vnd.github+json',
-    'X-GitHub-Api-Version': '2022-11-28',
-  }};
-  try {{
-    // Fetch current file: get its sha and merge remote marks so concurrent
-    // edits from other machines are not clobbered (local edits win on keys).
-    const getRes = await fetch(API + '?ref=' + BRANCH,
-                              {{headers, cache: 'no-store'}});
-    let remote = {{}};
-    if (getRes.ok) {{
-      const j = await getRes.json();
-      remoteSha = j.sha;
-      try {{ remote = JSON.parse(b64decode(j.content)); }} catch (e) {{}}
-    }} else if (getRes.status === 404) {{
-      remoteSha = null;
-    }} else {{
-      throw new Error('GET ' + getRes.status);
-    }}
-    const merged = Object.assign({{}}, remote, state);
-    state = merged;
-    const payload = {{
-      message: 'Update Fable/Cooked marks',
-      content: b64encode(JSON.stringify(merged, null, 2)),
-      branch: BRANCH,
-    }};
-    if (remoteSha) payload.sha = remoteSha;
-    const putRes = await fetch(API, {{
-      method: 'PUT', headers, body: JSON.stringify(payload),
-    }});
-    if (putRes.ok) {{
-      const j = await putRes.json();
-      remoteSha = j.content && j.content.sha ? j.content.sha : null;
-      setStatus('saved to GitHub \u2713', 'ok');
-    }} else if (putRes.status === 401 || putRes.status === 403) {{
-      setStatus('GitHub rejected the token (need Contents: write)', 'err');
-    }} else if (putRes.status === 409) {{
-      // sha was stale; retry once with a fresh fetch
-      saving = false; pending = false; return commitToGitHub();
-    }} else {{
-      setStatus('GitHub save failed (' + putRes.status + ')', 'err');
-    }}
-  }} catch (e) {{
-    setStatus('GitHub save error \u2014 saved locally', 'err');
-  }} finally {{
-    saving = false;
-    if (pending) {{ pending = false; commitToGitHub(); }}
-  }}
-}}
-
-document.getElementById('connect').addEventListener('click', () => {{
-  const has = !!localStorage.getItem(TOKEN_KEY);
-  if (has) {{
-    if (confirm('Disconnect GitHub and forget the token in this browser?')) {{
-      localStorage.removeItem(TOKEN_KEY);
-      updateConnectButton();
-      setStatus('disconnected (marks save locally only)', 'warn');
-    }}
-    return;
-  }}
-  const tok = prompt('Paste a GitHub fine-grained token with Contents: Read & '
-    + 'write on ' + REPO + ' only. '
-    + 'It is stored only in this browser and is never committed.');
-  if (tok && tok.trim()) {{
-    localStorage.setItem(TOKEN_KEY, tok.trim());
-    updateConnectButton();
-    commitToGitHub();
-  }}
-}});
-
-function updateConnectButton() {{
-  const b = document.getElementById('connect');
-  b.textContent = localStorage.getItem(TOKEN_KEY)
-    ? 'GitHub connected \u2713' : 'Connect GitHub';
-}}
-
-document.querySelector('tbody').addEventListener('change', e => {{
-  const cb = e.target;
-  if (cb.type !== 'checkbox') return;
-  const id = cb.dataset.id, kind = cb.dataset.kind;
-  state[id] = state[id] || {{}};
-  state[id][kind] = cb.checked;
-  if (kind === 'skibidi') {{
-    const tr = cb.closest('tr');
-    if (tr) tr.classList.toggle('skibidi', cb.checked);
-  }}
-  saveLocal();
-  scheduleCommit();
-}});
-
-document.getElementById('save').addEventListener('click', () => {{
-  const blob = new Blob([JSON.stringify(state, null, 2)],
-                        {{type: 'application/json'}});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = 'status_state.json';
-  a.click();
-  URL.revokeObjectURL(a.href);
-}});
-
-updateConnectButton();
-
-document.getElementById('filter').addEventListener('input', e => {{
-  const q = e.target.value.trim();
-  document.querySelectorAll('tbody tr').forEach(tr => {{
-    tr.style.display = (q && !('#' + tr.dataset.id).includes(q)) ? 'none' : '';
-  }});
-}});
-
-let onlyRun = false;
-document.getElementById('onlyrun').addEventListener('click', e => {{
-  onlyRun = !onlyRun;
-  e.target.textContent = onlyRun ? 'Show all' : 'Show only run';
-  document.querySelectorAll('tbody tr').forEach(tr => {{
-    if (onlyRun && tr.classList.contains('notrun')) tr.style.display = 'none';
-    else tr.style.display = '';
-  }});
-}});
-
-applyState();
-</script>
-</body>
-</html>
-"""
-    HTML_OUT.write_text(html_doc, encoding="utf-8")
-
-
-def main():
-    state = load_state()
-    rows = scan_category("open", state)
-    rows.sort(key=lambda r: r["problem"])
-    write_csv(rows)
-    write_state_if_missing(rows)
-    state = load_state()  # reload in case it was just created
-    write_html(rows, state)
-    run = sum(1 for r in rows if r["run"] == "yes")
-    print(f"wrote {CSV_OUT.name}, {HTML_OUT.name}, {STATE_OUT.name} "
-          f"({run}/{len(rows)} problems run)")
+    print(f"wrote {DATA_OUT.name} and {CSV_OUT.name} "
+          f"({run}/{total} run, {solved} solved, {green} >= {GREEN_THRESHOLD}%)")
 
 
 if __name__ == "__main__":
-    main()
+    build()
