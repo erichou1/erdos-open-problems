@@ -111,8 +111,11 @@
   /* Table */
   .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
     box-shadow: var(--shadow); }
-  .scroll { overflow-x: auto; }
-  table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: .9rem; min-width: 880px; }
+  /* No overflow here: an overflow container would capture the sticky <thead>
+     and detach it from the page scroll. The page scrolls horizontally on very
+     narrow screens instead, which keeps the sticky header aligned. */
+  .scroll { overflow: visible; }
+  table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: .9rem; min-width: 820px; }
   thead th { position: sticky; top: 116px; background: var(--panel-2); color: var(--muted);
     text-align: left; font-weight: 600; font-size: .76rem; letter-spacing: .04em; text-transform: uppercase;
     padding: .6rem .8rem; border-bottom: 1px solid var(--line); z-index: 5; white-space: nowrap; }
