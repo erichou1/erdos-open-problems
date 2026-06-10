@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 """
-deepseek_rename.py — COLLECT answers and RENAME DeepSeek chats.
+deepseek_rename.py — COLLECT answers from DeepSeek chats.
 
 Reads .deepseek_chat_map.json (written by deepseek_submit.py). For each chat it
-navigates to the conversation, waits if still generating, saves the answer to
-erdos_problems/solutions_deepseek/<category>/solution_<N>.md, and renames the
-chat to "Erdős #N [solved|unsolved] C%".
+navigates to the conversation, waits if still generating, and saves the answer
+to erdos_problems/solutions_deepseek/<category>/solution_<N>.md plus a
+human-named copy to outputs/deepseek/<category>/<title>.md.
+
+Chats are NOT renamed: when DeepSeek shows a "too many requests" page the
+sidebar disappears and renaming is impossible, so the verdict + completeness is
+recorded only in the saved output filename.
 
 Usage:
   python3 deepseek_rename.py                 # process all categories in the map
   python3 deepseek_rename.py --category open
   python3 deepseek_rename.py --watch         # keep polling until all done
-  python3 deepseek_rename.py --no-rename     # only save answers
 """
 
 import argparse
@@ -23,7 +26,7 @@ from deepseek_common import sync_playwright
 SOLUTIONS_ROOT = D.REPO_DIR / "solutions_deepseek"
 
 
-def process_once(page, category, do_rename=True, gen_wait_s=20):
+def process_once(page, category, gen_wait_s=20):
     chat_map = D.load_chat_map()
     cat_map = chat_map.get(category, {})
     if not cat_map:
@@ -92,25 +95,20 @@ def process_once(page, category, do_rename=True, gen_wait_s=20):
                 continue
 
             solved = D.is_solved(response)
-            confidence = D.extract_confidence(response)
+            completeness = D.extract_completeness(response)
             status_tag = "[solved]" if solved else "[unsolved]"
-            title = D.output_title(num, status_tag, confidence)
+            title = D.output_title(num, status_tag, completeness)
 
             body = (
-                f"# Erdős Problem #{num} {status_tag} {confidence}% (DeepSeek)\n\n"
+                f"# Erdős Problem #{num} {status_tag} {completeness}% (DeepSeek)\n\n"
                 f"---\n\n## DeepSeek Response\n\n{response}\n"
             )
             out_file.write_text(body, encoding="utf-8")
             # Human-named copy in outputs/deepseek/<category>/.
             D.save_output("deepseek", category, num, title, body)
 
-            renamed = ""
-            if do_rename:
-                ok = D.rename_chat(page, title)
-                renamed = " (renamed)" if ok else " (rename failed)"
-
             completed += 1
-            print(f"#{num}: {status_tag} {confidence}% saved{renamed}")
+            print(f"#{num}: {status_tag} {completeness}% saved")
 
         except Exception as e:
             print(f"#{num}: ERROR {e}")
@@ -120,11 +118,10 @@ def process_once(page, category, do_rename=True, gen_wait_s=20):
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Collect answers and rename DeepSeek chats")
+    ap = argparse.ArgumentParser(description="Collect answers from DeepSeek chats")
     ap.add_argument("--category", default=None, help="Limit to one category (default: all in map)")
     ap.add_argument("--watch", action="store_true", help="Keep polling every --interval until all done")
     ap.add_argument("--interval", type=float, default=60.0, help="Seconds between watch passes (default 60)")
-    ap.add_argument("--no-rename", action="store_true", help="Save answers but do not rename chats")
     ap.add_argument("--headless", action="store_true", help="Run without a visible window")
     args = ap.parse_args()
 
@@ -162,7 +159,7 @@ def main():
             total_pending = 0
             for cat in categories:
                 print(f"\n=== [DeepSeek] Category: {cat} ===")
-                done, pend = process_once(page, cat, do_rename=not args.no_rename)
+                done, pend = process_once(page, cat)
                 total_completed += done
                 total_pending += pend
 

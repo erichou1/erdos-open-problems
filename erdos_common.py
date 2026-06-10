@@ -608,9 +608,10 @@ def save_chat_map(m: dict):
 
 # ── Output copies (named like the chat tab) ───────────────────────────────────
 
-def output_title(num: int, status_tag: str, confidence: str) -> str:
-    """The tab/title naming convention, e.g. 'Erdős #12 [solved] 88%'."""
-    return f"Erdős #{num} {status_tag} {confidence}%"
+def output_title(num: int, status_tag: str, completeness: str) -> str:
+    """The tab/title naming convention, e.g. 'Erdős #12 [solved] 88%'.
+    The percentage is the COMPLETENESS_SCORE reported by the model."""
+    return f"Erdős #{num} {status_tag} {completeness}%"
 
 
 def save_output(platform: str, category: str, num: int, title: str, body: str):
@@ -620,7 +621,7 @@ def save_output(platform: str, category: str, num: int, title: str, body: str):
 
     Idempotent: if a copy with this exact title already exists it does nothing;
     otherwise it removes any stale copy for the same problem number (the status
-    or confidence may have changed between runs) and writes the new one.
+    or completeness may have changed between runs) and writes the new one.
     """
     out_dir = OUTPUTS_DIR / platform / category
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -643,7 +644,7 @@ def restore_output_from_solution(platform: str, category: str, num: int,
     """
     Rebuild the named output copy from an already-saved solution file, so
     progress is restored even if the outputs/ folder was deleted or the run was
-    interrupted. Parses the status/confidence from the solution header line.
+    interrupted. Parses the status/completeness from the solution header line.
     """
     m = re.search(r"#\s*Erdős Problem #\d+\s+(\[[^\]]+\])\s+(\S+?)%",
                   solution_text)
@@ -849,6 +850,23 @@ def extract_confidence(response: str) -> str:
         r'"solution_probability"\s*:\s*(\d{1,3})',
         r'SOLUTION_PROBABILITY[^\d]{0,40}?(\d{1,3})\s*%?',
         r'Confidence:\s*(\d{1,3})\s*%',
+    ):
+        m = re.search(pat, response, re.IGNORECASE)
+        if m:
+            return m.group(1)
+    return "?"
+
+
+def extract_completeness(response: str) -> str:
+    # New research-mode format reports COMPLETENESS_SCORE (0-100): how much of
+    # the argument has been rigorously established. Prefer it, then fall back to
+    # related fields if the model phrased it differently.
+    for pat in (
+        r'COMPLETENESS_SCORE[^\d]{0,40}?(\d{1,3})',
+        r'"completeness_score"\s*:\s*(\d{1,3})',
+        r'"completeness"\s*:\s*(\d{1,3})',
+        r'Completeness[^\d]{0,40}?(\d{1,3})\s*%?',
+        r'PROOF_CONFIDENCE[^\d]{0,40}?(\d{1,3})',
     ):
         m = re.search(pat, response, re.IGNORECASE)
         if m:

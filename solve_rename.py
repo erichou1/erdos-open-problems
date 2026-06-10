@@ -1,22 +1,25 @@
 #!/usr/bin/env python3
 """
-solve_rename.py — COLLECT answers and RENAME chats.
+solve_rename.py — COLLECT answers from ChatGPT chats.
 
 Reads .chatgpt_chat_map.json (written by solve_submit.py). For each recorded
 chat it:
   1. navigates directly to the conversation URL,
   2. waits if ChatGPT is still generating,
-  3. saves the answer to erdos_problems/solutions/<category>/solution_<N>.md,
-  4. renames the chat to  "Erdős #N [solved|unsolved] C%".
+  3. saves the answer to erdos_problems/solutions/<category>/solution_<N>.md
+     and a human-named copy to outputs/chatgpt/<category>/<title>.md.
+
+Chats are NOT renamed: when ChatGPT shows a "too many requests" page the
+sidebar disappears and renaming is impossible, so the verdict + completeness is
+recorded only in the saved output filename.
 
 Safe to run repeatedly: chats still generating are left for the next run,
-already-renamed/saved chats are skipped.
+already-saved chats are skipped.
 
 Usage:
   python3 solve_rename.py                 # process all categories in the map
   python3 solve_rename.py --category open
   python3 solve_rename.py --watch         # keep polling every 60s until all done
-  python3 solve_rename.py --no-rename     # only save answers, skip renaming
 """
 
 import argparse
@@ -26,7 +29,7 @@ import erdos_common as C
 from erdos_common import sync_playwright
 
 
-def process_once(page, category, do_rename=True, gen_wait_s=20) -> tuple[int, int]:
+def process_once(page, category, gen_wait_s=20) -> tuple[int, int]:
     """
     Returns (completed_this_pass, still_pending).
     """
@@ -87,25 +90,20 @@ def process_once(page, category, do_rename=True, gen_wait_s=20) -> tuple[int, in
                 continue
 
             solved = C.is_solved(response)
-            confidence = C.extract_confidence(response)
+            completeness = C.extract_completeness(response)
             status_tag = "[solved]" if solved else "[unsolved]"
-            title = C.output_title(num, status_tag, confidence)
+            title = C.output_title(num, status_tag, completeness)
 
             body = (
-                f"# Erdős Problem #{num} {status_tag} {confidence}%\n\n"
+                f"# Erdős Problem #{num} {status_tag} {completeness}%\n\n"
                 f"---\n\n## ChatGPT Response\n\n{response}\n"
             )
             out_file.write_text(body, encoding="utf-8")
             # Human-named copy in outputs/chatgpt/<category>/.
             C.save_output("chatgpt", category, num, title, body)
 
-            renamed = ""
-            if do_rename:
-                ok = C.rename_chat(page, title)
-                renamed = " (renamed)" if ok else " (rename failed)"
-
             completed += 1
-            print(f"#{num}: {status_tag} {confidence}% saved{renamed}")
+            print(f"#{num}: {status_tag} {completeness}% saved")
 
         except Exception as e:
             print(f"#{num}: ERROR {e}")
@@ -115,11 +113,10 @@ def process_once(page, category, do_rename=True, gen_wait_s=20) -> tuple[int, in
 
 
 def main():
-    ap = argparse.ArgumentParser(description="Collect answers and rename Erdős chats")
+    ap = argparse.ArgumentParser(description="Collect answers from Erdős chats")
     ap.add_argument("--category", default=None, help="Limit to one category (default: all in map)")
     ap.add_argument("--watch", action="store_true", help="Keep polling every --interval until all done")
     ap.add_argument("--interval", type=float, default=60.0, help="Seconds between watch passes (default 60)")
-    ap.add_argument("--no-rename", action="store_true", help="Save answers but do not rename chats")
     ap.add_argument("--headless", action="store_true", help="Run without a visible window")
     args = ap.parse_args()
 
@@ -157,7 +154,7 @@ def main():
             total_pending = 0
             for cat in categories:
                 print(f"\n=== Category: {cat} ===")
-                done, pend = process_once(page, cat, do_rename=not args.no_rename)
+                done, pend = process_once(page, cat)
                 total_completed += done
                 total_pending += pend
 
