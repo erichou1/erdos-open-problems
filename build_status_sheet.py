@@ -295,7 +295,7 @@ function b64encode(str) {{
   return btoa(unescape(encodeURIComponent(str)));
 }}
 function b64decode(str) {{
-  return decodeURIComponent(escape(atob((str || '').replace(/\n/g, ''))));
+  return decodeURIComponent(escape(atob((str || '').replace(/\\s/g, ''))));
 }}
 
 // Pull the freshest committed marks (works when served via GitHub Pages).
@@ -396,8 +396,8 @@ document.getElementById('connect').addEventListener('click', () => {{
     return;
   }}
   const tok = prompt('Paste a GitHub fine-grained token with Contents: Read & '
-    + 'write on ' + REPO + ' only.\nIt is stored only in this browser and is '
-    + 'never committed.');
+    + 'write on ' + REPO + ' only. '
+    + 'It is stored only in this browser and is never committed.');
   if (tok && tok.trim()) {{
     localStorage.setItem(TOKEN_KEY, tok.trim());
     updateConnectButton();
