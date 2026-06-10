@@ -29,8 +29,9 @@ def main():
     ap.add_argument("--problem",  type=int, default=None, help="Submit a single problem by Erdős number")
     ap.add_argument("--batch",    type=int, default=1, help="Tabs to submit in parallel (default 1; DeepSeek allows only one message at a time)")
     ap.add_argument("--reverse",  action="store_true", help="Process problems from the end (highest number) backwards")
-    ap.add_argument("--delay",    type=float, default=15.0, help="Seconds between submission rounds (default 15)")
+    ap.add_argument("--delay",    type=float, default=120.0, help="Seconds between submission rounds, after the round finishes thinking (default 120)")
     ap.add_argument("--backoff",  type=float, default=120.0, help="Seconds to wait when rate-limited (default 120)")
+    ap.add_argument("--think-timeout", type=float, default=1200.0, help="Max seconds to wait for a round to finish thinking (default 1200)")
     ap.add_argument("--headless", action="store_true", help="Run without a visible window")
     args = ap.parse_args()
 
@@ -110,15 +111,37 @@ def main():
         def valid_url(u):
             return u and ("/chat/s/" in u or "/a/chat/" in u)
 
+        def wait_round_finished(round_tabs):
+            """Block until every tab in this round stops generating (or timeout)."""
+            print(f"  waiting for {len(round_tabs)} chat(s) to finish thinking...")
+            deadline = time.time() + args.think_timeout
+            # Give generation a moment to actually start before polling.
+            time.sleep(5)
+            while time.time() < deadline:
+                still = []
+                for tab in round_tabs:
+                    try:
+                        if D.is_generating(tab):
+                            still.append(tab)
+                    except Exception:
+                        pass
+                if not still:
+                    print("  round finished thinking.")
+                    return
+                time.sleep(10)
+            print("  WARNING: think-timeout reached; moving on.")
+
         submitted = 0
         for round_start in range(0, total, n_tabs):
             chunk = pending[round_start:round_start + n_tabs]
             print(f"-- Round {round_start // n_tabs + 1}: submitting {len(chunk)} problem(s) --")
 
             results = []
+            round_tabs = []
             for tab, tex in zip(tabs, chunk):
                 num, url = submit_one(tab, tex)
                 results.append((num, url))
+                round_tabs.append(tab)
                 time.sleep(2)
 
             for num, url in results:
@@ -130,7 +153,11 @@ def main():
                     print(f"  #{num}: no URL captured (will retry on next run)")
             D.save_chat_map(chat_map)
 
+            # Wait for this round to finish thinking before continuing.
+            wait_round_finished(round_tabs)
+
             if round_start + n_tabs < total:
+                print(f"  waiting {args.delay:.0f}s before next round...")
                 time.sleep(args.delay)
 
         print(f"\nDone. {submitted} new submissions. Map saved to {D.DS_CHAT_MAP_FILE}")
