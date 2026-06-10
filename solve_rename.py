@@ -50,6 +50,9 @@ def process_once(page, category, do_rename=True, gen_wait_s=20) -> tuple[int, in
         if out_file.exists():
             txt = out_file.read_text(encoding="utf-8", errors="ignore")
             if "\nERROR:" not in txt[:200]:
+                # Make sure the named output copy exists (restores progress even
+                # if outputs/ was deleted or a previous run was interrupted).
+                C.restore_output_from_solution("chatgpt", category, num, txt)
                 continue
 
         if "/c/" not in url:
@@ -86,16 +89,19 @@ def process_once(page, category, do_rename=True, gen_wait_s=20) -> tuple[int, in
             solved = C.is_solved(response)
             confidence = C.extract_confidence(response)
             status_tag = "[solved]" if solved else "[unsolved]"
+            title = C.output_title(num, status_tag, confidence)
 
-            out_file.write_text(
+            body = (
                 f"# Erdős Problem #{num} {status_tag} {confidence}%\n\n"
-                f"---\n\n## ChatGPT Response\n\n{response}\n",
-                encoding="utf-8",
+                f"---\n\n## ChatGPT Response\n\n{response}\n"
             )
+            out_file.write_text(body, encoding="utf-8")
+            # Human-named copy in outputs/chatgpt/<category>/.
+            C.save_output("chatgpt", category, num, title, body)
 
             renamed = ""
             if do_rename:
-                ok = C.rename_chat(page, f"Erdős #{num} {status_tag} {confidence}%")
+                ok = C.rename_chat(page, title)
                 renamed = " (renamed)" if ok else " (rename failed)"
 
             completed += 1

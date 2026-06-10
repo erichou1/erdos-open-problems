@@ -26,6 +26,9 @@ from erdos_common import (  # noqa: F401
     get_problem_files,
     is_solved,
     extract_confidence,
+    output_title,
+    save_output,
+    restore_output_from_solution,
 )
 
 # ── DeepSeek-specific paths / URLs ────────────────────────────────────────────

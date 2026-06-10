@@ -32,6 +32,11 @@ REPO_DIR      = Path(__file__).resolve().parent / "erdos_problems"
 PROFILE_DIR   = Path(__file__).resolve().parent / ".chatgpt_profile"
 CHAT_MAP_FILE = Path(__file__).resolve().parent / ".chatgpt_chat_map.json"
 
+# Human-named output copies live here, one subfolder per platform.
+#   outputs/chatgpt/<category>/Erdős #N [solved] 88%.md
+#   outputs/deepseek/<category>/Erdős #N [unsolved] 0%.md
+OUTPUTS_DIR   = Path(__file__).resolve().parent / "outputs"
+
 CHATGPT_URL = "https://chatgpt.com"
 # The ChatGPT Project URL is set in .env (CHATGPT_PROJECT_URL=...).
 # Edit .env to change it. Falls back to plain chatgpt.com if not set.
@@ -599,6 +604,54 @@ def load_chat_map() -> dict:
 
 def save_chat_map(m: dict):
     CHAT_MAP_FILE.write_text(json.dumps(m, indent=2))
+
+
+# ── Output copies (named like the chat tab) ───────────────────────────────────
+
+def output_title(num: int, status_tag: str, confidence: str) -> str:
+    """The tab/title naming convention, e.g. 'Erdős #12 [solved] 88%'."""
+    return f"Erdős #{num} {status_tag} {confidence}%"
+
+
+def save_output(platform: str, category: str, num: int, title: str, body: str):
+    """
+    Write a human-named copy of a solution into
+    outputs/<platform>/<category>/<title>.md, mirroring the chat tab name.
+
+    Idempotent: if a copy with this exact title already exists it does nothing;
+    otherwise it removes any stale copy for the same problem number (the status
+    or confidence may have changed between runs) and writes the new one.
+    """
+    out_dir = OUTPUTS_DIR / platform / category
+    out_dir.mkdir(parents=True, exist_ok=True)
+    safe = title.replace("/", "-")
+    target = out_dir / f"{safe}.md"
+    if target.exists():
+        return target
+    for old in out_dir.glob(f"Erdős #{num} *.md"):
+        if old != target:
+            try:
+                old.unlink()
+            except OSError:
+                pass
+    target.write_text(body, encoding="utf-8")
+    return target
+
+
+def restore_output_from_solution(platform: str, category: str, num: int,
+                                 solution_text: str):
+    """
+    Rebuild the named output copy from an already-saved solution file, so
+    progress is restored even if the outputs/ folder was deleted or the run was
+    interrupted. Parses the status/confidence from the solution header line.
+    """
+    m = re.search(r"#\s*Erdős Problem #\d+\s+(\[[^\]]+\])\s+(\S+?)%",
+                  solution_text)
+    if m:
+        title = output_title(num, m.group(1), m.group(2))
+    else:
+        title = f"Erdős #{num}"
+    return save_output(platform, category, num, title, solution_text)
 
 
 # ── Browser ───────────────────────────────────────────────────────────────────

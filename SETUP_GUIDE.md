@@ -82,7 +82,26 @@ Solutions are written to:
 - `erdos_problems/solutions/<category>/` (ChatGPT)
 - `erdos_problems/solutions_deepseek/<category>/` (DeepSeek)
 
-## 7. Privacy
+A second, human-named copy of every answer is also written to an `outputs/`
+folder, using the same name as the chat tab:
+
+- `outputs/chatgpt/<category>/Erdős #N [solved] 88%.md`
+- `outputs/deepseek/<category>/Erdős #N [unsolved] 0%.md`
+
+## 7. Resuming after the computer is closed
+
+Progress is saved to disk continuously, so you can close the computer (or stop a
+script) at any time and pick up where you left off:
+
+- Submitted chats are recorded in the chat maps as they happen.
+- Each answer is written to disk the moment it is collected.
+
+Just re-run the same commands. Already-submitted problems and already-saved
+answers are skipped automatically, and the `outputs/` copies are rebuilt from
+the saved solutions if they are missing. The `--watch` collectors also
+re-open the browser by themselves if the window is closed.
+
+## 8. Privacy
 
 These files stay local and are git-ignored:
 
@@ -91,4 +110,4 @@ These files stay local and are git-ignored:
 - `.chatgpt_chat_map.json`, `.deepseek_chat_map.json` — conversation IDs
 - `*.log`
 
-See `PIPELINE_GUIDE.pdf` for a one-page overview of how the pipeline works.
+See `SETUP_GUIDE.pdf` for a printable copy of this guide.
