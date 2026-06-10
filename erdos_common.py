@@ -644,15 +644,24 @@ def restore_output_from_solution(platform: str, category: str, num: int,
     """
     Rebuild the named output copy from an already-saved solution file, so
     progress is restored even if the outputs/ folder was deleted or the run was
-    interrupted. Parses the status/completeness from the solution header line.
+    interrupted.
+
+    The status tag is taken from the solution header, but the percentage is
+    re-derived from the response body via extract_completeness() rather than
+    trusting the header number (older solutions were named by confidence). The
+    header line is rewritten so the file content matches the completeness-based
+    filename.
     """
-    m = re.search(r"#\s*Erdős Problem #\d+\s+(\[[^\]]+\])\s+(\S+?)%",
-                  solution_text)
-    if m:
-        title = output_title(num, m.group(1), m.group(2))
-    else:
-        title = f"Erdős #{num}"
-    return save_output(platform, category, num, title, solution_text)
+    lines = solution_text.split("\n")
+    header = lines[0] if lines else ""
+    m = re.search(r"(\[[^\]]+\])", header)
+    status_tag = m.group(1) if m else "[unsolved]"
+    marker = " (DeepSeek)" if "(DeepSeek)" in header else ""
+    completeness = extract_completeness(solution_text)
+    title = output_title(num, status_tag, completeness)
+    new_header = f"# Erdős Problem #{num} {status_tag} {completeness}%{marker}"
+    body = "\n".join([new_header] + lines[1:]) if lines else solution_text
+    return save_output(platform, category, num, title, body)
 
 
 # ── Browser ───────────────────────────────────────────────────────────────────
@@ -860,13 +869,14 @@ def extract_confidence(response: str) -> str:
 def extract_completeness(response: str) -> str:
     # New research-mode format reports COMPLETENESS_SCORE (0-100): how much of
     # the argument has been rigorously established. Prefer it, then fall back to
-    # related fields if the model phrased it differently.
+    # related phrasings of *completeness* only. Never fall back to the
+    # confidence score — completeness and confidence are distinct, and the
+    # output filenames are named by completeness.
     for pat in (
         r'COMPLETENESS_SCORE[^\d]{0,40}?(\d{1,3})',
         r'"completeness_score"\s*:\s*(\d{1,3})',
         r'"completeness"\s*:\s*(\d{1,3})',
         r'Completeness[^\d]{0,40}?(\d{1,3})\s*%?',
-        r'PROOF_CONFIDENCE[^\d]{0,40}?(\d{1,3})',
     ):
         m = re.search(pat, response, re.IGNORECASE)
         if m:
