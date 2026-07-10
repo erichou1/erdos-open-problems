@@ -64,508 +64,182 @@ PROJECT_URL = os.environ.get("CHATGPT_PROJECT_URL", "https://chatgpt.com")
 
 # ── Prompt ───────────────────────────────────────────────────────────────────
 PROMPT_TEMPLATE = """\
-<system_identity>
-You are GPT, a large language model operating via token-level self-attention over a finite context window.
-You do not possess mathematical intuition.
-You perform conditional generation and formal reasoning.
-Your documented failure modes on research-level proof tasks are:
-(1) PREMATURE_CONVERGENCE
-Locking onto the first familiar pattern.
-(2) QUANTIFIER_BLINDNESS
-Mis-scoping quantifiers.
-(3) SYCOPHANCY
-Accepting premises without verification.
-(4) THEOREM_HALLUCINATION
-Applying theorems without checking hypotheses.
-(5) EARLY_COMMITMENT
-Treating exploration as proof.
-(6) RECOGNITION_COLLAPSE
-Recognizing a problem and stopping reasoning.
-(7) REDUCTION_CHEAT
-Reducing a problem to a lemma and acting as if progress is complete.
-(8) OBSTRUCTION_TERMINATION
-Finding a bottleneck and terminating.
-(9) CONFIDENCE_INFLATION
-Mistaking plausibility for proof.
-(10) GAP_FORGETTING
-Failing to recursively attack unresolved gaps.
-</system_identity>
-<recognition_firewall>
-ABSOLUTE PROHIBITION:
-You may not determine whether the problem is:
-famous,
-open,
-solved,
-unsolved,
-classical,
-modern,
-well known.
-You may not use:
-historical status,
-literature status,
-citations,
-authority,
-known results databases.
-If recognition occurs:
-Treat it as a false positive.
-Recognition is not understanding.
-Recognition is not proof.
-Recognition is not disproof.
-Continue reasoning from first principles.
-</recognition_firewall>
-<knowledge_constraints>
-You are operating in COMPLETE OFFLINE MODE.
-DO NOT USE WIFI.
-Do not use:
-internet search,
-web search,
-online references,
-arXiv,
-MathSciNet,
-Google Scholar,
-Wikipedia,
-theorem repositories,
-external databases,
-retrieved documents,
-hidden memory of literature status.
-You must derive conclusions solely from:
-the problem statement,
-stated assumptions,
-definitions,
-logical deduction performed within the current session.
-Every theorem application requires:
-exact theorem statement,
-exact hypotheses,
-explicit verification.
-</knowledge_constraints>
-<global_constraints>
-Never terminate because a problem appears familiar.
-Never terminate because a problem appears difficult.
-Never terminate because a lemma appears difficult.
-Never substitute recognition for derivation.
-Never substitute plausibility for proof.
-Never substitute confidence for proof.
-Treat every statement as false until verified.
-Treat every theorem as unavailable until hypotheses are checked.
-Every nontrivial claim must be justified.
-Every quantifier must be tracked.
-Every cardinal estimate must be verified.
-Every reduction must be justified.
-Every gap must be recorded.
-</global_constraints>
-<anti_reduction_cheat>
-A reduction is not a solution.
-If reasoning reaches:
-"It suffices to prove S"
-"It remains to show S"
-"The key lemma is S"
-"The problem reduces to S"
-then:
-Record S.
-Promote S to a primary theorem.
-Continue reasoning on S.
-The original problem remains unsolved.
-No success may be claimed merely because a reduction was found.
-</anti_reduction_cheat>
-<persistence_protocol>
-The objective is not to determine whether a solution exists.
-The objective is to search for a solution as aggressively as possible.
-You are forbidden from terminating because:
-a gap exists,
-a lemma is difficult,
-a proof appears incomplete,
-a reduction was found,
-an obstruction was identified,
-a conjectural answer was obtained.
-Whenever an unresolved statement appears:
-Promote it to a primary target.
-Attack it recursively.
-Generate new definitions.
-Generate new invariants.
-Generate new reformulations.
-Generate stronger statements.
-Generate weaker statements.
-Search for contradictions.
-Search for counterexamples.
-Search for alternative proof frameworks.
-If all current strategies fail:
-Do NOT stop.
-Invent entirely new strategies.
-Create new mathematical structures if necessary.
-Continue until resource exhaustion.
-Resource exhaustion is the only acceptable non-solution endpoint.
-</persistence_protocol>
-<problem_formalization_protocol>
-Before proving anything:
-Produce:
-Formal statement.
-Quantifier structure.
-Negation.
-Contrapositive.
-Equivalent formulations.
-Extremal cases.
-Symmetries.
-Invariants.
-Boundary conditions.
-Cardinality estimates.
-Do not proceed until all items are explicit.
-</problem_formalization_protocol>
-<reasoning_topology>
-Phase 0:
-Deconstruction.
-Produce:
-objects,
-parameters,
-assumptions,
-quantifiers,
-invariants,
-equivalent formulations,
-negation,
-dual forms,
-extremal cases.
-Do not proceed until every item is explicit.
+You are investigating Erdős Problem #{problem_number}.
 
-Phase 1:
-Breadth First Search.
-Generate at least 12 independent strategies.
-Required categories:
-Direct proof.
-Contradiction.
-Construction.
-Induction.
-Transfinite induction.
-Cardinal arithmetic.
-Diagonalization.
-Compactness.
-Density arguments.
-Reflection arguments.
-Auxiliary structure invention.
-Counterexample search.
-For each strategy provide:
-description,
-hidden assumptions,
-obstacle,
-confidence,
-novelty,
-expected value.
-Rank all strategies.
-Select the top three.
-Do not immediately commit to one.
+Canonical problem page:
+{problem_url}
 
-Phase 2:
-Theorem Discovery Engine.
-Invent:
-new definitions,
-new invariants,
-new rank functions,
-new density notions,
-new combinatorial objects,
-new equivalence relations.
-For every invention provide:
-definition,
-motivation,
-consequences,
-possible applications.
-Search for structures not mentioned in the problem statement.
+Locally extracted statement:
 
-Phase 3:
-Parallel Exploration.
-Maintain:
-Branch A
-Branch B
-Branch C
-Each branch evolves independently.
-Each branch must track:
-assumptions,
-deductions,
-failures,
-unresolved gaps.
-Failed branches are retained.
-Extract useful lemmas.
-Move useful lemmas into a shared theorem pool.
-
-Phase 4:
-Local Verification.
-After every major lemma:
-Attempt to destroy it.
-Search for:
-counterexamples,
-edge cases,
-singular behavior,
-successor behavior,
-minimal examples,
-maximal examples.
-No lemma is accepted before surviving attack.
-</reasoning_topology>
-<deep_reasoning_engine>
-Phase 5:
-Depth First Execution.
-Select the highest expected-value branch.
-Execute it in exhaustive detail.
-Every claim must include:
-assumptions used,
-lemmas used,
-justification,
-exact logical dependencies.
-No unexplained jumps.
-No appeals to intuition.
-No appeals to familiarity.
-
-For every derivation state:
-What is being proven.
-Why it matters.
-Which previous facts are used.
-Whether the step is reversible.
-Whether new assumptions were introduced.
-
-If a contradiction is reached:
-Explicitly identify:
-contradictory statements,
-assumptions responsible,
-minimal inconsistent subset.
-Do not merely state "contradiction."
-</deep_reasoning_engine>
-<sanity_check_protocol>
-After every major deduction perform:
-SANITY CHECK
-Am I assuming the conclusion?
-Have I mis-scoped a quantifier?
-Have I introduced a hidden assumption?
-Have I used an unproved lemma?
-Have I silently strengthened a hypothesis?
-Have I silently weakened a conclusion?
-Is cardinal arithmetic justified?
-Is every object defined?
-If any answer is YES:
-Immediately backtrack.
-Do not patch forward.
-Return to the last verified checkpoint.
-</sanity_check_protocol>
-<proof_gap_recursion>
-Whenever an unresolved statement S appears:
-Create
-GAP_NODE(S)
-For every GAP_NODE:
-Generate at least 10 attack strategies.
-Required attacks:
-Direct proof.
-Contradiction.
-Stronger theorem implying S.
-Weaker theorem sufficient for original goal.
-Equivalent formulation.
-Auxiliary structure construction.
-New invariant discovery.
-Counterexample search.
-Extremal configuration analysis.
-Recursive decomposition.
-
-If S depends on another statement T:
-Create
-GAP_NODE(T)
-and recursively attack T.
-
-A gap may never remain merely:
-plausible,
-expected,
-likely,
-conjectural,
-standard.
-Every gap must be:
-proved,
-disproved,
-reduced to strictly simpler gaps.
-</proof_gap_recursion>
-<anti_stopping_rule>
-The following are NOT stopping conditions:
-identifying an obstruction,
-reducing to a lemma,
-producing a plausible asymptotic,
-finding a likely answer,
-finding a heuristic,
-proving a special case,
-obtaining numerical evidence,
-obtaining experimental evidence,
-finding a bottleneck.
-
-If reasoning reaches:
-"The key lemma is ..."
-"The remaining gap is ..."
-"The proof would follow if ..."
-"It remains to show ..."
-then:
-Extract the statement.
-Promote it to a primary theorem.
-Restart the entire reasoning architecture.
-Continue recursively.
-
-A reduction is not a solution.
-An obstruction is not a solution.
-A bottleneck is not a solution.
-</anti_stopping_rule>
-<research_mode>
-Act as a research mathematician.
-Do not optimize for producing an answer.
-Optimize for eliminating unknowns.
-Every unresolved statement becomes a new target.
-Every failure must produce information.
-Every dead end must produce:
-lessons learned,
-excluded strategies,
-surviving approaches.
-Never discard information from failed branches.
-</research_mode>
-<adversarial_referee>
-After constructing a candidate proof:
-Assume the proof is wrong.
-Attempt to destroy it.
-Search for:
-Counterexamples.
-Quantifier mistakes.
-Hidden assumptions.
-Circular reasoning.
-Invalid theorem applications.
-Undefined objects.
-Missing cases.
-Cardinal arithmetic failures.
-Nonconstructive leaps.
-Dependence on unstated axioms.
-
-For every major lemma:
-Construct the strongest possible attack.
-If any attack succeeds:
-Destroy the proof.
-Backtrack.
-Select the next-best branch.
-Restart verification.
-
-Local patches are forbidden.
-Failed proofs must be rebuilt from the last verified checkpoint.
-</adversarial_referee>
-<meta_search_engine>
-For the current target theorem T:
-Ask:
-"What stronger theorem implies T?"
-Attempt to prove it.
-
-Ask:
-"What weaker theorem has already been proved?"
-Determine the exact gap.
-
-Ask:
-"What hidden structure would make T easy?"
-Attempt to construct that structure.
-
-Ask:
-"What is the simplest possible counterexample?"
-Attempt to construct it.
-
-Ask:
-"What new definition would make T natural?"
-Invent one.
-Repeat recursively.
-</meta_search_engine>
-<formalization_layer>
-Translate all verified results into:
-Definitions.
-Lemmas.
-Corollaries.
-Main theorem.
-
-Construct a dependency graph.
-For every result list:
-assumptions,
-dependencies,
-conclusions.
-
-No theorem may depend on an unresolved statement.
-</formalization_layer>
-<final_state>
-Output exactly one of:
-PROVED
-DISPROVED
-RESOURCE_EXHAUSTED
-
-RESOURCE_EXHAUSTED means:
-The available context window was exhausted after repeated recursive attempts.
-RESOURCE_EXHAUSTED is NOT evidence that the theorem is false.
-RESOURCE_EXHAUSTED is NOT evidence that the theorem is unsolved.
-RESOURCE_EXHAUSTED simply means reasoning capacity ended before a proof or disproof was obtained.
-
-Never output:
-NO_VERIFIED_SOLUTION
-OBSTRUCTION_FOUND
-LIKELY_TRUE
-LIKELY_FALSE
-PROBABLY
-CONJECTURALLY
-EXPECTED_ANSWER
-</final_state>
-<confidence_reporting>
-After the final state report:
-PROOF_CONFIDENCE
-0 to 100
-Meaning:
-confidence that the presented reasoning is logically correct.
-
-COMPLETENESS_SCORE
-0 to 100
-Meaning:
-how much of the argument has been rigorously established.
-
-ADVERSARIAL_SURVIVAL_SCORE
-0 to 100
-Meaning:
-how well the argument survived attacks.
-
-RESOURCE_USAGE
-Estimate:
-percentage of reasoning budget used,
-number of branches explored,
-number of lemmas generated,
-number of failed proof attempts.
-</confidence_reporting>
-<termination_condition>
-You may stop only when:
-Complete proof of the original statement.
-Complete disproof of the original statement.
-Resource exhaustion occurs after all reachable recursive gap expansions have been analyzed.
-
-The following are NOT stopping conditions:
-identifying an obstruction,
-reducing to a lemma,
-obtaining a conjectural asymptotic,
-finding a plausible answer,
-finding a likely strategy,
-proving only a special case,
-discovering a difficult bottleneck.
-
-Every unresolved statement must be recursively attacked.
-</termination_condition>
-<training_decontamination>
-At the end explicitly state:
-"I have not used WiFi, internet search, web search, external databases, retrieved documents, citations, or literature-status information.
-All reasoning was derived from the problem statement, explicit assumptions, definitions, and deductions performed within this session."
-</training_decontamination>
 <problem_statement>
-The problem to solve is:
-
 {problem}
 </problem_statement>
-<execution_trigger>
-Begin with complete formalization.
-Do not summarize.
-Do not classify the problem.
-Do not discuss historical status.
-Do not stop at reductions.
-Do not stop at bottlenecks.
-Do not stop at plausible asymptotics.
-Do not stop at difficult lemmas.
-Continue recursive proof search until:
-a proof is obtained,
-a disproof is obtained,
-or the context window is exhausted.
-If context remains available, continue searching.
-</execution_trigger>\
+
+Your goal is to investigate and attempt the intended mathematical research
+problem. Do not solve only an accidentally literal, weakened, malformed, or
+context-free interpretation of the extracted sentence.
+
+You are expected to use web search and relevant mathematical literature.
+
+PHASE 1 — IDENTIFY THE INTENDED PROBLEM
+
+1. Open the canonical Erdős Problems page.
+2. Read the complete statement, remarks, definitions, comments, references,
+   related problems, and linked sources.
+3. Search for the original source and relevant later literature, including
+   papers, surveys, books, preprints, and serious mathematical discussions.
+4. Determine the intended interpretation of all potentially ambiguous parts:
+   - quantifier order;
+   - parameter dependencies;
+   - standard conventions;
+   - the class of admissible objects;
+   - whether constants are absolute or parameter-dependent;
+   - whether the displayed statement abbreviates a standard formulation;
+   - whether remarks or cited literature clarify the intended claim.
+5. Compare the locally extracted statement with the canonical page and the
+   literature.
+6. Explicitly state whether the literal reading differs from the intended
+   research problem.
+7. When ambiguity remains, use the interpretation best supported by the
+   canonical page, the original source, and subsequent literature. Record any
+   unresolved ambiguity.
+
+Do not begin a proof until this interpretation step is complete.
+
+PHASE 2 — LITERATURE MAP
+
+Produce a concise, technically precise account of:
+
+1. the original source of the problem, when identifiable;
+2. standard definitions and conventions;
+3. known special cases;
+4. known upper and lower bounds;
+5. equivalent or closely related formulations;
+6. the strongest relevant published or publicly available results;
+7. known extremal examples, constructions, and obstructions;
+8. prior approaches that appear relevant;
+9. what remains genuinely unresolved.
+
+Give citations or direct source references for external results.
+
+Do not rely on a theorem merely because its title or summary sounds relevant.
+State its hypotheses and verify that they apply.
+
+If the literature already contains a complete solution, explain that clearly,
+identify the source, and independently audit the argument rather than claiming
+a new solution.
+
+PHASE 3 — FORMALIZE THE TARGET
+
+Write the intended target formally, with all quantifiers and parameter
+dependencies explicit.
+
+Separate:
+
+- assumptions and definitions;
+- results already known from the literature;
+- the exact remaining target;
+- stronger and weaker variants;
+- interpretation-dependent assumptions.
+
+If the extracted statement differs from the canonical intended formulation,
+work on the canonical intended formulation and explain the discrepancy.
+
+PHASE 4 — ATTEMPT THE PROBLEM
+
+Make a serious attempt to prove or disprove the remaining target.
+
+You may use established literature results only after:
+
+1. stating the exact result;
+2. identifying its source;
+3. checking each hypothesis;
+4. explaining exactly how it applies.
+
+Explore multiple approaches when useful, including:
+
+- extremal methods;
+- probabilistic methods;
+- algebraic methods;
+- analytic methods;
+- geometric methods;
+- number-theoretic methods;
+- graph-theoretic or combinatorial reformulations;
+- reductions to established theorems;
+- constructions and counterexample searches;
+- computational experiments used as evidence rather than proof;
+- analysis of known extremal examples;
+- stronger or weaker intermediate statements.
+
+Do not stop solely because the problem is described as open. Attempt to obtain
+the strongest rigorous progress possible.
+
+Do not treat a reduction, analogy, citation, numerical experiment, or plausible
+heuristic as a proof.
+
+PHASE 5 — ADVERSARIAL AUDIT
+
+Before giving the final verdict:
+
+1. check every quantifier;
+2. verify every parameter dependency;
+3. test boundary and degenerate cases;
+4. identify all uses of compactness, limits, asymptotics, or choice;
+5. verify that every cited theorem has matching hypotheses;
+6. distinguish uniform bounds from pointwise bounds;
+7. distinguish existence from effective construction;
+8. search for hidden assumptions and circular reasoning;
+9. attempt to construct counterexamples to every major lemma;
+10. list every unresolved gap.
+
+FINAL RESPONSE FORMAT
+
+Use these sections:
+
+1. Intended formulation
+2. Literal-versus-intended interpretation
+3. Literature and known results
+4. Formal target
+5. Proof or disproof attempts
+6. Rigorous progress obtained
+7. Failed approaches and obstructions
+8. Gap audit
+9. Sources consulted
+10. Final classification
+
+The final classification must be exactly one of:
+
+- SOLVED
+- DISPROVED
+- PARTIAL
+- NO VERIFIED PROGRESS
+
+Use SOLVED only if every step of a complete proof of the intended target has
+been established.
+
+Use DISPROVED only if a valid counterexample or complete disproof has been
+established.
+
+Use PARTIAL only when a new, rigorously justified special case, reduction,
+bound, lemma, construction, or obstruction has been established beyond merely
+restating the literature.
+
+Otherwise use NO VERIFIED PROGRESS.
+
+Finish with:
+
+Classification: <one classification>
+Completeness: <integer from 0 to 100>%
+Unresolved gaps:
+1. ...
+2. ...
+
+Clearly distinguish:
+
+- facts obtained from cited sources;
+- deductions established in this response;
+- computational observations;
+- heuristic or speculative ideas.
 """
 
 REFUSAL_PHRASES = [
@@ -781,7 +455,7 @@ def send_prompt(page, prompt_text: str):
         page.evaluate("el => el.focus()", box)
         time.sleep(0.2)
         # Clear any persisted draft text first, then insert the prompt.
-        page.keyboard.press("Meta+A")
+        page.keyboard.press("Control+A")
         page.keyboard.press("Delete")
         time.sleep(0.1)
         page.keyboard.insert_text(prompt_text)
@@ -850,23 +524,37 @@ def wait_for_conversation_url(page, timeout_s: int = 30) -> str:
 # ── Answer classification ─────────────────────────────────────────────────────
 
 def is_solved(response: str) -> bool:
-    lower = response.lower()
-    # New research-mode format: final state is PROVED / DISPROVED /
-    # RESOURCE_EXHAUSTED. Only PROVED/DISPROVED count as a definitive result.
-    # Search near the end of the response where the final_state is reported.
-    tail = lower[-2000:]
-    if "resource_exhausted" in tail:
+    """Return True only for a definitive SOLVED or DISPROVED classification."""
+    tail = response[-4000:]
+
+    # Preferred literature-aware output format.
+    matches = re.findall(
+        r"Classification:\s*(SOLVED|DISPROVED|PARTIAL|NO VERIFIED PROGRESS)",
+        tail,
+        re.IGNORECASE,
+    )
+    if matches:
+        return matches[-1].upper() in {"SOLVED", "DISPROVED"}
+
+    # Backward compatibility with the older research-mode format.
+    lower_tail = tail.lower()
+    if "resource_exhausted" in lower_tail:
         return False
-    if re.search(r'\bdisproved\b', tail):
+    if re.search(r"\bdisproved\b", lower_tail):
         return True
-    if re.search(r'\bproved\b', tail) and not re.search(r'\bnot proved\b', tail):
+    if re.search(r"\bproved\b", lower_tail) and not re.search(
+        r"\bnot proved\b", lower_tail
+    ):
         return True
+
     # Legacy machine-readable / STATUS fallbacks.
-    m = re.search(r'"problem_solved"\s*:\s*(true|false)', lower)
+    m = re.search(r'"problem_solved"\s*:\s*(true|false)', response, re.IGNORECASE)
     if m:
-        return m.group(1) == "true"
-    # Legacy "# Final Answer" format.
-    return ("# final answer" in lower) and not any(p in lower for p in REFUSAL_PHRASES)
+        return m.group(1).lower() == "true"
+
+    return ("# final answer" in response.lower()) and not any(
+        phrase in response.lower() for phrase in REFUSAL_PHRASES
+    )
 
 
 def extract_confidence(response: str) -> str:
@@ -1019,7 +707,7 @@ def rename_chat(page, title: str):
                 editable.fill(title)
             except Exception:
                 editable.click()
-                page.keyboard.press("Meta+A")
+                page.keyboard.press("Control+A")
                 page.keyboard.insert_text(title)
             editable.press("Enter")
             time.sleep(0.4)
