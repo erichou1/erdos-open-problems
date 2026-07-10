@@ -4,7 +4,7 @@ solve_submit.py — SUBMIT prompts to ChatGPT (no waiting for answers).
 
 For each Erdős problem it:
   1. opens a new chat inside the configured ChatGPT project,
-  2. submits a literature-aware mathematical research prompt,
+  2. submits the offline candidate-research prompt,
   3. records the conversation URL in .chatgpt_chat_map.json.
 
 It does not collect the final answer. Use solve_rename.py for collection.
@@ -177,8 +177,8 @@ def main() -> None:
             num = C.problem_number(tex)
             statement = C.extract_problem_statement(tex)
 
-            # The canonical problem page provides the surrounding remarks,
-            # references, definitions, and literature context.
+            # Kept as metadata for compatibility; the offline prompt does not
+            # retrieve or consume the canonical page.
             canonical_url = f"https://www.erdosproblems.com/{num}"
 
             prompt = C.PROMPT_TEMPLATE.format(
@@ -202,27 +202,29 @@ def main() -> None:
                     )
                     time.sleep(args.backoff)
 
+                start_url = C.current_url(tab)
                 C.send_prompt(tab, prompt)
                 url = C.wait_for_conversation_url(
                     tab,
                     timeout_s=45,
+                    start_url=start_url,
                 )
 
-                if "/c/" not in url and C.detect_rate_limit(tab):
+                if not valid_url(url, start_url) and C.detect_rate_limit(tab):
                     print(
                         f"  #{num}: RATE LIMITED after send, "
                         f"backing off {args.backoff}s..."
                     )
                     time.sleep(args.backoff)
 
-                return num, url
+                return num, url, start_url
 
             except Exception as exc:
                 print(f"  ERROR submitting #{num}: {exc}")
-                return num, None
+                return num, None, ""
 
-        def valid_url(url) -> bool:
-            return bool(url and "/c/" in url)
+        def valid_url(url, start_url="") -> bool:
+            return C.is_conversation_url(url, start_url)
 
         def wait_round_finished(round_tabs) -> None:
             """
@@ -276,15 +278,15 @@ def main() -> None:
             round_tabs = []
 
             for tab, tex in zip(tabs, chunk):
-                num, url = submit_one(tab, tex)
-                results.append((num, url))
+                num, url, start_url = submit_one(tab, tex)
+                results.append((num, url, start_url))
                 round_tabs.append(tab)
 
                 # Avoid starting all requests at exactly the same moment.
                 time.sleep(2)
 
-            for num, url in results:
-                if valid_url(url):
+            for num, url, start_url in results:
+                if valid_url(url, start_url):
                     cat_map[str(num)] = {
                         "url": url,
                         "problem": num,

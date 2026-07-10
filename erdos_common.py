@@ -15,8 +15,11 @@ import os
 import re
 import time
 from pathlib import Path
+from urllib.parse import urlparse
 
 from playwright.sync_api import sync_playwright  # noqa: F401  (re-exported)
+from solver_prompts import CANDIDATE_PROMPT_TEMPLATE
+from verification import candidate_status
 
 # ── Load .env (no third-party library needed) ────────────────────────────────
 _ENV_FILE = Path(__file__).parent / ".env"
@@ -53,7 +56,7 @@ PROFILE_DIR   = _SCRIPT_DIR / ".chatgpt_profile"
 CHAT_MAP_FILE = _SCRIPT_DIR / ".chatgpt_chat_map.json"
 
 # Human-named output copies live here, one subfolder per platform.
-#   outputs/chatgpt/<category>/Erdős #N [solved] 88%.md
+#   outputs/chatgpt/<category>/Erdős #N [candidate-proved] 88%.md
 #   outputs/deepseek/<category>/Erdős #N [unsolved] 0%.md
 OUTPUTS_DIR   = _SCRIPT_DIR / "outputs"
 
@@ -242,6 +245,10 @@ Clearly distinguish:
 - heuristic or speculative ideas.
 """
 
+# Existing batch submitters keep the public name, but solving is now offline and
+# candidate-only. Online source status is maintained separately in the catalog.
+PROMPT_TEMPLATE = CANDIDATE_PROMPT_TEMPLATE
+
 REFUSAL_PHRASES = [
     "open", "unresolved", "partial progress", "not obtained",
     "cannot solve", "cannot fabricate", "won't fabricate", "no complete proof",
@@ -303,7 +310,7 @@ def save_chat_map(m: dict):
 # ── Output copies (named like the chat tab) ───────────────────────────────────
 
 def output_title(num: int, status_tag: str, completeness: str) -> str:
-    """The tab/title naming convention, e.g. 'Erdős #12 [solved] 88%'.
+    """The tab/title naming convention, e.g. 'Erdős #12 [candidate-proved] 88%'.
     The percentage is the COMPLETENESS_SCORE reported by the model."""
     return f"Erdős #{num} {status_tag} {completeness}%"
 
@@ -381,6 +388,30 @@ def ensure_logged_in(page):
 
 
 # ── ChatGPT page helpers ──────────────────────────────────────────────────────
+
+def current_url(page) -> str:
+    """Read the live URL after ChatGPT client-side navigation."""
+    try:
+        return page.evaluate("() => location.href")
+    except Exception:
+        try:
+            return page.url
+        except Exception:
+            return ""
+
+
+def is_conversation_url(url: str, start_url: str = "") -> bool:
+    """Validate classic and project-scoped ChatGPT conversation routes."""
+    if not url:
+        return False
+    parsed = urlparse(url)
+    if parsed.scheme != "https" or parsed.hostname not in {"chatgpt.com", "www.chatgpt.com"}:
+        return False
+    if "/c/" in parsed.path:
+        return True
+    if start_url:
+        return url != start_url and url != "about:blank"
+    return url.rstrip("/") != PROJECT_URL.rstrip("/") and parsed.path not in {"", "/"}
 
 def is_generating(page) -> bool:
     try:
@@ -470,7 +501,7 @@ def send_prompt(page, prompt_text: str):
             break
         time.sleep(0.2)
 
-    start_url = page.url
+    start_url = current_url(page)
 
     def _box_has_text():
         try:
@@ -498,7 +529,7 @@ def send_prompt(page, prompt_text: str):
         # Give the submission a moment to register
         for _ in range(10):
             time.sleep(0.5)
-            if "/c/" in page.url and page.url != start_url:
+            if "/c/" in current_url(page) and current_url(page) != start_url:
                 return
             if not _box_has_text():
                 return
@@ -510,15 +541,17 @@ def send_prompt(page, prompt_text: str):
 
 
 
-def wait_for_conversation_url(page, timeout_s: int = 30) -> str:
-    """After submitting, wait until the URL becomes a concrete conversation (/c/<id>)."""
+def wait_for_conversation_url(page, timeout_s: int = 30, start_url: str = "") -> str:
+    """Wait for a concrete conversation URL or a project-route transition."""
     deadline = time.time() + timeout_s
     while time.time() < deadline:
-        url = page.url
+        url = current_url(page)
         if "/c/" in url:
             return url
+        if start_url and url != start_url and url not in ("", "about:blank"):
+            return url
         time.sleep(0.5)
-    return page.url  # may still be the project URL if capture failed
+    return current_url(page)
 
 
 # ── Answer classification ─────────────────────────────────────────────────────

@@ -6,7 +6,7 @@ runtime from ``data.json``. This script (re)generates that feed by scanning the
 committed solution copies in ``outputs/chatgpt/open/`` — the filenames already
 encode each problem's number, verdict and completeness score, e.g.
 
-    outputs/chatgpt/open/Erdős #117 [solved] 82%.md
+    outputs/chatgpt/open/Erdős #117 [candidate-proved] 82%.md
 
 so no parsing of file *contents* is required. A GitHub Action re-runs this on
 every push that touches ``outputs/``, keeping the site in sync automatically.
@@ -35,6 +35,7 @@ PROBLEMS_DIR = BASE_DIR / CATEGORY / "individual"
 
 DATA_OUT = BASE_DIR / "data.json"
 CSV_OUT = BASE_DIR / "status.csv"
+CATALOG_FILE = BASE_DIR / "problem_catalog.json"
 
 # Repo the solution links point at, and the branch they live on.
 REPO = "erichou1/erdos-open-problems"
@@ -43,8 +44,18 @@ BLOB_BASE = f"https://github.com/{REPO}/blob/{BRANCH}/"
 
 GREEN_THRESHOLD = 60  # completeness >= this counts as a strong result
 
-# "Erdős #117 [solved] 82%.md"  ->  (117, "solved", "82")
+# "Erdős #117 [candidate-proved] 82%.md" -> candidate record fields
 FNAME_RE = re.compile(r"Erdős\s+#(\d+)\s+\[([^\]]+)\]\s+(\d+|\?)\s*%", re.UNICODE)
+
+
+def load_catalog() -> dict:
+    """Online source metadata; never imported by the solving prompts."""
+    if not CATALOG_FILE.exists():
+        return {}
+    try:
+        return json.loads(CATALOG_FILE.read_text(encoding="utf-8")).get("problems", {})
+    except (OSError, ValueError):
+        return {}
 
 
 def all_problem_numbers() -> list:
@@ -66,6 +77,7 @@ def scan_outputs() -> dict:
     "?", a higher score beats a lower one, and "solved" beats "unsolved".
     """
     best = {}
+    catalog = load_catalog()
     if not OUTPUTS_DIR.is_dir():
         return best
     for f in sorted(OUTPUTS_DIR.glob("*.md")):
@@ -77,13 +89,17 @@ def scan_outputs() -> dict:
         comp = m.group(3)
         comp_val = int(comp) if comp.isdigit() else -1
         rel = f"outputs/chatgpt/{CATEGORY}/{f.name}"
+        source = catalog.get(str(num), {})
         rec = {
             "n": num,
             "run": True,
-            "status": "solved" if status == "solved" else "unsolved",
+            "status": status,
             "completeness": comp_val if comp_val >= 0 else None,
             "path": rel,
             "blob": BLOB_BASE + quote(rel),
+            "source_state": source.get("source_state", "unknown"),
+            "source_reports_resolved": bool(source.get("source_reports_resolved")),
+            "source_url": source.get("source_problem_url"),
         }
         prev = best.get(num)
         if prev is None:
@@ -92,8 +108,10 @@ def scan_outputs() -> dict:
         # Prefer the better-scored / solved record.
         prev_score = prev["completeness"] if prev["completeness"] is not None else -1
         new_score = rec["completeness"] if rec["completeness"] is not None else -1
-        better = (new_score, rec["status"] == "solved") > (
-            prev_score, prev["status"] == "solved")
+        status_rank = {"verified-proved": 3, "verified-disproved": 3,
+                       "candidate-proved": 2, "candidate-disproved": 2}
+        better = (status_rank.get(rec["status"], 0), new_score) > (
+            status_rank.get(prev["status"], 0), prev_score)
         if better:
             best[num] = rec
     return best
@@ -101,6 +119,7 @@ def scan_outputs() -> dict:
 
 def build():
     records = scan_outputs()
+    catalog = load_catalog()
 
     # Include every open problem, not just the ones that have been run, so the
     # site can show what is still pending. Problems with no output file get a
@@ -117,15 +136,19 @@ def build():
         if rec:
             problems.append(rec)
         else:
+            source = catalog.get(str(n), {})
             problems.append({
                 "n": n, "run": False, "status": None,
                 "completeness": None, "path": None, "blob": None,
+                "source_state": source.get("source_state", "unknown"),
+                "source_reports_resolved": bool(source.get("source_reports_resolved")),
+                "source_url": source.get("source_problem_url"),
             })
 
     total = len(numbers)
     run_recs = [r for r in problems if r["run"]]
     run = len(run_recs)
-    solved = sum(1 for r in run_recs if r["status"] == "solved")
+    solved = sum(1 for r in run_recs if r["status"] == "verified-proved")
     scored = [r["completeness"] for r in run_recs if r["completeness"] is not None]
     green = sum(1 for c in scored if c >= GREEN_THRESHOLD)
     avg = round(sum(scored) / len(scored), 1) if scored else 0
@@ -150,15 +173,19 @@ def build():
         json.dumps(feed, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
     with CSV_OUT.open("w", newline="", encoding="utf-8") as fh:
-        w = csv.writer(fh)
-        w.writerow(["problem", "run", "status", "completeness", "link"])
+        w = csv.writer(fh, lineterminator="\n")
+        w.writerow(["problem", "run", "status", "completeness", "link",
+                    "source_state", "source_reports_resolved", "source_url"])
         for r in problems:
             comp = "" if r["completeness"] is None else r["completeness"]
             w.writerow([r["n"], "yes" if r["run"] else "no",
-                        r["status"] or "", comp, r["blob"] or ""])
+                        r["status"] or "", comp, r["blob"] or "",
+                        r["source_state"],
+                        "yes" if r["source_reports_resolved"] else "no",
+                        r["source_url"] or ""])
 
     print(f"wrote {DATA_OUT.name} and {CSV_OUT.name} "
-          f"({run}/{total} run, {total - run} pending, {solved} solved, "
+          f"({run}/{total} run, {total - run} pending, {solved} verified proved, "
           f"{green} >= {GREEN_THRESHOLD}%)")
 
 

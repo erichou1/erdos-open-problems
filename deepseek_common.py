@@ -27,6 +27,7 @@ from erdos_common import (  # noqa: F401
     is_solved,
     extract_confidence,
     extract_completeness,
+    candidate_status,
     output_title,
     save_output,
     restore_output_from_solution,
@@ -577,4 +578,3 @@ def rename_chat(page, title: str) -> bool:
             page.set_default_timeout(30_000)
         except Exception:
             pass
-
