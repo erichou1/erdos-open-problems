@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#934}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $h_t(d)$ be minimal such that every graph $G$ with $h_t(d)$ edges and maximal degree $\leq d$ contains two edges whose shortest path between them has length $\geq t$. Estimate $h_t(d)$.
+
+
+
+
+A problem of Erd\H{o}s and Ne\v{s}et\v{r}il. Erd\H{o}s \cite{Er88} wrote 'This problem seems to be interesting only if there is a nice expression for $h_t(d)$.' It is easy to see that $h_t(d)\leq 2d^t$ always and $h_1(d)=d+1$. Erd\H{o}s and Ne\v{s}et\v{r}il and Bermond, Bond, Paoli, and Peyrat \cite{BBPP83} independently conjectured that $h_2(d) \leq \tfrac{5}{4}d^2+1$, with equality for even $d$ (see [149] ). This was proved by Chung, Gy\'{a}rf\'{a}s, Tuza, and Trotter \cite{CGTT90}. Cambie, Cames van Batenburg, de Joannis de Verclos, and Kang \cite{CCJK22} conjectured that\[h_3(d) \leq d^3-d^2+d+2,\]with equality if and only if $d=p^k+1$ for some prime power $p^k$, and proved that $h_3(3)=23$. They also conjecture that, for all $t\geq 3$, $h_t(d)\geq (1-o(1))d^t$ for infinitely many $d$ and $h_t(d)\leq (1+o(1))d^t$ for all $d$ (where the $o(1)$ term $\to 0$ as $d\to \infty$). The same authors prove that, if $t$ is large, then there are infinitely many $d$ such that $h_t(d) \geq 0.629^td^t$, and that for all $t\geq 1$ we have\[h_t(d) \leq \tfrac{3}{2}d^t+1.\]
+
+
+
+
+References
+
+[BBPP83] Bermond, J.-C. and Bond, J. and Paoli, M. and Peyrat, C., Graphs and interconnection networks: diameter and vulnerability . (1983), 1--30.
+
+[CCJK22] Cambie, Stijn and Cames van Batenburg, Wouter and de Joannis de Verclos, R\'{e}mi and Kang, Ross J., Maximizing line subgraphs of diameter at most {$t$} . SIAM J. Discrete Math. (2022), 939--950.
+
+[CGTT90] Chung, F. R. K. and Gy\'{a}rf\'{a}s, A. and Tuza, Z. and Trotter, W. T., The maximum number of edges in {$2K_2$}-free graphs of bounded degree . Discrete Math. (1990), 129--135.
+
+[Er88] Erd\H{o}s, P, Problems and results in combinatorial analysis and graph theory . Discrete Math. (1988), 81-92.
+
+\noindent\textbf{Related OEIS sequences:} possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/934}}
+\end{document}
