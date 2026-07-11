@@ -79,7 +79,9 @@ def _json_object(text: str) -> dict:
     start, end = stripped.find("{"), stripped.rfind("}")
     if start < 0 or end < start:
         raise ValueError("review response did not contain a JSON object")
-    return json.loads(stripped[start:end + 1])
+    # strict=False allows raw control characters (e.g. unescaped newlines) that
+    # ChatGPT often emits inside JSON string values, which strict parsing rejects.
+    return json.loads(stripped[start:end + 1], strict=False)
 
 
 def _strings(value) -> tuple[str, ...]:
@@ -144,15 +146,44 @@ class ProofPipeline:
         self.artifact_root = Path(artifact_root)
         self.max_revisions = max(0, max_revisions)
         self.verification_evidence = verification_evidence
+        self._stage_cache = None
+
+    def _run(self, prompt: str, stage: str) -> str:
+        """Call the isolated runner, caching each stage's raw response to disk so
+        an interrupted run resumes from the last finished stage instead of
+        regenerating it. Isolation is preserved: a cache hit replays the exact
+        response that stage already produced in its own fresh conversation."""
+        cache_file = self._stage_cache / f"{stage}.txt"
+        if cache_file.exists():
+            cached = cache_file.read_text(encoding="utf-8", errors="ignore")
+            if cached.strip():
+                print(f"{stage}: reusing cached response", flush=True)
+                return cached
+        response = self.runner.run(prompt, stage=stage, isolated=True)
+        cache_file.write_text(response, encoding="utf-8")
+        return response
 
     def solve(self, problem_number: int, problem: str) -> PipelineResult:
         """Run all isolated stages, persist evidence, and apply the hard gate."""
-        run_id = (
-            datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-            + "-" + uuid.uuid4().hex[:8]
-        )
-        out = self.artifact_root / f"problem_{problem_number}" / run_id
+        prob_dir = self.artifact_root / f"problem_{problem_number}"
+        # Resume the newest incomplete run (no manifest.json) so a stop mid-problem
+        # continues from the last finished stage; otherwise start a fresh run.
+        incomplete = sorted(
+            (d for d in prob_dir.glob("*")
+             if d.is_dir() and not (d / "manifest.json").exists()),
+            key=lambda d: d.name,
+        ) if prob_dir.exists() else []
+        if incomplete:
+            out = incomplete[-1]
+        else:
+            run_id = (
+                datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+                + "-" + uuid.uuid4().hex[:8]
+            )
+            out = prob_dir / run_id
         out.mkdir(parents=True, exist_ok=True)
+        self._stage_cache = out / "_stage_cache"
+        self._stage_cache.mkdir(exist_ok=True)
         lock = make_statement_lock(problem)
         lock_text = statement_lock_text(lock)
         (out / "problem.txt").write_text(lock.original_statement, encoding="utf-8")
@@ -165,22 +196,21 @@ class ProofPipeline:
             prompt = SCOUT_PROMPT_TEMPLATE.format(
                 offline=OFFLINE_POLICY, role=role, search=SEARCH_POLICY, problem=lock_text
             )
-            response = self.runner.run(prompt, stage=f"scout_{index}", isolated=True)
+            response = self._run(prompt, f"scout_{index}")
             (out / f"scout_{index}.md").write_text(response, encoding="utf-8")
             scouts.append(response)
         scout_bundle = "\n\n".join(
             f"## Scout {i}\n{response}" for i, response in enumerate(scouts, 1)
         )
 
-        synthesis_raw = self.runner.run(
+        synthesis_raw = self._run(
             SYNTHESIS_PROMPT_TEMPLATE.format(
                 offline=OFFLINE_POLICY,
                 statement_lock=lock_text,
                 scouts=scout_bundle,
                 feedback="NONE",
             ),
-            stage="synthesis",
-            isolated=True,
+            "synthesis",
         )
         planner_data = _json_object(synthesis_raw)
         graph = graph_as_dict(planner_data, parse_subgoal_graph(planner_data))
@@ -191,14 +221,13 @@ class ProofPipeline:
         state_file = out / "research_state.json"
         state.save(state_file)
 
-        candidate = self.runner.run(
+        candidate = self._run(
             CONSTRUCTION_PROMPT_TEMPLATE.format(
                 candidate_prompt=CANDIDATE_PROMPT_TEMPLATE.format(problem=problem),
                 synthesis=graph_text,
                 scouts=scout_bundle,
             ),
-            stage="construction",
-            isolated=True,
+            "construction",
         )
         decision = GateDecision("candidate_rejected", ("no review completed",))
         outcome = candidate_status(candidate)
@@ -263,7 +292,7 @@ class ProofPipeline:
             if attempt > self.max_revisions:
                 break
             failure_memory = json.dumps(state.failed_approaches, indent=2)
-            regulator_raw = self.runner.run(
+            regulator_raw = self._run(
                 REGULATOR_PROMPT_TEMPLATE.format(
                     offline=OFFLINE_POLICY,
                     statement_lock=lock_text,
@@ -272,8 +301,7 @@ class ProofPipeline:
                     reviews="\n\n".join(raw_reviews),
                     failure_memory=failure_memory,
                 ),
-                stage=f"regulator_{attempt}",
-                isolated=True,
+                f"regulator_{attempt}",
             )
             try:
                 regulator = _json_object(regulator_raw)
@@ -297,7 +325,7 @@ class ProofPipeline:
                 json.dumps(regulator, indent=2) + "\n", encoding="utf-8"
             )
             if regulation in {"REVISE_PLAN", "REWRITE"}:
-                replan_raw = self.runner.run(
+                replan_raw = self._run(
                     SYNTHESIS_PROMPT_TEMPLATE.format(
                         offline=OFFLINE_POLICY,
                         statement_lock=lock_text,
@@ -307,8 +335,7 @@ class ProofPipeline:
                             "failure_memory": state.failed_approaches,
                         }, indent=2),
                     ),
-                    stage=f"replan_{attempt}",
-                    isolated=True,
+                    f"replan_{attempt}",
                 )
                 replan_data = _json_object(replan_raw)
                 graph = graph_as_dict(replan_data, parse_subgoal_graph(replan_data))
@@ -318,7 +345,7 @@ class ProofPipeline:
                     graph_text + "\n", encoding="utf-8"
                 )
             state.save(state_file)
-            candidate = self.runner.run(
+            candidate = self._run(
                 REVISION_PROMPT_TEMPLATE.format(
                     offline=OFFLINE_POLICY,
                     statement_lock=lock_text,
@@ -329,8 +356,7 @@ class ProofPipeline:
                     search_policy=SEARCH_POLICY,
                     output_contract=OUTPUT_CONTRACT,
                 ),
-                stage=f"revision_{attempt}",
-                isolated=True,
+                f"revision_{attempt}",
             )
 
         (out / "candidate.md").write_text(candidate, encoding="utf-8")
@@ -361,7 +387,7 @@ class ProofPipeline:
         raw_reviews = []
         for role, mandate in REVIEW_MANDATES.items():
             stage = f"review_{role}_{attempt}"
-            raw = self.runner.run(
+            raw = self._run(
                 VERIFIER_PROMPT_TEMPLATE.format(
                     offline=OFFLINE_POLICY,
                     role=role,
@@ -370,8 +396,7 @@ class ProofPipeline:
                     subgoal_graph=graph_text,
                     candidate=candidate,
                 ),
-                stage=stage,
-                isolated=True,
+                stage,
             )
             (attempt_dir / f"review_{role}.json").write_text(raw, encoding="utf-8")
             raw_reviews.append(raw)
@@ -388,7 +413,7 @@ class ProofPipeline:
                 ))
 
         adjudication_stage = f"adjudication_{attempt}"
-        raw_adjudication = self.runner.run(
+        raw_adjudication = self._run(
             ADJUDICATOR_PROMPT_TEMPLATE.format(
                 offline=OFFLINE_POLICY,
                 statement_lock=lock_text,
@@ -396,8 +421,7 @@ class ProofPipeline:
                 candidate=candidate,
                 reviews="\n\n".join(raw_reviews),
             ),
-            stage=adjudication_stage,
-            isolated=True,
+            adjudication_stage,
         )
         (attempt_dir / "adjudication.json").write_text(
             raw_adjudication, encoding="utf-8"

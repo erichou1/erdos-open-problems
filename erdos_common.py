@@ -52,7 +52,8 @@ def _detect_repo_dir() -> Path:
 
 
 REPO_DIR      = _detect_repo_dir()
-PROFILE_DIR   = _SCRIPT_DIR / ".chatgpt_profile"
+PROFILE_DIR   = Path(os.environ.get(
+    "CHATGPT_PROFILE_DIR", str(_SCRIPT_DIR / ".chatgpt_profile")))
 CHAT_MAP_FILE = _SCRIPT_DIR / ".chatgpt_chat_map.json"
 
 # Human-named output copies live here, one subfolder per platform.
@@ -435,11 +436,53 @@ def extract_response(page) -> str:
 
 def detect_rate_limit(page) -> bool:
     """Return True if the page is showing a rate-limit / throttle message."""
+    # ChatGPT throttles rapid new-conversation creation with a blocking modal
+    # (often with a "Got it" button); detect the dialog explicitly as well as
+    # the text, since the modal can intercept clicks.
+    try:
+        if page.query_selector(
+                '[data-testid="modal-conversation-history-rate-limit"], '
+                '[id*="rate-limit" i]'):
+            return True
+    except Exception:
+        pass
     try:
         body_text = (page.inner_text("body") or "").lower()
     except Exception:
         return False
     return any(p in body_text for p in RATE_LIMIT_PHRASES)
+
+
+def dismiss_rate_limit_modal(page) -> bool:
+    """Dismiss a 'too many requests' / rate-limit alert (click its "Got it" /
+    close button, else press Escape) so the UI is interactable again.
+
+    Returns True if something was dismissed."""
+    try:
+        # Prefer an explicit acknowledge button (the too-many-requests alert
+        # uses "Got it"); match a few common labels case-insensitively.
+        for btn in page.query_selector_all('button, [role="button"]'):
+            try:
+                label = (btn.inner_text() or "").strip().lower()
+            except Exception:
+                continue
+            if label in ("got it", "ok", "okay", "dismiss", "close", "try again"):
+                try:
+                    page.evaluate("el => el.click()", btn)
+                    time.sleep(0.5)
+                    return True
+                except Exception:
+                    pass
+        # Fall back to closing any open dialog.
+        if page.query_selector('[role="dialog"], '
+                               '[data-testid="modal-conversation-history-rate-limit"]'):
+            page.keyboard.press("Escape")
+            time.sleep(0.5)
+            return True
+    except Exception:
+        pass
+    return False
+
 
 
 def start_new_chat(page):
@@ -480,16 +523,26 @@ def send_prompt(page, prompt_text: str):
             [box, prompt_text],
         )
     else:
-        # ChatGPT's #prompt-textarea is a ProseMirror contenteditable. The most
-        # reliable way to populate it (so React/ProseMirror registers the text
-        # and enables the send button) is keyboard.insertText after focusing.
+        # ChatGPT's #prompt-textarea is a ProseMirror contenteditable. A bulk
+        # keyboard.insert_text() does NOT register with ProseMirror (the send
+        # then fires on an empty editor), so populate it with a synthetic paste
+        # event instead — instant and reliable even for very large prompts.
         page.evaluate("el => el.focus()", box)
         time.sleep(0.2)
-        # Clear any persisted draft text first, then insert the prompt.
-        page.keyboard.press("Control+A")
+        page.keyboard.press("Meta+A")
         page.keyboard.press("Delete")
         time.sleep(0.1)
-        page.keyboard.insert_text(prompt_text)
+        page.evaluate(
+            """(args) => {
+                const [el, text] = args;
+                el.focus();
+                const dt = new DataTransfer();
+                dt.setData('text/plain', text);
+                el.dispatchEvent(new ClipboardEvent('paste',
+                    {clipboardData: dt, bubbles: true, cancelable: true}));
+            }""",
+            [box, prompt_text],
+        )
 
     # Wait until the editor actually contains text (send button enables).
     deadline = time.time() + 5
