@@ -337,13 +337,23 @@ class ProofPipeline:
                     ),
                     f"replan_{attempt}",
                 )
-                replan_data = _json_object(replan_raw)
-                graph = graph_as_dict(replan_data, parse_subgoal_graph(replan_data))
-                graph_text = json.dumps(graph, indent=2)
-                state.subgoal_graph = graph
-                (out / f"subgoal_graph_revision_{attempt}.json").write_text(
-                    graph_text + "\n", encoding="utf-8"
-                )
+                try:
+                    replan_data = _json_object(replan_raw)
+                    graph = graph_as_dict(replan_data, parse_subgoal_graph(replan_data))
+                    graph_text = json.dumps(graph, indent=2)
+                    state.subgoal_graph = graph
+                    (out / f"subgoal_graph_revision_{attempt}.json").write_text(
+                        graph_text + "\n", encoding="utf-8"
+                    )
+                except (ValueError, json.JSONDecodeError) as error:
+                    # A malformed model response must not discard the entire
+                    # problem run. Retain the last valid graph and continue the
+                    # proof revision with the regulator's constraints.
+                    (attempt_dir / "replan_error.txt").write_text(
+                        f"Malformed replan response: {error}\n\n{replan_raw}",
+                        encoding="utf-8",
+                    )
+                    state.attempts[-1]["replan_error"] = str(error)
             state.save(state_file)
             candidate = self._run(
                 REVISION_PROMPT_TEMPLATE.format(

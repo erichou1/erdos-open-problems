@@ -158,6 +158,34 @@ class ProofPipelineTests(unittest.TestCase):
             self.assertEqual(result.gate.status, "candidate_rejected")
             self.assertTrue((result.artifact_dir / "manifest.json").exists())
 
+    def test_malformed_replan_continues_with_last_valid_graph(self):
+        class MalformedReplanRunner(PassingRunner):
+            def run(self, prompt, *, stage, isolated):
+                if stage == "review_logic_1":
+                    data = json.loads(super().run(prompt, stage=stage, isolated=isolated))
+                    data["verdict"] = "fail"
+                    data["material_errors"] = ["L1 is unsupported"]
+                    return json.dumps(data)
+                if stage == "regulator_1":
+                    return json.dumps({
+                        "decision": "REVISE_PLAN",
+                        "rationale": "replace L1",
+                        "broken_node_ids": ["L1"],
+                        "new_constraints": ["supply evidence"],
+                    })
+                if stage == "replan_1":
+                    return '{"summary": "unterminated"'
+                return super().run(prompt, stage=stage, isolated=isolated)
+
+        problem = "Prove U."
+        with tempfile.TemporaryDirectory() as directory:
+            result = ProofPipeline(
+                MalformedReplanRunner(), Path(directory), max_revisions=1,
+                verification_evidence=evidence_for(problem),
+            ).solve(6, problem)
+            self.assertTrue((result.artifact_dir / "manifest.json").exists())
+            self.assertTrue((result.artifact_dir / "attempt_1" / "replan_error.txt").exists())
+
     def test_external_evidence_promotes_existing_run_and_publishes(self):
         runner = PassingRunner()
         problem = "Prove T."

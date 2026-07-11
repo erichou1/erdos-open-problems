@@ -2,8 +2,10 @@
 """Run the full verified pipeline for one problem through ChatGPT browser UI."""
 
 import argparse
+import fcntl
 import hashlib
 import json
+import tempfile
 import time
 from pathlib import Path
 
@@ -63,28 +65,31 @@ class ChatGPTBrowserRunner:
     """Fresh-chat adapter for ProofPipeline's isolated model calls."""
 
     def __init__(self, browser, page, *, timeout_s: float,
-                 backoff_s: float = 180.0, max_backoff_s: float = 1800.0,
-                 max_attempts: int = 8):
+                 backoff_s: float = 180.0, max_backoff_s: float = 300.0,
+                 request_spacing_s: float = 20.0, max_attempts: int = 8):
         self.browser = browser
         self.page = page
         self.timeout_s = timeout_s
         self.backoff_s = backoff_s
         self.max_backoff_s = max(backoff_s, max_backoff_s)
+        self.rate_limiter = SharedRateLimiter(
+            Path(tempfile.gettempdir()) / "erdos_chatgpt_rate_limit.json",
+            backoff_s=backoff_s,
+            max_backoff_s=self.max_backoff_s,
+            request_spacing_s=request_spacing_s,
+        )
         self.max_attempts = max_attempts
         self.contexts = {}
 
     def context_id(self, stage: str) -> str:
         return self.contexts.get(stage, "")
 
-    def _cool_down(self, stage: str, reason: str, streak: int) -> None:
-        """Dismiss a rate-limit alert and wait with capped exponential backoff."""
-        wait_s = min(self.backoff_s * (2 ** max(0, streak - 1)),
-                     self.max_backoff_s)
+    def _cool_down(self, stage: str, reason: str) -> None:
+        """Apply one shared cooldown across every browser worker."""
+        streak, wait_s = self.rate_limiter.record_rate_limit()
         C.dismiss_rate_limit_modal(self.page)
-        print(f"{stage}: {reason}; consecutive rate limits={streak}; "
-              f"waiting {wait_s:.0f}s before retrying (does not use a retry)",
-              flush=True)
-        time.sleep(wait_s)
+        print(f"{stage}: {reason}; shared rate-limit streak={streak}; "
+              f"all workers paused for up to {wait_s:.0f}s", flush=True)
 
     def run(self, prompt: str, *, stage: str, isolated: bool) -> str:
         if not isolated:
@@ -92,11 +97,11 @@ class ChatGPTBrowserRunner:
 
         last_error = "unknown"
         attempts_used = 0
-        rate_limit_streak = 0
         # A rate limit is a provider-side temporary condition, not a failed
         # proof stage. Keep the problem alive until ChatGPT accepts the prompt;
         # only real navigation/generation/response failures consume retries.
         while attempts_used < self.max_attempts:
+            self.rate_limiter.wait_for_slot(stage)
             try:
                 _ = self.page.url
             except Exception:
@@ -107,11 +112,9 @@ class ChatGPTBrowserRunner:
 
                 # A rate-limit alert blocks chat creation — clear it and back off.
                 if C.detect_rate_limit(self.page):
-                    rate_limit_streak += 1
                     last_error = "rate-limited before send"
-                    self._cool_down(stage, last_error, rate_limit_streak)
+                    self._cool_down(stage, last_error)
                     continue
-                rate_limit_streak = 0
 
                 start_url = C.current_url(self.page)
                 C.send_prompt(self.page, prompt)
@@ -120,9 +123,8 @@ class ChatGPTBrowserRunner:
 
                 if not url or url == start_url:
                     if C.detect_rate_limit(self.page):
-                        rate_limit_streak += 1
                         last_error = "rate-limited after send"
-                        self._cool_down(stage, last_error, rate_limit_streak)
+                        self._cool_down(stage, last_error)
                         continue
                     attempts_used += 1
                     last_error = "no conversation URL"
@@ -132,6 +134,7 @@ class ChatGPTBrowserRunner:
                     continue
 
                 self.contexts[stage] = url
+                self.rate_limiter.record_success()
                 print(f"{stage}: waiting for response at {url}", flush=True)
                 time.sleep(5)
 
@@ -139,7 +142,7 @@ class ChatGPTBrowserRunner:
                 while time.time() < deadline and C.is_generating(self.page):
                     # A throttle can pop up mid-generation; keep the UI clear.
                     if C.detect_rate_limit(self.page):
-                        C.dismiss_rate_limit_modal(self.page)
+                        self._cool_down(stage, "rate-limited while generating")
                     time.sleep(5)
 
                 if C.is_generating(self.page):
@@ -167,9 +170,8 @@ class ChatGPTBrowserRunner:
                 print(f"{stage}: error '{exc}'", flush=True)
                 try:
                     if C.detect_rate_limit(self.page):
-                        rate_limit_streak += 1
                         last_error = "rate-limited during browser exception"
-                        self._cool_down(stage, last_error, rate_limit_streak)
+                        self._cool_down(stage, last_error)
                         continue
                 except Exception:
                     pass
@@ -183,6 +185,78 @@ class ChatGPTBrowserRunner:
             f"({last_error})")
 
 
+class SharedRateLimiter:
+    """Cross-process request gate for the single shared ChatGPT quota."""
+
+    def __init__(self, path: Path, *, backoff_s: float,
+                 max_backoff_s: float, request_spacing_s: float):
+        self.path = path
+        self.backoff_s = backoff_s
+        self.max_backoff_s = max_backoff_s
+        self.request_spacing_s = request_spacing_s
+        self.path.touch(exist_ok=True)
+
+    def _update(self, action):
+        with self.path.open("r+", encoding="utf-8") as handle:
+            fcntl.flock(handle, fcntl.LOCK_EX)
+            try:
+                try:
+                    state = json.load(handle)
+                except (json.JSONDecodeError, ValueError):
+                    state = {}
+                result = action(state)
+                handle.seek(0)
+                handle.truncate()
+                json.dump(state, handle)
+                handle.flush()
+                return result
+            finally:
+                fcntl.flock(handle, fcntl.LOCK_UN)
+
+    def wait_for_slot(self, stage: str) -> None:
+        """Serialize sends and honor a cooldown imposed by any worker."""
+        while True:
+            now = time.time()
+
+            def reserve(state):
+                ready_at = max(float(state.get("cooldown_until", 0)),
+                               float(state.get("next_request_at", 0)))
+                if ready_at <= now:
+                    state["next_request_at"] = now + self.request_spacing_s
+                    return 0.0
+                return ready_at - now
+
+            delay = self._update(reserve)
+            if delay <= 0:
+                return
+            print(f"{stage}: waiting {delay:.0f}s for the shared ChatGPT quota",
+                  flush=True)
+            time.sleep(delay)
+
+    def record_rate_limit(self) -> tuple[int, float]:
+        now = time.time()
+
+        def penalize(state):
+            streak = int(state.get("rate_limit_streak", 0)) + 1
+            wait_s = min(self.backoff_s * (2 ** max(0, streak - 1)),
+                         self.max_backoff_s)
+            state["rate_limit_streak"] = streak
+            state["cooldown_until"] = max(float(state.get("cooldown_until", 0)),
+                                          now + wait_s)
+            state["next_request_at"] = max(float(state.get("next_request_at", 0)),
+                                           state["cooldown_until"])
+            return streak, wait_s
+
+        return self._update(penalize)
+
+    def record_success(self) -> None:
+        def clear_penalty(state):
+            state["rate_limit_streak"] = 0
+            state["cooldown_until"] = 0
+
+        self._update(clear_penalty)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--problem", type=int, required=True)
@@ -191,8 +265,10 @@ def main() -> None:
     parser.add_argument("--stage-timeout", type=float, default=1800)
     parser.add_argument("--backoff", type=float, default=180.0,
                         help="Initial seconds to wait after a rate-limit alert")
-    parser.add_argument("--max-backoff", type=float, default=1800.0,
+    parser.add_argument("--max-backoff", type=float, default=300.0,
                         help="Maximum adaptive rate-limit backoff in seconds")
+    parser.add_argument("--request-spacing", type=float, default=20.0,
+                        help="Minimum seconds between any two worker requests")
     parser.add_argument("--max-revisions", type=int, default=2)
     parser.add_argument("--print-statement-sha", action="store_true")
     parser.add_argument("--headless", action="store_true")
@@ -215,6 +291,7 @@ def main() -> None:
             browser, page, timeout_s=args.stage_timeout,
             backoff_s=args.backoff,
             max_backoff_s=args.max_backoff,
+            request_spacing_s=args.request_spacing,
         )
         result = ProofPipeline(
             runner,
