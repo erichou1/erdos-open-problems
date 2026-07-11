@@ -1,0 +1,323 @@
+{
+  "summary": "No solution or classification is claimed. The literal statement is blocked at S0 because \u201cinfinite path\u201d is undefined: the induced-path interpretation is immediately false for every infinite ordinal, while the repeat-allowed infinite-walk interpretation is trivially true; the double-ray interpretation requires a separate classification. Under the standard ray interpretation, the finite-separator rank theorem, elimination-forest representation, exact forest-antichain equivalence, full-cardinality antichain theorem, and positive result for all infinite initial ordinals are mathematically well supported and independently checkable. The reports\u2019 agreement on these facts is not itself treated as proof. Scout 3\u2019s stronger claim covering every nonzero limit ordinal below \u03c9\u00b3 has the highest immediate information value but rests on a comparatively intricate separation lemma that must be audited before use. The highest-priority positive branch is an order-sensitive demand-tree or Cantor-profile gluing theorem compatible with finite-separator decompositions. The highest-priority negative branch searches first for finite-class or matching selector obstructions, then height-two and recursively nested star forests with unbounded finite depth. Componentwise order-type preservation and arbitrary countable simultaneous requirements are retained as refuted principles, since explicit interleaving and star examples invalidate them. The boundary \u03c9\u2081^(\u03c9+2) remains unresolved; any ray-interpretation counterexample there must have unbounded finite branch lengths and every finite depth tail of full ambient order type. Source portfolio: \n\nPasted text\n\n",
+  "bottleneck_ids": [
+    "S0",
+    "S3",
+    "Q1",
+    "Q3",
+    "B2",
+    "B4",
+    "G1",
+    "G2",
+    "E1",
+    "GOAL"
+  ],
+  "subgoals": [
+    {
+      "id": "S0",
+      "claim": "[BLOCKING] Normalize the immutable statement without choosing a convenient meaning: specify simple undirected graphs versus other graph conventions; distinguish a one-way simple ray, a two-way double ray, an induced ray, and a repeat-allowed infinite walk; define inherited order type; and treat separately whether 0 is called a limit ordinal.",
+      "dependencies": [],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "S1",
+      "claim": "[PROVED CONDITIONAL BRANCH] Under the induced-path interpretation, the assertion fails for every infinite limit ordinal: the complete graph has no induced infinite path and has no independent set of infinite order type.",
+      "dependencies": [
+        "S0"
+      ],
+      "centrality": 3,
+      "falsifiable": true
+    },
+    {
+      "id": "S2",
+      "claim": "[PROVED CONDITIONAL BRANCH] Under the repeat-allowed infinite-walk interpretation, the assertion holds for every ordinal: any edge permits an endlessly alternating walk, so a graph with no such walk is edgeless and its whole vertex set is independent.",
+      "dependencies": [
+        "S0"
+      ],
+      "centrality": 3,
+      "falsifiable": true
+    },
+    {
+      "id": "S3",
+      "claim": "[OPEN BRANCH] Classify the statement when \u201cinfinite path\u201d means a two-way infinite simple path. Do not import results from the ray branch unless their hypotheses still exclude double rays and preserve the required ordinal order type.",
+      "dependencies": [
+        "S0"
+      ],
+      "centrality": 4,
+      "falsifiable": true
+    },
+    {
+      "id": "S4",
+      "claim": "[CONDITIONAL LOCK] For the main proof-search branch, fix a graph to be simple and undirected and an infinite path to be a one-way simple ray of distinct vertices; an independent set of type \u03b1 is a subset of \u03b1 with inherited order type exactly \u03b1.",
+      "dependencies": [
+        "S0"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "C1",
+      "claim": "[PROVED UNDER S4] Establish the finite-separator rank theorem: a graph is rayless exactly when it belongs to the least hierarchy generated from finite graphs by deleting a finite separator and requiring all remaining components to have smaller rank.",
+      "dependencies": [
+        "S4"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "C2",
+      "claim": "[PROVED UNDER S4] From a finite-separator rank decomposition, construct a rooted forest on the same vertex set, with no infinite branch, in which every edge of the original graph joins comparable vertices. Check explicitly that finite separator bags are replaced by finite chains and that every original edge is covered.",
+      "dependencies": [
+        "C1"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "C3",
+      "claim": "[PROVED UNDER S4] Show that the comparability graph of a rooted forest whose predecessor chains are finite and which has no infinite branch is rayless. The proof must rule out a ray that alternates between different descendant cones rather than assuming it is itself a tree branch.",
+      "dependencies": [
+        "S4"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "C4",
+      "claim": "[PROVED UNDER S4] Deduce the exact equivalence: P(\u03b1) holds exactly when every rooted forest on the ordered set \u03b1 with no infinite branch has an antichain whose inherited ordinal order has type \u03b1. Verify both directions and do not relabel a subset without checking preservation of inherited order type.",
+      "dependencies": [
+        "C2",
+        "C3"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "P1",
+      "claim": "[PROVED UNDER S4] Prove that every infinite branchless rooted forest has an antichain of the same cardinality as its vertex set, for example by mapping every vertex to a leaf descendant with finite fibers. State the choice principle used to obtain an infinite branch when a node has no leaf descendant.",
+      "dependencies": [
+        "C4"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "P2",
+      "claim": "[PROVED BOUNDARIES] Resolve 0, \u03c9, and all infinite initial ordinals. If 0 is admitted as a limit ordinal, the empty independent set settles it. The case \u03c9 and every infinite initial ordinal follow from P1 because a subset of an initial ordinal with full cardinality has full order type.",
+      "dependencies": [
+        "S0",
+        "P1"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "P3",
+      "claim": "[PROVED UNDER S4] For an infinite regular cardinal \u03ba and finitely many \u03ba-sized vertex sets in a rayless graph, construct one independent set meeting every specified set in \u03ba vertices. Audit the concentration-versus-diffusion split at a finite separator and the disjoint refinement of finitely many \u03ba-sized component supports.",
+      "dependencies": [
+        "C1"
+      ],
+      "centrality": 4,
+      "falsifiable": true
+    },
+    {
+      "id": "P4",
+      "claim": "[PROVED POSITIVE FAMILY] Deduce P(\u03ba\u00b7m) for every infinite regular initial ordinal \u03ba and every positive finite m by applying P3 to the consecutive \u03ba-blocks and verifying that \u03ba vertices inside a \u03ba-block have inherited type \u03ba. This includes every \u03c9\u00b7m.",
+      "dependencies": [
+        "P3"
+      ],
+      "centrality": 3,
+      "falsifiable": true
+    },
+    {
+      "id": "P5",
+      "claim": "[OPEN VERIFICATION] Audit the proposed \u03bb-family refinement theorem for regular infinite cardinals \u03bb\u2264\u03ba: from \u03bb many \u03ba-sized demands, retain a \u03bb-sized set of indices and meet each retained demand in \u03ba vertices. Check all three separator cases, especially the transfinite greedy choice of distinct components and the disjoint refinement of \u03bb many \u03ba-sized supports.",
+      "dependencies": [
+        "C1",
+        "P3"
+      ],
+      "centrality": 4,
+      "falsifiable": true
+    },
+    {
+      "id": "P6",
+      "claim": "[CONDITIONAL POSITIVE FAMILY] If P5 is validated, deduce P(\u03ba\u00b7\u03bb) for regular infinite initial cardinals \u03bb\u2264\u03ba, checking that the retained block-index set has inherited order type \u03bb and that the selected part of every retained block has type \u03ba.",
+      "dependencies": [
+        "P5"
+      ],
+      "centrality": 3,
+      "falsifiable": true
+    },
+    {
+      "id": "N1",
+      "claim": "[REFUTED PRINCIPLE] Do not require one independent set to meet every member of an arbitrary countable family infinitely. A disjoint union of stars, with one demand consisting of all centers and the remaining demands consisting of individual leaf sets, refutes this strengthening.",
+      "dependencies": [
+        "C4"
+      ],
+      "centrality": 4,
+      "falsifiable": true
+    },
+    {
+      "id": "N2",
+      "claim": "[REFUTED PRINCIPLE] Do not infer that replacing every interleaved component by a subset of the same internal order type preserves the order type of the union. The diagonal tail selection in the columns of \u03c9\u00b2 preserves type \u03c9 in every column but collapses the union from type \u03c9\u00b2 to type \u03c9.",
+      "dependencies": [
+        "C4"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "B1",
+      "claim": "[PROVED REDUCTION] Define the finite-transversal property FT(\u03b1): every partition of \u03b1 into nonempty finite classes has a transversal of type \u03b1. Prove that failure of FT(\u03b1) yields a rayless counterexample by making each class a clique and placing no edges between classes.",
+      "dependencies": [
+        "S4"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "B2",
+      "claim": "[OPEN HIGH-FALSIFIABILITY BRANCH] Decide first the size-two specialization of B1: whether every matching or fixed-point-free involution on a limit ordinal \u03b1 admits an independent transversal of inherited type \u03b1. Stress-test noninitial ordinals, singular cofinalities, limit exponents, and heavily interleaved pairs.",
+      "dependencies": [
+        "B1"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "B3",
+      "claim": "[PROVED REDUCTION] Characterize antichains in a height-two star forest with roots R, leaves L, and parent map p:L\u2192R: every antichain is contained in S union {\u2113\u2208L:p(\u2113)\u2209S} for some S\u2286R. Thus a star counterexample is exactly a parent map for which every such root-leaf tradeoff has type below \u03b1.",
+      "dependencies": [
+        "C4"
+      ],
+      "centrality": 4,
+      "falsifiable": true
+    },
+    {
+      "id": "B4",
+      "claim": "[OPEN CONSTRUCTION BRANCH] Search for recursively nested star forests of finite but unbounded branch length whose labels are nonconvexly interleaved through \u03b1. Require an explicit well-founded finite-separator certificate and verify by the recursive antichain profile equation that every antichain has type below \u03b1.",
+      "dependencies": [
+        "B3",
+        "N1",
+        "N2"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "Q1",
+      "claim": "[OPEN VERIFICATION, HIGH INFORMATION GAIN] Fully prove or refute Scout 3\u2019s finite-pattern separation lemma for finitely many mandatory infinite sets and finitely many sequences of infinite sets. The audit must verify that concentrated and diffuse requirements can be assigned to components without hidden incompatibilities and that the assembled subsets are pairwise anticomplete.",
+      "dependencies": [
+        "C1",
+        "N1"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "Q2",
+      "claim": "[CONDITIONAL POSITIVE RANGE] If Q1 survives audit, derive P(\u03b1) for every nonzero limit \u03b1<\u03c9\u00b3 by decomposing \u03b1 into finitely many \u03c9\u00b2-blocks and \u03c9-blocks, retaining infinitely many rows in every required \u03c9\u00b2-block, and checking the inherited ordinal sum exactly.",
+      "dependencies": [
+        "Q1",
+        "P1"
+      ],
+      "centrality": 4,
+      "falsifiable": true
+    },
+    {
+      "id": "Q3",
+      "claim": "[OPEN BOUNDARY] Resolve \u03b1=\u03c9\u00b3. Prove a two-level separation theorem retaining infinitely many outer blocks and, inside each retained outer block, infinitely many rows with infinite pairwise anticomplete subsets; or construct a certified branchless forest refuting that theorem and determine whether it also refutes P(\u03c9\u00b3).",
+      "dependencies": [
+        "Q1",
+        "N1",
+        "N2"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "D1",
+      "claim": "[PROVED ORDINAL LEMMA] For every ordinal \u03b2 and every finite coloring of \u03c9^\u03b2, prove that one color class has inherited order type \u03c9^\u03b2. Check successor and limit exponents and avoid replacing cofinal cardinality by order type.",
+      "dependencies": [
+        "S4"
+      ],
+      "centrality": 4,
+      "falsifiable": true
+    },
+    {
+      "id": "D2",
+      "claim": "[PROVED NECESSARY CONDITIONS] At \u03b1=\u03c9\u2081^(\u03c9+2), rewrite \u03b1 as a power of \u03c9 and use D1 with C4 to show that any counterexample forest must have unbounded finite branch lengths, every individual depth level and every finite union of levels must have type below \u03b1, and every depth tail must retain type \u03b1.",
+      "dependencies": [
+        "C4",
+        "D1"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "G1",
+      "claim": "[OPEN POSITIVE BRANCH] Define an order-sensitive hierarchical profile or demand-tree norm for subsets of \u03b1, especially \u03b1=\u03c9\u2081^(\u03c9+2), which detects copies of \u03b1 and records unbounded lower-scale complexity across canonical blocks. It must survive interleaved component replacement and must not imply either refuted principle N1 or N2.",
+      "dependencies": [
+        "N1",
+        "N2",
+        "D2"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "G2",
+      "claim": "[OPEN MAIN PROOF BRANCH] Using G1, prove a concentration-or-gluing theorem for a finite-separator decomposition: either one lower-rank cone retains the full \u03b1-profile, or fronts from sufficiently many incomparable cones can be amalgamated without decreasing the \u03b1-profile. Iterating the first alternative must produce a forbidden infinite branch.",
+      "dependencies": [
+        "C1",
+        "C4",
+        "G1"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "E1",
+      "claim": "[OPEN MAIN COUNTEREXAMPLE BRANCH] If B2, B4, Q3, or the proposed gluing principle G2 fails, extract an explicit ordinally labeled branchless forest or finite-class graph and verify both required negations: it has no ray, and every subset of inherited order type \u03b1 contains a comparable pair or graph edge.",
+      "dependencies": [
+        "B2",
+        "B4",
+        "Q3",
+        "G1"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "T1",
+      "claim": "[AUXILIARY FALSIFICATION PROGRAM] Implement finite block-profile tests for matchings, finite classes, stars, and nested forests. Compute Pareto-optimal antichain profiles recursively, and use the results only to refute candidate gluing laws or identify scalable obstruction patterns, never as proof of the transfinite statement.",
+      "dependencies": [
+        "B2",
+        "B3",
+        "G1"
+      ],
+      "centrality": 2,
+      "falsifiable": true
+    },
+    {
+      "id": "GOAL",
+      "claim": "[OPEN] Classify exactly the limit ordinals \u03b1 satisfying the immutable statement under every materially distinct interpretation identified in S0. Under the ray interpretation, complete either G2 or E1, resolve \u03c9\u00b3 and \u03c9\u2081^(\u03c9+2), verify every ordinal-order gluing step, and state honestly if the general classification remains unresolved.",
+      "dependencies": [
+        "S1",
+        "S2",
+        "S3",
+        "P2",
+        "P4",
+        "P6",
+        "Q2",
+        "Q3",
+        "D2",
+        "G2",
+        "E1"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    }
+  ]
+}

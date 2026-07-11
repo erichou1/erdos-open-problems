@@ -1,0 +1,66 @@
+{
+"reviewer_role": "independent adversarial referee (structural_dependency)",
+"verdict": "fail",
+"claims_checked": 18,
+"claims_total": 18,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14",
+"C15",
+"C16",
+"C17",
+"C18"
+],
+"open_gaps": [
+"S0 remains unresolved: the immutable statement does not define the meaning or constant dependence of the symbol ≫. The candidate adopts one interpretation rather than resolving the locked statement.",
+"The terminal PBD route S5-S8 is open. The candidate establishes necessary restrictions and one sparse-palette obstruction but neither identifies a robust palette nor constructs the required uniform PBDs.",
+"S6 and S7 are not discharged: there is no uniform test or construction for the broad palette of all prime powers in [q,2q] throughout q^2 ≤ v < 4q^2.",
+"The full S9 assertion is only partially covered. The threshold and equality construction are proved, but the general claim that the all-new residual part is t-regular for n=q^2+t is not explicitly stated and discharged.",
+"The ITD routes S11-S12 remain open. The q=3 construction is valid, while the q=4 construction is not established as written, and no uniform construction or growing range of residual degrees is obtained.",
+"S13 is incomplete because the candidate does not record all exact divisibility and lattice constraints for the orthogonal-array hypergraph.",
+"S14 remains open: no applicable exact matching theorem and no obstruction specific to the symmetric hypergraph is proved.",
+"S16-S18 are not discharged. No documented computation over Latin squares of orders 2p, no certification eliminating an invariant family, and no maintained falsification suite are supplied.",
+"None of the disjunctive terminal routes proves or disproves the adopted square-root assertion, and the exact immutable statement is not resolved."
+],
+"unchecked_imports": [],
+"counterexample_searches": [
+"The v=1026 pair-count obstruction for K={32,64,243} and K={32,64,81,243} was recomputed and is valid.",
+"The parity proof that the even-order cyclic Latin square has no transversal is valid.",
+"The even-order translation-family obstruction is valid but applies only to that construction class.",
+"The q=3 translation frame in C15 was checked across all six coordinate pairs and satisfies the required difference condition.",
+"C16 was falsified as written. For the displayed matrix and d_{i,h,j}=hC_{ij}, coordinate pair (0,1) gives base differences 9,0,12 from anchors i=2,3,4, so zero occurs four times after multiplication by H and an entire multiplicative coset is missing.",
+"C17 fails at the stated boundary r=2: there are no two distinct compatible vertices, while the asserted maximum codegree n^(r-3)=n^(-1) is neither an applicable nor integral codegree.",
+"The supplied GOAL node was dependency-checked and found structurally inconsistent: its dependency array is conjunctive, although its text requires only one of several disjunctive terminal routes."
+],
+"material_errors": [
+"The candidate violates the ambiguity rule by adopting the standard absolute interpretation of ≫. Its subsequent conclusions are conditional statements about a modified, clarified proposition, not a resolution of the exact immutable statement.",
+"C16 is not proved by the displayed data. The listed difference triples are obtained from the transposed convention C_{ki}-C_{ji}, whereas the construction explicitly sets d_{i,h,j}=hC_{ij} and requires C_{ik}-C_{ij}. Under the stated convention the frame condition fails.",
+"C17 is false over its declared domain of all integers r,n. At minimum it requires r≥3 and a precise definition of compatible vertices.",
+"The validated subgoal DAG does not correctly encode its final disjunction. Listing S8, S12, S14, S17, and S18 simultaneously as GOAL dependencies makes them conjunctive prerequisites under ordinary DAG semantics.",
+"The dependency ledger is not logically exact. C12 uses finite-field structure directly, which is not a consequence of the statement of C5; C18 additionally requires existence of at least one Latin square of every order, supplied only by the unnumbered cyclic construction; and C10 lists C8 although C8 is not needed for its conditional implication.",
+"C4 defines N(t) as an infimum over an unspecified domain but then treats that infimum as an attained threshold. This creates an exact off-by-one/attainment gap, even though the asymptotic equivalence can be recovered with a corrected definition.",
+"The assertion that all eighteen claims are fully justified is inaccurate because C16 is invalid as written and C17 omits necessary boundary hypotheses.",
+"The candidate does not prove or disprove the original assertion and therefore fails the primary acceptance criterion."
+],
+"completeness_score": 58,
+"proof_confidence": 0,
+"adversarial_survival_score": 61,
+"statement_sha256": "3c9f2d219321365a80825b0cb65a244b298b263a6a3d9a43b4b4c3c7a4331a06",
+"notes": "Most foundational reductions C2-C15, apart from the exact-threshold technical issue in C4, are mathematically sound. C18's compatible-resolution identity is also sound once Latin-square existence is included as a dependency. These correct intermediate results do not discharge a terminal route, and the explicit C16 inconsistency prevents the candidate from receiving credit as a fully verified proof-search report. Source artifact reviewed: 
+
+Pasted text
+
+"
+}

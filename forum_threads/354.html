@@ -1,0 +1,2347 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+
+<title>354 Discussion Thread | Erdős Problems</title>
+<meta property="og:title" content="354 Discussion Thread | Erdős Problems">
+<link rel="icon" href="/static/favicon.ico">
+<link rel="stylesheet" href="/static/style.css?v=733265cf">
+
+<script>
+document.addEventListener('click', (e) => {
+  // Toggle reply form
+  const toggle = e.target.closest('.reply-toggle');
+  if (toggle) {
+    const id = toggle.getAttribute('data-target');
+    const form = document.getElementById(id);
+    if (form) form.classList.toggle('hidden');
+  }
+  // Reply with quote
+  const quoteBtn = e.target.closest('.reply-quote');
+  if (quoteBtn) {
+    const id = quoteBtn.getAttribute('data-target');
+    const form = document.getElementById(id);
+    if (!form) return;
+    const ta = form.querySelector('textarea');
+    const raw = quoteBtn.getAttribute('data-raw') || '';
+    const quoted = raw.split('\n').map(l => '> ' + l).join('\n') + '\n\n';
+    ta.value = quoted;
+    form.classList.remove('hidden');
+    ta.focus();
+    const len = ta.value.length;
+    ta.setSelectionRange(len, len);
+  }
+});
+</script>
+
+<!-- This creates the reference in the bibliography box. -->
+
+<script>
+function addNewBox(key, problem_id, shouldScroll = false) {
+  const local_id = 'bib-container' + String(problem_id);
+  const container = document.getElementById(local_id);
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  fetch(`/bibs/${encodeURIComponent(key)}`)
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.text();
+    })
+    .then(html => {
+      container.innerHTML = html;
+
+      if (shouldScroll) {
+        requestAnimationFrame(() => {
+          container.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+        });
+      }
+    })
+    .catch(err => {
+      console.error("Failed to load bib:", err);
+      container.textContent = "Unable to load reference.";
+
+      if (shouldScroll) {
+        container.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+    });
+}
+</script>
+
+<script>
+const filledSVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" class="fav-icon">
+  <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+</svg>
+                `;
+const outlineSVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="black" fill="white" class="fav-icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.610l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.840-.610l1.285-5.386a.563.563 0 0 0-.182-.557L3.041 10.385a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+</svg>
+                `;
+
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest(".fav-btn");
+  if (!btn) return;
+
+  e.preventDefault();
+  const problemId = btn.dataset.problemId;
+
+  try {
+    const res = await fetch(`/forum/toggle_favourite/${problemId}`, { method: "POST" });
+    const data = await res.json();
+
+    btn.dataset.favourited = data.favourited ? "true" : "false";
+    btn.innerHTML = data.favourited ? filledSVG : outlineSVG;
+  } catch (err) {
+    console.error("Toggle failed:", err);
+  }
+});
+</script>
+
+    
+<script>
+function addImageBox(X, problem_id, shouldScroll = true) {
+  const local_id = 'image-container' + String(problem_id);
+  const container = document.getElementById(local_id);
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  const newBox = document.createElement("div");
+
+  const img = document.createElement("img");
+  img.src = `/static/${encodeURIComponent(X)}.png`;
+  img.className = "responsive-image";
+  img.alt = String(X);
+
+  newBox.appendChild(img);
+  container.appendChild(newBox);
+
+  if (shouldScroll) {
+    requestAnimationFrame(() => {
+      container.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+  }
+}
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('searchForm');
+  if (!form) return;
+  form.addEventListener('submit', function (e) {
+    const input = form.querySelector('.searchTerm');
+    if (!input) return;
+    const value = input.value.trim();
+    if (!value) return;
+    const path = '/search/' + encodeURIComponent(value);
+    const inDual = window.location.pathname.startsWith("/dual");
+    if (inDual) {
+      e.preventDefault(); 
+      const selected = document.querySelector('input[name="targetPanel"]:checked');
+      const panel = selected ? selected.value : "left";
+      const iframe = document.getElementById(`iframe-${panel}`);
+      if (iframe) {
+        const url = path.includes("?") ? path + "&embed=1" : path + "?embed=1";
+        iframe.src = url;
+        const box = document.querySelector(`#panel-${panel} input`);
+        if (box) box.value = path;
+      } else {
+        window.location.href = path;
+      }
+    } else {
+      form.action = path;
+      form.method = "GET";
+    }
+  });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.location.pathname.startsWith("/dual")) return;
+
+  var form = document.getElementById('idsearchForm');
+  if (!form) return;
+
+  form.onsubmit = function() {
+    var input = document.querySelector('.idsearchTerm').value.trim();
+    var searchUrl;
+
+    if (/^\d+$/.test(input)) {
+        searchUrl = '/' + encodeURIComponent(input);
+    } else if (/^((\d+|end)(-(\d+|end))?\s*)+(open|solved|yes|no)?$/.test(input.toLowerCase())) {
+        let parts = input.split(/\s+/).filter(Boolean);
+        searchUrl = '/range/' + parts.map(encodeURIComponent).join('/');
+    } else {
+        alert("Enter either a single integer or a space-separated list of numbers/ranges...");
+        return false;
+    }
+    window.location.href = searchUrl;
+    return false;
+  };
+});
+</script>
+
+<script>
+  window.CURRENT_USERNAME = "";
+</script>
+
+
+<script>
+document.addEventListener("click", async (ev) => {
+  const btn = ev.target.closest(".reaction-btn");
+  if (!btn) return;
+  const you = window.CURRENT_USERNAME || "";
+  const bar = btn.closest(".reaction-bar");
+  const postId = bar?.dataset.postId;
+  const rtype = btn.dataset.type;
+  const reactUrl = bar?.dataset.reactUrl; 
+  if (!postId || !rtype || !reactUrl) return;
+
+  try {
+    const res = await fetch(reactUrl, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({type: rtype})
+    });
+    const data = await res.json();
+    if (!data.ok) {
+      alert(data.error || "Could not update reaction.");
+      return;
+    }
+    const summary = data.summary;
+    
+    bar.querySelectorAll(".reaction-btn").forEach(b => {
+      const t = b.dataset.type;
+      const countSpan = bar.querySelector(`.reaction-count[data-type="${t}"]`);
+      if (countSpan && summary[t]) {
+        countSpan.textContent = summary[t].count;
+    const desc = b.dataset.desc || "";
+    const usersTitle = summary[t].users_title || "No one yet.";
+    b.title = `${desc}\n\n${usersTitle}`;
+      }
+        const iReacted = you && (summary[t].users_title || "").includes(you);
+  b.classList.toggle("active", !!iReacted);
+  b.setAttribute("aria-pressed", iReacted ? "true" : "false");
+    });
+  } catch (e) {
+    console.error(e);
+    alert("Only registered users with 5+ posts can react.");
+  }
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.body.addEventListener("click", function (e) {
+    const link = e.target.closest(".problem-reaction-link");
+    if (!link) return;
+
+    e.preventDefault();
+
+    const row = link.closest(".problem-reaction-row");
+    if (!row) return;
+
+    const form = row.querySelector(".problem-reaction-form");
+    if (!form) return;
+
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+      method: "POST",
+      body: formData,
+      headers: {
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    })
+      .then(resp => resp.json())
+      .then(data => {
+        if (!data.ok) {
+          console.error(data.error || "Problem reaction update failed");
+          return;
+        }
+
+        const summary = data.summary;
+
+        // Update users text for each reaction type
+        for (const [type, info] of Object.entries(summary)) {
+          const r = document.querySelector(
+            `.problem-reaction-row[data-reaction-type="${type}"]`
+          );
+          if (!r) continue;
+
+          const usersCell = r.querySelector(".problem-reaction-users");
+          if (usersCell) {
+            usersCell.textContent = info.users_title || "None yet";
+          }
+        }
+        link.classList.toggle("active");
+        if (link.classList.contains("active")) {
+          link.textContent = "(no)";
+        } else {
+          link.textContent = "(yes)";
+        }
+      })
+      .catch(err => {
+        console.error("Problem reaction AJAX error", err);
+      });
+  });
+});
+</script>
+
+
+
+
+
+
+</head>
+
+<body>
+
+<div class="topnav">
+
+  <div class="left">
+    <div class="logo">
+      <a class="dual-aware" href="/"><img src="/static/EPLogo.png" alt="Logo" height="50"></a>
+    </div>
+    <div class="links dual-aware desktop-nav">
+      <a href="/forum">Forum</a>
+      <a href="/dm">Inbox</a> 
+      <a href="/favourites">Favourites</a>
+      <a href="/tags">Tags</a> 
+      <div class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">More</a>
+        <div class="dropdown-content">
+          <a href="/faq">FAQ</a>
+          <a href="/prizes">Prizes</a>
+          <a href="/lists">Problem Lists</a>
+          <a href="/definitions">Definitions</a>
+          <a href="/links">Links</a>
+        </div>
+      </div> 
+    </div>
+    <div class="mobile-nav">
+    
+        <a class="forumlink" href="/forum">Forum</a>
+    <div class="dropdown">
+      <button class="dropbtn" id="mobileMenuButton">Menu</button>
+      <div class="dropdown-content">
+        <a href="/dm">Inbox</a> 
+        <a href="/favourites">Favourites</a>
+        <a href="/tags">Tags</a>  
+        <a href="/faq">FAQ</a>
+        <a href="/prizes">Prizes</a>
+        <a href="/lists">Problem Lists</a>
+        <a href="/definitions">Definitions</a>
+        <a href="/links">Links</a>
+      </div>
+     </div>
+    </div>
+  </div>
+
+  <div class = "middle">
+    <div class="button-container" style="max-width: 50%;">
+      <form id="idsearchForm">
+        <input required type="text" name="query" class="idsearchTerm" placeholder="# (or range #-#)" title="Enter either a single integer or a space-separated list of numbers/ranges, optionally ending with 'open' or 'solved'.">
+        <button type="submit" class="searchButton">Go</button>
+      </form>
+    </div>
+    <div class="button-container" style="max-width: 50%;">
+      <form id="searchForm">
+        <input required type="text" name="query" class="searchTerm" placeholder="Search" title="Search all problems.">
+        <button type="submit" class="searchButton">Go</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="right">
+    <a href="#" id="dualViewLink" class="split_all">Dual View</a>
+    <a href="/random_solved" class="split_solved dual-aware">Random Solved</a>
+    <a href="/random_open" class="split_open dual-aware">Random Open</a>
+  </div>
+
+</div>
+
+<div id="notifications-slot"></div>
+
+
+
+
+<div class="container">
+<div class="problem-box">
+
+        
+
+                    <div class="problem-text" id="open">  
+<div id="prize">
+
+<span class="tooltip">
+  OPEN
+  <span class="tooltiptext">
+    This is open, and cannot be resolved with a finite computation.
+  </span>
+</span>
+
+</div>
+
+                        <div id="content">Let $\alpha,\beta\in \mathbb{R}_{&#62;0}$ such that $\alpha/\beta$ is irrational. Is the multiset\[\{ \lfloor \alpha\rfloor,\lfloor 2\alpha\rfloor,\lfloor 4\alpha\rfloor,\ldots\}\cup \{ \lfloor \beta\rfloor,\lfloor 2\beta\rfloor,\lfloor 4\beta\rfloor,\ldots\}\]complete? That is, can all sufficiently large natural numbers $n$ be written as\[n=\sum_{s\in S}\lfloor 2^s\alpha\rfloor+\sum_{t\in T}\lfloor 2^t\beta\rfloor\]for some finite $S,T\subset \mathbb{N}$?<br><br>What if $2$ is replaced by some $\gamma\in(1,2)$?</div>
+                        <div id="problem_id"><a href="/354">#354</a>: <a href="#bib-container354" onclick="event.preventDefault();addNewBox('ErGr80', '354', true);return false;">[ErGr80,p.58]</a></div>
+                         
+                            <div id="tags">
+                            
+  <a href="/tags/number theory">number theory</a> | 
+
+  <a href="/tags/complete sequences">complete sequences</a>
+
+                            </div>
+                        
+                    </div>  
+                    
+                    <div class="problem-text" id="disclaimer">  
+The open status of this problem reflects the current belief of the owner of this website. There may be literature on this problem that I am unaware of, which may partially or completely solve the stated problem. Please do your own literature search before expending significant effort on solving this problem. If you find any relevant literature not mentioned here, please add this in a comment.
+                    <div
+  class="problem-status-widget"
+  data-problem-id="354"
+  data-set-url="/problem-status/354"
+  data-current-status="open"
+  data-can-edit="0"
+  style="--status-progress: 0.0; --status-count: 3;"s
+>
+                      <div class="problem-status-heading">Comment activity that has not yet been incorporated into the remarks</div>
+
+  <div class="problem-status-scale" role="radiogroup" aria-label="Problem status">
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option is-active"
+        data-status="open"
+        data-label="None"
+        data-description="There are no solutions, partial or complete, claimed in the comments."
+        data-progress="0.0"
+        role="radio"
+        aria-checked="true"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">None</span>
+      </button>
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option"
+        data-status="partial"
+        data-label="Partial"
+        data-description="There are claims of partial results and/or a path to a solution in the comments."
+        data-progress="0.5"
+        role="radio"
+        aria-checked="false"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">Partial</span>
+      </button>
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option"
+        data-status="claimed"
+        data-label="Solution"
+        data-description="A claimed solution has been posted in the comments."
+        data-progress="1.0"
+        role="radio"
+        aria-checked="false"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">Solution</span>
+      </button>
+    
+  </div>
+
+  <div class="problem-status-explanation">
+    <span class="js-problem-status-description">
+      There are no solutions, partial or complete, claimed in the comments.
+    </span>
+  </div>
+  </div>
+  
+                    </div>
+                    
+                    
+
+
+                    
+
+                        <div class="problem-additional-text"> 
+                    
+                           This question was first mentioned by Graham <a href="#bib-container354" onclick="event.preventDefault();addNewBox('Gr71', '354', true);return false;">[Gr71]</a>. <br><br>Hegyvári <a href="#bib-container354" onclick="event.preventDefault();addNewBox('He89', '354', true);return false;">[He89]</a> proved that this holds if $\alpha=m/2^n$ is a dyadic rational and $\beta$ is not. He later <a href="#bib-container354" onclick="event.preventDefault();addNewBox('He91', '354', true);return false;">[He91]</a> proved that, for any fixed $\alpha&gt;0$, the set of $\beta$ for which this holds either has measure $0$ or infinite measure. In <a href="#bib-container354" onclick="event.preventDefault();addNewBox('He94', '354', true);return false;">[He94]</a> he proved that the set of $(\alpha,\beta)$ for which the corresponding set of sums does not contain an infinite arithmetic progression has cardinality continuum.<br><br>Hegyvári <a href="#bib-container354" onclick="event.preventDefault();addNewBox('He89', '354', true);return false;">[He89]</a> proved that the sequence is not complete if $\alpha\geq 2$ and $\beta =2^k\alpha$ for some $k\geq 0$. Jiang and Ma <a href="#bib-container354" onclick="event.preventDefault();addNewBox('JiMa24', '354', true);return false;">[JiMa24]</a> and Fang and He <a href="#bib-container354" onclick="event.preventDefault();addNewBox('FaHe25', '354', true);return false;">[FaHe25]</a> prove that the sequence is not complete if $1&lt;\alpha&lt;2$ and $\beta=2^k\alpha$ for some sufficiently large $k$.<br><br>It is likely (and Hegyvári conjectures) that the assumption $\alpha/\beta$ irrational can be weakened to $\alpha/\beta \neq 2^k$ and either $\alpha$ or $\beta$ not a dyadic rational.<br><br>In the comments van Doorn proves the sequence is complete if $\alpha &lt; 2&lt;\beta&lt;3$, and also proves that if either $\alpha$ or $\beta$ is not a dyadic rational then the corresponding sequence with ceiling functions replacing the floor functions is complete.
+                           
+                    
+                    
+<p style="text-align: center; font-family: 'Courier New', monospace; font-size: 90%;">
+  <a href="/latex/354">View the LaTeX source</a>
+</p>
+<p style="text-align: center; font-family: 'Courier New', monospace; font-size: 90%;">
+  
+ This page was last edited 01 December 2025. <a href="/history/354">View history</a>
+</p>
+                    <div class="image-container" id="image-container354"></div>
+                        </div>
+
+                        <div class="problem-additional-text" style="text-align:center;"> 
+</div>
+
+                <div id="bib-container354"></div>
+  <div class="external">External data from <a href="https://github.com/teorth/erdosproblems">the database</a> - you can help update this</a>                
+
+
+  <br>
+  Formalised statement? 
+    
+      <a href="https://github.com/google-deepmind/formal-conjectures/blob/main/FormalConjectures/ErdosProblems/354.lean">Yes</a>
+    
+  
+  
+  
+  <br>
+  
+  </div>
+
+
+<div class="problem-reactions">
+
+<div class="comment-count">
+  <a style="color: inherit;" href="/forum/discuss/354">
+    10 comments on this problem
+  </a>
+</div>
+
+<table class="problem-reactions-table">
+  <tbody>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="like">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Likes this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    
+      <a href="/forum/user/Woett" style="color:inherit; text-decoration: none;">Woett</a>, 
+    
+      <a href="/forum/user/jbbaehr22" style="color:inherit; text-decoration: none;">jbbaehr22</a>, 
+    
+      <a href="/forum/user/kasko37" style="color:inherit; text-decoration: none;">kasko37</a>
+    
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="collab">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Interested in collaborating</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    
+      <a href="/forum/user/Woett" style="color:inherit; text-decoration: none;">Woett</a>, 
+    
+      <a href="/forum/user/jbbaehr22" style="color:inherit; text-decoration: none;">jbbaehr22</a>
+    
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="working_on">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Currently working on this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="hard">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>This problem looks difficult</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="easy">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>This problem looks tractable</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="formalisable">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>The results on this problem could be formalisable</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="working_form">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>I am working on formalising the results on this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+</div>
+<br>
+
+                <div class="citationbox"> <div id="content">
+                                    
+                           <b>Additional thanks to</b>: Wouter van Doorn          <br> <br>
+                    
+When referring to this problem, please use the original sources of Erd&#337;s. If you wish to acknowledge this website, the recommended citation format is:
+<br><br>
+T. F. Bloom, Erd&#337;s Problem #354, https://www.erdosproblems.com/354, accessed 2026-07-10</div>
+</div>
+
+               
+
+
+<div class="problem-additional-text"> 
+
+
+
+
+<div class="thread-sort">
+Order by
+  <a href="/forum/thread/354?order=oldest"
+     class="order ">oldest first</a> or
+  <a href="/forum/thread/354?order=newest"
+     class="order active">newest first</a>. (The most recent comments are highlighted in a red border.)
+</div>
+
+
+
+
+<ul class="post-list">
+  
+    
+    
+
+
+
+
+
+
+<li id="post-1928"
+    class="post depth-0
+           recent recent-3
+           even">
+    <div class="post-body" id="post-1928">
+    
+
+
+
+      
+      <p>Aristotle from Harmonic found a <a href="https://github.com/plby/lean-proofs/blob/main/ErdosProblems/Erdos354x.md" rel="nofollow noopener noreferrer ugc" target="_blank">disproof</a> of the <a href="https://github.com/google-deepmind/formal-conjectures/blob/f33f5ddb49f6077e34025917965bcd1bbd920d73/FormalConjectures/ErdosProblems/354.lean" rel="nofollow noopener noreferrer ugc" target="_blank">statement</a> at the Formal Conjectures project, due to a <a href="https://github.com/google-deepmind/formal-conjectures/issues/1309" rel="nofollow noopener noreferrer ugc" target="_blank">misformalization</a>.  <a href="https://live.lean-lang.org/#project=mathlib-v4.24.0&amp;url=https%3A%2F%2Fraw.githubusercontent.com%2Fplby%2Flean-proofs%2Frefs%2Fheads%2Fmain%2Fsrc%2Fv4.24.0%2FErdosProblems%2FErdos354x.lean" rel="nofollow noopener noreferrer ugc" target="_blank">Type-check it online!</a><br><br>I don't know whether I will keep posting comments like this as more misformalizations are inevitably found, but I think I would like to draw some attention to (a) how frequent misformalization is and (b) the fact that tools like Aristotle can help find some such issues automatically, including in cases with nontrivial arguments.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/BorisAlexeev">BorisAlexeev</a></strong>
+      
+      — <a href="/forum/thread/354#post-1928">03:09 on 01 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="1928" data-react-url="/forum/post/1928/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Woett"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-1932"
+    class="post depth-1
+           recent recent-2
+           odd">
+    <div class="post-body" id="post-1932">
+    
+
+
+
+      
+      <p>I say keep going--these are really valuable to document. Misformalisations are (regrettably) not an edge case here; they’re a persistent, inherent risk whenever we translate informal conjectures into Lean. Especially at scale. <br><br>Having concrete examples where Aristotle (or similar tools) disprove a misformalized statement is essential to building our trust in these pipelines; and especially to harden the formal conjectures repo over time.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/John_N._Dvorak">John N. Dvorak</a></strong>
+      
+      — <a href="/forum/thread/354#post-1932">05:07 on 01 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="1932" data-react-url="/forum/post/1932/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2023"
+    class="post depth-2
+           recent recent-1
+           even">
+    <div class="post-body" id="post-2023">
+    
+
+
+
+      
+      <p>I will keep <a href="https://github.com/google-deepmind/formal-conjectures/issues?q=Erd%C5%91s%20is%3Aissue%20label%3Amisformalization%20author%3Aplby" rel="nofollow noopener noreferrer ugc" target="_blank">submitting issues to the Formal Conjectures project</a>, but probably commenting on a forum page here only for misformalizations of interest.  For example, today Aristotle found <a href="https://github.com/google-deepmind/formal-conjectures/issues/1343" rel="nofollow noopener noreferrer ugc" target="_blank">that n=0 was mistakenly allowed</a> in parts of <a href="/366" rel="nofollow noopener noreferrer ugc" target="_blank">[366]</a>, and that's not very interesting at all.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/BorisAlexeev">BorisAlexeev</a></strong>
+      
+      — <a href="/forum/thread/354#post-2023">21:37 on 04 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2023" data-react-url="/forum/post/2023/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: zach hunter, Woett, John N. Dvorak"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">3</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-1292"
+    class="post depth-0
+           
+           odd">
+    <div class="post-body" id="post-1292">
+    
+
+
+
+      
+      <p>Using the deep research tool of ChatGPT I managed to find a few references I was not aware of previously, and I think my first comment here is mostly obsolete. Oh well. Long comment incoming! And by the way, as far as I know, in everything that follows the original problem with constant $\gamma = 2$ is considered, unless otherwise stated.<br><br>Okay, to start off, <br><br>N. Hegyvári, <i>Some remarks on a problem of Erdős and Graham</i>, Acta Math. Hung., Volume 53 (1989), 149-154<br><br>proves exactly Proposition 1 in my comment above; if $\alpha$ is a dyadic rational and $\beta$ is not a dyadic rational, then the sequence under consideration is complete. On the other hand, using $\alpha \ge 2$ and $\beta = 2^l \alpha$ with $l \in \mathbb{N}$, he also shows that the set of pairs $(\alpha, \beta)$ for which the sequence is not complete has the cardinality of the continuum.  <br><br>Even though I cannot access this paper by Hegyvári, I can find his follow-up paper where he mentions that he had obtained the dyadic rational result:<br><br>N. Hegyvári, <i>On complete sequences</i>, Annales Univ. Sci. Budapest, Volume 34 (1991), 7-10.<br><br>In this second paper (which you can find <a href="https://annalesm.elte.hu/annales34-1991/Annales_1991_T-XXXIV.pdf" rel="nofollow noopener noreferrer ugc" target="_blank">here</a>, pages 7-10) he furthermore proves that, for any fixed $\alpha &gt; 0$, the set of $\beta$ for which the corresponding sequence is complete either has Lebesgue measure $0$, or has infinite measure. In order to prove this he makes use of the observation in my first comment that $P(2\alpha, \beta)$ implies $P(\alpha, \beta)$. But he didn't stop there!<br><br>N. Hegyvári, <i>On sumset of certain sets</i>, Publ. Math. Debrecen, Volume 45 (1994), 115-122 <br><br>which can be found <a href="https://publi.math.unideb.hu/load_doc.php?p=174&amp;t=pap" rel="nofollow noopener noreferrer ugc" target="_blank">here</a>, shows that the set of pairs $(\alpha, \beta)$ for which the sequence does not even contain an infinite arithmetic progression, also has the cardinality of the continuum. This strengthens the second result from the first paper I mentioned. Both cardinality continuum results make use of $\alpha$ and $\beta$ with $\frac{\beta}{\alpha}$ a power of two (i.e. rational), however. So they don't disprove the conjecture at hand.<br><br>Then, much more recently, we finally have the following two papers<br><br>X. W. Jiang, W. X. Ma, <i>A conjecture of Hegyvári</i>, Int. J. Number Theory, Volume 20 (2024), 915–933.<br>J. H. Fang, J. Y. He, <i>On a problem of Erdős and Graham</i>, Acta Math. Hung., Volume 175 (2025), 532-542.<br><br>Thanks to Terence who kindly sent me a copy of the second paper (and see his comment below as well!), both papers seem to extend Hegyvári's non-completeness results in the case that $\frac{\alpha}{\beta}$ is a power of two, but for $\alpha &lt; 2$ and $\beta$ sufficiently large.<br><br>Long story short, I believe the following four results for specific $\alpha$ and $\beta$ are known:<br><br><b> Proposition 1.</b> If exactly one of $\alpha$ and $\beta$ is a dyadic rational, then the sequence is complete. <br><b> Proposition 2.</b> If $\min(\alpha, \beta) &lt; 2$ and $\max(\alpha, \beta) &lt; 3$, then the sequence is complete. <br><b> Proposition 3.</b> If $\alpha \ge 2$ and $\beta = 2^l \alpha$ with $l \in \mathbb{N}$, then the sequence is not complete.<br><b> Proposition 4.</b> If $\alpha &lt; 2$ and  $\beta = 2^l \alpha$ with $l \in \mathbb{N}$ sufficiently large, then the sequence is not complete.<br><br>Here, Propositions 1 and 3 are due to Hegyvári, while Proposition 4 is due to Jiang-Ma and Fang-He.<br><br>Long story even shorter, as far as I can tell there is no solution to the main problem yet. On the other hand, I do suspect that the first paper by Hegyvári either settles the case $\gamma = \sqrt{2}$ or perhaps even $1 &lt; \gamma \le \sqrt{2}$ (possibly implicitly). If anyone has access to this paper and could check, that would be appreciated. And in other news, the hypothesis that $\frac{\alpha}{\beta}$ is irrational can most likely be slightly weakened (if that wasn't clear already); Hegyvári conjectures that the sequence is complete if either $\alpha$ or $\beta$ is not a dyadic rational, and $\beta \neq 2^l \alpha$. In other words, Propositions 3 and 4 are conjecturally close to optimal.<br><br>The result I mentioned in my second post in this comment section (namely, that if we change all floor functions to ceiling functions, then the sequence is complete, as long as either $\alpha$ or $\beta$ is not a dyadic rational) does seem to be new however, so perhaps I actually will keep working on my own paper on this subject.</p>
+      
+      
+      <div class="fixed-post">
+(The site has been updated to address this comment.)
+      </div>
+
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Woett">Woett</a></strong>
+      
+      — <a href="/forum/thread/354#post-1292">20:23 on 19 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="1292" data-react-url="/forum/post/1292/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: TerenceTao"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: Woett, Alfaiz"
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">2</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-1294"
+    class="post depth-1
+           
+           even">
+    <div class="post-body" id="post-1294">
+    
+
+
+
+      
+      <p>If it makes you feel any better, I had a fairly similar experience with <a href="https://www.erdosproblems.com/243" rel="nofollow noopener noreferrer ugc" target="_blank">#243</a>, though with Vjeko playing the role of an AI deep research tool in that case.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TerenceTao">TerenceTao</a></strong>
+      
+      — <a href="/forum/thread/354#post-1294">21:33 on 19 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="1294" data-react-url="/forum/post/1294/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Vjeko_Kovac, zach hunter, Woett"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">3</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-1295"
+    class="post depth-2
+           
+           odd">
+    <div class="post-body" id="post-1295">
+    
+
+
+
+      
+      <p>That does make me feel better Terence, thank you ;)</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Woett">Woett</a></strong>
+      
+      — <a href="/forum/thread/354#post-1295">21:36 on 19 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="1295" data-react-url="/forum/post/1295/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: TerenceTao"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-1296"
+    class="post depth-1
+           
+           odd">
+    <div class="post-body" id="post-1296">
+    
+
+
+
+      
+      <p>I was able to get a hold of the Fang-He paper, but not the Jiang-Ma paper.  From what I can tell:<br><br>* Jiang-Ma showed that completeness fails when $1 &#60; \alpha &#60; 2$ and $\beta = 2^l \alpha$ for a sufficiently large $l$. In fact they prove something stronger than non-completeness but it is more technical to state.<br>* Fang-He reprove this statement with a simpler proof and say even more about the set of subset sums.<br><br>However they don't seem to claim anything about the case when $\beta/\alpha$ is not a power of two.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TerenceTao">TerenceTao</a></strong>
+      
+      — <a href="/forum/thread/354#post-1296">21:41 on 19 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="1296" data-react-url="/forum/post/1296/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Woett"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-1010"
+    class="post depth-0
+           
+           even">
+    <div class="post-body" id="post-1010">
+    
+
+
+
+      
+      <p>At a first glance, it seems like there should be no fundamental difference in this question if we change all floor functions to ceiling functions, right? A priori there seems to be no reason why proving the completeness for one should be any easier or harder than for the other. Well, as fate would have it, I can resolve this problem.. But only if we use the ceiling function! Isn't that remarkable?<br><br>To elaborate on this, let me define two notions. We say that a sequence $S = (s_1, s_2, \ldots)$ is a $\Sigma$-sequence if a constant $c$ exists such that $s_{n+1} - \sum_{i=1}^n s_i \le c$ for all $n$. And we call a sequence precomplete if, for every $k \in \mathbb{N}$, there are $k$ consecutive integers that can all be written as the sum of distinct elements of $S$.<br><br>In his $1964$ paper 'Complete Sequences of Polynomial Values' (see <a href="https://mathweb.ucsd.edu/~ronspubs/#64" rel="nofollow noopener noreferrer ugc" target="_blank">here</a>), Graham proved that if $A = (a_1, a_2, \ldots)$ is a $\Sigma$-sequence and $B = (b_1, b_2, \ldots)$ is precomplete, then the union $(a_1, b_1, a_2, b_2, \ldots)$ is complete.<br><br>Now, if $a_{n+1} \le 2a_n$ for all large enough $n$, then one can show that $A$ is a $\Sigma$-sequence. And the equality $a_{n+1} \le 2a_n$ is satisfied for all large enough $n$ if $a_n = \lceil 2^{n-1} \alpha \rceil$, but not if $a_n = \lfloor 2^{n-1} \alpha \rfloor$!<br><br>Moreover, to prove that $B = (b_1, b_2, \ldots)$ is precomplete for $b_n = \lceil 2^{n-1} \beta \rceil$, it turns out that it is sufficient to show that there are just two consecutive integers that can both be written as the sum of distinct elements of $B$. And for $b_n = \lceil 2^{n-1} \beta \rceil$ one can check that, unless $\beta$ is a dyadic rational, there is some $n$ such that $b_1 + b_2 + \ldots + b_{n-1}$ is equal to $b_n - 1$, finishing the proof.<br><br>All in all I can prove the following theorem: as long as either $\alpha$ or $\beta$ is not a dyadic rational, then $(\lceil \alpha \rceil, \lceil \beta\rceil, \lceil 2\alpha \rceil, \lceil 2\beta\rceil, \lceil 4\alpha \rceil, \lceil 4\beta\rceil, \ldots)$ is complete.<br><br>For a (first version of a) full write-up, see <a href="https://github.com/Woett/Mathematical-shorts/blob/main/Completeness%20of%20exponentially%20increasing%20sequences%20II.pdf" rel="nofollow noopener noreferrer ugc" target="_blank">here</a>.<br><br>I plan to combine this write-up with another project I'm working on, and will submit a proper paper to the arXiv in the coming months. I'll make sure to link it once it's finished. In the mean time, perhaps someone else can use some of these ideas to put the ball into the back of the net ;) As it does feel like we're very close to solving this problem.</p>
+      
+      
+      <div class="fixed-post">
+(The site has been updated to address this comment.)
+      </div>
+
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Woett">Woett</a></strong>
+      
+      — <a href="/forum/thread/354#post-1010">19:28 on 11 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="1010" data-react-url="/forum/post/1010/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-1011"
+    class="post depth-1
+           
+           odd">
+    <div class="post-body" id="post-1011">
+    
+
+
+
+      
+      <p>This change of ceilings and floors may lead to no difference in result, but proving it can be of substantial different difficulty.<br>(I know an analogue of an olympiad question where this was the case e.g.)</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/StijnC">StijnC</a></strong>
+      
+      — <a href="/forum/thread/354#post-1011">20:02 on 11 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="1011" data-react-url="/forum/post/1011/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-651"
+    class="post depth-0
+           
+           odd">
+    <div class="post-body" id="post-651">
+    
+
+
+
+      
+      <p>Let $P(\alpha, \beta)$ denote the statement that the above sequence is complete, where $\alpha$ and $\beta$ are assumed to be positive reals. Then I can prove the following two propositions:<br><br><b> Proposition 1.</b> If $\alpha = \frac{m}{2^n}$ is a dyadic rational (so in particular if $\alpha \in \mathbb{N}$) and $\beta$ is not a dyadic rational, then $P(\alpha, \beta)$ holds. <br><b> Proposition 2.</b> If $\min(\alpha, \beta) &lt; 2$ and $\max(\alpha, \beta) &lt; 3$, then $P(\alpha, \beta)$ holds. <br><br>In general we see that $P(2\alpha, \beta)$ implies $P(\alpha, \beta)$, as the corresponding sequence for the former is a subsequence of the latter. In particular, to prove the first proposition it is sufficient to assume $\alpha \in \mathbb{N}$. <br><br>So assume $\alpha = m \in \mathbb{N}$ and let us first note that the sequence $(\lfloor \alpha \rfloor, \lfloor 2\alpha \rfloor, \lfloor 4\alpha \rfloor, \ldots)$ then generates $m\mathbb{N}$. We therefore need to show that sums of distinct elements from $B = (\lfloor \beta \rfloor, \lfloor 2\beta \rfloor, \lfloor 4\beta \rfloor, \ldots)$ attain all residue classes modulo $m$.<br><br>Now, for every prime divisor $p$ of $m$, I claim that $B$ contains infinitely many elements not divisible by $p$, if $\beta$ is not a dyadic rational. Indeed, if $p$ divides $\lfloor 2^l \beta \rfloor$ for some $l$, let $r \in \mathbb{N}$ and $\epsilon \in (0, 1)$ be such that $2^l \beta = pr + \epsilon$ and choose $l'$ such that $1 \le 2^{l'} \epsilon &lt; 2$. We then get that $\left \lfloor 2^{l+l'} \beta \right \rfloor = 2^{l'}pr + 1$ is not divisible by $p$. <br><br>Let $b_1 \pmod{m}, b_2 \pmod{m}, \ldots, b_k \pmod{m}$ be those residue classes modulo $m$ that appear infinitely often in $B$. We remark that it is not necessarily the case that there exists an $i$ such that $\gcd(b_i, m) = 1$. However, we do have $\gcd(b_1, \ldots, b_k, m) = 1$ by the aforementioned claim on prime divisors $p$ of $m$. We therefore get by the existence of the Frobenius number that all residue classes modulo $m$ appear among sums of the $b_i$, which was what we needed to prove.<br><br>As for the second proposition, note we may assume $\beta \ge \alpha &gt; 1$; the first inequality by symmetry, and the second inequality by the aforementioned fact that $P(2\alpha, \beta)$ implies $P(\alpha, \beta)$. Now define, for $n \ge 1$, $s_{2n-1} = \lfloor 2^{n-1} \alpha \rfloor$ and $s_{2n} = \lfloor 2^{n-1} \beta \rfloor$. We then claim that $(s_1, s_2, \ldots)$ generates the entirety of $\mathbb{N}$, for which it is necessary and sufficient to show $s_{n+1} \le 1 + \sum_{i=1}^n s_i$ for all $n \ge 0$. This follows for $n = 0$ by the fact that $s_1 = \lfloor \alpha \rfloor = 1$, and it follows for $n = 1$ as $s_2 = \lfloor \beta \rfloor \le 2$. For $n \ge 2$ we get by induction<br>\begin{align*}<br>s_{n+1} &amp;\le 2s_{n-1} + 1 \\<br>&amp;\le 2 + \sum_{i=1}^{n-1} s_i \\<br>&amp;\le 1 + \sum_{i=1}^{n} s_i.<br>\end{align*}<br>In fact, the proof of this second proposition immediately generalizes to $\gamma \in (1,2)$ instead of $2$, and it even works in some cases for $\gamma \le 3$.</p>
+      
+      
+      <div class="fixed-post">
+(The site has been updated to address this comment.)
+      </div>
+
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Woett">Woett</a></strong>
+      
+      — <a href="/forum/thread/354#post-651">21:52 on 20 Sep 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="651" data-react-url="/forum/post/651/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: Woett"
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+  
+</ul>
+
+
+
+
+
+<p>
+                        <div style="text-align:center;">
+<strong>All comments are the responsibility of the user. Comments appearing on this page are not verified for correctness. Please keep posts mathematical and on topic.</strong>
+</div>
+<p>
+
+
+<div style="text-align:center; margin: 1em">
+
+
+  <p><a href="/forum/login?next=%2Fforum%2Fthread%2F354">Log in</a> to add a comment.</p>
+
+
+    </div>
+<p><div style="text-align: center; margin: 1em 0;">
+<a href="/forum/">Back to the forum</a>
+</div>
+                </div>
+            </div>
+            
+
+<script>
+document.addEventListener("submit", (e) => {
+  const form = e.target.closest(".reply-form");
+  if (!form) return;
+  const btn = form.querySelector('button[type="submit"]');
+  if (btn?.dataset.submitting === "1") {
+    e.preventDefault(); // already submitted
+    return;
+  }
+  if (btn) {
+    btn.dataset.submitting = "1";
+    btn.disabled = true;
+    btn.textContent = "Posting…";
+  }
+});
+</script>
+
+<script>
+document.addEventListener("click", (ev) => {
+  const a = ev.target.closest(".thread-sort .order");
+  if (!a) return;
+});
+</script>
+
+<script>
+document.addEventListener("submit", (e) => {
+  const form = e.target.closest(".comment-form");
+  if (!form) return;
+
+  const btn = form.querySelector('button[type="submit"]');
+  if (!btn) return;
+
+  // Already submitting? Block.
+  if (btn.dataset.submitting === "1") {
+    e.preventDefault();
+    return;
+  }
+
+  // First submit: lock UI
+  btn.dataset.submitting = "1";
+  btn.disabled = true;
+  const original = btn.textContent;
+  btn.dataset.originalText = original;
+  btn.textContent = "Posting…";
+});
+</script>
+           
+
+
+
+
+<script>
+window.MathJax = {
+  output: {
+    font: 'mathjax-tex'
+  },
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+};
+</script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@4.1.2/tex-chtml-nofont.js"></script>
+
+
+<!-- Previewing forum posts -->
+<!-- Previewing forum posts -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, m => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[m]);
+  }
+
+  function normalizeHref(href) {
+    href = href.trim();
+    if (!/^https?:\/\//i.test(href) && !href.startsWith("/")) {
+      href = "https://" + href;
+    }
+
+    return href;
+  }
+
+  let mathJaxQueue = Promise.resolve();
+
+  function clearMathJax(element) {
+    if (window.MathJax && MathJax.typesetClear) {
+      MathJax.typesetClear([element]);
+    }
+  }
+
+  function typesetMath(element) {
+    if (!window.MathJax) return;
+
+    if (MathJax.typesetPromise) {
+      mathJaxQueue = mathJaxQueue
+        .then(() => {
+          if (MathJax.startup && MathJax.startup.promise) {
+            return MathJax.startup.promise;
+          }
+        })
+        .then(() => MathJax.typesetPromise([element]))
+        .catch(err => {
+          console.error("MathJax typeset failed:", err);
+        });
+
+      return;
+    }
+
+    if (MathJax.Hub) {
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, element]);
+    }
+  }
+
+  function renderPreview(textarea, preview, label) {
+    let raw = textarea.value;
+    const anchors = [];
+    let idx = 0;
+
+    raw = raw.replace(
+      /<a\s+href=("(?:[^"]*)"|'(?:[^']*)')\s*>([\s\S]*?)<\/a>/gi,
+      (match, qHref, labelText) => {
+        const href = qHref.slice(1, -1);
+        const token = `__A_TAG_${idx++}__`;
+
+        anchors.push({
+          token,
+          href: normalizeHref(href),
+          label: labelText
+        });
+
+        return token;
+      }
+    );
+
+    let safe = escapeHtml(raw);
+
+    anchors.forEach(a => {
+      const html = `<a href="${escapeHtml(a.href)}">${escapeHtml(a.label)}</a>`;
+      safe = safe.replace(a.token, html);
+    });
+
+    safe = safe.replace(/\{PROBLEM=(.+?)\}/g, (_, p1) =>
+      `<a href="/${escapeHtml(p1)}">[${escapeHtml(p1)}]</a>`
+    );
+
+    safe = safe.replace(/\n/g, "<br>");
+    clearMathJax(preview);
+
+    if (!safe.trim()) {
+      preview.innerHTML = "";
+      preview.classList.add("hidden");
+      label.classList.add("hidden");
+      return;
+    }
+
+    preview.innerHTML = safe;
+    preview.classList.remove("hidden");
+    label.classList.remove("hidden");
+
+    typesetMath(preview);
+  }
+
+  document.querySelectorAll("form textarea").forEach(textarea => {
+    const form = textarea.closest("form");
+    const preview = form && form.querySelector(".post-preview");
+    const label = form && form.querySelector(".preview-label");
+
+    if (preview && label) {
+      textarea.addEventListener("input", () => renderPreview(textarea, preview, label));
+      renderPreview(textarea, preview, label);
+    }
+  });
+});
+</script>
+
+<!-- To handle the search bar -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function setFilterLink(linkId, newFilter) {
+        const link = document.getElementById(linkId);
+        if (!link) return;
+        const pathParts = window.location.pathname.split("/");
+        // Expect: /<section>/<entry> or /<section>/<entry>/<filter>
+        if (pathParts.length >= 3) {
+            const section = pathParts[1];
+            const entry = pathParts[2];
+            // Construct base: /tags/additive, /sources_bib/BL09, etc.
+            const baseUrl = "/" + section + "/" + entry;
+            link.href = baseUrl + "/" + newFilter;
+        }
+    }
+    setFilterLink("solvedLink", "solved");
+    setFilterLink("openLink", "open");
+    setFilterLink("yesLink", "yes");
+    setFilterLink("noLink", "no");
+});
+</script>
+
+<!-- Handle the dual view link -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const dualLink = document.getElementById("dualViewLink");
+  if (!dualLink) return;
+
+  const isInDualView = window.location.pathname.startsWith("/dual");
+  dualLink.textContent = isInDualView ? "Exit Dual View" : "Dual View";
+  dualLink.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    if (isInDualView) {
+      try {
+        const leftIframe = document.getElementById("iframe-left");
+        const src = leftIframe?.src || "/";
+        let clean = src.replace(window.location.origin, "");
+        clean = clean.replace(/[?&]embed=1/, "");
+
+        window.location.href = clean;
+      } catch (err) {
+        window.location.href = "/";
+      }
+    } else {
+      const currentPath = window.location.pathname + window.location.search;
+      const rightPanelDefault = "/";
+      const hash = `#left:${encodeURIComponent(currentPath)}&right:${encodeURIComponent(rightPanelDefault)}`;
+      window.location.href = `/dual${hash}`;
+    }
+  });
+});
+</script>
+
+<!-- Redirect links and searches when in dual view mode -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  if (!window.location.pathname.startsWith("/dual")) return;
+
+  function getTargetPanel() {
+    const selected = document.querySelector('input[name="targetPanel"]:checked');
+    return selected ? selected.value : "left";
+  }
+
+  function loadInPanel(panel, path) {
+    if (!path) return;
+    const iframe = document.getElementById(`iframe-${panel}`);
+    if (!iframe) return;
+    const url = path.includes("?") ? path + "&embed=1" : path + "?embed=1";
+    iframe.src = url;
+    const inputBox = document.querySelector(`#panel-${panel} input`);
+    if (inputBox) inputBox.value = path;
+    console.log(`Loaded "${url}" into panel "${panel}"`);
+  }
+  
+  document.querySelectorAll(".dual-aware a[href^='/'], a.dual-aware[href^='/']").forEach(link => {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      const path = this.getAttribute("href");
+      loadInPanel(getTargetPanel(), path);
+    });
+  });
+
+  const idForm = document.getElementById("idsearchForm");
+  if (idForm) {
+    idForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const input = idForm.querySelector(".idsearchTerm").value.trim();
+      if (!input) return;
+
+      let path = null;
+
+      if (/^\d+$/.test(input)) {
+        path = "/go_to/" + encodeURIComponent(input);
+      } else if (/^((\d+|end)(-(\d+|end))?\s*)+(open|solved|yes|no)?$/i.test(input)) {
+        const parts = input.split(/\s+/).filter(Boolean);
+        path = "/range/" + parts.map(encodeURIComponent).join("/");
+      } else {
+        alert("Invalid input format.");
+        return;
+      }
+
+      loadInPanel(getTargetPanel(), path);
+    });
+  }
+
+  const searchForm = document.getElementById("searchForm");
+  if (searchForm) {
+    searchForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const input = searchForm.querySelector(".searchTerm").value.trim();
+      if (!input) return;
+
+      const path = "/search/" + encodeURIComponent(input);
+      loadInPanel(getTargetPanel(), path);
+    });
+  }
+});
+</script>
+
+<!-- Different menu on mobile -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const button = document.getElementById("mobileMenuButton");
+  const dropdown = document.getElementById("mobileDropdown");
+
+  if (button && dropdown) {
+    button.addEventListener("click", function () {
+      dropdown.classList.toggle("show");
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+      }
+    });
+  }
+});
+</script>
+
+<!-- For expanding threads -->
+
+<script>
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('#toggle-posts');
+  if (!link) return;
+  e.preventDefault(); 
+
+  const box = document.getElementById('more-posts');
+  const isHidden = box.classList.toggle('hidden');
+  const expanded = !isHidden;
+
+  link.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  box.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+
+  link.textContent = expanded
+    ? 'Show only the top five comments'
+    : `Show ${link.dataset.remaining} more comments`;
+});
+</script>
+
+
+<script>
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('.toggle-replies');
+  if (!link) return;
+  e.preventDefault();
+
+  const pid = link.dataset.postId;
+  const box = document.getElementById(`more-replies-${pid}`);
+  if (!box) return;
+
+  const isHidden = box.classList.toggle('hidden');
+  const expanded = !isHidden;
+
+  link.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  box.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+
+  link.textContent = expanded
+    ? 'Hide replies'
+    : `Show ${link.dataset.remaining} more replies`;
+});
+</script>
+
+
+<script>
+document.addEventListener("click", async function (event) {
+    const button = event.target.closest(".problem-status-option");
+    if (!button) return;
+
+    const widget = button.closest(".problem-status-widget");
+    if (!widget) return;
+
+    if (widget.dataset.canEdit !== "1") return;
+
+    const status = button.dataset.status;
+    const url = widget.dataset.setUrl;
+
+    widget.classList.add("is-saving");
+
+    const buttons = widget.querySelectorAll(".problem-status-option");
+    buttons.forEach(btn => btn.disabled = true);
+
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "X-Requested-With": "fetch"
+            },
+            body: JSON.stringify({ status: status })
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok || !data.ok) {
+            throw new Error(data.error || "Could not update problem status.");
+        }
+
+        widget.dataset.currentStatus = data.status;
+
+        buttons.forEach(btn => {
+            const active = btn.dataset.status === data.status;
+            btn.classList.toggle("is-active", active);
+            btn.setAttribute("aria-checked", active ? "true" : "false");
+        });
+
+        const label = widget.querySelector(".js-problem-status-label");
+        const description = widget.querySelector(".js-problem-status-description");
+
+        if (label) label.textContent = data.label || button.dataset.label;
+        if (description) description.textContent = data.description || button.dataset.description;
+          widget.style.setProperty("--status-progress", button.dataset.progress);
+
+    } catch (err) {
+        alert(err.message || "Could not update problem status.");
+    } finally {
+        widget.classList.remove("is-saving");
+
+        if (widget.dataset.canEdit === "1") {
+            buttons.forEach(btn => btn.disabled = false);
+        }
+    }
+});
+</script>
+  
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a193472b6abde8d8',t:'MTc4MzcyNTQwNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

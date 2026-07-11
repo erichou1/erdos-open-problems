@@ -1,0 +1,35 @@
+{
+  "problem_number": 417,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/417",
+  "retrieved_at": "2026-07-10T23:17:05.757305+00:00",
+  "page_title": "417 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "dbf3339ed8d25221f76554ee1a0a62d6d199e661e79c07ac4bbe96c4f7d29d7a",
+  "comment_count": 5,
+  "comments": [
+    {
+      "post_id": "6399",
+      "text": "Define $E(x) = V(x) - V'(x)$ and $M(v) = \\min\\{m : \\phi(m) = v\\}$. Then $E(x) = \\#\\{v \\le x : v \\in \\mathrm{Im}\\,\\phi,\\ M(v) > x\\}$, so the problem becomes, how often does a totient value first appear above $x$? One family comes from $v = 2(p-1)$ with $p \\in (x/3, x/2)$ prime. Since $\\phi(4p) = 2(p-1) \\le x$ and $4p > x$, these are candidate hidden totients. If $\\phi(r) = v > x/2$ and $r \\le x$, then $r$ must be odd. If $2 \\mid r$, write $r = 2^a s$ with $s$ odd; then $\\phi(r) = 2^{a-1}\\phi(s) \\le r/2 \\le x/2$, contradiction. Since $p > x/3$ we have $v = 2(p-1) > x/2$ for large $x$, so the lemma applies. Excluding odd preimages $r \\le x$ of $v = 2(p-1)$ via Brun-type sieve estimates suggests the exceptional set is $o(x/\\log x)$, giving $E(x) \\gg x/\\log x$. This does not establish divergence of $V(x)/V'(x)$ since the Maier-Pomerance factor dominates. But $M(v)$ may be the right object for further attack, particularly for $v \\equiv 0 \\pmod{8}$. Developed with AI assistance; I take responsibility for the mathematical content.",
+      "meta": "TheAbandonedThinker — 23:11 on 11 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6445",
+      "text": "I went back into this again after the earlier comment and found a cleaner conditional subfamily where the inverse tree almost completely collapses. The starting point is still $E(x)=\\#\\{v\\leq x: M(v)>x\\}$, where $M(v)=\\min\\{m:\\phi(m)=v\\}$. The broad family $v=2(p-1)$ seems too loose because semiprime preimages survive in too many ways. But the following conditional family behaves much more rigidly. Take primes $p=6\\ell+1$ with $\\ell$ also prime, and restrict to $p\\in(3x/7,x/2)$. Then $v=2(p-1)=12\\ell$. We still have $\\phi(4p)=12\\ell\\leq x$, while $4p>x$. From the parity observation in the earlier comment, any preimage $r\\leq x$ satisfying $\\phi(r)=12\\ell$ must be odd. Prime case: $r=q$, $q-1=12\\ell$, so $q=12\\ell+1=2p-1$. The prime obstruction only survives when $2p-1$ is also prime. Prime powers: $r=q^a$, $a\\geq 2$, then $q^{a-1}(q-1)=12\\ell$. Since $\\gcd(q,q-1)=1$ we need $q^{a-1}\\mid 12\\ell$. For large odd prime $\\ell$ the only cases are $q=3$ giving $\\phi(9)=6\\neq 12\\ell$, or $q=\\ell$ giving $\\ell=13$, a finite exception irrelevant for large $x$. Semiprimes: $(q_1-1)(q_2-1)=12\\ell$, writing $q_i-1=2a_i$ gives $a_1 a_2=3\\ell$. For odd prime $\\ell>3$ the only splits are $(a_1,a_2)=(1,3\\ell)$ giving $r=3p>x$, or $(a_1,a_2)=(3,\\ell)$ giving $r=7(2\\ell+1)$, which exceeds $x$ since $\\ell\\in(x/14,x/12)$. If $r$ has three or more distinct odd prime factors then $\\nu_2(\\phi(r))\\geq 3$ but $\\nu_2(12\\ell)=2$, impossible. So the only obstruction is $2p-1$ prime. This does not give an unconditional result since infinitude of primes $p=6\\ell+1$ with $\\ell$ prime is unproved. Still the $M(v)$ reformulation and $2$-adic pruning seem structurally relevent once $\\nu_2(\\phi(r))$ is controlled carefully. Analysis was 100% AI prompting built on my earlier constructions and works. Any mistakes are my responsibility.",
+      "meta": "TheAbandonedThinker — 23:17 on 13 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "265",
+      "text": "The sequence $V'(x)$ is in the OEIS as A061070. \"On the number of distinct values of Euler’s φ-function\" (1988) by Maier and Pomerance prove that it is asymptotically $\\frac{x}{\\log(x)} \\exp\\{(C+o(1))(\\log \\log \\log x)^2\\}$ for an explicit constant $C$. In particular, $V'(x)$ is $o(x)$. Apparently, \"On some functions connected with φ(n)\" (1929) by Pillai was the first to prove this. Later, \"On the normal number of prime factors of p−1 and some related problems concerning Euler’s φ-function\" (1935) by Erdős and \"On the values of Euler’s φ-function\" (1973) and \"Distinct values of Euler’s φ-function\" (1976) both by Erdős&Hall proved versions closer to the asymptotic expression above. (See also \"The distribution of totients\" by Kevin Ford.) The sequence $V(x)$ is in the OEIS as A070243. \"Some remarks on Euler’s φ-function and some related problems\" (1945) by Erdős was apparently the first to prove that $V(x)/x$ tends to a limit, which can be evaluated as $\\zeta(2)\\zeta(3)/\\zeta(6)$. (See also \"The distribution of values of the Euler function\" (1972) by Bateman.) In other words, I believe that $V(x)/V'(x)$ tends to infinity and this was proven by [Pillai in 1929 and] Erdős himself in 1935 and 1945. Color me confused.",
+      "meta": "BorisAlexeev — 12:42 on 31 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "780",
+      "text": "Okay, thanks to the OEIS links, perhaps I can resolve my confusion? The OEIS links suggest that $V(x)$ is actually in the OEIS as A264810, not A070243 as I said. The difference is this: A264810 counts the number of different values of $\\phi(m)$ that are less than $x$, whereas A070243 counts the number of different values of $m$ such that $\\phi(m)\\le x$. If different values $m_1$ and $m_2$ have $\\phi(m_1)=\\phi(m_2)\\le x$, then the former counts it only once whereas the latter counts it twice. Naturally, this makes a big difference for the conjecture. I believe that A264810 (as linked presently) is indeed the correct interpretation of $V(x)$, and my own comment I'm replying to was incorrect regarding the meaning of $V(x)$ (but hopefully correct otherwise).",
+      "meta": "BorisAlexeev — 14:37 on 29 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "784",
+      "text": "Apologies, I missed your earlier comment. Yes, I think this interpretation is correct - the definition of $V(x)$ here should agree with the definition given in [416] (see that problem's commentary for more details on known estimates for $V(x)$). So $V'(x)$ is A061070 and $V(x)$ is A264810. As far as I can see, the estimates in the literature (e.g. Maier-Pomerance and Ford) are all about $V(x)$, not the $V'(x)$ as defined here.",
+      "meta": "Thomas Bloom — 15:21 on 29 Sep 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

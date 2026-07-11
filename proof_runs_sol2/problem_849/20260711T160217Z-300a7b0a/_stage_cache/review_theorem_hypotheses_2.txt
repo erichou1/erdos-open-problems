@@ -1,0 +1,87 @@
+{
+"reviewer_role": "independent adversarial referee (theorem_hypotheses)",
+"verdict": "fail",
+"claims_checked": 19,
+"claims_total": 19,
+"checked_claim_ids": [
+"DOMAIN_BIFURCATION",
+"SEMIDISCRETE_POSITIVE",
+"FIXED_LAYER_MONOTONICITY",
+"HALF_ROW_MONOTONICITY",
+"CENTRAL_GROWTH",
+"NORMALIZATION_FINITE",
+"FIBER_ORDERING",
+"LOW_MULTIPLICITIES",
+"DENSITY_LOW_MULTIPLICITIES",
+"T5_SPLIT",
+"DISPLACEMENT_IDENTITY",
+"SLOPE_AUDIT",
+"PELL_ADJACENT",
+"PELL_SEPARATION",
+"DIVISOR_INVARIANT",
+"LOW_LAYER_SYSTEM",
+"WORD_SYSTEM",
+"FINITE_CERTIFICATE",
+"TERMINAL_AUDIT"
+],
+"open_gaps": [
+"The immutable statement is not proved or disproved.",
+"DOMAIN remains unresolved. The candidate demonstrates two possible interpretations but does not establish which domain the immutable statement uniquely denotes.",
+"The discrete route remains conditional on an added interpretation of n and k as integers.",
+"No global exclusion of a value with exactly four interior representations is proved.",
+"The low-layer/high-layer system is not closed for all k at least 5.",
+"No theorem proves that two high-layer representations permit at most one additional interior representation.",
+"No positive construction realizes every exact interior multiplicity q.",
+"No uniform method excludes unintended representations in an infinite Pell or displacement-word family.",
+"No effective bound or complete decision procedure is supplied for scalable displacement-word systems.",
+"The Pell construction supplies only adjacent pairs and no arbitrary compatible multi-lift."
+],
+"unchecked_imports": [
+"Claim 2 implicitly uses the Intermediate Value Theorem and the fact that a continuous, strictly increasing, unbounded function on a closed ray has range equal to the ray beginning at its endpoint value. The theorem is not stated exactly, unboundedness is not explicitly proved, and its hypotheses are not separately checked.",
+"Claim 5 calls C(n,floor(n/2)) the row maximum without stating and proving binomial symmetry and the required monotonicity on the other half of the row.",
+"Claim 9 invokes the estimates Theta(sqrt(A)), O(sqrt(A) log(A)) = o(A), and O(A^(1/3) log(A)) = o(sqrt(A)) without stating the limiting comparison theorem for logarithms versus positive powers.",
+"Claim 15 invokes Euclid's lemma: if gcd(p,q)=1 and q divides p a, then q divides a. Its exact statement and hypotheses are not supplied.",
+"Claim 15 invokes the least-common-multiple divisibility property: if every q_i divides a, then lcm(q_i) divides a. It is not stated or proved.",
+"Claim 18 assumes the exact contractual behavior of Python's comb, isqrt, integer division, and heap operations. The computation was independently rerun offline and matched, but those software primitives are not formally specified inside the candidate."
+],
+"counterexample_searches": [
+"The domain-separation example a=70 was checked. In the discrete interpretation its only representations are (70,1) and (8,4); in the semidiscrete interpretation with real upper argument it has exactly one representation in each layer k=1,2,3,4.",
+"The unqualified assertion that the central row maximum strictly increases for every nonnegative row has the boundary counterexample R_0=R_1=1. The intended use for admissible rows n at least 2 survives, but that range must be stated.",
+"The intended slope inequality was tested on every collision chain arising from rows n at most 500. The chains for 120, 210, and 3003 all satisfied strictly increasing e_i/d_i; no finite counterexample was found.",
+"The finite certificate was rerun with exact integers. It reproduced 3014786 high-layer occurrences, 3014784 distinct values, the two repeated high-layer values 3003 and 61218182743304701891431482520, the three layer-2 hits 3003, 11628, and 24310, and an empty dangerous list.",
+"The layer cutoff was checked exactly: C(102,51)=399608854866744452032002440112 is at most 10^30, while C(104,52)=1583065848125949175357548128136 exceeds 10^30.",
+"The Pell recurrence was checked through multiple iterations. It produces (k,n)=(5,15), (39,104), and (272,714), preserving the Pell equation and the adjacent collision identity.",
+"The one-edge word ((1,1)) was checked against the Pell recurrence and indeed has unbounded solutions, confirming that a fixed finite word does not imply bounded variables."
+],
+"material_errors": [
+"The candidate expressly reaches no terminal conclusion, so it fails the acceptance criterion requiring a proof or disproof of the exact original statement.",
+"Claim 1's displayed discrete domain is syntactically malformed: '(n,k) in Z^2 >= 2' does not specify whether n alone or both coordinates are at least 2. The latter reading excludes k=1 and contradicts Claims 6 and 8.",
+"Claim 10 does not define S_j correctly. The expression 'S_j={C(n,j)>=2j}' is not a set of coefficient values and omits the quantified row variable and set-builder separator.",
+"Claim 10's definition 'h(a)=#{k>=5 in S_k}' is ill-typed: a layer index k is not an element of the set of coefficient values S_k. The intended condition a in S_k is absent.",
+"Claims 10 and 19 falsely describe two strong global statements as necessary for excluding M(a)=5. They are sufficient branch-killing conditions, not logically necessary. Excluding exact interior multiplicity 4 does not require excluding all values lying in three low layers and any high layer, since such values could have additional representations and multiplicity greater than 4.",
+"Claim 10 proves only the case M(a)=5, equivalently mu(a)=4, whereas the validated T5_CASE_SPLIT subgoal asks for the disjunction under mu(a)>=4. The extension is elementary but is not stated or proved.",
+"Claim 11 states the correct displacement identity, but its derivation is textually incomplete: the displayed starting equality is missing, leaving only isolated factorial ratios.",
+"Claim 12's reciprocal-slope display omits every inequality sign.",
+"Claim 12's key logarithmic identity is missing its entire left-hand sum. Consequently the definitions of the two averages and the equation d_i Ubar_i=e_i Gbar_i are unsupported as written.",
+"Claim 12's final comparison also omits the strict inequality sign. The intended proof is recoverable and appears mathematically sound, but the submitted proof is incomplete and cannot be repaired by the referee.",
+"Claim 15 contains the malformed equation 'p,a=q C(n-1,k-1)' rather than the required product p a=q C(n-1,k-1).",
+"Claim 17 omits almost the entire polynomial equation for each word edge. It displays only the right-hand falling factorial and therefore does not derive the promised WORD_SYSTEM.",
+"Because Claim 17 lacks the actual equations, its later assertion that it has produced a finite polynomial system is unsupported.",
+"Claim 5 does not state the range of n for which strict row-maximum growth is asserted; without restricting to n at least 1 or the admissible range n at least 2, the assertion has a boundary failure at rows 0 and 1.",
+"Claim 18 is a valid bounded computational result after independent reproduction, but it cannot address any a greater than 10^30 and supplies no finite-to-infinite argument."
+],
+"completeness_score": 55,
+"proof_confidence": 0,
+"adversarial_survival_score": 61,
+"statement_sha256": "b669094e22469ade57dcca529d2ce001ede0c9bee628c97121ad1d9a7ebfb01b",
+"notes": [
+"Most elementary conditional claims, including fixed-layer monotonicity, half-row monotonicity, normalization, fiber ordering, the exact multiplicities 1 through 4, the intended displacement identity, the Pell recurrence, Pell separation, the divisor invariant, and the low-layer algebra, are substantively correct once their domains and missing notation are repaired.",
+"The intended slope theorem also appears correct: later edges have uniformly larger U terms and uniformly smaller G terms. Nevertheless, the submitted formulas omit indispensable expressions and comparison symbols.",
+"The finite certificate through 10^30 is reproducible and survived independent exact-integer execution.",
+"Input provenance only, not mathematical evidence: 
+
+Pasted text
+
+"
+]
+}

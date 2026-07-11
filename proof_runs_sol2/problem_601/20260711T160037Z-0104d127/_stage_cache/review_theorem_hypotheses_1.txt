@@ -1,0 +1,131 @@
+{
+"reviewer_role": "independent adversarial referee (theorem_hypotheses)",
+"verdict": "fail",
+"claims_checked": 17,
+"claims_total": 17,
+"checked_claim_ids": [
+"S0",
+"S1",
+"S2",
+"S3",
+"S4",
+"S5",
+"C1",
+"C2",
+"C3",
+"P1",
+"P2",
+"P3",
+"P4",
+"B1",
+"B2",
+"G1",
+"GOAL"
+],
+"open_gaps": [
+{
+"claim_id": "S0",
+"gap": "The candidate begins to adopt a normalization but terminates before stating it. It does not specify whether an infinite path is a ray, double ray, induced path, or infinite walk; whether graphs are simple and undirected; or whether 0 counts as a limit ordinal."
+},
+{
+"claim_id": "S1",
+"gap": "No finite-separator rank is defined, and neither direction of the claimed rayless-graph characterization is proved."
+},
+{
+"claim_id": "S2",
+"gap": "No elimination-forest construction, forest comparability graph, or equivalence with inherited-order-type antichains is stated or proved."
+},
+{
+"claim_id": "S3",
+"gap": "No same-cardinality antichain lemma is stated or proved, and no deduction for infinite initial ordinals is supplied."
+},
+{
+"claim_id": "S4",
+"gap": "No regular-cardinal block theorem, concentration argument, disjoint refinement, or rank induction appears."
+},
+{
+"claim_id": "S5",
+"gap": "No finite-pattern separation lemma or proof for nonzero limit ordinals below omega cubed appears."
+},
+{
+"claim_id": "C1",
+"gap": "The finite-transversal property is neither defined nor classified, and no finite-clique counterexample construction is analyzed."
+},
+{
+"claim_id": "C2",
+"gap": "No height-two star obstruction or parent-map analysis is provided."
+},
+{
+"claim_id": "C3",
+"gap": "No ordered block model, recursion, profile computation, or scalable obstruction is supplied."
+},
+{
+"claim_id": "P1",
+"gap": "No ordinal demand structure is defined."
+},
+{
+"claim_id": "P2",
+"gap": "No concentration-or-front dichotomy is formulated precisely or proved."
+},
+{
+"claim_id": "P3",
+"gap": "The omega cubed stress test is not addressed."
+},
+{
+"claim_id": "P4",
+"gap": "No hierarchical disjoint-refinement theorem or invariant is supplied."
+},
+{
+"claim_id": "B1",
+"gap": "None of the necessary constraints at omega_1^(omega+2) is verified."
+},
+{
+"claim_id": "B2",
+"gap": "The boundary depth-tail fusion principle is neither proved nor refuted."
+},
+{
+"claim_id": "G1",
+"gap": "No recursive characterization of the satisfying limit ordinals is proposed or tested."
+},
+{
+"claim_id": "GOAL",
+"gap": "The candidate gives no classification and proves or disproves no instance of the immutable statement."
+}
+],
+"unchecked_imports": [],
+"counterexample_searches": [
+{
+"target": "Meaning of infinite path",
+"result": "The interpretations are inequivalent. A one-way ray is an infinite simple path but contains no double ray. An infinite clique has an infinite simple path but no infinite induced path. If an infinite walk may repeat vertices or edges, any graph containing an edge can generate an infinite alternating walk, radically changing the assertion."
+},
+{
+"target": "Graph convention",
+"result": "Directed, undirected, simple, looped, and multigraph conventions produce different notions of path and independence. The candidate does not restrict the convention."
+},
+{
+"target": "Zero as a limit ordinal",
+"result": "If 0 is admitted, the empty graph has an independent vertex set of inherited order type 0, so this boundary case is trivially positive. The candidate neither includes nor excludes it."
+},
+{
+"target": "Candidate mathematical assertions",
+"result": "No substantive theorem or intermediate assertion survives long enough in the truncated candidate to permit a mathematical counterexample test."
+}
+],
+"material_errors": [
+"The candidate is truncated at the phrase 'For the main analysis, adopt the following' and is followed only by an error message.",
+"It silently announces that a convention will be adopted instead of resolving the statement's ambiguity and separating inequivalent interpretations.",
+"It contains no theorem statement, proof, disproof, classification, construction, or verified dependency.",
+"It does not address any boundary case, including 0 or omega_1^(omega+2).",
+"It does not preserve and resolve the original universal quantifiers because it never reaches a mathematical claim.",
+"The line 'No external result or historical assertion is used below' is vacuous because there is no subsequent argument."
+],
+"completeness_score": 0.0,
+"proof_confidence": 0.0,
+"adversarial_survival_score": 0.0,
+"statement_sha256": "d6cba89b3fc36877f79ee1c44e20fd3658f8cec907cc5f2d0cc46caca89a4cdd",
+"notes": "This is not a defective complete proof but an interrupted fragment. No repair can be evaluated without inventing missing definitions and arguments, which the referee mandate forbids. Reviewed from the supplied artifact. 
+
+Pasted text
+
+"
+}

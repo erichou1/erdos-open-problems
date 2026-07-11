@@ -1,0 +1,74 @@
+{
+"reviewer_role": "independent adversarial referee (global_synthesis)",
+"verdict": "fail",
+"claims_checked": 18,
+"claims_total": 18,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14",
+"C15",
+"C16",
+"C17",
+"C18"
+],
+"open_gaps": [
+"S0 remains unresolved: the immutable statement does not define the symbol ≫, and the candidate selects a preferred interpretation instead of treating the ambiguity as blocking.",
+"G1: no uniform critical-scale PBD theorem with prime-power block sizes in [x,Bx] is proved.",
+"G2: no uniform ITD(q+1,n;q) construction covering all required n≥q^2 is proved.",
+"G3: no perfect-matching or absorption theorem for the orthogonal-array hypergraph at r=Theta(sqrt(n)) is proved.",
+"G4: no universal infinite-family upper bound on max_L rho(L) strong enough to disprove the square-root assertion is proved.",
+"Consequently, none of the disjunctive terminal routes S8, S12, S14, or S17 is completed."
+],
+"unchecked_imports": [],
+"counterexample_searches": [
+"The sparse-palette obstruction at v=1026 for K={32,64,243} and K={32,64,81,243} was arithmetically rechecked and is valid.",
+"The parity proof that the cyclic Latin square of even order has no transversal was rechecked and is valid.",
+"The parity obstruction for the stated translation-type construction on even orders was rechecked and is valid only as a construction-class obstruction.",
+"The proposed C16 frame was checked directly against all ten coordinate pairs. Under the stated definition d_{i,h,j}=hC_{ij}, none of the ten frame multisets equals F_13 minus {0}.",
+"For coordinate pair (0,1) in C16, anchor i=3 gives C_{31}-C_{30}=2-2=0, so zero occurs for all four h in H, immediately contradicting the required nonzero-difference partition.",
+"The boundary case r=2 in C17 was checked: distinct vertices have codegree zero, not n^(r-3)=n^(-1)."
+],
+"material_errors": [
+{
+"claim_id": "C1",
+"error": "The candidate acknowledges that ≫ is undefined but then adopts the standard absolute interpretation. This violates the acceptance instruction that ambiguity is a blocking defect and does not resolve the exact immutable statement."
+},
+{
+"claim_id": "GOAL",
+"error": "The candidate neither proves nor disproves the asserted square-root lower bound. Every terminal construction or obstruction is left conditional or open."
+},
+{
+"claim_id": "C16",
+"error": "The displayed matrix does not satisfy C14 with the stated convention d_{i,h,j}=hC_{ij}. The listed difference triples instead correspond to transposed entries C_{ji}. As written, the construction has zero and repeated differences and therefore does not establish ITD(5,17;4)."
+},
+{
+"claim_id": "C17",
+"error": "The codegree formula is stated for unrestricted integers r,n but fails at r=2. It becomes correct only after adding the hypothesis r≥3, which the immutable boundary-case requirements do not permit the referee to insert silently."
+},
+{
+"claim_id": "result",
+"error": "The assertion that all 18 claims survived adversarial checking is false because C16 is invalid as written and C17 omits a necessary boundary hypothesis."
+}
+],
+"completeness_score": 68,
+"proof_confidence": 0,
+"adversarial_survival_score": 64,
+"statement_sha256": "3c9f2d219321365a80825b0cb65a244b298b263a6a3d9a43b4b4c3c7a4331a06",
+"notes": "Most structural claims C2-C15 and C18 are sound or appropriately conditional, and C15's q=3 frame checks correctly. Nevertheless, the exact theorem is unresolved, the notation defect is not lawfully discharged, and one of the two advertised finite first-perturbation constructions is invalid under its own definitions. The candidate therefore cannot pass. Source candidate reviewed: 
+
+Pasted text
+
+"
+}

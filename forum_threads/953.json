@@ -1,0 +1,95 @@
+{
+  "problem_number": 953,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/953",
+  "retrieved_at": "2026-07-10T23:19:39.771896+00:00",
+  "page_title": "953 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "abdf66d78837b0bd129884f75713db11c52edc50e7d78a3cd371913e56972e38",
+  "comment_count": 17,
+  "comments": [
+    {
+      "post_id": "6343",
+      "text": "I have a formalisation of the upper bound i.e that there exists C > 0 such that for all R ≥ 1, M(R) ≤ C √R. The resolution M(R) = R^{1/2+o(1)} then quickly follows from Sárközy's result which is not in Mathlib. https://github.com/AllenGrahamHart/FormalConjectures-Bench/tree/main/formalizations/erdos953",
+      "meta": "AllenHart — 08:14 on 09 May 2026 👍 1 📝 2 🤖 0"
+    },
+    {
+      "post_id": "5950",
+      "text": "Let $M(R)$ denote the supremum of the measures of measurable sets $A\\subset B_R(0)\\subset\\mathbb R^2$ such that $|a-b|$ is never a positive integer for distinct $a,b\\in A$. With GPT-5.5 Pro I've got\\[ M(R)\\ll R^{1/2} \\qquad (R\\geq 1). \\]by using a Poisson-Bessel kernel. Consequently,\\[ M(R)=R^{1/2+o(1)}\\qquad (R\\to\\infty). \\]Here's the note with a proof. EDIT: streamlined and cleaned version is here following comments by Vjeko.",
+      "meta": "Przemek Chojecki — 19:43 on 27 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5953",
+      "text": "The proof seems to be, in principle, ok, but one should still check it and possibly rewrite it. On page 3 below formula (3.3), it says that a function of the form $e^{-s|x|}\\cdots$ is Schwartz, which it clearly isn't, but this is, of course, completely irrelevant. Also, the writeup is unnecessarily convoluted, because it started from Junnosuke's comment on how the problem relates to the discrete problem solved by Konyagin. In modern language (inspired by Bourgain's approach) one would start by defining the \"pattern counting form\"\\[ \\mathcal{N}(A) := \\int_{(\\mathbb{R}^2)^2} 1_A(x) 1_A(x+y) \\,d\\mu(y) \\,dx, \\]where\\[ \\mu= \\sum_{k\\in\\mathbb{N}} w_k \\sigma_k, \\]$\\sigma_k$ is normalized circular measure supported on the circle around the origin of radius $k$, while the numbers $w_k\\geq0$ are some \"weights\". Clearly, $\\mathcal{N}(A)=0$ when $A$ realizes no integer distances. A difficult part for us solving the problem \"manually\" was choosing the weights (and I had only tried some naive choices). This is not how the above proof actually goes, but I think that it would benefit from being rewritten that way (if possible).",
+      "meta": "Vjeko_Kovac — 21:15 on 27 Apr 2026 👍 4 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5971",
+      "text": "Thank you! I've managed to cut it down to 3 pages with GPT-5.5 and added it above in EDIT.",
+      "meta": "Przemek Chojecki — 08:30 on 28 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5975",
+      "text": "Well ok, thx, but this still seems to be the same proof, only with less details given. :-) I didn't want to be critical, I was just trying to compare it to how I would start solving it, which obviously didn't lead me anywhere. :-) Maybe it would still be worth rewriting the proof, when someone finds time and motivation. Positive definiteness hints that this is likely just Delsarte's method (unsurprising and commonly used in the context of bounding the set size/measure), so it could be just a matter of adjusting the weights (which ChatGPT did masterly), but I didn't yet have time to fully digest all details.",
+      "meta": "Vjeko_Kovac — 10:41 on 28 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5976",
+      "text": "Of course, your comments are very helpful! If you want to collaborate on this, I'm more than happy.",
+      "meta": "Przemek Chojecki — 10:50 on 28 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5977",
+      "text": "Well, after 1977 there was a lot of work on larger point configurations (not just a pair of points), so this could potentially trigger more substantial research along these lines. So maybe, thx! We'll see. However, I'll first try to fully digest and maybe rewrite the argument from your draft, just for the sake of understanding and verifying it.",
+      "meta": "Vjeko_Kovac — 11:20 on 28 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5982",
+      "text": "Sure, thank you, looking forward to it!",
+      "meta": "Przemek Chojecki — 12:01 on 28 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6011",
+      "text": "I have prepared with GPT-5.5 Thinking a streamlined writeup of Chojecki's argument. Tell me whether it's useful/not useful. In general GPT-5.5 Thinking is faster and more accurate, hence easier to work with and allowing for writeup to be produced quickly (and hopefully with quality as well). So in some sense I was also trying it out. There were indeed, as usual, decisions and feedbacks that I had to make as part of the process, but I wasn't initially familiar with the argument and so others may be better informed about the value of the work, etc.",
+      "meta": "Nat Sothanaphan — 21:22 on 28 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6124",
+      "text": "Actually, yes, it gives the more direct proof I was talking about, without going to the discrete set and then back. It also spells out the main idea clearly.",
+      "meta": "Vjeko_Kovac — 08:24 on 01 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5994",
+      "text": "Congrats. Standard check found no issues in the longer writeup. (The earlier Schwartz class issue was already fixed.)",
+      "meta": "Nat Sothanaphan — 16:07 on 28 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6004",
+      "text": "Thank you for checking!",
+      "meta": "Przemek Chojecki — 18:27 on 28 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6335",
+      "text": "I don't want to delay this solution any further, so I can say that the proof generated by Przemek (with ChatGPT) is correct and the simplification generated by Nat (with ChatGPT) is expositionally quite satisfactory and does the job. The proof is in fact really nice and the main idea is simple. I like calling it Delsarte's method, so perhaps I swayed GPT to use that name. Approximating the set from below (using regularity of the Lebesgue measure) one can assume that $A$ is compact, in which case it doesn't only avoid integer distances between pairs of its points - it also avoids achieving distances that are $s$-close to an integer, for some $s>0$. One then defines a certain \"witness function\" $K_s$ (constructed as a weighted superposition of dilates of the Bessel function $J_0$) with properties: $K_s$ is radial and positive definite, $K_s(x) \\lesssim s^{-2}$ for $|x|\\leq s$, and $K_s(x) \\lesssim - |x|^{-1/2}$ when $\\| |x| \\|_{\\mathbb{Z}}\\geq s$. Now, \\begin{align*} & 0\\leq \\iint K_s(x-y) 1_A(x) 1_A(y) dx dy \\\\ & = \\iint_{|x-y|< s} \\underbrace{K_s(x-y)}_{\\lesssim s^{-2}} 1_A(x) 1_A(y) dx dy \\\\ & + \\iint_{\\| |x-y| \\|_{\\mathbb{Z}}\\geq s} \\underbrace{K_s(x-y)}_{\\lesssim R^{-1/2}} 1_A(x) 1_A(y) dx dy \\\\ & + \\underbrace{\\iint_{|x-y|\\geq s, \\| |x-y| \\|_{\\mathbb{Z}}< s} K_s(x-y) 1_A(x) 1_A(y) dx dy}_{=0} \\end{align*} which leads to\\[ 0\\leq Cs^{-2}s^2|A| - C'R^{-1/2} (|A|^2-s^2|A|), \\]i.e., $|A|\\lesssim R^{1/2}$ in the limit as $s\\to0$. This is clearly a modification of Konyagin's solution of [465] \"inspired\" by Junnosuke's comment on how the problem relates to the discrete problem. I still feel a bit uncomfortable with a proof that performs an approximation argument up to some $s>0$ that plays no role in the final estimate, but it's correct, and that would be something to think about later. I would still prefer the proof along the lines of my comment above, which is how I would start working on the problem, but, hey, I didn't solve it that way, so maybe there's a good reason why this is better. :-)",
+      "meta": "Vjeko_Kovac — 22:40 on 08 May 2026 👍 3 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6342",
+      "text": "Thank you for streamlining the argument!",
+      "meta": "Przemek Chojecki — 07:30 on 09 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6",
+      "text": "The problem could be attributed to Erdős, Graham, and Sárközi. I could not find any subsequent publications on the problem. When Erdős said \"Sárközi has the sharpest results, but nothing has been published yet\" this might mean that he had the sharpest results among the three of them, but nothing was sufficiently nontrivial or definite to warrant publication. :-) It is trivial to see that the order of growth is $O(r)$: just consider intersections of $A$ with translates of the horizontal integer lattice. In the other direction, one can use Sárközy's result on Problem [466] (taking the set $A$ to be a union of congruent disks) and obtain something like $\\Omega(r^{0.26})$. I suspect that the true order of magnitude could be around $r^{1/2}$, but I was not able to modify Konyagin's beautiful solution of Problem [465] to work here as well.",
+      "meta": "Vjeko_Kovac — 13:24 on 09 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4033",
+      "text": "Using Sárközy’s result, one obtains a stronger bound $\\Omega(X^{1/2-\\varepsilon})$. More precisely, Sárközy’s theorem asserts that for any sufficiently small $\\delta>0$ and all $X > X_0(\\delta)$, one has $$N(X,\\delta) > X^{1/2-\\delta^{1/7}}, $$where $N(X,\\delta)$ is the function defined in [465]. Taking $\\delta=\\varepsilon^7$, it suffices to place disks of radius $\\delta/3$ centered at each point of Sárközy’s point set. As for the upper bound, if one works out the implied constant in Konyagin’s proof of the estimate $N(X,\\delta)\\ll_{\\delta} X^{1/2}$ for [465], one obtains something like $$N(X,\\delta) \\delta^{5/2}\\ll X^{1/2}. $$To apply this to the present problem, one would need to improve the left-hand side to $N(X,\\delta) \\delta^{2}$. However, I suspect that a better construction should exist.",
+      "meta": "J_Koizumi_144 — 13:56 on 01 Feb 2026 👍 3 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4051",
+      "text": "You are right about the lower bound. That way for every small $\\varepsilon>0$ you get\\[ f(r) \\geq \\Big(\\frac{\\varepsilon^7}{3}\\Big)^2 \\pi r^{1/2-\\varepsilon} . \\]I don't remember why I wrote $f(r)\\geq r^{0.26}$. I guess I was using some other bound from his paper. So the readily available lower bound in fact is $f(r)=\\Omega(r^{1/2-\\varepsilon})$ for every $\\varepsilon>0$. For the upper bound I only see that Konyagin's proof applies to unions of disks and not general sets $A$. He cleverly constructs linear combinations of Bessel functions that get wild only *near* integers, which is why they don't immediately say something about a set that only forbids precisely integer distances. I tried to reuse the same Bessel construction from his proof, even with different weights, but I remember that I couldn't get any nontrivial bound from it. It still smells a lot like similar distance-avoiding problems (like Furstenberg-Katznelson-Weiss), but a different Bessel construction should be needed to get a nontrivial bound, perhaps anything that is $o(r)$ and I am skeptical about the possibility of getting $O(r^{1/2})$.",
+      "meta": "Vjeko_Kovac — 21:49 on 01 Feb 2026 👍 1 📝 0 🤖 0"
+    }
+  ]
+}

@@ -1,0 +1,62 @@
+{
+"reviewer_role": "independent adversarial referee (counterexample)",
+"verdict": "fail",
+"claims_checked": 18,
+"claims_total": 18,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14",
+"C15",
+"C16",
+"C17",
+"C18"
+],
+"open_gaps": [
+"S0 remains unresolved: the immutable statement does not define the symbol ≫. The candidate conditionally adopts one interpretation, contrary to the requirement that ambiguity be treated as blocking.",
+"No critical-scale PBD theorem is proved.",
+"No uniform incomplete-transversal-design embedding theorem is proved.",
+"No perfect-matching or absorption theorem for the orthogonal-array hypergraph at r = Theta(sqrt(n)) is proved.",
+"No universal infinite-family upper bound capable of disproving the square-root assertion is proved.",
+"Consequently, neither the candidate's interpretation of the statement nor the exact immutable statement is proved or disproved."
+],
+"unchecked_imports": [
+"Section 3.3 invokes the direct-product construction f(mn) >= min(f(m),f(n)) without stating and proving it from the supplied definitions.",
+"Finite-field existence is explicitly stated in C5 and is not an unchecked import."
+],
+"counterexample_searches": [
+"C16 was falsified by direct modular calculation. Reading the displayed matrix by rows, for coordinate pair (0,1) the required base differences are 9, 0, and 12, because C[2,1]-C[2,0]=1-5=9, C[3,1]-C[3,0]=2-2=0, and C[4,1]-C[4,0]=11-12=12 modulo 13. The zero difference violates the requirement that the resulting multiset be F_13 minus {0}.",
+"The difference triples printed after the matrix in C16 are exactly the triples obtained from the transpose of the displayed matrix, not from the displayed matrix itself. Thus C16 is false as written.",
+"C17 fails at the boundary r=2. There are no two distinct compatible vertices with the claimed codegree n^(r-3)=n^(-1), and codegrees are integer counts. The formula requires at least r>=3 and a separate treatment of r=2.",
+"C14 was stress-tested for missing data: the shift system covers old-new and new-new pairs but does not construct the old-old core. Without an explicit hypothesis supplying an order-q core with q+1 columns, the shifts alone do not imply the claimed ITD.",
+"The q=3 translation frame in C15 was checked across all six coordinate pairs; each listed union does equal Z_7 minus {0}. No counterexample was found there.",
+"The sparse-palette obstruction in Section 3.1 was independently checked: the pair-count and Fisher calculations correctly rule out the stated palettes at v=1026.",
+"Boundary tests n=2 in C3 and C6, q=2 in C5 and C6, r=2 in C2, and t=0 in C8 and C9 were examined. The first four claims survive their relevant boundaries except for C17 as noted.",
+"The finite constructions C15 and the intended transpose-version of C16 cannot establish an asymptotic conclusion; isolated examples cannot falsify or prove the required eventual universal quantifier."
+],
+"material_errors": [
+"The candidate does not satisfy the acceptance criterion of proving or disproving the exact original statement.",
+"The candidate replaces the undefined immutable notation ≫ with a chosen interpretation, even though the instructions require ambiguity to be treated as a blocking defect.",
+"C16 is arithmetically false for the displayed matrix. Its verification uses the transpose without saying so.",
+"C14 omits the necessary hypothesis or construction of the order-q core. The shift conditions alone leave all old-old pairs uncovered.",
+"C17's maximum-codegree formula is false as stated for the allowed boundary r=2.",
+"The assertion that all eighteen claims were successfully checked is inaccurate because C16 fails and C14 and C17 have unresolved hypothesis or boundary defects.",
+"The final resource-exhausted declaration explicitly leaves every terminal route open, so it cannot support a positive proof confidence."
+],
+"completeness_score": 62,
+"proof_confidence": 0,
+"adversarial_survival_score": 58,
+"statement_sha256": "3c9f2d219321365a80825b0cb65a244b298b263a6a3d9a43b4b4c3c7a4331a06",
+"notes": "Most of C2-C13, C15, and C18 are coherent partial reductions, and several boundary and counting arguments survive direct checking. Nevertheless, the exact conclusion is unresolved, the notation defect is improperly bypassed, and the explicit C16 construction is false as written. These are decisive failures rather than stylistic deficiencies."
+}

@@ -1,0 +1,96 @@
+{
+"reviewer_role": "independent adversarial referee (theorem_hypotheses)",
+"verdict": "fail",
+"claims_checked": 16,
+"claims_total": 16,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14",
+"C15",
+"C16"
+],
+"open_gaps": [
+{
+"id": "DOMAIN",
+"issue": "The immutable statement does not explicitly quantify n and k as integers. The candidate adopts the Pascal-triangle interpretation, so every substantive conclusion is conditional rather than a resolution of the exact locked wording."
+},
+{
+"id": "LOW_HIGH_EXCLUSION",
+"issue": "No proof or disproof is given that S_2 intersect S_3 intersect S_4 intersect S_k is empty for every k at least 5."
+},
+{
+"id": "HIGH_EXTENSION_BOUND",
+"issue": "No proof or disproof is given that a value represented on at least two layers k at least 5 has at most three interior representations in total."
+},
+{
+"id": "T5",
+"issue": "The candidate neither constructs nor excludes a value with exactly four interior representations, so t=5 remains unresolved."
+},
+{
+"id": "FINITE_TO_GLOBAL",
+"issue": "The exact computation stops at a=10^30 and supplies no argument for the unbounded region a>10^30."
+},
+{
+"id": "POSITIVE_SCALING",
+"issue": "No construction produces exact interior multiplicity q for every nonnegative integer q. A t=5 example or unbounded multiplicity alone would not prove the universal assertion."
+}
+],
+"unchecked_imports": [],
+"counterexample_searches": [
+{
+"target": "C11 collision-slope orientation",
+"method": "Enumerated equal-value fibers with row index n at most 500 and tested consecutive displacement ratios.",
+"result": "No counterexample was found. The nontrivial fibers for 120, 210, and 3003 obey increasing column-rise divided by row-drop, equivalently decreasing row-drop divided by column-rise."
+},
+{
+"target": "C13 adjacent-layer construction",
+"method": "Checked the displacement equation, norm-preserving recurrence, integrality conditions, admissibility inequalities, and the first generated values by exact arithmetic.",
+"result": "The stated recurrence and the collisions at 3003 and 61218182743304701891431482520 are correct."
+},
+{
+"target": "C16 finite exclusion",
+"method": "Independently merged all exact sequences binom(n,k) for 5<=k<=51, n>=2k, and binom(n,k)<=10^30, using arbitrary-precision integer arithmetic and exact S_2, S_3, and S_4 membership tests.",
+"result": "Reproduced 3014786 high-layer occurrences and 3014784 distinct values. The only repeated high-layer values were 3003 and 61218182743304701891431482520. No value had four interior representations, confirming M(a)<=4 throughout the searched range."
+},
+{
+"target": "Boundary and omitted-layer claims in C7",
+"method": "Directly evaluated the stated binomial coefficients and central-binomial lower bounds.",
+"result": "The witnesses M(2)=1, M(6)=2, M(120)=3, and M(3003)=4 are correctly certified under the discrete interpretation."
+}
+],
+"material_errors": [
+{
+"type": "acceptance-criterion failure",
+"description": "The candidate proves neither the original universal assertion nor its negation. Its final conclusion is explicitly RESOURCE_EXHAUSTED."
+},
+{
+"type": "domain substitution",
+"description": "The candidate replaces the formally ambiguous locked statement with an adopted integer-domain interpretation. Although this is transparently disclosed, it cannot satisfy the instruction to resolve the exact statement without adding hypotheses."
+},
+{
+"type": "nonterminal finite result",
+"description": "C16 is correct and reproducible, but a finite exclusion through 10^30 has no logical force on values above 10^30 and therefore cannot settle t=5."
+}
+],
+"completeness_score": 61,
+"proof_confidence": 0,
+"adversarial_survival_score": 91,
+"statement_sha256": "b669094e22469ade57dcca529d2ce001ede0c9bee628c97121ad1d9a7ebfb01b",
+"notes": "The local structural package C1-C16 largely survives adversarial checking, including independent reproduction of C16. No unchecked external theorem is used. Nevertheless, the required terminal proof or disproof is absent, and the domain defect remains blocking under the stated acceptance criteria. Reviewed artifact: 
+
+Pasted text
+
+"
+}

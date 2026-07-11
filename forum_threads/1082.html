@@ -1,0 +1,3622 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+
+<title>1082 Discussion Thread | Erdős Problems</title>
+<meta property="og:title" content="1082 Discussion Thread | Erdős Problems">
+<link rel="icon" href="/static/favicon.ico">
+<link rel="stylesheet" href="/static/style.css?v=733265cf">
+
+<script>
+document.addEventListener('click', (e) => {
+  // Toggle reply form
+  const toggle = e.target.closest('.reply-toggle');
+  if (toggle) {
+    const id = toggle.getAttribute('data-target');
+    const form = document.getElementById(id);
+    if (form) form.classList.toggle('hidden');
+  }
+  // Reply with quote
+  const quoteBtn = e.target.closest('.reply-quote');
+  if (quoteBtn) {
+    const id = quoteBtn.getAttribute('data-target');
+    const form = document.getElementById(id);
+    if (!form) return;
+    const ta = form.querySelector('textarea');
+    const raw = quoteBtn.getAttribute('data-raw') || '';
+    const quoted = raw.split('\n').map(l => '> ' + l).join('\n') + '\n\n';
+    ta.value = quoted;
+    form.classList.remove('hidden');
+    ta.focus();
+    const len = ta.value.length;
+    ta.setSelectionRange(len, len);
+  }
+});
+</script>
+
+<!-- This creates the reference in the bibliography box. -->
+
+<script>
+function addNewBox(key, problem_id, shouldScroll = false) {
+  const local_id = 'bib-container' + String(problem_id);
+  const container = document.getElementById(local_id);
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  fetch(`/bibs/${encodeURIComponent(key)}`)
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.text();
+    })
+    .then(html => {
+      container.innerHTML = html;
+
+      if (shouldScroll) {
+        requestAnimationFrame(() => {
+          container.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+        });
+      }
+    })
+    .catch(err => {
+      console.error("Failed to load bib:", err);
+      container.textContent = "Unable to load reference.";
+
+      if (shouldScroll) {
+        container.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+    });
+}
+</script>
+
+<script>
+const filledSVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" class="fav-icon">
+  <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+</svg>
+                `;
+const outlineSVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="black" fill="white" class="fav-icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.610l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.840-.610l1.285-5.386a.563.563 0 0 0-.182-.557L3.041 10.385a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+</svg>
+                `;
+
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest(".fav-btn");
+  if (!btn) return;
+
+  e.preventDefault();
+  const problemId = btn.dataset.problemId;
+
+  try {
+    const res = await fetch(`/forum/toggle_favourite/${problemId}`, { method: "POST" });
+    const data = await res.json();
+
+    btn.dataset.favourited = data.favourited ? "true" : "false";
+    btn.innerHTML = data.favourited ? filledSVG : outlineSVG;
+  } catch (err) {
+    console.error("Toggle failed:", err);
+  }
+});
+</script>
+
+    
+<script>
+function addImageBox(X, problem_id, shouldScroll = true) {
+  const local_id = 'image-container' + String(problem_id);
+  const container = document.getElementById(local_id);
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  const newBox = document.createElement("div");
+
+  const img = document.createElement("img");
+  img.src = `/static/${encodeURIComponent(X)}.png`;
+  img.className = "responsive-image";
+  img.alt = String(X);
+
+  newBox.appendChild(img);
+  container.appendChild(newBox);
+
+  if (shouldScroll) {
+    requestAnimationFrame(() => {
+      container.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+  }
+}
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('searchForm');
+  if (!form) return;
+  form.addEventListener('submit', function (e) {
+    const input = form.querySelector('.searchTerm');
+    if (!input) return;
+    const value = input.value.trim();
+    if (!value) return;
+    const path = '/search/' + encodeURIComponent(value);
+    const inDual = window.location.pathname.startsWith("/dual");
+    if (inDual) {
+      e.preventDefault(); 
+      const selected = document.querySelector('input[name="targetPanel"]:checked');
+      const panel = selected ? selected.value : "left";
+      const iframe = document.getElementById(`iframe-${panel}`);
+      if (iframe) {
+        const url = path.includes("?") ? path + "&embed=1" : path + "?embed=1";
+        iframe.src = url;
+        const box = document.querySelector(`#panel-${panel} input`);
+        if (box) box.value = path;
+      } else {
+        window.location.href = path;
+      }
+    } else {
+      form.action = path;
+      form.method = "GET";
+    }
+  });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.location.pathname.startsWith("/dual")) return;
+
+  var form = document.getElementById('idsearchForm');
+  if (!form) return;
+
+  form.onsubmit = function() {
+    var input = document.querySelector('.idsearchTerm').value.trim();
+    var searchUrl;
+
+    if (/^\d+$/.test(input)) {
+        searchUrl = '/' + encodeURIComponent(input);
+    } else if (/^((\d+|end)(-(\d+|end))?\s*)+(open|solved|yes|no)?$/.test(input.toLowerCase())) {
+        let parts = input.split(/\s+/).filter(Boolean);
+        searchUrl = '/range/' + parts.map(encodeURIComponent).join('/');
+    } else {
+        alert("Enter either a single integer or a space-separated list of numbers/ranges...");
+        return false;
+    }
+    window.location.href = searchUrl;
+    return false;
+  };
+});
+</script>
+
+<script>
+  window.CURRENT_USERNAME = "";
+</script>
+
+
+<script>
+document.addEventListener("click", async (ev) => {
+  const btn = ev.target.closest(".reaction-btn");
+  if (!btn) return;
+  const you = window.CURRENT_USERNAME || "";
+  const bar = btn.closest(".reaction-bar");
+  const postId = bar?.dataset.postId;
+  const rtype = btn.dataset.type;
+  const reactUrl = bar?.dataset.reactUrl; 
+  if (!postId || !rtype || !reactUrl) return;
+
+  try {
+    const res = await fetch(reactUrl, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({type: rtype})
+    });
+    const data = await res.json();
+    if (!data.ok) {
+      alert(data.error || "Could not update reaction.");
+      return;
+    }
+    const summary = data.summary;
+    
+    bar.querySelectorAll(".reaction-btn").forEach(b => {
+      const t = b.dataset.type;
+      const countSpan = bar.querySelector(`.reaction-count[data-type="${t}"]`);
+      if (countSpan && summary[t]) {
+        countSpan.textContent = summary[t].count;
+    const desc = b.dataset.desc || "";
+    const usersTitle = summary[t].users_title || "No one yet.";
+    b.title = `${desc}\n\n${usersTitle}`;
+      }
+        const iReacted = you && (summary[t].users_title || "").includes(you);
+  b.classList.toggle("active", !!iReacted);
+  b.setAttribute("aria-pressed", iReacted ? "true" : "false");
+    });
+  } catch (e) {
+    console.error(e);
+    alert("Only registered users with 5+ posts can react.");
+  }
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.body.addEventListener("click", function (e) {
+    const link = e.target.closest(".problem-reaction-link");
+    if (!link) return;
+
+    e.preventDefault();
+
+    const row = link.closest(".problem-reaction-row");
+    if (!row) return;
+
+    const form = row.querySelector(".problem-reaction-form");
+    if (!form) return;
+
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+      method: "POST",
+      body: formData,
+      headers: {
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    })
+      .then(resp => resp.json())
+      .then(data => {
+        if (!data.ok) {
+          console.error(data.error || "Problem reaction update failed");
+          return;
+        }
+
+        const summary = data.summary;
+
+        // Update users text for each reaction type
+        for (const [type, info] of Object.entries(summary)) {
+          const r = document.querySelector(
+            `.problem-reaction-row[data-reaction-type="${type}"]`
+          );
+          if (!r) continue;
+
+          const usersCell = r.querySelector(".problem-reaction-users");
+          if (usersCell) {
+            usersCell.textContent = info.users_title || "None yet";
+          }
+        }
+        link.classList.toggle("active");
+        if (link.classList.contains("active")) {
+          link.textContent = "(no)";
+        } else {
+          link.textContent = "(yes)";
+        }
+      })
+      .catch(err => {
+        console.error("Problem reaction AJAX error", err);
+      });
+  });
+});
+</script>
+
+
+
+
+
+
+</head>
+
+<body>
+
+<div class="topnav">
+
+  <div class="left">
+    <div class="logo">
+      <a class="dual-aware" href="/"><img src="/static/EPLogo.png" alt="Logo" height="50"></a>
+    </div>
+    <div class="links dual-aware desktop-nav">
+      <a href="/forum">Forum</a>
+      <a href="/dm">Inbox</a> 
+      <a href="/favourites">Favourites</a>
+      <a href="/tags">Tags</a> 
+      <div class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">More</a>
+        <div class="dropdown-content">
+          <a href="/faq">FAQ</a>
+          <a href="/prizes">Prizes</a>
+          <a href="/lists">Problem Lists</a>
+          <a href="/definitions">Definitions</a>
+          <a href="/links">Links</a>
+        </div>
+      </div> 
+    </div>
+    <div class="mobile-nav">
+    
+        <a class="forumlink" href="/forum">Forum</a>
+    <div class="dropdown">
+      <button class="dropbtn" id="mobileMenuButton">Menu</button>
+      <div class="dropdown-content">
+        <a href="/dm">Inbox</a> 
+        <a href="/favourites">Favourites</a>
+        <a href="/tags">Tags</a>  
+        <a href="/faq">FAQ</a>
+        <a href="/prizes">Prizes</a>
+        <a href="/lists">Problem Lists</a>
+        <a href="/definitions">Definitions</a>
+        <a href="/links">Links</a>
+      </div>
+     </div>
+    </div>
+  </div>
+
+  <div class = "middle">
+    <div class="button-container" style="max-width: 50%;">
+      <form id="idsearchForm">
+        <input required type="text" name="query" class="idsearchTerm" placeholder="# (or range #-#)" title="Enter either a single integer or a space-separated list of numbers/ranges, optionally ending with 'open' or 'solved'.">
+        <button type="submit" class="searchButton">Go</button>
+      </form>
+    </div>
+    <div class="button-container" style="max-width: 50%;">
+      <form id="searchForm">
+        <input required type="text" name="query" class="searchTerm" placeholder="Search" title="Search all problems.">
+        <button type="submit" class="searchButton">Go</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="right">
+    <a href="#" id="dualViewLink" class="split_all">Dual View</a>
+    <a href="/random_solved" class="split_solved dual-aware">Random Solved</a>
+    <a href="/random_open" class="split_open dual-aware">Random Open</a>
+  </div>
+
+</div>
+
+<div id="notifications-slot"></div>
+
+
+
+
+<div class="container">
+<div class="problem-box">
+
+        
+
+                    <div class="problem-text" id="open">  
+<div id="prize">
+
+<span class="tooltip">
+  FALSIFIABLE
+  <span class="tooltiptext">
+    Open, but could be disproved with a finite counterexample.
+  </span>
+</span>
+
+</div>
+
+                        <div id="content">Let $A\subset \mathbb{R}^2$ be a set of $n$ points with no three on a line. Does $A$ determine at least $\lfloor n/2\rfloor$ distinct distances? In fact, must there exist a single point from which there are at least $\lfloor n/2\rfloor$ distinct distances?</div>
+                        <div id="problem_id"><a href="/1082">#1082</a>: <a href="#bib-container1082" onclick="event.preventDefault();addNewBox('Er75f', '1082', true);return false;">[Er75f,p.101]</a><a href="#bib-container1082" onclick="event.preventDefault();addNewBox('Er87b', '1082', true);return false;">[Er87b]</a><a href="#bib-container1082" onclick="event.preventDefault();addNewBox('Er97e', '1082', true);return false;">[Er97e]</a></div>
+                         
+                            <div id="tags">
+                            
+  <a href="/tags/geometry">geometry</a> | 
+
+  <a href="/tags/distances">distances</a>
+
+                            </div>
+                        
+                    </div>  
+                    
+                    <div class="problem-text" id="disclaimer">  
+The open status of this problem reflects the current belief of the owner of this website. There may be literature on this problem that I am unaware of, which may partially or completely solve the stated problem. Please do your own literature search before expending significant effort on solving this problem. If you find any relevant literature not mentioned here, please add this in a comment.
+                    <div
+  class="problem-status-widget"
+  data-problem-id="1082"
+  data-set-url="/problem-status/1082"
+  data-current-status="open"
+  data-can-edit="0"
+  style="--status-progress: 0.0; --status-count: 3;"s
+>
+                      <div class="problem-status-heading">Comment activity that has not yet been incorporated into the remarks</div>
+
+  <div class="problem-status-scale" role="radiogroup" aria-label="Problem status">
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option is-active"
+        data-status="open"
+        data-label="None"
+        data-description="There are no solutions, partial or complete, claimed in the comments."
+        data-progress="0.0"
+        role="radio"
+        aria-checked="true"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">None</span>
+      </button>
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option"
+        data-status="partial"
+        data-label="Partial"
+        data-description="There are claims of partial results and/or a path to a solution in the comments."
+        data-progress="0.5"
+        role="radio"
+        aria-checked="false"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">Partial</span>
+      </button>
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option"
+        data-status="claimed"
+        data-label="Solution"
+        data-description="A claimed solution has been posted in the comments."
+        data-progress="1.0"
+        role="radio"
+        aria-checked="false"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">Solution</span>
+      </button>
+    
+  </div>
+
+  <div class="problem-status-explanation">
+    <span class="js-problem-status-description">
+      There are no solutions, partial or complete, claimed in the comments.
+    </span>
+  </div>
+  </div>
+  
+                    </div>
+                    
+                    
+
+
+                    
+
+                        <div class="problem-additional-text"> 
+                    
+                           A conjecture of Szemerédi, who proved this with $n/2$ replaced by $n/3$. More generally, Szemerédi gave a simple proof that if there are no $k$ points on a line then some point determines $\gg n/k$ distinct distances (a weak inverse result to the distinct distance problem <a href="/89" rel="nofollow noopener noreferrer ugc" target="_blank">[89]</a>).<br><br>This is a stronger form of <a href="/93" rel="nofollow noopener noreferrer ugc" target="_blank">[93]</a>. The second question is a stronger form of <a href="/982" rel="nofollow noopener noreferrer ugc" target="_blank">[982]</a>.<br><br>Szemerédi's proof is unpublished, but given in <a href="#bib-container1082" onclick="event.preventDefault();addNewBox('Er75f', '1082', true);return false;">[Er75f]</a>.<br><br>In <a href="#bib-container1082" onclick="event.preventDefault();addNewBox('Er75f', '1082', true);return false;">[Er75f]</a> Erdős asks whether, given $n$ points in $\mathbb{R}^3$ with no three on a line, do they determine $\gg n$ distances? Altman proved the answer is yes if the points form the vertices of a convex polyhedron (see <a href="/660" rel="nofollow noopener noreferrer ugc" target="_blank">[660]</a> for a stronger form of this), and Szemerédi proved the answer is yes if there are no four points on a plane.<br><br>The second stronger question has a negative answer: there is <a href="#" onclick="addImageBox('1082','1082')">a construction</a><span id="image-container1082"></span> of $8$ points such that each point has exactly three distinct distances to the others. This first appeared in the literature in a paper of Erdős and Fishburn <a href="#bib-container1082" onclick="event.preventDefault();addNewBox('ErFi97b', '1082', true);return false;">[ErFi97b]</a>, where they credit the construction to Harborth. This configuration is studied in detail by Fishburn <a href="#bib-container1082" onclick="event.preventDefault();addNewBox('Fi02', '1082', true);return false;">[Fi02]</a>.<br><br>(This construction was later found by DeepMind. An earlier construction was also given by Xichuan in the comments, who gave a set of $42$ points in $\mathbb{R}^2$, with no three on a line, such that each point determines only $20$ distinct distances.)
+                           
+                    
+                    
+<p style="text-align: center; font-family: 'Courier New', monospace; font-size: 90%;">
+  <a href="/latex/1082">View the LaTeX source</a>
+</p>
+<p style="text-align: center; font-family: 'Courier New', monospace; font-size: 90%;">
+  
+ This page was last edited 11 April 2026. <a href="/history/1082">View history</a>
+</p>
+                    <div class="image-container" id="image-container1082"></div>
+                        </div>
+
+                        <div class="problem-additional-text" style="text-align:center;"> 
+</div>
+
+                <div id="bib-container1082"></div>
+  <div class="external">External data from <a href="https://github.com/teorth/erdosproblems">the database</a> - you can help update this</a>                
+
+
+  <br>
+  Formalised statement? 
+    
+      <a href="https://github.com/google-deepmind/formal-conjectures/blob/main/FormalConjectures/ErdosProblems/1082.lean">Yes</a>
+    
+  
+    <br>
+    Related OEIS sequences:   
+    
+      Possible
+    
+  
+  
+  
+  <br>
+  
+  </div>
+
+
+<div class="problem-reactions">
+
+<div class="comment-count">
+  <a style="color: inherit;" href="/forum/discuss/1082">
+    21 comments on this problem
+  </a>
+</div>
+
+<table class="problem-reactions-table">
+  <tbody>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="like">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Likes this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    
+      <a href="/forum/user/Dogmachine" style="color:inherit; text-decoration: none;">Dogmachine</a>
+    
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="collab">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Interested in collaborating</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="working_on">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Currently working on this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="hard">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>This problem looks difficult</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="easy">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>This problem looks tractable</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="formalisable">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>The results on this problem could be formalisable</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="working_form">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>I am working on formalising the results on this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+</div>
+<br>
+
+                <div class="citationbox"> <div id="content">
+                                    
+                           <b>Additional thanks to</b>: Stijn Cambie, Sharvil Kesarwani, and Xichuan          <br> <br>
+                    
+When referring to this problem, please use the original sources of Erd&#337;s. If you wish to acknowledge this website, the recommended citation format is:
+<br><br>
+T. F. Bloom, Erd&#337;s Problem #1082, https://www.erdosproblems.com/1082, accessed 2026-07-10</div>
+</div>
+
+               
+
+
+<div class="problem-additional-text"> 
+
+
+
+
+<div class="thread-sort">
+Order by
+  <a href="/forum/thread/1082?order=oldest"
+     class="order ">oldest first</a> or
+  <a href="/forum/thread/1082?order=newest"
+     class="order active">newest first</a>. (The most recent comments are highlighted in a red border.)
+</div>
+
+
+
+
+<ul class="post-list">
+  
+    
+    
+
+
+
+
+
+
+<li id="post-4462"
+    class="post depth-0
+           
+           even">
+    <div class="post-body" id="post-4462">
+    
+
+
+
+      
+      <p>I have found a construction disproving the stronger conjecture in literature here from 2002: https://www.sciencedirect.com/science/article/pii/S0012365X01001340<br>The construction provided here is identical to the one used by DeepMind, so I wouldn't consider this an original solve by the agent. <br><br>I was suspect of the originality of the quite simple construction DeepMind had provided, and I also had a gut feeling I had seen this exact construction before, but I couldn't place it. I was able to find this literature source from Google AI results from searching for "8 vertex configuration local 3 distance set erdos".</p>
+      
+      
+      <div class="fixed-post">
+(The site has been updated to address this comment.)
+      </div>
+
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/SharkyKesa">Sharvil Kesarwani</a></strong>
+      
+      — <a href="/forum/thread/1082#post-4462">17:28 on 25 Feb 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="4462" data-react-url="/forum/post/4462/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: TerenceTao, BorisAlexeev, Moritz Firsching, Alfaiz, GTsoukalas"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">5</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: Moritz Firsching, Sharvil Kesarwani"
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">2</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-4468"
+    class="post depth-1
+           
+           odd">
+    <div class="post-body" id="post-4468">
+    
+
+
+
+      
+      <p>On behalf of the DeepMind team, thank you for pointing this out!</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/swarat">SwaratChaudhuri</a></strong>
+      
+      — <a href="/forum/thread/1082#post-4468">17:58 on 25 Feb 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="4468" data-react-url="/forum/post/4468/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: BorisAlexeev"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-4531"
+    class="post depth-2
+           recent recent-1
+           even">
+    <div class="post-body" id="post-4531">
+    
+
+
+
+      
+      <p>Thanks for the acknowledgement, SwaratChaudhuri.  Would it be possible to check to see if the article was in the training set?  Solving the attribution problem is quite critical.  As you can see, a lot of deep expert effort is expended on manually solving it for AI agents which significantly reduces the value proposition.  Ofc, if the attribution problem is mostly solved, the utility would be very potent - even if the solutions are not novel.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/qrdl">qrdl</a></strong>
+      
+      — <a href="/forum/thread/1082#post-4531">05:29 on 01 Mar 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="4531" data-react-url="/forum/post/4531/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-4476"
+    class="post depth-1
+           
+           even">
+    <div class="post-body" id="post-4476">
+    
+
+
+
+      
+      <p>Notable quote from the abstract: "I  first heard about $H_8$ from Paul Erdős ..."</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/BorisAlexeev">BorisAlexeev</a></strong>
+      
+      — <a href="/forum/thread/1082#post-4476">19:22 on 25 Feb 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="4476" data-react-url="/forum/post/4476/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Moritz Firsching"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-4477"
+    class="post depth-2
+           recent recent-3
+           odd">
+    <div class="post-body" id="post-4477">
+    
+
+
+
+      
+      <p>"...who learned about it from Heiko Harborth."</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Moritz_Firsching">Moritz Firsching</a></strong>
+      
+      — <a href="/forum/thread/1082#post-4477">20:03 on 25 Feb 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="4477" data-react-url="/forum/post/4477/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: BorisAlexeev, old-bielefelder"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">2</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-4530"
+    class="post depth-3
+           recent recent-2
+           even">
+    <div class="post-body" id="post-4530">
+    
+
+
+
+      
+      <p>I wrote to Heiko Harborth and asked if the construction was original with him or if he heard about from yet somebody else. He writes: <br>- He found the configuration himself and told Erdős at a conference about it<br>- A subset of the configuration already appears as the third of the nine point configurations with 6 points and 3 distinct distances in H. Harborth and L. Piepmeyer: Three distinct distances in the plane. Geometria Dedicata 61(1996), 315-327, Figure 2</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Moritz_Firsching">Moritz Firsching</a></strong>
+      
+      — <a href="/forum/thread/1082#post-4530">20:52 on 28 Feb 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="4530" data-react-url="/forum/post/4530/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: TerenceTao, Sharvil Kesarwani"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">2</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-4449"
+    class="post depth-0
+           
+           odd">
+    <div class="post-body" id="post-4449">
+    
+
+
+
+      
+      <p>On February 14, a DeepMind prover agent found a Lean proof falsifying the second part of this conjecture. Of course, the conjecture had already been resolved, so the finding is not fundamentally novel. However, an interesting characteristic of our proof is that it constructs a counterexample with 8 points, smaller than the one @eigensolver gives in the thread below. The proof was discovered fully autonomously; the only problem-specific human input was the formal problem statement [link 1], drawn from Formal Conjectures [link 2]. The full Lean proof (compilable with Lean 4.22) is available here [link 3].<br><br>link 1: https://github.com/google-deepmind/formal-conjectures/pull/2397<br>link 2: https://github.com/google-deepmind/formal-conjectures<br>link 3: https://github.com/google-deepmind/formal-conjectures/blob/0aca4d71095301c0fd2dca32611b7addb2ea735c/FormalConjectures/ErdosProblems/1082.lean</p>
+      
+      
+      <div class="fixed-post">
+(The site has been updated to address this comment.)
+      </div>
+
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/GTsoukalas">GTsoukalas</a></strong>
+      
+      — <a href="/forum/thread/1082#post-4449">13:01 on 25 Feb 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="4449" data-react-url="/forum/post/4449/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: BorisAlexeev, old-bielefelder"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">2</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: Moritz Firsching"
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-4450"
+    class="post depth-1
+           
+           even">
+    <div class="post-body" id="post-4450">
+    
+
+
+
+      
+      <p>Your three postings look very interesting! <br><br>Are you willing to describe your "DeepMind prover agent" <br>in some more detail? Are Gemini 3 Pro instances involved there?<br><br>Congrats, Ingo.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/old-bielefelder">old-bielefelder</a></strong>
+      
+      — <a href="/forum/thread/1082#post-4450">13:45 on 25 Feb 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="4450" data-react-url="/forum/post/4450/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-4466"
+    class="post depth-2
+           
+           odd">
+    <div class="post-body" id="post-4466">
+    
+
+
+
+      
+      <p>Thank you for the interest! We cannot yet share any details regarding the system, but hope to soon.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/GTsoukalas">GTsoukalas</a></strong>
+      
+      — <a href="/forum/thread/1082#post-4466">17:44 on 25 Feb 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="4466" data-react-url="/forum/post/4466/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: old-bielefelder"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-4456"
+    class="post depth-1
+           
+           odd">
+    <div class="post-body" id="post-4456">
+    
+
+
+
+      
+      <p>Congrats.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/1082#post-4456">16:31 on 25 Feb 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="4456" data-react-url="/forum/post/4456/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-4461"
+    class="post depth-1
+           
+           even">
+    <div class="post-body" id="post-4461">
+    
+
+
+
+      
+      <p><a href="https://raw.githubusercontent.com/plby/lean-proofs/refs/heads/main/other/Erdos1082gdm.png" rel="nofollow noopener noreferrer ugc" target="_blank">Here</a> is a picture of the configuration of eight points.  In words, one description of the configuration might be: Let four of the points be vertices of a square.  Then, on each side of the square, construct an equilateral triangle.  The remaining four points are the other vertices of those triangles.  (The triangles can either all face outward or all face inward, but the resulting configuration is the same in both cases.)<br><br>Also, note that the main conjecture is still open.  Both this construction, and <a href="https://www.erdosproblems.com/forum/thread/1082#post-2279" rel="nofollow noopener noreferrer ugc" target="_blank">the one by eigensolver</a>, disprove the second/"stronger" part of the conjecture.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/BorisAlexeev">BorisAlexeev</a></strong>
+      
+      — <a href="/forum/thread/1082#post-4461">17:15 on 25 Feb 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="4461" data-react-url="/forum/post/4461/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Moritz Firsching"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-4463"
+    class="post depth-2
+           
+           odd">
+    <div class="post-body" id="post-4463">
+    
+
+
+
+      
+      <p>Thanks for the pic! Yep, this is only partial solution.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/1082#post-4463">17:31 on 25 Feb 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="4463" data-react-url="/forum/post/4463/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-4465"
+    class="post depth-3
+           
+           even">
+    <div class="post-body" id="post-4465">
+    
+
+
+
+      
+      <p>Good catch! I have updated the initial comment to reflect that this is indeed only for the second part of the conjecture.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/GTsoukalas">GTsoukalas</a></strong>
+      
+      — <a href="/forum/thread/1082#post-4465">17:42 on 25 Feb 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="4465" data-react-url="/forum/post/4465/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-4470"
+    class="post depth-2
+           
+           even">
+    <div class="post-body" id="post-4470">
+    
+
+
+
+      
+      <p>the pr also had a picture: https://github.com/google-deepmind/formal-conjectures/pull/2397<br>and a link to some sagemath code for it</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Moritz_Firsching">Moritz Firsching</a></strong>
+      
+      — <a href="/forum/thread/1082#post-4470">18:02 on 25 Feb 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="4470" data-react-url="/forum/post/4470/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: BorisAlexeev"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-2279"
+    class="post depth-0
+           
+           even">
+    <div class="post-body" id="post-2279">
+    
+
+
+
+      
+      <p>Following @StijnC's idea, I seem to have found a counterexample to the second question. It consists of $42$ points:  <br><br><a href="https://ibb.co/Df0sR3nc" rel="nofollow noopener noreferrer ugc" target="_blank">Image Link</a><br><a href="https://www.geogebra.org/classic/vphxsnc9" rel="nofollow noopener noreferrer ugc" target="_blank">GeoGebra Link</a><br><br>This counterexample is composed of two concentric regular $N$-gons ($N = 21$), denoted as $A_1A_2\dots A_N$ and $B_1B_2\dots B_N$ counterclockwisely, with inner and outer radius ratio equal to $r_0=\frac12\left(1-\sqrt{5-8\cos\frac{2\pi}{7}}\right)=0.4450418679\dots$, a root of $x^3-x^2-2x+1=0$. This set of points satisfies $|A_1A_4|=|A_1B_4|$ and $|B_1B_{10}|=|B_1 A_5|$, which degenerates distances, and for any $B_k$, the line $A_1 B_k$ does not pass through any other points. Due to symmetry, each point determines only $N−1 = 20$ distinct distances, thus constituting a counterexample to the second problem.<br><br>The method I used involved solving quadratic equations in terms of $r$, of the form $|A_1 B_i| = |A_1 A_j|$ and $|B_1 B_k| = |B_1 A_l|$, obtaining solution sets $R_1$ and $R_2$, and then selecting $r$ from their intersection such that no three points are collinear. However, due to precision errors, I might have misjudged the solutions. I would be immensely grateful if someone could help verify this.<br><br>By the way, all $(N, r)$ pairs I found are of the form:<br><br>$$(42k+21, r_0),\quad (42k+21, 1-r_0)\quad (k\in\mathbb{N})$$</p>
+      
+      
+      <div class="fixed-post">
+(The site has been updated to address this comment.)
+      </div>
+
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/eigensolver">eigensolver</a></strong>
+      
+      — <a href="/forum/thread/1082#post-2279">11:39 on 19 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2279" data-react-url="/forum/post/2279/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: StijnC, BorisAlexeev"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">2</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: StijnC"
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2289"
+    class="post depth-1
+           
+           odd">
+    <div class="post-body" id="post-2289">
+    
+
+
+
+      
+      <p>Great :)<br>I checked that $(21,r_0)$ and $(21,1-r_0)$ are solutions with Maple.<br>(the computations are purely goniometric)<br><br>Since $42k+21$ is an odd multiple of $21$, the same result applies there,<br>and so one has infinitely many examples, but all of them come from the core configuration with two $21$-gons.<br><br>For $1-r_0$, one has $|A_1A_4|=|A_1B_4|$ and $|B_1B_7|=|B_1A_5|$ (the labeling in the geogebra file does not correspond with the usual numbering).</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/StijnC">StijnC</a></strong>
+      
+      — <a href="/forum/thread/1082#post-2289">17:37 on 19 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2289" data-react-url="/forum/post/2289/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: TerenceTao"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2361"
+    class="post depth-1
+           
+           even">
+    <div class="post-body" id="post-2361">
+    
+
+
+
+      
+      <p>This counterexample has been <a href="https://gist.github.com/llllvvuu/5e0b51804e7676c0650856c680d03856" rel="nofollow noopener noreferrer ugc" target="_blank">verified</a> in Lean 4 using <a href="https://aristotle.harmonic.fun/" rel="nofollow noopener noreferrer ugc" target="_blank">Aristotle</a>.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/llllvvuu">llllvvuu</a></strong>
+      
+      — <a href="/forum/thread/1082#post-2361">22:51 on 21 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2361" data-react-url="/forum/post/2361/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-1143"
+    class="post depth-0
+           
+           odd">
+    <div class="post-body" id="post-1143">
+    
+
+
+
+      
+      <p>I tried to disprove the additional (stronger version of the) question,<br>but didn't get there:<br>take n odd, and two concentric regular n-gons $A_1A_2 \ldots A_n$ and $B_1B_2 \ldots B_n$ (common circumcenter $O$), with $O,A_i,B_i$ colinear for every $i$.<br>By choosing $n$ and $|OA_i|/|OB_i|$ right, it might be that $|A_iA_j|=|A_i B_k|$ and $|B_iB_j|=|A_i B_\ell|$ for some $i,j,k,\ell$, while no $3$ points of the construction are colinear. <br>If so, we would conclude.<br>(satisfying 1 out of 2 of the first is easy)<br><br>Update: checked for odd $n \le 250$, and no positive result.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/StijnC">StijnC</a></strong>
+      
+      — <a href="/forum/thread/1082#post-1143">14:35 on 16 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="1143" data-react-url="/forum/post/1143/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-1144"
+    class="post depth-1
+           
+           even">
+    <div class="post-body" id="post-1144">
+    
+
+
+
+      
+      <p>A note that the second question is a stronger form of <a href="/982" rel="nofollow noopener noreferrer ugc" target="_blank">[982]</a> (I'll add this remark).</p>
+      
+      
+      <div class="fixed-post">
+(The site has been updated to address this comment.)
+      </div>
+
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TFBloom">Thomas Bloom</a></strong>
+      
+      — <a href="/forum/thread/1082#post-1144">15:16 on 16 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="1144" data-react-url="/forum/post/1144/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2297"
+    class="post depth-1
+           
+           odd">
+    <div class="post-body" id="post-2297">
+    
+
+
+
+      
+      <p>(Question prompted by construction with $n=21$ below.)<br><br>When you checked odd $n\le 250$, were you assuming that $A_i$ and $B_i$ had exactly the same angle?</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/BorisAlexeev">BorisAlexeev</a></strong>
+      
+      — <a href="/forum/thread/1082#post-2297">21:03 on 19 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2297" data-react-url="/forum/post/2297/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2299"
+    class="post depth-2
+           
+           even">
+    <div class="post-body" id="post-2299">
+    
+
+
+
+      
+      <p>The incompleteness was that the check happened under the $|A_iA_j|=|A_iB_i|$ condition (i.e., not all possible combinations were taken)<br>So I am very happy eigensolver did the effort to check all combinations,<br>while I indeed only did a quick easy search.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/StijnC">StijnC</a></strong>
+      
+      — <a href="/forum/thread/1082#post-2299">21:25 on 19 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2299" data-react-url="/forum/post/2299/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+</ul>
+
+
+
+
+
+<p>
+                        <div style="text-align:center;">
+<strong>All comments are the responsibility of the user. Comments appearing on this page are not verified for correctness. Please keep posts mathematical and on topic.</strong>
+</div>
+<p>
+
+
+<div style="text-align:center; margin: 1em">
+
+
+  <p><a href="/forum/login?next=%2Fforum%2Fthread%2F1082">Log in</a> to add a comment.</p>
+
+
+    </div>
+<p><div style="text-align: center; margin: 1em 0;">
+<a href="/forum/">Back to the forum</a>
+</div>
+                </div>
+            </div>
+            
+
+<script>
+document.addEventListener("submit", (e) => {
+  const form = e.target.closest(".reply-form");
+  if (!form) return;
+  const btn = form.querySelector('button[type="submit"]');
+  if (btn?.dataset.submitting === "1") {
+    e.preventDefault(); // already submitted
+    return;
+  }
+  if (btn) {
+    btn.dataset.submitting = "1";
+    btn.disabled = true;
+    btn.textContent = "Posting…";
+  }
+});
+</script>
+
+<script>
+document.addEventListener("click", (ev) => {
+  const a = ev.target.closest(".thread-sort .order");
+  if (!a) return;
+});
+</script>
+
+<script>
+document.addEventListener("submit", (e) => {
+  const form = e.target.closest(".comment-form");
+  if (!form) return;
+
+  const btn = form.querySelector('button[type="submit"]');
+  if (!btn) return;
+
+  // Already submitting? Block.
+  if (btn.dataset.submitting === "1") {
+    e.preventDefault();
+    return;
+  }
+
+  // First submit: lock UI
+  btn.dataset.submitting = "1";
+  btn.disabled = true;
+  const original = btn.textContent;
+  btn.dataset.originalText = original;
+  btn.textContent = "Posting…";
+});
+</script>
+           
+
+
+
+
+<script>
+window.MathJax = {
+  output: {
+    font: 'mathjax-tex'
+  },
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+};
+</script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@4.1.2/tex-chtml-nofont.js"></script>
+
+
+<!-- Previewing forum posts -->
+<!-- Previewing forum posts -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, m => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[m]);
+  }
+
+  function normalizeHref(href) {
+    href = href.trim();
+    if (!/^https?:\/\//i.test(href) && !href.startsWith("/")) {
+      href = "https://" + href;
+    }
+
+    return href;
+  }
+
+  let mathJaxQueue = Promise.resolve();
+
+  function clearMathJax(element) {
+    if (window.MathJax && MathJax.typesetClear) {
+      MathJax.typesetClear([element]);
+    }
+  }
+
+  function typesetMath(element) {
+    if (!window.MathJax) return;
+
+    if (MathJax.typesetPromise) {
+      mathJaxQueue = mathJaxQueue
+        .then(() => {
+          if (MathJax.startup && MathJax.startup.promise) {
+            return MathJax.startup.promise;
+          }
+        })
+        .then(() => MathJax.typesetPromise([element]))
+        .catch(err => {
+          console.error("MathJax typeset failed:", err);
+        });
+
+      return;
+    }
+
+    if (MathJax.Hub) {
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, element]);
+    }
+  }
+
+  function renderPreview(textarea, preview, label) {
+    let raw = textarea.value;
+    const anchors = [];
+    let idx = 0;
+
+    raw = raw.replace(
+      /<a\s+href=("(?:[^"]*)"|'(?:[^']*)')\s*>([\s\S]*?)<\/a>/gi,
+      (match, qHref, labelText) => {
+        const href = qHref.slice(1, -1);
+        const token = `__A_TAG_${idx++}__`;
+
+        anchors.push({
+          token,
+          href: normalizeHref(href),
+          label: labelText
+        });
+
+        return token;
+      }
+    );
+
+    let safe = escapeHtml(raw);
+
+    anchors.forEach(a => {
+      const html = `<a href="${escapeHtml(a.href)}">${escapeHtml(a.label)}</a>`;
+      safe = safe.replace(a.token, html);
+    });
+
+    safe = safe.replace(/\{PROBLEM=(.+?)\}/g, (_, p1) =>
+      `<a href="/${escapeHtml(p1)}">[${escapeHtml(p1)}]</a>`
+    );
+
+    safe = safe.replace(/\n/g, "<br>");
+    clearMathJax(preview);
+
+    if (!safe.trim()) {
+      preview.innerHTML = "";
+      preview.classList.add("hidden");
+      label.classList.add("hidden");
+      return;
+    }
+
+    preview.innerHTML = safe;
+    preview.classList.remove("hidden");
+    label.classList.remove("hidden");
+
+    typesetMath(preview);
+  }
+
+  document.querySelectorAll("form textarea").forEach(textarea => {
+    const form = textarea.closest("form");
+    const preview = form && form.querySelector(".post-preview");
+    const label = form && form.querySelector(".preview-label");
+
+    if (preview && label) {
+      textarea.addEventListener("input", () => renderPreview(textarea, preview, label));
+      renderPreview(textarea, preview, label);
+    }
+  });
+});
+</script>
+
+<!-- To handle the search bar -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function setFilterLink(linkId, newFilter) {
+        const link = document.getElementById(linkId);
+        if (!link) return;
+        const pathParts = window.location.pathname.split("/");
+        // Expect: /<section>/<entry> or /<section>/<entry>/<filter>
+        if (pathParts.length >= 3) {
+            const section = pathParts[1];
+            const entry = pathParts[2];
+            // Construct base: /tags/additive, /sources_bib/BL09, etc.
+            const baseUrl = "/" + section + "/" + entry;
+            link.href = baseUrl + "/" + newFilter;
+        }
+    }
+    setFilterLink("solvedLink", "solved");
+    setFilterLink("openLink", "open");
+    setFilterLink("yesLink", "yes");
+    setFilterLink("noLink", "no");
+});
+</script>
+
+<!-- Handle the dual view link -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const dualLink = document.getElementById("dualViewLink");
+  if (!dualLink) return;
+
+  const isInDualView = window.location.pathname.startsWith("/dual");
+  dualLink.textContent = isInDualView ? "Exit Dual View" : "Dual View";
+  dualLink.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    if (isInDualView) {
+      try {
+        const leftIframe = document.getElementById("iframe-left");
+        const src = leftIframe?.src || "/";
+        let clean = src.replace(window.location.origin, "");
+        clean = clean.replace(/[?&]embed=1/, "");
+
+        window.location.href = clean;
+      } catch (err) {
+        window.location.href = "/";
+      }
+    } else {
+      const currentPath = window.location.pathname + window.location.search;
+      const rightPanelDefault = "/";
+      const hash = `#left:${encodeURIComponent(currentPath)}&right:${encodeURIComponent(rightPanelDefault)}`;
+      window.location.href = `/dual${hash}`;
+    }
+  });
+});
+</script>
+
+<!-- Redirect links and searches when in dual view mode -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  if (!window.location.pathname.startsWith("/dual")) return;
+
+  function getTargetPanel() {
+    const selected = document.querySelector('input[name="targetPanel"]:checked');
+    return selected ? selected.value : "left";
+  }
+
+  function loadInPanel(panel, path) {
+    if (!path) return;
+    const iframe = document.getElementById(`iframe-${panel}`);
+    if (!iframe) return;
+    const url = path.includes("?") ? path + "&embed=1" : path + "?embed=1";
+    iframe.src = url;
+    const inputBox = document.querySelector(`#panel-${panel} input`);
+    if (inputBox) inputBox.value = path;
+    console.log(`Loaded "${url}" into panel "${panel}"`);
+  }
+  
+  document.querySelectorAll(".dual-aware a[href^='/'], a.dual-aware[href^='/']").forEach(link => {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      const path = this.getAttribute("href");
+      loadInPanel(getTargetPanel(), path);
+    });
+  });
+
+  const idForm = document.getElementById("idsearchForm");
+  if (idForm) {
+    idForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const input = idForm.querySelector(".idsearchTerm").value.trim();
+      if (!input) return;
+
+      let path = null;
+
+      if (/^\d+$/.test(input)) {
+        path = "/go_to/" + encodeURIComponent(input);
+      } else if (/^((\d+|end)(-(\d+|end))?\s*)+(open|solved|yes|no)?$/i.test(input)) {
+        const parts = input.split(/\s+/).filter(Boolean);
+        path = "/range/" + parts.map(encodeURIComponent).join("/");
+      } else {
+        alert("Invalid input format.");
+        return;
+      }
+
+      loadInPanel(getTargetPanel(), path);
+    });
+  }
+
+  const searchForm = document.getElementById("searchForm");
+  if (searchForm) {
+    searchForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const input = searchForm.querySelector(".searchTerm").value.trim();
+      if (!input) return;
+
+      const path = "/search/" + encodeURIComponent(input);
+      loadInPanel(getTargetPanel(), path);
+    });
+  }
+});
+</script>
+
+<!-- Different menu on mobile -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const button = document.getElementById("mobileMenuButton");
+  const dropdown = document.getElementById("mobileDropdown");
+
+  if (button && dropdown) {
+    button.addEventListener("click", function () {
+      dropdown.classList.toggle("show");
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+      }
+    });
+  }
+});
+</script>
+
+<!-- For expanding threads -->
+
+<script>
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('#toggle-posts');
+  if (!link) return;
+  e.preventDefault(); 
+
+  const box = document.getElementById('more-posts');
+  const isHidden = box.classList.toggle('hidden');
+  const expanded = !isHidden;
+
+  link.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  box.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+
+  link.textContent = expanded
+    ? 'Show only the top five comments'
+    : `Show ${link.dataset.remaining} more comments`;
+});
+</script>
+
+
+<script>
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('.toggle-replies');
+  if (!link) return;
+  e.preventDefault();
+
+  const pid = link.dataset.postId;
+  const box = document.getElementById(`more-replies-${pid}`);
+  if (!box) return;
+
+  const isHidden = box.classList.toggle('hidden');
+  const expanded = !isHidden;
+
+  link.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  box.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+
+  link.textContent = expanded
+    ? 'Hide replies'
+    : `Show ${link.dataset.remaining} more replies`;
+});
+</script>
+
+
+<script>
+document.addEventListener("click", async function (event) {
+    const button = event.target.closest(".problem-status-option");
+    if (!button) return;
+
+    const widget = button.closest(".problem-status-widget");
+    if (!widget) return;
+
+    if (widget.dataset.canEdit !== "1") return;
+
+    const status = button.dataset.status;
+    const url = widget.dataset.setUrl;
+
+    widget.classList.add("is-saving");
+
+    const buttons = widget.querySelectorAll(".problem-status-option");
+    buttons.forEach(btn => btn.disabled = true);
+
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "X-Requested-With": "fetch"
+            },
+            body: JSON.stringify({ status: status })
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok || !data.ok) {
+            throw new Error(data.error || "Could not update problem status.");
+        }
+
+        widget.dataset.currentStatus = data.status;
+
+        buttons.forEach(btn => {
+            const active = btn.dataset.status === data.status;
+            btn.classList.toggle("is-active", active);
+            btn.setAttribute("aria-checked", active ? "true" : "false");
+        });
+
+        const label = widget.querySelector(".js-problem-status-label");
+        const description = widget.querySelector(".js-problem-status-description");
+
+        if (label) label.textContent = data.label || button.dataset.label;
+        if (description) description.textContent = data.description || button.dataset.description;
+          widget.style.setProperty("--status-progress", button.dataset.progress);
+
+    } catch (err) {
+        alert(err.message || "Could not update problem status.");
+    } finally {
+        widget.classList.remove("is-saving");
+
+        if (widget.dataset.canEdit === "1") {
+            buttons.forEach(btn => btn.disabled = false);
+        }
+    }
+});
+</script>
+  
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a19352658c3971e7',t:'MTc4MzcyNTg2NQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

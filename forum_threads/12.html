@@ -1,0 +1,2694 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+
+<title>12 Discussion Thread | Erdős Problems</title>
+<meta property="og:title" content="12 Discussion Thread | Erdős Problems">
+<link rel="icon" href="/static/favicon.ico">
+<link rel="stylesheet" href="/static/style.css?v=733265cf">
+
+<script>
+document.addEventListener('click', (e) => {
+  // Toggle reply form
+  const toggle = e.target.closest('.reply-toggle');
+  if (toggle) {
+    const id = toggle.getAttribute('data-target');
+    const form = document.getElementById(id);
+    if (form) form.classList.toggle('hidden');
+  }
+  // Reply with quote
+  const quoteBtn = e.target.closest('.reply-quote');
+  if (quoteBtn) {
+    const id = quoteBtn.getAttribute('data-target');
+    const form = document.getElementById(id);
+    if (!form) return;
+    const ta = form.querySelector('textarea');
+    const raw = quoteBtn.getAttribute('data-raw') || '';
+    const quoted = raw.split('\n').map(l => '> ' + l).join('\n') + '\n\n';
+    ta.value = quoted;
+    form.classList.remove('hidden');
+    ta.focus();
+    const len = ta.value.length;
+    ta.setSelectionRange(len, len);
+  }
+});
+</script>
+
+<!-- This creates the reference in the bibliography box. -->
+
+<script>
+function addNewBox(key, problem_id, shouldScroll = false) {
+  const local_id = 'bib-container' + String(problem_id);
+  const container = document.getElementById(local_id);
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  fetch(`/bibs/${encodeURIComponent(key)}`)
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.text();
+    })
+    .then(html => {
+      container.innerHTML = html;
+
+      if (shouldScroll) {
+        requestAnimationFrame(() => {
+          container.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+        });
+      }
+    })
+    .catch(err => {
+      console.error("Failed to load bib:", err);
+      container.textContent = "Unable to load reference.";
+
+      if (shouldScroll) {
+        container.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+    });
+}
+</script>
+
+<script>
+const filledSVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" class="fav-icon">
+  <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+</svg>
+                `;
+const outlineSVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="black" fill="white" class="fav-icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.610l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.840-.610l1.285-5.386a.563.563 0 0 0-.182-.557L3.041 10.385a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+</svg>
+                `;
+
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest(".fav-btn");
+  if (!btn) return;
+
+  e.preventDefault();
+  const problemId = btn.dataset.problemId;
+
+  try {
+    const res = await fetch(`/forum/toggle_favourite/${problemId}`, { method: "POST" });
+    const data = await res.json();
+
+    btn.dataset.favourited = data.favourited ? "true" : "false";
+    btn.innerHTML = data.favourited ? filledSVG : outlineSVG;
+  } catch (err) {
+    console.error("Toggle failed:", err);
+  }
+});
+</script>
+
+    
+<script>
+function addImageBox(X, problem_id, shouldScroll = true) {
+  const local_id = 'image-container' + String(problem_id);
+  const container = document.getElementById(local_id);
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  const newBox = document.createElement("div");
+
+  const img = document.createElement("img");
+  img.src = `/static/${encodeURIComponent(X)}.png`;
+  img.className = "responsive-image";
+  img.alt = String(X);
+
+  newBox.appendChild(img);
+  container.appendChild(newBox);
+
+  if (shouldScroll) {
+    requestAnimationFrame(() => {
+      container.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+  }
+}
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('searchForm');
+  if (!form) return;
+  form.addEventListener('submit', function (e) {
+    const input = form.querySelector('.searchTerm');
+    if (!input) return;
+    const value = input.value.trim();
+    if (!value) return;
+    const path = '/search/' + encodeURIComponent(value);
+    const inDual = window.location.pathname.startsWith("/dual");
+    if (inDual) {
+      e.preventDefault(); 
+      const selected = document.querySelector('input[name="targetPanel"]:checked');
+      const panel = selected ? selected.value : "left";
+      const iframe = document.getElementById(`iframe-${panel}`);
+      if (iframe) {
+        const url = path.includes("?") ? path + "&embed=1" : path + "?embed=1";
+        iframe.src = url;
+        const box = document.querySelector(`#panel-${panel} input`);
+        if (box) box.value = path;
+      } else {
+        window.location.href = path;
+      }
+    } else {
+      form.action = path;
+      form.method = "GET";
+    }
+  });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.location.pathname.startsWith("/dual")) return;
+
+  var form = document.getElementById('idsearchForm');
+  if (!form) return;
+
+  form.onsubmit = function() {
+    var input = document.querySelector('.idsearchTerm').value.trim();
+    var searchUrl;
+
+    if (/^\d+$/.test(input)) {
+        searchUrl = '/' + encodeURIComponent(input);
+    } else if (/^((\d+|end)(-(\d+|end))?\s*)+(open|solved|yes|no)?$/.test(input.toLowerCase())) {
+        let parts = input.split(/\s+/).filter(Boolean);
+        searchUrl = '/range/' + parts.map(encodeURIComponent).join('/');
+    } else {
+        alert("Enter either a single integer or a space-separated list of numbers/ranges...");
+        return false;
+    }
+    window.location.href = searchUrl;
+    return false;
+  };
+});
+</script>
+
+<script>
+  window.CURRENT_USERNAME = "";
+</script>
+
+
+<script>
+document.addEventListener("click", async (ev) => {
+  const btn = ev.target.closest(".reaction-btn");
+  if (!btn) return;
+  const you = window.CURRENT_USERNAME || "";
+  const bar = btn.closest(".reaction-bar");
+  const postId = bar?.dataset.postId;
+  const rtype = btn.dataset.type;
+  const reactUrl = bar?.dataset.reactUrl; 
+  if (!postId || !rtype || !reactUrl) return;
+
+  try {
+    const res = await fetch(reactUrl, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({type: rtype})
+    });
+    const data = await res.json();
+    if (!data.ok) {
+      alert(data.error || "Could not update reaction.");
+      return;
+    }
+    const summary = data.summary;
+    
+    bar.querySelectorAll(".reaction-btn").forEach(b => {
+      const t = b.dataset.type;
+      const countSpan = bar.querySelector(`.reaction-count[data-type="${t}"]`);
+      if (countSpan && summary[t]) {
+        countSpan.textContent = summary[t].count;
+    const desc = b.dataset.desc || "";
+    const usersTitle = summary[t].users_title || "No one yet.";
+    b.title = `${desc}\n\n${usersTitle}`;
+      }
+        const iReacted = you && (summary[t].users_title || "").includes(you);
+  b.classList.toggle("active", !!iReacted);
+  b.setAttribute("aria-pressed", iReacted ? "true" : "false");
+    });
+  } catch (e) {
+    console.error(e);
+    alert("Only registered users with 5+ posts can react.");
+  }
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.body.addEventListener("click", function (e) {
+    const link = e.target.closest(".problem-reaction-link");
+    if (!link) return;
+
+    e.preventDefault();
+
+    const row = link.closest(".problem-reaction-row");
+    if (!row) return;
+
+    const form = row.querySelector(".problem-reaction-form");
+    if (!form) return;
+
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+      method: "POST",
+      body: formData,
+      headers: {
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    })
+      .then(resp => resp.json())
+      .then(data => {
+        if (!data.ok) {
+          console.error(data.error || "Problem reaction update failed");
+          return;
+        }
+
+        const summary = data.summary;
+
+        // Update users text for each reaction type
+        for (const [type, info] of Object.entries(summary)) {
+          const r = document.querySelector(
+            `.problem-reaction-row[data-reaction-type="${type}"]`
+          );
+          if (!r) continue;
+
+          const usersCell = r.querySelector(".problem-reaction-users");
+          if (usersCell) {
+            usersCell.textContent = info.users_title || "None yet";
+          }
+        }
+        link.classList.toggle("active");
+        if (link.classList.contains("active")) {
+          link.textContent = "(no)";
+        } else {
+          link.textContent = "(yes)";
+        }
+      })
+      .catch(err => {
+        console.error("Problem reaction AJAX error", err);
+      });
+  });
+});
+</script>
+
+
+
+
+
+
+</head>
+
+<body>
+
+<div class="topnav">
+
+  <div class="left">
+    <div class="logo">
+      <a class="dual-aware" href="/"><img src="/static/EPLogo.png" alt="Logo" height="50"></a>
+    </div>
+    <div class="links dual-aware desktop-nav">
+      <a href="/forum">Forum</a>
+      <a href="/dm">Inbox</a> 
+      <a href="/favourites">Favourites</a>
+      <a href="/tags">Tags</a> 
+      <div class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">More</a>
+        <div class="dropdown-content">
+          <a href="/faq">FAQ</a>
+          <a href="/prizes">Prizes</a>
+          <a href="/lists">Problem Lists</a>
+          <a href="/definitions">Definitions</a>
+          <a href="/links">Links</a>
+        </div>
+      </div> 
+    </div>
+    <div class="mobile-nav">
+    
+        <a class="forumlink" href="/forum">Forum</a>
+    <div class="dropdown">
+      <button class="dropbtn" id="mobileMenuButton">Menu</button>
+      <div class="dropdown-content">
+        <a href="/dm">Inbox</a> 
+        <a href="/favourites">Favourites</a>
+        <a href="/tags">Tags</a>  
+        <a href="/faq">FAQ</a>
+        <a href="/prizes">Prizes</a>
+        <a href="/lists">Problem Lists</a>
+        <a href="/definitions">Definitions</a>
+        <a href="/links">Links</a>
+      </div>
+     </div>
+    </div>
+  </div>
+
+  <div class = "middle">
+    <div class="button-container" style="max-width: 50%;">
+      <form id="idsearchForm">
+        <input required type="text" name="query" class="idsearchTerm" placeholder="# (or range #-#)" title="Enter either a single integer or a space-separated list of numbers/ranges, optionally ending with 'open' or 'solved'.">
+        <button type="submit" class="searchButton">Go</button>
+      </form>
+    </div>
+    <div class="button-container" style="max-width: 50%;">
+      <form id="searchForm">
+        <input required type="text" name="query" class="searchTerm" placeholder="Search" title="Search all problems.">
+        <button type="submit" class="searchButton">Go</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="right">
+    <a href="#" id="dualViewLink" class="split_all">Dual View</a>
+    <a href="/random_solved" class="split_solved dual-aware">Random Solved</a>
+    <a href="/random_open" class="split_open dual-aware">Random Open</a>
+  </div>
+
+</div>
+
+<div id="notifications-slot"></div>
+
+
+
+
+<div class="container">
+<div class="problem-box">
+
+        
+
+                    <div class="problem-text" id="open">  
+<div id="prize">
+
+<span class="tooltip">
+  OPEN
+  <span class="tooltiptext">
+    This is open, and cannot be resolved with a finite computation.
+  </span>
+</span>
+
+</div>
+
+                        <div id="content">Let $A$ be an infinite set such that there are no distinct $a,b,c\in A$ such that $a\mid (b+c)$ and $b,c&#62;a$. Is there such an $A$ with\[\liminf \frac{\lvert A\cap\{1,\ldots,N\}\rvert}{N^{1/2}}&#62;0?\]Does there exist some absolute constant $c&#62;0$ such that there are always infinitely many $N$ with\[\lvert A\cap\{1,\ldots,N\}\rvert&#60;N^{1-c}?\]Is it true that\[\sum_{n\in A}\frac{1}{n}&#60;\infty?\]</div>
+                        <div id="problem_id"><a href="/12">#12</a>: <a href="#bib-container12" onclick="event.preventDefault();addNewBox('ErSa70', '12', true);return false;">[ErSa70]</a><a href="#bib-container12" onclick="event.preventDefault();addNewBox('Er73', '12', true);return false;">[Er73]</a><a href="#bib-container12" onclick="event.preventDefault();addNewBox('Er75b', '12', true);return false;">[Er75b]</a><a href="#bib-container12" onclick="event.preventDefault();addNewBox('Er77c', '12', true);return false;">[Er77c]</a><a href="#bib-container12" onclick="event.preventDefault();addNewBox('Er80', '12', true);return false;">[Er80,p.113]</a><a href="#bib-container12" onclick="event.preventDefault();addNewBox('Er92c', '12', true);return false;">[Er92c]</a><a href="#bib-container12" onclick="event.preventDefault();addNewBox('Er95c', '12', true);return false;">[Er95c]</a><a href="#bib-container12" onclick="event.preventDefault();addNewBox('Er97', '12', true);return false;">[Er97]</a><a href="#bib-container12" onclick="event.preventDefault();addNewBox('Er97b', '12', true);return false;">[Er97b]</a><a href="#bib-container12" onclick="event.preventDefault();addNewBox('Er97e', '12', true);return false;">[Er97e]</a><a href="#bib-container12" onclick="event.preventDefault();addNewBox('Er98', '12', true);return false;">[Er98]</a></div>
+                         
+                            <div id="tags">
+                            
+  <a href="/tags/number theory">number theory</a>
+
+                            </div>
+                        
+                    </div>  
+                    
+                    <div class="problem-text" id="disclaimer">  
+The open status of this problem reflects the current belief of the owner of this website. There may be literature on this problem that I am unaware of, which may partially or completely solve the stated problem. Please do your own literature search before expending significant effort on solving this problem. If you find any relevant literature not mentioned here, please add this in a comment.
+                    <div
+  class="problem-status-widget"
+  data-problem-id="12"
+  data-set-url="/problem-status/12"
+  data-current-status="open"
+  data-can-edit="0"
+  style="--status-progress: 0.0; --status-count: 3;"s
+>
+                      <div class="problem-status-heading">Comment activity that has not yet been incorporated into the remarks</div>
+
+  <div class="problem-status-scale" role="radiogroup" aria-label="Problem status">
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option is-active"
+        data-status="open"
+        data-label="None"
+        data-description="There are no solutions, partial or complete, claimed in the comments."
+        data-progress="0.0"
+        role="radio"
+        aria-checked="true"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">None</span>
+      </button>
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option"
+        data-status="partial"
+        data-label="Partial"
+        data-description="There are claims of partial results and/or a path to a solution in the comments."
+        data-progress="0.5"
+        role="radio"
+        aria-checked="false"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">Partial</span>
+      </button>
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option"
+        data-status="claimed"
+        data-label="Solution"
+        data-description="A claimed solution has been posted in the comments."
+        data-progress="1.0"
+        role="radio"
+        aria-checked="false"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">Solution</span>
+      </button>
+    
+  </div>
+
+  <div class="problem-status-explanation">
+    <span class="js-problem-status-description">
+      There are no solutions, partial or complete, claimed in the comments.
+    </span>
+  </div>
+  </div>
+  
+                    </div>
+                    
+                    
+
+
+                    
+
+                        <div class="problem-additional-text"> 
+                    
+                           Asked by Erdős and Sárközy <a href="#bib-container12" onclick="event.preventDefault();addNewBox('ErSa70', '12', true);return false;">[ErSa70]</a>, who proved that $A$ must have density $0$. They also prove that this is essentially best possible, in that given any function $f(x)\to \infty$ as $x\to \infty$ there exists a set $A$ with this property and infinitely many $N$ such that\[\lvert A\cap\{1,\ldots,N\}\rvert&gt;\frac{N}{f(N)}.\](Their example is given by all integers in $(y_i,\frac{3}{2}y_i)$ congruent to $1$ modulo $(2y_{i-1})!$, where $y_i$ is some sufficiently quickly growing sequence.)<br><br>An example of an $A$ with this property where\[\liminf \frac{\lvert A\cap\{1,\ldots,N\}\rvert}{N^{1/2}}\log N&gt;0\]is given by the set of $p^2$, where $p\equiv 3\pmod{4}$ is prime.<br><br>Elsholtz and Planitzer <a href="#bib-container12" onclick="event.preventDefault();addNewBox('ElPl17', '12', true);return false;">[ElPl17]</a> have constructed such an $A$ with\[\lvert A\cap\{1,\ldots,N\}\rvert\gg \frac{N^{1/2}}{(\log N)^{1/2}(\log\log N)^2(\log\log\log N)^2}.\]Schoen <a href="#bib-container12" onclick="event.preventDefault();addNewBox('Sc01', '12', true);return false;">[Sc01]</a> proved that if all elements in $A$ are pairwise coprime then\[\lvert A\cap\{1,\ldots,N\}\rvert \ll N^{2/3}\]for infinitely many $N$. Baier <a href="#bib-container12" onclick="event.preventDefault();addNewBox('Ba04', '12', true);return false;">[Ba04]</a> has improved this to $\ll N^{2/3}/\log N$.<br><br>DeepMind has provided a construction that shows the answer to the second question is no (and hence the answer to the first question is yes). This construction has been simplified and improved in the comments; it is now known that there exists an $A$ with this property such that, for all large $N$,\[\lvert A\cap \{1,\ldots,N\}\rvert \geq \frac{N}{(\log N)^{O(\log\log\log N)}}.\]It is unknown whether there exists such an $A$ with $\sum_{n\in A}\frac{1}{n}=\infty$.<br><br>For the finite version see <a href="/13" rel="nofollow noopener noreferrer ugc" target="_blank">[13]</a>.
+                           
+                    
+                    
+<p style="text-align: center; font-family: 'Courier New', monospace; font-size: 90%;">
+  <a href="/latex/12">View the LaTeX source</a>
+</p>
+<p style="text-align: center; font-family: 'Courier New', monospace; font-size: 90%;">
+  
+ This page was last edited 08 April 2026. <a href="/history/12">View history</a>
+</p>
+                    <div class="image-container" id="image-container12"></div>
+                        </div>
+
+                        <div class="problem-additional-text" style="text-align:center;"> 
+</div>
+
+                <div id="bib-container12"></div>
+  <div class="external">External data from <a href="https://github.com/teorth/erdosproblems">the database</a> - you can help update this</a>                
+
+
+  <br>
+  Formalised statement? 
+    
+      <a href="https://github.com/google-deepmind/formal-conjectures/blob/main/FormalConjectures/ErdosProblems/12.lean">Yes</a>
+    
+  
+  
+  
+  <br>
+  
+  </div>
+
+
+<div class="problem-reactions">
+
+<div class="comment-count">
+  <a style="color: inherit;" href="/forum/discuss/12">
+    13 comments on this problem
+  </a>
+</div>
+
+<table class="problem-reactions-table">
+  <tbody>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="like">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Likes this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    
+      <a href="/forum/user/holyterror" style="color:inherit; text-decoration: none;">holyterror</a>
+    
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="collab">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Interested in collaborating</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="working_on">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Currently working on this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="hard">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>This problem looks difficult</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="easy">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>This problem looks tractable</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="formalisable">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>The results on this problem could be formalisable</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="working_form">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>I am working on formalising the results on this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+</div>
+<br>
+
+                <div class="citationbox"> <div id="content">
+                                    
+                           <b>Additional thanks to</b>: Nat Sothanaphan, GTsoukalas, and Terence Tao          <br> <br>
+                    
+When referring to this problem, please use the original sources of Erd&#337;s. If you wish to acknowledge this website, the recommended citation format is:
+<br><br>
+T. F. Bloom, Erd&#337;s Problem #12, https://www.erdosproblems.com/12, accessed 2026-07-10</div>
+</div>
+
+               
+
+
+<div class="problem-additional-text"> 
+
+
+
+
+<div class="thread-sort">
+Order by
+  <a href="/forum/thread/12?order=oldest"
+     class="order ">oldest first</a> or
+  <a href="/forum/thread/12?order=newest"
+     class="order active">newest first</a>. (The most recent comments are highlighted in a red border.)
+</div>
+
+
+
+
+<ul class="post-list">
+  
+    
+    
+
+
+
+
+
+
+<li id="post-5288"
+    class="post depth-0
+           
+           even">
+    <div class="post-body" id="post-5288">
+    
+
+
+
+      
+      <p>Looking at Nat/GPT's simplified construction, I think I have a yet simpler description. It suffices to prove that, for any $\epsilon&#62;0$, there exists $A$ with this property such that $\lvert A\cap [1,N]\rvert\gg_\epsilon N^{1-\epsilon}$ for all large $N$.<br><br>Let $C&#62;e$ be some constant to be chosen later and let $p_1&lt;p_2&lt;\cdots$ be the odd primes. Let\[B_k = \left\{ C^{k\log k}&lt;n&lt;\frac{3}{2}C^{k\log k} : n\equiv 1\pmod{p_i}, i&lt;k\textrm{ and }n\equiv 0\pmod{p_k}\right\}.\]If $a&lt;b\leq c\in B_k$ then clearly $2a&lt;b+c&lt;3C^{k\log k}&lt;3a$ so $a\nmid b+c$. If $a&lt;b\leq c$ and $a\in B_k$ and $c\in B_l$ for some $l&gt;k$ then $p_k\mid a$ but $p_k\nmid b+c$ (because $b+c$ is either $1$ or $2$ modulo $p_k$) so $a\nmid b+c$. Therefore $A=\cup B_k$ has the property that $a\nmid b+c$ for any $a&#60;b\leq c\in A$.<br><br>Now since $\prod_{i\leq k}p_i=e^{(1+o(1))k\log k}$ each $B_k$ has size about $(C/e)^{k\log k}/2$. For any large $N$ if $C^{k\log k}\leq N&#60;C^{(k+1)\log(k+1)}$ then $B_{k-1}\subset A\cap[1,N]$ and so\[\lvert A\cap [1,N]\rvert \gg C^{-O(\log k)}(C/e)^{k\log k}\gg C^{-O(\log k)}e^{-k\log k}N\gg C^{-O(\log k)}N^{1-\epsilon}\]where $\epsilon=1/\log C$, which is (since $\log k\leq \log\log N$)\[\gg (\log N)^{-O(1/\epsilon)}N^{1-\epsilon},\]which suffices. (There are some additional errors of $e^{o(k\log k)}$ to track, but these will only affect this by $N^{o(\epsilon)}$.)<br><br>In fact (assuming I haven't made a silly error somewhere above) I think this actually produces a set $A$ such that\[\lvert A\cap [1,N]\rvert \gg \frac{N}{\exp(O(\sqrt{\log N\log\log N}))}\]for all large $N$.<br><br>(Annoyingly this is still too sparse to rule out $\sum_{n\in A}\frac{1}{n}=\infty$, for which one would need something more like $\lvert A\rvert \geq N/(\log N)^{1-c}$.)</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TFBloom">Thomas Bloom</a></strong>
+      
+      — <a href="/forum/thread/12#post-5288">22:33 on 07 Apr 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="5288" data-react-url="/forum/post/5288/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: TerenceTao, Moritz Firsching, Nat Sothanaphan"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">3</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-5289"
+    class="post depth-1
+           
+           odd">
+    <div class="post-body" id="post-5289">
+    
+
+
+
+      
+      <p>I think if one encodes the congruence conditions in "binary" one can be more efficient (using $\asymp \log k$ primes for the $B_k$ block rather than $\asymp k$ primes) and get something tantalizingly close, namely $|A| \gg N / \log^{O(\log\log\log N)} N$ I think.  Now, each $B_k$ is supported in $[2^k, \frac{3}{2} 2^k]$ and has congruence conditions as follows: one has $n = 0 \pmod{p_i}$ for $2^{m-1}$ of the indices $2^m &lt; i \leq 2^{m+1}$, and $n = 1 \pmod{p_i}$ for all the other indices $i \leq 2^{m+1}$, where $2 \leq 2^m \asymp \log k$ is chosen so that all of these congruence conditions are distinct in $k$.  The pattern looks something like this:<ul>
+<li> $B_1$: $n = 0 \pmod{3}$, $n = 1 \pmod{5}$
+</li><li> $B_2$: $n = 1 \pmod{3}$, $n = 0 \pmod{5}$
+</li><li> $B_3$: $n = 1 \pmod{3,5}$, $n = 0 \pmod{7, 11}$, $n = 1 \pmod{13, 17}$
+</li><li> $B_4$: $n = 1 \pmod{3,5}$, $n = 0 \pmod{7, 13}$, $n = 1 \pmod{11, 17}$
+</li><li> $B_5$: $n = 1 \pmod{3,5}$, $n = 0 \pmod{7, 17}$, $n = 1 \pmod{11, 13}$
+</li><li> $B_6$: $n = 1 \pmod{3,5}$, $n = 0 \pmod{11, 13}$, $n = 1 \pmod{7, 17}$
+</li><li> $B_7$: $n = 1 \pmod{3,5}$, $n = 0 \pmod{11, 17}$, $n = 1 \pmod{7, 13}$
+</li><li> $B_8$: $n = 1 \pmod{3,5}$, $n = 0 \pmod{13, 17}$, $n = 1 \pmod{7, 11}$
+</li><li> $B_9$: $n = 1 \pmod{3,5,7,11,13,17}$, $n = 0 \pmod{19, 23, 29, 31}$, $n=1 \pmod{37, 39, 41, 43}$
+</li><li> $\dots$
+</li></ul>Each $B_k$ has density like $1 / \prod_{i=1}^{2^{m+1}} p_i$ which is about $1 / \log^{O(\log\log\log N)} N$ when $N = 2^k$, I think.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TerenceTao">TerenceTao</a></strong>
+      
+      — <a href="/forum/thread/12#post-5289">03:39 on 08 Apr 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="5289" data-react-url="/forum/post/5289/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Moritz Firsching, old-bielefelder, Nat Sothanaphan"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">3</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-5290"
+    class="post depth-2
+           
+           even">
+    <div class="post-body" id="post-5290">
+    
+
+
+
+      
+      <p>Aha yes, very nice; an equivalent construction is to take each $B_k$ as the set of those $2^k\leq n&#60;\frac{3}{2}2^k$ such that $n\equiv u_i\pmod{p_i}$ where $u_1\cdots u_{O(\log k)}$ are the binary digits of $k$. (Because all that we need is if $a\in B_k$ and $c\in B_l$ with $k&#60;l$ then there is some $i$ such that $a\equiv 0\pmod{p_i}$ and $c\equiv 1\pmod{p_i}$.)<br><br>In fact taking $n\equiv 1\pmod{p_i}$ if $u_i=1$ is overkill, it would be enough if $n\in [1,p_i/2)\pmod{p_i}$. This doesn't change the density really for most $N$, but it does mean that for infinitely many $N$ (those like $2^k$ where $k$ has $O(1)$ many binary digits) the density is more like $\gg 1/(\log N)(\log\log N)^{O(1)}$.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TFBloom">Thomas Bloom</a></strong>
+      
+      — <a href="/forum/thread/12#post-5290">05:36 on 08 Apr 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="5290" data-react-url="/forum/post/5290/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: TerenceTao, Nat Sothanaphan"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">2</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-5297"
+    class="post depth-3
+           recent recent-3
+           odd">
+    <div class="post-body" id="post-5297">
+    
+
+
+
+      
+      <p>Wow, thanks. All of this makes it seem like there could be some fundamental barrier preventing $\sum_{n \in A} 1/n$ from diverging. (Alternatively, it's just a coincidence.) Very interesting.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/12#post-5297">17:53 on 08 Apr 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="5297" data-react-url="/forum/post/5297/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-5300"
+    class="post depth-4
+           recent recent-2
+           even">
+    <div class="post-body" id="post-5300">
+    
+
+
+
+      
+      <p>I'd be surprised if one could get $A$ to be dense enough for $\sum \frac{1}{n}=\infty$ (but have been surprised many times before!).</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TFBloom">Thomas Bloom</a></strong>
+      
+      — <a href="/forum/thread/12#post-5300">10:13 on 09 Apr 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="5300" data-react-url="/forum/post/5300/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Nat Sothanaphan"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-5303"
+    class="post depth-5
+           recent recent-1
+           odd">
+    <div class="post-body" id="post-5303">
+    
+
+
+
+      
+      <p>It seems very hard to do this by the existing strategy of imposing congruence conditions on different dyadic blocks such as $[2^k, \frac{3}{2} 2^k]$.  Every block needs a divisibility condition $n = 0 \pmod{q_k}$ in addition to some side conditions on $n$ with respect to other moduli, e.g., $n \in [1, p_i/2) \pmod{p_i}$ for various $i$.  Even if we ignore the side conditions, I think we cannot afford any repetitions in the $q_k$: if $q_k = q_{k'}$ for some $k &#60; k'$ then we have no mechanism for preventing an element of $B_k$ dividing the sum of two elements of $B_{k'}$, for instance.  So $q_k$ has to grow at least as fast as $k$, so $\sum_k 1/q_k$ can only barely diverge.  This is already the density limit if one just imposes $n = 0 \pmod{q_k}$, but then one also has the additional side conditions, and now one can only afford to sparsify the set further by about $\log k$ before we are going to make $\sum_{n \in A} 1/n$ converge.  This doesn't look feasible.<br><br>So if the third question is to have a negative answer, one has to go beyond congruence conditions on blocks to construct these sets - but it's really hard to envisage what more efficient construction there could be.  Perhaps these constructions are already close to optimal and the answer to the third question is positive, but this may require some sort of "inverse theorem" that formalizes the intuition that congruence constructions are nearly optimal.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TerenceTao">TerenceTao</a></strong>
+      
+      — <a href="/forum/thread/12#post-5303">14:45 on 09 Apr 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="5303" data-react-url="/forum/post/5303/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Nat Sothanaphan"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-5281"
+    class="post depth-0
+           
+           odd">
+    <div class="post-body" id="post-5281">
+    
+
+
+
+      
+      <p>The DeepMind prover agent has found Lean proofs for the first and second questions, as <a href="https://google-deepmind.github.io/formal-conjectures/theorem/?name=Erdos12.erdos_12.parts.i" rel="nofollow noopener noreferrer ugc" target="_blank">parts (i)</a> and <a href="https://google-deepmind.github.io/formal-conjectures/theorem/?name=Erdos12.erdos_12.parts.ii" rel="nofollow noopener noreferrer ugc" target="_blank">parts (ii)</a>, as formalized in Formal Conjectures. The formal proof for (i) can be found <a href="https://github.com/mo271/formal-conjectures/blob/8d872b465955e46e2d28bc165d186ea41fd0da9e/FormalConjectures/ErdosProblems/12.lean#L810" rel="nofollow noopener noreferrer ugc" target="_blank">at this link</a>, and the formal proof for (ii) can be found <a href="https://github.com/mo271/formal-conjectures/blob/118a6a60df73a9f47d6c89f3cdb3786eaa2e8d0a/FormalConjectures/ErdosProblems/12.lean#L740" rel="nofollow noopener noreferrer ugc" target="_blank">at this link</a>. The first question is resolved in the affirmative, whereas the second question is resolved in the negative. We give informal proofs reflecting the arguments in the Lean proofs:<br><br>The proof of the first question constructs a sequence of "blocks'' that individually cannot contain such $a,b,c$, and with a careful choice of parameters, their union forms the desired set. <br><br>$\textbf{Theorem}$. There is an infinite set $A$ satisfying that there are no distinct $a,b,c \in A$ with $a &lt; b,c$ satisfying $a | b + c$ and<br>$$\liminf_{N \to \infty} \frac{|A \cap \{1, \dots, N\}|}{N^{1/2}} &gt; 0$$.<br>$\textbf{Proof}$. Let $f : \mathbb{N} \to \mathbb{N}$ be defined by $f(0) = 0$ and $f(n) = 3f(\lfloor n/2 \rfloor) + (n \bmod 2)$. The function $f$ takes a number represented in base 2 and outputs the number given by the same representation but read in base 3. In particular, the base 3 representation of $f(n)$ will contain only $0$s and $1$s. For this reason, $f(a) + f(b) = 2f(c)$ implies $a = b = c$, ensuring the sequence $(f(n))_{n \in \mathbb{N}}$ contains no 3-APs.<br><br>Next, let $F_i$ be the $i$-th odd prime, and write $M_i = \prod_{j &lt; i} F_j$ and $V_i = F_i M_i$. By Bertrand's postulate, we have $F_i \le 2^{i + 2}$. By the Chinese Remainder Theorem, for each $i$, let $C_i &lt; V_i$ be the unique integer such that $C_i \equiv 0 \pmod{F_i}$ and $C_i \equiv 1 \pmod{M_i}$.<br><br>Now we define the parameters for the blocks $(B_i)$. Let:<br>- $Y_i = 3^{(i + 20)^3}$ be the exponential bounding scale to control the distance between blocks.<br>- $P_i = 10V_iY_i + C_i$ be the starting coordinate of block $i$.<br>- $X_i = \lfloor \sqrt{P_{i + 1}} \rfloor$ be the element capacity of block $i$. Note that the capacity of $B_i$ is directly tied to the starting point of the next block $B_{i+1}$.<br><br>Formally, define $B_i = \{P_i + V_if(y) \mid y &lt; X_i\}$. The purpose of $Y_i$ is to keep the blocks relatively narrow while ensuring they are well-spaced. Note that if $y &lt; 2^k$, then $f(y) &lt; 3^k$. Letting $k = (i + 20)^3$, we want to guarantee that for any $y &lt; X_i$, we have $f(y) &lt; Y_i = 3^k$. To do this, it suffices to show $X_i \le \sqrt{P_{i+1}} &lt; 2^k$, which is equivalent to $P_{i+1} \le 4^k$. <br><br>Observe that $P_{i+1} \leq 11V_{i + 1}Y_{i + 1} \leq 11 \cdot 2^{(i + 4)^2} \cdot 3^{(i + 21)^3}$, applying Bertrand's postulate to bound $V_{i+1}$. This is asymptotically strictly smaller than $4^k = 4^{(i+20)^3}$. For our choice of shift ($+20$), the inequality $11 \cdot 2^{(i + 4)^2} \cdot 3^{(i + 21)^3} \le 4^{(i+20)^3}$ holds universally for all $i \ge 1$.<br><br>Set $A = \bigcup_{i \in \mathbb{N}} B_i$. Clearly, $A$ is an infinite set. Suppose, for the sake of contradiction, that there exist distinct $a,b,c \in A$ with $a &lt; b,c$ such that $a \mid (b + c)$. Suppose $a \in B_i$. We analyze two cases:<br><br>- Case 1: (Cross-block) Suppose at least one of $b,c$ is not in $B_i$. Without loss of generality, assume $b \in B_j$ for some $j &gt; i$ (since $b &gt; a$). Since $a \in B_i$, we have $a \equiv 0 \pmod{F_i}$, and thus $b + c \equiv 0 \pmod{F_i}$ by the divisibility condition. However, by our CRT construction, $b \equiv 1 \pmod{F_i}$. The element $c$ must belong to some block $B_m$ with $m \ge i$, so $c \equiv 0 \pmod{F_i}$ (if $m=i$) or $c \equiv 1 \pmod{F_i}$ (if $m &gt; i$). Therefore, $b + c \equiv 1 \pmod{F_i}$ or $b + c \equiv 2 \pmod{F_i}$. Since $F_i \ge 3$, this directly contradicts $b + c \equiv 0 \pmod{F_i}$.<br><br>- Case 2 (Same block) Suppose $b, c \in B_i$. They must be tightly clustered around $P_i$. Because $y &lt; X_i$, we have $f(y) &lt; Y_i$. The maximum "noise" added to any block element is $V_iY_i$. Since $P_i &gt; 10V_iY_i$, any $x \in B_i$ must satisfy $x \in [P_i, 1.1P_i]$. The divisibility condition $a \mid (b+c)$ implies $m a = b + c$ for some integer $m$. Because $b+c \in [2P_i, 2.2P_i]$ and $a \in [P_i, 1.1P_i]$, it must be that $m = 2$, implying $2a = b + c$. <br><br>Writing the elements as $a = P_i + V_if(a')$, $b = P_i + V_if(b')$, and $c = P_i + V_if(c')$, substitution and cancellation yield $2f(a') = f(b') + f(c')$. This is impossible for distinct $a', b', c'$ because the image of $f$ avoids 3-APs, contradicting the assumption that $a,b,c$ are distinct.<br><br>Finally, we show that $C(N) = |A \cap \{1, \dots, N\}| \ge c\sqrt{N}$ for some constant $c &gt; 0$. We split into two cases:<br><br>Case 1: $N$ falls in the gap between $B_i$ and $B_{i + 1}$; precisely, $P_i + V_iY_i \leq N &lt; P_{i + 1}$. Here, $C(N)$ counts at least all elements in $B_i$, meaning $C(N) \geq X_i = \lfloor \sqrt{P_{i + 1}} \rfloor$. Since $N \leq P_{i + 1}$, we have $\sqrt{N} \leq \sqrt{P_{i + 1}}$. Thus, $\frac{C(N)}{\sqrt{N}} \geq \frac{\lfloor \sqrt{P_{i + 1}} \rfloor}{\sqrt{P_{i + 1}}} \approx 1$.<br><br>Case 2: $N$ is inside the block $B_i$; precisely, $P_i \leq N &lt; P_i + V_iY_i$. A pessimistic lower bound counts only the elements up to the previous block, giving $C(N) \geq X_{i - 1} = \lfloor \sqrt{P_i} \rfloor$. Observe that $V_iY_i \leq 0.1P_i$, so $N \leq 1.1 P_i &lt; 2 P_i$. Consequently, $\sqrt{P_i} &gt; \sqrt{N/2}$, which implies $\frac{C(N)}{\sqrt{N}} \geq \frac{1}{\sqrt{2}}$.<br><br>In both cases, $\liminf_{N \to \infty} \frac{C(N)}{N^{1/2}} \ge \frac{1}{\sqrt{2}} &gt; 0$, completing the proof. $\square$<br><br>Next, we give an informal proof derived from the Lean proof produced by the agent answering the second question. The agent produced multiple proofs for this question, all somewhat similar in style to the proof for the first question. We present the proof which seems most novel, having seen that previous proof.<br><br>$\textbf{Theorem}$. There exists an infinite set $A \subset \mathbb{Z}^+$ with no distinct $a, b, c \in A$ with $b, c &gt; a$, and $a | b + c$, yet for any $\varepsilon &gt; 0$ and all sufficiently large $N$:$$ |A \cap \{1, \dots, N\}| \geq N^{1-\varepsilon} $$<br>Consequently, there is no absolute constant $c &gt; 0$ such that every such set $A$ satisfies $|A \cap \{1, \dots, N\}| &lt; N^{1-c}$ for infinitely many $N$.<br><br>$\textbf{Proof}$. Let $c \in (0, 1)$, and let $(P_k)$ be a sequence of pairwise coprime integers with $P_k \geq 3$ and $P_k \leq 4^{k+2}$ (for example, we can choose $P_k$ to be the $k$-th odd prime). Next, define the running product $L_k = \prod_{i = 0}^k P_i$. As before, we have $L_k \leq 4^{(k+2)^2}$. By the Chinese Remainder Theorem, there are integers $R_k &lt; L_k$ satisfying $R_k \equiv 0 \pmod{P_k}$ and $R_k \equiv 1 \pmod{P_i}$ for all $i &lt; k$.<br><br>Choose an integer $m \geq 2$ satisfying $m &gt; (2m + 1)^{1-c/2}$ and define the dimension $V_k = (k + 10)^4$. We use a construction of Behrend (1946) to generate dense sets free of 3-term arithmetic progressions. Consider the grid of vectors $\{1, \dots, m\}^{V_k - 1}$. Let $v = (v_0, \dots, v_{V_k - 2})$ be such a vector. The squared norm $\|v\|_2^2$ takes integer values in the range $[V_k - 1, (V_k - 1) m^2]$. By the pigeonhole principle, there exists an integer radius $K$ such that the number of vectors on this sphere satisfies $|\{v \in \{1, \dots, m\}^{V_k - 1} \mid \|v\|_2^2 = K\}| \geq m^{V_k - 1} / (V_k m^2 + 1)$.<br><br>Define $S_k$ as the set of integers formed by evaluating these vectors in base $2m+1$, strictly offset by adding a massive leading digit $m(2m+1)^{V_k - 1}$:<br>$$S_k = \left\{ m(2m+1)^{V_k - 1} + \sum_{i = 0}^{V_k - 2} v_i (2m + 1)^i \mathrel{\Bigg|} v \in \{1, \dots, m\}^{V_k - 1}, \sum_{i=0}^{V_k-2} v_i^2 = K \right\}$$<br>Because the digits are bounded by $m$, adding two elements in base $2m+1$ involves no carrying. The restriction to the sphere of radius $\sqrt{K}$ ensures $S_k$ contains no 3-APs. Furthermore, because the vectors use digits strictly between $1$ and $m$, every element $x \in S_k$ satisfies $m(2m+1)^{V_k-1} \leq x &lt; (m+1)(2m+1)^{V_k-1}$, ensuring the set is tightly clustered.<br><br>We define the blocks $A_k = \{L_kx + R_k \mid x \in S_k\}$, and set $A = \bigcup_{k \in \mathbb{N}} A_k$. Clearly, $A$ is an infinite set. We verify $A$ contains no distinct $a,b,c$ such that $a \mid (b + c)$ with $b, c &gt; a$. If $a, b, c$ are in different blocks, a similar modular arithmetic argument as before using the CRT conditions yields a contradiction. If they are in the same block, the tightness of $S_k$ guarantees $b+c &lt; 3a$, forcing the divisibility multiplier to be exactly 2 (i.e., $2a = b+c$), which contradicts the fact that $S_k$ is 3-AP-free. To ensure the blocks $A_k$ do not overlap, we bound their elements. The maximum element in $A_k$ is bounded above by:<br>$$\max(A_k) \leq L_k (m+1)(2m + 1)^{V_k - 1}$$<br>The minimum element in the next block $A_{k+1}$ is bounded below by:<br>$$\min(A_{k+1}) \geq L_{k + 1} m(2m + 1)^{V_{k + 1} - 1}$$<br>Because the dimension $V_{k + 1} = (k + 11)^4$ is significantly larger than $V_k = (k + 10)^4$, the base exponent strictly dominates, separating the blocks.<br><br>We now show that $|A \cap \{1, \dots, N\}| \geq N^{1-c}$ for sufficiently large $N$. The density drops the most in the empty gaps between blocks, with the absolute minimum occurring immediately before block $A_{k + 1}$ begins. At this point, $N = \min(A_{k+1}) - 1$, and our total element count is strictly greater than $|A_k|$. Thus, it suffices to prove:<br>$$|A_k| \geq (\max(A_{k + 1}))^{1-c}$$<br>Substituting our parameter bounds into this inequality yields, and since $m$ was chosen to satisfy $m &gt; (2m + 1)^{1 - c/2}$, it remains to prove<br>$$\frac{\left((2m+1)^{1-c/2}\right)^{V_k - 1}}{V_k m^2 + 1} \geq \left( L_{k + 1}(m+1)(2m + 1)^{V_{k+1} - 1} \right)^{1-c}$$<br>Ignoring the polynomial denominator and constant multipliers, we compare the asymptotic growth of the exponents on the base $2m+1$:<br>- On the left hand side, the exponent is $(1 - c/2)(V_k - 1) = (1 - c/2)k^4 + O(k^3)$.<br>- On the right hand side, the exponent is $(1 - c)(V_{k + 1} - 1) = (1 - c)(k + 11)^4 = (1-c)k^4 + O(k^3)$.<br><br>The contribution of the running product $L_{k + 1} \leq 4^{(k+3)^2}$ and the constant $(m+1)$ to the right hand side is only $O(k^2)$, which is safely absorbed into the $O(k^3)$ error term. Because $c &gt; 0$, the $k^4$ coefficient on the left hand side $(1 - c/2)$ is strictly greater than the $k^4$ coefficient on the right hand side $(1 - c)$. Thus, for sufficiently large $k$, the left hand side asymptotically dominates, and the inequality holds. $\square$<br><br>Note that the Lean proof for this second question mentions a construction of Javier Cilleruelo, though the agent's thinking is rather vague in its attribution to Cilleruelo. That being said, we weren’t able to find a direct resolution to this conjecture in the literature.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/GTsoukalas">GTsoukalas</a></strong>
+      
+      — <a href="/forum/thread/12#post-5281">11:37 on 07 Apr 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="5281" data-react-url="/forum/post/5281/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Moritz Firsching, Nat Sothanaphan"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">2</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-5282"
+    class="post depth-1
+           
+           even">
+    <div class="post-body" id="post-5282">
+    
+
+
+
+      
+      <p>Thanks! These long proof-comments are a little difficult to parse, and to extract what was proved from them; could you please edit to state at the beginning exactly what results you have proved that settle these questions, and ideally link to a separate PDF which contains a human readable description of the proofs (rather than just the formalisations)?</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TFBloom">Thomas Bloom</a></strong>
+      
+      — <a href="/forum/thread/12#post-5282">11:54 on 07 Apr 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="5282" data-react-url="/forum/post/5282/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: TerenceTao, old-bielefelder, Nat Sothanaphan, GTsoukalas"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">4</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-5284"
+    class="post depth-2
+           
+           odd">
+    <div class="post-body" id="post-5284">
+    
+
+
+
+      
+      <p>Here is a high level summary of the first construction; I'll leave a similar description of the second construction to others.<br><br>The construction $A$ is a union of blocks $B_i$ where<ol>
+<li> Each $B_i$ lies in $[P_i, 1.1 P_i]$ for some moderately rapidly growing $P_i$;
+</li><li> Each $B_i$ has cardinality $\gg \sqrt{P_{i+1}}$;
+</li><li> Each $B_i$ has no 3-term arithmetic progressions; and
+</li><li> Each element of $B_i$ is divisible by $p'_i$ and equal to $1$ modulo $p'_1,\dots,p'_{i-1}$, where $p'_1, p'_2, \dots$ are the odd primes (which the agent called $F_i$ for some reason).
+</li></ol>Such sets can be constructed by standard Behrend type constructions together with the Chinese remainder theorem, though in this case the agent selected a simpler Salem-Spencer type construction instead of the Behrend construction, which is used instead in the second construction.  The condition (2) forces the $P_i$ to grow slower than double exponential, whilst the Chinese remainder theorem step used to ensure (4) requires the $P_i$ to grow faster than exponential, but there is enough room between these two constraints that a suitable choice of scales $P_i$ can be located.<br><br>Properties (1), (2) ensure the lim inf bound $\liminf_{N \to \infty} \frac{|A \cap \{1,\dots,N\}|}{\sqrt{N}} &gt; 0$.  Property (3) excludes solutions to $a | b+c$ within a single block $B_i$ where $b+c = 2a$; property (1) excludes solutions to $a | b+c$ within a single block $B_i$ for which $b+c \geq 3a$; and property (4) excludes solutions to $a | b+c$ in which at least one of $b,c$ lie in a later block than $a$  (because $0+1$, $1+0$, and $1+1$ are non-vanishing mod $p'$ for any odd prime $p'$).<br><br>In retrospect, one could have located this construction by first solving the single-scale problem of, for a large scale $P$, finding a subset $B$ of $[P, 2P)$ of size $\gg \sqrt{P}$ with no solutions to $a|b+c$ with $b,c &gt; a$.  One would only have to notice that already the only possibilities for such a solution are $ma = b+c$ for $m=2,3$, and that one can eliminate $m=3$ by restricting $B$ to say $[P, 1.1 P]$, at which point the problem becomes the well-studied problem of finding large sets without 3APs.  To glue all the scales together one can borrow the idea of the $p=3 \hbox{ mod } 4$ construction from the commentary and take advantage of congruence conditions and the Chinese remainder theorem to avoid creating any new solutions to $a|b+c$ from the gluing.  To get the lim inf bound rather than the lim sup bound one needs to make each block $B_i$ of size $\gg \sqrt{P_{i+1}}$ rather than $\gg \sqrt{P_i}$, but there is enough room in the parameters to accommodate this while still being able to afford the use of the Chinese remainder theorem; this is the main new idea in the argument compared to the original Erdos-Sarkozy construction.<br><br>As a side observation: it seems that the Lean proof assistant language incentivizes AI agents to structure proofs in a way that emphasize low-level explicit constructions rather than the high-level properties that are actually the key ingredients to the arguments.  I guess this is because making constructions completely explicit (with hard-coded parameters etc.) reduces the number of existential quantifiers one has to carry around the Lean proof, when compared to proofs that are more modular (and human-readable) in nature.<br><br>EDIT: I noticed that the Erdos-Sarkozy construction actually doesn't need any 3AP-free constructions.  On looking at the problem more closely, I think this is because the conditions $b,c &gt; a$ in fact exclude $2a = b+c$ automatically.  So one can simplify the proof here significantly (by dropping property (3) from the argument entirely), and in fact solve the first problem by a very minor tweak of the original Erdos-Sarkozy construction, optimizing the parameters more tightly.  Probably the same is true for the second problem.<br><br>SECOND EDIT: While the AI-generated argument ended up being relatively straightforward (after being cleaned up), this solution is perhaps notable for being one of the first AI-generated (partial) solutions to an Erdos problem which actually has a non-trivial amount of human literature on it that made prior partial progress but did not resolve the problem.  A problem could be "low hanging fruit", yet still have a simple solution overlooked by multiple human experts who actually spent some non-trivial amount of time thinking about the problem, to the point where they were writing entire research papers on it.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TerenceTao">TerenceTao</a></strong>
+      
+      — <a href="/forum/thread/12#post-5284">15:18 on 07 Apr 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="5284" data-react-url="/forum/post/5284/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Nat Sothanaphan, qrdl, GTsoukalas"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">3</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-5291"
+    class="post depth-2
+           
+           even">
+    <div class="post-body" id="post-5291">
+    
+
+
+
+      
+      <p>Thanks for pointing that out! I edited the respond to make it clearer what was proven. For any forthcoming solutions, we could link the proofs in Lean and separately an informal clean-up as a pdf, also in a link. Perhaps we can keep the high-level summary inside the comment along with the links, would that be a reasonable format?</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/GTsoukalas">GTsoukalas</a></strong>
+      
+      — <a href="/forum/thread/12#post-5291">09:08 on 08 Apr 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="5291" data-react-url="/forum/post/5291/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-5292"
+    class="post depth-3
+           
+           odd">
+    <div class="post-body" id="post-5292">
+    
+
+
+
+      
+      <p>Yes, that sounds sensible; ideally the comment will contain a summary giving the main ideas of the proof and a link to both a formalisation and a detailed PDF; this may require a little more work of course, since AI is often not great at giving an accurate summary of the most important ideas in the proofs it generates!</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TFBloom">Thomas Bloom</a></strong>
+      
+      — <a href="/forum/thread/12#post-5292">09:12 on 08 Apr 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="5292" data-react-url="/forum/post/5292/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-5293"
+    class="post depth-4
+           
+           even">
+    <div class="post-body" id="post-5293">
+    
+
+
+
+      
+      <p>Sounds good! So far we have been digesting the proofs ourselves, and then producing summaries/informal proofs. We'll do our best to give the main ideas, noting that we're less familiar with surrounding literature so it may be difficult to place the new ideas in context.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/GTsoukalas">GTsoukalas</a></strong>
+      
+      — <a href="/forum/thread/12#post-5293">09:20 on 08 Apr 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="5293" data-react-url="/forum/post/5293/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Thomas Bloom"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-5287"
+    class="post depth-0
+           
+           even">
+    <div class="post-body" id="post-5287">
+    
+
+
+
+      
+      <p>GPT-5.4 Thinking and I have simplified DeepMind's proofs according to Tao's suggestions. We use a common construction template, which is close to Erdos-Sarkozy, for both parts.<br><br>Here are <a href="https://drive.google.com/file/d/15oHXNPNx68spt4QttwNx7bCfX7g_7MoO/view" rel="nofollow noopener noreferrer ugc" target="_blank">the notes</a>.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/12#post-5287">21:40 on 07 Apr 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="5287" data-react-url="/forum/post/5287/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Thomas Bloom, GTsoukalas"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">2</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+  
+</ul>
+
+
+
+
+
+<p>
+                        <div style="text-align:center;">
+<strong>All comments are the responsibility of the user. Comments appearing on this page are not verified for correctness. Please keep posts mathematical and on topic.</strong>
+</div>
+<p>
+
+
+<div style="text-align:center; margin: 1em">
+
+
+  <p><a href="/forum/login?next=%2Fforum%2Fthread%2F12">Log in</a> to add a comment.</p>
+
+
+    </div>
+<p><div style="text-align: center; margin: 1em 0;">
+<a href="/forum/">Back to the forum</a>
+</div>
+                </div>
+            </div>
+            
+
+<script>
+document.addEventListener("submit", (e) => {
+  const form = e.target.closest(".reply-form");
+  if (!form) return;
+  const btn = form.querySelector('button[type="submit"]');
+  if (btn?.dataset.submitting === "1") {
+    e.preventDefault(); // already submitted
+    return;
+  }
+  if (btn) {
+    btn.dataset.submitting = "1";
+    btn.disabled = true;
+    btn.textContent = "Posting…";
+  }
+});
+</script>
+
+<script>
+document.addEventListener("click", (ev) => {
+  const a = ev.target.closest(".thread-sort .order");
+  if (!a) return;
+});
+</script>
+
+<script>
+document.addEventListener("submit", (e) => {
+  const form = e.target.closest(".comment-form");
+  if (!form) return;
+
+  const btn = form.querySelector('button[type="submit"]');
+  if (!btn) return;
+
+  // Already submitting? Block.
+  if (btn.dataset.submitting === "1") {
+    e.preventDefault();
+    return;
+  }
+
+  // First submit: lock UI
+  btn.dataset.submitting = "1";
+  btn.disabled = true;
+  const original = btn.textContent;
+  btn.dataset.originalText = original;
+  btn.textContent = "Posting…";
+});
+</script>
+           
+
+
+
+
+<script>
+window.MathJax = {
+  output: {
+    font: 'mathjax-tex'
+  },
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+};
+</script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@4.1.2/tex-chtml-nofont.js"></script>
+
+
+<!-- Previewing forum posts -->
+<!-- Previewing forum posts -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, m => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[m]);
+  }
+
+  function normalizeHref(href) {
+    href = href.trim();
+    if (!/^https?:\/\//i.test(href) && !href.startsWith("/")) {
+      href = "https://" + href;
+    }
+
+    return href;
+  }
+
+  let mathJaxQueue = Promise.resolve();
+
+  function clearMathJax(element) {
+    if (window.MathJax && MathJax.typesetClear) {
+      MathJax.typesetClear([element]);
+    }
+  }
+
+  function typesetMath(element) {
+    if (!window.MathJax) return;
+
+    if (MathJax.typesetPromise) {
+      mathJaxQueue = mathJaxQueue
+        .then(() => {
+          if (MathJax.startup && MathJax.startup.promise) {
+            return MathJax.startup.promise;
+          }
+        })
+        .then(() => MathJax.typesetPromise([element]))
+        .catch(err => {
+          console.error("MathJax typeset failed:", err);
+        });
+
+      return;
+    }
+
+    if (MathJax.Hub) {
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, element]);
+    }
+  }
+
+  function renderPreview(textarea, preview, label) {
+    let raw = textarea.value;
+    const anchors = [];
+    let idx = 0;
+
+    raw = raw.replace(
+      /<a\s+href=("(?:[^"]*)"|'(?:[^']*)')\s*>([\s\S]*?)<\/a>/gi,
+      (match, qHref, labelText) => {
+        const href = qHref.slice(1, -1);
+        const token = `__A_TAG_${idx++}__`;
+
+        anchors.push({
+          token,
+          href: normalizeHref(href),
+          label: labelText
+        });
+
+        return token;
+      }
+    );
+
+    let safe = escapeHtml(raw);
+
+    anchors.forEach(a => {
+      const html = `<a href="${escapeHtml(a.href)}">${escapeHtml(a.label)}</a>`;
+      safe = safe.replace(a.token, html);
+    });
+
+    safe = safe.replace(/\{PROBLEM=(.+?)\}/g, (_, p1) =>
+      `<a href="/${escapeHtml(p1)}">[${escapeHtml(p1)}]</a>`
+    );
+
+    safe = safe.replace(/\n/g, "<br>");
+    clearMathJax(preview);
+
+    if (!safe.trim()) {
+      preview.innerHTML = "";
+      preview.classList.add("hidden");
+      label.classList.add("hidden");
+      return;
+    }
+
+    preview.innerHTML = safe;
+    preview.classList.remove("hidden");
+    label.classList.remove("hidden");
+
+    typesetMath(preview);
+  }
+
+  document.querySelectorAll("form textarea").forEach(textarea => {
+    const form = textarea.closest("form");
+    const preview = form && form.querySelector(".post-preview");
+    const label = form && form.querySelector(".preview-label");
+
+    if (preview && label) {
+      textarea.addEventListener("input", () => renderPreview(textarea, preview, label));
+      renderPreview(textarea, preview, label);
+    }
+  });
+});
+</script>
+
+<!-- To handle the search bar -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function setFilterLink(linkId, newFilter) {
+        const link = document.getElementById(linkId);
+        if (!link) return;
+        const pathParts = window.location.pathname.split("/");
+        // Expect: /<section>/<entry> or /<section>/<entry>/<filter>
+        if (pathParts.length >= 3) {
+            const section = pathParts[1];
+            const entry = pathParts[2];
+            // Construct base: /tags/additive, /sources_bib/BL09, etc.
+            const baseUrl = "/" + section + "/" + entry;
+            link.href = baseUrl + "/" + newFilter;
+        }
+    }
+    setFilterLink("solvedLink", "solved");
+    setFilterLink("openLink", "open");
+    setFilterLink("yesLink", "yes");
+    setFilterLink("noLink", "no");
+});
+</script>
+
+<!-- Handle the dual view link -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const dualLink = document.getElementById("dualViewLink");
+  if (!dualLink) return;
+
+  const isInDualView = window.location.pathname.startsWith("/dual");
+  dualLink.textContent = isInDualView ? "Exit Dual View" : "Dual View";
+  dualLink.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    if (isInDualView) {
+      try {
+        const leftIframe = document.getElementById("iframe-left");
+        const src = leftIframe?.src || "/";
+        let clean = src.replace(window.location.origin, "");
+        clean = clean.replace(/[?&]embed=1/, "");
+
+        window.location.href = clean;
+      } catch (err) {
+        window.location.href = "/";
+      }
+    } else {
+      const currentPath = window.location.pathname + window.location.search;
+      const rightPanelDefault = "/";
+      const hash = `#left:${encodeURIComponent(currentPath)}&right:${encodeURIComponent(rightPanelDefault)}`;
+      window.location.href = `/dual${hash}`;
+    }
+  });
+});
+</script>
+
+<!-- Redirect links and searches when in dual view mode -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  if (!window.location.pathname.startsWith("/dual")) return;
+
+  function getTargetPanel() {
+    const selected = document.querySelector('input[name="targetPanel"]:checked');
+    return selected ? selected.value : "left";
+  }
+
+  function loadInPanel(panel, path) {
+    if (!path) return;
+    const iframe = document.getElementById(`iframe-${panel}`);
+    if (!iframe) return;
+    const url = path.includes("?") ? path + "&embed=1" : path + "?embed=1";
+    iframe.src = url;
+    const inputBox = document.querySelector(`#panel-${panel} input`);
+    if (inputBox) inputBox.value = path;
+    console.log(`Loaded "${url}" into panel "${panel}"`);
+  }
+  
+  document.querySelectorAll(".dual-aware a[href^='/'], a.dual-aware[href^='/']").forEach(link => {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      const path = this.getAttribute("href");
+      loadInPanel(getTargetPanel(), path);
+    });
+  });
+
+  const idForm = document.getElementById("idsearchForm");
+  if (idForm) {
+    idForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const input = idForm.querySelector(".idsearchTerm").value.trim();
+      if (!input) return;
+
+      let path = null;
+
+      if (/^\d+$/.test(input)) {
+        path = "/go_to/" + encodeURIComponent(input);
+      } else if (/^((\d+|end)(-(\d+|end))?\s*)+(open|solved|yes|no)?$/i.test(input)) {
+        const parts = input.split(/\s+/).filter(Boolean);
+        path = "/range/" + parts.map(encodeURIComponent).join("/");
+      } else {
+        alert("Invalid input format.");
+        return;
+      }
+
+      loadInPanel(getTargetPanel(), path);
+    });
+  }
+
+  const searchForm = document.getElementById("searchForm");
+  if (searchForm) {
+    searchForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const input = searchForm.querySelector(".searchTerm").value.trim();
+      if (!input) return;
+
+      const path = "/search/" + encodeURIComponent(input);
+      loadInPanel(getTargetPanel(), path);
+    });
+  }
+});
+</script>
+
+<!-- Different menu on mobile -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const button = document.getElementById("mobileMenuButton");
+  const dropdown = document.getElementById("mobileDropdown");
+
+  if (button && dropdown) {
+    button.addEventListener("click", function () {
+      dropdown.classList.toggle("show");
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+      }
+    });
+  }
+});
+</script>
+
+<!-- For expanding threads -->
+
+<script>
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('#toggle-posts');
+  if (!link) return;
+  e.preventDefault(); 
+
+  const box = document.getElementById('more-posts');
+  const isHidden = box.classList.toggle('hidden');
+  const expanded = !isHidden;
+
+  link.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  box.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+
+  link.textContent = expanded
+    ? 'Show only the top five comments'
+    : `Show ${link.dataset.remaining} more comments`;
+});
+</script>
+
+
+<script>
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('.toggle-replies');
+  if (!link) return;
+  e.preventDefault();
+
+  const pid = link.dataset.postId;
+  const box = document.getElementById(`more-replies-${pid}`);
+  if (!box) return;
+
+  const isHidden = box.classList.toggle('hidden');
+  const expanded = !isHidden;
+
+  link.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  box.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+
+  link.textContent = expanded
+    ? 'Hide replies'
+    : `Show ${link.dataset.remaining} more replies`;
+});
+</script>
+
+
+<script>
+document.addEventListener("click", async function (event) {
+    const button = event.target.closest(".problem-status-option");
+    if (!button) return;
+
+    const widget = button.closest(".problem-status-widget");
+    if (!widget) return;
+
+    if (widget.dataset.canEdit !== "1") return;
+
+    const status = button.dataset.status;
+    const url = widget.dataset.setUrl;
+
+    widget.classList.add("is-saving");
+
+    const buttons = widget.querySelectorAll(".problem-status-option");
+    buttons.forEach(btn => btn.disabled = true);
+
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "X-Requested-With": "fetch"
+            },
+            body: JSON.stringify({ status: status })
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok || !data.ok) {
+            throw new Error(data.error || "Could not update problem status.");
+        }
+
+        widget.dataset.currentStatus = data.status;
+
+        buttons.forEach(btn => {
+            const active = btn.dataset.status === data.status;
+            btn.classList.toggle("is-active", active);
+            btn.setAttribute("aria-checked", active ? "true" : "false");
+        });
+
+        const label = widget.querySelector(".js-problem-status-label");
+        const description = widget.querySelector(".js-problem-status-description");
+
+        if (label) label.textContent = data.label || button.dataset.label;
+        if (description) description.textContent = data.description || button.dataset.description;
+          widget.style.setProperty("--status-progress", button.dataset.progress);
+
+    } catch (err) {
+        alert(err.message || "Could not update problem status.");
+    } finally {
+        widget.classList.remove("is-saving");
+
+        if (widget.dataset.canEdit === "1") {
+            buttons.forEach(btn => btn.disabled = false);
+        }
+    }
+});
+</script>
+  
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a19344cc8f72e8d8',t:'MTc4MzcyNTMwOA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

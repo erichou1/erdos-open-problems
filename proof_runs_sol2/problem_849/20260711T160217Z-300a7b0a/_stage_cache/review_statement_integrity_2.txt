@@ -1,0 +1,78 @@
+{
+"reviewer_role": "statement_integrity",
+"verdict": "fail",
+"claims_checked": 19,
+"claims_total": 19,
+"checked_claim_ids": [
+"DOMAIN_BIFURCATION",
+"SEMIDISCRETE_POSITIVE",
+"FIXED_LAYER_MONOTONICITY",
+"HALF_ROW_MONOTONICITY",
+"CENTRAL_GROWTH",
+"NORMALIZATION_FINITE",
+"FIBER_ORDERING",
+"LOW_MULTIPLICITIES",
+"DENSITY_LOW_MULTIPLICITIES",
+"T5_SPLIT",
+"DISPLACEMENT_IDENTITY",
+"SLOPE_AUDIT",
+"PELL_ADJACENT",
+"PELL_SEPARATION",
+"DIVISOR_INVARIANT",
+"LOW_LAYER_SYSTEM",
+"WORD_SYSTEM",
+"FINITE_CERTIFICATE",
+"TERMINAL_AUDIT"
+],
+"open_gaps": [
+"The immutable statement's domain for n and k remains unresolved. Consequently, no conditional discrete or semidiscrete result proves or disproves the exact statement.",
+"No global exclusion of simultaneous membership in layers 2, 3, 4 and a layer k at least 5 is proved.",
+"No global compatibility theorem proves that two high-layer representations force total interior multiplicity at most three.",
+"The candidate does not exclude multiplicity five under the discrete interpretation.",
+"No construction realizes every exact interior multiplicity q.",
+"No effective bound or complete decision procedure is supplied for scalable displacement-word systems.",
+"No arbitrary Pell multi-lift or uniform exclusion of unintended layers is supplied.",
+"The finite computation stops at a equal to 10^30 and has no finite-to-infinite extension."
+],
+"unchecked_imports": [],
+"counterexample_searches": [
+{
+"target": "Claim 1's literal definition of D_Z",
+"result": "The displayed domain is malformed and most naturally reads as requiring both coordinates to be at least 2. Under that literal reading, the asserted representation (70,1) is excluded, so a=70 has only the displayed admissible solution (8,4), not two. The claim therefore contradicts its own domain definition."
+},
+{
+"target": "Claim 17's omitted terminal half-row condition",
+"result": "For the one-edge word W=((1,3)), the points (15,5) and (14,8) satisfy the displacement identity because C(15,5)=C(14,8)=3003. The initial condition 15 at least 2 times 5 holds, but the endpoint condition 14 at least 2 times 8 fails. Claim 17 checks only the starting point of the last edge, so its stated system admits this inadmissible chain."
+},
+{
+"target": "Claim 12 orientation",
+"result": "The 3003 chain gives edge ratios e/d equal to 1/21 and 1, supporting the intended increasing orientation. However, several comparison signs and the central sum identity are absent from the submitted text, so the written proof is not formally complete."
+},
+{
+"target": "Claim 18 computational output",
+"result": "The supplied exact-integer enumeration was independently reproduced: 3014786 high-layer occurrences, 3014784 distinct values, the two listed repeated values, the three listed layer-2 hits, no dangerous values, and maximum enumerated layer 51. This supports only the bounded conclusion."
+}
+],
+"material_errors": [
+"The candidate explicitly reaches no proof or disproof of the immutable universal statement, so it fails the primary acceptance criterion.",
+"Claim 1 changes or leaves ambiguous the domain and defines D_Z inconsistently with all later uses of the automatic k=1 representation.",
+"Claim 2 proves a theorem only after introducing a generalized real-variable binomial coefficient absent from the immutable statement.",
+"Claim 10 does not correctly define S_j or h(a): its displayed set-builder notation lacks the quantified row variable and treats k as belonging to S_k rather than a as belonging to S_k.",
+"Claim 11's derivation is missing one side of the coefficient equality in the displayed proof.",
+"Claim 12 contains missing comparison signs and omits the left side of the logarithmic sum identity. Repairing these omissions is prohibited in an adversarial statement-integrity review.",
+"Claim 15 contains the malformed equation 'p,a=q...' where multiplication is required.",
+"Claim 17 omits the actual polynomial equations it claims to derive.",
+"Claim 17 also omits admissibility of the final endpoint, and the collision (15,5) to (14,8) is an explicit spurious solution admitted by the stated constraints.",
+"The assertion that all 19 claims were checked overstates the status of several syntactically incomplete claims.",
+"The valid finite certificate and local lemmas cannot substitute for either missing terminal route."
+],
+"completeness_score": 57,
+"proof_confidence": 0,
+"adversarial_survival_score": 64,
+"statement_sha256": "b669094e22469ade57dcca529d2ce001ede0c9bee628c97121ad1d9a7ebfb01b",
+"notes": "The artifact was treated only as untrusted input provenance, not as mathematical evidence: 
+
+Pasted text
+
+. Most elementary monotonicity, normalization, low-multiplicity, Pell-family, low-layer-algebra, and bounded-enumeration claims are substantively correct after their domains and notation are repaired. Nevertheless, the exact immutable question remains unresolved, and the domain inconsistency plus the incomplete WORD_SYSTEM independently force rejection."
+}

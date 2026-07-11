@@ -1,0 +1,169 @@
+{
+  "statement_lock": {
+    "original_statement": "Are there, for all large $n$, some points $x_1,\\ldots,x_n,y_1,\\ldots,y_n\\in \\mathbb{R}^2$ such that the number of distinct distances $d(x_i,y_j)$ is\\[o\\left(\\frac{n}{\\sqrt{\\log n}}\\right)?\\]\n\n\n\n\nOne can also ask this for points in $\\mathbb{R}^3$. In $\\mathbb{R}^4$ Lenz observed that there are $x_1,\\ldots,x_n,y_1,\\ldots,y_n\\in \\mathbb{R}^4$ such that $d(x_i,y_j)=1$ for all $i,j$, taking the points on two orthogonal circles. More generally, if $F(2n)$ is the minimal number of such distances, and $f(2n)$ is minimal number of distinct distances between any $2n$ points in $\\mathbb{R}^2$, then is $F =o(f)$? See also [89] .",
+    "sha256": "1a1d20a3dee71f7bdc92834c48238b40d7d273fd322f3d71771e35966a2596cc",
+    "acceptance_criteria": [
+      "Prove or disprove the exact original statement without changing quantifiers.",
+      "Do not add hypotheses, restrict domains, weaken conclusions, or omit subproblems.",
+      "Resolve every boundary case and every explicitly numbered task.",
+      "Treat ambiguity as a blocking defect rather than choosing a convenient interpretation."
+    ]
+  },
+  "subgoal_graph": {
+    "summary": "{'source': '\\n\\nPasted text\\n\\n', 'status': 'No solution of the pairwise-distinct planar problem is claimed. The literal repetition-allowed syntax has a one-distance witness, but the immutable wording does not determine whether repetitions or overlap are permitted; under the acceptance criteria this semantic fork is a blocking defect.', 'cross_scout_assessment': ['The explicit repeated-point witness, the three-dimensional grid construction, the two-anchor bound, and the fixed-radius incidence lower bound can be checked directly from the supplied arguments; their repetition across reports is not being used as proof.', 'The strongest self-contained planar information supplied is K = \u03a9(n^(2/3)) for pairwise-distinct sets, while the three-dimensional numerical analogue has K = O(n^(2/3)) for every n.', 'Low-degree curves, bounded unions of lines or circles, parallel-line constructions, cyclic symmetry, and naive orthogonal-axis products are rigorously incompatible with the target scale.', 'The square-lattice benchmark depends on a quantitative count of integers represented by a binary positive-definite quadratic form. That arithmetic theorem is asserted but not fully derived in the reports, so it must be proved or introduced with exact hypotheses before being used.', 'Several reports systematically replace sqrt(log n) by log n in necessary-condition calculations. For the locked target K = o(n/sqrt(log n)), the corrected requirements are: average distance multiplicity \u03c9(n sqrt(log n)), a shell of size \u03c9(sqrt(log n)) around every center, isosceles-triple count \u03c9(n^2 sqrt(log n)), and equal-distance energy \u03c9(n^3 sqrt(log n)).', 'The reports disagree in emphasis rather than in proved conclusions: lattice searches favor arithmetic norm forms; the algebraic-module report proposes a genuinely new high-rank norm mechanism; the matrix reports emphasize low centered rank and Euclidean realizability; and the bisector reports emphasize partial reflection symmetries. These branches should remain separate until one produces a certified lemma.'], 'branch_ranking': [{'rank': 1, 'branch': 'Variable binary quadratic forms and translated lattice cosets', 'assessment': 'Best mathematical fit and easiest to falsify computationally. It directly targets the known norm-collision mechanism, but all finite evidence currently points to only constant-factor changes.'}, {'rank': 2, 'branch': 'Weighted perpendicular-bisector and radial-support lower bounds', 'assessment': 'Highest centrality for a negative result. It exploits interactions among all distance classes, which single-radius incidence bounds discard, but the required improvement from O(n^(7/3)) to O(n^2 sqrt(log n)) is substantial.'}, {'rank': 3, 'branch': 'High-rank algebraic modules and relative norm maps', 'assessment': 'Most novel construction branch and substantively different from planar lattices. Its decisive obligations are uniform norm-value estimates, field-dependent constants, injectivity, and all-n interpolation.'}, {'rank': 4, 'branch': 'Few-symbol Euclidean distance matrices', 'assessment': 'Highly falsifiable at small parameters and capable of discovering nonlattice configurations. Centered rank at most two is only a filter; positive-definite Euclidean compatibility is the main unresolved obstruction.'}, {'rank': 5, 'branch': 'Energy-only lower bounds', 'assessment': 'A clean universal bound E = O(n^3 sqrt(log n)) would settle the distinct planar question negatively, but radial distributions may be too uneven for a second-moment estimate alone. It should be coupled to a multiscale support theorem.'}]}",
+    "bottleneck_ids": [
+      "SEMANTIC_FORK",
+      "QUADRATIC_FORM_BRANCH",
+      "ALGEBRAIC_NORM_BRANCH",
+      "EUCLIDEAN_MATRIX_BRANCH",
+      "RADIAL_SUPPORT_BRANCH",
+      "F_VS_f_BRANCH"
+    ],
+    "subgoals": [
+      {
+        "id": "SEMANTIC_FORK",
+        "claim": "Separate and adjudicate the three inequivalent conventions permitted by the wording: repetitions allowed; each list internally distinct but possibly overlapping; and all 2n points pairwise distinct. Do not transfer a conclusion between conventions without proof.",
+        "dependencies": [],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "THRESHOLD_LEDGER",
+        "claim": "Formalize the locked asymptotic as F_2(n) = o(n/sqrt(log n)) and verify every derived threshold against this denominator, correcting all occurrences where the scouts used log n instead of sqrt(log n).",
+        "dependencies": [
+          "SEMANTIC_FORK"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "PLANAR_BASELINES",
+        "claim": "Under each distinctness convention, certify the two-anchor bound and the fixed-radius incidence argument, including treatment of distance zero, to obtain the strongest currently justified universal planar lower bound K = \u03a9(n^(2/3)).",
+        "dependencies": [
+          "THRESHOLD_LEDGER"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "THREEDIMENSIONAL_BRANCH",
+        "claim": "For the interpretation asking for the same numerical bound in R^3, give an all-n construction with 2n pairwise-distinct points and O(n^(2/3)) cross-distances, and separately record that this does not by itself resolve an F_3 = o(f_3) comparison.",
+        "dependencies": [
+          "SEMANTIC_FORK",
+          "THRESHOLD_LEDGER"
+        ],
+        "centrality": 3,
+        "falsifiable": true
+      },
+      {
+        "id": "ARITHMETIC_BENCHMARK",
+        "claim": "Prove, with exact hypotheses, the required upper and lower estimates for norm values in balanced square or checkerboard lattice boxes, so that the asserted \u0398(n/sqrt(log n)) benchmark is available as a proved lemma rather than an imported heuristic.",
+        "dependencies": [
+          "THRESHOLD_LEDGER",
+          "PLANAR_BASELINES"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "COMPUTATIONAL_HARNESS",
+        "claim": "Build exact finite tests that use integer or algebraic coefficient representations, quotient by row, column, color, and Euclidean symmetries, and reject candidates using two-anchor multiplicities, centered-rank constraints, and exact Euclidean realization equations.",
+        "dependencies": [
+          "PLANAR_BASELINES"
+        ],
+        "centrality": 3,
+        "falsifiable": true
+      },
+      {
+        "id": "QUADRATIC_FORM_BRANCH",
+        "claim": "Establish or refute the existence of positive-definite binary quadratic forms Q_m, possibly with rational translations or congruence-restricted difference boxes, for which a balanced m by m parameter box produces o(m^2/sqrt(log m)) distinct values while retaining \u0398(m^2) distinct planar points.",
+        "dependencies": [
+          "ARITHMETIC_BENCHMARK",
+          "COMPUTATIONAL_HARNESS"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "ALGEBRAIC_NORM_BRANCH",
+        "claim": "Establish or refute a family of conjugation-stable number fields K_d and injective coefficient boxes B_L subset K_d for which the relative norm set {z conjugate(z): z in B_L-B_L-tau} has size o(L^(2d)/sqrt(2d log L)); in a bound C_d L^(2d)/sqrt(log L), this requires C_d sqrt(d) tending to zero together with uniform onset control.",
+        "dependencies": [
+          "THRESHOLD_LEDGER",
+          "COMPUTATIONAL_HARNESS"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "EUCLIDEAN_MATRIX_BRANCH",
+        "claim": "Establish or refute the existence of k-symbol n by n matrices with k = o(n/sqrt(log n)) whose doubly centered matrix has rank at most two and which satisfy all positive-definite Euclidean compatibility and point-distinctness equations.",
+        "dependencies": [
+          "PLANAR_BASELINES",
+          "COMPUTATIONAL_HARNESS"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "BISECTOR_STRUCTURE_BRANCH",
+        "claim": "Using the exact identity between isosceles triples and weighted incidences on perpendicular bisectors, prove a structural dichotomy for configurations with K much smaller than n: either obtain T(X,Y) = O(n^2 sqrt(log n)), or force quantitatively organized partial reflection axes stronger than the mere existence of lines containing \u03a9(n/K) points.",
+        "dependencies": [
+          "THRESHOLD_LEDGER",
+          "PLANAR_BASELINES"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "RADIAL_SUPPORT_BRANCH",
+        "claim": "Establish or refute a multiscale radial-support theorem strong enough to imply K = \u03a9(n/sqrt(log n)); a sufficient but potentially overstrong target is the universal equal-distance energy bound E(X,Y) = O(n^3 sqrt(log n)).",
+        "dependencies": [
+          "BISECTOR_STRUCTURE_BRANCH",
+          "ARITHMETIC_BENCHMARK"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "ALL_N_INTERPOLATION",
+        "claim": "Prove the exact monotonicity and interpolation lemma needed to convert constructions on a subsequence N_t into constructions for every sufficiently large n, explicitly quantifying the permitted growth of N_(t+1)/N_t and preserving the little-o estimate.",
+        "dependencies": [
+          "SEMANTIC_FORK",
+          "THRESHOLD_LEDGER"
+        ],
+        "centrality": 3,
+        "falsifiable": true
+      },
+      {
+        "id": "F_VS_f_BRANCH",
+        "claim": "Treat F = o(f) as a separate subproblem: define F and f under matching distinctness conventions, prove the unconditional comparison F(2n) <= f(2n), and determine which proved upper or lower bounds on f are necessary for either asymptotic implication.",
+        "dependencies": [
+          "SEMANTIC_FORK",
+          "THRESHOLD_LEDGER",
+          "ARITHMETIC_BENCHMARK"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "GOAL",
+        "claim": "Produce a final adjudication of every locked component without changing quantifiers: record the outcome under each distinctness convention, resolve the planar pairwise-distinct question by either a certified construction or a uniform lower bound, include the R^3 outcome, and separately resolve or explicitly isolate the F = o(f) question.",
+        "dependencies": [
+          "SEMANTIC_FORK",
+          "THREEDIMENSIONAL_BRANCH",
+          "QUADRATIC_FORM_BRANCH",
+          "ALGEBRAIC_NORM_BRANCH",
+          "EUCLIDEAN_MATRIX_BRANCH",
+          "RADIAL_SUPPORT_BRANCH",
+          "ALL_N_INTERPOLATION",
+          "F_VS_f_BRANCH"
+        ],
+        "centrality": 5,
+        "falsifiable": false
+      }
+    ]
+  },
+  "attempts": [],
+  "verified_lemmas": [],
+  "failed_approaches": []
+}

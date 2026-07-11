@@ -1,0 +1,35 @@
+{
+  "decision": "REWRITE",
+  "rationale": "The rejection is caused by fatal artifact-level truncation, not by an identified local proof gap or a demonstrated defect in the validated subgoal graph. The candidate ends before completing its first normalization, contains no substantive mathematical claim, and supplies no dependency chain that can be patched. REVISE_PROOF is therefore insufficient because there is no proof body to repair. REVISE_PLAN is not justified because the reviews do not show that any validated dependency is false, circular, or structurally inadequate. The cheapest valid recovery is to regenerate the candidate from the beginning using the existing DAG, without extrapolating from the missing continuation. \n\nPasted text\n\n",
+  "broken_node_ids": [
+    "S0",
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    "S5",
+    "C1",
+    "C2",
+    "C3",
+    "P1",
+    "P2",
+    "P3",
+    "P4",
+    "B1",
+    "B2",
+    "G1",
+    "GOAL"
+  ],
+  "new_constraints": [
+    "Discard the truncated candidate completely; do not preserve or reconstruct any unstated intended argument.",
+    "Begin by discharging S0 explicitly: separate the ray, double-ray, induced-path, and repeat-allowed infinite-walk interpretations; specify the graph convention; and treat the status of 0 separately.",
+    "Do not select a preferred interpretation and present it as the answer to the immutable statement.",
+    "Under each nontrivial interpretation, state every definition and imported theorem with exact hypotheses before use.",
+    "Follow the validated dependency graph in order and label which nodes are proved, refuted, or remain open.",
+    "Do not claim S2 until both directions of the forest equivalence and preservation of inherited ordinal order type are proved.",
+    "Do not infer order type from cardinality; every gluing or refinement argument must verify ordinal type in the inherited ordering.",
+    "Stress-test all proposed positive principles against finite clique partitions, matchings, height-two stars, nested stars, interleaved components, singular cofinalities, and limit exponents.",
+    "Resolve the specified boundary cases, including 0 when applicable, omega, initial ordinals, omega cubed, and omega_1^(omega+2).",
+    "The rewritten artifact must end with an explicit classification or an honest statement that the GOAL remains unresolved; it must not present a partial reduction as a solution."
+  ]
+}

@@ -1,0 +1,102 @@
+{
+"reviewer_role": "independent adversarial referee (mechanical_evidence)",
+"verdict": "fail",
+"claims_checked": 18,
+"claims_total": 18,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14",
+"C15",
+"C16",
+"C17",
+"C18"
+],
+"open_gaps": [
+"The immutable statement is not resolved. The candidate explicitly leaves all four terminal routes G1-G4 open.",
+"The notation ≫ remains undefined in the immutable statement. Adopting one interpretation does not cure the blocking ambiguity under the acceptance criteria.",
+"No uniform critical-scale PBD construction is proved.",
+"No uniform ITD(q+1,n;q) construction sufficient for the asymptotic conclusion is proved.",
+"No perfect-matching theorem for the orthogonal-array hypergraph at r=Theta(sqrt(n)) is proved.",
+"No infinite-family upper bound disproving the square-root assertion is proved."
+],
+"unchecked_imports": [],
+"counterexample_searches": [
+{
+"target": "C16",
+"method": "Exact modular recomputation of every stated matrix difference in F_13",
+"result": "Failed. Under the stated definition d_{i,h,j}=hC_{ij}, the listed difference triples are not the differences C_{ik}-C_{ij}. For coordinate pair (0,1), the three base differences are 9, 0, and 12, not 4, 12, and 3. The zero difference causes anchored rows to cover diagonal new-new pairs already covered by the all-new matching, violating C14."
+},
+{
+"target": "C16",
+"method": "Comparison with the displayed difference table",
+"result": "The displayed triples equal C_{ki}-C_{ji}, using transposed matrix indices. Thus the evidence would require d_{i,h,j}=hC_{ji} or replacement of C by C^T. That repair is not present in the candidate and cannot be supplied by the referee."
+},
+{
+"target": "C15",
+"method": "Exact enumeration of the six coordinate-pair difference multisets modulo 7",
+"result": "Passed. Each multiset is exactly {1,2,3,4,5,6}, so the q=3 frame data satisfy C14."
+},
+{
+"target": "C17",
+"method": "Boundary test at r=2",
+"result": "Failed as stated. There are no two distinct compatible vertices when r=2, so the maximum codegree is 0, not n^(r-3)=n^(-1). The formula is valid only after adding an appropriate restriction such as r>=3."
+},
+{
+"target": "Sparse PBD palette example",
+"method": "Exact pair-count and congruence verification",
+"result": "Passed. For v=1026 and K={32,64,243}, Fisher's block lower bound and pair counting force the 243-block count to vanish, after which divisibility modulo 16 is impossible. The extension to K={32,64,81,243} also fails by parity once 243-blocks are excluded."
+},
+{
+"target": "Small boundary cases in C5 and C6",
+"method": "Direct substitution q=2",
+"result": "Passed. The constructions give f(2)=1 and g(2)=0, consistent with q-1 and q-2."
+}
+],
+"material_errors": [
+{
+"claim_id": "GOAL",
+"error": "The candidate neither proves nor disproves the exact original assertion. A portfolio of conditional routes and reductions does not meet the acceptance criterion."
+},
+{
+"claim_id": "C1",
+"error": "The candidate selects the standard absolute interpretation of ≫ despite the explicit instruction that ambiguity is a blocking defect. Therefore it does not resolve the immutable statement without changing or supplementing its meaning."
+},
+{
+"claim_id": "C16",
+"error": "The claimed q=4 translation frame fails its own exact computational check. The displayed matrix, the indexing formula d_{i,h,j}=hC_{ij}, and the listed difference triples are mutually inconsistent."
+},
+{
+"claim_id": "C17",
+"error": "The asserted maximum-codegree formula omits the boundary restriction r>=3 and is false for r=2."
+},
+{
+"claim_id": "Adversarial referee pass",
+"error": "The assertion that every finite-frame difference condition checks directly is false for C16. Consequently the candidate's own adversarial validation did not detect a mechanically verifiable defect."
+},
+{
+"claim_id": "Result ledger",
+"error": "The declaration CLAIMS_CHECKED: 18 is not supported in the required mechanical sense because C16's supplied certificate was not actually verified and is false as written."
+}
+],
+"completeness_score": 62,
+"proof_confidence": 0,
+"adversarial_survival_score": 55,
+"statement_sha256": "3c9f2d219321365a80825b0cb65a244b298b263a6a3d9a43b4b4c3c7a4331a06",
+"notes": "Most structural reductions C2-C15 and C18 survive the supplied checks, apart from the blocking interpretation issue. C16 contains a concrete indexing error detectable by exact arithmetic, and C17 has a boundary defect. Even correcting those defects would leave the central asymptotic problem completely unresolved. The finite-field existence theorem is explicitly stated with the needed prime-power hypothesis, so it is not recorded as an unchecked import. Reviewed source artifact: 
+
+Pasted text
+
+"
+}

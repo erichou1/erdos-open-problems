@@ -1,0 +1,85 @@
+{
+"reviewer_role": "independent adversarial referee (mechanical_evidence)",
+"verdict": "fail",
+"claims_checked": 14,
+"claims_total": 14,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14"
+],
+"open_gaps": [
+"The immutable statement remains semantically underdetermined regarding distinctness, ordering, positivity and domain of d, cube dimension, generator domains, zero generators, and properness.",
+"For the strict increasing interpretation, no scale-independent bound B(W) for linked-factor chains is proved, and no fixed width W with arbitrarily long chains is constructed.",
+"The descent-versus-halving analysis does not bound the number of alternating descent and halving phases independently of the initial scale.",
+"No height-independent upper bound on the dimension of primitive proper square cubes is proved.",
+"No construction or dimension-lifting mechanism producing proper square cubes in every dimension is supplied.",
+"Consequently, neither quantified question in the immutable statement is proved or disproved."
+],
+"unchecked_imports": [],
+"counterexample_searches": [
+{
+"target": "C9 binary additive-cube enumeration",
+"method": "Exact exhaustive enumeration of every binary word through length 10, checking every starting position and every admissible block length.",
+"result": "The counts are exactly 1, 2, 4, 6, 10, 16, 18, 12, 10, 6, 0 for lengths 0 through 10. The six length-9 survivors listed by the candidate match the exhaustive output."
+},
+{
+"target": "C14 ternary avoidance word",
+"method": "Exact inspection of every possible three-adjacent-block configuration in the stated length-30 word.",
+"result": "No three consecutive equal-length blocks with equal sums occur."
+},
+{
+"target": "C4-C6 algebraic identities",
+"method": "Symbolic expansion of the one-step gap formula and elimination of the intermediate root in the two-step recurrence.",
+"result": "The displayed one-step identity, decreasing-step equation, and two-step recurrence reduce identically to zero. No algebraic counterexample was found."
+},
+{
+"target": "C6 transition classification",
+"method": "Checked the deduction from 6brs <= W(r+s) using 1/r + 1/s <= 2 for positive integers r and s.",
+"result": "The conclusion 3b <= W is valid. The fraction must be read as (r+s)/(rs), not rs/(r+s)."
+},
+{
+"target": "C7 small-gap tail bound",
+"method": "Exact finite searches for W from 1 through 10 over all relevant small root gaps and roots in the transition range.",
+"result": "No tail exceeded the claimed coarse bound 2W+4."
+},
+{
+"target": "C14 explicit quasi-progressions",
+"method": "Direct integer arithmetic on all listed roots and squares.",
+"result": "The width-1 and width-2 examples, including the genuine halving transitions, are correct."
+},
+{
+"target": "C14 proper three-dimensional cube",
+"method": "Computed all eight subset sums of 4 + {4485, 7392, 20160}.",
+"result": "The vertices are exactly 2^2, 67^2, 86^2, 109^2, 142^2, 157^2, 166^2, and 179^2, all distinct."
+},
+{
+"target": "C12 curvature assertions on the explicit three-cube",
+"method": "Computed every Boolean finite difference exactly.",
+"result": "All signed curvatures are positive integers and the spectra for fixed direction sets are distinct, consistent with C12."
+}
+],
+"material_errors": [
+"The candidate does not meet the acceptance criteria: it explicitly replaces the immutable wording by a working interpretation and then leaves both substantive questions unresolved.",
+"No proof or disproof is present, so the candidate's reported proof-confidence value of 95 is unsupported.",
+"The phrase in C3 describing factorizations of 'W+1 consecutive integers' is imprecise: the chain factors selected, possibly repeated, members of an interval containing W+1 consecutive integers; it need not factor every member.",
+"The computational assertions in C9 and C14 were presented without code or a certificate. Independent exact checking confirms them, so this is an evidentiary omission rather than a false result.",
+"No numbered local claim was falsified, but correctness of those local claims does not close any of the decisive bottlenecks A4, A5, B4, or B5."
+],
+"completeness_score": 41,
+"proof_confidence": 0,
+"adversarial_survival_score": 89,
+"statement_sha256": "d23ff4ea91f0d915bd67a828cdec2f9acc9b33169e5e84e2e4f5660875187ca1",
+"notes": "The candidate is a largely consistent partial structural report rather than a solution. Exact computation confirms its principal finite claims and explicit examples. The fail verdict is caused by the unchanged semantic blocker and the complete absence of a decisive scale-independent chain argument or height-independent cube-dimension argument."
+}

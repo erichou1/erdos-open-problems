@@ -1,0 +1,184 @@
+{
+  "summary": "No solution or classification is claimed. The four reports independently converge on a standard-ray reduction from rayless graphs to branchless rooted forests, plus a full-cardinality antichain lemma; this convergence raises confidence but does not replace verification. The immutable statement remains formally blocked because \u201cinfinite path,\u201d the graph convention, and whether 0 is a limit ordinal are unspecified. Conditional on \u201cinfinite path\u201d meaning a one-way simple ray in a simple undirected graph, the dominant unresolved issue is order-sensitive gluing: locally large antichains in incomparable lower-rank components can lose global ordinal type when united. The portfolio therefore prioritizes: (1) independently auditing the exact forest equivalence; (2) attacking low-rank counterexamples through finite-class selectors and star forests; (3) developing ordinal demand-tree/front-fusion invariants, first stress-tested at \u03c9\u00b3; and (4) applying the surviving invariant to the highlighted boundary \u03c9\u2081^(\u03c9+2). Scout 3\u2019s claimed positive range below \u03c9\u00b3 and Scouts 1\u20132\u2019s regular block theorems are high-information candidates but must be reconstructed line by line before use. Source artifact: \n\nPasted text\n\n",
+  "bottleneck_ids": [
+    "S0",
+    "S2",
+    "C1",
+    "P1",
+    "P2",
+    "P3",
+    "B2",
+    "G1"
+  ],
+  "subgoals": [
+    {
+      "id": "S0",
+      "claim": "Resolve the interpretation defect without silently choosing a convention: specify whether an infinite path is a simple ray, a double ray, an induced path, or an infinite walk; specify that graphs are simple and undirected; and decide whether 0 is included among limit ordinals. Record the resulting answers separately when interpretations are inequivalent.",
+      "dependencies": [],
+      "centrality": 5,
+      "falsifiable": false
+    },
+    {
+      "id": "S1",
+      "claim": "Under the simple-ray interpretation, re-prove from the definitions that a graph is rayless exactly when it has an ordinal finite-separator rank: rank 0 consists of finite graphs, and a positive-rank graph becomes a disjoint union of lower-rank components after deletion of a finite set.",
+      "dependencies": [
+        "S0"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "S2",
+      "claim": "Under the simple-ray interpretation, establish the exact equivalence: P(\u03b1) holds if and only if every rooted forest on \u03b1 with finite root-to-node chains and no infinite branch has an antichain of inherited order type \u03b1. This requires separately verifying both the elimination-forest construction for rayless graphs and raylessness of the forest comparability graph.",
+      "dependencies": [
+        "S1"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "S3",
+      "claim": "Verify that every infinite branchless rooted forest has an antichain of the same cardinality as its vertex set, for example via its leaves and a finite-to-one descendant map. Deduce only after verification that every infinite initial ordinal satisfies P.",
+      "dependencies": [
+        "S2"
+      ],
+      "centrality": 4,
+      "falsifiable": true
+    },
+    {
+      "id": "S4",
+      "claim": "Audit the regular-cardinal block results: for regular infinite \u03ba and regular \u03bb\u2264\u03ba, determine whether every rayless graph permits an independent set that is \u03ba-large in \u03bb many prescribed \u03ba-sized blocks, thereby proving P(\u03ba\u00b7\u03bb). Check all concentration, disjoint-refinement, and rank-induction cases rather than importing the scout proof.",
+      "dependencies": [
+        "S2"
+      ],
+      "centrality": 3,
+      "falsifiable": true
+    },
+    {
+      "id": "S5",
+      "claim": "Audit the finite-pattern separation lemma claimed by Scout 3 and its asserted consequence that every nonzero limit \u03b1<\u03c9\u00b3 satisfies P. In particular, verify that recursively selected infinite subsets are jointly anticomplete and that the construction survives every separator-rank case.",
+      "dependencies": [
+        "S2",
+        "S3"
+      ],
+      "centrality": 4,
+      "falsifiable": true
+    },
+    {
+      "id": "C1",
+      "claim": "Counterexample branch I: classify the finite-transversal property FT(\u03b1): every partition of \u03b1 into finite classes has a transversal of order type \u03b1. A failure of FT(\u03b1), already for classes of size two if possible, yields a rank-one rayless counterexample by replacing every class with a clique.",
+      "dependencies": [
+        "S2"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "C2",
+      "claim": "Counterexample branch II: classify height-two star obstructions. For disjoint roots R and leaves L with parent map p:L\u2192R, determine whether there are \u03b1 and p such that every set S\u222a{\u2113\u2208L:p(\u2113)\u2209S}, S\u2286R, has order type below \u03b1.",
+      "dependencies": [
+        "S2"
+      ],
+      "centrality": 4,
+      "falsifiable": true
+    },
+    {
+      "id": "C3",
+      "claim": "Construct finite ordered block models for matchings, finite clique decompositions, stars, and recursively nested stars. Compute Pareto-optimal antichain profiles by the exact tree recursion and use persistent profile deficiencies either to suggest a scalable ordinal counterexample or to falsify the low-rank obstruction families.",
+      "dependencies": [
+        "C1",
+        "C2"
+      ],
+      "centrality": 3,
+      "falsifiable": true
+    },
+    {
+      "id": "P1",
+      "claim": "Positive branch I: define an exact ordinal demand structure D(\u03b1) encoding when a subset of \u03b1 has order type \u03b1. For powers such as \u03c9\u00b3 this should express nested \u201cinfinitely many children survive\u201d requirements; for uncountable powers it must encode regular-cardinal block demands and limit-stage unboundedness.",
+      "dependencies": [
+        "S2"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "P2",
+      "claim": "Positive branch II: prove or refute a concentration-or-front dichotomy. For a subtree or a collection of incomparable rank components whose union realizes D(\u03b1), either one lower-rank piece still realizes D(\u03b1), or fronts chosen from sufficiently many pieces can be amalgamated into an antichain realizing D(\u03b1).",
+      "dependencies": [
+        "P1",
+        "S2"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "P3",
+      "claim": "Use \u03b1=\u03c9\u00b3 as the first two-level stress test: for disjoint infinite cells A(n,m), prove or refute that a rayless graph admits infinitely many outer indices n, infinitely many inner indices m for each surviving n, and infinite pairwise anticomplete subsets of the corresponding cells. A proof gives P(\u03c9\u00b3); a counterexample identifies the first failure of naive demand-tree separation.",
+      "dependencies": [
+        "S5",
+        "P1",
+        "P2"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "P4",
+      "claim": "Develop a hierarchical disjoint-refinement theorem for component intersections with blocks of types \u03ba\u00b2, \u03ba\u00b3, \u2026, \u03ba^\u03c9. The invariant must retain nested block profiles and must explicitly avoid the false inference that preserving the order type of every component separately preserves the order type of their interleaved union.",
+      "dependencies": [
+        "S4",
+        "P1",
+        "P2"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "B1",
+      "claim": "At \u03b1=\u03c9\u2081^(\u03c9+2), verify the necessary boundary constraints: finite-height forests cannot obstruct \u03b1; every individual depth level and every finite union of levels must have order type below \u03b1; every depth tail must retain order type \u03b1; and a minimal-rank obstruction cannot contain a proper child cone of type \u03b1.",
+      "dependencies": [
+        "S2"
+      ],
+      "centrality": 4,
+      "falsifiable": true
+    },
+    {
+      "id": "B2",
+      "claim": "Prove or refute the boundary depth-tail fusion principle: every branchless forest on \u03b1=\u03c9\u2081^(\u03c9+2) whose every depth tail has type \u03b1 has an antichain of type \u03b1. Attack this using the hierarchical profile invariant from P4, while testing recursive-star constructions from C3 against the same principle.",
+      "dependencies": [
+        "B1",
+        "P2",
+        "P4",
+        "C3"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "G1",
+      "claim": "Derive a candidate recursive characterization of all limit ordinals satisfying P, expressed through Cantor-normal-form demand operations and closure under the verified block and fusion lemmas. Test every proposed closure rule against finite-class, star, interleaving, singular-cofinality, and limit-exponent obstructions.",
+      "dependencies": [
+        "S3",
+        "S4",
+        "S5",
+        "C1",
+        "C2",
+        "P3",
+        "P4",
+        "B2"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "GOAL",
+      "claim": "Target: after resolving the wording ambiguity, prove or disprove the exact original assertion for every limit ordinal \u03b1, with a complete classification, all boundary cases, and no altered quantifiers or additional hypotheses.",
+      "dependencies": [
+        "S0",
+        "G1"
+      ],
+      "centrality": 5,
+      "falsifiable": false
+    }
+  ]
+}

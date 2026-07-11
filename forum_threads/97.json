@@ -1,0 +1,35 @@
+{
+  "problem_number": 97,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/97",
+  "retrieved_at": "2026-07-10T23:21:38.063971+00:00",
+  "page_title": "97 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "91496775c832dd0ba4b700c4d44a41e45fd5d0211d283a4201caee0e019da5f9",
+  "comment_count": 5,
+  "comments": [
+    {
+      "post_id": "6513",
+      "text": "I believe I have a proof for this problem. The general case can be conditionally reformulated/reduced to the exact n=9 case. The claim: The following three statements together reduce Problem 97 to the case \\(|P|=9\\). 1. Counting obstruction. Any counterexample \\(P\\) has \\(|P| \\ge 9\\). 2. Surplus removable-vertex package. Suppose \\(P\\) is a counterexample with \\(|P| \\ge 10\\). Fix a Moser triangle \\(T \\subseteq P\\) and its three opposite caps \\(C_1, C_2, C_3\\). A closed cap-sum identity gives\\[ |C_1| + |C_2| + |C_3| \\;=\\; |P| + 3 \\;\\ge\\; 13, \\]so some opposite cap has size \\(\\ge 5\\). From any opposite cap of size \\(\\ge 5\\) one can extract a vertex \\(v \\in P\\) whose deletion preserves the counterexample property. 3. Strict-convex convention. Read \"convex polygon\" as \"finite set of extreme vertices in strict convex position.\" (The alternative reading that allows redundant \\(180^\\circ\\) boundary vertices needs a separate, routine degenerate-interface reduction.) Theorem (conditional). Under (1), (2) and (3), Problem 97 is equivalent to the single finite statement: no \\(9\\)-point set in strict convex position is a counterexample. So, the problem reduces to finding a 9-point counterexample in strict convex position, or proving the entire 9-point space does not contain a counterexample. I currently have axiom and sorry-free lean code proving this for n=9, modulo the actual computational results, which are taking a while to complete. Will share as soon as it's ready. --Adam",
+      "meta": "mysticflounder — 18:53 on 18 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6536",
+      "text": "I don't see why this claim would be true: > From any opposite cap of size $\\ge 5$ one can extract a vertex $v\\in P$ whose deletion preserves the counterexample property.",
+      "meta": "BorisAlexeev — 14:38 on 20 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7011",
+      "text": "Boris, thanks for your comment. I need to soften my original statement to \"I believe I have made significant progress toward closing this problem.\" I'm currently seeking a collaborator(s) who can both review the current progress and help me close the remaining open part of the problem. Sorry if this is not in the best formatting, I'm not fully fluent in LaTeX yet. Here's what I've been able to prove unconditionally (formalized in Lean, available for review.): 1. The counting obstruction I mentioned in my original post 2. Cap-sum bridge statement: $|A| > 9 ⇒$ some opposite cap is surplus. 3. Finite N9 closure. No 9-point counterexample exists. Current open frontier: The remaining unproven conjectures are both in the \"descent\" part of the problem (proving that all larger counterexamples can be reduced to size nine via removable vertexes): 1. Removable-Vertex Existence Theorem (conjectured). Let A be a nonempty, strictly convex (convex-independent), finite point set in ℝ² with $A > 9$. Suppose A satisfies a property \"PerVertexK4\": every point of A has at least 4 other points of A at the same distance from it. Suppose further that no strictly smaller set with these same properties exists (minimality induction hypothesis). Then A contains a removable vertex: a point $x ∈ A$ such that deleting x preserves the PerVertexK4 property on the erased set. 2. Uniform surplus-cap removability (conjectured). Let P be a cardinality-minimal strict-convex PerVertexK4 counterexample. Choose a labeled triple of three distinct vertices of P (that I call a \"Moser triangle\") that is later promoted to the equilateral MEC-boundary packet, together with its three closed opposite caps C1, C2, C3. If some cap Ci has |Ci| > 4, then Ci contains a removable vertex. Edits: Removed inline lean code and proof strategy for the U-series so as to shrink the post a bit for readability. I am currently effectively stuck on proving these two \"descent\" conjectures. More info at https://github.com/mysticflounder/erdos-97-96-formalization (The repo still contains a lot of project jargon that can't really be cleaned up until the final refactor, so apologies for that.) If anything needs to be further clarified, please let me know. I can be reached directly at [email protected] or via the leanprover Zulip. Disclosure: I used AI assistance in developing this proof. --Adam",
+      "meta": "mysticflounder — 21:37 on 15 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7045",
+      "text": "Posted a summary with the Lean code at https://github.com/mysticflounder/erdos-97-96-formalization",
+      "meta": "mysticflounder — 02:12 on 18 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6898",
+      "text": "A small observation on the \\(k=4\\) case. Suppose every vertex \\(v_i\\) of a convex \\(n\\)-gon has some distance occurring at least four times among the other vertices. Choose four such vertices for each \\(i\\), and call the resulting set \\(Q_i\\). Let \\(d(v)\\) be the number of sets \\(Q_i\\) containing the vertex \\(v\\). Then \\(\\sum_v d(v)=4n\\). For distinct centers, the corresponding circles are distinct and hence intersect in at most two points, so \\(|Q_i\\cap Q_j|\\le 2\\). Therefore \\(\\sum_{i<j}|Q_i\\cap Q_j|=\\sum_v \\binom{d(v)}{2}\\). By Cauchy--Schwarz, \\(\\sum_v d(v)^2\\ge \\frac{(4n)^2}{n}=16n\\), and hence \\(\\sum_v \\binom{d(v)}{2}=\\frac12\\left(\\sum_v d(v)^2-\\sum_v d(v)\\right)\\ge 6n\\). On the other hand, \\(\\sum_{i<j}|Q_i\\cap Q_j|\\le 2\\binom n2=n(n-1)\\). Thus \\(6n\\le n(n-1)\\), so any counterexample must satisfy \\(n\\ge 7\\). In the extremal case \\(n=7\\), equality would force \\(d(v)=4\\) for every vertex and \\(|Q_i\\cap Q_j|=2\\) for every pair of chosen circles. Thus the incidence matrix has the structure of a \\(2-(7,4,2)\\) design. I have not closed the geometry of this case; computational checks of the cyclic orderings suggest the remaining cases are highly constrained, but this is only evidence, not a proof. AI disclosure: AI tools were used for computation, checking, and drafting assistance. The argument presented here reflects my own assessment, and any errors are my responsibility.",
+      "meta": "TheAbandonedThinker — 00:23 on 09 Jun 2026 👍 1 📝 0 🤖 0"
+    }
+  ]
+}
