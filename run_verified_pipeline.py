@@ -63,30 +63,40 @@ class ChatGPTBrowserRunner:
     """Fresh-chat adapter for ProofPipeline's isolated model calls."""
 
     def __init__(self, browser, page, *, timeout_s: float,
-                 backoff_s: float = 180.0, max_attempts: int = 8):
+                 backoff_s: float = 180.0, max_backoff_s: float = 1800.0,
+                 max_attempts: int = 8):
         self.browser = browser
         self.page = page
         self.timeout_s = timeout_s
         self.backoff_s = backoff_s
+        self.max_backoff_s = max(backoff_s, max_backoff_s)
         self.max_attempts = max_attempts
         self.contexts = {}
 
     def context_id(self, stage: str) -> str:
         return self.contexts.get(stage, "")
 
-    def _cool_down(self, stage: str, reason: str) -> None:
-        """Dismiss a rate-limit alert ("Got it") and wait before retrying."""
+    def _cool_down(self, stage: str, reason: str, streak: int) -> None:
+        """Dismiss a rate-limit alert and wait with capped exponential backoff."""
+        wait_s = min(self.backoff_s * (2 ** max(0, streak - 1)),
+                     self.max_backoff_s)
         C.dismiss_rate_limit_modal(self.page)
-        print(f"{stage}: {reason}; dismissing alert, waiting "
-              f"{self.backoff_s:.0f}s", flush=True)
-        time.sleep(self.backoff_s)
+        print(f"{stage}: {reason}; consecutive rate limits={streak}; "
+              f"waiting {wait_s:.0f}s before retrying (does not use a retry)",
+              flush=True)
+        time.sleep(wait_s)
 
     def run(self, prompt: str, *, stage: str, isolated: bool) -> str:
         if not isolated:
             raise ValueError("verified pipeline stages must use isolated contexts")
 
         last_error = "unknown"
-        for attempt in range(1, self.max_attempts + 1):
+        attempts_used = 0
+        rate_limit_streak = 0
+        # A rate limit is a provider-side temporary condition, not a failed
+        # proof stage. Keep the problem alive until ChatGPT accepts the prompt;
+        # only real navigation/generation/response failures consume retries.
+        while attempts_used < self.max_attempts:
             try:
                 _ = self.page.url
             except Exception:
@@ -97,8 +107,11 @@ class ChatGPTBrowserRunner:
 
                 # A rate-limit alert blocks chat creation — clear it and back off.
                 if C.detect_rate_limit(self.page):
-                    self._cool_down(stage, f"rate-limited before send (attempt {attempt})")
+                    rate_limit_streak += 1
+                    last_error = "rate-limited before send"
+                    self._cool_down(stage, last_error, rate_limit_streak)
                     continue
+                rate_limit_streak = 0
 
                 start_url = C.current_url(self.page)
                 C.send_prompt(self.page, prompt)
@@ -107,10 +120,13 @@ class ChatGPTBrowserRunner:
 
                 if not url or url == start_url:
                     if C.detect_rate_limit(self.page):
-                        self._cool_down(stage, f"rate-limited after send (attempt {attempt})")
+                        rate_limit_streak += 1
+                        last_error = "rate-limited after send"
+                        self._cool_down(stage, last_error, rate_limit_streak)
                         continue
+                    attempts_used += 1
                     last_error = "no conversation URL"
-                    print(f"{stage}: no conversation URL (attempt {attempt}); retrying",
+                    print(f"{stage}: no conversation URL (attempt {attempts_used}); retrying",
                           flush=True)
                     time.sleep(15)
                     continue
@@ -127,17 +143,19 @@ class ChatGPTBrowserRunner:
                     time.sleep(5)
 
                 if C.is_generating(self.page):
+                    attempts_used += 1
                     last_error = f"generation exceeded {self.timeout_s:.0f}s"
-                    print(f"{stage}: {last_error} (attempt {attempt}); backing off",
+                    print(f"{stage}: {last_error} (attempt {attempts_used}); backing off",
                           flush=True)
-                    self._cool_down(stage, "timeout")
+                    time.sleep(self.backoff_s)
                     continue
 
                 time.sleep(2)
                 response = C.extract_response(self.page)
                 if not response or len(response.strip()) < 100:
+                    attempts_used += 1
                     last_error = "empty/incomplete response"
-                    print(f"{stage}: {last_error} (attempt {attempt}); retrying",
+                    print(f"{stage}: {last_error} (attempt {attempts_used}); retrying",
                           flush=True)
                     time.sleep(15)
                     continue
@@ -146,17 +164,23 @@ class ChatGPTBrowserRunner:
 
             except Exception as exc:
                 last_error = str(exc)
-                print(f"{stage}: error '{exc}' (attempt {attempt})", flush=True)
+                print(f"{stage}: error '{exc}'", flush=True)
                 try:
                     if C.detect_rate_limit(self.page):
-                        self._cool_down(stage, "rate-limited (exception)")
+                        rate_limit_streak += 1
+                        last_error = "rate-limited during browser exception"
+                        self._cool_down(stage, last_error, rate_limit_streak)
                         continue
                 except Exception:
                     pass
+                attempts_used += 1
+                print(f"{stage}: retrying after browser error "
+                      f"(attempt {attempts_used})", flush=True)
                 time.sleep(15)
 
         raise RuntimeError(
-            f"{stage}: failed after {self.max_attempts} attempts ({last_error})")
+            f"{stage}: failed after {self.max_attempts} non-rate-limit attempts "
+            f"({last_error})")
 
 
 def main() -> None:
@@ -166,7 +190,9 @@ def main() -> None:
     parser.add_argument("--artifacts", type=Path, default=Path("proof_runs"))
     parser.add_argument("--stage-timeout", type=float, default=1800)
     parser.add_argument("--backoff", type=float, default=180.0,
-                        help="Seconds to wait after a rate-limit alert before retrying")
+                        help="Initial seconds to wait after a rate-limit alert")
+    parser.add_argument("--max-backoff", type=float, default=1800.0,
+                        help="Maximum adaptive rate-limit backoff in seconds")
     parser.add_argument("--max-revisions", type=int, default=2)
     parser.add_argument("--print-statement-sha", action="store_true")
     parser.add_argument("--headless", action="store_true")
@@ -188,6 +214,7 @@ def main() -> None:
         runner = ChatGPTBrowserRunner(
             browser, page, timeout_s=args.stage_timeout,
             backoff_s=args.backoff,
+            max_backoff_s=args.max_backoff,
         )
         result = ProofPipeline(
             runner,

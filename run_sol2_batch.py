@@ -41,6 +41,10 @@ def main() -> None:
     ap.add_argument("--artifacts", default="proof_runs_sol2")
     ap.add_argument("--max-revisions", type=int, default=2)
     ap.add_argument("--stage-timeout", type=float, default=1800)
+    ap.add_argument("--backoff", type=float, default=180.0,
+                    help="Initial seconds to wait after a rate-limit alert")
+    ap.add_argument("--max-backoff", type=float, default=1800.0,
+                    help="Maximum adaptive rate-limit backoff in seconds")
     ap.add_argument("--headless", action="store_true",
                     help="Run the browser without a visible window")
     ap.add_argument("--wait-pid", type=int, default=0,
@@ -79,6 +83,8 @@ def main() -> None:
             "--artifacts", args.artifacts,
             "--max-revisions", str(args.max_revisions),
             "--stage-timeout", str(args.stage_timeout),
+            "--backoff", str(args.backoff),
+            "--max-backoff", str(args.max_backoff),
         ]
         if args.headless:
             cmd.append("--headless")
