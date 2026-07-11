@@ -65,8 +65,8 @@ class ChatGPTBrowserRunner:
     """Fresh-chat adapter for ProofPipeline's isolated model calls."""
 
     def __init__(self, browser, page, *, timeout_s: float,
-                 backoff_s: float = 180.0, max_backoff_s: float = 300.0,
-                 request_spacing_s: float = 20.0, max_attempts: int = 8):
+                 backoff_s: float = 15.0, max_backoff_s: float = 120.0,
+                 request_spacing_s: float = 12.0, max_attempts: int = 8):
         self.browser = browser
         self.page = page
         self.timeout_s = timeout_s
@@ -263,11 +263,11 @@ def main() -> None:
     parser.add_argument("--category", default="open")
     parser.add_argument("--artifacts", type=Path, default=Path("proof_runs"))
     parser.add_argument("--stage-timeout", type=float, default=1800)
-    parser.add_argument("--backoff", type=float, default=180.0,
+    parser.add_argument("--backoff", type=float, default=15.0,
                         help="Initial seconds to wait after a rate-limit alert")
-    parser.add_argument("--max-backoff", type=float, default=300.0,
+    parser.add_argument("--max-backoff", type=float, default=120.0,
                         help="Maximum adaptive rate-limit backoff in seconds")
-    parser.add_argument("--request-spacing", type=float, default=20.0,
+    parser.add_argument("--request-spacing", type=float, default=12.0,
                         help="Minimum seconds between any two worker requests")
     parser.add_argument("--max-revisions", type=int, default=2)
     parser.add_argument("--print-statement-sha", action="store_true")

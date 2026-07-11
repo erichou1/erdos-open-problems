@@ -41,11 +41,11 @@ def main() -> None:
     ap.add_argument("--artifacts", default="proof_runs_sol2")
     ap.add_argument("--max-revisions", type=int, default=2)
     ap.add_argument("--stage-timeout", type=float, default=1800)
-    ap.add_argument("--backoff", type=float, default=180.0,
+    ap.add_argument("--backoff", type=float, default=15.0,
                     help="Initial seconds to wait after a rate-limit alert")
-    ap.add_argument("--max-backoff", type=float, default=300.0,
+    ap.add_argument("--max-backoff", type=float, default=120.0,
                     help="Maximum adaptive rate-limit backoff in seconds")
-    ap.add_argument("--request-spacing", type=float, default=20.0,
+    ap.add_argument("--request-spacing", type=float, default=12.0,
                     help="Minimum seconds between any two worker requests")
     ap.add_argument("--headless", action="store_true",
                     help="Run the browser without a visible window")
