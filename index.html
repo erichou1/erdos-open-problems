@@ -257,13 +257,13 @@
 
   <footer>
     <div class="card">
-      <strong>How this works.</strong> Every open problem is submitted to the model
-      under an identical adversarial "research-mode" prompt that forbids appeals to
-      authority or literature status and demands it attack the problem from first
-      principles. The <em>completeness score</em> measures how much of the argument
-      was rigorously established. <strong>These are machine attempts, not
-      peer-reviewed proofs</strong> — a high score is an invitation to verify, not a
-      claim of truth. The <b>Verdict</b> dropdown is a human likelihood rating
+      <strong>How this works.</strong> Problems are investigated under an offline,
+      statement-locked research workflow with independent exploration and layered
+      adversarial review. The <em>completeness score</em> measures how much of the
+      argument was rigorously established. <strong>These are machine attempts, not
+      peer-reviewed proofs</strong> — even <code>candidate-proved</code> is not a
+      solved claim. Only the separate verification gate may promote a result. The
+      <b>Verdict</b> dropdown is a human likelihood rating
       (High / Medium / Low); tick <b>Checked</b> once a person has read it,
       <b>Fable</b> once it's been formalised in Fable, and <b>Works</b> if it holds
       up — and leave <b>Notes</b>. These sync to the repo for everyone when you
@@ -304,8 +304,8 @@ function loadLocalMarks() {
 }
 function saveLocalMarks() { localStorage.setItem(LS_MARKS, JSON.stringify(MARKS)); }
 
-// The effective verdict for a problem: explicit human mark wins; otherwise seed
-// from the model — a claimed proof defaults to High, any other attempt to Low.
+// The effective verdict for a problem: explicit human review wins. Every
+// machine-only candidate defaults to Low, regardless of its self-reported label.
 function effVerdict(p) {
   const m = MARKS[p.n];
   if (m && m.verdict) return m.verdict;

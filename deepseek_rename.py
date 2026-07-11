@@ -94,9 +94,9 @@ def process_once(page, category, gen_wait_s=20):
                 pending += 1
                 continue
 
-            solved = D.is_solved(response)
+            candidate = D.candidate_status(response)
             completeness = D.extract_completeness(response)
-            status_tag = "[solved]" if solved else "[unsolved]"
+            status_tag = f"[{candidate.replace('_', '-')}]"
             title = D.output_title(num, status_tag, completeness)
 
             body = (

@@ -70,7 +70,7 @@ python3 solve_submit.py --reverse --start 0 --limit 50
 python3 deepseek_submit.py --reverse --start 0 --limit 50 --delay 60
 ```
 
-Then collect answers and label each saved file `[solved]/[unsolved] + completeness`:
+Then collect answers and label each saved file with a candidate outcome and completeness:
 
 ```bash
 python3 solve_rename.py --watch --interval 60
@@ -85,8 +85,25 @@ Solutions are written to:
 A second, human-named copy of every answer is also written to an `outputs/`
 folder, named by verdict and completeness score:
 
-- `outputs/chatgpt/<category>/Erdős #N [solved] 88%.md`
-- `outputs/deepseek/<category>/Erdős #N [unsolved] 0%.md`
+- `outputs/chatgpt/<category>/Erdős #N [candidate-proved] 88%.md`
+- `outputs/deepseek/<category>/Erdős #N [resource-exhausted] 0%.md`
+
+These labels are not verified solutions. The multi-context workflow in
+`proof_pipeline.py` must pass `verification.evaluate_gate` before a result can
+be recorded as `verified_proved` or `verified_disproved`. The gate requires a
+hashed formal-proof, exact-computation, or expert-review artifact in addition to
+unanimous independent model review:
+
+```bash
+python3 run_verified_pipeline.py --problem 137 --print-statement-sha
+cp verification-evidence.example.json verification-evidence.json
+python3 run_verified_pipeline.py --problem 137
+# Review the saved candidate, then fill in its hashes, verifier, outcome,
+# and local artifact path.
+python3 promote_verified_run.py \
+  --run-dir proof_runs/problem_137/<run-id> \
+  --evidence-json verification-evidence.json --publish
+```
 
 ## 7. Resuming after the computer is closed
 

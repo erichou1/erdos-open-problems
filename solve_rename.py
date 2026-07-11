@@ -58,7 +58,7 @@ def process_once(page, category, gen_wait_s=20) -> tuple[int, int]:
                 C.restore_output_from_solution("chatgpt", category, num, txt)
                 continue
 
-        if "/c/" not in url:
+        if not C.is_conversation_url(url):
             print(f"#{num}: no valid chat URL recorded, skipping.")
             continue
 
@@ -89,9 +89,9 @@ def process_once(page, category, gen_wait_s=20) -> tuple[int, int]:
                 pending += 1
                 continue
 
-            solved = C.is_solved(response)
+            candidate = C.candidate_status(response)
             completeness = C.extract_completeness(response)
-            status_tag = "[solved]" if solved else "[unsolved]"
+            status_tag = f"[{candidate.replace('_', '-')}]"
             title = C.output_title(num, status_tag, completeness)
 
             body = (
