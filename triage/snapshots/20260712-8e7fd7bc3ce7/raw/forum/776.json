@@ -1,0 +1,40 @@
+{
+  "problem_number": 776,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/776",
+  "retrieved_at": "2026-07-10T23:18:45.302670+00:00",
+  "page_title": "776 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "498ee953a3f660d13701aba7803e0bc6d71de894059d6212da8b503866671e73",
+  "comment_count": 6,
+  "comments": [
+    {
+      "post_id": "4255",
+      "text": "1. This problem also appears in the following volume, which seems to be the original source: P. Erdős, Problem sessions, In: Ordered Sets (Proc. NATO Adv. Study), edited by I. Rival, Dordrecht: Reidel (1981), 860--861. 2. In [Gu83], Guy writes: \"[$\\ldots$] We have no satisfactory estimate of $n_0(r)$. The content of the previous two paragraphs will be a small subset of a forthcoming paper of Erdős, Szemerédi and Trotter.\" However, I have not been able to locate any related publication in MathSciNet, Google Scholar, the Erdős paper website, or on Trotter's personal homepage. 3. Let $n_0(r)$ be the threshold such that whenever $n>n_0(r)$ one can achieve $n-3$ distinct set sizes in such a family. My friend He and I have just written a paper (arXiv:2602.09803v1). By iterating ChatGPT-5.2 Thinking hundreds of times, we made some progress on this problem: $n_0(2)=3$ and $n_0(3)=8$, and moreover for every integer $r\\ge 4$ one has\\[ 2r+2 \\ \\le\\ n_0(r)\\ \\le\\ 2r+2\\log_2 r + O(\\log_2\\log_2 r). \\] (The site has been updated to address this comment.)",
+      "meta": "Quanyu Tang — 03:32 on 11 Feb 2026 👍 6 📝 2 🤖 0"
+    },
+    {
+      "post_id": "4256",
+      "text": "nice! presumably for each $k\\ge 3$, there exists some $C_k$ so that $g(n,(C_k-o(1))n)\\ge n-k$ but $g(n,(C_k+o(1))n)<n-k$. do you have a guess for this?",
+      "meta": "zach hunter — 17:00 on 11 Feb 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4268",
+      "text": "Thank you, Zach. This is a very good question, which generalizes the original Erdős--Trotter problem. For integers $\\delta\\ge 3$ and $r\\ge 2$, we define\\[ n_{0}^{(\\delta)}(r):=\\min\\Bigl\\{n_0:\\ \\forall\\,n>n_0,\\ g(n,r)\\ge n-\\delta\\Bigr\\}. \\]Then one can obtain the following conclusions (proofs can be found in this note): 1. If $\\delta\\ge 5$, then \\(n_{0}^{(\\delta)}(r)=O(\\sqrt r)=o(r)\\). In particular, the constant $C_{\\delta}$ in your conjecture is $+\\infty$. 2. When $\\delta=4$, one can get a partial result: \\(n_{0}^{(4)}(r) \\ge \\lceil \\frac{r + 3}{3} \\rceil\\) for $r\\geq 12$. Therefore, the constant $C_{4}$ in your conjecture lies in the interval $[1/2,\\,3]$. EDIT: I don't have a good guess for the specific value of $C_4$ at the moment, but I'm happy to hear your thoughts and discuss it further.",
+      "meta": "Quanyu Tang — 08:44 on 12 Feb 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4271",
+      "text": "Congrats!",
+      "meta": "Nat Sothanaphan — 21:23 on 12 Feb 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5317",
+      "text": "This shows that $n_0(r)\\sim 2r$ as $r \\to \\infty$, so we know the first order behaviour of $n_0(r)$. Since the problem was phrased quite loosely, I'm minded to mark this as solved, but would like to hear what you (and others) think: do you think that the really interesting behaviour lies in the finer behaviour of $n_0(r)-2r$, or do you agree that this problem as Erdős likely originally intended it has been solved in spirit?",
+      "meta": "Thomas Bloom — 11:27 on 10 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5560",
+      "text": "Numerical experiments show that for $4 \\leq r \\leq 10$, we have $n_0(r) \\leq 2r + 4$. Thus, I am not sure whether it is possible that for sufficiently large $r$, there exists a constant $C \\in \\{2, 3, 4\\}$ such that $n_0(r) = 2r + C$. I have not yet found a construction that yields $n_0(r) = 2r + O(1)$, but such a construction might exist.",
+      "meta": "Quanyu Tang — 14:51 on 17 Apr 2026 👍 1 📝 0 🤖 0"
+    }
+  ]
+}

@@ -1,0 +1,257 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.45
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-11-12",
+      "state": "yes"
+    },
+    "references": [
+      "Er99",
+      "ErHa58"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/623",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Er99] Erd\\H{o}s, Paul, A selection of problems and results in combinatorics. Combin. Probab. Comput. (1999), 1-6.\n \n [ErHa58] Erd\\H{o}s, P. and Hajnal, A., On the structure of set mappings. Acta Math. Acad. Sci. Hungar. (1958), 111-133.",
+      "remarks": "A problem of Erd\\H{o}s and Hajnal \\cite{ErHa58}, who proved that if $\\lvert X\\rvert <\\aleph_\\omega$ then the answer is no. Erd\\H{o}s suggests in \\cite{Er99} that this problem is 'perhaps undecidable'."
+    },
+    "source_state": "open",
+    "tags": [
+      "set theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 3.12,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.008793,
+        0.403905
+      ],
+      "probability": 0.206349
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 2.16,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.384146
+      ],
+      "probability": 0.177642
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.6,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.282916
+      ],
+      "probability": 0.117647
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.1,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.409873
+      ],
+      "probability": 0.189189
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 4.433,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.061426,
+        0.478128
+      ],
+      "probability": 0.269777
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 3.1,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.007993,
+        0.402603
+      ],
+      "probability": 0.205298
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 39.0,
+      "credible_interval_approx": [
+        0.0,
+        0.106373
+      ],
+      "probability": 0.044118
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.009216,
+        0.509303
+      ],
+      "probability": 0.259259
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "clear"
+    },
+    "literature": {
+      "comment_count": 3,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:18:03.944976+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "07bf10a33c4d6aef47cb23bd23a6ce45bcf1519b1d13a5737f48e97cf2dd5409"
+    },
+    "statement": {
+      "ambiguity_markers": [],
+      "ambiguity_status": "clear",
+      "quantifier_signal_count": 2,
+      "question_count": 1,
+      "requires_source_audit": false,
+      "statement_characters": 274,
+      "statement_tokens_approx": 50
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "prove",
+      "multi_part": false,
+      "primary_domain": "set theory"
+    }
+  },
+  "problem_id": "erdos-623",
+  "problem_number": 623,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "prove",
+    "multi_part": false,
+    "primary_domain": "set theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_623.html",
+      "raw_html_sha256": "b928d7662b7bbb3ca94341c46a82140679358bab1cf6667a9455124a9bea82a4",
+      "section_sha256": {
+        "references": "a30ac987cac5a12857b3f4a1d29508890fc52d70453fa2443b1df784ea9bb833",
+        "remarks": "59836b3a54a860777d516cdea08e0218e966958ac05cb8594f4807a30460791a",
+        "statement": "f671b6b5be56b0b5d8e9bc821a98dcd925c2d2a2d47fd9e44e2dc7ad8b9947ed"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_623.json",
+      "source_record_sha256": "310ac8dad8a8a4ec4934bda9376af468af18dc9d35d88bdc5767fd390c5c5f4b",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_623.tex",
+    "latex_sha256": "17550509ec79afa5ccc832e950f5f9d785044319d5b0ee6ea07cc2f5a5918257",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "f671b6b5be56b0b5d8e9bc821a98dcd925c2d2a2d47fd9e44e2dc7ad8b9947ed",
+    "recommended_attack_modes": [
+      "formal_search",
+      "shared_infrastructure_search",
+      "literature_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "729e190f5c6f227be4c8c32dc53e819abb86bf03efa7bc0b62bdb98aa7f004d9",
+  "routes": [
+    "formal_search",
+    "shared_infrastructure_search",
+    "literature_search",
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "clear",
+    "intended": "Let $X$ be a set of cardinality $\\aleph_\\omega$ and $f$ be a function from the finite subsets of $X$ to $X$ such that $f(A)\\not\\in A$ for all $A$. Must there exist an infinite $Y\\subseteq X$ that is independent - that is, for all finite $B\\subset Y$ we have $f(B)\\not\\in Y$?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $X$ be a set of cardinality $\\aleph_\\omega$ and $f$ be a function from the finite subsets of $X$ to $X$ such that $f(A)\\not\\in A$ for all $A$. Must there exist an infinite $Y\\subseteq X$ that is independent - that is, for all finite $B\\subset Y$ we have $f(B)\\not\\in Y$?",
+    "original": "Let $X$ be a set of cardinality $\\aleph_\\omega$ and $f$ be a function from the finite subsets of $X$ to $X$ such that $f(A)\\not\\in A$ for all $A$. Must there exist an infinite $Y\\subseteq X$ that is independent - that is, for all finite $B\\subset Y$ we have $f(B)\\not\\in Y$?",
+    "statement_sha256": "f671b6b5be56b0b5d8e9bc821a98dcd925c2d2a2d47fd9e44e2dc7ad8b9947ed"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 643,
+  "raw_page": {
+    "path": "raw/pages/problem_643.html",
+    "sha256": "d90a3cca5ec646ffe75e73b47269083895af43bf9b030410b2f29ed505136190"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "eed1ea876b424c38b49542162119f7921c2cf99f6e6fa3314a1ec65e0f814860",
+      "source_region": "div.problem-additional-text",
+      "text": "[Fu84] F\\\"uredi, Z., Hypergraphs in which all disjoint pairs have distinct unions. Combinatorica (1984), 161--168.\n \n [PiVe09] Pikhurko, Oleg and Verstra\\\"{e}te, Jacques, The maximum size of hypergraphs without generalized 4-cycles. J. Combin. Theory Ser. A (2009), 637--649."
+    },
+    "remarks": {
+      "sha256": "1f589787a220eac5087de37e055215d9e127939f8bfe975c58fbc36dcc94a568",
+      "source_region": "div.problem-additional-text",
+      "text": "For $t=2$ this is asking for the maximal number of edges on a graph which contains no $C_4$, and so $f(n;2)=(1/2+o(1))n^{3/2}$. \n\nF\\\"{u}redi \\cite{Fu84} proved that $f(n;3) \\ll n^2$ and $f(n;3) > \\binom{n}{2}$ for infinitely many $n$. Pikhurko and Verstra\\\"{e}te \\cite{PiVe09} have proved $f(n;3)\\leq \\frac{13}{9}\\binom{n}{2}$ for all $n$.\n\nMore generally, F\\\"{u}redi \\cite{Fu84} proved that\\[\\binom{n-1}{t-1}+\\left\\lfloor\\frac{n-1}{t}\\right\\rfloor\\leq f(n;t) < \\frac{7}{2}\\binom{n}{t-1},\\]and conjectured the lower bound is sharp for $t\\geq 4$. Pikhurko and Verstra\\\"{e}te \\cite{PiVe09} have proved that\\[1 \\leq \\limsup_{n\\to \\infty} \\frac{f(n;t)}{\\binom{n}{t-1}}\\leq \\min\\left(\\frac{7}{4},1+\\frac{2}{\\sqrt{t}}\\right)\\]for all $t\\geq 3$.\n\nF\\\"{u}redi \\cite{Fu84} proved that $f(n;3)/\\binom{n}{2}$ converges as $n\\to \\infty$, but the existence of the limit for $t\\geq 4$ is unknown."
+    },
+    "statement": {
+      "sha256": "78ffb65abecf279075210998d2b60a1aeabe14f16d4440868b866194f4710a56",
+      "source_region": "div#content",
+      "text": "Let $f(n;t)$ be minimal such that if a $t$-uniform hypergraph on $n$ vertices contains at least $f(n;t)$ edges then there must be four edges $A,B,C,D$ such that\\[A\\cup B= C\\cup D\\]and\\[A\\cap B=C\\cap D=\\emptyset.\\]Estimate $f(n;t)$ - in particular, is it true that for $t\\geq 3$\\[f(n;t)=(1+o(1))\\binom{n}{t-1}?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/643"
+}

@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#236}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, primes
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $f(n)$ count the number of solutions to $n=p+2^k$ for prime $p$ and $k\geq 0$. Is it true that $f(n)=o(\log n)$?
+
+
+
+
+Erd\H{o}s \cite{Er50} proved that there are infinitely many $n$ such that $f(n)\gg \log\log n$. Erd\H{o}s could not even prove that there do not exist infinitely many integers $n$ such that for all $1&lt; 2^k&lt;n$ the number $n-2^k$ is prime - see [1142] . The sequence of values of $f(n)$ is A109925 on the OEIS. See also [237] .
+
+
+
+
+References
+
+[Er50] Erd\H{o}s, P., On integers of the form $2^k+p$ and some related problems . Summa Brasil. Math. (1950), 113-123.
+
+\noindent\textbf{Related OEIS sequences:} A039669, A109925
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/236}}
+\end{document}

@@ -43,7 +43,7 @@ new solutions appear on the site automatically — no manual rebuild step.
 
 ## ⚙️ How it works
 
-1. **Submit** — `solve_submit.py` opens a chat per problem in a ChatGPT Project and sends the research-mode prompt. It drives a real browser via Playwright, so it uses *your* session — no API keys.
+1. **Submit** — `solve_submit.py` validates the complete canonical source snapshot before opening the browser, uses only its exact theorem text, and opens a chat per problem in a ChatGPT Project. The prompt and private chat-map entry bind the source snapshot, statement, prompt template, provider, and collection-contract hashes and are explicitly labeled `UNVERIFIED_CANDIDATE`. It drives a real browser via Playwright, so it uses *your* session — no API keys.
 2. **Collect** — `solve_rename.py` revisits each chat, saves the answer, and names the file by candidate verdict and completeness, e.g. `Erdős #117 [candidate-proved] 82%.md`.
 3. **Publish** — `build_status_sheet.py` turns those filenames into `data.json`; the static site renders it. The Action keeps it current.
 
@@ -59,6 +59,43 @@ as the schema. The harness hashes the referenced artifact itself.
 The completeness score is **how much of the argument the model rigorously
 established**, deliberately distinct from how confident the prose sounds.
 
+## 🔎 Search and rank the full corpus
+
+The opportunity searcher is the front door for large research allocations. It
+preserves first-party source snapshots, checks that local open membership equals
+the canonical catalog, builds one auditable problem card per open problem, and
+publishes separate weak-prior rankings for full solutions, partial progress,
+Lean, finite computation, literature cleanup, uncertainty, reuse, and protected
+exploration. Its probabilities are explicitly **not calibrated yet**.
+
+```bash
+# Repair only source-open files missing locally (omit --apply for provenance-only output)
+python3 erdos_ingest.py --apply
+
+# Create the complete solver-grade canonical page/section snapshot. This resolves
+# upstream main to an exact commit and verifies the commit-pinned catalog bytes.
+python3 erdos_ingest.py --canonical
+
+# Build cards and rankings (fails closed without a complete canonical snapshot)
+python3 erdos_searcher.py build --top-k 25
+
+# Verify that source state `open` and local open files are exactly equal
+python3 check_corpus_integrity.py
+```
+
+Current artifacts live under `triage/`; the machine-readable ranking is
+`triage/rankings/current.json`. See
+[`docs/ERDOS_SEARCHER_SPEC.md`](docs/ERDOS_SEARCHER_SPEC.md) for prediction,
+routing, ledger, calibration, and rollback details.
+
+`run_continuous.py` and `problem_queue.py` provide an experimental atomic ranked
+queue with disjoint protected exploration, immutable context+ranking hashes,
+exact-run-contract claims, and a validated four-to-one allocation cadence.
+Continuous multi-worker scheduling remains disabled
+in release flags until lease/heartbeat crash tests pass. A bounded test requires the explicit
+`--enable-experimental` switch; use `--new-campaign` only before any workers are
+active.
+
 ## 🚀 Run the pipeline yourself
 
 ```bash
@@ -67,6 +104,7 @@ cd erdos-open-problems
 
 python3 -m venv .venv && source .venv/bin/activate
 pip install -r requirements.txt
+# For the exact audited dependency set instead: pip install -r requirements.lock
 playwright install chromium
 
 cp .env.example .env          # optional: set your ChatGPT Project URL
@@ -77,13 +115,20 @@ python3 solve_submit.py --reverse --start 0 --limit 50
 python3 solve_rename.py --watch --interval 60
 
 # full statement-locked, independently reviewed workflow
-python3 run_verified_pipeline.py --problem 137 --print-statement-sha
-python3 run_verified_pipeline.py --problem 137 --max-revisions 2
+python3 run_verified_pipeline.py --problem 137 --print-statement-sha \
+  --model-id <exact-model-id>
+python3 run_verified_pipeline.py --problem 137 --max-revisions 2 \
+  --model-id <exact-model-id>
 # Review proof_runs/problem_137/<run-id>/candidate.md, fill the evidence JSON,
 # then promote that exact saved run:
 python3 promote_verified_run.py --run-dir proof_runs/problem_137/<run-id> \
   --evidence-json verification-evidence.json --publish
 ```
+
+Provider rate limits do not consume verified proof attempts. Both verified and
+legacy collectors wait and retry with adaptive exponential backoff; every
+cooldown and inter-request delay is hard-capped at 120 seconds. Legacy URL-only
+chat-map entries are intentionally resubmitted because they lack source hashes.
 
 See [SETUP_GUIDE.md](SETUP_GUIDE.md) (or the printable `SETUP_GUIDE.pdf`) for the
 full walkthrough, including DeepSeek and resume behavior.
@@ -101,10 +146,16 @@ full walkthrough, including DeepSeek and resume behavior.
 | `solve_submit.py` / `solve_rename.py` | Submit problems to ChatGPT and collect answers. |
 | `deepseek_submit.py` / `deepseek_rename.py` | Same pipeline for DeepSeek. |
 | `proof_pipeline.py` | Long-horizon scout, DAG, construct, regulate, revise, and adjudicate orchestrator. |
+| `erdos_ingest.py` | First-party corpus crawler with immutable raw snapshots and source hashes. |
+| `erdos_searcher.py` | Problem cards, cheap probes, weak-prior rankings, exploration, and ledgers. |
+| `run_status.py` | Normalized verified/partial/budget-exhausted/censored/operational outcomes. |
+| `problem_queue.py` / `run_continuous.py` | Experimental ranked atomic work queue and continuous worker. |
 | `promote_verified_run.py` | Bind external evidence to an exact saved candidate and publish only after the gate passes. |
 | `research_state.py` | Immutable statement lock and persistent DAG/lemma/failure memory. |
 | `solver_prompts.py` | Offline, role-separated search and verification prompts. |
 | `verification.py` | Deterministic proof-promotion gate. |
+| `schemas/` / `config/pipeline_features.json` | Artifact contracts and release-state feature flags. |
+| `docs/` | Audit, SOTA evidence, architecture, searcher/Lean specs, migration, evaluation, and risks. |
 | `problem_catalog.json` | Online source status/provenance, isolated from solver prompts. |
 | `erdos_common.py` / `deepseek_common.py` | Shared prompt, parsing, browser and output helpers. |
 | `fetch_erdos.py` / `fetch_categories.py` | (Re)download and categorize the problem set. |

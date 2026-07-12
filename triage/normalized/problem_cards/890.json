@@ -1,0 +1,311 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.301
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2026-02-02",
+      "state": "yes"
+    },
+    "references": [
+      "ErSe67"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/890",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[ErSe67] Erd\\H{o}s, P. and Selfridge, J. L., Some problems on the prime factors of consecutive integers. Illinois J. Math. (1967), 428--430.",
+      "remarks": "A question of Erd\\H{o}s and Selfridge \\cite{ErSe67}, who observe that\\[\\liminf_{n\\to \\infty}\\sum_{0\\leq i<k}\\omega_k(n+i)\\geq k-1\\]for every $k$. This follows from P\\'{o}lya's theorem that the set of $k$-smooth integers has unbounded gaps - indeed, provided $n$ is large, all but at most one of $n,n+1,\\ldots,n+k-1$ has a prime factor $>k$ by P\\'{o}lya's theorem.\n\nIt is a classical fact that\\[\\limsup_{n\\to \\infty}\\omega(n)\\frac{\\log\\log n}{\\log n}=1.\\](There appears to be an error in \\cite{ErSe67}, who ask the first question with $\\omega_k$ replaced by $\\omega$, have a bound of $k+\\pi(k)$ rather than $k$, but as explained by Meza and Tao in the comments this formulation is obviously false, and the version given here is most likely what was intended.)"
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory",
+      "primes"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.99,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.003601,
+        0.395331
+      ],
+      "probability": 0.199466
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.681,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.033651,
+        0.451304
+      ],
+      "probability": 0.242477
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 13.0,
+      "credible_interval_approx": [
+        0.0,
+        0.134243
+      ],
+      "probability": 0.037037
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.2,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.41937
+      ],
+      "probability": 0.196429
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.367,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.01098,
+        0.355626
+      ],
+      "probability": 0.183303
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 3.6,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.022708,
+        0.398345
+      ],
+      "probability": 0.210526
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.092979
+      ],
+      "probability": 0.038462
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.002288,
+        0.452997
+      ],
+      "probability": 0.227642
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 6,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:19:19.822564+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "6174709542c3b8fc427614e33e2e07fa0673b67d039a3c43fe20efe695914648"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 1,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 375,
+      "statement_tokens_approx": 44
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove_or_disprove",
+      "multi_part": true,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-890",
+  "problem_number": 890,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove_or_disprove",
+    "multi_part": true,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_890.html",
+      "raw_html_sha256": "96f32bcfae68292322817f37c6aba136fb5626459d71e868733a1e822345ddd6",
+      "section_sha256": {
+        "references": "f5b5c233e27d4a15267490177859a3d753207fc56f04d0e78f09fe4d35979402",
+        "remarks": "17876aa2c3bf7ff50f2e2d45d3f9af2f78855813a0982b54efb844c8a2ac9e0d",
+        "statement": "4b41f4477c9ed47a5bed403759d0bbc70be69f98b638245343b8ec2e749ecb67"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_890.json",
+      "source_record_sha256": "85eedc62df4cd2de989e3128e8a0066e7481ac79e1895e3c3865cc903c766410",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_890.tex",
+    "latex_sha256": "42195b0cf32c72f2c26caea8bd3ea8a9519fe364c2b8bf3e93c3d33a303c3cb3",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "4b41f4477c9ed47a5bed403759d0bbc70be69f98b638245343b8ec2e749ecb67",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "formal_search",
+      "subproblem_decomposition",
+      "shared_infrastructure_search",
+      "literature_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "If $\\omega_k(n)$ counts the number of distinct prime factors of $n$ which are $>k$, then is it true that, for every $k\\geq 1$,\\[\\liminf_{n\\to \\infty}\\sum_{0\\leq i<k}\\omega_k(n+i)\\leq k?",
+        "focus_question_sha256": "0c880cf47345be677c45810a3f66d6413788c1f715581e0ec235ba1c5870bdc0",
+        "parent_statement_sha256": "4b41f4477c9ed47a5bed403759d0bbc70be69f98b638245343b8ec2e749ecb67",
+        "part_index": 1,
+        "subproblem_contract_sha256": "b8452ce4737133efacedc0d5d5c9296d40a402277614f529883bbdab3b765cb3",
+        "subproblem_id": "erdos-890-part-01-b8452ce4"
+      },
+      {
+        "focus_question": "\\]Is it true that\\[\\limsup_{n\\to \\infty}\\left(\\sum_{0\\leq i<k}\\omega(n+i)\\right) \\frac{\\log\\log n}{\\log n}=1,\\]where $\\omega$ counts the number of distinct prime factors without restriction?",
+        "focus_question_sha256": "9454d6ad0f27a57a6b7f316d7add5f547383d9e72e1dedb24ca37a9f3f2cc1f3",
+        "parent_statement_sha256": "4b41f4477c9ed47a5bed403759d0bbc70be69f98b638245343b8ec2e749ecb67",
+        "part_index": 2,
+        "subproblem_contract_sha256": "57c4a6dace9ae1509d71ca4a4e7d78c7cdbe524c68cd46f2c59ba18ef9159189",
+        "subproblem_id": "erdos-890-part-02-57c4a6da"
+      }
+    ]
+  },
+  "research_directive_sha256": "a213c4a8f536be004c020a656d845ec40f3a6647ba5819a5767050f7a07b5a1d",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "formal_search",
+    "subproblem_decomposition",
+    "shared_infrastructure_search",
+    "literature_search"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "If $\\omega_k(n)$ counts the number of distinct prime factors of $n$ which are $>k$, then is it true that, for every $k\\geq 1$,\\[\\liminf_{n\\to \\infty}\\sum_{0\\leq i<k}\\omega_k(n+i)\\leq k?\\]Is it true that\\[\\limsup_{n\\to \\infty}\\left(\\sum_{0\\leq i<k}\\omega(n+i)\\right) \\frac{\\log\\log n}{\\log n}=1,\\]where $\\omega$ counts the number of distinct prime factors without restriction?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "If $\\omega_k(n)$ counts the number of distinct prime factors of $n$ which are $>k$, then is it true that, for every $k\\geq 1$,\\[\\liminf_{n\\to \\infty}\\sum_{0\\leq i<k}\\omega_k(n+i)\\leq k?\\]Is it true that\\[\\limsup_{n\\to \\infty}\\left(\\sum_{0\\leq i<k}\\omega(n+i)\\right) \\frac{\\log\\log n}{\\log n}=1,\\]where $\\omega$ counts the number of distinct prime factors without restriction?",
+    "original": "If $\\omega_k(n)$ counts the number of distinct prime factors of $n$ which are $>k$, then is it true that, for every $k\\geq 1$,\\[\\liminf_{n\\to \\infty}\\sum_{0\\leq i<k}\\omega_k(n+i)\\leq k?\\]Is it true that\\[\\limsup_{n\\to \\infty}\\left(\\sum_{0\\leq i<k}\\omega(n+i)\\right) \\frac{\\log\\log n}{\\log n}=1,\\]where $\\omega$ counts the number of distinct prime factors without restriction?",
+    "statement_sha256": "4b41f4477c9ed47a5bed403759d0bbc70be69f98b638245343b8ec2e749ecb67"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-890",
+      "part_index": 1,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "If $\\omega_k(n)$ counts the number of distinct prime factors of $n$ which are $>k$, then is it true that, for every $k\\geq 1$,\\[\\liminf_{n\\to \\infty}\\sum_{0\\leq i<k}\\omega_k(n+i)\\leq k?",
+        "focus_question_sha256": "0c880cf47345be677c45810a3f66d6413788c1f715581e0ec235ba1c5870bdc0",
+        "normalized": "If $\\omega_k(n)$ counts the number of distinct prime factors of $n$ which are $>k$, then is it true that, for every $k\\geq 1$,\\[\\liminf_{n\\to \\infty}\\sum_{0\\leq i<k}\\omega_k(n+i)\\leq k?\\]Is it true that\\[\\limsup_{n\\to \\infty}\\left(\\sum_{0\\leq i<k}\\omega(n+i)\\right) \\frac{\\log\\log n}{\\log n}=1,\\]where $\\omega$ counts the number of distinct prime factors without restriction?",
+        "original": "If $\\omega_k(n)$ counts the number of distinct prime factors of $n$ which are $>k$, then is it true that, for every $k\\geq 1$,\\[\\liminf_{n\\to \\infty}\\sum_{0\\leq i<k}\\omega_k(n+i)\\leq k?\\]Is it true that\\[\\limsup_{n\\to \\infty}\\left(\\sum_{0\\leq i<k}\\omega(n+i)\\right) \\frac{\\log\\log n}{\\log n}=1,\\]where $\\omega$ counts the number of distinct prime factors without restriction?",
+        "statement_sha256": "4b41f4477c9ed47a5bed403759d0bbc70be69f98b638245343b8ec2e749ecb67"
+      },
+      "subproblem_contract_sha256": "b8452ce4737133efacedc0d5d5c9296d40a402277614f529883bbdab3b765cb3",
+      "subproblem_id": "erdos-890-part-01-b8452ce4"
+    },
+    {
+      "parent_problem_id": "erdos-890",
+      "part_index": 2,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "\\]Is it true that\\[\\limsup_{n\\to \\infty}\\left(\\sum_{0\\leq i<k}\\omega(n+i)\\right) \\frac{\\log\\log n}{\\log n}=1,\\]where $\\omega$ counts the number of distinct prime factors without restriction?",
+        "focus_question_sha256": "9454d6ad0f27a57a6b7f316d7add5f547383d9e72e1dedb24ca37a9f3f2cc1f3",
+        "normalized": "If $\\omega_k(n)$ counts the number of distinct prime factors of $n$ which are $>k$, then is it true that, for every $k\\geq 1$,\\[\\liminf_{n\\to \\infty}\\sum_{0\\leq i<k}\\omega_k(n+i)\\leq k?\\]Is it true that\\[\\limsup_{n\\to \\infty}\\left(\\sum_{0\\leq i<k}\\omega(n+i)\\right) \\frac{\\log\\log n}{\\log n}=1,\\]where $\\omega$ counts the number of distinct prime factors without restriction?",
+        "original": "If $\\omega_k(n)$ counts the number of distinct prime factors of $n$ which are $>k$, then is it true that, for every $k\\geq 1$,\\[\\liminf_{n\\to \\infty}\\sum_{0\\leq i<k}\\omega_k(n+i)\\leq k?\\]Is it true that\\[\\limsup_{n\\to \\infty}\\left(\\sum_{0\\leq i<k}\\omega(n+i)\\right) \\frac{\\log\\log n}{\\log n}=1,\\]where $\\omega$ counts the number of distinct prime factors without restriction?",
+        "statement_sha256": "4b41f4477c9ed47a5bed403759d0bbc70be69f98b638245343b8ec2e749ecb67"
+      },
+      "subproblem_contract_sha256": "57c4a6dace9ae1509d71ca4a4e7d78c7cdbe524c68cd46f2c59ba18ef9159189",
+      "subproblem_id": "erdos-890-part-02-57c4a6da"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

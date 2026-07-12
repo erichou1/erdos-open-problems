@@ -1,0 +1,256 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.221
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2026-04-16",
+      "state": "yes"
+    },
+    "references": [
+      "GrRo99"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/539",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[GrRo99] Granville, Andrew and Roesler, Friedrich, The set of differences of a given set. Amer. Math. Monthly (1999), 338--344.",
+      "remarks": "Erd\\H{o}s and Szemer\\'{e}di proved that\\[n^{1/2} \\ll h(n) \\ll n^{1-c}\\]for some constant $c>0$. The upper bound has been improved to $h(n)\\ll n^{2/3}$ by Freiman and Lev. A proof of these bounds can be found in a paper of Granville and Roesler \\cite{GrRo99}.\n\nGranville and Roesler also reformulate this problem as one in combinatorial geometry: given $A\\subseteq \\mathbb{Z}^d$ of size $n$ what is the minimum size possible of\\[\\{ \\delta(\\mathbf{a},\\mathbf{b}) : \\mathbf{a},\\mathbf{b}\\in A\\}\\]where $\\delta(\\mathbf{a},\\mathbf{b})$ has $i$th coordinate $\\max(0,a_i-b_i)$. Using this formulation they obtained improved lower bounds in fixed small dimension $d$.\n\nUsing this reformulation, ProofCouncil has proved that\\[h(n) \\leq e^{O(\\sqrt{\\log n})} n^{1/2},\\]and hence $h(n)=n^{1/2+o(1)}$."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 3.07,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.006794,
+        0.400638
+      ],
+      "probability": 0.203716
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.117,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.01562,
+        0.459698
+      ],
+      "probability": 0.237659
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.8,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.190215
+      ],
+      "probability": 0.0625
+    },
+    "p_high_mathematical_value": {
+      "alpha": 1.767,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.375702
+      ],
+      "probability": 0.164087
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.967,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.042823,
+        0.454046
+      ],
+      "probability": 0.248434
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.9,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        2.3e-05,
+        0.389239
+      ],
+      "probability": 0.194631
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 39.0,
+      "credible_interval_approx": [
+        0.0,
+        0.106373
+      ],
+      "probability": 0.044118
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.009216,
+        0.509303
+      ],
+      "probability": 0.259259
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "clear"
+    },
+    "literature": {
+      "comment_count": 8,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:17:38.300768+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "84de6c1497dd8d2b02f20b945a61e86d579966ba3421b90e2eba3151b3217b6f"
+    },
+    "statement": {
+      "ambiguity_markers": [],
+      "ambiguity_status": "clear",
+      "quantifier_signal_count": 1,
+      "question_count": 0,
+      "requires_source_audit": false,
+      "statement_characters": 168,
+      "statement_tokens_approx": 24
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "estimate",
+      "multi_part": false,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-539",
+  "problem_number": 539,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "estimate",
+    "multi_part": false,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_539.html",
+      "raw_html_sha256": "0ca4d8edae1c7b49f9f5814a1f290dbc8033599d85707a7f356eb538fa3ede17",
+      "section_sha256": {
+        "references": "8d7aa8b7288ad01096abfe39690f35f08849765486bd4cdb8e71cacc7d74659f",
+        "remarks": "ff071a2df95f580e0f220eebf80e81673cff8929f171aa6ba2aa3e208e40d537",
+        "statement": "d3142a6e1fa4949f947f9e8f923323905d99b1afd3e1062a51a7700a2a81a0e7"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_539.json",
+      "source_record_sha256": "c75ead2b121348969d50e6e94d72dadf2cf6f544af6326bc0bb19360dc7bbed4",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_539.tex",
+    "latex_sha256": "33e9c717ee0710f9f29da4490c7778ca0e62a9c58f45dfc32819f98236f5a382",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "d3142a6e1fa4949f947f9e8f923323905d99b1afd3e1062a51a7700a2a81a0e7",
+    "recommended_attack_modes": [
+      "formal_search",
+      "shared_infrastructure_search",
+      "literature_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "c17d5fda29a96d598bb952807cf40cc1871682123d0a79b1b1be6a17e73c78e1",
+  "routes": [
+    "formal_search",
+    "shared_infrastructure_search",
+    "literature_search",
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "clear",
+    "intended": "Let $h(n)$ be such that, for any set $A\\subseteq \\mathbb{N}$ of size $n$, the set\\[\\left\\{ \\frac{a}{(a,b)}: a,b\\in A\\right\\}\\]has size at least $h(n)$. Estimate $h(n)$.",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $h(n)$ be such that, for any set $A\\subseteq \\mathbb{N}$ of size $n$, the set\\[\\left\\{ \\frac{a}{(a,b)}: a,b\\in A\\right\\}\\]has size at least $h(n)$. Estimate $h(n)$.",
+    "original": "Let $h(n)$ be such that, for any set $A\\subseteq \\mathbb{N}$ of size $n$, the set\\[\\left\\{ \\frac{a}{(a,b)}: a,b\\in A\\right\\}\\]has size at least $h(n)$. Estimate $h(n)$.",
+    "statement_sha256": "d3142a6e1fa4949f947f9e8f923323905d99b1afd3e1062a51a7700a2a81a0e7"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#302}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, unit fractions
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $f(N)$ be the size of the largest $A\subseteq \{1,\ldots,N\}$ such that there are no solutions to\[\frac{1}{a}= \frac{1}{b}+\frac{1}{c}\]with distinct $a,b,c\in A$? Estimate $f(N)$. In particular, is $f(N)=(\tfrac{1}{2}+o(1))N$?
+
+
+
+
+The colouring version of this is [303] , which was solved by Brown and R\"{o}dl \cite{BrRo91}. One can take either $A$ to be all odd integers in $[1,N]$ or all integers in $[N/2,N]$ to show $f(N)\geq (1/2+o(1))N$. Wouter van Doorn has proved (see this note ) that\[f(N) \leq (9/10+o(1))N.\]Stijn Cambie has observed that\[f(N)\geq (5/8+o(1))N,\]taking $A$ to be all odd integers $\leq N/4$ and all integers in $[N/2,N]$. Stijn Cambie has also observed that, if we allow $b=c$, then there is a solution to this equation when $\lvert A\rvert \geq (\tfrac{2}{3}+o(1))N$, since then there must exist some $n,2n\in A$. See also [301] and [327] .
+
+
+
+
+References
+
+[BrRo91] Brown, Tom C. and R\"{o}dl, Voijtech, Monochromatic solutions to equations with unit fractions . Bull. Austral. Math. Soc. (1991), 387-392.
+
+\noindent\textbf{Related OEIS sequences:} A390395
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/302}}
+\end{document}

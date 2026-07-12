@@ -1,0 +1,55 @@
+{
+  "problem_number": 256,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/256",
+  "retrieved_at": "2026-07-10T23:16:15.503515+00:00",
+  "page_title": "256 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "a3e8017436e48347ddf44031f089f9780a55fdf88d9824fbda27cbed376731a7",
+  "comment_count": 9,
+  "comments": [
+    {
+      "post_id": "1706",
+      "text": "when I try to click on the Belov-Konyagin paper, it says: \"Unable to load reference.\" (The site has been updated to address this comment.)",
+      "meta": "zach hunter — 12:37 on 11 Nov 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "584",
+      "text": "I would like to add a follow-up to my earlier comment at 08:55 on 16 Sep 2025. At that time I posed the following conjecture: For every choice of positive integers $s_1,\\dots,s_n$, if $P_n(z) = \\prod_{j=1}^n \\bigl(1 - z^{s_j}\\bigr) = \\sum_{k=0}^N a_k z^k$, then $\\sum_{k=0}^N |a_k|^2 \\ge 2n$. I have now proved this conjecture, details can be found in my next comment.",
+      "meta": "Quanyu Tang — 05:48 on 17 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "589",
+      "text": "Looking at the original paper of Erdös-Szekeres, it seems that this is essentially a more detailed write-up of their argument proving the lower bound $f(n)\\geqslant\\sqrt{2n}$. Though the observation from your previous post this bound $\\sum_k|a_k|^2\\geqslant 2n$ can be used to give $f(n)\\geqslant 2\\sqrt{n}$ by using the result of O’Hara--Rodriguez as a black box is new.",
+      "meta": "bkbedert — 09:51 on 17 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "590",
+      "text": "Thanks for your comment! Indeed the argument is close in spirit to Erdős–Szekeres, but the inequality $\\sum_k |a_k|^2 \\ge 2n$ is new, and combining it with O’Hara–Rodriguez gives $f(n)\\ge 2\\sqrt{n}$, which to my knowledge is the first general improvement since 1959.",
+      "meta": "Quanyu Tang — 10:23 on 17 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "596",
+      "text": "I have just written up my result proving that\\[ f(n) \\ge 2\\sqrt{n}, \\]and it is now available on arXiv: arXiv:2509.14182. Although this is not a very major improvement (since Erdős even conjectured that for sufficiently large $n$, $f(n)$ grows faster than any power of $n$), I believe it is still worthwhile to record. In fact, this can be viewed as a fix of the original 1959 proof of Erdős–Szekeres (See also Section 2 of my paper.) The original Erdős–Szekeres idea considered the identity\\[\\sum_{j=1}^r z^{a_j} - \\sum_{j=1}^r z^{b_j} \\;=\\; \\prod_{j=1}^n (1-z^{s_j}),\\]where $\\{a_j\\}$ and $\\{b_j\\}$ are disjoint sets of integers. In this formulation all nonzero coefficients on the left-hand side are $\\pm 1$. Since $z=1$ is a zero of multiplicity $n$, together with the classical Prouhet–Tarry–Escott problem, one would conclude that $P_n(z)$ has at least $2n$ nonzero coefficients $a_k$, hence\\[\\sum_{k=0}^N |a_k|^2 \\;\\ge\\; 2n.\\]Applying Parseval’s identity gives\\[\\| P_n \\|_{L^\\infty(|z|=1)}^2 \\geq \\frac{1}{2\\pi}\\int_{-\\pi}^{\\pi} |P_n(e^{it})|^2 dt = \\sum_{k=0}^N |a_k|^2 \\ge 2n,\\]which in turn implies $f(n) \\ge \\sqrt{2n}$. However, the gap is that the coefficients of $P_n(z)$ are not necessarily all $\\pm 1$, so this argument fails. In the paper of Billsborough–Freedman–Hart–Kowalsky–Lubinsky–Pomeranz–Sammel (Proc. AMS 149 (2021), 4233–4246, link), the authors gave a corrected proof showing that $P_n(z)$ has at least $n$ nonzero coefficients, and by using a result of O’Hara and Rodriguez they again obtained $f(n) \\ge \\sqrt{2n}$. Moreover, they remarked: \"If the original Erdős--Szekeres proof could be fixed, the O’Hara--Rodriguez bound would give $f(n)\\ge 2\\sqrt{n}$.\" My result may thus be regarded as precisely providing such a fix, thereby confirming their expectation.",
+      "meta": "Quanyu Tang — 01:49 on 18 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "570",
+      "text": "In my previous comment at 07:32 on 16 Sep 2025, I noted that the classical bound $f(n)\\ge \\sqrt{2n}$ can be slightly sharpened to $f(n)\\ \\ge\\ \\sqrt{2n+2}$. Here I would like to suggest a stronger conjecture based on further experiments. **Conjecture**. For every choice of positive integers $s_1,\\dots,s_n$, if $P_n(z)=\\prod_{j=1}^n(1-z^{s_j})=\\sum_{k=0}^N a_k z^k$, then $$ \\sum_{k=0}^N |a_k|^2\\ \\ge\\ 2n.$$ If this conjecture is true, then by Corollary 1 of O’Hara--Rodriguez \"Some properties of self-inversive polynomials\", we have\\[ \\|P_n\\|_{L^\\infty(|z|=1)}^2 \\ \\ge\\ 2\\sum_k |a_k|^2 \\ \\ge\\ 4 n, \\]and thus\\[ \\|P_n\\|_{L^\\infty(|z|=1)}\\ \\ge\\ 2\\sqrt{n}, \\]which is stronger than the classical $\\sqrt{2n}$ (and also the $\\sqrt{2n+2}$ refinement). Numerical evidence (global searches for small $n$). For each $n$ I searched over many sequences $s=(s_1,\\dots,s_n)$ (with repetitions allowed) and minimized $\\sum_k|a_k|^2$; a representative minimizer is shown. In all cases below the nonzero coefficients of $P_n$ are $\\pm1$.\\[ \\begin{array}{c|c|l} n & \\min\\sum |a_k|^2 & \\text{one minimizing }(s_1,\\dots,s_n)\\\\\\hline 1 & 2 & (1)\\\\ 2 & 4 & (1,2)\\\\ 3 & 6 & (1,2,3)\\\\ 4 & 8 & (1,2,3,5)\\\\ 5 & 10 & (1,2,3,5,7)\\\\ 6 & 12 & (1,2,3,4,5,7)\\\\ 7 & 16 & (1,2,3,4,5,7,11)\\\\ 8 & 16 & (1,2,3,5,7,8,11,13)\\\\ 9 & 20 & (1,2,3,5,7,8,9,11,13) \\end{array} \\]Thus for $n=1,2,3,4,5,6,8$ we observe $\\min\\sum|a_k|^2=2n$, while for $n=7$ and $n=9$ the minimum is even larger ($16>2n$ and $20>2n$, respectively). I would be very interested in proofs, counterexamples, or further data for larger $n$.",
+      "meta": "Quanyu Tang — 08:55 on 16 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "568",
+      "text": "According to Lubinsky’s \"A Survey of Erdős–Szekeres Products\" (Springer link, p.300), “Nor has there been an improvement on the lower bound $f(n) \\ge \\sqrt{2n}$ in general.” I would like to point out a slight sharpening: in fact\\[ f(n) \\;\\ge\\; \\sqrt{2n+2}. \\]Proof. Write\\[ P_n(z) = \\prod_{j=1}^n (1 - z^{s_j}) = \\sum_{k=0}^N a_k z^k. \\]Since $z=1$ is a zero of multiplicity $n$, we have\\[ \\sum_{k=0}^N a_k (k)_j = 0, \\qquad j=0,1,\\dots,n-1, \\]where $(k)_j = k(k-1)\\cdots(k-j+1)$. Let $\\operatorname{supp}(P_n)=\\{t_1<\\cdots<t_m\\}$ be the exponents with $a_{t_i}\\neq 0$. Restricting to $j=0,\\dots,m-1$ gives a square system with coefficient matrix\\[ F = \\big[(t_i)_j\\big]_{\\;0\\le j\\le m-1}^{\\;1\\le i\\le m}. \\]Using $(t)_j = j!\\binom{t}{j}$, a standard change-of-basis argument gives\\[ \\det F = \\prod_{1\\le i<\\ell\\le m}(t_\\ell - t_i) \\;\\neq\\; 0. \\]Thus $m \\ge n+1$, so $P_n$ has at least $n+1$ nonzero coefficients. (This bound is sharp, attained by $(1-z)^n$.) Therefore\\[ \\sum_{k=0}^N |a_k|^2 \\;\\ge\\; n+1. \\]By Corollary 1 of O’Hara--Rodriguez \"Some properties of self-inversive polynomials\" (JSTOR link), if all zeros lie on the unit circle then\\[ \\|P_n\\|_{L^\\infty (|z|=1)}^2 \\;\\ge\\; 2\\sum_{k=0}^N |a_k|^2 \\;\\ge\\; 2(n+1), \\]which yields\\[ \\|P_n\\|_{L^\\infty (|z|=1)} \\;\\ge\\; \\sqrt{2n+2}. \\]So the classical universal lower bound $\\sqrt{2n}$ can be sharpened slightly to $\\sqrt{2n+2}$. This slight sharpening is clearly more useful than the original bound, and it is tight when $n=1$, since $f(1)=2>\\sqrt{2}$.",
+      "meta": "Quanyu Tang — 07:32 on 16 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "543",
+      "text": "As a related remark, let $\\{s_j\\}_{j=1}^n$ be positive integers. In 1959, Erdős and Szekeres posed a number of problems about the size of polynomials of the form $$ \\prod_{j=1}^n (1 - z^{s_j}), $$ where $\\{s_j\\}_{j=1}^n$ are positive integers. A recent survey of these problems and related questions can be found in Lubinsky’s \"A Survey of Erdős–Szekeres Products\", available at (link).",
+      "meta": "Quanyu Tang — 03:12 on 15 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "542",
+      "text": "It seems that the second question in the problem statement has already been resolved in the negative. In fact, Belov and Konyagin proved in Corollary 0.3 of the paper \"An estimate of the free term of a non-negative trigonometric polynomial with integer coefficients\"(link) that $$ \\log f(n) = O\\!\\big((\\log n)^4\\big), $$ so $f(n) \\le \\exp\\!\\big(C (\\log n)^4\\big)$. This shows in particular that no exponential lower bound of the form $\\exp(n^c)$ can hold. Clearly, there is a lot of scope for work on both upper and lower bounds. The first question is still far from solved.",
+      "meta": "Quanyu Tang — 02:48 on 15 Sep 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

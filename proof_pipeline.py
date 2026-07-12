@@ -2,11 +2,12 @@
 
 import json
 import hashlib
+import re
 from datetime import datetime, timezone
 import uuid
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Protocol
+from typing import Any, Protocol
 
 from solver_prompts import (
     ADJUDICATOR_PROMPT_TEMPLATE,
@@ -36,11 +37,96 @@ from research_state import (
     parse_subgoal_graph,
     statement_lock_text,
 )
+from run_contract import (
+    STAGE_CACHE_SCHEMA_VERSION,
+    RunContractError,
+    canonical_json,
+    make_run_contract,
+    run_contract_id,
+    run_context_id,
+    stage_cache_context_id,
+    validate_run_contract,
+)
+
+
+_ROUTING_MODES = {
+    "statement_audit", "human_clarification", "formal_search",
+    "exact_construction_search", "construction_verification",
+    "shared_infrastructure_search", "subproblem_decomposition",
+    "exact_computation", "counterexample_search", "literature_search",
+    "natural_language_research",
+}
+
+
+def normalize_research_directive(
+    directive: dict | None, *, parent_statement_sha256: str,
+) -> tuple[dict, str]:
+    """Validate a search-plane directive without changing the truth target."""
+    if directive is None:
+        directive = {
+            "schema_version": 1,
+            "parent_statement_sha256": parent_statement_sha256,
+            "recommended_attack_modes": ["natural_language_research"],
+            "subproblem_targets": [],
+        }
+    if not isinstance(directive, dict) or set(directive) != {
+        "schema_version", "parent_statement_sha256",
+        "recommended_attack_modes", "subproblem_targets",
+    }:
+        raise ValueError("research directive schema is not closed")
+    if directive.get("schema_version") != 1 \
+            or directive.get("parent_statement_sha256") != parent_statement_sha256:
+        raise ValueError("research directive parent statement binding mismatch")
+    modes = directive.get("recommended_attack_modes")
+    if not isinstance(modes, list) or not modes or len(modes) != len(set(modes)) \
+            or any(mode not in _ROUTING_MODES for mode in modes):
+        raise ValueError("research directive contains invalid attack modes")
+    raw_targets = directive.get("subproblem_targets")
+    if not isinstance(raw_targets, list):
+        raise ValueError("research directive subproblem targets must be a list")
+    targets = []
+    for target in raw_targets:
+        required = {
+            "subproblem_id", "part_index", "subproblem_contract_sha256",
+            "parent_statement_sha256", "focus_question", "focus_question_sha256",
+        }
+        if not isinstance(target, dict) or set(target) != required:
+            raise ValueError("research directive subproblem schema is not closed")
+        if target.get("parent_statement_sha256") != parent_statement_sha256:
+            raise ValueError("subproblem target parent binding mismatch")
+        focus = str(target.get("focus_question", "")).strip()
+        focus_sha = hashlib.sha256(focus.encode("utf-8")).hexdigest()
+        if not focus or target.get("focus_question_sha256") != focus_sha:
+            raise ValueError("subproblem focus-question hash mismatch")
+        part_index = target.get("part_index")
+        if not isinstance(part_index, int) or isinstance(part_index, bool) or part_index < 1:
+            raise ValueError("subproblem part index is invalid")
+        expected_contract = hashlib.sha256(canonical_json({
+            "parent_statement_sha256": parent_statement_sha256,
+            "focus_question_sha256": focus_sha,
+            "part_index": part_index,
+        }).encode("utf-8")).hexdigest()
+        if target.get("subproblem_contract_sha256") != expected_contract \
+                or not re.fullmatch(
+                    rf"erdos-[0-9]+-part-{part_index:02d}-{expected_contract[:8]}",
+                    str(target.get("subproblem_id", "")),
+                ):
+            raise ValueError("subproblem target contract identity mismatch")
+        targets.append({**target, "focus_question": focus})
+    normalized = {
+        "schema_version": 1,
+        "parent_statement_sha256": parent_statement_sha256,
+        "recommended_attack_modes": list(modes),
+        "subproblem_targets": targets,
+    }
+    digest = hashlib.sha256(canonical_json(normalized).encode("utf-8")).hexdigest()
+    return normalized, digest
 
 
 class IsolatedRunner(Protocol):
     def run(self, prompt: str, *, stage: str, isolated: bool) -> str: ...
     def context_id(self, stage: str) -> str: ...
+    def restore_context(self, stage: str, context_id: str) -> None: ...
 
 
 @dataclass(frozen=True)
@@ -49,6 +135,43 @@ class PipelineResult:
     candidate_outcome: str
     gate: GateDecision
     artifact_dir: Path
+
+
+def _failure_classification(
+    outcome: str,
+    decision: GateDecision,
+    contract,
+    reviews: list[Review],
+) -> tuple[str, list[str]]:
+    """Separate mathematical rejection evidence from process/schema failure."""
+    if decision.status.startswith("verified_"):
+        return "verified", []
+    if decision.status == "awaiting_external_evidence":
+        return "external_evidence", list(decision.reasons)
+    if outcome == "resource_exhausted":
+        return "budget", []
+    statement_findings: list[str] = []
+    mathematical_findings: list[str] = []
+    for review in reviews:
+        findings = [
+            item for item in (
+                *review.open_gaps,
+                *review.unchecked_imports,
+                *review.material_errors,
+            )
+            if item and not item.lower().startswith("malformed reviewer output:")
+        ]
+        if review.reviewer_role == "statement_integrity":
+            statement_findings.extend(findings)
+        else:
+            mathematical_findings.extend(findings)
+    mathematical_findings.extend(contract.open_gaps if contract else ())
+    mathematical_findings.extend(contract.unchecked_imports if contract else ())
+    if statement_findings:
+        return "statement", sorted(set(statement_findings))
+    if mathematical_findings:
+        return "mathematical", sorted(set(mathematical_findings))
+    return "operational_verification", list(decision.reasons)
 
 
 SCOUT_ROLES = (
@@ -95,8 +218,12 @@ def _strings(value) -> tuple[str, ...]:
 def _review(
     data: dict, *, reviewer_id: str, expected_role: str, context_id: str
 ) -> Review:
-    reported_role = str(data.get("reviewer_role", expected_role))
-    if reported_role != expected_role:
+    reported_role = str(data.get("reviewer_role", expected_role)).strip()
+    accepted_roles = {
+        expected_role.casefold(),
+        f"independent adversarial referee ({expected_role})".casefold(),
+    }
+    if reported_role.casefold() not in accepted_roles:
         raise ValueError(f"reviewer role mismatch: expected {expected_role}, got {reported_role}")
     return Review(
         reviewer_id=reviewer_id,
@@ -141,12 +268,199 @@ class ProofPipeline:
         *,
         max_revisions: int = 2,
         verification_evidence: tuple[VerificationEvidence, ...] = (),
+        pipeline_version: str = "unrecorded",
+        model_portfolio: str = "unrecorded",
+        execution_config: dict | None = None,
+        source_snapshot_id: str | None = None,
+        source_snapshot_sha256: str | None = None,
+        toolset: dict[str, Any] | None = None,
+        dependencies: dict[str, Any] | None = None,
+        runtime: dict[str, Any] | None = None,
     ):
         self.runner = runner
         self.artifact_root = Path(artifact_root)
         self.max_revisions = max(0, max_revisions)
         self.verification_evidence = verification_evidence
+        self.pipeline_version = pipeline_version
+        self.model_portfolio = model_portfolio
+        self.execution_config = dict(execution_config or {})
         self._stage_cache = None
+        contract_context = {
+            "source_snapshot_id": source_snapshot_id,
+            "source_snapshot_sha256": source_snapshot_sha256,
+            "toolset": toolset,
+            "dependencies": dependencies,
+            "runtime": runtime,
+        }
+        supplied = [value is not None for value in contract_context.values()]
+        if any(supplied) and not all(supplied):
+            missing = sorted(
+                key for key, value in contract_context.items() if value is None
+            )
+            raise ValueError(
+                "run-contract context is incomplete; missing " + ", ".join(missing)
+            )
+        self._run_contract_context = contract_context if all(supplied) else None
+        self._active_run_contract = None
+
+    def _budget(self) -> dict[str, Any]:
+        return {
+            "max_revisions": self.max_revisions,
+            "scout_contexts": len(SCOUT_ROLES),
+            "review_roles_per_attempt": len(REVIEW_MANDATES) + 1,
+        }
+
+    def _bind_run_contract(
+        self, statement_sha256: str,
+        research_directive_sha256: str | None = None,
+    ) -> dict | None:
+        """Bind the exact statement to this pipeline's reusable identity."""
+        if self._run_contract_context is None:
+            self._active_run_contract = None
+            return None
+        context = self._run_contract_context
+        self._active_run_contract = make_run_contract(
+            statement_sha256=statement_sha256,
+            source_snapshot_id=context["source_snapshot_id"],
+            source_snapshot_sha256=context["source_snapshot_sha256"],
+            pipeline_fingerprint=self.pipeline_version,
+            research_directive_sha256=(
+                research_directive_sha256
+                or hashlib.sha256(b"synthetic-test-research-directive").hexdigest()
+            ),
+            model_portfolio=self.model_portfolio,
+            toolset=context["toolset"],
+            budget=self._budget(),
+            execution_config=self.execution_config,
+            dependencies=context["dependencies"],
+            runtime=context["runtime"],
+        )
+        return self._active_run_contract
+
+    def _run_contract_record(self, execution_id: str) -> dict[str, Any] | None:
+        if self._active_run_contract is None:
+            return None
+        contract = validate_run_contract(self._active_run_contract)
+        contract_id = run_contract_id(contract)
+        return {
+            "run_contract_record_schema_version": 1,
+            "execution_id": execution_id,
+            "run_contract_id": contract_id,
+            "run_context_id": run_context_id(
+                run_contract_id_value=contract_id,
+                execution_id=execution_id,
+            ),
+            "run_contract": contract,
+        }
+
+    def _incomplete_run_is_compatible(
+        self, directory: Path, problem: str, research_directive_sha256: str,
+    ) -> bool:
+        expected = self._run_contract_record(directory.name)
+        if expected is None:
+            return False
+        try:
+            recorded = json.loads(
+                (directory / "run_contract.json").read_text(encoding="utf-8")
+            )
+            if not isinstance(recorded, dict) or set(recorded) != {
+                "run_contract_record_schema_version",
+                "execution_id",
+                "run_contract_id",
+                "run_context_id",
+                "run_contract",
+            }:
+                return False
+            embedded_contract = validate_run_contract(recorded["run_contract"])
+            if (
+                recorded != expected
+                or run_contract_id(embedded_contract) != recorded["run_contract_id"]
+            ):
+                return False
+            problem_file = directory / "problem.txt"
+            if problem_file.exists() and problem_file.read_text(
+                encoding="utf-8"
+            ) != problem:
+                return False
+            statement_lock_file = directory / "statement_lock.json"
+            if statement_lock_file.exists():
+                statement_lock = json.loads(
+                    statement_lock_file.read_text(encoding="utf-8")
+                )
+                if statement_lock.get("sha256") != embedded_contract["statement_sha256"]:
+                    return False
+            directive_file = directory / "research_directive.json"
+            if not directive_file.exists():
+                return False
+            directive_record = json.loads(directive_file.read_text(encoding="utf-8"))
+            if directive_record.get("research_directive_sha256") \
+                    != research_directive_sha256:
+                return False
+        except (
+            KeyError,
+            OSError,
+            TypeError,
+            ValueError,
+            json.JSONDecodeError,
+            RunContractError,
+        ):
+            return False
+        return True
+
+    @staticmethod
+    def _write_json_atomic(path: Path, value: object) -> None:
+        temporary = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")
+        try:
+            temporary.write_text(
+                json.dumps(value, indent=2, ensure_ascii=False, sort_keys=True) + "\n",
+                encoding="utf-8",
+            )
+            temporary.replace(path)
+        finally:
+            temporary.unlink(missing_ok=True)
+
+    @staticmethod
+    def _cache_metadata_is_compatible(
+        metadata: object,
+        *,
+        stage: str,
+        prompt_sha256: str,
+        response_sha256: str,
+        expected_contract: dict,
+        expected_contract_id: str,
+        expected_cache_context_id: str,
+    ) -> bool:
+        required = {
+            "cache_schema_version",
+            "stage",
+            "prompt_sha256",
+            "response_sha256",
+            "run_contract",
+            "run_contract_id",
+            "cache_context_id",
+            "context_id",
+            "recorded_at",
+        }
+        if not isinstance(metadata, dict) or set(metadata) != required:
+            return False
+        try:
+            embedded_contract = validate_run_contract(metadata["run_contract"])
+            embedded_contract_id = run_contract_id(embedded_contract)
+            recorded_at = datetime.fromisoformat(metadata["recorded_at"])
+        except (KeyError, TypeError, ValueError, RunContractError):
+            return False
+        return (
+            metadata["cache_schema_version"] == STAGE_CACHE_SCHEMA_VERSION
+            and metadata["stage"] == stage
+            and metadata["prompt_sha256"] == prompt_sha256
+            and metadata["response_sha256"] == response_sha256
+            and embedded_contract == expected_contract
+            and embedded_contract_id == expected_contract_id
+            and metadata["run_contract_id"] == expected_contract_id
+            and metadata["cache_context_id"] == expected_cache_context_id
+            and isinstance(metadata["context_id"], str)
+            and recorded_at.tzinfo is not None
+        )
 
     def _run(self, prompt: str, stage: str) -> str:
         """Call the isolated runner, caching each stage's raw response to disk so
@@ -154,38 +468,125 @@ class ProofPipeline:
         regenerating it. Isolation is preserved: a cache hit replays the exact
         response that stage already produced in its own fresh conversation."""
         cache_file = self._stage_cache / f"{stage}.txt"
-        if cache_file.exists():
-            cached = cache_file.read_text(encoding="utf-8", errors="ignore")
-            if cached.strip():
-                print(f"{stage}: reusing cached response", flush=True)
-                return cached
+        metadata_file = self._stage_cache / f"{stage}.meta.json"
+        prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
+        if self._active_run_contract is None:
+            # Without an exact statement/source/model/tool/runtime contract there
+            # is no defensible cache key. The solver may continue, but no stage
+            # response is persisted or replayed under an ambiguous identity.
+            return self.runner.run(prompt, stage=stage, isolated=True)
+
+        active_contract = validate_run_contract(self._active_run_contract)
+        active_contract_id = run_contract_id(active_contract)
+        cache_context_id = stage_cache_context_id(
+            run_contract_id_value=active_contract_id,
+            stage=stage,
+            prompt_sha256=prompt_sha256,
+        )
+        if cache_file.exists() and metadata_file.exists():
+            try:
+                cached = cache_file.read_text(encoding="utf-8")
+                metadata = json.loads(metadata_file.read_text(encoding="utf-8"))
+            except (UnicodeDecodeError, json.JSONDecodeError, OSError, ValueError):
+                cached, metadata = "", {}
+            cached_response_sha256 = hashlib.sha256(
+                cached.encode("utf-8")
+            ).hexdigest()
+            if cached.strip() and self._cache_metadata_is_compatible(
+                metadata,
+                stage=stage,
+                prompt_sha256=prompt_sha256,
+                response_sha256=cached_response_sha256,
+                expected_contract=active_contract,
+                expected_contract_id=active_contract_id,
+                expected_cache_context_id=cache_context_id,
+            ):
+                context_id = str(metadata.get("context_id", ""))
+                restore_context = getattr(self.runner, "restore_context", None)
+                if context_id and callable(restore_context):
+                    try:
+                        restore_context(stage, context_id)
+                    except Exception:
+                        # A response whose isolated provenance cannot be restored
+                        # is regenerated instead of being returned ambiguously.
+                        pass
+                    else:
+                        print(f"{stage}: reusing validated cached response", flush=True)
+                        return cached
+                else:
+                    print(f"{stage}: reusing validated cached response", flush=True)
+                    return cached
         response = self.runner.run(prompt, stage=stage, isolated=True)
-        cache_file.write_text(response, encoding="utf-8")
+        context_id = self.runner.context_id(stage)
+        metadata = {
+            "cache_schema_version": STAGE_CACHE_SCHEMA_VERSION,
+            "stage": stage,
+            "prompt_sha256": prompt_sha256,
+            "response_sha256": hashlib.sha256(response.encode("utf-8")).hexdigest(),
+            "run_contract": active_contract,
+            "run_contract_id": active_contract_id,
+            "cache_context_id": cache_context_id,
+            "context_id": context_id,
+            "recorded_at": datetime.now(timezone.utc).isoformat(),
+        }
+        cache_tmp = cache_file.with_suffix(cache_file.suffix + ".tmp")
+        metadata_tmp = metadata_file.with_suffix(metadata_file.suffix + ".tmp")
+        cache_tmp.write_text(response, encoding="utf-8")
+        cache_tmp.replace(cache_file)
+        metadata_tmp.write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
+        metadata_tmp.replace(metadata_file)
         return response
 
-    def solve(self, problem_number: int, problem: str) -> PipelineResult:
+    def solve(
+        self, problem_number: int, problem: str, *,
+        research_directive: dict | None = None,
+    ) -> PipelineResult:
         """Run all isolated stages, persist evidence, and apply the hard gate."""
+        lock = make_statement_lock(problem)
+        directive, directive_sha256 = normalize_research_directive(
+            research_directive, parent_statement_sha256=lock.sha256,
+        )
+        self._bind_run_contract(lock.sha256, directive_sha256)
         prob_dir = self.artifact_root / f"problem_{problem_number}"
         # Resume the newest incomplete run (no manifest.json) so a stop mid-problem
         # continues from the last finished stage; otherwise start a fresh run.
         incomplete = sorted(
             (d for d in prob_dir.glob("*")
-             if d.is_dir() and not (d / "manifest.json").exists()),
+             if d.is_dir()
+             and not (d / "manifest.json").exists()
+             and self._incomplete_run_is_compatible(
+                 d, lock.original_statement, directive_sha256,
+             )),
             key=lambda d: d.name,
         ) if prob_dir.exists() else []
         if incomplete:
             out = incomplete[-1]
+            new_execution = False
         else:
             run_id = (
                 datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
                 + "-" + uuid.uuid4().hex[:8]
             )
             out = prob_dir / run_id
+            new_execution = True
         out.mkdir(parents=True, exist_ok=True)
+        if new_execution:
+            self._write_json_atomic(out / "research_directive.json", {
+                **directive,
+                "research_directive_sha256": directive_sha256,
+            })
+            contract_record = self._run_contract_record(out.name)
+            if contract_record is not None:
+                self._write_json_atomic(out / "run_contract.json", contract_record)
         self._stage_cache = out / "_stage_cache"
         self._stage_cache.mkdir(exist_ok=True)
-        lock = make_statement_lock(problem)
         lock_text = statement_lock_text(lock)
+        research_context = (
+            f"{lock_text}\n\nRESEARCH ROUTING DIRECTIVE (search guidance only; "
+            "it cannot modify the exact locked target):\n"
+            f"ROUTING_PACKET_SHA256: {directive_sha256}\n"
+            + json.dumps(directive, indent=2, ensure_ascii=False, sort_keys=True)
+        )
         (out / "problem.txt").write_text(lock.original_statement, encoding="utf-8")
         (out / "statement_lock.json").write_text(
             json.dumps(asdict(lock), indent=2) + "\n", encoding="utf-8"
@@ -194,7 +595,8 @@ class ProofPipeline:
         scouts = []
         for index, role in enumerate(SCOUT_ROLES, 1):
             prompt = SCOUT_PROMPT_TEMPLATE.format(
-                offline=OFFLINE_POLICY, role=role, search=SEARCH_POLICY, problem=lock_text
+                offline=OFFLINE_POLICY, role=role, search=SEARCH_POLICY,
+                problem=research_context,
             )
             response = self._run(prompt, f"scout_{index}")
             (out / f"scout_{index}.md").write_text(response, encoding="utf-8")
@@ -206,7 +608,7 @@ class ProofPipeline:
         synthesis_raw = self._run(
             SYNTHESIS_PROMPT_TEMPLATE.format(
                 offline=OFFLINE_POLICY,
-                statement_lock=lock_text,
+                statement_lock=research_context,
                 scouts=scout_bundle,
                 feedback="NONE",
             ),
@@ -223,7 +625,9 @@ class ProofPipeline:
 
         candidate = self._run(
             CONSTRUCTION_PROMPT_TEMPLATE.format(
-                candidate_prompt=CANDIDATE_PROMPT_TEMPLATE.format(problem=problem),
+                candidate_prompt=CANDIDATE_PROMPT_TEMPLATE.format(
+                    problem=research_context
+                ),
                 synthesis=graph_text,
                 scouts=scout_bundle,
             ),
@@ -239,7 +643,7 @@ class ProofPipeline:
             outcome = candidate_status(candidate)
             contract = candidate_contract(candidate)
             reviews, raw_reviews = self._run_reviews(
-                candidate, lock_text, graph_text, attempt, attempt_dir
+                candidate, research_context, graph_text, attempt, attempt_dir
             )
             decision = evaluate_gate(
                 outcome,
@@ -295,7 +699,7 @@ class ProofPipeline:
             regulator_raw = self._run(
                 REGULATOR_PROMPT_TEMPLATE.format(
                     offline=OFFLINE_POLICY,
-                    statement_lock=lock_text,
+                    statement_lock=research_context,
                     subgoal_graph=graph_text,
                     candidate=candidate,
                     reviews="\n\n".join(raw_reviews),
@@ -328,7 +732,7 @@ class ProofPipeline:
                 replan_raw = self._run(
                     SYNTHESIS_PROMPT_TEMPLATE.format(
                         offline=OFFLINE_POLICY,
-                        statement_lock=lock_text,
+                        statement_lock=research_context,
                         scouts=scout_bundle,
                         feedback=json.dumps({
                             "regulator": regulator,
@@ -358,7 +762,7 @@ class ProofPipeline:
             candidate = self._run(
                 REVISION_PROMPT_TEMPLATE.format(
                     offline=OFFLINE_POLICY,
-                    statement_lock=lock_text,
+                    statement_lock=research_context,
                     subgoal_graph=graph_text,
                     candidate=candidate,
                     reviews="\n\n".join(raw_reviews),
@@ -370,10 +774,40 @@ class ProofPipeline:
             )
 
         (out / "candidate.md").write_text(candidate, encoding="utf-8")
+        active_contract_id = (
+            run_contract_id(self._active_run_contract)
+            if self._active_run_contract is not None else None
+        )
+        failure_plane, failure_evidence = _failure_classification(
+            outcome, decision, contract, reviews
+        )
         manifest = {
             "problem_number": problem_number,
+            "execution_id": out.name,
+            "pipeline_version": self.pipeline_version,
+            "model_portfolio": self.model_portfolio,
+            "budget": {
+                **self.execution_config,
+                **self._budget(),
+            },
+            "run_contract_id": active_contract_id,
+            "run_context_id": (
+                run_context_id(
+                    run_contract_id_value=active_contract_id,
+                    execution_id=out.name,
+                )
+                if active_contract_id is not None else None
+            ),
+            "run_contract": self._active_run_contract,
             "statement_sha256": lock.sha256,
+            "research_directive": directive,
+            "research_directive_sha256": directive_sha256,
+            "candidate_sha256": hashlib.sha256(
+                candidate.encode("utf-8")
+            ).hexdigest(),
             "candidate_outcome": outcome,
+            "failure_plane": failure_plane,
+            "failure_evidence": failure_evidence,
             "reviews": [asdict(review) for review in reviews],
             "verification_evidence": [
                 asdict(evidence) for evidence in self.verification_evidence

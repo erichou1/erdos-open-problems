@@ -1,0 +1,312 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.518
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "ErSa97",
+      "Sa99"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/883",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[ErSa97] Erd\\H{o}s, Paul and Sarkozy, Gabor N., On cycles in the coprime graph of integers. Electron. J. Combin. (1997), Research Paper 8, approx. 11.\n \n [Sa99] S\\'{a}rk\\\"ozy, G\\'{a}bor N., Complete tripartite subgraphs in the coprime graph of\nintegers. Discrete Math. (1999), 227--238.",
+      "remarks": "A problem of Erd\\H{o}s and S\\'{a}rk\\H{o}zy \\cite{ErSa97}, who prove that if\\[\\lvert A\\rvert >\\lfloor\\tfrac{n}{2}\\rfloor+\\lfloor\\tfrac{n}{3}\\rfloor-\\lfloor\\tfrac{n}{6}\\rfloor\\]then $G(A)$ contains all odd cycles of length $\\leq cn$ for some constant $c>0$.\n\nThis threshold is the best possible, since one could take $A$ to be the set of $m\\leq n$ which are divisible by either $2$ or $3$, in which case $G(A)$ contains no triangles. \n\nThe second question was solved by S\\'{a}rk\\\"{o}zy \\cite{Sa99} who proved that, for large $n$, if $\\lvert A\\rvert$ exceeds the given threshold then $G(A)$ contains a complete $(1,\\ell,\\ell)$ triparite graph with\\[\\ell \\gg \\frac{\\log n}{\\log\\log n}.\\]"
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory",
+      "graph theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 3.12,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.008793,
+        0.403905
+      ],
+      "probability": 0.206349
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.31,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.018127,
+        0.428821
+      ],
+      "probability": 0.223474
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.3,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.207417
+      ],
+      "probability": 0.079755
+    },
+    "p_high_mathematical_value": {
+      "alpha": 3.233,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.026718,
+        0.501892
+      ],
+      "probability": 0.264305
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 0.867,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.163071
+      ],
+      "probability": 0.054622
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.8,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.0,
+        0.27406
+      ],
+      "probability": 0.117647
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.063431
+      ],
+      "probability": 0.021739
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.0,
+        0.384039
+      ],
+      "probability": 0.173913
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 3,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:19:17.119983+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "7500de84cebc59f1b1722093ab8e92ff0b63cd0266769da8053a5274b6bfb6a4"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "sufficiently_large",
+        "multiple_questions",
+        "implicit_convention"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 1,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 590,
+      "statement_tokens_approx": 67
+    },
+    "structure": {
+      "asymptotic": true,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "prove_or_disprove",
+      "multi_part": true,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-883",
+  "problem_number": 883,
+  "problem_type": {
+    "asymptotic": true,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "prove_or_disprove",
+    "multi_part": true,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_883.html",
+      "raw_html_sha256": "8bd2967c88b0e102268595c2a844c12db41604099b9a2ae31a89f92ae315131d",
+      "section_sha256": {
+        "references": "81726463ab365b4e0c6c65bddde271a1a34dbb47166e882eb1d90efb0f3371d1",
+        "remarks": "59bfcfd07764e901e5b16ae4c1757f17f7e2e254e6a8b229a2306e3a7a8a3819",
+        "statement": "42b1e16f4bd3b2e2185d03c68112158ea913c9d5e0072b8faebab3b8d89b9e8d"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_883.json",
+      "source_record_sha256": "71fec9e04d4e6b66d86e1b7c1b13c708737d08acd9803f10e40e7a4e76d17e5b",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_883.tex",
+    "latex_sha256": "3b5aacf410a89eb69db053965a4a7483eba215edca36a2d835b9d4c25e86dd4d",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "42b1e16f4bd3b2e2185d03c68112158ea913c9d5e0072b8faebab3b8d89b9e8d",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "subproblem_decomposition",
+      "shared_infrastructure_search",
+      "literature_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "For $A\\subseteq \\{1,\\ldots,n\\}$ let $G(A)$ be the graph with vertex set $A$, where two integers are joined by an edge if they are coprime. Is it true that if\\[\\lvert A\\rvert >\\lfloor\\tfrac{n}{2}\\rfloor+\\lfloor\\tfrac{n}{3}\\rfloor-\\lfloor\\tfrac{n}{6}\\rfloor\\]then $G(A)$ contains all odd cycles of length $\\leq \\frac{n}{3}+1$?",
+        "focus_question_sha256": "d6ed5a4f6e8753ac898779afe8c06848c6d2e8af0f334ff7d2313fbc5f54c010",
+        "parent_statement_sha256": "42b1e16f4bd3b2e2185d03c68112158ea913c9d5e0072b8faebab3b8d89b9e8d",
+        "part_index": 1,
+        "subproblem_contract_sha256": "4d0f538e917448762bb44d72fd6b0eb93f39d386daeaa5e5f677252b82cd9b33",
+        "subproblem_id": "erdos-883-part-01-4d0f538e"
+      },
+      {
+        "focus_question": "Is it true that, for every $\\ell\\geq 1$, if $n$ is sufficiently large and\\[\\lvert A\\rvert >\\lfloor\\tfrac{n}{2}\\rfloor+\\lfloor\\tfrac{n}{3}\\rfloor-\\lfloor\\tfrac{n}{6}\\rfloor\\]then $G(A)$ must contain a complete $(1,\\ell,\\ell)$ triparite graph on $2\\ell+1$ vertices?",
+        "focus_question_sha256": "bff4cf6a05d2dd9eed701742bb31d01aeb8111d971d773306b797b701f547ee0",
+        "parent_statement_sha256": "42b1e16f4bd3b2e2185d03c68112158ea913c9d5e0072b8faebab3b8d89b9e8d",
+        "part_index": 2,
+        "subproblem_contract_sha256": "628d37a13b6ad4f7a25b1e8b6f4ab2754eee3df68065c19387521cdce86f6037",
+        "subproblem_id": "erdos-883-part-02-628d37a1"
+      }
+    ]
+  },
+  "research_directive_sha256": "7a39fad2cd093581d9668896097fa5a4f62429fa8b1bbfe639f8e1f7185b1c2b",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "subproblem_decomposition",
+    "shared_infrastructure_search",
+    "literature_search"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "For $A\\subseteq \\{1,\\ldots,n\\}$ let $G(A)$ be the graph with vertex set $A$, where two integers are joined by an edge if they are coprime.\n\nIs it true that if\\[\\lvert A\\rvert >\\lfloor\\tfrac{n}{2}\\rfloor+\\lfloor\\tfrac{n}{3}\\rfloor-\\lfloor\\tfrac{n}{6}\\rfloor\\]then $G(A)$ contains all odd cycles of length $\\leq \\frac{n}{3}+1$?\n\nIs it true that, for every $\\ell\\geq 1$, if $n$ is sufficiently large and\\[\\lvert A\\rvert >\\lfloor\\tfrac{n}{2}\\rfloor+\\lfloor\\tfrac{n}{3}\\rfloor-\\lfloor\\tfrac{n}{6}\\rfloor\\]then $G(A)$ must contain a complete $(1,\\ell,\\ell)$ triparite graph on $2\\ell+1$ vertices?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "For $A\\subseteq \\{1,\\ldots,n\\}$ let $G(A)$ be the graph with vertex set $A$, where two integers are joined by an edge if they are coprime. Is it true that if\\[\\lvert A\\rvert >\\lfloor\\tfrac{n}{2}\\rfloor+\\lfloor\\tfrac{n}{3}\\rfloor-\\lfloor\\tfrac{n}{6}\\rfloor\\]then $G(A)$ contains all odd cycles of length $\\leq \\frac{n}{3}+1$? Is it true that, for every $\\ell\\geq 1$, if $n$ is sufficiently large and\\[\\lvert A\\rvert >\\lfloor\\tfrac{n}{2}\\rfloor+\\lfloor\\tfrac{n}{3}\\rfloor-\\lfloor\\tfrac{n}{6}\\rfloor\\]then $G(A)$ must contain a complete $(1,\\ell,\\ell)$ triparite graph on $2\\ell+1$ vertices?",
+    "original": "For $A\\subseteq \\{1,\\ldots,n\\}$ let $G(A)$ be the graph with vertex set $A$, where two integers are joined by an edge if they are coprime.\n\nIs it true that if\\[\\lvert A\\rvert >\\lfloor\\tfrac{n}{2}\\rfloor+\\lfloor\\tfrac{n}{3}\\rfloor-\\lfloor\\tfrac{n}{6}\\rfloor\\]then $G(A)$ contains all odd cycles of length $\\leq \\frac{n}{3}+1$?\n\nIs it true that, for every $\\ell\\geq 1$, if $n$ is sufficiently large and\\[\\lvert A\\rvert >\\lfloor\\tfrac{n}{2}\\rfloor+\\lfloor\\tfrac{n}{3}\\rfloor-\\lfloor\\tfrac{n}{6}\\rfloor\\]then $G(A)$ must contain a complete $(1,\\ell,\\ell)$ triparite graph on $2\\ell+1$ vertices?",
+    "statement_sha256": "42b1e16f4bd3b2e2185d03c68112158ea913c9d5e0072b8faebab3b8d89b9e8d"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-883",
+      "part_index": 1,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "For $A\\subseteq \\{1,\\ldots,n\\}$ let $G(A)$ be the graph with vertex set $A$, where two integers are joined by an edge if they are coprime. Is it true that if\\[\\lvert A\\rvert >\\lfloor\\tfrac{n}{2}\\rfloor+\\lfloor\\tfrac{n}{3}\\rfloor-\\lfloor\\tfrac{n}{6}\\rfloor\\]then $G(A)$ contains all odd cycles of length $\\leq \\frac{n}{3}+1$?",
+        "focus_question_sha256": "d6ed5a4f6e8753ac898779afe8c06848c6d2e8af0f334ff7d2313fbc5f54c010",
+        "normalized": "For $A\\subseteq \\{1,\\ldots,n\\}$ let $G(A)$ be the graph with vertex set $A$, where two integers are joined by an edge if they are coprime. Is it true that if\\[\\lvert A\\rvert >\\lfloor\\tfrac{n}{2}\\rfloor+\\lfloor\\tfrac{n}{3}\\rfloor-\\lfloor\\tfrac{n}{6}\\rfloor\\]then $G(A)$ contains all odd cycles of length $\\leq \\frac{n}{3}+1$? Is it true that, for every $\\ell\\geq 1$, if $n$ is sufficiently large and\\[\\lvert A\\rvert >\\lfloor\\tfrac{n}{2}\\rfloor+\\lfloor\\tfrac{n}{3}\\rfloor-\\lfloor\\tfrac{n}{6}\\rfloor\\]then $G(A)$ must contain a complete $(1,\\ell,\\ell)$ triparite graph on $2\\ell+1$ vertices?",
+        "original": "For $A\\subseteq \\{1,\\ldots,n\\}$ let $G(A)$ be the graph with vertex set $A$, where two integers are joined by an edge if they are coprime.\n\nIs it true that if\\[\\lvert A\\rvert >\\lfloor\\tfrac{n}{2}\\rfloor+\\lfloor\\tfrac{n}{3}\\rfloor-\\lfloor\\tfrac{n}{6}\\rfloor\\]then $G(A)$ contains all odd cycles of length $\\leq \\frac{n}{3}+1$?\n\nIs it true that, for every $\\ell\\geq 1$, if $n$ is sufficiently large and\\[\\lvert A\\rvert >\\lfloor\\tfrac{n}{2}\\rfloor+\\lfloor\\tfrac{n}{3}\\rfloor-\\lfloor\\tfrac{n}{6}\\rfloor\\]then $G(A)$ must contain a complete $(1,\\ell,\\ell)$ triparite graph on $2\\ell+1$ vertices?",
+        "statement_sha256": "42b1e16f4bd3b2e2185d03c68112158ea913c9d5e0072b8faebab3b8d89b9e8d"
+      },
+      "subproblem_contract_sha256": "4d0f538e917448762bb44d72fd6b0eb93f39d386daeaa5e5f677252b82cd9b33",
+      "subproblem_id": "erdos-883-part-01-4d0f538e"
+    },
+    {
+      "parent_problem_id": "erdos-883",
+      "part_index": 2,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Is it true that, for every $\\ell\\geq 1$, if $n$ is sufficiently large and\\[\\lvert A\\rvert >\\lfloor\\tfrac{n}{2}\\rfloor+\\lfloor\\tfrac{n}{3}\\rfloor-\\lfloor\\tfrac{n}{6}\\rfloor\\]then $G(A)$ must contain a complete $(1,\\ell,\\ell)$ triparite graph on $2\\ell+1$ vertices?",
+        "focus_question_sha256": "bff4cf6a05d2dd9eed701742bb31d01aeb8111d971d773306b797b701f547ee0",
+        "normalized": "For $A\\subseteq \\{1,\\ldots,n\\}$ let $G(A)$ be the graph with vertex set $A$, where two integers are joined by an edge if they are coprime. Is it true that if\\[\\lvert A\\rvert >\\lfloor\\tfrac{n}{2}\\rfloor+\\lfloor\\tfrac{n}{3}\\rfloor-\\lfloor\\tfrac{n}{6}\\rfloor\\]then $G(A)$ contains all odd cycles of length $\\leq \\frac{n}{3}+1$? Is it true that, for every $\\ell\\geq 1$, if $n$ is sufficiently large and\\[\\lvert A\\rvert >\\lfloor\\tfrac{n}{2}\\rfloor+\\lfloor\\tfrac{n}{3}\\rfloor-\\lfloor\\tfrac{n}{6}\\rfloor\\]then $G(A)$ must contain a complete $(1,\\ell,\\ell)$ triparite graph on $2\\ell+1$ vertices?",
+        "original": "For $A\\subseteq \\{1,\\ldots,n\\}$ let $G(A)$ be the graph with vertex set $A$, where two integers are joined by an edge if they are coprime.\n\nIs it true that if\\[\\lvert A\\rvert >\\lfloor\\tfrac{n}{2}\\rfloor+\\lfloor\\tfrac{n}{3}\\rfloor-\\lfloor\\tfrac{n}{6}\\rfloor\\]then $G(A)$ contains all odd cycles of length $\\leq \\frac{n}{3}+1$?\n\nIs it true that, for every $\\ell\\geq 1$, if $n$ is sufficiently large and\\[\\lvert A\\rvert >\\lfloor\\tfrac{n}{2}\\rfloor+\\lfloor\\tfrac{n}{3}\\rfloor-\\lfloor\\tfrac{n}{6}\\rfloor\\]then $G(A)$ must contain a complete $(1,\\ell,\\ell)$ triparite graph on $2\\ell+1$ vertices?",
+        "statement_sha256": "42b1e16f4bd3b2e2185d03c68112158ea913c9d5e0072b8faebab3b8d89b9e8d"
+      },
+      "subproblem_contract_sha256": "628d37a13b6ad4f7a25b1e8b6f4ab2754eee3df68065c19387521cdce86f6037",
+      "subproblem_id": "erdos-883-part-02-628d37a1"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

@@ -1,0 +1,313 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.982
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "Er52c",
+      "Er65b",
+      "ErSc90",
+      "Na22",
+      "Ri34",
+      "Te90"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/976",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Er52c] Erd\\H{o}s, P., On the greatest prime factor of {$\\prod^x_{k=1}f(k)$}. J. London Math. Soc. (1952), 379--384.\n \n [Er65b] Erd\\H{o}s, Paul, Some recent advances and current problems in number theory. Lectures on Modern Mathematics, Vol. III (1965), 196-244.\n \n [ErSc90] Erd\\H{o}s, P. and Schinzel, A., On the greatest prime factor of {$\\prod^x_{k=1}f(k)$}. Acta Arith. (1990), 191--200.\n \n [Na22] Nagell, . Abhandlungen aus dem Math. Seminar Hamburg (1922), 179-194.\n \n [Ri34] G. Ricci, . Annali de Mat. (1934), 295-303.\n \n [Te90] Tenenbaum, G\\'{e}rald, Sur une question d'{E}rd\\H{o}s et Schinzel. (1990), 405--443.",
+      "remarks": "Nagell \\cite{Na22} and Ricci \\cite{Ri34} proved that\\[F_f(n) \\gg n\\log n,\\]which Erd\\H{o}s \\cite{Er52c} improved to\\[F_f(n) \\gg n(\\log n)^{\\log\\log\\log n}.\\]In \\cite{Er65b} he claimed a proof of\\[F_f(n) \\gg n\\exp((\\log n)^c)\\]for some constant $c>0$, but said he had never published the proof, which was 'fairly complicated'. This seems to have been flawed, since Erd\\H{o}s and Schinzel \\cite{ErSc90} later published a weaker bound. A proof of the stronger bound above was finally provided by Tenenbaum \\cite{Te90}."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.12,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.330196
+      ],
+      "probability": 0.150142
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.355,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.02003,
+        0.431679
+      ],
+      "probability": 0.225855
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.117512
+      ],
+      "probability": 0.032258
+    },
+    "p_high_mathematical_value": {
+      "alpha": 3.733,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.052427,
+        0.53396
+      ],
+      "probability": 0.293194
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.033,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.181062
+      ],
+      "probability": 0.064449
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.0,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.0,
+        0.29079
+      ],
+      "probability": 0.129032
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.063431
+      ],
+      "probability": 0.021739
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.0,
+        0.384039
+      ],
+      "probability": 0.173913
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 3,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:19:47.944238+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "d43049d8527707006c947cd5d44a64088a0f72bb76de3af702c84d0b95173297"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "unspecified_constant",
+        "asymptotic_notation",
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 2,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 387,
+      "statement_tokens_approx": 58
+    },
+    "structure": {
+      "asymptotic": true,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove_or_disprove",
+      "multi_part": true,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-976",
+  "problem_number": 976,
+  "problem_type": {
+    "asymptotic": true,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove_or_disprove",
+    "multi_part": true,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_976.html",
+      "raw_html_sha256": "76a7e831e296f33981a88a58554ea684877f7bd198a314b61ca9a9709533868f",
+      "section_sha256": {
+        "references": "928563c528fae70eef515ec83a6c72780c6694bc35718df215d1b2ed2ef2fe32",
+        "remarks": "01e96423ba60e42af4560eade92eefb6e06470a9e576c960f513e88b3450f4c8",
+        "statement": "df1c38d581fe2bc7172cb0c06e5a3b153b1fee3cf547995173766592c4a25dec"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_976.json",
+      "source_record_sha256": "0dce6d8ccc85f7c8995ebe55bf997ad5543384e64ebf0b2c8be324fcde7be4b6",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_976.tex",
+    "latex_sha256": "b51d20f9829cfcb79cf168459755d6067805d27930938977898e305ed982a983",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "df1c38d581fe2bc7172cb0c06e5a3b153b1fee3cf547995173766592c4a25dec",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "subproblem_decomposition",
+      "shared_infrastructure_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Let $f\\in \\mathbb{Z}[x]$ be an irreducible polynomial of degree $d\\geq 2$. Let $F_f(n)$ be maximal such that there exists $1\\leq m\\leq n$ with $f(m)$ is divisible by a prime $\\geq F_f(n)$. Equivalently, $F_f(n)$ is the greatest prime divisor of\\[\\prod_{1\\leq m\\leq n}f(m).\\]Estimate $F_f(n)$. In particular, is it true that $F_f(n)\\gg n^{1+c}$ for some constant $c>0$?",
+        "focus_question_sha256": "6a412310506cf245d14f6b715715657e2d66ed72a642ac6af3719ab31192faf4",
+        "parent_statement_sha256": "df1c38d581fe2bc7172cb0c06e5a3b153b1fee3cf547995173766592c4a25dec",
+        "part_index": 1,
+        "subproblem_contract_sha256": "b1f4729b823d5e341f7b35a4aa72f7f7e0500f111a332f2446adf829c9cbb4c3",
+        "subproblem_id": "erdos-976-part-01-b1f4729b"
+      },
+      {
+        "focus_question": "Or even $\\gg n^d$?",
+        "focus_question_sha256": "f226f8ce530e0f289b324d6fb5473931141ad716215ec26533a4304dc3f2b49d",
+        "parent_statement_sha256": "df1c38d581fe2bc7172cb0c06e5a3b153b1fee3cf547995173766592c4a25dec",
+        "part_index": 2,
+        "subproblem_contract_sha256": "b01595a63e54f1e6010e48a45b7177326be2be09230a6305d2b2e86f555fd57d",
+        "subproblem_id": "erdos-976-part-02-b01595a6"
+      }
+    ]
+  },
+  "research_directive_sha256": "2ac19fc3bf756a01a28f50cc474b1305a9ec54dd1eeed60a9b133fcf8ede3110",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "subproblem_decomposition",
+    "shared_infrastructure_search"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Let $f\\in \\mathbb{Z}[x]$ be an irreducible polynomial of degree $d\\geq 2$. Let $F_f(n)$ be maximal such that there exists $1\\leq m\\leq n$ with $f(m)$ is divisible by a prime $\\geq F_f(n)$. Equivalently, $F_f(n)$ is the greatest prime divisor of\\[\\prod_{1\\leq m\\leq n}f(m).\\]Estimate $F_f(n)$. In particular, is it true that $F_f(n)\\gg n^{1+c}$ for some constant $c>0$? Or even $\\gg n^d$?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $f\\in \\mathbb{Z}[x]$ be an irreducible polynomial of degree $d\\geq 2$. Let $F_f(n)$ be maximal such that there exists $1\\leq m\\leq n$ with $f(m)$ is divisible by a prime $\\geq F_f(n)$. Equivalently, $F_f(n)$ is the greatest prime divisor of\\[\\prod_{1\\leq m\\leq n}f(m).\\]Estimate $F_f(n)$. In particular, is it true that $F_f(n)\\gg n^{1+c}$ for some constant $c>0$? Or even $\\gg n^d$?",
+    "original": "Let $f\\in \\mathbb{Z}[x]$ be an irreducible polynomial of degree $d\\geq 2$. Let $F_f(n)$ be maximal such that there exists $1\\leq m\\leq n$ with $f(m)$ is divisible by a prime $\\geq F_f(n)$. Equivalently, $F_f(n)$ is the greatest prime divisor of\\[\\prod_{1\\leq m\\leq n}f(m).\\]Estimate $F_f(n)$. In particular, is it true that $F_f(n)\\gg n^{1+c}$ for some constant $c>0$? Or even $\\gg n^d$?",
+    "statement_sha256": "df1c38d581fe2bc7172cb0c06e5a3b153b1fee3cf547995173766592c4a25dec"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-976",
+      "part_index": 1,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Let $f\\in \\mathbb{Z}[x]$ be an irreducible polynomial of degree $d\\geq 2$. Let $F_f(n)$ be maximal such that there exists $1\\leq m\\leq n$ with $f(m)$ is divisible by a prime $\\geq F_f(n)$. Equivalently, $F_f(n)$ is the greatest prime divisor of\\[\\prod_{1\\leq m\\leq n}f(m).\\]Estimate $F_f(n)$. In particular, is it true that $F_f(n)\\gg n^{1+c}$ for some constant $c>0$?",
+        "focus_question_sha256": "6a412310506cf245d14f6b715715657e2d66ed72a642ac6af3719ab31192faf4",
+        "normalized": "Let $f\\in \\mathbb{Z}[x]$ be an irreducible polynomial of degree $d\\geq 2$. Let $F_f(n)$ be maximal such that there exists $1\\leq m\\leq n$ with $f(m)$ is divisible by a prime $\\geq F_f(n)$. Equivalently, $F_f(n)$ is the greatest prime divisor of\\[\\prod_{1\\leq m\\leq n}f(m).\\]Estimate $F_f(n)$. In particular, is it true that $F_f(n)\\gg n^{1+c}$ for some constant $c>0$? Or even $\\gg n^d$?",
+        "original": "Let $f\\in \\mathbb{Z}[x]$ be an irreducible polynomial of degree $d\\geq 2$. Let $F_f(n)$ be maximal such that there exists $1\\leq m\\leq n$ with $f(m)$ is divisible by a prime $\\geq F_f(n)$. Equivalently, $F_f(n)$ is the greatest prime divisor of\\[\\prod_{1\\leq m\\leq n}f(m).\\]Estimate $F_f(n)$. In particular, is it true that $F_f(n)\\gg n^{1+c}$ for some constant $c>0$? Or even $\\gg n^d$?",
+        "statement_sha256": "df1c38d581fe2bc7172cb0c06e5a3b153b1fee3cf547995173766592c4a25dec"
+      },
+      "subproblem_contract_sha256": "b1f4729b823d5e341f7b35a4aa72f7f7e0500f111a332f2446adf829c9cbb4c3",
+      "subproblem_id": "erdos-976-part-01-b1f4729b"
+    },
+    {
+      "parent_problem_id": "erdos-976",
+      "part_index": 2,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Or even $\\gg n^d$?",
+        "focus_question_sha256": "f226f8ce530e0f289b324d6fb5473931141ad716215ec26533a4304dc3f2b49d",
+        "normalized": "Let $f\\in \\mathbb{Z}[x]$ be an irreducible polynomial of degree $d\\geq 2$. Let $F_f(n)$ be maximal such that there exists $1\\leq m\\leq n$ with $f(m)$ is divisible by a prime $\\geq F_f(n)$. Equivalently, $F_f(n)$ is the greatest prime divisor of\\[\\prod_{1\\leq m\\leq n}f(m).\\]Estimate $F_f(n)$. In particular, is it true that $F_f(n)\\gg n^{1+c}$ for some constant $c>0$? Or even $\\gg n^d$?",
+        "original": "Let $f\\in \\mathbb{Z}[x]$ be an irreducible polynomial of degree $d\\geq 2$. Let $F_f(n)$ be maximal such that there exists $1\\leq m\\leq n$ with $f(m)$ is divisible by a prime $\\geq F_f(n)$. Equivalently, $F_f(n)$ is the greatest prime divisor of\\[\\prod_{1\\leq m\\leq n}f(m).\\]Estimate $F_f(n)$. In particular, is it true that $F_f(n)\\gg n^{1+c}$ for some constant $c>0$? Or even $\\gg n^d$?",
+        "statement_sha256": "df1c38d581fe2bc7172cb0c06e5a3b153b1fee3cf547995173766592c4a25dec"
+      },
+      "subproblem_contract_sha256": "b01595a63e54f1e6010e48a45b7177326be2be09230a6305d2b2e86f555fd57d",
+      "subproblem_id": "erdos-976-part-02-b01595a6"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

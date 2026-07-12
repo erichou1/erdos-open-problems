@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1156,
+  "raw_page": {
+    "path": "raw/pages/problem_1156.html",
+    "sha256": "e45f956cd375d0c9ecd39c4f9136315d13872c95579cbe04272f9d4e74f24e71"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "1625ff3f963cab285f064a129ed23cff38c637b381a46281c3933e89cc241bf6",
+      "source_region": "div.problem-additional-text",
+      "text": "[AlSp16] Alon, Noga and Spencer, Joel H., The probabilistic method. (2016), xiv+375.\n \n [Bo88] Bollob\\'{a}s, B., The chromatic number of random graphs. Combinatorica (1988), 49-55.\n \n [He21] Heckel, Annika, Non-concentration of the chromatic number of a random graph. J. Amer. Math. Soc. (2021), 245--260.\n \n [HeRi23] Heckel, Annika and Riordan, Oliver, How does the chromatic number of a random graph vary?. J. Lond. Math. Soc. (2) (2023), 1769--1815.\n \n [Sc17] A. Scott, On the concentration of the chromatic number of random graphs. arXiv:0806.0178 (2017).\n \n [ShSp87] Shamir, E. and Spencer, J., Sharp concentration of the chromatic number on random graphs\n{$G_{n,p}$}. Combinatorica (1987), 121--129."
+    },
+    "remarks": {
+      "sha256": "2dc09b308a4f74b0545a7e02a01e58cdd486c661ba4f04221f58d95eb4683768",
+      "source_region": "div.problem-additional-text",
+      "text": "Bollob\\'{a}s \\cite{Bo88} proved that $\\chi(G) \\sim \\frac{n}{2\\log_2n}$ with high probability.\n\nShamir and Spencer \\cite{ShSp87} proved that, for any function $\\omega(n)$ such that $\\omega(n)/\\sqrt{n}\\to \\infty$, there is a function $f(n)$ such that\\[\\mathbb{P}(\\lvert\\chi(G)-f(n)\\rvert<\\omega(n))\\to 1\\]as $n\\to \\infty$. This is proved with $\\omega(n)\\frac{\\log n}{\\sqrt{n}}\\to \\infty$ in Exercise 3 of Section 7.9 of Alon and Spencer \\cite{AlSp16} (a proof is also given by Scott \\cite{Sc17}).\n\nHeckel \\cite{He21} proved that if $f$ and $\\omega$ are such that\\[\\mathbb{P}(\\lvert\\chi(G)-f(n)\\rvert<\\omega(n))\\to 1\\]as $n\\to \\infty$ then, for any $c<1/4$, there are infinitely many $n$ such that $\\omega(n)>n^c$. This was improved to any $c<1/2$ by Heckel and Riordan \\cite{HeRi23}."
+    },
+    "statement": {
+      "sha256": "b7809a3ae5c70bf527b2a7be11e14574e6d019496db1d080115811925adc6af7",
+      "source_region": "div#content",
+      "text": "Let $G$ be a random graph on $n$ vertices, in which every edge is included independently with probability $1/2$. \n\nIs there some constant $C$ such that that chromatic number $\\chi(G)$ is, almost surely, concentrated on at most $C$ values? \n\nIs it true that, if $\\omega(n)\\to \\infty$ sufficiently slowly, then for every function $f(n)$\\[\\mathbb{P}(\\lvert\\chi(G)-f(n)\\rvert<\\omega(n))<1/2\\]if $n$ is sufficiently large?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1156"
+}

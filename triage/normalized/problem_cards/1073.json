@@ -1,0 +1,256 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.209
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-11-13",
+      "state": "yes"
+    },
+    "references": [
+      "HaSu02"
+    ],
+    "source_last_update": "2025-10-05",
+    "source_problem_url": "https://www.erdosproblems.com/1073",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[HaSu02] Hardy, G. E. and Subbarao, M. V., A modified problem of Pillai and some related questions. Amer. Math. Monthly (2002), 554--559.",
+      "remarks": "A question of Erd\\H{o}s raised in discussions with Hardy and Subbarao \\cite{HaSu02}. The sequence of such $u$ begins\\[25,121,169,437,\\ldots\\]and is A256519 in the OEIS.\n\nWilson's theorem states that $u$ is prime if and only if $(u-1)!+1\\equiv 0\\pmod{u}$.\n\nThis is mentioned in problem A2 of Guy's collection."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.25,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.246107
+      ],
+      "probability": 0.09434
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.117,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.01562,
+        0.459698
+      ],
+      "probability": 0.237659
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.144533
+      ],
+      "probability": 0.04
+    },
+    "p_high_mathematical_value": {
+      "alpha": 1.5,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.345105
+      ],
+      "probability": 0.142857
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.367,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.018694,
+        0.419484
+      ],
+      "probability": 0.219089
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.9,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        2.3e-05,
+        0.389239
+      ],
+      "probability": 0.194631
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 40.0,
+      "credible_interval_approx": [
+        0.0,
+        0.103879
+      ],
+      "probability": 0.043062
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.009216,
+        0.509303
+      ],
+      "probability": 0.259259
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "minor"
+    },
+    "literature": {
+      "comment_count": 0,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:20:25.787497+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "287778639692a5d899bf70fbe900d212b70051775b196b9df9adfa23e4d4d74d"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "asymptotic_notation"
+      ],
+      "ambiguity_status": "minor",
+      "quantifier_signal_count": 1,
+      "question_count": 1,
+      "requires_source_audit": true,
+      "statement_characters": 130,
+      "statement_tokens_approx": 21
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove_or_disprove",
+      "multi_part": false,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-1073",
+  "problem_number": 1073,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove_or_disprove",
+    "multi_part": false,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_1073.html",
+      "raw_html_sha256": "2437ae4673687fdc27fcfb09bc26af4abd56349e9c20a9eb12f020494ecd0e1d",
+      "section_sha256": {
+        "references": "17fd799c29bdff915976c67a92946437009d4847d598fe41026b954b37e36770",
+        "remarks": "a2cb940a7392e55671d5bff28142afc5d68ffaff322ffc8e6dc49ffe21f4fd5e",
+        "statement": "ad81271c4319515e96c19925b4f00d45ded6deb2bd839f8e6f45187af1f02717"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_1073.json",
+      "source_record_sha256": "cb5f28c50da3e47c0fcb7f8b745bcdb8669ab30f1f7c1d2476f186bdb3bebc9b",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_1073.tex",
+    "latex_sha256": "b9be61ecf73bd56ce72cddc76b50538cb7ef67f56a109db156014a07ceae10e4",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "ad81271c4319515e96c19925b4f00d45ded6deb2bd839f8e6f45187af1f02717",
+    "recommended_attack_modes": [
+      "formal_search",
+      "shared_infrastructure_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "1ce818e9edcf4bacf92b6af2c0cfbff22e7776935713379c2d3c0171f48007db",
+  "routes": [
+    "formal_search",
+    "shared_infrastructure_search",
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "minor",
+    "intended": "Let $A(x)$ count the number of composite $u<x$ such that $n!+1\\equiv 0\\pmod{u}$ for some $n$. Is it true that $A(x)\\leq x^{o(1)}$?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $A(x)$ count the number of composite $u<x$ such that $n!+1\\equiv 0\\pmod{u}$ for some $n$. Is it true that $A(x)\\leq x^{o(1)}$?",
+    "original": "Let $A(x)$ count the number of composite $u<x$ such that $n!+1\\equiv 0\\pmod{u}$ for some $n$. Is it true that $A(x)\\leq x^{o(1)}$?",
+    "statement_sha256": "ad81271c4319515e96c19925b4f00d45ded6deb2bd839f8e6f45187af1f02717"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

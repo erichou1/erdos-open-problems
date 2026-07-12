@@ -19,12 +19,43 @@ Usage:
 import argparse
 import sys
 import time
+from pathlib import Path
 
 import erdos_common as C
+from erdos_ingest import ProvenanceError
 from erdos_common import sync_playwright
+from legacy_candidate_collection import (
+    AdaptiveCooldown,
+    CandidateSource,
+    build_bound_prompt,
+    build_collection_contract,
+    chat_metadata,
+    clamp_cooldown,
+    load_canonical_candidate_sources,
+    reusable_chat_entry,
+)
 
 
-def main() -> None:
+DEFAULT_TRIAGE_DIR = Path(__file__).resolve().parent / "triage"
+
+
+def prepare_submission(
+    source: CandidateSource, category: str
+) -> tuple[dict[str, object], str]:
+    """Build one source-bound, explicitly unverified ChatGPT submission."""
+    contract = build_collection_contract(
+        source,
+        provider="chatgpt",
+        category=category,
+        prompt_template=C.PROMPT_TEMPLATE,
+    )
+    prompt = build_bound_prompt(
+        C.PROMPT_TEMPLATE, source=source, contract=contract
+    )
+    return contract, prompt
+
+
+def main(argv=None, *, problem_file_provider=None) -> None:
     ap = argparse.ArgumentParser(
         description="Submit Erdős problems to ChatGPT"
     )
@@ -90,7 +121,26 @@ def main() -> None:
         action="store_true",
         help="Run without a visible browser window",
     )
-    args = ap.parse_args()
+    ap.add_argument(
+        "--triage",
+        type=Path,
+        default=DEFAULT_TRIAGE_DIR,
+        help="Triage root containing a complete canonical ingestion snapshot",
+    )
+    args = ap.parse_args(argv)
+    args.backoff = clamp_cooldown(args.backoff)
+    args.delay = clamp_cooldown(args.delay)
+    adaptive_cooldown = AdaptiveCooldown(args.backoff)
+
+    canonical_sources = None
+    if not args.login:
+        try:
+            canonical_sources = load_canonical_candidate_sources(args.triage)
+        except ProvenanceError as exc:
+            sys.exit(
+                "Refusing to submit without a complete canonical source "
+                f"snapshot: {exc}"
+            )
 
     C.PROFILE_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -109,21 +159,18 @@ def main() -> None:
             print("Login saved.")
             return
 
-        # Build the problem list.
+        # Local paths select problem numbers only. Statements always come from
+        # the fully validated immutable canonical snapshot loaded above.
         if args.problem is not None:
-            tex = (
-                C.REPO_DIR
-                / args.category
-                / "individual"
-                / f"problem_{args.problem}.tex"
-            )
-
-            if not tex.exists():
-                sys.exit(f"File not found: {tex}")
-
-            files = [tex]
+            numbers = [args.problem]
+            if args.problem not in canonical_sources:
+                sys.exit(
+                    f"Problem #{args.problem} is not present in the complete "
+                    "canonical source-open snapshot"
+                )
         else:
-            files = C.get_problem_files(args.category)
+            provider = problem_file_provider or C.get_problem_files
+            files = provider(args.category)
 
             if args.reverse:
                 files = list(reversed(files))
@@ -133,6 +180,19 @@ def main() -> None:
             if args.limit is not None:
                 files = files[:args.limit]
 
+            numbers = [C.problem_number(path) for path in files]
+            unavailable = [
+                number for number in numbers if number not in canonical_sources
+            ]
+            for number in unavailable:
+                print(
+                    f"#{number}: not in the canonical source-open snapshot; "
+                    "not submitting."
+                )
+            numbers = [
+                number for number in numbers if number in canonical_sources
+            ]
+
         C.ensure_logged_in(page)
 
         chat_map = C.load_chat_map()
@@ -141,16 +201,26 @@ def main() -> None:
         # Exclude already submitted problems.
         pending = []
 
-        for tex in files:
-            num = C.problem_number(tex)
+        for num in numbers:
             key = str(num)
             existing = cat_map.get(key, {})
+            source = canonical_sources[num]
+            contract, prompt = prepare_submission(source, args.category)
 
-            if "/c/" in existing.get("url", ""):
-                print(f"#{num}: already submitted, skipping.")
+            if reusable_chat_entry(
+                existing,
+                contract,
+                valid_url=lambda value: C.is_conversation_url(value),
+            ):
+                print(f"#{num}: current source-bound chat exists, skipping.")
                 continue
 
-            pending.append(tex)
+            existing_url = (
+                existing.get("url", "") if isinstance(existing, dict) else ""
+            )
+            if C.is_conversation_url(existing_url):
+                print(f"#{num}: stale or unbound chat metadata; resubmitting.")
+            pending.append((source, contract, prompt))
 
         total = len(pending)
         batch = max(1, args.batch)
@@ -167,61 +237,71 @@ def main() -> None:
             for _ in range(n_tabs - 1)
         ]
 
-        def submit_one(tab, tex):
+        def submit_one(tab, submission):
             """
             Submit one problem.
 
             Returns:
                 tuple[int, str | None]: problem number and conversation URL.
             """
-            num = C.problem_number(tex)
-            statement = C.extract_problem_statement(tex)
+            source, contract, prompt = submission
+            num = source.problem_number
 
-            # Kept as metadata for compatibility; the offline prompt does not
-            # retrieve or consume the canonical page.
-            canonical_url = f"https://www.erdosproblems.com/{num}"
-
-            prompt = C.PROMPT_TEMPLATE.format(
-                problem_number=num,
-                problem_url=canonical_url,
-                problem=statement,
-            )
-
-            try:
+            while True:
                 try:
-                    _ = tab.url
-                except Exception:
-                    tab = browser.new_page()
+                    try:
+                        _ = tab.url
+                    except Exception:
+                        tab = browser.new_page()
 
-                C.start_new_chat(tab)
+                    C.start_new_chat(tab)
 
-                if C.detect_rate_limit(tab):
-                    print(
-                        f"  #{num}: RATE LIMITED, "
-                        f"backing off {args.backoff}s..."
+                    if C.detect_rate_limit(tab):
+                        wait_s = adaptive_cooldown.record_rate_limit()
+                        C.dismiss_rate_limit_modal(tab)
+                        print(
+                            f"  #{num}: RATE LIMITED; adaptive wait "
+                            f"{wait_s:.0f}s (streak {adaptive_cooldown.streak})..."
+                        )
+                        time.sleep(wait_s)
+                        continue
+
+                    start_url = C.current_url(tab)
+                    C.send_prompt(tab, prompt)
+                    url = C.wait_for_conversation_url(
+                        tab,
+                        timeout_s=45,
+                        start_url=start_url,
                     )
-                    time.sleep(args.backoff)
 
-                start_url = C.current_url(tab)
-                C.send_prompt(tab, prompt)
-                url = C.wait_for_conversation_url(
-                    tab,
-                    timeout_s=45,
-                    start_url=start_url,
-                )
+                    if not valid_url(url, start_url) and C.detect_rate_limit(tab):
+                        wait_s = adaptive_cooldown.record_rate_limit()
+                        C.dismiss_rate_limit_modal(tab)
+                        print(
+                            f"  #{num}: RATE LIMITED after send; adaptive wait "
+                            f"{wait_s:.0f}s (streak {adaptive_cooldown.streak})..."
+                        )
+                        time.sleep(wait_s)
+                        continue
+                    if valid_url(url, start_url):
+                        adaptive_cooldown.record_success()
+                    return num, url, start_url, contract
 
-                if not valid_url(url, start_url) and C.detect_rate_limit(tab):
-                    print(
-                        f"  #{num}: RATE LIMITED after send, "
-                        f"backing off {args.backoff}s..."
-                    )
-                    time.sleep(args.backoff)
-
-                return num, url, start_url
-
-            except Exception as exc:
-                print(f"  ERROR submitting #{num}: {exc}")
-                return num, None, ""
+                except Exception as exc:
+                    try:
+                        limited = C.detect_rate_limit(tab)
+                    except Exception:
+                        limited = False
+                    if limited:
+                        wait_s = adaptive_cooldown.record_rate_limit()
+                        print(
+                            f"  #{num}: RATE LIMITED during browser error; adaptive "
+                            f"wait {wait_s:.0f}s (streak {adaptive_cooldown.streak})..."
+                        )
+                        time.sleep(wait_s)
+                        continue
+                    print(f"  ERROR submitting #{num}: {exc}")
+                    return num, None, "", contract
 
         def valid_url(url, start_url="") -> bool:
             return C.is_conversation_url(url, start_url)
@@ -277,20 +357,17 @@ def main() -> None:
             results = []
             round_tabs = []
 
-            for tab, tex in zip(tabs, chunk):
-                num, url, start_url = submit_one(tab, tex)
-                results.append((num, url, start_url))
+            for tab, submission in zip(tabs, chunk):
+                num, url, start_url, contract = submit_one(tab, submission)
+                results.append((num, url, start_url, contract))
                 round_tabs.append(tab)
 
                 # Avoid starting all requests at exactly the same moment.
                 time.sleep(2)
 
-            for num, url, start_url in results:
+            for num, url, start_url, contract in results:
                 if valid_url(url, start_url):
-                    cat_map[str(num)] = {
-                        "url": url,
-                        "problem": num,
-                    }
+                    cat_map[str(num)] = chat_metadata(contract, url)
                     submitted += 1
                     print(f"  #{num}: submitted -> {url}")
                 else:

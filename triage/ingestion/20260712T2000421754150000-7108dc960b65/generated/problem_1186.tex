@@ -1,0 +1,50 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#1186}
+\date{Last updated: 2026-04-04}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} additive combinatorics, arithmetic progressions
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $\delta_k$ be such that in any $2$-colouring of $\{1,\ldots,n\}$ there exist at least $(\delta_k+o(1))n^2$ many monochromatic $k$-term arithmetic progressions. Give reasonable bounds (or even an asymptotic formula) for $\delta_k$.
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+In \cite{Er80} Erd\H{o}s said 'perhaps one can get an asymptotic formula' for $\delta_k$, but this seems unlikely. Van der Waerden's theorem implies $\delta_k\gg_k 1$. The probabilistic method implies\[\delta_k \leq \frac{1}{(k-1)2^{k}}.\]Parrilo, Robertson, and Saracino \cite{PRS08} have proved\[0.0511\approx \frac{1675}{32768}\leq \delta_3 \leq \frac{117}{2192}\approx 0.0533,\]and conjectured the upper bound is correct. They also report that Graham offered \$100 for determining the value of $\delta_3$ at a conference in 1999.
+
+It is easier to study this quantity if we replace $\{1,\ldots,n\}$ with a finite field $\mathbb{F}_p$; let this analogue be denoted by $\tilde{\delta}_k$. A random colouring implies $\tilde{\delta}_k\leq 1/2^{k}$.
+
+It is straightforward to prove that $\tilde{\delta}_3=1/8$ (see, for example, \cite{Wo10}). Improving on work of Cameron, Cilleruelo, and Serra \cite{CCS07}, Wolf \cite{Wo10} proved\[\frac{1}{32}\leq \tilde{\delta}_4\leq \left(1-\frac{1}{259200}\right)\frac{1}{16}.\]These bounds were improved by Lu and Peng \cite{LuPe12} to\[\frac{7}{192}\leq \tilde{\delta}_4\leq \frac{17}{300}.\]
+
+\bigskip
+\noindent\textbf{References:}
+
+[CCS07] Cameron, Peter and Cilleruelo, Javier and Serra, Oriol, On monochromatic solutions of equations in groups. Rev. Mat. Iberoam. (2007), 385--395.
+ 
+ [Er80] Erd\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.
+ 
+ [LuPe12] Lu, Linyuan and Peng, Xing, Monochromatic 4-term arithmetic progressions in 2-colorings of
+{$\Bbb Z_n$}. J. Combin. Theory Ser. A (2012), 1048--1065.
+ 
+ [PRS08] Parrilo, Pablo A. and Robertson, Aaron and Saracino, Dan, On the asymptotic minimum number of monochromatic 3-term
+arithmetic progressions. J. Combin. Theory Ser. A (2008), 185--192.
+ 
+ [Wo10] Wolf, J., The minimum number of monochromatic 4-term progressions in
+{$\Bbb Z_p$}. J. Comb. (2010), 53--68.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/1186}}
+\end{document}

@@ -1,0 +1,355 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.565
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "Er84e"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/878",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Er84e] Erd\\H{o}s, P., On two unconventional number theoretic functions and on some\nrelated problems. (1984), 113--121.",
+      "remarks": "Erd\\H{o}s \\cite{Er84e} proved that\\[\\max_{n\\leq x}f(n)\\sim \\frac{x\\log x}{\\log\\log x}\\]for a sequence of $x\\to \\infty$.\n\nIt is trivial that $f(n)\\leq F(n)$ for all $n$. It may be true that, for almost all $n$,\\[F(n)\\sim \\frac{1}{2}n\\log\\log n.\\]Erd\\H{o}s notes that $f(n)/n$ 'almost behaves as a conventional additive function', but unusually $f(n)/n$ does not have a mean value - indeed,\\[\\limsup \\frac{1}{x}\\sum_{n<x}\\frac{f(n)}{n}=\\infty\\]but\\[\\liminf \\frac{1}{x}\\sum_{n<x}\\frac{f(n)}{n}<\\infty.\\]Erd\\H{o}s \\cite{Er84e} proved that\\[x\\log\\log\\log\\log x\\ll H(x) \\ll x\\log\\log\\log x.\\]Barreto has noted in the comments that this upper bound for $H(x)$ implies $f(n)=o(n\\log\\log n)$ for almost all $n$. Barreto has also noted that $\\max_{n\\leq x}f(n)=\\max_{n\\leq x}F(n)$ is false at $x=210$.\n\nSee also [879]."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 3.03,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.005196,
+        0.397997
+      ],
+      "probability": 0.201597
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.355,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.02003,
+        0.431679
+      ],
+      "probability": 0.225855
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.117512
+      ],
+      "probability": 0.032258
+    },
+    "p_high_mathematical_value": {
+      "alpha": 3.2,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.024991,
+        0.499599
+      ],
+      "probability": 0.262295
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.033,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.181062
+      ],
+      "probability": 0.064449
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.0,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.0,
+        0.29079
+      ],
+      "probability": 0.129032
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.063431
+      ],
+      "probability": 0.021739
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.0,
+        0.384039
+      ],
+      "probability": 0.173913
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 7,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:19:15.374453+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "abe3e9453f79eec43807a22ff1866fa33decd6da9576dd1302d08c22ecedf73c"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "asymptotic_notation",
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 2,
+      "question_count": 4,
+      "requires_source_audit": true,
+      "statement_characters": 855,
+      "statement_tokens_approx": 110
+    },
+    "structure": {
+      "asymptotic": true,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove_or_disprove",
+      "multi_part": true,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-878",
+  "problem_number": 878,
+  "problem_type": {
+    "asymptotic": true,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove_or_disprove",
+    "multi_part": true,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_878.html",
+      "raw_html_sha256": "aafc78e8a2ea504c61136fea1bef9c5e3e70e1d4877ae1b6392b4188a60a62b4",
+      "section_sha256": {
+        "references": "5fe587b6e8497e376faf74e1272a55b7b372947f401ea3b6d59057ed6884b797",
+        "remarks": "26c22016786da9403e517efb9e4f325c20b06e6a9eb1211e800b0b900569ef08",
+        "statement": "1188c9c6a00731e8bbb24695bd8231a724acf92a459068224ec27a62aae0bfc6"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_878.json",
+      "source_record_sha256": "d444eff3ef9a23d5a3e46b7dcd4b461ad7374823cd5ec128360693bfbb05562a",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_878.tex",
+    "latex_sha256": "f4b0e3b2663f58c1c7d763c9d3ea9e1a2fd08b9cb03c96030869afb78c6466b4",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "1188c9c6a00731e8bbb24695bd8231a724acf92a459068224ec27a62aae0bfc6",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "subproblem_decomposition",
+      "shared_infrastructure_search",
+      "literature_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "If $n=\\prod_{1\\leq i\\leq t} p_i^{k_i}$ is the factorisation of $n$ into distinct primes then let\\[f(n)=\\sum p_i^{\\ell_i},\\]where $\\ell_i$ is chosen such that $n\\in [p_i^{\\ell_i},p_i^{\\ell_i+1})$. Furthermore, let\\[F(n)=\\max \\sum_{i} a_i\\]where the maximum is taken over all distinct $a_1,\\ldots,a_k\\leq n$ such that $(a_i,a_j)=1$ for $i\\neq j$ and all prime factors of each $a_i$ are prime factors of $n$. Is it true that, for almost all $n$,\\[f(n)=o(n\\log\\log n)\\]and\\[F(n) \\gg n\\log\\log n?",
+        "focus_question_sha256": "811e97677e6525c559c02871c35b80f2a1f509d027a9b49ba2a78232b9e8d0f7",
+        "parent_statement_sha256": "1188c9c6a00731e8bbb24695bd8231a724acf92a459068224ec27a62aae0bfc6",
+        "part_index": 1,
+        "subproblem_contract_sha256": "3149f20081083c10e7891d8928a1ff3a99dd1a724ab864c903dbcfb60ab695d0",
+        "subproblem_id": "erdos-878-part-01-3149f200"
+      },
+      {
+        "focus_question": "\\]Is it true that\\[\\max_{n\\leq x}f(n)\\sim \\frac{x\\log x}{\\log\\log x}?",
+        "focus_question_sha256": "36f7bef70f6fa2e67031354bf45f7abe7ccb08e3d85c2281ce0abad1e7e34df9",
+        "parent_statement_sha256": "1188c9c6a00731e8bbb24695bd8231a724acf92a459068224ec27a62aae0bfc6",
+        "part_index": 2,
+        "subproblem_contract_sha256": "e5d6fe091a35441283551fd869cf7b6101cabe4a7936686ea62e5a3d9722a2dd",
+        "subproblem_id": "erdos-878-part-02-e5d6fe09"
+      },
+      {
+        "focus_question": "\\]Is it true that (for all $x$, or perhaps just for all large $x$)\\[\\max_{n\\leq x}f(n)=\\max_{n\\leq x}F(n)?",
+        "focus_question_sha256": "55ba02a29eb659c6896d3cd551d88d0d7df0087dbe63948bf939732df3f69fd6",
+        "parent_statement_sha256": "1188c9c6a00731e8bbb24695bd8231a724acf92a459068224ec27a62aae0bfc6",
+        "part_index": 3,
+        "subproblem_contract_sha256": "c645530b88e10d9ec5ae1500bd0a5df137102784a214e87f071e740799f45367",
+        "subproblem_id": "erdos-878-part-03-c645530b"
+      },
+      {
+        "focus_question": "\\]Find an asymptotic formula for the number of $n<x$ such that $f(n)=F(n)$. Find an asymptotic formula for\\[H(x)=\\sum_{n<x}\\frac{f(n)}{n}.\\]Is it true that\\[H(x) \\ll x\\log\\log\\log\\log x?",
+        "focus_question_sha256": "898f5690fd3da36cf7b0f23fb4129f6615b470d97edb9e61b687de7d816eb60c",
+        "parent_statement_sha256": "1188c9c6a00731e8bbb24695bd8231a724acf92a459068224ec27a62aae0bfc6",
+        "part_index": 4,
+        "subproblem_contract_sha256": "83689fc031a9c49f227aeabccd95e27cd88d95ec92c22af6b9722eda57adaadf",
+        "subproblem_id": "erdos-878-part-04-83689fc0"
+      }
+    ]
+  },
+  "research_directive_sha256": "98fc2884c1ec63dcc0de0f433702adf36070f8d17372b0262e5ceddb85477f22",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "subproblem_decomposition",
+    "shared_infrastructure_search",
+    "literature_search"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "If $n=\\prod_{1\\leq i\\leq t} p_i^{k_i}$ is the factorisation of $n$ into distinct primes then let\\[f(n)=\\sum p_i^{\\ell_i},\\]where $\\ell_i$ is chosen such that $n\\in [p_i^{\\ell_i},p_i^{\\ell_i+1})$. Furthermore, let\\[F(n)=\\max \\sum_{i} a_i\\]where the maximum is taken over all distinct $a_1,\\ldots,a_k\\leq n$ such that $(a_i,a_j)=1$ for $i\\neq j$ and all prime factors of each $a_i$ are prime factors of $n$.\n\nIs it true that, for almost all $n$,\\[f(n)=o(n\\log\\log n)\\]and\\[F(n) \\gg n\\log\\log n?\\]Is it true that\\[\\max_{n\\leq x}f(n)\\sim \\frac{x\\log x}{\\log\\log x}?\\]Is it true that (for all $x$, or perhaps just for all large $x$)\\[\\max_{n\\leq x}f(n)=\\max_{n\\leq x}F(n)?\\]Find an asymptotic formula for the number of $n<x$ such that $f(n)=F(n)$. Find an asymptotic formula for\\[H(x)=\\sum_{n<x}\\frac{f(n)}{n}.\\]Is it true that\\[H(x) \\ll x\\log\\log\\log\\log x?\\]",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "If $n=\\prod_{1\\leq i\\leq t} p_i^{k_i}$ is the factorisation of $n$ into distinct primes then let\\[f(n)=\\sum p_i^{\\ell_i},\\]where $\\ell_i$ is chosen such that $n\\in [p_i^{\\ell_i},p_i^{\\ell_i+1})$. Furthermore, let\\[F(n)=\\max \\sum_{i} a_i\\]where the maximum is taken over all distinct $a_1,\\ldots,a_k\\leq n$ such that $(a_i,a_j)=1$ for $i\\neq j$ and all prime factors of each $a_i$ are prime factors of $n$. Is it true that, for almost all $n$,\\[f(n)=o(n\\log\\log n)\\]and\\[F(n) \\gg n\\log\\log n?\\]Is it true that\\[\\max_{n\\leq x}f(n)\\sim \\frac{x\\log x}{\\log\\log x}?\\]Is it true that (for all $x$, or perhaps just for all large $x$)\\[\\max_{n\\leq x}f(n)=\\max_{n\\leq x}F(n)?\\]Find an asymptotic formula for the number of $n<x$ such that $f(n)=F(n)$. Find an asymptotic formula for\\[H(x)=\\sum_{n<x}\\frac{f(n)}{n}.\\]Is it true that\\[H(x) \\ll x\\log\\log\\log\\log x?\\]",
+    "original": "If $n=\\prod_{1\\leq i\\leq t} p_i^{k_i}$ is the factorisation of $n$ into distinct primes then let\\[f(n)=\\sum p_i^{\\ell_i},\\]where $\\ell_i$ is chosen such that $n\\in [p_i^{\\ell_i},p_i^{\\ell_i+1})$. Furthermore, let\\[F(n)=\\max \\sum_{i} a_i\\]where the maximum is taken over all distinct $a_1,\\ldots,a_k\\leq n$ such that $(a_i,a_j)=1$ for $i\\neq j$ and all prime factors of each $a_i$ are prime factors of $n$.\n\nIs it true that, for almost all $n$,\\[f(n)=o(n\\log\\log n)\\]and\\[F(n) \\gg n\\log\\log n?\\]Is it true that\\[\\max_{n\\leq x}f(n)\\sim \\frac{x\\log x}{\\log\\log x}?\\]Is it true that (for all $x$, or perhaps just for all large $x$)\\[\\max_{n\\leq x}f(n)=\\max_{n\\leq x}F(n)?\\]Find an asymptotic formula for the number of $n<x$ such that $f(n)=F(n)$. Find an asymptotic formula for\\[H(x)=\\sum_{n<x}\\frac{f(n)}{n}.\\]Is it true that\\[H(x) \\ll x\\log\\log\\log\\log x?\\]",
+    "statement_sha256": "1188c9c6a00731e8bbb24695bd8231a724acf92a459068224ec27a62aae0bfc6"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-878",
+      "part_index": 1,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "If $n=\\prod_{1\\leq i\\leq t} p_i^{k_i}$ is the factorisation of $n$ into distinct primes then let\\[f(n)=\\sum p_i^{\\ell_i},\\]where $\\ell_i$ is chosen such that $n\\in [p_i^{\\ell_i},p_i^{\\ell_i+1})$. Furthermore, let\\[F(n)=\\max \\sum_{i} a_i\\]where the maximum is taken over all distinct $a_1,\\ldots,a_k\\leq n$ such that $(a_i,a_j)=1$ for $i\\neq j$ and all prime factors of each $a_i$ are prime factors of $n$. Is it true that, for almost all $n$,\\[f(n)=o(n\\log\\log n)\\]and\\[F(n) \\gg n\\log\\log n?",
+        "focus_question_sha256": "811e97677e6525c559c02871c35b80f2a1f509d027a9b49ba2a78232b9e8d0f7",
+        "normalized": "If $n=\\prod_{1\\leq i\\leq t} p_i^{k_i}$ is the factorisation of $n$ into distinct primes then let\\[f(n)=\\sum p_i^{\\ell_i},\\]where $\\ell_i$ is chosen such that $n\\in [p_i^{\\ell_i},p_i^{\\ell_i+1})$. Furthermore, let\\[F(n)=\\max \\sum_{i} a_i\\]where the maximum is taken over all distinct $a_1,\\ldots,a_k\\leq n$ such that $(a_i,a_j)=1$ for $i\\neq j$ and all prime factors of each $a_i$ are prime factors of $n$. Is it true that, for almost all $n$,\\[f(n)=o(n\\log\\log n)\\]and\\[F(n) \\gg n\\log\\log n?\\]Is it true that\\[\\max_{n\\leq x}f(n)\\sim \\frac{x\\log x}{\\log\\log x}?\\]Is it true that (for all $x$, or perhaps just for all large $x$)\\[\\max_{n\\leq x}f(n)=\\max_{n\\leq x}F(n)?\\]Find an asymptotic formula for the number of $n<x$ such that $f(n)=F(n)$. Find an asymptotic formula for\\[H(x)=\\sum_{n<x}\\frac{f(n)}{n}.\\]Is it true that\\[H(x) \\ll x\\log\\log\\log\\log x?\\]",
+        "original": "If $n=\\prod_{1\\leq i\\leq t} p_i^{k_i}$ is the factorisation of $n$ into distinct primes then let\\[f(n)=\\sum p_i^{\\ell_i},\\]where $\\ell_i$ is chosen such that $n\\in [p_i^{\\ell_i},p_i^{\\ell_i+1})$. Furthermore, let\\[F(n)=\\max \\sum_{i} a_i\\]where the maximum is taken over all distinct $a_1,\\ldots,a_k\\leq n$ such that $(a_i,a_j)=1$ for $i\\neq j$ and all prime factors of each $a_i$ are prime factors of $n$.\n\nIs it true that, for almost all $n$,\\[f(n)=o(n\\log\\log n)\\]and\\[F(n) \\gg n\\log\\log n?\\]Is it true that\\[\\max_{n\\leq x}f(n)\\sim \\frac{x\\log x}{\\log\\log x}?\\]Is it true that (for all $x$, or perhaps just for all large $x$)\\[\\max_{n\\leq x}f(n)=\\max_{n\\leq x}F(n)?\\]Find an asymptotic formula for the number of $n<x$ such that $f(n)=F(n)$. Find an asymptotic formula for\\[H(x)=\\sum_{n<x}\\frac{f(n)}{n}.\\]Is it true that\\[H(x) \\ll x\\log\\log\\log\\log x?\\]",
+        "statement_sha256": "1188c9c6a00731e8bbb24695bd8231a724acf92a459068224ec27a62aae0bfc6"
+      },
+      "subproblem_contract_sha256": "3149f20081083c10e7891d8928a1ff3a99dd1a724ab864c903dbcfb60ab695d0",
+      "subproblem_id": "erdos-878-part-01-3149f200"
+    },
+    {
+      "parent_problem_id": "erdos-878",
+      "part_index": 2,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "\\]Is it true that\\[\\max_{n\\leq x}f(n)\\sim \\frac{x\\log x}{\\log\\log x}?",
+        "focus_question_sha256": "36f7bef70f6fa2e67031354bf45f7abe7ccb08e3d85c2281ce0abad1e7e34df9",
+        "normalized": "If $n=\\prod_{1\\leq i\\leq t} p_i^{k_i}$ is the factorisation of $n$ into distinct primes then let\\[f(n)=\\sum p_i^{\\ell_i},\\]where $\\ell_i$ is chosen such that $n\\in [p_i^{\\ell_i},p_i^{\\ell_i+1})$. Furthermore, let\\[F(n)=\\max \\sum_{i} a_i\\]where the maximum is taken over all distinct $a_1,\\ldots,a_k\\leq n$ such that $(a_i,a_j)=1$ for $i\\neq j$ and all prime factors of each $a_i$ are prime factors of $n$. Is it true that, for almost all $n$,\\[f(n)=o(n\\log\\log n)\\]and\\[F(n) \\gg n\\log\\log n?\\]Is it true that\\[\\max_{n\\leq x}f(n)\\sim \\frac{x\\log x}{\\log\\log x}?\\]Is it true that (for all $x$, or perhaps just for all large $x$)\\[\\max_{n\\leq x}f(n)=\\max_{n\\leq x}F(n)?\\]Find an asymptotic formula for the number of $n<x$ such that $f(n)=F(n)$. Find an asymptotic formula for\\[H(x)=\\sum_{n<x}\\frac{f(n)}{n}.\\]Is it true that\\[H(x) \\ll x\\log\\log\\log\\log x?\\]",
+        "original": "If $n=\\prod_{1\\leq i\\leq t} p_i^{k_i}$ is the factorisation of $n$ into distinct primes then let\\[f(n)=\\sum p_i^{\\ell_i},\\]where $\\ell_i$ is chosen such that $n\\in [p_i^{\\ell_i},p_i^{\\ell_i+1})$. Furthermore, let\\[F(n)=\\max \\sum_{i} a_i\\]where the maximum is taken over all distinct $a_1,\\ldots,a_k\\leq n$ such that $(a_i,a_j)=1$ for $i\\neq j$ and all prime factors of each $a_i$ are prime factors of $n$.\n\nIs it true that, for almost all $n$,\\[f(n)=o(n\\log\\log n)\\]and\\[F(n) \\gg n\\log\\log n?\\]Is it true that\\[\\max_{n\\leq x}f(n)\\sim \\frac{x\\log x}{\\log\\log x}?\\]Is it true that (for all $x$, or perhaps just for all large $x$)\\[\\max_{n\\leq x}f(n)=\\max_{n\\leq x}F(n)?\\]Find an asymptotic formula for the number of $n<x$ such that $f(n)=F(n)$. Find an asymptotic formula for\\[H(x)=\\sum_{n<x}\\frac{f(n)}{n}.\\]Is it true that\\[H(x) \\ll x\\log\\log\\log\\log x?\\]",
+        "statement_sha256": "1188c9c6a00731e8bbb24695bd8231a724acf92a459068224ec27a62aae0bfc6"
+      },
+      "subproblem_contract_sha256": "e5d6fe091a35441283551fd869cf7b6101cabe4a7936686ea62e5a3d9722a2dd",
+      "subproblem_id": "erdos-878-part-02-e5d6fe09"
+    },
+    {
+      "parent_problem_id": "erdos-878",
+      "part_index": 3,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "\\]Is it true that (for all $x$, or perhaps just for all large $x$)\\[\\max_{n\\leq x}f(n)=\\max_{n\\leq x}F(n)?",
+        "focus_question_sha256": "55ba02a29eb659c6896d3cd551d88d0d7df0087dbe63948bf939732df3f69fd6",
+        "normalized": "If $n=\\prod_{1\\leq i\\leq t} p_i^{k_i}$ is the factorisation of $n$ into distinct primes then let\\[f(n)=\\sum p_i^{\\ell_i},\\]where $\\ell_i$ is chosen such that $n\\in [p_i^{\\ell_i},p_i^{\\ell_i+1})$. Furthermore, let\\[F(n)=\\max \\sum_{i} a_i\\]where the maximum is taken over all distinct $a_1,\\ldots,a_k\\leq n$ such that $(a_i,a_j)=1$ for $i\\neq j$ and all prime factors of each $a_i$ are prime factors of $n$. Is it true that, for almost all $n$,\\[f(n)=o(n\\log\\log n)\\]and\\[F(n) \\gg n\\log\\log n?\\]Is it true that\\[\\max_{n\\leq x}f(n)\\sim \\frac{x\\log x}{\\log\\log x}?\\]Is it true that (for all $x$, or perhaps just for all large $x$)\\[\\max_{n\\leq x}f(n)=\\max_{n\\leq x}F(n)?\\]Find an asymptotic formula for the number of $n<x$ such that $f(n)=F(n)$. Find an asymptotic formula for\\[H(x)=\\sum_{n<x}\\frac{f(n)}{n}.\\]Is it true that\\[H(x) \\ll x\\log\\log\\log\\log x?\\]",
+        "original": "If $n=\\prod_{1\\leq i\\leq t} p_i^{k_i}$ is the factorisation of $n$ into distinct primes then let\\[f(n)=\\sum p_i^{\\ell_i},\\]where $\\ell_i$ is chosen such that $n\\in [p_i^{\\ell_i},p_i^{\\ell_i+1})$. Furthermore, let\\[F(n)=\\max \\sum_{i} a_i\\]where the maximum is taken over all distinct $a_1,\\ldots,a_k\\leq n$ such that $(a_i,a_j)=1$ for $i\\neq j$ and all prime factors of each $a_i$ are prime factors of $n$.\n\nIs it true that, for almost all $n$,\\[f(n)=o(n\\log\\log n)\\]and\\[F(n) \\gg n\\log\\log n?\\]Is it true that\\[\\max_{n\\leq x}f(n)\\sim \\frac{x\\log x}{\\log\\log x}?\\]Is it true that (for all $x$, or perhaps just for all large $x$)\\[\\max_{n\\leq x}f(n)=\\max_{n\\leq x}F(n)?\\]Find an asymptotic formula for the number of $n<x$ such that $f(n)=F(n)$. Find an asymptotic formula for\\[H(x)=\\sum_{n<x}\\frac{f(n)}{n}.\\]Is it true that\\[H(x) \\ll x\\log\\log\\log\\log x?\\]",
+        "statement_sha256": "1188c9c6a00731e8bbb24695bd8231a724acf92a459068224ec27a62aae0bfc6"
+      },
+      "subproblem_contract_sha256": "c645530b88e10d9ec5ae1500bd0a5df137102784a214e87f071e740799f45367",
+      "subproblem_id": "erdos-878-part-03-c645530b"
+    },
+    {
+      "parent_problem_id": "erdos-878",
+      "part_index": 4,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "\\]Find an asymptotic formula for the number of $n<x$ such that $f(n)=F(n)$. Find an asymptotic formula for\\[H(x)=\\sum_{n<x}\\frac{f(n)}{n}.\\]Is it true that\\[H(x) \\ll x\\log\\log\\log\\log x?",
+        "focus_question_sha256": "898f5690fd3da36cf7b0f23fb4129f6615b470d97edb9e61b687de7d816eb60c",
+        "normalized": "If $n=\\prod_{1\\leq i\\leq t} p_i^{k_i}$ is the factorisation of $n$ into distinct primes then let\\[f(n)=\\sum p_i^{\\ell_i},\\]where $\\ell_i$ is chosen such that $n\\in [p_i^{\\ell_i},p_i^{\\ell_i+1})$. Furthermore, let\\[F(n)=\\max \\sum_{i} a_i\\]where the maximum is taken over all distinct $a_1,\\ldots,a_k\\leq n$ such that $(a_i,a_j)=1$ for $i\\neq j$ and all prime factors of each $a_i$ are prime factors of $n$. Is it true that, for almost all $n$,\\[f(n)=o(n\\log\\log n)\\]and\\[F(n) \\gg n\\log\\log n?\\]Is it true that\\[\\max_{n\\leq x}f(n)\\sim \\frac{x\\log x}{\\log\\log x}?\\]Is it true that (for all $x$, or perhaps just for all large $x$)\\[\\max_{n\\leq x}f(n)=\\max_{n\\leq x}F(n)?\\]Find an asymptotic formula for the number of $n<x$ such that $f(n)=F(n)$. Find an asymptotic formula for\\[H(x)=\\sum_{n<x}\\frac{f(n)}{n}.\\]Is it true that\\[H(x) \\ll x\\log\\log\\log\\log x?\\]",
+        "original": "If $n=\\prod_{1\\leq i\\leq t} p_i^{k_i}$ is the factorisation of $n$ into distinct primes then let\\[f(n)=\\sum p_i^{\\ell_i},\\]where $\\ell_i$ is chosen such that $n\\in [p_i^{\\ell_i},p_i^{\\ell_i+1})$. Furthermore, let\\[F(n)=\\max \\sum_{i} a_i\\]where the maximum is taken over all distinct $a_1,\\ldots,a_k\\leq n$ such that $(a_i,a_j)=1$ for $i\\neq j$ and all prime factors of each $a_i$ are prime factors of $n$.\n\nIs it true that, for almost all $n$,\\[f(n)=o(n\\log\\log n)\\]and\\[F(n) \\gg n\\log\\log n?\\]Is it true that\\[\\max_{n\\leq x}f(n)\\sim \\frac{x\\log x}{\\log\\log x}?\\]Is it true that (for all $x$, or perhaps just for all large $x$)\\[\\max_{n\\leq x}f(n)=\\max_{n\\leq x}F(n)?\\]Find an asymptotic formula for the number of $n<x$ such that $f(n)=F(n)$. Find an asymptotic formula for\\[H(x)=\\sum_{n<x}\\frac{f(n)}{n}.\\]Is it true that\\[H(x) \\ll x\\log\\log\\log\\log x?\\]",
+        "statement_sha256": "1188c9c6a00731e8bbb24695bd8231a724acf92a459068224ec27a62aae0bfc6"
+      },
+      "subproblem_contract_sha256": "83689fc031a9c49f227aeabccd95e27cd88d95ec92c22af6b9722eda57adaadf",
+      "subproblem_id": "erdos-878-part-04-83689fc0"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

@@ -1,0 +1,54 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#183}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{Prize: \$250}
+
+\noindent\textbf{Tags:} graph theory, ramsey theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $R(3;k)$ be the minimal $n$ such that if the edges of $K_n$ are coloured with $k$ colours then there must exist a monochromatic triangle. Determine\[\lim_{k\to \infty}R(3;k)^{1/k}.\]
+
+
+
+
+Erd\H{o}s offers \$100 for showing that this limit is finite. An easy pigeonhole argument shows that\[R(3;k)\leq 2+k(R(3;k-1)-1),\]from which $R(3;k)\leq \lceil e k!\rceil$ immediately follows. The best-known upper bound is\[R(3;k)\leq (e-\tfrac{1}{6}) k!+1,\]due to Xu, Xie, and Chen \cite{XXC02} (improving previous bounds of Wan \cite{Wa97} and Whitehead \cite{Wh73}). See Eliahou \cite{El19} for more on the upper bound. These arise from the same type of inductive relationship and computational bounds for $R(3;k)$ for small $k$. The best-known lower bound (coming from lower bounds for Schur numbers) is\[R(3,k)\geq (380)^{k/5}-O(1),\]due to Ageron, Casteras, Pellerin, Portella, Rimmel, and Tomasik \cite{ACPPRT21} (improving previous bounds of Exoo \cite{Ex94} and Fredricksen and Sweet \cite{FrSw00}). Note that $380^{1/5}\approx 3.2806$. See also [483] . This problem is #21 in Ramsey Theory in the graphs problem collection.
+
+
+
+
+References
+
+[ACPPRT21] R. Ageron, P. Casteras, T. Pellerin, Y. Portella, A. Rimmel, and J. Tomasik, New lower bounds for Schur and weak Schur numbers . arXiv:2112.03175 (2021).
+
+[El19] No reference found.
+
+
+[Ex94] Exoo, G., A lower bound for Schur numbers and multicolor Ramsey numbers . Electronic J. of Combinatorics (1994).
+
+[FrSw00] Fredricksen, Harold and Sweet, Melvin M., Symmetric sum-free partitions and lower bounds for Schur numbers . Electron. J. Combin. (2000), Research Paper 32, 9.
+
+[Wa97] Wan, Honghui, Upper bounds for {R}amsey numbers {$R(3,3,\cdots,3)$} and Schur numbers . J. Graph Theory (1997), 119--122.
+
+[Wh73] Whitehead, Jr., Earl Glen, The {R}amsey number {$N(3,\,3,\,3,\,3;\,2)$} . Discrete Math. (1973), 389--396.
+
+[XXC02] Xu, Xiao Dong and Xie, Zheng and Chen, Zhi, Upper bounds for {R}amsey numbers {$R_n(3)$} and Schur numbers . Math. Econ. (2002), 81--84.
+
+\noindent\textbf{Related OEIS sequences:} A003323
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/183}}
+\end{document}

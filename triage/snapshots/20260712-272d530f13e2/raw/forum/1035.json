@@ -1,0 +1,40 @@
+{
+  "problem_number": 1035,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/1035",
+  "retrieved_at": "2026-07-10T23:19:58.845925+00:00",
+  "page_title": "1035 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "39b08512a3ebc6c3f6525ec9ba085ceefbd165d0888a4e1e22e9c8ab417519ff",
+  "comment_count": 6,
+  "comments": [
+    {
+      "post_id": "525",
+      "text": "personally I find #181 more relevant (compared to #576). naive DRC says that $\\approx 2^n(1-c)^{-n}$ vertices should at least suffice. and for fixed $c>0$, the arguments of Tikhomirov can show there is $c'\\in (0,c)$ so that $2^n (1-c')^{-n}$ vertices suffice for large $n$.",
+      "meta": "zach hunter — 09:25 on 14 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "527",
+      "text": "I'll note that the \"blow-up case\" should be clear here (at least if you want $m=(1+o(1))2^n$ vertices). let $H_0$ be any $m_0$ graph with minimum degree $>m_0/2$. by Dirac's theorem, $H_0$ should contain a Hamilton cycle, $C=v_1,\\dots,v_{m_0}$. now, consider consider the homomorphism $\\phi$ which sends the $i$-th layer of the hypercube to $v_{i\\pmod{m_0}}$. this is clearly a homomorphism, and the pre-image of any vertex has size $\\sim 2^n/m_0$ (since the binomial coefficeints do not vary significantly).",
+      "meta": "zach hunter — 10:16 on 14 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "528",
+      "text": "actually, maybe by an appropriately quantified blow-up lemma, we can actually get a $(1+o(1))2^n$ bound in general?",
+      "meta": "zach hunter — 10:20 on 14 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "530",
+      "text": "What do you mean by a blow-up lemma in this case?",
+      "meta": "Thomas Bloom — 10:24 on 14 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "531",
+      "text": "\"the blow-up lemma\" is a very deep result about doing spanning or nearly spanning embeddings of bounded degree $H$ into graphs $G$, based off of the regularity partition of $G$ (essentially if various parameters are right, we can embed $H$ as long as it has homomorphism into a certain auxiliary graph based on the partition). usually the bounds of various dependencies are fairly poor. but since we are embedding something bipartite (and just using pathwidth, rather than a more complicated), I could fathom it being possible for the bounds to work out (at least if we are willing to just aim for a nearly spanning embedding).",
+      "meta": "zach hunter — 12:18 on 14 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "532",
+      "text": "Aha, you meant THAT blow-up lemma, just with actually good dependencies. Thanks!",
+      "meta": "Thomas Bloom — 12:54 on 14 Sep 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

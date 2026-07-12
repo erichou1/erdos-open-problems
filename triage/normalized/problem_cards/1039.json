@@ -1,0 +1,255 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.418
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-09-10",
+      "state": "no"
+    },
+    "references": [
+      "KLR25",
+      "Po61"
+    ],
+    "source_last_update": "2025-09-15",
+    "source_problem_url": "https://www.erdosproblems.com/1039",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[KLR25] M. Krishnapur, E. Lundberg, and K. Ramachandran, On the area of polynomial lemniscates. arXiv:2503.18270 (2025).\n \n [Po61] Pommerenke, Ch., On metric properties of complex polynomials. Michigan Math. J. (1961), 97-115.",
+      "remarks": "A problem of Erd\\H{o}s, Herzog, and Piranian, who note that $f(z)=z^n-1$ has $\\rho(f) \\leq \\frac{\\pi/2}{n}$.\n\nPommerenke \\cite{Po61} proved that\\[\\rho(f) \\geq \\frac{1}{2en^2}.\\]Krishnapur, Lundberg, and Ramachandran \\cite{KLR25} proved\\[\\rho(f) \\gg \\frac{1}{n\\sqrt{\\log n}}.\\]"
+    },
+    "source_state": "open",
+    "tags": [
+      "analysis"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 3.64,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.029695,
+        0.435778
+      ],
+      "probability": 0.232737
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 0.927,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.242939
+      ],
+      "probability": 0.084818
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 14.0,
+      "credible_interval_approx": [
+        0.0,
+        0.125322
+      ],
+      "probability": 0.034483
+    },
+    "p_high_mathematical_value": {
+      "alpha": 3.167,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.023263,
+        0.497285
+      ],
+      "probability": 0.260274
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.167,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.23659
+      ],
+      "probability": 0.088608
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.1,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.228734
+      ],
+      "probability": 0.083969
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 40.0,
+      "credible_interval_approx": [
+        0.0,
+        0.071043
+      ],
+      "probability": 0.02439
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.436385
+      ],
+      "probability": 0.2
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "minor"
+    },
+    "literature": {
+      "comment_count": 16,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:20:00.543904+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "7204fd21781083e39a7af5629a1e78d429de851d429ed37294780bf3b71bcc19"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "asymptotic_notation"
+      ],
+      "ambiguity_status": "minor",
+      "quantifier_signal_count": 1,
+      "question_count": 1,
+      "requires_source_audit": true,
+      "statement_characters": 289,
+      "statement_tokens_approx": 42
+    },
+    "structure": {
+      "asymptotic": true,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove",
+      "multi_part": false,
+      "primary_domain": "analysis"
+    }
+  },
+  "problem_id": "erdos-1039",
+  "problem_number": 1039,
+  "problem_type": {
+    "asymptotic": true,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove",
+    "multi_part": false,
+    "primary_domain": "analysis"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_1039.html",
+      "raw_html_sha256": "172ff84f3603897910f602bb1c7476a498f429bf6da80c5f50b4079d545bc57d",
+      "section_sha256": {
+        "references": "efbe60742f85ad54134d481c6a389fb1d7adf009009acb84f88df9a4ef217014",
+        "remarks": "25f212c7dccc7c3d427aebd1c9fcb07c23182757bc4d9a18f28b4eb659438e19",
+        "statement": "ae9a5fc6c2e0954850f38c901229dc28111d47210be90be439443f5d04178b8a"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_1039.json",
+      "source_record_sha256": "0b53c34786830374600c78dd0c60a1f471a0d762746def6f4a5fd63cb79b2c84",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_1039.tex",
+    "latex_sha256": "738d2d123fb59765a8704cb411638ea79d7ef970c80751e5d3c7575d16b41301",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "ae9a5fc6c2e0954850f38c901229dc28111d47210be90be439443f5d04178b8a",
+    "recommended_attack_modes": [
+      "literature_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "4d107f260038c59f5726db2bfdc54b558799cff143db4f48eaf13420d3555a69",
+  "routes": [
+    "literature_search",
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "minor",
+    "intended": "Let $f(z)=\\prod_{i=1}^n(z-z_i)\\in \\mathbb{C}[z]$ with $\\lvert z_i\\rvert \\leq 1$ for all $i$. Let $\\rho(f)$ be the radius of the largest disc which is contained in $\\{z: \\lvert f(z)\\rvert< 1\\}$. \n\nDetermine the behaviour of $\\rho(f)$. In particular, is it always true that $\\rho(f)\\gg 1/n$?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $f(z)=\\prod_{i=1}^n(z-z_i)\\in \\mathbb{C}[z]$ with $\\lvert z_i\\rvert \\leq 1$ for all $i$. Let $\\rho(f)$ be the radius of the largest disc which is contained in $\\{z: \\lvert f(z)\\rvert< 1\\}$. Determine the behaviour of $\\rho(f)$. In particular, is it always true that $\\rho(f)\\gg 1/n$?",
+    "original": "Let $f(z)=\\prod_{i=1}^n(z-z_i)\\in \\mathbb{C}[z]$ with $\\lvert z_i\\rvert \\leq 1$ for all $i$. Let $\\rho(f)$ be the radius of the largest disc which is contained in $\\{z: \\lvert f(z)\\rvert< 1\\}$. \n\nDetermine the behaviour of $\\rho(f)$. In particular, is it always true that $\\rho(f)\\gg 1/n$?",
+    "statement_sha256": "ae9a5fc6c2e0954850f38c901229dc28111d47210be90be439443f5d04178b8a"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

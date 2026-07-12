@@ -1,0 +1,259 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.592
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "yes"
+    },
+    "references": [
+      "Er78d",
+      "Er83d",
+      "Ma02",
+      "Ma13"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/352",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Er78d] Erd\\H{o}s, P., Set-theoretic, measure-theoretic, combinatorial, and\nnumber-theoretic problems concerning point sets in Euclidean\nspace. Real Anal. Exchange (1978/79), 113-138.\n \n [Er83d] Erd\\H{o}s, Paul, Some combinatorial, geometric and set theoretic problems in measure theory. Measure Theory, Oberwolfach 1983: Proceedings of the Conference held at Oberwolfach, June 26-July 2, 1983 (1984), 321-327.\n \n [Ma02] Mauldin, R. D., Some problems in set theory, analysis and geometry. (2002), 493--506.\n \n [Ma13] Mauldin, R. Daniel, Some problems and ideas of {E}rd\\H{o}s in analysis and geometry. (2013), 365--376.",
+      "remarks": "Erd\\H{o}s (unpublished) proved that this is true if $A$ has infinite measure, or if $A$ is an unbounded set of positive measure (stating in \\cite{Er78d} and \\cite{Er83d} it 'follows easily from the Lebesgue density theorem'). \n\nIn \\cite{Er78d} and \\cite{Er83d} he speculated that perhaps $C=4\\pi/\\sqrt{27}\\approx 2.418$ works, which would be the best possible, as witnessed by a circle of radius $<2\\cdot 3^{-3/4}$.\n\nFurther evidence for this is given by a result of Freiling and Mauldin \\cite{Ma02}, who proved that if $A$ has outer measure $>4\\pi/\\sqrt{27}$ then $A$ contains the vertices of a triangle with area $>1$. This also proves the same threshold for the original problem under the assumption that $A$ is a compact convex set. \n\nMauldin also discusses this problem in \\cite{Ma13}, in which he notes that it suffices to prove this under the assumption that $A$ is the union of the interiors of $n<\\infty$ many compact convex sets. Freiling and Mauldin (see \\cite{Ma13}) have proved this conjecture if $1\\leq n\\leq 3$."
+    },
+    "source_state": "open",
+    "tags": [
+      "geometry"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 4.18,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.051356,
+        0.465331
+      ],
+      "probability": 0.258344
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 2.251,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.392225
+      ],
+      "probability": 0.183714
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.8,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.190215
+      ],
+      "probability": 0.0625
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.733,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.000771,
+        0.465138
+      ],
+      "probability": 0.232955
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 4.267,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.054809,
+        0.469781
+      ],
+      "probability": 0.262295
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.9,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        2.3e-05,
+        0.389239
+      ],
+      "probability": 0.194631
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 39.0,
+      "credible_interval_approx": [
+        0.0,
+        0.106373
+      ],
+      "probability": 0.044118
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.009216,
+        0.509303
+      ],
+      "probability": 0.259259
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "clear"
+    },
+    "literature": {
+      "comment_count": 17,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:16:45.668605+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "376066d79d81ff708b91cee29e9bfde98c5b1214ae4fcf0c5f3ed77c9eae1498"
+    },
+    "statement": {
+      "ambiguity_markers": [],
+      "ambiguity_status": "clear",
+      "quantifier_signal_count": 1,
+      "question_count": 1,
+      "requires_source_audit": false,
+      "statement_characters": 139,
+      "statement_tokens_approx": 23
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove",
+      "multi_part": false,
+      "primary_domain": "geometry"
+    }
+  },
+  "problem_id": "erdos-352",
+  "problem_number": 352,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove",
+    "multi_part": false,
+    "primary_domain": "geometry"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_352.html",
+      "raw_html_sha256": "a08244dbcd371df5d4ad314f84213057d6f85bc81867f482d9e3203529f2bf48",
+      "section_sha256": {
+        "references": "03e591cf40716d7fbfabea344c2399797a22b84a837d1d47ed830f2275c3f56a",
+        "remarks": "e00e585fbe861328a5820e0d527c12984015523b6c647daeac8783474cbceaa4",
+        "statement": "9adea077d06c7355252611facb687bed0b3eacd0c9d1484adc8da5be1e7c1f91"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_352.json",
+      "source_record_sha256": "9979dd95e11506cd56d8247fcebc3823717e19291caf150bf2f6472c37eac43f",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_352.tex",
+    "latex_sha256": "47c04c607625a9929daababf402786655b921988a3cf2821ec959ba42234a437",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "9adea077d06c7355252611facb687bed0b3eacd0c9d1484adc8da5be1e7c1f91",
+    "recommended_attack_modes": [
+      "formal_search",
+      "shared_infrastructure_search",
+      "literature_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "72b6317d0ce9d634cc9e8d67d7c8ea3bb82c5f2b78ef79a39fc44aeb47e37dfa",
+  "routes": [
+    "formal_search",
+    "shared_infrastructure_search",
+    "literature_search",
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "clear",
+    "intended": "Is there some $c>0$ such that every measurable $A\\subseteq \\mathbb{R}^2$ of measure $\\geq c$ contains the vertices of a triangle of area 1?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Is there some $c>0$ such that every measurable $A\\subseteq \\mathbb{R}^2$ of measure $\\geq c$ contains the vertices of a triangle of area 1?",
+    "original": "Is there some $c>0$ such that every measurable $A\\subseteq \\mathbb{R}^2$ of measure $\\geq c$ contains the vertices of a triangle of area 1?",
+    "statement_sha256": "9adea077d06c7355252611facb687bed0b3eacd0c9d1484adc8da5be1e7c1f91"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

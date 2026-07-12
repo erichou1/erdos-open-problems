@@ -1,0 +1,255 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.785
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "Be68",
+      "Er80",
+      "Ge77",
+      "Wa25",
+      "Wr84"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/169",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Be68] Berlekamp, E. R., A construction for partitions which avoid long arithmetic progressions. Canad. Math. Bull. (1968), 409-414.\n \n [Er80] Erd\\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.\n \n [Ge77] Gerver, Joseph L., The sum of the reciprocals of a set of integers with no\narithmetic progression of {$k$} terms. Proc. Amer. Math. Soc. (1977), 211--214.\n \n [Wa25] A. Walker, Integer sets of large harmonic sum which avoid long arithmetic progressions. arXiv:2203.06045 (2025).\n \n [Wr84] Wr\\'oblewski, J., A nonaveraging set of integers with a large sum of reciprocals. Math. Comp. (1984), 261--262.",
+      "remarks": "Berlekamp \\cite{Be68} proved $f(k) \\geq \\frac{\\log 2}{2}k$. Gerver \\cite{Ge77} proved\\[f(k) \\geq (1-o(1))k\\log k.\\]It is trivial that\\[\\frac{f(k)}{\\log W(k)}\\geq \\frac{1}{2},\\]but improving the right-hand side to any constant $>1/2$ is open.\n\nGerver also proved (see the comments for an alternative argument of Tao) that [3] is equivalent to $f(k)$ being finite for all $k$.\n\nThe current record for $f(3)$ is $f(3)\\geq 3.00849$, due to Wr\\'{o}blewski \\cite{Wr84}. Walker \\cite{Wa25} proved $f(4)\\geq 4.43975$.\n\nWalker \\cite{Wa25} has shown that it suffices to consider Kempner sets (that is, sets of integers defined as all those whose base $b$ digits are contained in some $S\\subset \\{0,\\ldots,b-1\\}$ for fixed $b$ and $S$), in the sense that for any $k\\geq 3$ and $\\epsilon>0$ there is a Kempner set $A$ lacking $k$-term arithmetic progressions such that\\[\\sum_{n\\in A}\\frac{1}{n}\\geq f(k)-\\epsilon.\\]In \\cite{Er80} Erd\\H{o}s asks whether for every $\\epsilon>0$ and $k\\geq 3$ if $A$ is a set of integers without a $k$-term arithmetic progression such that $\\min(A)$ is sufficiently large in terms of $\\epsilon$ and $k$ then $\\sum_{n\\in A}\\frac{1}{n}<\\epsilon$."
+    },
+    "source_state": "open",
+    "tags": [
+      "additive combinatorics",
+      "arithmetic progressions"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.28,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.343328
+      ],
+      "probability": 0.159664
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 0.889,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.23736
+      ],
+      "probability": 0.081681
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.6,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.282916
+      ],
+      "probability": 0.117647
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.233,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.422465
+      ],
+      "probability": 0.198813
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.3,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.251666
+      ],
+      "probability": 0.097744
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 0.9,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.203695
+      ],
+      "probability": 0.069767
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 39.0,
+      "credible_interval_approx": [
+        0.0,
+        0.07279
+      ],
+      "probability": 0.025
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.436385
+      ],
+      "probability": 0.2
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "clear"
+    },
+    "literature": {
+      "comment_count": 7,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:15:54.121443+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "89e924fcd36b9362d7aa0ff1f5131190f79607131163bdcaacdd6f25d0fa5a05"
+    },
+    "statement": {
+      "ambiguity_markers": [],
+      "ambiguity_status": "clear",
+      "quantifier_signal_count": 0,
+      "question_count": 1,
+      "requires_source_audit": false,
+      "statement_characters": 291,
+      "statement_tokens_approx": 40
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "estimate",
+      "multi_part": false,
+      "primary_domain": "additive combinatorics"
+    }
+  },
+  "problem_id": "erdos-169",
+  "problem_number": 169,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "estimate",
+    "multi_part": false,
+    "primary_domain": "additive combinatorics"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_169.html",
+      "raw_html_sha256": "a7eff97757ca7c15261d5a35f0bdb87f376c9d0623c02c03e087ef1d0dccea57",
+      "section_sha256": {
+        "references": "2c59648a22f695d85f5e14dbade8f12fd7f1874eb936f2f8480a5f5e7391e8aa",
+        "remarks": "6ea6ae88d8a42b09032b170d4c5b64c20ec36168cb7bd7281739e994f0bd70b9",
+        "statement": "aff7663f1d31c812c26e462c35cf432f367540eb1167dd9bf7e82cced79ea5ba"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_169.json",
+      "source_record_sha256": "fa181c57ecc284ba811f0be925cac70473115dfb0ea1e6d3f4a3f4573795970d",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_169.tex",
+    "latex_sha256": "73ca11206e405fb2db9eef47564fcfb620050f80ca9a08ebaf67f03983ff1224",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "aff7663f1d31c812c26e462c35cf432f367540eb1167dd9bf7e82cced79ea5ba",
+    "recommended_attack_modes": [
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "e70f568d209255465289ee204f57836e13494779ba1954a61dfc6844452e8394",
+  "routes": [
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "clear",
+    "intended": "Let $k\\geq 3$ and $f(k)$ be the supremum of $\\sum_{n\\in A}\\frac{1}{n}$ as $A$ ranges over all sets of positive integers which do not contain a $k$-term arithmetic progression. Estimate $f(k)$. \n\nIs\\[\\lim_{k\\to \\infty}\\frac{f(k)}{\\log W(k)}=\\infty\\]where $W(k)$ is the van der Waerden number?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $k\\geq 3$ and $f(k)$ be the supremum of $\\sum_{n\\in A}\\frac{1}{n}$ as $A$ ranges over all sets of positive integers which do not contain a $k$-term arithmetic progression. Estimate $f(k)$. Is\\[\\lim_{k\\to \\infty}\\frac{f(k)}{\\log W(k)}=\\infty\\]where $W(k)$ is the van der Waerden number?",
+    "original": "Let $k\\geq 3$ and $f(k)$ be the supremum of $\\sum_{n\\in A}\\frac{1}{n}$ as $A$ ranges over all sets of positive integers which do not contain a $k$-term arithmetic progression. Estimate $f(k)$. \n\nIs\\[\\lim_{k\\to \\infty}\\frac{f(k)}{\\log W(k)}=\\infty\\]where $W(k)$ is the van der Waerden number?",
+    "statement_sha256": "aff7663f1d31c812c26e462c35cf432f367540eb1167dd9bf7e82cced79ea5ba"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

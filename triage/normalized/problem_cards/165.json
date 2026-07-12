@@ -1,0 +1,257 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.899
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "AKS80",
+      "BoKe21",
+      "CJMS25",
+      "HHKP25",
+      "Ki95",
+      "PGM20",
+      "Sh83"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/165",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[AKS80] Ajtai, Mikl\\'{o}s and Koml\\'{o}s, J\\'{a}nos and Szemer\\'{e}di, Endre, A note on Ramsey numbers. J. Combin. Theory Ser. A (1980), 354-360.\n \n [BoKe21] Bohman, Tom and Keevash, Peter, Dynamic concentration of the triangle-free process. Random Structures Algorithms (2021), 221-293.\n \n [CJMS25] M. Campos, M. Jenssen, M. Michelen, and J. Sahasrabudhe, A new lower bound for the Ramsey numbers $R(3,k)$. arXiv:2505.13371 (2025).\n \n [HHKP25] Z. Hefty, P. Horn, D. King, and F. Pfender, Improving $R(3,k)$ in just two bites. arXiv:2510.19718 (2025).\n \n [Ki95] Kim, J. H., The Ramsey number $R(3,t)$ has order of magnitude $t^2/\\log t$. Random Structures and Algorithms (1995), 173-207.\n \n [PGM20] Fiz Pontiveros, Gonzalo and Griffiths, Simon and Morris, Robert, The triangle-free process and the Ramsey number $R(3,k)$. Mem. Amer. Math. Soc. (2020), v+125.\n \n [Sh83] Shearer J., A note on the independence number of triangle-free graphs. Discrete Math. (1983), 83-87.",
+      "remarks": "It is known that there exists some constant $c>0$ such that for large $k$\\[(c+o(1))\\frac{k^2}{\\log k}\\leq R(3,k) \\leq (1+o(1))\\frac{k^2}{\\log k}.\\]The lower bound is due to Kim \\cite{Ki95}, the upper bound is due to Shearer \\cite{Sh83}, improving an earlier bound of Ajtai, Koml\\'{o}s, and Szemer\\'{e}di \\cite{AKS80}. \n\nThe value of $c$ in the lower bound has seen a number of improvements. Kim's original proof gave $c\\geq 1/162$. The bound $c\\geq 1/4$ was proved independently by Bohman and Keevash \\cite{BoKe21} and Pontiveros, Griffiths and Morris \\cite{PGM20}. The latter collection of authors conjecture that this lower bound is the true order of magnitude.\n\nThis was, however, improved by Campos, Jenssen, Michelen, and Sahasrabudhe \\cite{CJMS25} to $c\\geq 1/3$, and further by Hefty, Horn, King, and Pfender \\cite{HHKP25} to $c\\geq 1/2$. Both of these papers conjecture that $c=1/2$ is the correct asymptotic.\n\nSee also [544], and [986] for the general case. See [1013] for a related function."
+    },
+    "source_state": "open",
+    "tags": [
+      "graph theory",
+      "ramsey theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.2,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.336836
+      ],
+      "probability": 0.15493
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 1.175,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277471
+      ],
+      "probability": 0.105159
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.8,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.190215
+      ],
+      "probability": 0.0625
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.167,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.41624
+      ],
+      "probability": 0.19403
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.6,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.282916
+      ],
+      "probability": 0.117647
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 0.9,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.203695
+      ],
+      "probability": 0.069767
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 39.0,
+      "credible_interval_approx": [
+        0.0,
+        0.07279
+      ],
+      "probability": 0.025
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.436385
+      ],
+      "probability": 0.2
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "clear"
+    },
+    "literature": {
+      "comment_count": 5,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:15:53.006500+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "071e2de44747949298f9278a9d0457c8e8852839c76abd6879c76fd74e94479c"
+    },
+    "statement": {
+      "ambiguity_markers": [],
+      "ambiguity_status": "clear",
+      "quantifier_signal_count": 0,
+      "question_count": 0,
+      "requires_source_audit": false,
+      "statement_characters": 40,
+      "statement_tokens_approx": 6
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove",
+      "multi_part": false,
+      "primary_domain": "graph theory"
+    }
+  },
+  "problem_id": "erdos-165",
+  "problem_number": 165,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove",
+    "multi_part": false,
+    "primary_domain": "graph theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_165.html",
+      "raw_html_sha256": "a4b14e079be123fb056169c80807773955d87041c6433f944c52c8f4a2b0164d",
+      "section_sha256": {
+        "references": "153373817f06839af77413a40ac5ff2f8d7c11b69b9200ecb7195b9d01d66bea",
+        "remarks": "4d338ec5c5b1ccfd9c12c43880eb8b99d552199572eec34c95f889ffd520c929",
+        "statement": "b82a025a58f6bf1a7389494acc7e144973f3d1e31e135e9cca1d29e545b9d124"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_165.json",
+      "source_record_sha256": "35ab8421eaffed5d6947500a50c9f48134efdf4c8797437300b38b99fd2512c5",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_165.tex",
+    "latex_sha256": "4245f43110d7785be244831e56fe3933720540378beaa85fcb2d1067508fda50",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "b82a025a58f6bf1a7389494acc7e144973f3d1e31e135e9cca1d29e545b9d124",
+    "recommended_attack_modes": [
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "d5c87467a533d718be91fa5f71e1a6eeb6f162042c9e0f485e5cb0d5c8eeb54b",
+  "routes": [
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "clear",
+    "intended": "Give an asymptotic formula for $R(3,k)$.",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Give an asymptotic formula for $R(3,k)$.",
+    "original": "Give an asymptotic formula for $R(3,k)$.",
+    "statement_sha256": "b82a025a58f6bf1a7389494acc7e144973f3d1e31e135e9cca1d29e545b9d124"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

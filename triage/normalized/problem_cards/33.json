@@ -1,0 +1,314 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.624
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-09-04",
+      "state": "yes"
+    },
+    "references": [
+      "BaRa01",
+      "Ci93",
+      "Ha95",
+      "Mo65"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/33",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[BaRa01] Balasubramanian, R. and Ramana, D. S., Additive complements of the squares. C. R. Math. Acad. Sci. Soc. R. Can. (2001), 6--11.\n \n [Ci93] Cilleruelo, Javier, The additive completion of {$k$}th-powers. J. Number Theory (1993), 237--243.\n \n [Ha95] Habsieger, Laurent, On the additive completion of polynomial sets. J. Number Theory (1995), 130--135.\n \n [Mo65] Moser, Leo, On the additive completion of sets of integers. (1965), 175--180.",
+      "remarks": "Such a set $A$ is called an additive complement of the set of squares. Erd\\H{o}s observed that there exist $A$ for which the $\\limsup$ is finite and $>1$. Moser \\cite{Mo65} proved that, for any such $A$,\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}>1.06.\\]The best-known lower bound is\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}\\geq\\frac{4}{\\pi}\\approx 1.273\\]proved by Cilleruelo \\cite{Ci93}, Habsieger \\cite{Ha95}, and Balasubramanian and Ramana \\cite{BaRa01}.\n\nThe problem of minimising the $\\limsup$ appears to have been much less studied. van Doorn has a construction of such an $A$ in which, for all $N$,\\[\\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}< 2\\phi^{5/2}\\approx 6.66,\\]where $\\phi=\\frac{1+\\sqrt{5}}{2}$ is the golden ratio."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory",
+      "additive basis"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 3.7,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.03211,
+        0.439227
+      ],
+      "probability": 0.235669
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.657,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.032652,
+        0.449911
+      ],
+      "probability": 0.241282
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 2.0,
+      "beta": 13.0,
+      "credible_interval_approx": [
+        0.0,
+        0.299901
+      ],
+      "probability": 0.133333
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.833,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.005957,
+        0.472916
+      ],
+      "probability": 0.239437
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.367,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.01098,
+        0.355626
+      ],
+      "probability": 0.183303
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 3.6,
+      "beta": 14.0,
+      "credible_interval_approx": [
+        0.021229,
+        0.387862
+      ],
+      "probability": 0.204545
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.092979
+      ],
+      "probability": 0.038462
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.002288,
+        0.452997
+      ],
+      "probability": 0.227642
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 5,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:15:14.756431+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "f8d721ba1f60a14cb6e8412ef82f3b96034065193cad94acf0f532d59a549b4d"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 1,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 281,
+      "statement_tokens_approx": 31
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "compute",
+      "multi_part": true,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-33",
+  "problem_number": 33,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "compute",
+    "multi_part": true,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_33.html",
+      "raw_html_sha256": "d47eb0d75ef55e37ce67038a62048eb7c01f63e10d7ffcbb87d95d80699aa1b0",
+      "section_sha256": {
+        "references": "eceb2991799dcfa8a812f51434d96ce000e43debfc7d2c3b3830b0e18b9c9d20",
+        "remarks": "ea97f3c3b78ce53ace95eefe515cf4d8b8a339cd5539d5d6bb674e7da1b794b4",
+        "statement": "bd1c5040c9bec47ac447762c5c41b5d4c3c17bd8c94d775a19f4cb17a8038e29"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_33.json",
+      "source_record_sha256": "1b2cd444fc9a434b48c2fb2113f5caa3910ba9e13afb0acee8bc4cd8d844de40",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_33.tex",
+    "latex_sha256": "07cfcf4fa9d907fee001e201aa432523563469e2f7a8182a95e185251df60a73",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "bd1c5040c9bec47ac447762c5c41b5d4c3c17bd8c94d775a19f4cb17a8038e29",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "formal_search",
+      "subproblem_decomposition",
+      "shared_infrastructure_search",
+      "literature_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Let $A\\subset\\mathbb{N}$ be such that every large integer can be written as $n^2+a$ for some $a\\in A$ and $n\\geq 0$. What is the smallest possible value of\\[\\limsup \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}?",
+        "focus_question_sha256": "750685c3dc3fda16c2446a73e89c7da02828f9124aa88b07ae80261151dba992",
+        "parent_statement_sha256": "bd1c5040c9bec47ac447762c5c41b5d4c3c17bd8c94d775a19f4cb17a8038e29",
+        "part_index": 1,
+        "subproblem_contract_sha256": "e1daa2bbb8d89d7e871bac3a59b3f8e318076166954f134be3fd4592d287517b",
+        "subproblem_id": "erdos-33-part-01-e1daa2bb"
+      },
+      {
+        "focus_question": "\\]Is\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}>1?",
+        "focus_question_sha256": "030e81ca6dc7bdf6522d1817b753aaeef6b9b1c1623fb4e2f9c49a193f09e58e",
+        "parent_statement_sha256": "bd1c5040c9bec47ac447762c5c41b5d4c3c17bd8c94d775a19f4cb17a8038e29",
+        "part_index": 2,
+        "subproblem_contract_sha256": "5a05ef0ca38d3f126da04594873e9f31c70d3eff6477da5cbe31152aa3ea90eb",
+        "subproblem_id": "erdos-33-part-02-5a05ef0c"
+      }
+    ]
+  },
+  "research_directive_sha256": "49397c2686992a0791d1a8f7b12278c31939d3aa942dcfe0f67ed3618b06e3a8",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "formal_search",
+    "subproblem_decomposition",
+    "shared_infrastructure_search",
+    "literature_search"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Let $A\\subset\\mathbb{N}$ be such that every large integer can be written as $n^2+a$ for some $a\\in A$ and $n\\geq 0$. What is the smallest possible value of\\[\\limsup \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}?\\]Is\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}>1?\\]",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $A\\subset\\mathbb{N}$ be such that every large integer can be written as $n^2+a$ for some $a\\in A$ and $n\\geq 0$. What is the smallest possible value of\\[\\limsup \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}?\\]Is\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}>1?\\]",
+    "original": "Let $A\\subset\\mathbb{N}$ be such that every large integer can be written as $n^2+a$ for some $a\\in A$ and $n\\geq 0$. What is the smallest possible value of\\[\\limsup \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}?\\]Is\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}>1?\\]",
+    "statement_sha256": "bd1c5040c9bec47ac447762c5c41b5d4c3c17bd8c94d775a19f4cb17a8038e29"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-33",
+      "part_index": 1,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Let $A\\subset\\mathbb{N}$ be such that every large integer can be written as $n^2+a$ for some $a\\in A$ and $n\\geq 0$. What is the smallest possible value of\\[\\limsup \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}?",
+        "focus_question_sha256": "750685c3dc3fda16c2446a73e89c7da02828f9124aa88b07ae80261151dba992",
+        "normalized": "Let $A\\subset\\mathbb{N}$ be such that every large integer can be written as $n^2+a$ for some $a\\in A$ and $n\\geq 0$. What is the smallest possible value of\\[\\limsup \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}?\\]Is\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}>1?\\]",
+        "original": "Let $A\\subset\\mathbb{N}$ be such that every large integer can be written as $n^2+a$ for some $a\\in A$ and $n\\geq 0$. What is the smallest possible value of\\[\\limsup \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}?\\]Is\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}>1?\\]",
+        "statement_sha256": "bd1c5040c9bec47ac447762c5c41b5d4c3c17bd8c94d775a19f4cb17a8038e29"
+      },
+      "subproblem_contract_sha256": "e1daa2bbb8d89d7e871bac3a59b3f8e318076166954f134be3fd4592d287517b",
+      "subproblem_id": "erdos-33-part-01-e1daa2bb"
+    },
+    {
+      "parent_problem_id": "erdos-33",
+      "part_index": 2,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "\\]Is\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}>1?",
+        "focus_question_sha256": "030e81ca6dc7bdf6522d1817b753aaeef6b9b1c1623fb4e2f9c49a193f09e58e",
+        "normalized": "Let $A\\subset\\mathbb{N}$ be such that every large integer can be written as $n^2+a$ for some $a\\in A$ and $n\\geq 0$. What is the smallest possible value of\\[\\limsup \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}?\\]Is\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}>1?\\]",
+        "original": "Let $A\\subset\\mathbb{N}$ be such that every large integer can be written as $n^2+a$ for some $a\\in A$ and $n\\geq 0$. What is the smallest possible value of\\[\\limsup \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}?\\]Is\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}>1?\\]",
+        "statement_sha256": "bd1c5040c9bec47ac447762c5c41b5d4c3c17bd8c94d775a19f4cb17a8038e29"
+      },
+      "subproblem_contract_sha256": "5a05ef0ca38d3f126da04594873e9f31c70d3eff6477da5cbe31152aa3ea90eb",
+      "subproblem_id": "erdos-33-part-02-5a05ef0c"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

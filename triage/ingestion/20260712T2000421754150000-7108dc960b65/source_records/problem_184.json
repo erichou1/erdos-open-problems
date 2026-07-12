@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 184,
+  "raw_page": {
+    "path": "raw/pages/problem_184.html",
+    "sha256": "f99c61130a216ec3323379f7a244268fa8395c121feafa1e3236ac48d1e3f994"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "5ea429d1d669b21d1dd70c94c67789081a2c7795d4da7f428340f8f3407c3a8e",
+      "source_region": "div.problem-additional-text",
+      "text": "[BM22] Buci\\'C, M. and Montgomery, R., Towards the Erd\\H{o}s-Gallai Cycle Decomposition Conjecture. arXiv:2211.07689 (2022).\n \n [CFS14] Conlon, David and Fox, Jacob and Sudakov, Benny, Cycle packing. Random Structures Algorithms (2014), 608-626.\n \n [EGP66] Erd\\H{o}s, Paul and Goodman, A. W. and P\\'{o}sa, Lajos, The representation of a graph by set intersections. Canadian J. Math. (1966), 106-112.\n \n [Er71] Erd\\H{o}s, P., Some unsolved problems in graph theory and combinatorial analysis. Combinatorial Mathematics and its Applications (Proc.\nConf., Oxford, 1969) (1971), 97-109."
+    },
+    "remarks": {
+      "sha256": "a44555706d42a89b414dfe4383447b018a30dee6bdbfbf63780cc8efe0dc4b8b",
+      "source_region": "div.problem-additional-text",
+      "text": "Conjectured by Erd\\H{o}s and Gallai, who proved that $O(n\\log n)$ many cycles and edges suffices (see Section 5 of \\cite{EGP66}). \n\nThe graph $K_{3,n-3}$ shows that at least $(1+c)n$ many cycles and edges are required, for some constant $c>0$. In \\cite{Er71} Erd\\H{o}s suggests that only $n-1$ many cycles and edges are required if we do not require them to be edge-disjoint.\n\nThe best bound available is due to Buci\\'{c} and Montgomery \\cite{BM22}, who prove that $O(n\\log^*n)$ many cycles and edges suffice, where $\\log^*$ is the iterated logarithm function.\n\nConlon, Fox, and Sudakov \\cite{CFS14} proved that $O_\\epsilon(n)$ cycles and edges suffice if $G$ has minimum degree at least $\\epsilon n$, for any $\\epsilon>0$.\n\nSee also [583] for an analogous problem decomposing into paths, and [1017] for decomposing into complete graphs."
+    },
+    "statement": {
+      "sha256": "4f6f37a8adbdb2412c3a8b9befbcbdadd3088d1061726ae46e93b7fa5cf839ff",
+      "source_region": "div#content",
+      "text": "Any graph on $n$ vertices can be decomposed into $O(n)$ many edge-disjoint cycles and edges."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/184"
+}

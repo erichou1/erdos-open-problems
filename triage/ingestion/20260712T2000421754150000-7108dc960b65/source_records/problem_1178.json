@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1178,
+  "raw_page": {
+    "path": "raw/pages/problem_1178.html",
+    "sha256": "1b95020c97a1dfba54daed0a88439552c3cf08b340de0f0c193d16ab33fa723d"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "6009b200749eb7a64afb48cce231745d5e2e1a31d5e9804c76242aa29ff90d45",
+      "source_region": "div.problem-additional-text",
+      "text": "[BES73] Brown, W. G. and Erd\\H{o}s, P. and S\\'os, V. T., Some extremal problems on {$r$}-graphs. (1973), 53--63.\n \n [CGLS23] Conlon, David and Gishboliner, Lior and Levanzov, Yevgeny and\nShapira, Asaf, A new bound for the {B}rown-{E}rd\\H os-S\\'os problem. J. Combin. Theory Ser. B (2023), 1--35.\n \n [EFR86] Erd\\H{o}s, P. and Frankl, P. and R\\\"{o}dl, V., The asymptotic number of graphs not containing a fixed subgraph and a problem for hypergraphs having no exponent. Graphs Combin. (1986), 113-121.\n \n [Er75b] Erd\\H{o}s, Paul, Problems and results in combinatorial number theory. Journ\\'{e}es Arithm\\'{e}tiques de Bordeaux (Conf., Univ. Bordeaux, Bordeaux, 1974) (1975), 295-310.\n \n [RuSz78] Ruzsa, I. Z. and Szemer\\'{e}di, E., Triple systems with no six points carrying three triangles. Combinatorics (Proc. Fifth Hungarian Colloq.,\nKeszthely, 1976), Vol. II (1978), 939-945.\n \n [SaSe05] S\\'{a}rk\\\"ozy, G\\'{a}bor N. and Selkow, Stanley, An extension of the {R}uzsa-Szemer\\'edi theorem. Combinatorica (2005), 77--84.\n \n [SoSo17] Solymosi, David and Solymosi, Jozsef, Small cores in 3-uniform hypergraphs. J. Combin. Theory Ser. B (2017), 897--910."
+    },
+    "remarks": {
+      "sha256": "1d7aa979890cf6313564ec000b44dd57f914ca2189eee67408b65d93427a3403",
+      "source_region": "div.problem-additional-text",
+      "text": "A conjecture of Brown, Erd\\H{o}s, and S\\'{o}s \\cite{BES73}, who proved that $d_r(e)\\geq (r-2)e+3$ (see also [1076]).\n\nRuzsa and Szemer\\'{e}di \\cite{RuSz78} proved $d_3(3)=6$ (see [716]).\n\nErd\\H{o}s, Frankl, and R\\\"{o}dl \\cite{EFR86} proved\\[d_r(3)= (r-2)3+3\\]for all $r\\geq 3$. S\\'{a}rk\\\"{o}zy and Selkow \\cite{SaSe05} proved\\[d_r(e) \\leq (r-2)e+2+\\lfloor \\log_2 e\\rfloor\\]for all $r,e\\geq 3$. Solymosi and Solymosi \\cite{SoSo17} proved that $d_3(10)\\leq 14$. Conlon, Gishboliner, Levanzov, and Shapira \\cite{CGLS23} proved\\[d_3(e)\\leq e+O\\left(\\frac{\\log e}{\\log\\log e}\\right)\\]for all $e\\geq 3$.\n\nIn \\cite{Er75b} Erd\\H{o}s even asks whether, if $\\mathcal{F}$ is the family of $3$-uniform hypergraphs on $k$ vertices with $k-3$ edges,\\[\\mathrm{ex}_3(n,\\mathcal{F})\\asymp n r_{k-3}(n),\\]where $r_{k-3}(n)$ is the maximal size of a subset of $\\{1,\\ldots,n\\}$ that does not contain a non-trivial arithmetic progression of length $k-3$. He states that Ruzsa has proved the lower bound for $k=6,7,8$.\n\nSee [1157] for the general case."
+    },
+    "statement": {
+      "sha256": "c53216c0a9fb3d7d0a1ef22d079fa46846d03a6e164ed4582acd2bcdd782e1f4",
+      "source_region": "div#content",
+      "text": "For $r\\geq 3$ let $d_r(e)$ be the minimal $d$ such that\\[\\mathrm{ex}_r(n,\\mathcal{F})=o(n^2),\\]where $\\mathcal{F}$ is the family of $r$-uniform hypergraphs on $d$ vertices with $e$ edges.\n\nProve that\\[d_r(e)=(r-2)e+3\\]for all $r,e\\geq 3$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1178"
+}

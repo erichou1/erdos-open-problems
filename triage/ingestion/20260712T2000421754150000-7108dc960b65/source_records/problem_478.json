@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 478,
+  "raw_page": {
+    "path": "raw/pages/problem_478.html",
+    "sha256": "7fdbfa74eff817b5ef72966d2ef81312d4c0cb9c8cd41cf6c1707cd9c010200b"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "9a278f37280561adb462dc8146a9c268a3b5c7b95c68a9fd7e5748877bf607f6",
+      "source_region": "div.problem-additional-text",
+      "text": "[AnTa16] V. Andreji\\'{c} and M. Tatarevic, On distinct residues of factorials. arXiv:1603.04086 (2016).\n \n [GSSV24] Grebennikov, Alexandr and Sagdeev, Arsenii and Semchankau,\nAliaksei and Vasilevskii, Aliaksei, On the sequence {$n! \\bmod p$}. Rev. Mat. Iberoam. (2024), 637--648.\n \n [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.\n \n [KlMu17] Klurman, Oleksiy and Munsch, Marc, Distribution of factorials modulo {$p$}. J. Th\\'{e}or. Nombres Bordeaux (2017), 169--177.\n \n [RoSc60] Rokowska, B. and Schinzel, A., Sur un probl\\`eme de {M}. {E}rd\\H os. Elem. Math. (1960), 84--85.\n \n [Tr13] T. Trudgian, There are no socialist primes less than $10^9$. arXiv:1310.6403 (2013)."
+    },
+    "remarks": {
+      "sha256": "76bed8436f9036ea401a8d180453f1241860bd55caf27f227ea7192ef1c00332",
+      "source_region": "div.problem-additional-text",
+      "text": "Since $A_p/A_p=\\{1,\\ldots,p-1\\}$ it follows that $\\lvert A_p\\rvert \\gg p^{1/2}$. The best known lower bound is due to Grebennikov, Sagdeev, Semchankau, and Vasilevskii \\cite{GSSV24},\\[\\lvert A_p\\rvert \\geq (\\sqrt{2}-o(1))p^{1/2},\\]which follows from proving that $\\lvert A_pA_p\\rvert=(1+o(1))p$.\n\nWilson's theorem implies $(p-2)!\\equiv 1\\pmod{p}$, and hence $\\lvert A_p\\rvert\\leq p-2$. Results on $\\lvert A_p\\rvert$ on average were obtained by Klurman and Munsch \\cite{KlMu17}. \n\nIt is even open whether there are infinitely many primes $p$ such that $\\lvert A_p\\rvert=p-2$: in other words, such that $2!,\\ldots,(p-1)!$ are all distinct modulo $p$ (such primes are sometimes called socialist primes). Rokowska and Schinzel \\cite{RoSc60} have proved that any socialist prime is $5\\pmod{8}$, and must satisfy $-(\\frac{5}{p})=(\\frac{-23}{p})=1$. Moreover, the congruence class missing from $2!,\\ldots,(p-1)!$ must be $-(\\frac{p-1}{2})!$. \n\nThe only known socialist prime is $p=5$. Trudgian \\cite{Tr13} has shown there are no other socialist primes $<10^9$. This was extended to $10^{11}$ by Andreji\\'{c} and Tatarevic \\cite{AnTa16}.\n\nThis is also discussed in problems A2 and F11 of Guy's collection \\cite{Gu04}."
+    },
+    "statement": {
+      "sha256": "5d1a43b30640ae81dbf38d8c6f30ca5a4f8e72b0935f9d2f8f233cbbf568f32a",
+      "source_region": "div#content",
+      "text": "Let $p$ be a prime and\\[A_p = \\{ k! \\pmod{p} : 1\\leq k<p\\}.\\]Is it true that\\[\\lvert A_p\\rvert \\sim (1-\\tfrac{1}{e})p?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/478"
+}

@@ -1,0 +1,60 @@
+{
+  "problem_number": 357,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/357",
+  "retrieved_at": "2026-07-10T23:16:46.832702+00:00",
+  "page_title": "357 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "f2f62f3f0489dbd8fc68c85edbdbd28bcd095d7d767aa9d06074504e3ee60fef",
+  "comment_count": 10,
+  "comments": [
+    {
+      "post_id": "2112",
+      "text": "As a remark, Beker's work on [356] gives a nontrivial upper bound for $f(n)$. Define\\[ S(a) = \\left\\{ \\sum_{i=u}^v a_i : 1 \\le u \\le v \\le k \\right\\}. \\]By [Be23b, Proposition 1.5], for any strictly increasing sequence \\(1 \\le a_1 < \\cdots < a_k \\le n\\) one has\\[ |S(a)| \\le (c_4 + o(1)) n^2, \\qquad c_4 = \\frac{e^2 - 1}{2(e^2 + 1)}. \\]Now take an extremal configuration for $f(n)$: there exists some $k = f(n)$ and a strictly increasing subset \\(1 \\le a_1 < \\cdots < a_k \\le n\\) such that all consecutive sums are distinct. In this case\\[ |S(a)| = \\frac{k(k+1)}{2}. \\]Combining the two bounds, we obtain \\(\\frac{k(k+1)}{2} \\le (c_4 + o(1)) n^2\\), and hence\\[ f(n) \\le \\left(\\sqrt{2c_4} + o(1)\\right) n = \\left( \\sqrt{\\frac{e^2 - 1}{e^2 + 1}} + o(1) \\right) n \\approx (0.8727 + o(1))\\,n. \\][Be23b] Beker, A., On a problem of Erdős and Graham about consecutive sums in strictly increasing sequences. arXiv:2311.10087 (2023).",
+      "meta": "Quanyu Tang — 20:19 on 08 Dec 2025 👍 3 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2115",
+      "text": "The upper bound of $f(n)\\leq g(n)\\leq\\frac{2n}{3}$ follows from Hegyvári's paper. Though this is a way of specifically tackling the monotone version of the problem.",
+      "meta": "Adenwalla — 00:12 on 09 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2117",
+      "text": "By the upper bound of Coppersmith and Phillips in [867], we have \\begin{equation*} f(n) \\leq \\left(\\frac{2}{3}-\\frac{1}{512}\\right)n + \\log n \\end{equation*} for all large $n$, which is even better! (The site has been updated to address this comment.)",
+      "meta": "DesmondWeisenberg — 00:51 on 09 Dec 2025 👍 3 📝 1 🤖 0"
+    },
+    {
+      "post_id": "5308",
+      "text": "The description applies this upper bound to $g(n)$ but I believe it should only apply to $f(n)$.",
+      "meta": "Adenwalla — 17:29 on 09 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4133",
+      "text": "Regarding \"A similar question can be asked if we replace strict monotonicity with weak monotonicity (i.e. we allow $a_i=a_j$)\" I'm not quite sure how to make sense of this: Is the idea here to then allow only sums over intervals of length larger than $1$? or is it then allowed to take sums over length-$1$ intervals, but they are only counted once? Would $a_1, a_2, a_3 = 1, 1, 2$ have all distinct sums? Is there a reference where this question is asked? Boris Alexeev pointed me to this question when asking about our formalisation in Formal Conjectures of this problem.",
+      "meta": "Moritz Firsching — 20:07 on 03 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4137",
+      "text": "In OLD AND NEW PROBLEMS AND RESULTS IN COMBINATORIAL NUMBER THEORY , at the bottom of page 58. However, it just says 'What if we remove the monotonicity constraint and/or the distinctness constraint?' I am not sure what it mean to remove the distinctness constraint, and perhaps 'remove the monotonicity constraint' merely means the version tackled in [He86].",
+      "meta": "Adenwalla — 00:11 on 04 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4142",
+      "text": "Thanks! I also don't understand what removing the \"distinctness constraint\" would exactly mean. In the same paragraph the word \"distinct\" is mentioned for the blocks, so perhaps this condition is relaxed instead?",
+      "meta": "Moritz Firsching — 07:56 on 04 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4168",
+      "text": "I think a good interpretation of weak monotonicity is one where we don't compare sums over two different length $1$ intervals (as you said) and the rest is the same. Your example would not have al distinct sums due to $a_1+a_2=a_3$.",
+      "meta": "Adenwalla — 17:54 on 04 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1873",
+      "text": "The page numbers are [Er77c,p.70][ErGr80,p.58]. Another related question we can ask is: if we have $n$ positive integers with distinct consecutive sums, with no restrictions on monotonicity or on the upper bound of each individual number, what is the smallest sum of these integers? This is essentially equivalent to the $d = 1$ case of [670], by letting the integers of the sequence correspond to the lengths of the gaps between points. Perhaps a \"see also\" to [867] would make sense too. Feel free to delete this comment after reviewing. (The site has been updated to address this comment.)",
+      "meta": "DesmondWeisenberg — 05:29 on 28 Nov 2025 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "180",
+      "text": "Every set with the property in [874] has this property as well. It therefore follows from the construction of Straus that $f(n) \\geq (2 + o(1))n^{1/2}$. (Side note: the multiplicative analogues of [874] and this are [786] and [421], respectively.) (The site has been updated to address this comment.)",
+      "meta": "DesmondWeisenberg — 09:03 on 24 Aug 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

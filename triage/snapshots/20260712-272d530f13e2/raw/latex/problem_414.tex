@@ -1,0 +1,34 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#414}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, iterated functions
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $h_1(n)=h(n)=n+\tau(n)$ (where $\tau(n)$ counts the number of divisors of $n$) and $h_k(n)=h(h_{k-1}(n))$. Is it true, for any $m,n$, there exist $i$ and $j$ such that $h_i(m)=h_j(n)$?
+
+
+
+
+Asked by Spiro. That is, there is (eventually) only one possible sequence that the iterations of $n\mapsto h(n)$ can settle on. Erd\H{o}s and Graham believed the answer is yes. Similar questions can be asked by the iterates of many other functions. See also [412] and [413] .
+
+\noindent\textbf{Related OEIS sequences:} A064491, possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/414}}
+\end{document}

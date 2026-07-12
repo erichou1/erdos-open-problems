@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 675,
+  "raw_page": {
+    "path": "raw/pages/problem_675.html",
+    "sha256": "2abf7fe290d0150ddb5cdb9887c5af0388d25f9f56802200d4aa44f7651f8cbc"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_region": "div.problem-additional-text",
+      "text": ""
+    },
+    "remarks": {
+      "sha256": "d484880d1b17c9f67220789cc463b52421b448f0a0363f3d1417b396a7ed4499",
+      "source_region": "div.problem-additional-text",
+      "text": "Elementary sieve theory implies that the set of squarefree numbers has the translation property.\n\nMore generally, Brun's sieve can be used to prove that if $B\\subseteq \\mathbb{N}$ is a set of pairwise coprime integers with $\\sum_{b<x}\\frac{1}{b}=o(\\log\\log x)$ then $A=\\{ n: b\\nmid n\\textrm{ for all }b\\in A\\}$ has the translation property. Erd\\H{o}s did not know what happens if the condition on $\\sum_{b<x}\\frac{1}{b}$ is weakened or dropped altogether."
+    },
+    "statement": {
+      "sha256": "d60b276afee2cb51887dbbace7e738779bde6011f10e1736134a87ff6978da71",
+      "source_region": "div#content",
+      "text": "We say that $A\\subset \\mathbb{N}$ has the translation property if, for every $n$, there exists some integer $t_n\\geq 1$ such that, for all $1\\leq a\\leq n$,\\[a\\in A\\quad\\textrm{ if and only if }\\quad a+t_n\\in A.\\]{UL}\n{LI}Does the set of the sums of two squares have the translation property?{/LI}\n{LI}If we partition all primes into $P\\sqcup Q$, such that each set contains $\\gg x/\\log x$ many primes $\\leq x$ for all large $x$, then can the set of integers only divisible by primes from $P$ have the translation property?{/LI}\n{LI}If $A$ is the set of squarefree numbers then how fast does the minimal such $t_n$ grow? Is it true that $t_n>\\exp(n^c)$ for some constant $c>0$?{/LI}\n{/UL}"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/675"
+}

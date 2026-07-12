@@ -1,0 +1,272 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 2.842
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "yes"
+    },
+    "references": [
+      "CoGu68",
+      "DFX21",
+      "Er56",
+      "Er73",
+      "Er80",
+      "Er85c",
+      "Er98",
+      "ErGr80",
+      "ErSp74",
+      "Gr71",
+      "Gu04",
+      "Gu82",
+      "Ru99",
+      "St23"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/1",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[CoGu68] J. H. Conway and R. K. Guy, Sets of natural numbers with distinct sums. Notices Amer. Math. Soc. (1968), 345.\n \n [DFX21] Dubroff, Q. and Fox, J. and Xu, M. W., A note on the Erd\\H{o}s distinct subset sums problem. SIAM Journal on Discrete Mathematics (2021), 322-324.\n \n [Er56] Erd\\H{o}s, P., Problems and results in additive number theory. Colloque sur la Th\\'{e}orie des Nombres, Bruxelles, 1955 (1956), 127-137.\n \n [Er73] Erd\\H{o}s, P., Problems and results on combinatorial number theory. A survey of combinatorial theory (Proc. Internat. Sympos., Colorado State Univ., Fort Collins, Colo., 1971) (1973), 117-138.\n \n [Er80] Erd\\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.\n \n [Er85c] Erd\\H{o}s, P., On some of my problems in number theory I would most like to see solved. Number theory (Ootacamund, 1984) (1985), 74-84.\n \n [Er98] Erd\\H{o}s, Paul, Some of my new and almost new problems and results in combinatorial number theory. Number theory (Eger, 1996) (1998), 169-180.\n \n [ErGr80] Erd\\H{o}s, P. and Graham, R., Old and new problems and results in combinatorial number theory. Monographies de L'Enseignement Mathematique (1980).\n \n [ErSp74] Erd\\H{o}s, Paul and Spencer, Joel, Probabilistic methods in combinatorics. Akad\\'{e}miai Kiad\\'{o} (1974).\n \n [Gr71] Graham, R. L., On sums of integers taken from a fixed sequence. (1971), 22--40.\n \n [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.\n \n [Gu82] Guy, Richard K., Sets of integers whose subsets have distinct sums. (1982), 141--154.\n \n [Ru99] Ruzsa, I., Erd\\H{o}s and the Integers. Journal of Number Theory (1999), 115-163.\n \n [St23] Steinerberger, S., Some remarks on the Erd\\H{o}s distinct subset sums problem. arXiv:2208.12182 (2023).",
+      "remarks": "Erd\\H{o}s called this 'perhaps my first serious problem' (in \\cite{Er98} he dates it to 1931). The powers of $2$ show that $2^n$ would be best possible here: this provides an upper bound for the minimal such $N$ of $N\\leq 2^{n-1}$. This was improved by Conway and Guy \\cite{CoGu68} (see also \\cite{Gu82}) to $N\\leq 2^{n-2}$ (for all large $n$). The best known upper bound is\\[N\\leq 0.22002\\cdot 2^n,\\]due to Bohman.\n\nThe trivial lower bound is $N \\gg 2^{n}/n$, since all $2^n$ distinct subset sums must lie in $[0,Nn)$. Erd\\H{o}s and Moser \\cite{Er56} proved\\[ N\\geq (\\tfrac{1}{4}-o(1))\\frac{2^n}{\\sqrt{n}}.\\](In \\cite{Er85c} Erd\\H{o}s offered \\$100 for any improvement of the constant $1/4$ here.)\n\nA number of improvements of the constant have been given (see \\cite{St23} for a history), with the current record $\\sqrt{2/\\pi}$ first proved in unpublished work of Elkies and Gleason. Two proofs achieving this constant are provided by Dubroff, Fox, and Xu \\cite{DFX21}, who in fact prove the exact bound $N\\geq \\binom{n}{\\lfloor n/2\\rfloor}$.\n\nAn equivalent formulation is to ask for the maximal size of a set of integers in $[1,x]$ which is dissociated (all subset sums are distinct). If $F(x)$ is the size of such a set then this problem is equivalent to\\[F(x) <\\log_2x+O(1).\\]Conway and Guy (see \\cite{Gu82}) conjectured that $F(2^k)=k+2$ for all large $k$, but Erd\\H{o}s \\cite{Er80} wrote he had 'no opinion'.\n\nIn \\cite{Er73} and \\cite{ErGr80} the generalisation where $A\\subseteq (0,N]$ is a set of real numbers such that the subset sums all differ by at least $1$ is proposed, with the same conjectured bound. (The second proof of \\cite{DFX21} applies also to this generalisation.) This generalisation seems to have first appeared in \\cite{Gr71}.\n\nThis problem appears in Erd\\H{o}s' book with Spencer \\cite{ErSp74} in the final chapter titled 'The kitchen sink'. As Ruzsa writes in \\cite{Ru99} \"it is a rich kitchen where such things go to the sink\". \n\nThe sequence of minimal $N$ for a given $n$ is A276661 in the OEIS.\n\nSee also [350].\n\nThis is discussed in problem C8 of Guy's collection \\cite{Gu04}."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory",
+      "additive combinatorics"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 3.62,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.02889,
+        0.434618
+      ],
+      "probability": 0.231754
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.117,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.01562,
+        0.459698
+      ],
+      "probability": 0.237659
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 14.0,
+      "credible_interval_approx": [
+        0.0,
+        0.125322
+      ],
+      "probability": 0.034483
+    },
+    "p_high_mathematical_value": {
+      "alpha": 3.067,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.018074,
+        0.490214
+      ],
+      "probability": 0.254144
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.667,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.030769,
+        0.437316
+      ],
+      "probability": 0.234043
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.9,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        2.3e-05,
+        0.389239
+      ],
+      "probability": 0.194631
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 40.0,
+      "credible_interval_approx": [
+        0.0,
+        0.103879
+      ],
+      "probability": 0.043062
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.009216,
+        0.509303
+      ],
+      "probability": 0.259259
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "minor"
+    },
+    "literature": {
+      "comment_count": 3,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:14:53.207541+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "bd63236af14731eee52d4b751cf5af5cabf097a5d42cb98a0a3d18e93f10e50b"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "asymptotic_notation"
+      ],
+      "ambiguity_status": "minor",
+      "quantifier_signal_count": 1,
+      "question_count": 0,
+      "requires_source_audit": true,
+      "statement_characters": 157,
+      "statement_tokens_approx": 23
+    },
+    "structure": {
+      "asymptotic": true,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove",
+      "multi_part": false,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-1",
+  "problem_number": 1,
+  "problem_type": {
+    "asymptotic": true,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove",
+    "multi_part": false,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_1.html",
+      "raw_html_sha256": "509bdb0612fd174cfc3e2f75194d702fb204e90024fc48a5132ab17c5a5f3657",
+      "section_sha256": {
+        "references": "7348df92ce5e38eb9b1611117136520f1392710d575c17485ff46d87ebce0193",
+        "remarks": "727e77389902ffe774a66092a34bb8e2bf42fdd5b7b82fb3bead87a08d8516be",
+        "statement": "bd9aa852758b1a1b093877b64a9371a62131a4e25a514d347983d472805e1ce1"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_1.json",
+      "source_record_sha256": "688d22f09ebdcb2b358a9b95ca05fc609c65515f6639fb948f584d451b1e3a64",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_1.tex",
+    "latex_sha256": "33844738ddcd3b4ec0beeb9d5e5f21e59e8d0e5c3534be2e61d6c6e15db558d8",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "bd9aa852758b1a1b093877b64a9371a62131a4e25a514d347983d472805e1ce1",
+    "recommended_attack_modes": [
+      "formal_search",
+      "shared_infrastructure_search",
+      "literature_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "f8f6fa7ff98c41b2b38b2a64f60892a2c9e279ca3376bf73e7df8e2b3e68edc8",
+  "routes": [
+    "formal_search",
+    "shared_infrastructure_search",
+    "literature_search",
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "minor",
+    "intended": "If $A\\subseteq \\{1,\\ldots,N\\}$ with $\\lvert A\\rvert=n$ is such that the subset sums $\\sum_{a\\in S}a$ are distinct for all $S\\subseteq A$ then\\[N \\gg 2^{n}.\\]",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "If $A\\subseteq \\{1,\\ldots,N\\}$ with $\\lvert A\\rvert=n$ is such that the subset sums $\\sum_{a\\in S}a$ are distinct for all $S\\subseteq A$ then\\[N \\gg 2^{n}.\\]",
+    "original": "If $A\\subseteq \\{1,\\ldots,N\\}$ with $\\lvert A\\rvert=n$ is such that the subset sums $\\sum_{a\\in S}a$ are distinct for all $S\\subseteq A$ then\\[N \\gg 2^{n}.\\]",
+    "statement_sha256": "bd9aa852758b1a1b093877b64a9371a62131a4e25a514d347983d472805e1ce1"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

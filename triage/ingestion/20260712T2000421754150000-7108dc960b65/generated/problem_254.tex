@@ -1,0 +1,35 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#254}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $A\subseteq \mathbb{N}$ be such that\[\lvert A\cap [1,2x]\rvert -\lvert A\cap [1,x]\rvert \to \infty\textrm{ as }x\to \infty\]and\[\sum_{n\in A} \{ \theta n\}=\infty\]for every $\theta\in (0,1)$, where $\{x\}$ is the distance of $x$ from the nearest integer. Then every sufficiently large integer is the sum of distinct elements of $A$.
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Cassels \cite{Ca60} proved this under the alternative hypotheses\[\lim \frac{\lvert A\cap [1,2x]\rvert -\lvert A\cap [1,x]\rvert}{\log\log x}=\infty\]and\[\sum_{n\in A} \{ \theta n\}^2=\infty\]for every $\theta\in (0,1)$.
+
+\bigskip
+\noindent\textbf{References:}
+
+[Ca60] Cassels, J. W. S., On the representation of integers as the sums of distinct summands taken from a fixed set. Acta Sci. Math. (Szeged) (1960), 111-124.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/254}}
+\end{document}

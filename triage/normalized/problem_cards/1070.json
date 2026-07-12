@@ -1,0 +1,255 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.636
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-09-28",
+      "state": "no"
+    },
+    "references": [
+      "ACMVZ23",
+      "Cr67",
+      "LaRo72",
+      "MRVZ23"
+    ],
+    "source_last_update": "2025-10-05",
+    "source_problem_url": "https://www.erdosproblems.com/1070",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[ACMVZ23] G. Ambrus, A. Csisz\\'{a}rik, M. Matolcsi, D. Varga, and P. Zs\\'{a}mboki, The density of planar sets avoiding unit distances. arXiv:2207.14179 (2023).\n \n [Cr67] H. T. Croft, Incidence incidents. Eureka (1967), 22-26.\n \n [LaRo72] Larman, D. G. and Rogers, C. A., The realization of distances within sets in Euclidean space. Mathematika (1972), 1-24.\n \n [MRVZ23] M. Matolcsi, I. Z. Ruzsa, D. Varga, and P. Zs\\'{a}mboki, The fractional chromatic number of the plane is at least $4$. arXiv:2311.10069 (2023).",
+      "remarks": "In other words, estimate the minimal independence number of a unit distance graph with $n$ vertices. If $\\omega$ is the independence number and $\\chi$ is the chromatic number then $\\omega \\chi\\geq n$, and hence $f(n)\\geq n/\\chi$, where $\\chi$ is the answer to the Hadwiger-Nelson problem [508].\n\nThe Moser spindle shows $f(n)\\leq \\frac{2}{7}n\\approx 0.285n$. Larman and Rogers \\cite{LaRo72} noted that if $m_1$ is the supremum of the upper densities of measurable subsets of $\\mathbb{R}^2$ which have no unit distance pairs then\\[f(n)\\geq m_1n.\\]Croft \\cite{Cr67} gave the best-known lower bound of $m_1\\geq 0.22936$ and hence\\[0.22936n \\leq f(n) \\leq \\frac{2}{7}n\\approx 0.285n.\\]Ambrus, Csisz\\'{a}rik, Matolcsi, Varga, and Zs\\'{a}mboki \\cite{ACMVZ23} have proved that $m_1\\leq 0.247$, and hence this approach cannot achieve $f(n)\\geq n/4$. See [232] for more on $m_1$. \n\nMatolcsi, Ruzsa, Varga, and Zs\\'{a}mboki \\cite{MRVZ23} have improved the upper bound to\\[f(n) \\leq \\left(\\frac{1}{4}+o(1)\\right)n.\\]They conjecture that $m_1=0.22936\\cdots$ (the lower bound of Croft mentioned above) and $f(n)=(1/4+o(1))n$.\n\nIf we also insist that no two points are distance $<1$ apart then this is problem becomes [1066]."
+    },
+    "source_state": "open",
+    "tags": [
+      "geometry"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 3.78,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.035328,
+        0.44376
+      ],
+      "probability": 0.239544
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 1.008,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.254697
+      ],
+      "probability": 0.091566
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.8,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.190215
+      ],
+      "probability": 0.0625
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.4,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.437443
+      ],
+      "probability": 0.210526
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.467,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.269445
+      ],
+      "probability": 0.108911
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.1,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.228734
+      ],
+      "probability": 0.083969
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 39.0,
+      "credible_interval_approx": [
+        0.0,
+        0.07279
+      ],
+      "probability": 0.025
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.436385
+      ],
+      "probability": 0.2
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "clear"
+    },
+    "literature": {
+      "comment_count": 7,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:20:24.709905+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "8be1937db182fe1e70a1b08a20de31f2e58776c21e59b12cc8e751caa4549ff5"
+    },
+    "statement": {
+      "ambiguity_markers": [],
+      "ambiguity_status": "clear",
+      "quantifier_signal_count": 1,
+      "question_count": 1,
+      "requires_source_audit": false,
+      "statement_characters": 203,
+      "statement_tokens_approx": 34
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove_or_disprove",
+      "multi_part": false,
+      "primary_domain": "geometry"
+    }
+  },
+  "problem_id": "erdos-1070",
+  "problem_number": 1070,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove_or_disprove",
+    "multi_part": false,
+    "primary_domain": "geometry"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_1070.html",
+      "raw_html_sha256": "e2ef0b72f69c864c845fa15014e63037b23f5e607f568f8c9b3a31b63ce85e67",
+      "section_sha256": {
+        "references": "06c4714b6148949f73c6b19e3bc23e94397feaea8a85ce812cf058b53b1971e9",
+        "remarks": "4fce66cd9da52c74223199ed1b0cb29c56400e34c57a8421b12311aa2419d51a",
+        "statement": "c519c5f2fd155f8633fb87c1ced8e79603bfd571a09c296eb235c5f1f0649fd3"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_1070.json",
+      "source_record_sha256": "363b7d9f4f45db7801d1df5f4b60d189de5bcd0f1e7b9f138098629ff908f85d",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_1070.tex",
+    "latex_sha256": "93d3054b6196e477d23fa041f749f554eb3a66a52d01a6f47edf0e823132a849",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "c519c5f2fd155f8633fb87c1ced8e79603bfd571a09c296eb235c5f1f0649fd3",
+    "recommended_attack_modes": [
+      "literature_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "9c910cb68d7144311df59458d50e16b6ed3fdd46eded72b45faf34be610ad6eb",
+  "routes": [
+    "literature_search",
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "clear",
+    "intended": "Let $f(n)$ be maximal such that, given any $n$ points in $\\mathbb{R}^2$, there exist $f(n)$ points such that no two are distance $1$ apart. Estimate $f(n)$. In particular, is it true that $f(n)\\geq n/4$?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $f(n)$ be maximal such that, given any $n$ points in $\\mathbb{R}^2$, there exist $f(n)$ points such that no two are distance $1$ apart. Estimate $f(n)$. In particular, is it true that $f(n)\\geq n/4$?",
+    "original": "Let $f(n)$ be maximal such that, given any $n$ points in $\\mathbb{R}^2$, there exist $f(n)$ points such that no two are distance $1$ apart. Estimate $f(n)$. In particular, is it true that $f(n)\\geq n/4$?",
+    "statement_sha256": "c519c5f2fd155f8633fb87c1ced8e79603bfd571a09c296eb235c5f1f0649fd3"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

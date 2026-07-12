@@ -1,0 +1,260 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.358
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "yes"
+    },
+    "references": [
+      "Ba23",
+      "Er85c"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/218",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Ba23] Banks, William D., On ratios of consecutive prime gaps. Integers (2023), Paper No. A50, 13.\n \n [Er85c] Erd\\H{o}s, P., On some of my problems in number theory I would most like to see solved. Number theory (Ootacamund, 1984) (1985), 74-84.",
+      "remarks": "In \\cite{Er85c} Erd\\H{o}s also conjectures that $d_n=d_{n+1}=\\cdots=d_{n+k}$ is solvable for every $k$ (which is equivalent to $k$ consecutive primes in arithmetic progression, see [141]).\n\nBanks \\cite{Ba23} has given a heuristic argument, assuming a quantitative form of the prime tuples conjecture, that the first statement is true, and in fact for any $c\\geq 0$ and $\\epsilon>0$ the number of $n$ such that $p_n\\leq x$ and $d_{n+1}\\geq cd_n$ is\\[\\frac{\\pi(x)}{c+1}+O\\left(\\frac{x}{(\\log x)^{3/2+\\epsilon}}\\right).\\]"
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory",
+      "primes"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 3.56,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.026475,
+        0.431109
+      ],
+      "probability": 0.228792
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.074,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.013547,
+        0.456659
+      ],
+      "probability": 0.235103
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.3,
+      "beta": 14.0,
+      "credible_interval_approx": [
+        0.0,
+        0.220332
+      ],
+      "probability": 0.084967
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.933,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.011149,
+        0.480471
+      ],
+      "probability": 0.24581
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.5,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.024059,
+        0.427553
+      ],
+      "probability": 0.225806
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.7,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.375214
+      ],
+      "probability": 0.183673
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 40.0,
+      "credible_interval_approx": [
+        0.0,
+        0.103879
+      ],
+      "probability": 0.043062
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.009216,
+        0.509303
+      ],
+      "probability": 0.259259
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "minor"
+    },
+    "literature": {
+      "comment_count": 14,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:16:07.473671+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "7e57bd04a388017a4daa2104f6832c71981ad4e590c3baa09ee7dc0856a511e6"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "implicit_convention"
+      ],
+      "ambiguity_status": "minor",
+      "quantifier_signal_count": 0,
+      "question_count": 0,
+      "requires_source_audit": true,
+      "statement_characters": 189,
+      "statement_tokens_approx": 27
+    },
+    "structure": {
+      "asymptotic": true,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "prove",
+      "multi_part": false,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-218",
+  "problem_number": 218,
+  "problem_type": {
+    "asymptotic": true,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "prove",
+    "multi_part": false,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_218.html",
+      "raw_html_sha256": "21ffe8da27bf198f4fc8d7fa7a73848b8981ba957cf8a49cad27a0f4e4400f73",
+      "section_sha256": {
+        "references": "a9ed8a017ee2a40814e2da1db24ce9ba1ee4a111bc0b609b164bacec2994042f",
+        "remarks": "6b451100167bccc29ee201e4c4474059afe123b103f2200e7d6e5fc41593f465",
+        "statement": "351f52374d61c7d949a75aedfb350c99a75d1d0b16c9beaf4a0bd4c2379fc3fd"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_218.json",
+      "source_record_sha256": "9135e162151592623cad9a64b85d2c071c5fbe2c08b38a5fbf084225c794cc51",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_218.tex",
+    "latex_sha256": "06298a6ac0a0d8b2e6dc26cba06363407e25ce1120381026da723251f974590d",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "351f52374d61c7d949a75aedfb350c99a75d1d0b16c9beaf4a0bd4c2379fc3fd",
+    "recommended_attack_modes": [
+      "formal_search",
+      "shared_infrastructure_search",
+      "literature_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "8c316b3e2fa34e544c2aead62406e378e14c896ed2cad3ca1a85c4c4548bcb74",
+  "routes": [
+    "formal_search",
+    "shared_infrastructure_search",
+    "literature_search",
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "minor",
+    "intended": "Let $d_n=p_{n+1}-p_n$. The set of $n$ such that $d_{n+1}\\geq d_n$ has density $1/2$, and similarly for $d_{n+1}\\leq d_n$. Furthermore, there are infinitely many $n$ such that $d_{n+1}=d_n$.",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $d_n=p_{n+1}-p_n$. The set of $n$ such that $d_{n+1}\\geq d_n$ has density $1/2$, and similarly for $d_{n+1}\\leq d_n$. Furthermore, there are infinitely many $n$ such that $d_{n+1}=d_n$.",
+    "original": "Let $d_n=p_{n+1}-p_n$. The set of $n$ such that $d_{n+1}\\geq d_n$ has density $1/2$, and similarly for $d_{n+1}\\leq d_n$. Furthermore, there are infinitely many $n$ such that $d_{n+1}=d_n$.",
+    "statement_sha256": "351f52374d61c7d949a75aedfb350c99a75d1d0b16c9beaf4a0bd4c2379fc3fd"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

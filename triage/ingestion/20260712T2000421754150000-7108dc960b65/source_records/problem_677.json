@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 677,
+  "raw_page": {
+    "path": "raw/pages/problem_677.html",
+    "sha256": "1022ca17308841011c46a4eda3245376a673474dabdffd2d31b410ad98730a91"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "e774d740b76c6f76a22ac74a4c250867fe77b142004064478cbb7a3645efae49",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er79d] Erd\\H{o}s, P., Some unconventional problems in number theory. Acta Math. Acad. Sci. Hungar. (1979), 71-80.\n \n [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437."
+    },
+    "remarks": {
+      "sha256": "1abef19958b479f7edf2bb43b16a1de8bb0f12eeb52c21d2e61bb9a3b91ce564",
+      "source_region": "div.problem-additional-text",
+      "text": "The Thue-Siegel theorem implies that, for fixed $k$, there are only finitely many $m,n$ such that $m\\geq n+k$ and $M(n,k)=M(m,k)$.\n\nIn general, how many solutions does $M(n,k)=M(m,l)$ have when $m\\geq n+k$ and $l>1$? Erd\\H{o}s expects very few (and none when $l\\geq k$). \n\nThe only solutions Erd\\H{o}s knew were $M(4,3)=M(13,2)$ and $M(3,4)=M(19,2)$. \n\nIn \\cite{Er79d} Erd\\H{o}s conjectures the stronger fact that (aside from a finite number of exceptions) if $k>2$ and $m\\geq n+k$ then $\\prod_{i\\leq k}(n+i)$ and $\\prod_{i\\leq k}(m+i)$ cannot have the same set of prime factors.\n\nSee also [678], [686], and [850].\n\nThis is discussed in problem B35 of Guy's collection \\cite{Gu04}."
+    },
+    "statement": {
+      "sha256": "a227acf77bb4b520e720d132ad41f66642acc574a2580a4d25895734cb3aa4b4",
+      "source_region": "div#content",
+      "text": "Let $M(n,k)=[n+1,\\ldots,n+k]$ be the least common multiple of $\\{n+1,\\ldots,n+k\\}$.\n\nIs it true that for all $m\\geq n+k$\\[M(n,k) \\neq M(m,k)?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/677"
+}

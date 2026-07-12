@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 671,
+  "raw_page": {
+    "path": "raw/pages/problem_671.html",
+    "sha256": "9c4bdd9081fa2c62f3513c5a27cc2eec826c0b14aba72ad13b517bee66e1d612"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "d4afe821142aa81be52586bba7126bd749736087076cd9d2615ce1147dceb379",
+      "source_region": "div.problem-additional-text",
+      "text": "[Be31] S. Bernstein, Sur la limitation des valeurs d'un polynome $P_n(x)$ de degr\\'{e} n sur tout un segment par ses valeurs en $(n+1)$ points du segment. Izv. Akad. Nauk. SSSR (1931), 1025-1050.\n \n [ErVe80] Erd\\H{o}s, P. and V\\'{e}rtesi, P., On the almost everywhere divergence of Lagrange\ninterpolatory polynomials for arbitrary system of nodes. Acta Math. Acad. Sci. Hungar. (1980), 71-89."
+    },
+    "remarks": {
+      "sha256": "50f8ae001e5cd5a0e545993f6d5541001c06e3248d8f59c3e38d69b4e64ff18b",
+      "source_region": "div.problem-additional-text",
+      "text": "Bernstein \\cite{Be31} proved that for any choice of $a_i^n$ there exists $x_0\\in [-1,1]$ such that\\[\\limsup_{n\\to \\infty} \\sum_{1\\leq i\\leq n}\\lvert p_{i}^n(x)\\rvert=\\infty.\\]Erd\\H{o}s and V\\'{e}rtesi \\cite{ErVe80} proved that for any choice of $a_i^n$ there exists a continuous $f:[-1,1]\\to \\mathbb{R}$ such that\\[\\limsup_{n\\to \\infty} \\lvert \\mathcal{L}^nf(x)\\rvert=\\infty\\]for almost all $x\\in [-1,1]$."
+    },
+    "statement": {
+      "sha256": "7f1e0feafaac3c2499a70a873e93f423c7ab2b3f5e900e6c3e0f988b969fd212",
+      "source_region": "div#content",
+      "text": "Given $a_{i}^n\\in [-1,1]$ for all $1\\leq i\\leq n<\\infty$ we define $p_{i}^n$ as the unique polynomial of degree $n-1$ such that $p_{i}^n(a_{i}^n)=1$ and $p_{i}^n(a_{i'}^n)=0$ if $1\\leq i'\\leq n$ with $i\\neq i'$. We similarly define\\[\\mathcal{L}^nf(x) = \\sum_{1\\leq i\\leq n}f(a_i^n)p_i^n(x),\\]the unique polynomial of degree $n-1$ which agrees with $f$ on $a_i^n$ for $1\\leq i\\leq n$ (that is, the sequence of Lagrange interpolation polynomials).\n\nIs there such a sequence of $a_i^n$ such that for every continuous $f:[-1,1]\\to \\mathbb{R}$ there exists some $x\\in [-1,1]$ where\\[\\limsup_{n\\to \\infty} \\sum_{1\\leq i\\leq n}\\lvert p_{i}^n(x)\\rvert=\\infty\\]and yet\\[\\mathcal{L}^nf(x) \\to f(x)?\\]Is there such a sequence such that\\[\\limsup_{n\\to \\infty} \\sum_{1\\leq i\\leq n}\\lvert p_{i}^n(x)\\rvert=\\infty\\]for every $x\\in [-1,1]$ and yet for every continuous $f:[-1,1]\\to \\mathbb{R}$ there exists $x\\in [-1,1]$ with\\[\\mathcal{L}^nf(x) \\to f(x)?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/671"
+}

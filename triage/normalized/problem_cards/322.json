@@ -1,0 +1,318 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.688
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "Er36",
+      "Er65b",
+      "Gu04",
+      "Ma36"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/322",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Er36] Erd\\H{o}s, Paul, On the Representation of an Integer as the Sum of k k-th\nPowers. J. London Math. Soc. (1936), 133-136.\n \n [Er65b] Erd\\H{o}s, Paul, Some recent advances and current problems in number theory. Lectures on Modern Mathematics, Vol. III (1965), 196-244.\n \n [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.\n \n [Ma36] Mahler, Kurt, Note on Hypothesis K of Hardy and Littlewood. J. London Math. Soc. (1936), 136-138.",
+      "remarks": "Connected to Waring's problem. The famous Hypothesis $K$ of Hardy and Littlewood was that $1_A^{(k)}(n)\\leq n^{o(1)}$, but this was disproved by Mahler \\cite{Ma36} for $k=3$, who constructed infinitely many $n$ such that\\[1_A^{(3)}(n)\\gg n^{1/12}\\](where $A$ is the set of cubes). Erd\\H{o}s believed Hypothesis $K$ fails for all $k\\geq 4$, but this is unknown. Hardy and Littlewood made the weaker Hypothesis $K^*$ that for all $N$ and $\\epsilon>0$\\[\\sum_{n\\leq N}1_A^{(k)}(n)^2 \\ll_\\epsilon N^{1+\\epsilon}.\\]Erd\\H{o}s and Graham remark: 'This is probably true but no doubt very deep. However, it would suffice for most applications.'\n\nIndependently Erd\\H{o}s \\cite{Er36} and Chowla proved that for all $k\\geq 3$ and infinitely many $n$\\[1_A^{(k)}(n) \\gg n^{c/\\log\\log n}\\]for some constant $c>0$ (depending on $k$). In \\cite{Er65b} Erd\\H{o}s claims an unpublished proof that, if $B$ is the set of $k$th powers of any set of positive density, then\\[\\limsup 1_B^{(k)}(n)=\\infty.\\]This is discussed in problem D4 of Guy's collection \\cite{Gu04}."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory",
+      "powers"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.04,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.323402
+      ],
+      "probability": 0.145299
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.355,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.02003,
+        0.431679
+      ],
+      "probability": 0.225855
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 4.0,
+      "beta": 13.0,
+      "credible_interval_approx": [
+        0.039332,
+        0.431256
+      ],
+      "probability": 0.235294
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.867,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.007687,
+        0.475459
+      ],
+      "probability": 0.241573
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.033,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.181062
+      ],
+      "probability": 0.064449
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.0,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.0,
+        0.29079
+      ],
+      "probability": 0.129032
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.092979
+      ],
+      "probability": 0.038462
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.6,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.0,
+        0.437301
+      ],
+      "probability": 0.214876
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 1,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:16:34.307101+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "958de0b4d0149d448c4aecc8b248dcf13d0c6a1b321164846d1bd3befe740930"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 2,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 277,
+      "statement_tokens_approx": 47
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": true,
+      "finite_signal": true,
+      "goal": "construct",
+      "multi_part": true,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-322",
+  "problem_number": 322,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": true,
+    "finite_signal": true,
+    "goal": "construct",
+    "multi_part": true,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_322.html",
+      "raw_html_sha256": "4030121b8543401a69bf52951d70f436f5a9e9267cdab4fb8487cf5602c4d5ca",
+      "section_sha256": {
+        "references": "addbf243c20d6bf980f7d28396f9f6effc056ffd6ba875c2d33b348d8bf0682c",
+        "remarks": "b2c03a5b8e0705b74f14f0de9e80135025c1f9fd430520060a2401ee0c0ec2c5",
+        "statement": "a71a79cf57690c367bf47dcc996eaf61a3c80b327b3ae159b77f5bc4ee011d95"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_322.json",
+      "source_record_sha256": "ed71d5c9417ddfa54ab2cebab808973f3629f24336b2afcd49b0521f4b8bbe69",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_322.tex",
+    "latex_sha256": "3b314f97bc9b5710641948e14c8dcbdf35ea2968dcb2860b3c0602185ca617a7",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "a71a79cf57690c367bf47dcc996eaf61a3c80b327b3ae159b77f5bc4ee011d95",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "exact_construction_search",
+      "construction_verification",
+      "exact_computation",
+      "counterexample_search",
+      "subproblem_decomposition",
+      "shared_infrastructure_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Let $k\\geq 3$ and $A\\subset \\mathbb{N}$ be the set of $k$th powers. What is the order of growth of $1_A^{(k)}(n)$, i.e. the number of representations of $n$ as the sum of $k$ many $k$th powers?",
+        "focus_question_sha256": "cb37d215cc124c4525e6f634bd7945551c4f3a9e2749de8cfa5956e5aca11c93",
+        "parent_statement_sha256": "a71a79cf57690c367bf47dcc996eaf61a3c80b327b3ae159b77f5bc4ee011d95",
+        "part_index": 1,
+        "subproblem_contract_sha256": "c74146c640f1f6909159708e2a1a8fc06e3589c96f367428148525c15f99b68c",
+        "subproblem_id": "erdos-322-part-01-c74146c6"
+      },
+      {
+        "focus_question": "Does there exist some $c>0$ and infinitely many $n$ such that\\[1_A^{(k)}(n) >n^c?",
+        "focus_question_sha256": "cca154621d3e7bc8098921a81da0c172d7004ed369547ef7eb7db7e474224e26",
+        "parent_statement_sha256": "a71a79cf57690c367bf47dcc996eaf61a3c80b327b3ae159b77f5bc4ee011d95",
+        "part_index": 2,
+        "subproblem_contract_sha256": "de288b8add99ccaf1e981f1ac7609fb1667ddb2136cac20395d77376ee07c00d",
+        "subproblem_id": "erdos-322-part-02-de288b8a"
+      }
+    ]
+  },
+  "research_directive_sha256": "97f56abe249d3404ff36ec21df2f5189b270cf0cb544811f523875b681dca526",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "exact_construction_search",
+    "construction_verification",
+    "exact_computation",
+    "counterexample_search",
+    "subproblem_decomposition",
+    "shared_infrastructure_search"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Let $k\\geq 3$ and $A\\subset \\mathbb{N}$ be the set of $k$th powers. What is the order of growth of $1_A^{(k)}(n)$, i.e. the number of representations of $n$ as the sum of $k$ many $k$th powers? Does there exist some $c>0$ and infinitely many $n$ such that\\[1_A^{(k)}(n) >n^c?\\]",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $k\\geq 3$ and $A\\subset \\mathbb{N}$ be the set of $k$th powers. What is the order of growth of $1_A^{(k)}(n)$, i.e. the number of representations of $n$ as the sum of $k$ many $k$th powers? Does there exist some $c>0$ and infinitely many $n$ such that\\[1_A^{(k)}(n) >n^c?\\]",
+    "original": "Let $k\\geq 3$ and $A\\subset \\mathbb{N}$ be the set of $k$th powers. What is the order of growth of $1_A^{(k)}(n)$, i.e. the number of representations of $n$ as the sum of $k$ many $k$th powers? Does there exist some $c>0$ and infinitely many $n$ such that\\[1_A^{(k)}(n) >n^c?\\]",
+    "statement_sha256": "a71a79cf57690c367bf47dcc996eaf61a3c80b327b3ae159b77f5bc4ee011d95"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-322",
+      "part_index": 1,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Let $k\\geq 3$ and $A\\subset \\mathbb{N}$ be the set of $k$th powers. What is the order of growth of $1_A^{(k)}(n)$, i.e. the number of representations of $n$ as the sum of $k$ many $k$th powers?",
+        "focus_question_sha256": "cb37d215cc124c4525e6f634bd7945551c4f3a9e2749de8cfa5956e5aca11c93",
+        "normalized": "Let $k\\geq 3$ and $A\\subset \\mathbb{N}$ be the set of $k$th powers. What is the order of growth of $1_A^{(k)}(n)$, i.e. the number of representations of $n$ as the sum of $k$ many $k$th powers? Does there exist some $c>0$ and infinitely many $n$ such that\\[1_A^{(k)}(n) >n^c?\\]",
+        "original": "Let $k\\geq 3$ and $A\\subset \\mathbb{N}$ be the set of $k$th powers. What is the order of growth of $1_A^{(k)}(n)$, i.e. the number of representations of $n$ as the sum of $k$ many $k$th powers? Does there exist some $c>0$ and infinitely many $n$ such that\\[1_A^{(k)}(n) >n^c?\\]",
+        "statement_sha256": "a71a79cf57690c367bf47dcc996eaf61a3c80b327b3ae159b77f5bc4ee011d95"
+      },
+      "subproblem_contract_sha256": "c74146c640f1f6909159708e2a1a8fc06e3589c96f367428148525c15f99b68c",
+      "subproblem_id": "erdos-322-part-01-c74146c6"
+    },
+    {
+      "parent_problem_id": "erdos-322",
+      "part_index": 2,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Does there exist some $c>0$ and infinitely many $n$ such that\\[1_A^{(k)}(n) >n^c?",
+        "focus_question_sha256": "cca154621d3e7bc8098921a81da0c172d7004ed369547ef7eb7db7e474224e26",
+        "normalized": "Let $k\\geq 3$ and $A\\subset \\mathbb{N}$ be the set of $k$th powers. What is the order of growth of $1_A^{(k)}(n)$, i.e. the number of representations of $n$ as the sum of $k$ many $k$th powers? Does there exist some $c>0$ and infinitely many $n$ such that\\[1_A^{(k)}(n) >n^c?\\]",
+        "original": "Let $k\\geq 3$ and $A\\subset \\mathbb{N}$ be the set of $k$th powers. What is the order of growth of $1_A^{(k)}(n)$, i.e. the number of representations of $n$ as the sum of $k$ many $k$th powers? Does there exist some $c>0$ and infinitely many $n$ such that\\[1_A^{(k)}(n) >n^c?\\]",
+        "statement_sha256": "a71a79cf57690c367bf47dcc996eaf61a3c80b327b3ae159b77f5bc4ee011d95"
+      },
+      "subproblem_contract_sha256": "de288b8add99ccaf1e981f1ac7609fb1667ddb2136cac20395d77376ee07c00d",
+      "subproblem_id": "erdos-322-part-02-de288b8a"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

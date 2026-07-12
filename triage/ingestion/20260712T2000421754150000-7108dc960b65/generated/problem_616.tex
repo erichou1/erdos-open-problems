@@ -1,0 +1,37 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#616}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $r\geq 3$. For an $r$-uniform hypergraph $G$ let $\tau(G)$ denote the covering number (or transversal number), the minimum size of a set of vertices which includes at least one from each edge in $G$.
+
+Determine the best possible $t$ such that, if $G$ is an $r$-uniform hypergraph $G$ where every subgraph $G'$ on at most $3r-3$ vertices has $\tau(G')\leq 1$, we have $\tau(G)\leq t$.
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Erd\H{o}s, Hajnal, and Tuza \cite{EHT91} proved that this $t$ satisfies\[\frac{3}{16}r+\frac{7}{8}\leq t \leq \frac{1}{5}r.\]
+
+\bigskip
+\noindent\textbf{References:}
+
+[EHT91] Erd\H{o}s, Paul and Hajnal, Andr\'{a}s and Tuza, Zsolt, Local constraints ensuring small representing sets. J. Combin. Theory Ser. A (1991), 78-84.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/616}}
+\end{document}

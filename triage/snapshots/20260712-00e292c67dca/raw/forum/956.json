@@ -1,0 +1,45 @@
+{
+  "problem_number": 956,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/956",
+  "retrieved_at": "2026-07-10T23:19:41.431880+00:00",
+  "page_title": "956 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "25acb7ef35735de43af183b9cf90a2207c4bf3047455df29c853a4b0562f9e56",
+  "comment_count": 7,
+  "comments": [
+    {
+      "post_id": "5924",
+      "text": "GPT-5.5 Pro got\\[ h(n)=\\Theta(n^{4/3}). \\]using Erdős-Pach for an upper bound and for a lower bound a construction found in a paper by Pavel Valtr \"Strictly convex norms allowing many unit distances and related touching questions\" with a slight modification. Here's the note and here's the full formalization in Lean done by Aristotle.",
+      "meta": "Przemek Chojecki — 07:51 on 27 Apr 2026 👍 3 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5937",
+      "text": "Congrats. Standard check found no issues for the notes. For the formalization, it seems to be highly incomplete, with less than half (!) of the notes formalized. Also, this exact result was announced by Pavel Valtr in this workshop talk abstracts, but I couldn't find a published version of it.",
+      "meta": "Nat Sothanaphan — 15:11 on 27 Apr 2026 👍 3 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5938",
+      "text": "Thank you for checking it and good find with Pavel Valtr work! Indeed it looks like a mention only, with no proof published/written. For the formalization, that's strange, Aristotle completed it without any errors, so I've assumed it's complete.",
+      "meta": "Przemek Chojecki — 15:20 on 27 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5963",
+      "text": "Perhaps this preprint of Valtr contains the construction?",
+      "meta": "TerenceTao — 03:56 on 28 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5970",
+      "text": "Good find! This is what GPT-5.5 says about the difference between this preprint of Valtr and the note above: Valtr’s preprint contains the core construction, and it should be credited much more prominently. But it does not literally solve Erdős Problem #956 as stated without an extra modification. Valtr proves a very close result: he constructs a strictly convex norm with $\\Theta(n^{4/3})$ unit distances, and also an infinite sequence of possibly overlapping translates of one strictly convex centrally symmetric body with $\\Omega(n^{4/3})$ touching pairs; he also gives an $O(n^{4/3})$ upper bound for touching pairs among possibly overlapping translates. The word “possibly overlapping” is the key difference. For the norm ball in Valtr’s construction, those corresponding translates overlap badly. So Valtr’s construction is not, verbatim, an admissible configuration for $h(n)$. The construction in the note is best described as Valtr’s parabolic-grid mechanism plus a disjointness/unit-distance conversion. It keeps the same parabolic family of difference vectors, but replaces the full norm ball by a very small convex body $D_W$ whose Euclidean unit offset contains the desired parabolic cap.",
+      "meta": "Przemek Chojecki — 07:24 on 28 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5974",
+      "text": "It's important to keep in mind that AI is very bad at attribution and this is a core and important problem. What's worse, is AI companies seem to have a vested interest in hiding how AI arrives at answering things to avoid distillation attacks. While this lack of attribution makes a particular AI seem 'smarter' it's possible that it is holding back its ability to making meaningful contributions in a broader, more productive manner. I really applaud people who are contributing more AI proofs, but I think they have a responsibility to work harder on the attribution issue because of that.",
+      "meta": "qrdl — 10:25 on 28 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5981",
+      "text": "The paper found by Tao was cited in the notes and was the same one as in Chojecki's first comment.",
+      "meta": "Nat Sothanaphan — 11:54 on 28 Apr 2026 👍 1 📝 0 🤖 0"
+    }
+  ]
+}

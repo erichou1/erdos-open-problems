@@ -17,6 +17,7 @@ import time
 from pathlib import Path
 from urllib.parse import urlparse
 
+from erdos_ingest import extract_tex_statement
 from playwright.sync_api import sync_playwright  # noqa: F401  (re-exported)
 from solver_prompts import CANDIDATE_PROMPT_TEMPLATE
 from verification import candidate_status
@@ -270,18 +271,7 @@ RATE_LIMIT_PHRASES = [
 # ── Problem files ─────────────────────────────────────────────────────────────
 
 def extract_problem_statement(tex_path: Path) -> str:
-    text = tex_path.read_text(encoding="utf-8")
-    m = re.search(
-        r'\\noindent\\textbf\{(?:Problem Statement|Statement):\}\s*\n\n(.*?)'
-        r'(?=\n\n\\noindent\\textbf|\n\\bigskip|\n\\end\{document\})',
-        text, re.DOTALL,
-    )
-    if m:
-        return m.group(1).strip()
-    body = re.search(r'\\begin\{document\}(.*?)\\end\{document\}', text, re.DOTALL)
-    if body:
-        return body.group(1).strip()
-    return text.strip()
+    return extract_tex_statement(tex_path.read_text(encoding="utf-8"))
 
 
 def problem_number(tex_path: Path) -> int:

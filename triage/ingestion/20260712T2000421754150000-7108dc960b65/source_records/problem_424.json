@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 424,
+  "raw_page": {
+    "path": "raw/pages/problem_424.html",
+    "sha256": "3bae56dfa45b6c5a2e0d1b2b0a4184a73befe30781dc8486f3144099a83affb9"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "3182c538b7d4ac14fc798466e25cc26fb995303140846392b4336809703f4411",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er77c] Erd\\H{o}s, Paul, Problems and results on combinatorial number theory. III. Number theory day (Proc. Conf., Rockefeller Univ.,\nNew York, 1976) (1977), 43-72.\n \n [ErGr80] Erd\\H{o}s, P. and Graham, R., Old and new problems and results in combinatorial number theory. Monographies de L'Enseignement Mathematique (1980)."
+    },
+    "remarks": {
+      "sha256": "da51fa84dc8f30874943ca322adf8df77bb821f8792b91ea29994a9de727d577",
+      "source_region": "div.problem-additional-text",
+      "text": "Asked by Hofstadter. The sequence begins $2,3,5,9,14,17,26,\\ldots$ and is A005244 in the OEIS. This problem is also discussed in section E31 of Guy's book Unsolved Problems in Number Theory.\n\nIn \\cite{ErGr80} (and in Guy's book) this problem as written is asking for whether almost all integers appear in this sequence, but the answer to this is trivially no (as pointed out to me by Steinerberger): no integer $\\equiv 1\\pmod{3}$ is ever in the sequence, so the set of integers which appear has density at most $2/3$. This is easily seen by induction, and the fact that if $a,b\\in \\{0,2\\}\\pmod{3}$ then $ab-1\\in \\{0,2\\}\\pmod{3}$.\n\nPresumably it is the weaker question of whether a positive density of integers appear (as correctly asked in \\cite{Er77c}) that was also intended in \\cite{ErGr80}. As with many of Erd\\H{o}s' questions, by 'positive density' he most likely meant 'positive lower density' - in other words, does there exist $c>0$ such that for all large $x$ the number of values of $a_i$ in $[1,x]$ is at least $cx$?\n\nSee also Problem 63 of Green's open problems list."
+    },
+    "statement": {
+      "sha256": "3126b4375c31af9f0ba631ca64d565f178f5c339fa8214421e8a27e900974ea2",
+      "source_region": "div#content",
+      "text": "Let $a_1=2$ and $a_2=3$ and continue the sequence by appending to $a_1,\\ldots,a_n$ all possible values of $a_ia_j-1$ with $i\\neq j$. Is it true that the set of integers which eventually appear has positive density?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/424"
+}

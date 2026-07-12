@@ -1,0 +1,253 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.447
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "BGMS25",
+      "BlEr75",
+      "BlEr76b"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/320",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[BGMS25] S. Bettin, L. Greni\\'{e}, G. Molteni, and C. Sanna, A lower bound for the number of Egyptian fractions. arXiv:2509.10030 (2025).\n \n [BlEr75] Bleicher, M. N. and Erd\\H{o}s, P., The number of distinct subsums of $\\sum \\sb{1}\\spN\\,1/i$. Math. Comp. (1975), 29-42.\n \n [BlEr76b] Bleicher, Michael N. and Erd\\H{o}s, Paul, Denominators of Egyptian fractions. II. Illinois J. Math. (1976), 598-613.",
+      "remarks": "Bleicher and Erd\\H{o}s \\cite{BlEr75} proved the lower bound\\[\\log S(N)\\geq \\frac{N}{\\log N}\\left(\\log 2\\prod_{i=3}^k\\log_iN\\right),\\]valid for $k\\geq 4$ and $\\log_kN\\geq k$, and also \\cite{BlEr76b} proved the upper bound\\[\\log S(N)\\leq \\frac{N}{\\log N}\\left(\\log_r N \\prod_{i=3}^r \\log_iN\\right),\\]valid for $r\\geq 1$ and $\\log_{2r}N\\geq 1$. (In these bounds $\\log_in$ denotes the $i$-fold iterated logarithm.)\n\nBettin, Greni\\'{e}, Molteni, and Sanna \\cite{BGMS25} improved the lower bound to\\[\\log S(N) \\geq \\frac{N}{\\log N}\\left(2\\log 2\\left(1-\\frac{3/2}{\\log_kN}\\right)\\prod_{i=3}^k\\log_iN\\right),\\]valid for $k\\geq 4$ and $\\log_kN\\geq 3/2$. (In particular this goes to infinity faster than the lower bound of Bleicher and Erd\\H{o}s.)\n\nSee also [321]."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory",
+      "unit fractions"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.75,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.297358
+      ],
+      "probability": 0.127273
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 1.818,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.351351
+      ],
+      "probability": 0.153835
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.8,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.190215
+      ],
+      "probability": 0.0625
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.3,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.251666
+      ],
+      "probability": 0.097744
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 0.9,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.203695
+      ],
+      "probability": 0.069767
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 39.0,
+      "credible_interval_approx": [
+        0.0,
+        0.07279
+      ],
+      "probability": 0.025
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.436385
+      ],
+      "probability": 0.2
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "clear"
+    },
+    "literature": {
+      "comment_count": 0,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:16:33.013205+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "753f539f6e077e7d66ba5415ded4a8bc12659c7a7aeed02864dbf0531cedbc01"
+    },
+    "statement": {
+      "ambiguity_markers": [],
+      "ambiguity_status": "clear",
+      "quantifier_signal_count": 0,
+      "question_count": 0,
+      "requires_source_audit": false,
+      "statement_characters": 133,
+      "statement_tokens_approx": 18
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "estimate",
+      "multi_part": false,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-320",
+  "problem_number": 320,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "estimate",
+    "multi_part": false,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_320.html",
+      "raw_html_sha256": "0088d1cc2663344d8bf79a2558ec5b70066457a7e621165dd63a6933976e5b8b",
+      "section_sha256": {
+        "references": "c32313d5726a8bf47094ea2a6c0c18215dc20f67602559dcb45548e32e0d8745",
+        "remarks": "a123bd005a566cf5bdb4e8c7e2b43546d7cc9ad43478ce132cfefaddc8c20cd3",
+        "statement": "7f7aebf9691ef5abe6b28c471ed5e878f8a67ddec2912ddc08b6b84653a2f1ff"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_320.json",
+      "source_record_sha256": "0100469693b53c6f440ddd02778d1c6e84cb19859857bdcd7a78f95ea1cd9a44",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_320.tex",
+    "latex_sha256": "8d9d8e5bd00367375f18b8070209ce08b07a1eec70c646c7c6292bcf39f2ad2f",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "7f7aebf9691ef5abe6b28c471ed5e878f8a67ddec2912ddc08b6b84653a2f1ff",
+    "recommended_attack_modes": [
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "1c732e93cf6813d387c3b39e244c082d3d1a5bcaab544e5eaf98ec1cfa6f2926",
+  "routes": [
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "clear",
+    "intended": "Let $S(N)$ count the number of distinct sums of the form $\\sum_{n\\in A}\\frac{1}{n}$ for $A\\subseteq \\{1,\\ldots,N\\}$. Estimate $S(N)$.",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $S(N)$ count the number of distinct sums of the form $\\sum_{n\\in A}\\frac{1}{n}$ for $A\\subseteq \\{1,\\ldots,N\\}$. Estimate $S(N)$.",
+    "original": "Let $S(N)$ count the number of distinct sums of the form $\\sum_{n\\in A}\\frac{1}{n}$ for $A\\subseteq \\{1,\\ldots,N\\}$. Estimate $S(N)$.",
+    "statement_sha256": "7f7aebf9691ef5abe6b28c471ed5e878f8a67ddec2912ddc08b6b84653a2f1ff"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

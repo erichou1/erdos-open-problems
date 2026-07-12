@@ -1,0 +1,45 @@
+{
+  "problem_number": 995,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/995",
+  "retrieved_at": "2026-07-10T23:19:51.332378+00:00",
+  "page_title": "995 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "b6616b24ed2f5c22a1400f150542922010f031309930727cde71ad2f5c1d6a82",
+  "comment_count": 7,
+  "comments": [
+    {
+      "post_id": "5690",
+      "text": "Version 2 of my paper is now live: https://arxiv.org/abs/2604.18535. I was able to simplify the argument more than I expected, while simultaneously strengthening the results. The main result is now a construction of $f\\in\\bigcap_{1\\le q<\\infty}L^q(\\mathbb T)$ and lacunary $(n_j)$ satisfying $$\\|f-S_Nf\\|_2\\ll (\\log\\log N)^{-1/2}$$ and $$\\limsup_{N\\to\\infty}\\frac1N\\sum_{j\\le N}f(n_jx)=+\\infty.$$ The second result gives, for every $\\epsilon>0$ and $2\\le p<\\infty$, a function $f\\in L^p(\\mathbb T)$ with $$\\limsup_{N\\to\\infty}\\frac{\\sum_{j\\le N}f(n_jx)}{N(\\log N)^{1/p-\\varepsilon}}=+\\infty$$ almost everywhere. And the bookkeeping in v2 is decently simpler than in v1, though still technical.",
+      "meta": "ho boon suan — 02:37 on 22 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5659",
+      "text": "I have, with the assistance of GPT-5.4 Pro, obtained a rather intricate construction that gives negative answers to both [995] and [996]; see https://arxiv.org/abs/2604.18535. The idea is simple enough, but quite a lot of bookkeeping is required to get things right. The central result is as follows: Given a decreasing function $\\omega\\colon[N_0,\\infty)\\to(0,\\infty)$, suppose $N\\omega(N)^2$ is nondecreasing and that for every $\\kappa>0$ we have $A^{1/2}\\omega(\\exp(\\exp(\\kappa A\\log A)))\\to\\infty$ as $A\\to\\infty$. Then there exists a real-valued mean-zero function $f\\in L^2(\\mathbb T)$ and a lacunary integer sequence $(n_j)$ with $n_{j+1}/n_j\\ge2$ such that $\\|f-S_Nf\\|_2\\ll\\omega(N)$ for all sufficiently large $N$, while $\\limsup_{N\\to\\infty}\\frac1N\\sum_{j\\le N}f(n_jx)=+\\infty$ for almost every $x\\in\\mathbb T$. The proof constructs $f$ and $(n_j)=(2^{m_j})$ in stages. The function is built as $f=\\sum_{k\\ge1}F_k$, where a typical block has the form\\[ F(x)=\\frac1{\\sqrt{AL}}\\sum_{q=1}^{L}\\psi_d(2^{U+qD}x) \\]with dyadic spikes\\[ \\psi_d(x)=2^{d/2}\\bigl(\\mathbf 1_{[0,2^{-d-1})}(x)-\\mathbf 1_{[1/2,1/2+2^{-d-1})}(x)\\bigr). \\]Each stage runs a number of trials. A trial is an arithmetic progression of exponents, and the relevant trial sum has the form\\[ \\sum_{r=1}^\\ell F(2^{M+rD}x). \\]Some delicate bookkeeping is required to make the signal produced at one stage survive the contributions of all past and future stages. The construction is essentially a careful refinement of Erdős's construction in his 1949 paper On the Strong Law of Large Numbers, replacing the Rademacher functions he uses with dyadic spike block trials. The new point is that the spike blocks interact with the repeated trials through a convolution that amplifies signal: a single rare central spike, once hit, is counted throughout an entire trial because the relevant indices enter as \\(q+r\\), so one hit creates a macroscopic average. The parameters are then tuned so that the same block is cheap in \\(L^2\\), has a controlled Fourier tail, and is shielded from past and future stages by separation in dyadic valuation layers. Currently my paper leaves the endpoint case \\(\\omega(N)=(\\log\\log N)^{-1/2}\\) open, but I believe the same strategy should extend without too much difficulty to show that $\\limsup_{N\\to\\infty}\\frac1N\\sum_{j\\le N}f(n_jx)=+\\infty$ in this case as well. ChatGPT says this appears doable if one replaces the two-sided dyadic spike with a one-sided one and weakens the requirement of \"success for every stage\" to \"success for infinitely many stages.\" I am in the process of scrutinizing this approach, and if it works out, it should actually simplify the paper by a decent amount. I will probably upload a revised version of the manuscript to arXiv soon.",
+      "meta": "ho boon suan — 02:33 on 21 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5666",
+      "text": "Congrats! I ran standard check which claimed 1 minor issue. Looking forward to the revised paper! I note that for [995], this gives a negative answer to the $o(N \\sqrt{\\log \\log N})$ question but the main question to estimate the growth remains open. (EDIT: the paper also proves a stronger bound than this.)",
+      "meta": "Nat Sothanaphan — 10:36 on 21 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5670",
+      "text": "Thanks. On the question of estimating growth: Combining my result with Erdős's upper bound for [995], we get the worst-case growth estimate of $N(\\log N)^{1/2+o(1)}$, which I personally feel Erdős would have been satisfied with as an answer to the problem of estimating the growth in this case. But of course for such problems the question of what constitutes a resolution depends a fair bit upon the interpretation of the reader. (Incidentally, the page for [995] has a typo where the summation is repeated.) Anyway, I should have the revised version up in a day or two; hopefully not longer…",
+      "meta": "ho boon suan — 12:22 on 21 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5671",
+      "text": "I'll wait for others' comments on whether this resolves the problem. But I'm not sure why $= o(N(\\log N)^{1/2+\\varepsilon})$ and $\\neq o(N(\\log log N)^{1/2})$ closes the gap. (Note it's $\\log N$ vs. $\\log \\log N$.) (EDIT: the paper also proves a stronger bound than this.)",
+      "meta": "Nat Sothanaphan — 12:57 on 21 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5672",
+      "text": "In my paper I prove that there exist a mean-zero $f\\in L^2(\\mathbb T)$ and lacunary $(n_j)$ such that, for every $\\epsilon>0$, $$\\limsup_{N\\to\\infty}\\frac{\\sum_{j\\le N}f(n_jx)}{N(\\log N)^{1/2-\\epsilon}}=+\\infty$$ for almost every $x$, so this gives the lower bound $\\omega(N(\\log N)^{1/2-\\epsilon})$ for [995] for every $\\epsilon>0$; together with Erdős's upper bound $o(N(\\log N)^{1/2+\\epsilon})$ for every $\\epsilon>0$, this gives a growth estimate of $N(\\log N)^{1/2+o(1)}$.",
+      "meta": "ho boon suan — 13:02 on 21 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5673",
+      "text": "Sorry! I was focusing on the $o(N \\sqrt{\\log \\log N})$ claims. Yes, I think that may qualify for a full solution, pending confirmation from others.",
+      "meta": "Nat Sothanaphan — 13:08 on 21 Apr 2026 👍 1 📝 0 🤖 0"
+    }
+  ]
+}

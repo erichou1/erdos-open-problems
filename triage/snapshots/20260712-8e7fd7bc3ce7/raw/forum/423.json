@@ -1,0 +1,200 @@
+{
+  "problem_number": 423,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/423",
+  "retrieved_at": "2026-07-10T23:17:08.025571+00:00",
+  "page_title": "423 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "5c20b83f21db06c3a5538cceab9f20311d453ef9a20c29531c660708bf4db135",
+  "comment_count": 38,
+  "comments": [
+    {
+      "post_id": "4711",
+      "text": "I have just written a full paper on this problem (arXiv:2603.09939), proving a polynomial upper bound \\(a_n \\ll n^{4175/2506+o(1)}\\). I have also incorporated into the paper the result $a_n=n+\\omega(1)$ from my earlier note. Numerical evidence suggests that \\(a_n = n+o(n)\\), but for the moment I do not even know how to prove \\(a_n = O(n)\\). This work made exploratory use of ChatGPT-5.2 Thinking, with all mathematical arguments subsequently checked by the human author. Besides this, something rather interesting happened. Using three independent accounts, I separately asked GPT-5.2 Pro, GPT-5.4 Pro, and GPT-5.2 Thinking to produce upper bounds for \\(a_n\\). Initially, all three only managed to obtain an exponential bound \\(a_n \\ll e^{O(n)}\\). After further iteration, the two Pro models still remained stuck at this exponential bound. GPT-5.2 Thinking, however, eventually produced a polynomial upper bound, albeit with a rather large exponent. After checking the argument, I found that the exponent could be improved further, ultimately yielding the bound stated in the present paper.",
+      "meta": "Quanyu Tang — 04:11 on 11 Mar 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4712",
+      "text": "Congrats! From my anecdotal experience, GPT-5.2/5.4 Thinking is in fact more creative (defined as “ability to get new results”) than GPT-5.2/5.4 Pro, but may need more care and interactions to get results.",
+      "meta": "Nat Sothanaphan — 10:59 on 11 Mar 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4713",
+      "text": "Standard check finds no issues. (Specifically it raises one false alarm which is not an issue upon re-inspection.)",
+      "meta": "Nat Sothanaphan — 13:49 on 11 Mar 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4714",
+      "text": "Thank you! It would be interesting to see whether one can prove that \\(a_n = O(n)\\).",
+      "meta": "Quanyu Tang — 14:08 on 11 Mar 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4726",
+      "text": "Ok, GPT-5.4 Thinking was not able to prove that $a_n = O(n)$ or similar bounds. However, it accidentally found Cushman's paper which improves Bloom's exponent used. This results in $a_n \\ll_\\varepsilon n^{688/413 + \\varepsilon}$, which is a very slightly better exponent. Here is GPT's note.",
+      "meta": "Nat Sothanaphan — 18:54 on 12 Mar 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4736",
+      "text": "Thank you. Actually, I did come across Cushman's paper when I was writing my article, but I wasn't sure whether the results in that paper were correct. I noticed that in Bloom's latest paper [BFR26], published merely one month ago, the authors only stated that Bloom's bound constitutes the best one to date. Moreover, Even if the conjecture that \\(|A-A|\\gg |A|^{2-o(1)}\\) held true, the method in my paper would only yield \\(a_n \\le n^{1+o(1)}\\) instead of $a_n=O(n)$. For these reasons, I chose not to adopt Cushman's results. Reference. [BFR26] T. F. Bloom, J. Führer, and O. Roche-Newton, Additive Structure in Convex Sets, Combinatorica 46 (2026), Article7.",
+      "meta": "Quanyu Tang — 03:30 on 13 Mar 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4737",
+      "text": "I had asked GPT 5.4 during the night. It claimed a serious error in Theorem 1.3 of Cushman, but also said that Theorem 1.5 (which is needed for the bound in question) seems to be fine. It also wrote that it does not see easy ways to milk the 688/413 + eps bound.",
+      "meta": "old-bielefelder — 07:49 on 13 Mar 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4747",
+      "text": "Can you write up the error? It can't be verified this way.",
+      "meta": "Nat Sothanaphan — 15:01 on 13 Mar 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4749",
+      "text": "Sorry, I had it in a mixed pickles chat (mostly in German). Here is a screenshot of the point in question: https://althofer.de/fatal-error-in-theorem-1-dot-3.jpg",
+      "meta": "old-bielefelder — 15:16 on 13 Mar 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4750",
+      "text": "Looks like you're right about Theorem 1.3 error. (Edit: Cushman is correct.) Thanks! I'm now investigating whether we still get Theorem 1.5.",
+      "meta": "Nat Sothanaphan — 15:33 on 13 Mar 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4753",
+      "text": "Targeted standard check finds no issues for Theorem 1.5. That's at least a relief, although since we already have an error in Theorem 1.3 (Edit: Cushman is correct) I wouldn't be completely confident here.",
+      "meta": "Nat Sothanaphan — 16:10 on 13 Mar 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4754",
+      "text": "I've also emailed Cushman directly to inform about the Theorem 1.3 issue. (Edit: Cushman is correct.)",
+      "meta": "Nat Sothanaphan — 16:33 on 13 Mar 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4758",
+      "text": "Revert status here. Cushman told me that the claimed error in p. 19 is in fact already correct because there is a term $|B|^2$ on the LHS which gets added to $821/100$ to become $841/100$. This is partly my mistake because I manually verified that calculation also without noticing the LHS term. So: Cushman is correct and there is no error in Theorem 1.3.",
+      "meta": "Nat Sothanaphan — 19:07 on 13 Mar 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4759",
+      "text": "Thanks for clarifying the situation. I let GPT 5.4 also recheck the proof of Theorem 1.3, and now it also sees that it had missed the $|B|^2$ term on the left hand side. My apologies to Adam Cushman for prematurely citing the wrong error message. Shame, shame, shame. That will be a lesson for me - to doublecheck before believing an error message by an AI.",
+      "meta": "old-bielefelder — 19:26 on 13 Mar 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4761",
+      "text": "No shame here. I also double checked and still did not see that. (We're all fallible.)",
+      "meta": "Nat Sothanaphan — 19:40 on 13 Mar 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4746",
+      "text": "Oh ok, let's treat that as provisional then. But I wonder if it could just be publication delay? (Cushman's is arxiv 2512, while Bloom's is arxiv 2509.)",
+      "meta": "Nat Sothanaphan — 15:01 on 13 Mar 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4972",
+      "text": "Yes indeed - we wrote the paper before Cushman's paper came out. Cushman's result is the current record for $\\lvert A-A\\rvert$ (and $\\lvert A+A\\rvert$) for convex $A$.",
+      "meta": "Thomas Bloom — 21:13 on 23 Mar 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4963",
+      "text": "This upper bound is awesome! A while ago I was able to find a simple argument showing a quadratic upper bound, I have not studied your paper so perhaps the argument is already known to you. I never was able to beat quadratic by much, and certainly not to the degree you have. The point of my argument is that there is an anti-correlation between the twofold sums and the fourfold sums. Suppose there are $k$ elements of the sequence in the interval $(x, 2x]$. Then there are at least $k-3$ elements in $(4x, 8x]$ coming from fourfold sums. We want to show that there is a twofold sum in each interval $(a_{i} + a_{i+1} + a_{i+2} + a_{i+3}, a_{i+1} + a_{i+2} + a_{i+3} + a_{i+4}).$ This follows as there is a portion of the sequence which looks like $(a_{i+1} + a_{i+2}) = c_0, c_1, ..., c_s =(a_{i+2} + a_{i+3})$, and selecting a $j < s$ such that $c_j \\le a_{i+1} + a_{i+3}$ and $c_{j+1} \\ge a_{i+1} + a_{i+3}$ we have $c_j + c_{j+1}$ in the needed interval. We conclude that there are at least $2k - 7$ entries of the sequence in $(4x, 8x]$ (or $2k-5$ if one handles the boundaries better). This implies that if there are at least $c2^n + 14$ entries of the sequence less than $4^n$, then there are at least $c2^{n+1} + 14$ entries less than $4^{n+1}$, so the sequence exhibits at most quadratic growth.",
+      "meta": "matthew_bolan — 19:49 on 23 Mar 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4738",
+      "text": "Very recently, Prof. Yann Bugeaud kindly pointed out to me that the lower bound \\(a_n=n+\\omega(1)\\) in my paper can in fact be strengthened. Following his suggestion, I am now able to prove the stronger quantitative lower bound\\[ a_n = n+\\Omega(\\log\\log n). \\]I have temporarily posted the proof on my GitHub page: pdf here, tex here.",
+      "meta": "Quanyu Tang — 09:32 on 13 Mar 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4755",
+      "text": "Congrats. Targeted standard check finds no issue in this new lower bound.",
+      "meta": "Nat Sothanaphan — 16:36 on 13 Mar 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3231",
+      "text": "In the OEIS entry A005243, the COMMENTS section records the conjecture that there are infinitely many nonmembers (i.e. positive integers that never appear in this sequence). I have written a short note proving this conjecture. More precisely, writing $b_n:=a_n-n$, I show that $(b_n)_{n\\ge1}$ is nondecreasing and unbounded. In particular, $\\{a_n:n\\ge1\\}$ omits infinitely many integers, and this also gives a small qualitative step toward the asymptotic question in [423]: it rules out eventual linearity $a_n=n+B$ for all sufficiently large $n$.",
+      "meta": "Quanyu Tang — 17:34 on 15 Jan 2026 👍 4 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3236",
+      "text": "I also recently obtained a proof of this, in perhaps a slightly different way. Here is my own short note: https://github.com/mjtb49/HofstaderUlam/blob/main/HofstaderUlamSequence.pdf . My lower bound is terrible, I get something like $n + \\log^*(n)$ where $\\log^*$ is the iterated logarithm. EDIT: Now that I've looked at Quanyu Tang's note, I think there is nothing new in my proof besides maybe some constants I kept explicit.",
+      "meta": "matthew_bolan — 20:46 on 15 Jan 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3250",
+      "text": "Hi Matthew — thanks for sharing your note, and for the update after reading mine! I did a numerical experiment on the sequence: writing \\(a_n=n+b_n\\), I computed \\(b_n\\) for \\(1\\le n\\le 30000\\) and plotted the ratios \\(b_n/n^{1/5}\\), \\(b_n/n^{1/3}\\), \\(b_n/n^{1/2}\\), and \\(b_n/\\log n\\), and it seems plausible that\\[b_n \\approx n^\\alpha \\quad\\text{for some }\\ \\frac15<\\alpha<\\frac12\\](possibly with a very slowly varying correction). This makes me wonder whether one could push either approach to obtain any explicit quantitative lower bound beyond mere unboundedness — for instance something as weak as \\(b_n \\gg (\\log n)^c\\) for some absolute \\(c>0\\).",
+      "meta": "Quanyu Tang — 07:37 on 16 Jan 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3254",
+      "text": "Your plots look interesting. From an experimental view: An \"optimal\" alpha might be a bit smaller than 1/3. How much computing time would it cost you to extend from n=30,000 to say 1 million?!",
+      "meta": "old-bielefelder — 08:19 on 16 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3256",
+      "text": "I generated this figure using this Python code. It took nearly 1 hour to run on my laptop (for comparison, if I run it up to $n=20000$, it only takes 1 minute.), so I am not sure whether it is feasible to extend the computation up to $n=1000000$.",
+      "meta": "Quanyu Tang — 08:27 on 16 Jan 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3263",
+      "text": "It seems your code takes time n*n*log(n) and memory space n*n to compute the values up to a_n. Probably the memory requirement is responsible for the slowdown. There seem to exist program variants running in the same number of steps, but with memory O(n) only.",
+      "meta": "old-bielefelder — 12:04 on 16 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3262",
+      "text": "Can you provide your list of the first 30,000 a_n? I would like to search for structures in that list. EDIT: I would like to understand for instance, how often twin gaps like 12,13 or 38,39 occur. For n below 100 there is only one triple gap, namely 26,27,28. * Are there only finitely many triple gaps? * How frequent are twin gaps?",
+      "meta": "old-bielefelder — 11:16 on 16 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3265",
+      "text": "See A048973. Does the link Table of n, a(n) for n=1..6564 (terms < 10^8) by T. D. Noe contain the information you would like? Quanyu Tang: I think you would find this informative as well.",
+      "meta": "BorisAlexeev — 12:34 on 16 Jan 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3268",
+      "text": "Thx. In that OEIS entry there is also the COMMENT: The sequence appears to be growing slightly faster than quadratically. - T. D. Noe, Nov 04 2007",
+      "meta": "old-bielefelder — 13:37 on 16 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3274",
+      "text": "Here are the terms of A048973 up to $2^{37} \\approx 1.4\\cdot 10^{11}$. And below are the number of missing terms up to each power of 2. And here is this data on a log-log plot, where you can see it's non-convex. 4 1 8 2 16 6 32 12 64 26 128 42 256 66 512 99 1024 143 2048 183 4096 238 8192 298 16384 371 32768 461 65536 555 131072 689 262144 849 524288 1059 1048576 1308 2097152 1637 4194304 2056 8388608 2610 16777216 3326 33554432 4302 67108864 5595 134217728 7423 268435456 9965 536870912 13260 1073741824 17738 2147483648 23802 4294967296 32378 8589934592 44460 17179869184 60621 34359738368 83836 68719476736 115173 137438953472 157677",
+      "meta": "BorisAlexeev — 17:28 on 16 Jan 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3289",
+      "text": "Thanks, Boris for the additional data. I looked through them (more than 60,000 \"hole numbers\" !) and collected statistics for the number of elements with k (mod 16). k <13681 <33828 <47821 >=47821 1 48 29 26 8 2 51 25 12 19 3 8 0 0 0 4 215 113 59 36 5 8 0 0 0 6 100 46 34 15 7 12 0 0 0 8 654 316 210 181 9 9 1 0 0 10 97 49 29 19 11 5 0 0 1 12 175 98 43 41 13 11 0 0 0 14 47 31 15 9 15 46 30 17 18 16 12194 19409 13548 12454 ************************ For a conjecture \"there exists k mod 16 such that there are only finitely many holes with k mod 16\" the odd k should be first candidates.",
+      "meta": "old-bielefelder — 09:09 on 17 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3428",
+      "text": "Computerchess fan and hobby mathematician Wolfram Bernhardt has confirmed your data until 10^10: 17268 999971072 17269 999979264 17270 999980984 Exactly the same numbers.",
+      "meta": "old-bielefelder — 05:41 on 19 Jan 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3269",
+      "text": "Thanks, Boris. @old-bielefelder, I just ran this Python code and obtained this txt file containing the first $30{,}000$ terms of $a_n$.",
+      "meta": "Quanyu Tang — 13:38 on 16 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3270",
+      "text": "No mathematical content to add to this discussion, but I just wanted to say that I am pleased to see that, while the fancy new AI-assisted workflows for attacking Erdos problems are absorbing all the publicity at the moment, more old-fashioned OEIS-assisted workflows are still being put to good use!",
+      "meta": "TerenceTao — 15:58 on 16 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3278",
+      "text": "I looked at the \"Noe-list\" and let ChatGPT count, how often each value (mod 16) is in the list (until member 6564). The result is interesting: 0 5461 1 36 2 42 3 8 4 165 5 8 6 70 7 12 8 459 9 9 10 74 11 5 12 141 13 11 14 35 15 28 ***************** Questions: Are the 15 values for k != 0 (mod 16) finite in the limit (over all member till infinity)? Would the split to 16 (mod 32) and 0 (mod 32) also give small number for 16 and large for 0? Does this structure go on for mod 2^m and larger m?",
+      "meta": "old-bielefelder — 21:29 on 16 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3290",
+      "text": "This may relate to a property I remember proving in my comp math days: A number cannot be written as sum of consecutive numbers if and only if it is a power of 2, and if $n = 2^k pm$ where $p$ is the minimal odd prime dividing $n$ and $m$ is odd, then the length of the minimal length representation is $\\min(p, 2^{k+1})$. Since our sequence seems to contain most numbers, an analogous result holds here as well. In a similar vein, I noticed that for each odd prime $p$, the frequency of $b_n \\equiv 0 \\pmod{p}$ is much lower than $b_n \\equiv i\\pmod{p}$ for $0 < i < p - 1$, with these being equidistributed. Probably a similar argument holds.",
+      "meta": "Sharvil Kesarwani — 10:31 on 17 Jan 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3307",
+      "text": "What do you mean by \"the length of the minimal length representation\"? Concerning your observation > I noticed that for each odd prime p, the frequency of $b_n≡0 $ (mod $p$) > is much lower than $b_n≡i$ (mod $p$) for $0<i<p−1$, with these being equidistributed. I made an additional observation, here told for the elements 47,281 to 60,621 in Boris' list. For mod 13 one gets the following numbers of elements: k numbers with k (mod 15) 0 0 ** 1 1660 2 1485 3 17 * 4 1610 5 31 * 6 15 * 7 1569 8 1608 9 17 * 10 22 * 11 1551 12 18 * 13 1662 14 1536 So: small numbers for multiples of 3 and 5, and very small numbers for k=3*5.",
+      "meta": "old-bielefelder — 16:26 on 17 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3309",
+      "text": "> What do you mean by \"the length of the minimal length representation\"? The \"length\" is $\\ell$ in the following classic argument: The sum of the $\\ell$ consecutive integers starting at $m$ is $(m)+(m+1)+\\cdots+(m+\\ell-1)=\\ell\\cdot(2m+\\ell-1)/2$. If this sum equals $n$, then we have $2n=\\ell\\cdot(2m+\\ell-1)$. Moreover, note that the sum of the two factors $\\ell$ and $2m+\\ell-1$ is $2(m+\\ell)-1$, which is odd; it follows that exactly one of the factors is odd. Conversely, for every odd factor $d$ of $2n$, we can either let $\\ell=d$ and $2m+\\ell-1=2n/d$ or vice versa, and this corresponds to a decomposition. For example, if $n=15$, then the possible odd factors are $1$, $3$, $5$, and $15$ and the possible decompositions are: $d=1$ giving rise to $15$ (the single-term sum) and $-14+\\cdots+14+15$; $d=3$ giving rise to $4+5+6$ and $-3+\\cdots+6$; $d=5$ giving rise to $1+2+3+4+5$ and $0+1+2+3+4+5$; and $d=15$ giving rise to $-6+\\cdots+8$ and $7+8$. If we restrict to sums of positive integers, then exactly one decomposition from each pair works. Moreover, its length is the smaller of the two factors $\\min(d,2n/d)$. Also, this means that the number of ways of writing $n$ as the sum of consecutive positive integers equals the number of odd divisors of $n$. If we further insist the sum have at least two terms, then this excludes exactly one decomposition (the one with $n$ by itself, corresponding to the odd divisor $1$ of $2n$). In particular, an integer $n$ has a nontrivial decomposition iff $2n$ has any odd divisor other than $1$. This happens iff $n$ is not a power of $2$. If we try to analyze the smallest possible length $\\ell$ (other than the single-term decomposition), we get the claim above: it comes either from the smallest nontrivial odd divisor $d$ of $2n$ (which is the smallest odd prime $p$ dividing $n$) or from the largest odd divisor $d$ of $2n$ (which then ends up having a length one more than the 2-adic valuation of $n$).",
+      "meta": "BorisAlexeev — 18:25 on 17 Jan 2026 👍 1 📝 0 🤖 0"
+    }
+  ]
+}

@@ -1,0 +1,257 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.394
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "Er70",
+      "TaZh25b"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/856",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Er70] Erd\\H{o}s, Paul, Some extremal problems in combinatorial number theory. Mathematical Essays Dedicated to A. J. Macintyre (1970), 123-133.\n \n [TaZh25b] Q. Tang and S. Zhang, Harmonic LCM patterns and sunflower-free capacity. arXiv:2512.20055 (2025).",
+      "remarks": "Erd\\H{o}s \\cite{Er70} notes that\\[f_k(N) \\ll \\frac{\\log N}{\\log\\log N}.\\]Indeed, let $A$ be such a set. This in particular implies that, for every $t$, there are $<k$ solutions to $t=ap$ with $a\\in A$ and $p$ prime, whence\\[\\sum_{n\\in A}\\frac{1}{n}\\sum_{p<N}\\frac{1}{p}< k \\sum_{t<N^2}\\frac{1}{t} \\ll \\log N,\\]and the bound follows since $\\sum_{p<N}\\frac{1}{p}\\gg \\log\\log N$.\n\nImproved bounds have been given by Tang and Zhang \\cite{TaZh25b}, who proved bounds of the shape\\[(\\log N)^{b_k-o(1)}\\leq f_k(N)\\leq (\\log N)^{c_k+o(1)}\\]for some constants $0<b_k\\leq c_k\\leq 1$, and in particular\\[(\\log N)^{0.438}\\leq f_3(N)\\leq (\\log N)^{0.889},\\]say, for all large $N$. The exponents here are related to progress in the sunflower conjecture [857], to which this problem is closely related. For example, the exponents $c_k$ are $<1$ (and so the upper bound above is non-trivial) if and only if [857] holds for $k$-sunflowers.\n\nThe analogous question with natural density in place of logarithmic density (that is, we measure $\\lvert A\\rvert$ in place of $\\sum_{n\\in A}\\frac{1}{n}$) is the subject of [536]. In particular Erd\\H{o}s \\cite{Er70} has constructed $A\\subseteq \\{1,\\ldots,N\\}$ with $\\lvert A\\rvert \\gg N$ where no four have the same pairwise least common multiple, and hence the interest of the natural density problem is the $k=3$ case.\n\nA related combinatorial problem is asked at [857]."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 3.72,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.032915,
+        0.440368
+      ],
+      "probability": 0.236641
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 1.818,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.351351
+      ],
+      "probability": 0.153835
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 3.6,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.028085,
+        0.433453
+      ],
+      "probability": 0.230769
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.267,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.425526
+      ],
+      "probability": 0.201183
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.3,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.251666
+      ],
+      "probability": 0.097744
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 0.9,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.203695
+      ],
+      "probability": 0.069767
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 39.0,
+      "credible_interval_approx": [
+        0.0,
+        0.106373
+      ],
+      "probability": 0.044118
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.6,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.492884
+      ],
+      "probability": 0.245283
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "clear"
+    },
+    "literature": {
+      "comment_count": 18,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:19:08.285680+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "2620d49e701dea519557a4fc755ba2ce2dcbca2297d85008392d15c73f1c4923"
+    },
+    "statement": {
+      "ambiguity_markers": [],
+      "ambiguity_status": "clear",
+      "quantifier_signal_count": 0,
+      "question_count": 0,
+      "requires_source_audit": false,
+      "statement_characters": 234,
+      "statement_tokens_approx": 36
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": true,
+      "finite_signal": true,
+      "goal": "estimate",
+      "multi_part": false,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-856",
+  "problem_number": 856,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": true,
+    "finite_signal": true,
+    "goal": "estimate",
+    "multi_part": false,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_856.html",
+      "raw_html_sha256": "5411f141cfc61c7a54ca1e6867d306fdf867cf41eba8baa68f63860ef825a1c7",
+      "section_sha256": {
+        "references": "1e235203a753985dd0c3a5b583ddecf1a52c4c05e1e87464fce7761bc8d473c2",
+        "remarks": "d90acd67d408710f037d37af5d0c206fc8d7b0b5f8edf9010ee50ec692b5a891",
+        "statement": "058d37dc748cbc23d943487919c7198abbef35140aeb2de5aeacbc6d622f6f68"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_856.json",
+      "source_record_sha256": "8658dfb7f381c1d32023fb329e8614322ab3c9cf0d0c5eacde777f8157792744",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_856.tex",
+    "latex_sha256": "da39fc62a43de4d8454ef9be8cad43137b7bd3b4b32db133ca61f1c36235cc43",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "058d37dc748cbc23d943487919c7198abbef35140aeb2de5aeacbc6d622f6f68",
+    "recommended_attack_modes": [
+      "exact_computation",
+      "counterexample_search",
+      "literature_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "3b3e2c5e924be400a068b27f8aba211c8337159598504a17b4961d89646c0cae",
+  "routes": [
+    "exact_computation",
+    "counterexample_search",
+    "literature_search",
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "clear",
+    "intended": "Let $k\\geq 3$ and $f_k(N)$ be the maximum value of $\\sum_{n\\in A}\\frac{1}{n}$, where $A$ ranges over all subsets of $\\{1,\\ldots,N\\}$ which contain no subset of size $k$ with the same pairwise least common multiple.\n\nEstimate $f_k(N)$.",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $k\\geq 3$ and $f_k(N)$ be the maximum value of $\\sum_{n\\in A}\\frac{1}{n}$, where $A$ ranges over all subsets of $\\{1,\\ldots,N\\}$ which contain no subset of size $k$ with the same pairwise least common multiple. Estimate $f_k(N)$.",
+    "original": "Let $k\\geq 3$ and $f_k(N)$ be the maximum value of $\\sum_{n\\in A}\\frac{1}{n}$, where $A$ ranges over all subsets of $\\{1,\\ldots,N\\}$ which contain no subset of size $k$ with the same pairwise least common multiple.\n\nEstimate $f_k(N)$.",
+    "statement_sha256": "058d37dc748cbc23d943487919c7198abbef35140aeb2de5aeacbc6d622f6f68"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

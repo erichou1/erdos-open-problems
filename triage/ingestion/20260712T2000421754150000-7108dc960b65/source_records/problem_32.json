@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 32,
+  "raw_page": {
+    "path": "raw/pages/problem_32.html",
+    "sha256": "54dd0c5374f596c762755046de29bdbece360aab5cf91e1d596a8afa22305e61"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "fd06a79a0794fbb50dd748688bb7c3ffcb23f490df40c847f6061d5fa271f918",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er54] Erd\\H{o}s, Paul, Some results on additive number theory. Proc. Amer. Math. Soc. (1954), 847-853.\n \n [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.\n \n [Ko96] Kolountzakis, Mihail N., On the additive complements of the primes and sets of similar\ngrowth. Acta Arith. (1996), 1--8.\n \n [Lo54] Lorentz, G. G., On a problem of additive number theory. Proc. Amer. Math. Soc. (1954), 838-841.\n \n [Ru98c] Ruzsa, Imre Z., On the additive completion of primes. Acta Arith. (1998), 269-275.\n \n [Wo96] Wolke, Dieter, On a problem of Erd\\H{o}s in additive number theory. J. Number Theory (1996), 209-213."
+    },
+    "remarks": {
+      "sha256": "86129c12033323249e23d20a8f21065df64d9a69b4fda4a8e9f24bfdb514ff5e",
+      "source_region": "div.problem-additional-text",
+      "text": "Such a set is called an additive complement to the primes.\n\nErd\\H{o}s \\cite{Er54} proved that such a set $A$ exists with $\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert\\ll (\\log N)^2$ (improving a previous result of Lorentz \\cite{Lo54} who achieved $\\ll (\\log N)^3$). \n\nWolke \\cite{Wo96} has shown that such a bound is almost true, in that we can achieve $\\ll (\\log N)^{1+o(1)}$ if we only ask for almost all integers to be representable. Kolountzakis \\cite{Ko96} improved this to $\\ll (\\log N)(\\log\\log N)$, and Ruzsa \\cite{Ru98c} further improved this to $\\ll \\omega(N)\\log N$ for any $\\omega\\to \\infty$.\n\nThe answer to the third question is yes: Ruzsa \\cite{Ru98c} has shown that we must have\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{\\log N}\\geq e^\\gamma\\approx 1.781.\\]This is discussed in problem E1 of Guy's collection \\cite{Gu04}, where it is stated that Erd\\H{o}s offered \\$50 for determining whether $O(\\log N)$ can be achieved."
+    },
+    "statement": {
+      "sha256": "c0ac8c660fdea36d3d85e69c91f89c35cb6385c2ac146cf09bf52c7fd27ef577",
+      "source_region": "div#content",
+      "text": "Is there a set $A\\subset\\mathbb{N}$ such that\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert = o((\\log N)^2)\\]and such that every large integer can be written as $p+a$ for some prime $p$ and $a\\in A$? \n\nCan the bound $O(\\log N)$ be achieved? Must such an $A$ satisfy\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{\\log N}> 1?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/32"
+}

@@ -1,0 +1,257 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.499
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-11-25",
+      "state": "yes"
+    },
+    "references": [
+      "Gu04",
+      "Ma68",
+      "ShTi16"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/850",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.\n \n [Ma68] Makowski, Andrzej, On a problem of {E}rd\\H{o}s. Enseign. Math. (2) (1968), 193.\n \n [ShTi16] Shorey, Tarlok N. and Tijdeman, Rob, Arithmetic properties of blocks of consecutive integers. (2016), 455--471.",
+      "remarks": "This is sometimes known as the Erd\\H{o}s-Woods conjecture.\n\nFor just $x,y$ and $x+1,y+1$ one can take\\[x=2(2^r-1)\\]and\\[y = x(x+2).\\]Erd\\H{o}s also asked whether there are any other examples. Makowski \\cite{Ma68} observed that $x=75$ and $y=1215$ is another example, since\\[75 = 3\\cdot 5^2 \\textrm{ and }1215 = 3^5\\cdot 5\\]while\\[76 = 2^2\\cdot 19\\textrm{ and }1216 = 2^6\\cdot 19.\\](This example was also found independently by Matthew Bolan, and by Dubickas, who posed it as part of the 2024 team selection test in Lithuania.) No other examples are known. This sequence is listed as A343101 at the OEIS.\n\nShorey and Tijdeman \\cite{ShTi16} have shown that, assuming a strong form of the ABC conjecture due to Baker, then the answer to the original problem is no.\n\nSee also [677]. \n\nThe case of $x,y$ and $x+1,y+1$ appeared as Problem 1 in the Third Benelux Mathematical Olympiad 2011. \n\nThis problem is discussed in problem B19 of Guy's collection \\cite{Gu04}."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory",
+      "primes"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.91,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.312013
+      ],
+      "probability": 0.137311
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.074,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.013547,
+        0.456659
+      ],
+      "probability": 0.235103
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.6,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.282916
+      ],
+      "probability": 0.117647
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.133,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.413075
+      ],
+      "probability": 0.191617
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 4.1,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.048161,
+        0.461156
+      ],
+      "probability": 0.254658
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.7,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.375214
+      ],
+      "probability": 0.183673
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 39.0,
+      "credible_interval_approx": [
+        0.0,
+        0.106373
+      ],
+      "probability": 0.044118
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.009216,
+        0.509303
+      ],
+      "probability": 0.259259
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "clear"
+    },
+    "literature": {
+      "comment_count": 4,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:19:05.297284+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "3eb6fd1697d5560bdec544c7b3cf569f3e0a26b2add754289588f2865fabb36f"
+    },
+    "statement": {
+      "ambiguity_markers": [],
+      "ambiguity_status": "clear",
+      "quantifier_signal_count": 0,
+      "question_count": 1,
+      "requires_source_audit": false,
+      "statement_characters": 181,
+      "statement_tokens_approx": 31
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "prove",
+      "multi_part": false,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-850",
+  "problem_number": 850,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "prove",
+    "multi_part": false,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_850.html",
+      "raw_html_sha256": "5bdd85abcbf616fd1ebd28552d896142902ec2bb21b3442d7bf89267b6ba4648",
+      "section_sha256": {
+        "references": "b617b9c7b9ce92a36f5b1f212a234a686966e402a28aeceedab291c331fdf23c",
+        "remarks": "cb42b5441b7f93e6fa10857662bdcc595b81ec1e7fce72287305edaae55429ff",
+        "statement": "9d983de3b5b9c240f768c78c2be42d986e4da14cdde3ddfb3a80b9e2ad915f1b"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_850.json",
+      "source_record_sha256": "852e5c74e8977c53319e39d102b8f78d15780bcc7fcbb308b4c94eae0ba93117",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_850.tex",
+    "latex_sha256": "33a203df3f8c2cf73e64523aa8d15a7c24c1a2767c118fe0ae854e875c353125",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "9d983de3b5b9c240f768c78c2be42d986e4da14cdde3ddfb3a80b9e2ad915f1b",
+    "recommended_attack_modes": [
+      "formal_search",
+      "shared_infrastructure_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "7452fcac18ad2ef1502d288c2371a84b7ac949efc13050c1728d2b40e3e849ce",
+  "routes": [
+    "formal_search",
+    "shared_infrastructure_search",
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "clear",
+    "intended": "Can there exist two distinct integers $x$ and $y$ such that $x,y$ have the same prime factors, $x+1,y+1$ have the same prime factors, and $x+2,y+2$ also have the same prime factors?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Can there exist two distinct integers $x$ and $y$ such that $x,y$ have the same prime factors, $x+1,y+1$ have the same prime factors, and $x+2,y+2$ also have the same prime factors?",
+    "original": "Can there exist two distinct integers $x$ and $y$ such that $x,y$ have the same prime factors, $x+1,y+1$ have the same prime factors, and $x+2,y+2$ also have the same prime factors?",
+    "statement_sha256": "9d983de3b5b9c240f768c78c2be42d986e4da14cdde3ddfb3a80b9e2ad915f1b"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

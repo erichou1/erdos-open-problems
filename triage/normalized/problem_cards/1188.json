@@ -1,0 +1,253 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.611
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2026-04-04",
+      "state": "no"
+    },
+    "references": [
+      "BBMST24",
+      "Er80",
+      "Ho15"
+    ],
+    "source_last_update": "2026-04-04",
+    "source_problem_url": "https://www.erdosproblems.com/1188",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[BBMST24] Balister, Paul and Bollob\\'{a}s, B\\'ela and Morris, Robert and\nSahasrabudhe, Julian and Tiba, Marius, The structure and number of {E}rd\\H os covering systems. J. Eur. Math. Soc. (JEMS) (2024), 75--109.\n \n [Er80] Erd\\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.\n \n [Ho15] Hough, Bob, Solution of the minimum modulus problem for covering systems. Ann. of Math. (2) (2015), 361-382.",
+      "remarks": "Erd\\H{o}s \\cite{Er80} asked this without the minimal assumption, but otherwise this is trivial (since e.g. any system containing some fixed covering system would work, resulting in $\\gg 2^x$ many such systems). He expected $F(x)\\to \\infty$ as $x\\to \\infty$ 'very slowly'.\n\nIn \\cite{Er80} Erd\\H{o}s also asked to estimate the number of irreducible covering sets in $[1,x]$ (that is, those sets of moduli which contain no proper sets of moduli which form a covering system, perhaps with a different choice of congruence class). If this count is $G(x)$ then trivially $G(x)\\leq F(x)$. See [1189] for more on irreducible covering sets.\n\nIt follows from the solution of Hough \\cite{Ho15} to [2] that $F(x)\\to \\infty$ as $x\\to \\infty$ (although a lower bound of $F(x) \\gg \\log x$ is easily established by elementary means, as observed by van Doorn in the comments). The lower bound construction of Balister, Bollob\\'{a}s, Morris, Sahasrabudhe, and Tiba \\cite{BBMST24} implies that there are at least $\\exp(k^{3+o(1)})$ many minimal distinct covering systems, all of whose moduli are at most $\\prod_{p<k}p=e^{(1+o(1))k}$, which implies\\[F(x)\\geq \\exp((\\log x)^{3-o(1)})\\](in particular $F(x)$ grows faster than any polynomial, perhaps contradicting Erd\\H{o}s' guess that it should grow 'very slowly', although it is possible he was thinking of the number of different moduli possible). The trivial upper bound is\\[F(x) \\leq \\exp(O(x\\log x)).\\]"
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory",
+      "covering systems"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.95,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.315565
+      ],
+      "probability": 0.139785
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 1.818,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.351351
+      ],
+      "probability": 0.153835
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.6,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.282916
+      ],
+      "probability": 0.117647
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.167,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.41624
+      ],
+      "probability": 0.19403
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.3,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.251666
+      ],
+      "probability": 0.097744
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 0.9,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.203695
+      ],
+      "probability": 0.069767
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 39.0,
+      "credible_interval_approx": [
+        0.0,
+        0.07279
+      ],
+      "probability": 0.025
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.436385
+      ],
+      "probability": 0.2
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "clear"
+    },
+    "literature": {
+      "comment_count": 5,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:21:00.268150+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "5cb103ea41553160019b6c0a85dc9c63afcf291a67fcfb6e39db76b75969aaed"
+    },
+    "statement": {
+      "ambiguity_markers": [],
+      "ambiguity_status": "clear",
+      "quantifier_signal_count": 0,
+      "question_count": 0,
+      "requires_source_audit": false,
+      "statement_characters": 395,
+      "statement_tokens_approx": 59
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "estimate",
+      "multi_part": false,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-1188",
+  "problem_number": 1188,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "estimate",
+    "multi_part": false,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_1188.html",
+      "raw_html_sha256": "a367cbd42fe11e93f4d3cb1f28497aca279de2644cffba53937ba806d3f05915",
+      "section_sha256": {
+        "references": "d4169e7f86bab6952e616e787db52f9f3d41c10c626b2eeb429ab7a032f32a9f",
+        "remarks": "1e0bb824ebb5ff154096e3af4807588b3ad421b205f187b6e3b83387541d7955",
+        "statement": "01c1c0886356695385e2a34ee498a485c53b5a5a965bfb6e8092dc87eb0123d4"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_1188.json",
+      "source_record_sha256": "f1db0ba0cce2d474270ee5c2f9c7ef8e55e6c1a5715e8005361e52859e70200e",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_1188.tex",
+    "latex_sha256": "229be4c28164c8d4e674ed8bee073f222f2ffe518d2ae9113848069db6e8ea90",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "01c1c0886356695385e2a34ee498a485c53b5a5a965bfb6e8092dc87eb0123d4",
+    "recommended_attack_modes": [
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "f9e1c3d33d97530381d787413e48558818c6549365ae730e475e0f87eecea601",
+  "routes": [
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "clear",
+    "intended": "Call a set of distinct integers $1<n_1<\\cdots<n_k$ with associated congruence classes $a_i\\pmod{n_i}$ a distinct covering system if every integer satisfies at least one of these congruences. A minimal distinct covering system is one such that no proper subset forms a covering system.\n\nLet $F(x)$ count the number of minimal distinct covering systems with all moduli in $[1,x]$. Estimate $F(x)$.",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Call a set of distinct integers $1<n_1<\\cdots<n_k$ with associated congruence classes $a_i\\pmod{n_i}$ a distinct covering system if every integer satisfies at least one of these congruences. A minimal distinct covering system is one such that no proper subset forms a covering system. Let $F(x)$ count the number of minimal distinct covering systems with all moduli in $[1,x]$. Estimate $F(x)$.",
+    "original": "Call a set of distinct integers $1<n_1<\\cdots<n_k$ with associated congruence classes $a_i\\pmod{n_i}$ a distinct covering system if every integer satisfies at least one of these congruences. A minimal distinct covering system is one such that no proper subset forms a covering system.\n\nLet $F(x)$ count the number of minimal distinct covering systems with all moduli in $[1,x]$. Estimate $F(x)$.",
+    "statement_sha256": "01c1c0886356695385e2a34ee498a485c53b5a5a965bfb6e8092dc87eb0123d4"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

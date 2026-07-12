@@ -1,0 +1,40 @@
+{
+  "problem_number": 257,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/257",
+  "retrieved_at": "2026-07-10T23:16:16.043705+00:00",
+  "page_title": "257 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "9fe8222777dc78b989203eee5bbc9b77ec8d1b6513a6e4f1459cddb703c765c7",
+  "comment_count": 6,
+  "comments": [
+    {
+      "post_id": "1597",
+      "text": "The last claim in the comments, on $\\sum_{n\\in A}\\frac{1}{2^n-t_n}$ being irrational for integers $(t_n)_{n=1}^{\\infty}$ such that $0<|t_n|<C$, is easily seen to be false, even when $A=\\mathbb{N}$. This has already been disproved under [264], in this paper - see the more general Theorem 2.5, but a very short argument for $\\sum_{n=1}^{\\infty}\\frac{1}{2^n+b_n}$ is also sketched in a paragraph on p.17. However, the question was written quite ambiguously in [Er88c] (as Erdős forgot to say that $t_n\\neq0$), so one might also interpret it by requiring $0<t_n<C$. In that case the negative answer also easily follows from the ideas of the same paper, but this is not explicitly written there. Thus, I sketch the same very simple argument here, without taking any extra credit. :-) Consider the set of all sums $\\sum_{n=100}^{\\infty}\\frac{1}{2^n-t_n}$, where each $t_n$ ranges over $1,2,3,4,5,6$. They form a non-degenerate interval (and thus can be equal to some rational numbers), which can be seen by choosing $t_n$ inductively, so that the series sums to a desired target value. Namely, in each step, choosing $t_n$ achieves an approximation precision dictated by the largest gap:\\[ \\frac{1}{2^n-t_n-1} -\\frac{1}{2^n-t_n} = \\frac{1}{(2^n-t_n-1)(2^n-t_n)} \\leq \\frac{1}{(2^n-6)^2}, \\]while the values of the series' tail can fully cover an interval of length\\[ \\sum_{k=n+1}^{\\infty} \\Big( \\frac{1}{2^k-6} -\\frac{1}{2^k-1} \\Big) > \\frac{1}{2^{n+1}-6} -\\frac{1}{2^{n+1}-1} = \\frac{5}{(2^{n+1}-6)(2^{n+1}-1)} > \\frac{1}{(2^n-6)^2} \\]for $n\\geq100$. If one doesn't feel like working out the details, then rather just apply Lemma 4 (a) from this paper to the above collection of sums. (The site has been updated to address this comment.)",
+      "meta": "Vjeko_Kovac — 13:29 on 30 Oct 2025 👍 3 📝 0 🤖 0"
+    },
+    {
+      "post_id": "330",
+      "text": "Let \\(q ≥ 2\\) be an integer. We can use the following reference to settle some special cases: Yohei Tachiya, “Irrationality of Certain Lambert Series,” Tokyo J. Math. 27 (2004), 73–85. PDF: https://projecteuclid.org/journals/tokyo-journal-of-mathematics/volume-27/issue-1/Irrationality-of-Certain-Lambert-Series/10.3836/tjm/1244208475.pdf Tachiya’s Theorem 1 states that for any period-2 sequence \\({a_n}\\) (not identically zero),\\[ \\sum_{n\\ge1}\\frac{a_n}{1-q^n}\\notin\\mathbb{Q}. \\]Taking \\(a_n=\\mathbf{1}_{\\{n\\text{ is even}\\}}\\) (or \\(a_n=\\mathbf{1}_{\\{n\\text{ is odd}\\}}\\)), which are period-2 and not identically zero, we get\\[ \\sum_{n\\in 2\\mathbb{N}}\\frac{1}{q^n-1} = -\\sum_{n\\ge1}\\frac{a_n}{1-q^n}\\notin\\mathbb{Q}, \\qquad \\sum_{n\\in (2\\mathbb{N}-1)}\\frac{1}{q^n-1} = -\\sum_{n\\ge1}\\frac{a_n}{1-q^n}\\notin\\mathbb{Q}. \\]Thus, for \\(A = 2\\mathbb{N}\\) (positive even integers) or \\(A = 2\\mathbb{N} - 1\\) (positive odd integers), the subseries\\[ \\sum_{n\\in A}\\frac{1}{q^n-1} \\]is irrational (in particular for \\(q=2\\) posed in the problem).",
+      "meta": "Quanyu Tang — 14:10 on 05 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "332",
+      "text": "Well, ok, but the case of even positive integers is a consequence of a much older paper by Erdős, by writing\\[ \\sum_{n=1}^{\\infty} \\frac{1}{q^{2n}-1} = \\sum_{n=1}^{\\infty} \\frac{1}{(q^{2})^{n}-1}. \\]Similarly, the case of odd positive integers is a consequence of an older paper by Borwein, by writing\\[ \\sum_{n=1}^{\\infty} \\frac{1}{q^{2n-1}-1} = q \\sum_{n=1}^{\\infty} \\frac{1}{(q^{2})^{n}-q}. \\]",
+      "meta": "Vjeko_Kovac — 16:36 on 05 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "338",
+      "text": "Thanks for pointing this out — you are right that the even- and odd-positive-integer cases follow from the much earlier results of Erdős and Borwein, respectively. What Tachiya’s Theorem 1 offers here is a uniform way to handle any nontrivial period-2 coefficient sequence, not just the pure even or pure odd subsets. Beyond these two special cases in this problem, I am not sure if it yields further consequences here, though.",
+      "meta": "Quanyu Tang — 17:48 on 05 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "208",
+      "text": "The question about subseries of $\\sum 1/(t^n-1)$ has been asked for every integer $t\\geq2$, but I believe that the case $t=2$ is quite special. In the case $t=2$ the corresponding subsums form a fat (i.e., positive-measure) Cantor set, and it is very likely that it contains many rationals. If its gaps were even smaller (as for, say, $\\sum 1/(2^n-2^{-2^n})$), then one could easily prove that it does not even miss many rationals within range. In the cases $t\\geq3$ the subsums form a zero-measure Cantor set, which is quite possibly irrational.",
+      "meta": "Vjeko_Kovac — 19:36 on 25 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2",
+      "text": "Erdős asked about variants of this problem even earlier, see for instance this paper from 1965. A simpler variant of this problem, where one has a bit more freedom and can choose, say, infinitely many terms of the form $\\frac{1}{2^n-1}$ or $\\frac{1}{11^m-1}$ has an easy negative answer, simply because the corresponding infinite subsums fill out a union of non-degenerate intervals (from which one simply picks a rational number); see Theorem 2.3 in this paper. The set\\[ S = \\Big\\{ \\sum_{n\\in A} \\frac{1}{2^n-1} : A\\subseteq\\mathbb{N} \\Big\\} \\]appearing in [257] now has empty interior, so the same trick no longer applies. However, the answer is very likely negative again. Namely, the above set $S$ still has positive Lebesgue measure, i.e., it is a fat Cantor set. Thus, $S$ \"almost surely\" contains, say, at least one of the dyadic rationals $1/2,1/4,1/8,\\ldots$. However, this argument alone cannot be turned into a rigorous proof, since there exist fat Cantor sets containing no rational numbers; a nonconstructive proof was given by Boes, Darst, and Erdős.",
+      "meta": "Vjeko_Kovac — 10:55 on 09 Aug 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

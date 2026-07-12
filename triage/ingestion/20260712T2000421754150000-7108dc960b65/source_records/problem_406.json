@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 406,
+  "raw_page": {
+    "path": "raw/pages/problem_406.html",
+    "sha256": "bfca99da8f5d4a3b6663ab38b91031d5b6c2ae3f4ad9056b8e9818b8493d0089"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "7d6fddc4486aa7324d51cf2f160b7db669ca55d5c3dc9aa9a29eb1b5694f2d6f",
+      "source_region": "div.problem-additional-text",
+      "text": "[AbLa14] Abram, William C. and Lagarias, Jeffrey C., Intersections of multiplicative translates of 3-adic {C}antor\nsets. J. Fractal Geom. (2014), 349--390.\n \n [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.\n \n [La09] Lagarias, Jeffrey C., Ternary expansions of powers of 2. J. Lond. Math. Soc. (2) (2009), 562--588.\n \n [Na80] Narkiewicz, W., A note on a paper of {H}. {G}upta concerning powers of two and\nthree: ``{P}owers of {$2$}\\ and sums of distinct powers of\n{$3$}''\\ [{U}niv. {B}eograd. {P}ubl. {E}lektrotehn. {F}ak.\nSer. {M}at. {F}iz. {N}o. 602-633 (1978), 151--158 (1979);\\\n{MR} 81g:10016]. Univ. Beograd. Publ. Elektrotehn. Fak. Ser. Mat. Fiz. (1980), 173--174.\n \n [Sa22] Saye, Robert I., On two conjectures concerning the ternary digits of powers of\ntwo. J. Integer Seq. (2022), Art. 22.3.4, 9."
+    },
+    "remarks": {
+      "sha256": "4a6ef20289f1c93e062111b493748fdfe9b64c47f0c68e7ac2a56981dc0e6273",
+      "source_region": "div.problem-additional-text",
+      "text": "The only examples seem to be $1$, $4=1+3$, and $256=1+3+3^2+3^5$. If we only allow the digits $1$ and $2$ then $2^{15}$ seems to be the largest such power of $2$.\n\nThis would imply via Kummer's theorem that\\[3\\mid \\binom{2^{k+1}}{2^k}\\]for all large $k$.\n\nSaye \\cite{Sa22} has computed that $2^n$ contains every possible ternary digit for $16\\leq n \\leq 5.9\\times 10^{21}$.\n\nLet $N(x)$ count the number of $n\\leq x$ such that $2^n$ has only the digits $0$ and $1$ in base $3$. Narkiewicz \\cite{Na80} proved\\[N(x)\\leq 1.62 x^{\\log_32}\\]This is mentioned in problem B33 of Guy's collection \\cite{Gu04}. There are many generalisations possible - see, for example, \\cite{AbLa14} and \\cite{La09}."
+    },
+    "statement": {
+      "sha256": "3533b0cd2a6c73768fc53dc9ab7c33265a3e065d9ad0089d1c463139fde564dd",
+      "source_region": "div#content",
+      "text": "Is it true that there are only finitely many powers of $2$ which have only the digits $0$ and $1$ when written in base $3$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/406"
+}

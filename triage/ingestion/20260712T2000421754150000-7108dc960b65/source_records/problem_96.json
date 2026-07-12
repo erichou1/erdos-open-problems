@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 96,
+  "raw_page": {
+    "path": "raw/pages/problem_96.html",
+    "sha256": "767bfa203069e624cd3a88138c1771b93e20103a452a158e8341f5a82e994e2e"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "5c6827f0160e9eb3365dfba245bc70a05b3d4a790d164e22ab14663d7cb85483",
+      "source_region": "div.problem-additional-text",
+      "text": "[Ag15] Aggarwal, Amol, On unit distances in a convex polygon. Discrete Math. (2015), 88-92.\n \n [BrPa01] Brass , Peter and Pach, J\\'{a}nos, The maximum number of times the same distance can occur among\nthe vertices of a convex {$n$}-gon is {$O(n\\log n)$}. J. Combin. Theory Ser. A (2001), 178-179.\n \n [EdHa91] Edelsbrunner, Herbert and Hajnal, P\\'{e}ter, A lower bound on the number of unit distances between the\nvertices of a convex polygon. J. Combin. Theory Ser. A (1991), 312-316.\n \n [Er92e] Erd\\H{o}s, P\\'{a}l, Some Unsolved problems in Geometry, Number Theory and Combinatorics. Eureka (1992), 44-48.\n \n [Fu90] F\\\"{u}redi, Zolt\\'{a}n, The maximum number of unit distances in a convex {$n$}-gon. J. Combin. Theory Ser. A (1990), 316-320."
+    },
+    "remarks": {
+      "sha256": "1047bb62ff4f492809f2c58ddd0dcc650c2f729008273ddfaa4c08440c785ebf",
+      "source_region": "div.problem-additional-text",
+      "text": "Conjectured by Erd\\H{o}s and Moser. In \\cite{Er92e} Erd\\H{o}s credits the conjecture that the true upper bound is $2n$ to himself and Fishburn. F\\\"{u}redi \\cite{Fu90} proved an upper bound of $O(n\\log n)$. A short proof of this bound was given by Brass and Pach \\cite{BrPa01}. The best known upper bound is\\[\\leq n\\log_2n+4n,\\]due to Aggarwal \\cite{Ag15}.\n\nEdelsbrunner and Hajnal \\cite{EdHa91} have constructed $n$ such points with $2n-7$ pairs distance $1$ apart. (This disproved an early stronger conjecture of Erd\\H{o}s and Moser, that the true answer was $\\frac{5}{3}n+O(1)$.)\n\nA positive answer would follow from [97]. See also [90].\n\nIn \\cite{Er92e} Erd\\H{o}s makes the stronger conjecture that, if $g(x)$ counts the largest number of points equidistant from $x$ in $A$, then\\[\\sum_{x\\in A}g(x)< 4n.\\]He notes that the example of Edelsbrunner and Hajnal shows that $\\sum_{x\\in A}g(x)>4n-O(1)$ is possible."
+    },
+    "statement": {
+      "sha256": "b26d0b7c155f44101d0f30b46e120e308abc054b5c7c63e32b48fe824a238b4c",
+      "source_region": "div#content",
+      "text": "If $n$ points in $\\mathbb{R}^2$ form a convex polygon then there are $O(n)$ many pairs which are distance $1$ apart."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/96"
+}

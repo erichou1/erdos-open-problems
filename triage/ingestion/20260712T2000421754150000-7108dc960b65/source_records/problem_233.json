@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 233,
+  "raw_page": {
+    "path": "raw/pages/problem_233.html",
+    "sha256": "4021d70776ba529832d3ac616d2d3e46824ecef74eca78960432f710006912f6"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "29d071ac16cbf74fdfe54139e21409865fba9bacfaa32cfe11380d234a4dc918",
+      "source_region": "div.problem-additional-text",
+      "text": "[Cr36] Cram\\'{e}r, Harald, On the order of magnitude of the difference between consecutive prime numbers. Acta Arithmetica (1936), 23--46.\n \n [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.\n \n [Se43] Selberg, Atle, On the normal density of primes in small intervals, and the\ndifference between consecutive primes. Arch. Math. Naturvid. (1943), 87--105."
+    },
+    "remarks": {
+      "sha256": "06bbd59ce415b9c421ed15f1ac226438b5282d6043c6e60ca2dd6fa445730ee2",
+      "source_region": "div.problem-additional-text",
+      "text": "Cramer \\cite{Cr36} proved an upper bound of $O(N(\\log N)^4)$ conditional on the Riemann hypothesis. Selberg \\cite{Se43} improved this slightly (still assuming the Riemann hypothesis) to\\[\\sum_{1\\leq n\\leq N}\\frac{d_n^2}{n}\\ll (\\log N)^4.\\]The prime number theorem immediately implies a lower bound of\\[\\sum_{1\\leq n\\leq N}d_n^2\\gg N(\\log N)^2.\\]This would imply in particular that $d_n\\ll n^{1/2}\\log n$ for all $n$, which is known only the assumption of the Riemann Hypothesis.\n\nThe values of the sum are listed at A074741 on the OEIS.\n\nThis is discussed in problem A8 of Guy's collection \\cite{Gu04}."
+    },
+    "statement": {
+      "sha256": "4ebb35254d3f89f90362c3a20b3bbd3af429e08ccf6f126b15c4717e8b1be05b",
+      "source_region": "div#content",
+      "text": "Let $d_n=p_{n+1}-p_n$, where $p_n$ is the $n$th prime. Prove that\\[\\sum_{1\\leq n\\leq N}d_n^2 \\ll N(\\log N)^2.\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/233"
+}

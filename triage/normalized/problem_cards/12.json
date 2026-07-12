@@ -1,0 +1,340 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.692
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "yes"
+    },
+    "references": [
+      "Ba04",
+      "ElPl17",
+      "ErSa70",
+      "Sc01"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/12",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Ba04] Baier, Stephan, A note on {$\\scr P$}-sets. Integers (2004), A13, 6.\n \n [ElPl17] Elsholtz, Christian and Planitzer, Stefan, On Erd\\H{o}s and S\\'{a}rk\\\"ozy's sequences with Property P. Monatsh. Math. (2017), 565--575.\n \n [ErSa70] Erd\\H{o}s, P. and S\\'{a}rk\\\"ozi, A., On the divisibility properties of sequences of integers. Proc. London Math. Soc. (3) (1970), 97-101.\n \n [Sc01] Schoen, Tomasz, On a problem of Erd\\H{o}s and S\\'{a}rk\\\"ozy. J. Combin. Theory Ser. A (2001), 191--195.",
+      "remarks": "Asked by Erd\\H{o}s and S\\'{a}rk\\\"{o}zy \\cite{ErSa70}, who proved that $A$ must have density $0$. They also prove that this is essentially best possible, in that given any function $f(x)\\to \\infty$ as $x\\to \\infty$ there exists a set $A$ with this property and infinitely many $N$ such that\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert>\\frac{N}{f(N)}.\\](Their example is given by all integers in $(y_i,\\frac{3}{2}y_i)$ congruent to $1$ modulo $(2y_{i-1})!$, where $y_i$ is some sufficiently quickly growing sequence.)\n\nAn example of an $A$ with this property where\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}\\log N>0\\]is given by the set of $p^2$, where $p\\equiv 3\\pmod{4}$ is prime.\n\nElsholtz and Planitzer \\cite{ElPl17} have constructed such an $A$ with\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert\\gg \\frac{N^{1/2}}{(\\log N)^{1/2}(\\log\\log N)^2(\\log\\log\\log N)^2}.\\]Schoen \\cite{Sc01} proved that if all elements in $A$ are pairwise coprime then\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert \\ll N^{2/3}\\]for infinitely many $N$. Baier \\cite{Ba04} has improved this to $\\ll N^{2/3}/\\log N$.\n\nDeepMind has provided a construction that shows the answer to the second question is no (and hence the answer to the first question is yes). This construction has been simplified and improved in the comments; it is now known that there exists an $A$ with this property such that, for all large $N$,\\[\\lvert A\\cap \\{1,\\ldots,N\\}\\rvert \\geq \\frac{N}{(\\log N)^{O(\\log\\log\\log N)}}.\\]It is unknown whether there exists such an $A$ with $\\sum_{n\\in A}\\frac{1}{n}=\\infty$.\n\nFor the finite version see [13]."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 4.02,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.04496,
+        0.456913
+      ],
+      "probability": 0.250936
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.718,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.035174,
+        0.453415
+      ],
+      "probability": 0.244295
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 3.3,
+      "beta": 13.0,
+      "credible_interval_approx": [
+        0.0131,
+        0.391808
+      ],
+      "probability": 0.202454
+    },
+    "p_high_mathematical_value": {
+      "alpha": 3.267,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.028444,
+        0.504165
+      ],
+      "probability": 0.266304
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.533,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.016446,
+        0.364849
+      ],
+      "probability": 0.190647
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 3.8,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.029964,
+        0.409343
+      ],
+      "probability": 0.219653
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 2.6,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.118511
+      ],
+      "probability": 0.054622
+    },
+    "p_verified_partial_progress": {
+      "alpha": 3.4,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.031954,
+        0.495177
+      ],
+      "probability": 0.263566
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 13,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:15:09.273621+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "84ff8a69fe03859c06f34f6e724d58e6eb6778e0efe52a997c5590fbfe57431d"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 2,
+      "question_count": 3,
+      "requires_source_audit": true,
+      "statement_characters": 390,
+      "statement_tokens_approx": 48
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": true,
+      "finite_signal": true,
+      "goal": "prove_or_disprove",
+      "multi_part": true,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-12",
+  "problem_number": 12,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": true,
+    "finite_signal": true,
+    "goal": "prove_or_disprove",
+    "multi_part": true,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_12.html",
+      "raw_html_sha256": "ccd473013e22d02af4909ebaede14afccbbb1514a3f785955185749c87d6b2e7",
+      "section_sha256": {
+        "references": "8230ee2344a4b54b96e74aa0e1513777e828630b9df5455fdc43cafaf0f948e4",
+        "remarks": "4518b368a547df7c295007e3ca0148ed19dd6b7c60f02d9422ea6c9b1eeca67d",
+        "statement": "0b99db32090e4638317df84edcabbe436212d5a076848dae0326244190f67f88"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_12.json",
+      "source_record_sha256": "441f4dccae01ca06e6c8b86864ed4e98e96aa0fd03afba4bcf08cc0c507444d7",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_12.tex",
+    "latex_sha256": "db8fdda39c847668583de0bc8eaa4a03ef4b0703d7721efdc97eb9cd32a20354",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "0b99db32090e4638317df84edcabbe436212d5a076848dae0326244190f67f88",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "formal_search",
+      "exact_computation",
+      "counterexample_search",
+      "subproblem_decomposition",
+      "shared_infrastructure_search",
+      "literature_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Let $A$ be an infinite set such that there are no distinct $a,b,c\\in A$ such that $a\\mid (b+c)$ and $b,c>a$. Is there such an $A$ with\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}>0?",
+        "focus_question_sha256": "62ff78080aa98e5d9462cede9d483eb7942367adeabe4b8eba769306250e0e81",
+        "parent_statement_sha256": "0b99db32090e4638317df84edcabbe436212d5a076848dae0326244190f67f88",
+        "part_index": 1,
+        "subproblem_contract_sha256": "64aff95ace1afb46839f35e4d41fcbc82c1be65e0fa85833edb76fc8c7c5c788",
+        "subproblem_id": "erdos-12-part-01-64aff95a"
+      },
+      {
+        "focus_question": "\\]Does there exist some absolute constant $c>0$ such that there are always infinitely many $N$ with\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert<N^{1-c}?",
+        "focus_question_sha256": "5c01375891c07ae4b088914be2116e99aba8babf7896b28051796f1ba07e56a3",
+        "parent_statement_sha256": "0b99db32090e4638317df84edcabbe436212d5a076848dae0326244190f67f88",
+        "part_index": 2,
+        "subproblem_contract_sha256": "6fd9587a47c2713f6c7bef1dffd02c7852b97106db27b9b778c7a5544058d192",
+        "subproblem_id": "erdos-12-part-02-6fd9587a"
+      },
+      {
+        "focus_question": "\\]Is it true that\\[\\sum_{n\\in A}\\frac{1}{n}<\\infty?",
+        "focus_question_sha256": "b42c55e5239fc7332fe4f216140678c6ef3f1b0b951cfa9039cb1721c0d533a6",
+        "parent_statement_sha256": "0b99db32090e4638317df84edcabbe436212d5a076848dae0326244190f67f88",
+        "part_index": 3,
+        "subproblem_contract_sha256": "79cde62bad33619f30fdb9c917732fe237a068bd77ae75009b67a5f1dd6c889c",
+        "subproblem_id": "erdos-12-part-03-79cde62b"
+      }
+    ]
+  },
+  "research_directive_sha256": "b74be596668376327ecde6c35896b2d04e18bd180c58b0dc1be67b18deccdc7f",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "formal_search",
+    "exact_computation",
+    "counterexample_search",
+    "subproblem_decomposition",
+    "shared_infrastructure_search",
+    "literature_search"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Let $A$ be an infinite set such that there are no distinct $a,b,c\\in A$ such that $a\\mid (b+c)$ and $b,c>a$. Is there such an $A$ with\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}>0?\\]Does there exist some absolute constant $c>0$ such that there are always infinitely many $N$ with\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert<N^{1-c}?\\]Is it true that\\[\\sum_{n\\in A}\\frac{1}{n}<\\infty?\\]",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $A$ be an infinite set such that there are no distinct $a,b,c\\in A$ such that $a\\mid (b+c)$ and $b,c>a$. Is there such an $A$ with\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}>0?\\]Does there exist some absolute constant $c>0$ such that there are always infinitely many $N$ with\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert<N^{1-c}?\\]Is it true that\\[\\sum_{n\\in A}\\frac{1}{n}<\\infty?\\]",
+    "original": "Let $A$ be an infinite set such that there are no distinct $a,b,c\\in A$ such that $a\\mid (b+c)$ and $b,c>a$. Is there such an $A$ with\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}>0?\\]Does there exist some absolute constant $c>0$ such that there are always infinitely many $N$ with\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert<N^{1-c}?\\]Is it true that\\[\\sum_{n\\in A}\\frac{1}{n}<\\infty?\\]",
+    "statement_sha256": "0b99db32090e4638317df84edcabbe436212d5a076848dae0326244190f67f88"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-12",
+      "part_index": 1,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Let $A$ be an infinite set such that there are no distinct $a,b,c\\in A$ such that $a\\mid (b+c)$ and $b,c>a$. Is there such an $A$ with\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}>0?",
+        "focus_question_sha256": "62ff78080aa98e5d9462cede9d483eb7942367adeabe4b8eba769306250e0e81",
+        "normalized": "Let $A$ be an infinite set such that there are no distinct $a,b,c\\in A$ such that $a\\mid (b+c)$ and $b,c>a$. Is there such an $A$ with\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}>0?\\]Does there exist some absolute constant $c>0$ such that there are always infinitely many $N$ with\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert<N^{1-c}?\\]Is it true that\\[\\sum_{n\\in A}\\frac{1}{n}<\\infty?\\]",
+        "original": "Let $A$ be an infinite set such that there are no distinct $a,b,c\\in A$ such that $a\\mid (b+c)$ and $b,c>a$. Is there such an $A$ with\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}>0?\\]Does there exist some absolute constant $c>0$ such that there are always infinitely many $N$ with\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert<N^{1-c}?\\]Is it true that\\[\\sum_{n\\in A}\\frac{1}{n}<\\infty?\\]",
+        "statement_sha256": "0b99db32090e4638317df84edcabbe436212d5a076848dae0326244190f67f88"
+      },
+      "subproblem_contract_sha256": "64aff95ace1afb46839f35e4d41fcbc82c1be65e0fa85833edb76fc8c7c5c788",
+      "subproblem_id": "erdos-12-part-01-64aff95a"
+    },
+    {
+      "parent_problem_id": "erdos-12",
+      "part_index": 2,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "\\]Does there exist some absolute constant $c>0$ such that there are always infinitely many $N$ with\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert<N^{1-c}?",
+        "focus_question_sha256": "5c01375891c07ae4b088914be2116e99aba8babf7896b28051796f1ba07e56a3",
+        "normalized": "Let $A$ be an infinite set such that there are no distinct $a,b,c\\in A$ such that $a\\mid (b+c)$ and $b,c>a$. Is there such an $A$ with\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}>0?\\]Does there exist some absolute constant $c>0$ such that there are always infinitely many $N$ with\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert<N^{1-c}?\\]Is it true that\\[\\sum_{n\\in A}\\frac{1}{n}<\\infty?\\]",
+        "original": "Let $A$ be an infinite set such that there are no distinct $a,b,c\\in A$ such that $a\\mid (b+c)$ and $b,c>a$. Is there such an $A$ with\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}>0?\\]Does there exist some absolute constant $c>0$ such that there are always infinitely many $N$ with\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert<N^{1-c}?\\]Is it true that\\[\\sum_{n\\in A}\\frac{1}{n}<\\infty?\\]",
+        "statement_sha256": "0b99db32090e4638317df84edcabbe436212d5a076848dae0326244190f67f88"
+      },
+      "subproblem_contract_sha256": "6fd9587a47c2713f6c7bef1dffd02c7852b97106db27b9b778c7a5544058d192",
+      "subproblem_id": "erdos-12-part-02-6fd9587a"
+    },
+    {
+      "parent_problem_id": "erdos-12",
+      "part_index": 3,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "\\]Is it true that\\[\\sum_{n\\in A}\\frac{1}{n}<\\infty?",
+        "focus_question_sha256": "b42c55e5239fc7332fe4f216140678c6ef3f1b0b951cfa9039cb1721c0d533a6",
+        "normalized": "Let $A$ be an infinite set such that there are no distinct $a,b,c\\in A$ such that $a\\mid (b+c)$ and $b,c>a$. Is there such an $A$ with\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}>0?\\]Does there exist some absolute constant $c>0$ such that there are always infinitely many $N$ with\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert<N^{1-c}?\\]Is it true that\\[\\sum_{n\\in A}\\frac{1}{n}<\\infty?\\]",
+        "original": "Let $A$ be an infinite set such that there are no distinct $a,b,c\\in A$ such that $a\\mid (b+c)$ and $b,c>a$. Is there such an $A$ with\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{N^{1/2}}>0?\\]Does there exist some absolute constant $c>0$ such that there are always infinitely many $N$ with\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert<N^{1-c}?\\]Is it true that\\[\\sum_{n\\in A}\\frac{1}{n}<\\infty?\\]",
+        "statement_sha256": "0b99db32090e4638317df84edcabbe436212d5a076848dae0326244190f67f88"
+      },
+      "subproblem_contract_sha256": "79cde62bad33619f30fdb9c917732fe237a068bd77ae75009b67a5f1dd6c889c",
+      "subproblem_id": "erdos-12-part-03-79cde62b"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

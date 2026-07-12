@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 883,
+  "raw_page": {
+    "path": "raw/pages/problem_883.html",
+    "sha256": "8bd2967c88b0e102268595c2a844c12db41604099b9a2ae31a89f92ae315131d"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "81726463ab365b4e0c6c65bddde271a1a34dbb47166e882eb1d90efb0f3371d1",
+      "source_region": "div.problem-additional-text",
+      "text": "[ErSa97] Erd\\H{o}s, Paul and Sarkozy, Gabor N., On cycles in the coprime graph of integers. Electron. J. Combin. (1997), Research Paper 8, approx. 11.\n \n [Sa99] S\\'{a}rk\\\"ozy, G\\'{a}bor N., Complete tripartite subgraphs in the coprime graph of\nintegers. Discrete Math. (1999), 227--238."
+    },
+    "remarks": {
+      "sha256": "59bfcfd07764e901e5b16ae4c1757f17f7e2e254e6a8b229a2306e3a7a8a3819",
+      "source_region": "div.problem-additional-text",
+      "text": "A problem of Erd\\H{o}s and S\\'{a}rk\\H{o}zy \\cite{ErSa97}, who prove that if\\[\\lvert A\\rvert >\\lfloor\\tfrac{n}{2}\\rfloor+\\lfloor\\tfrac{n}{3}\\rfloor-\\lfloor\\tfrac{n}{6}\\rfloor\\]then $G(A)$ contains all odd cycles of length $\\leq cn$ for some constant $c>0$.\n\nThis threshold is the best possible, since one could take $A$ to be the set of $m\\leq n$ which are divisible by either $2$ or $3$, in which case $G(A)$ contains no triangles. \n\nThe second question was solved by S\\'{a}rk\\\"{o}zy \\cite{Sa99} who proved that, for large $n$, if $\\lvert A\\rvert$ exceeds the given threshold then $G(A)$ contains a complete $(1,\\ell,\\ell)$ triparite graph with\\[\\ell \\gg \\frac{\\log n}{\\log\\log n}.\\]"
+    },
+    "statement": {
+      "sha256": "42b1e16f4bd3b2e2185d03c68112158ea913c9d5e0072b8faebab3b8d89b9e8d",
+      "source_region": "div#content",
+      "text": "For $A\\subseteq \\{1,\\ldots,n\\}$ let $G(A)$ be the graph with vertex set $A$, where two integers are joined by an edge if they are coprime.\n\nIs it true that if\\[\\lvert A\\rvert >\\lfloor\\tfrac{n}{2}\\rfloor+\\lfloor\\tfrac{n}{3}\\rfloor-\\lfloor\\tfrac{n}{6}\\rfloor\\]then $G(A)$ contains all odd cycles of length $\\leq \\frac{n}{3}+1$?\n\nIs it true that, for every $\\ell\\geq 1$, if $n$ is sufficiently large and\\[\\lvert A\\rvert >\\lfloor\\tfrac{n}{2}\\rfloor+\\lfloor\\tfrac{n}{3}\\rfloor-\\lfloor\\tfrac{n}{6}\\rfloor\\]then $G(A)$ must contain a complete $(1,\\ell,\\ell)$ triparite graph on $2\\ell+1$ vertices?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/883"
+}

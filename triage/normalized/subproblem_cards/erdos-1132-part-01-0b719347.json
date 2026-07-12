@@ -1,0 +1,29 @@
+{
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "parent_problem_id": "erdos-1132",
+  "parent_run_contract_id": null,
+  "part_index": 1,
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "priority_score": 0.086957,
+  "problem_number": 1132,
+  "rank": 128,
+  "recommended_attack_modes": [
+    "statement_audit",
+    "human_clarification",
+    "subproblem_decomposition",
+    "shared_infrastructure_search"
+  ],
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "focus_question": "For $x_1,\\ldots,x_n\\in [-1,1]$ let\\[l_k(x)=\\frac{\\prod_{i\\neq k}(x-x_i)}{\\prod_{i\\neq k}(x_k-x_i)},\\]which are such that $l_k(x_k)=1$ and $l_k(x_i)=0$ for $i\\neq k$.\n\nLet $x_1,x_2,\\ldots\\in [-1,1]$ be an infinite sequence, and let\\[L_n(x) = \\sum_{1\\leq k\\leq n}\\lvert l_k(x)\\rvert,\\]where each $l_k(x)$ is defined above with respect to $x_1,\\ldots,x_n$. Must there exist $x\\in (-1,1)$ such that\\[L_n(x) >\\frac{2}{\\pi}\\log n-O(1)\\]for infinitely many $n$?",
+    "focus_question_sha256": "d1c301fbf529e501ed016fa93d4b86786d797def52c4c0c43b5a3d0ce5bfdd20",
+    "normalized": "For $x_1,\\ldots,x_n\\in [-1,1]$ let\\[l_k(x)=\\frac{\\prod_{i\\neq k}(x-x_i)}{\\prod_{i\\neq k}(x_k-x_i)},\\]which are such that $l_k(x_k)=1$ and $l_k(x_i)=0$ for $i\\neq k$. Let $x_1,x_2,\\ldots\\in [-1,1]$ be an infinite sequence, and let\\[L_n(x) = \\sum_{1\\leq k\\leq n}\\lvert l_k(x)\\rvert,\\]where each $l_k(x)$ is defined above with respect to $x_1,\\ldots,x_n$. Must there exist $x\\in (-1,1)$ such that\\[L_n(x) >\\frac{2}{\\pi}\\log n-O(1)\\]for infinitely many $n$? Is it true that\\[\\limsup_{n\\to \\infty}\\frac{L_n(x)}{\\log n}\\geq \\frac{2}{\\pi}\\]for almost all $x\\in (-1,1)$?",
+    "original": "For $x_1,\\ldots,x_n\\in [-1,1]$ let\\[l_k(x)=\\frac{\\prod_{i\\neq k}(x-x_i)}{\\prod_{i\\neq k}(x_k-x_i)},\\]which are such that $l_k(x_k)=1$ and $l_k(x_i)=0$ for $i\\neq k$.\n\nLet $x_1,x_2,\\ldots\\in [-1,1]$ be an infinite sequence, and let\\[L_n(x) = \\sum_{1\\leq k\\leq n}\\lvert l_k(x)\\rvert,\\]where each $l_k(x)$ is defined above with respect to $x_1,\\ldots,x_n$.\n\nMust there exist $x\\in (-1,1)$ such that\\[L_n(x) >\\frac{2}{\\pi}\\log n-O(1)\\]for infinitely many $n$?\n\nIs it true that\\[\\limsup_{n\\to \\infty}\\frac{L_n(x)}{\\log n}\\geq \\frac{2}{\\pi}\\]for almost all $x\\in (-1,1)$?",
+    "statement_sha256": "351143ce7e53fd57a862fead93f54ff511eb7ca3303e824c3ad8911ff721cb2d"
+  },
+  "subproblem_contract_sha256": "0b719347097d20535195959815e819f8a866791890180c0df49db315c02bf3a2",
+  "subproblem_id": "erdos-1132-part-01-0b719347"
+}

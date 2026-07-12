@@ -1,0 +1,48 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#267}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} irrationality
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $F_1=F_2=1$ and $F_{n+1}=F_n+F_{n-1}$ be the Fibonacci sequence. Let $n_1<n_2<\cdots $ be an infinite sequence with $n_{k+1}/n_k \geq c>1$. Must\[\sum_k\frac{1}{F_{n_k}}\]be irrational?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+It may be sufficient to have $n_k/k\to \infty$. Good \cite{Go74} and Bicknell and Hoggatt \cite{BiHo76} have shown that $\sum \frac{1}{F_{2^n}}$ is irrational - in fact,\[\sum \frac{1}{F_{2^n}}=\frac{7-\sqrt{5}}{2}.\]Badea \cite{Ba87} proved that $\sum \frac{1}{F_{2^n+1}}$ is irrational. 
+
+The sum $\sum \frac{1}{F_n}$ itself was proved to be irrational by Andr\'{e}-Jeannin \cite{An89}.
+
+The main problem has been proved for $c\geq 2$ by Badea \cite{Ba93}. It remains open for $1<c<2$.
+
+\bigskip
+\noindent\textbf{References:}
+
+[An89] Andr\'{e}-Jeannin, Richard, Irrationalit\'{e}{} de la somme des inverses de certaines suites r\'{e}currentes. C. R. Acad. Sci. Paris S\'{e}r. I Math. (1989), 539--541.
+ 
+ [Ba87] Badea, C., The irrationality of certain infinite series. Glasgow Math. J. (1987), 221--228.
+ 
+ [Ba93] Badea, C., A theorem on irrationality of infinite series and
+applications. Acta Arith. (1993), 313--323.
+ 
+ [BiHo76] Hoggatt, Jr., V. E. and Bicknell, Marjorie, A reciprocal series of Fibonacci numbers with subscripts $2^nk$. Fibonacci Quart. (1976), 453-455.
+ 
+ [Go74] Good, I. J., A reciprocal series of Fibonacci numbers. Fibonacci Quart. (1974), 346.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/267}}
+\end{document}

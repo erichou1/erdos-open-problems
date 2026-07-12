@@ -1,0 +1,310 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.502
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "Er59b",
+      "Ko88"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/626",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Er59b] Erd\\H{o}s, P., Graph theory and probability. Canadian J. Math. (1959), 34-38.\n \n [Ko88] Kostochka, A. V., Upper bounds on the chromatic number of graphs. Trudy Inst. Mat. (Novosibirsk) (1988), 204-226, 265.",
+      "remarks": "It is known that\\[\\frac{1}{4\\log k}\\log n\\leq g_k(n) \\leq \\frac{2}{\\log(k-2)}\\log n+1,\\]the lower bound due to Kostochka \\cite{Ko88} and the upper bound to Erd\\H{o}s \\cite{Er59b}. \n\nErd\\H{o}s \\cite{Er59b} proved that\\[\\lim_{n\\to \\infty}\\frac{\\log h^{(m)}(n)}{\\log n}\\gg \\frac{1}{m}\\]and, for odd $m$,\\[\\lim_{n\\to \\infty}\\frac{\\log h^{(m)}(n)}{\\log n}\\leq \\frac{2}{m+1},\\]and conjectured this is sharp. He had no good guess for the value of the limit for even $m$, other that it should lie in $[\\frac{2}{m+2},\\frac{2}{m}]$, but could not prove this even for $m=4$.\n\nSee also the entry in the graphs problem collection."
+    },
+    "source_state": "open",
+    "tags": [
+      "graph theory",
+      "chromatic number",
+      "cycles"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.5,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.272872
+      ],
+      "probability": 0.111111
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 2.606,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.0,
+        0.380481
+      ],
+      "probability": 0.184765
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 2.0,
+      "beta": 13.0,
+      "credible_interval_approx": [
+        0.0,
+        0.299901
+      ],
+      "probability": 0.133333
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.167,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.41624
+      ],
+      "probability": 0.19403
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 0.7,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.143576
+      ],
+      "probability": 0.044586
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.6,
+      "beta": 14.0,
+      "credible_interval_approx": [
+        0.0,
+        0.248513
+      ],
+      "probability": 0.102564
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.063431
+      ],
+      "probability": 0.021739
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.0,
+        0.384039
+      ],
+      "probability": 0.173913
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 0,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:18:05.869631+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "935476e1173bb4126a0ea71726185b053918bed65c35342f1c738b96676d467e"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "multiple_questions",
+        "implicit_convention"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 0,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 427,
+      "statement_tokens_approx": 63
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "compute",
+      "multi_part": true,
+      "primary_domain": "graph theory"
+    }
+  },
+  "problem_id": "erdos-626",
+  "problem_number": 626,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "compute",
+    "multi_part": true,
+    "primary_domain": "graph theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_626.html",
+      "raw_html_sha256": "e6622d68bcd72a0c724c32a0fe04269e69e7d78114521433c07145875cdf7a65",
+      "section_sha256": {
+        "references": "8d6f84be77f91fc9fa078d7de8bfae804ca088a49d43db0853725da96c3592b5",
+        "remarks": "c81ae493fffcb3fc716966ca1ea220f1e93d704d38205d7da21b9d9ebb3326ff",
+        "statement": "7d3619958a66cf9067d2be9e3eea9ee0f1bf1b09310fe6e2daaa51b8fe89a1b3"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_626.json",
+      "source_record_sha256": "5b51071ac80c0b2afc03a99f824244f13217ac83906357dabaa60c6e87d339a8",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_626.tex",
+    "latex_sha256": "86e072b77577add4924633f98c800717e77c6e9d58ef8a388c6349fa16264f06",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "7d3619958a66cf9067d2be9e3eea9ee0f1bf1b09310fe6e2daaa51b8fe89a1b3",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "subproblem_decomposition",
+      "shared_infrastructure_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Let $k\\geq 4$ and $g_k(n)$ denote the largest $m$ such that there is a graph on $n$ vertices with chromatic number $k$ and girth $>m$ (i.e. contains no cycle of length $\\leq m$). Does\\[\\lim_{n\\to \\infty}\\frac{g_k(n)}{\\log n}\\]exist?",
+        "focus_question_sha256": "8fc81dc2312fdc0932b2904f92cf76b2e6b85bfe4b5a1019947c630354a2306c",
+        "parent_statement_sha256": "7d3619958a66cf9067d2be9e3eea9ee0f1bf1b09310fe6e2daaa51b8fe89a1b3",
+        "part_index": 1,
+        "subproblem_contract_sha256": "b95fba968b68a13cc80a731eb7df797b6947a663cc6b3eb9aff0e039aad1bb96",
+        "subproblem_id": "erdos-626-part-01-b95fba96"
+      },
+      {
+        "focus_question": "Conversely, if $h^{(m)}(n)$ is the maximal chromatic number of a graph on $n$ vertices with girth $>m$ then does\\[\\lim_{n\\to \\infty}\\frac{\\log h^{(m)}(n)}{\\log n}\\]exist, and what is its value?",
+        "focus_question_sha256": "1906ba200e126fb263f927bea2d8782849df293d379b4ffcc01f41e5f1b8335d",
+        "parent_statement_sha256": "7d3619958a66cf9067d2be9e3eea9ee0f1bf1b09310fe6e2daaa51b8fe89a1b3",
+        "part_index": 2,
+        "subproblem_contract_sha256": "c638ef63eb2a17e028bb957d22164e568079fa330dfe7e2d51899cf92333cbd6",
+        "subproblem_id": "erdos-626-part-02-c638ef63"
+      }
+    ]
+  },
+  "research_directive_sha256": "f224070728ac888a364c7a12a63127c72783cfe479012240d2d030d91bacb059",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "subproblem_decomposition",
+    "shared_infrastructure_search"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Let $k\\geq 4$ and $g_k(n)$ denote the largest $m$ such that there is a graph on $n$ vertices with chromatic number $k$ and girth $>m$ (i.e. contains no cycle of length $\\leq m$). Does\\[\\lim_{n\\to \\infty}\\frac{g_k(n)}{\\log n}\\]exist?\n\nConversely, if $h^{(m)}(n)$ is the maximal chromatic number of a graph on $n$ vertices with girth $>m$ then does\\[\\lim_{n\\to \\infty}\\frac{\\log h^{(m)}(n)}{\\log n}\\]exist, and what is its value?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $k\\geq 4$ and $g_k(n)$ denote the largest $m$ such that there is a graph on $n$ vertices with chromatic number $k$ and girth $>m$ (i.e. contains no cycle of length $\\leq m$). Does\\[\\lim_{n\\to \\infty}\\frac{g_k(n)}{\\log n}\\]exist? Conversely, if $h^{(m)}(n)$ is the maximal chromatic number of a graph on $n$ vertices with girth $>m$ then does\\[\\lim_{n\\to \\infty}\\frac{\\log h^{(m)}(n)}{\\log n}\\]exist, and what is its value?",
+    "original": "Let $k\\geq 4$ and $g_k(n)$ denote the largest $m$ such that there is a graph on $n$ vertices with chromatic number $k$ and girth $>m$ (i.e. contains no cycle of length $\\leq m$). Does\\[\\lim_{n\\to \\infty}\\frac{g_k(n)}{\\log n}\\]exist?\n\nConversely, if $h^{(m)}(n)$ is the maximal chromatic number of a graph on $n$ vertices with girth $>m$ then does\\[\\lim_{n\\to \\infty}\\frac{\\log h^{(m)}(n)}{\\log n}\\]exist, and what is its value?",
+    "statement_sha256": "7d3619958a66cf9067d2be9e3eea9ee0f1bf1b09310fe6e2daaa51b8fe89a1b3"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-626",
+      "part_index": 1,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Let $k\\geq 4$ and $g_k(n)$ denote the largest $m$ such that there is a graph on $n$ vertices with chromatic number $k$ and girth $>m$ (i.e. contains no cycle of length $\\leq m$). Does\\[\\lim_{n\\to \\infty}\\frac{g_k(n)}{\\log n}\\]exist?",
+        "focus_question_sha256": "8fc81dc2312fdc0932b2904f92cf76b2e6b85bfe4b5a1019947c630354a2306c",
+        "normalized": "Let $k\\geq 4$ and $g_k(n)$ denote the largest $m$ such that there is a graph on $n$ vertices with chromatic number $k$ and girth $>m$ (i.e. contains no cycle of length $\\leq m$). Does\\[\\lim_{n\\to \\infty}\\frac{g_k(n)}{\\log n}\\]exist? Conversely, if $h^{(m)}(n)$ is the maximal chromatic number of a graph on $n$ vertices with girth $>m$ then does\\[\\lim_{n\\to \\infty}\\frac{\\log h^{(m)}(n)}{\\log n}\\]exist, and what is its value?",
+        "original": "Let $k\\geq 4$ and $g_k(n)$ denote the largest $m$ such that there is a graph on $n$ vertices with chromatic number $k$ and girth $>m$ (i.e. contains no cycle of length $\\leq m$). Does\\[\\lim_{n\\to \\infty}\\frac{g_k(n)}{\\log n}\\]exist?\n\nConversely, if $h^{(m)}(n)$ is the maximal chromatic number of a graph on $n$ vertices with girth $>m$ then does\\[\\lim_{n\\to \\infty}\\frac{\\log h^{(m)}(n)}{\\log n}\\]exist, and what is its value?",
+        "statement_sha256": "7d3619958a66cf9067d2be9e3eea9ee0f1bf1b09310fe6e2daaa51b8fe89a1b3"
+      },
+      "subproblem_contract_sha256": "b95fba968b68a13cc80a731eb7df797b6947a663cc6b3eb9aff0e039aad1bb96",
+      "subproblem_id": "erdos-626-part-01-b95fba96"
+    },
+    {
+      "parent_problem_id": "erdos-626",
+      "part_index": 2,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Conversely, if $h^{(m)}(n)$ is the maximal chromatic number of a graph on $n$ vertices with girth $>m$ then does\\[\\lim_{n\\to \\infty}\\frac{\\log h^{(m)}(n)}{\\log n}\\]exist, and what is its value?",
+        "focus_question_sha256": "1906ba200e126fb263f927bea2d8782849df293d379b4ffcc01f41e5f1b8335d",
+        "normalized": "Let $k\\geq 4$ and $g_k(n)$ denote the largest $m$ such that there is a graph on $n$ vertices with chromatic number $k$ and girth $>m$ (i.e. contains no cycle of length $\\leq m$). Does\\[\\lim_{n\\to \\infty}\\frac{g_k(n)}{\\log n}\\]exist? Conversely, if $h^{(m)}(n)$ is the maximal chromatic number of a graph on $n$ vertices with girth $>m$ then does\\[\\lim_{n\\to \\infty}\\frac{\\log h^{(m)}(n)}{\\log n}\\]exist, and what is its value?",
+        "original": "Let $k\\geq 4$ and $g_k(n)$ denote the largest $m$ such that there is a graph on $n$ vertices with chromatic number $k$ and girth $>m$ (i.e. contains no cycle of length $\\leq m$). Does\\[\\lim_{n\\to \\infty}\\frac{g_k(n)}{\\log n}\\]exist?\n\nConversely, if $h^{(m)}(n)$ is the maximal chromatic number of a graph on $n$ vertices with girth $>m$ then does\\[\\lim_{n\\to \\infty}\\frac{\\log h^{(m)}(n)}{\\log n}\\]exist, and what is its value?",
+        "statement_sha256": "7d3619958a66cf9067d2be9e3eea9ee0f1bf1b09310fe6e2daaa51b8fe89a1b3"
+      },
+      "subproblem_contract_sha256": "c638ef63eb2a17e028bb957d22164e568079fa330dfe7e2d51899cf92333cbd6",
+      "subproblem_id": "erdos-626-part-02-c638ef63"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

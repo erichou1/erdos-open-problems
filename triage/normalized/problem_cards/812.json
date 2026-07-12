@@ -1,0 +1,311 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.197
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2026-03-08",
+      "state": "yes"
+    },
+    "references": [
+      "BEFS89"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/812",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[BEFS89] Burr, S. A. and Erd\\H{o}s, P. and Faudree, R. J. and Schelp, R.\nH., On the difference between consecutive {R}amsey numbers. Utilitas Math. (1989), 115--118.",
+      "remarks": "Burr, Erd\\H{o}s, Faudree, and Schelp \\cite{BEFS89} proved that\\[R(n+1)-R(n) \\geq 4n-8\\]for all $n\\geq 2$. The lower bound of [165] implies that\\[R(n+2)-R(n) \\gg n^{2-o(1)}.\\]"
+    },
+    "source_state": "open",
+    "tags": [
+      "graph theory",
+      "ramsey theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.25,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.246107
+      ],
+      "probability": 0.09434
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.075,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.008335,
+        0.413589
+      ],
+      "probability": 0.210962
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.117512
+      ],
+      "probability": 0.032258
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.967,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.01288,
+        0.482941
+      ],
+      "probability": 0.247911
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.533,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.016446,
+        0.364849
+      ],
+      "probability": 0.190647
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 3.8,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.029964,
+        0.409343
+      ],
+      "probability": 0.219653
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.092979
+      ],
+      "probability": 0.038462
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.002288,
+        0.452997
+      ],
+      "probability": 0.227642
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 0,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:18:54.953321+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "8a9d2e75d85c1cd2e52e33b45a22b7d6c28f69a46598f292055aeb498308ccc7"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "unspecified_constant",
+        "asymptotic_notation",
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 2,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 129,
+      "statement_tokens_approx": 18
+    },
+    "structure": {
+      "asymptotic": true,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove_or_disprove",
+      "multi_part": true,
+      "primary_domain": "graph theory"
+    }
+  },
+  "problem_id": "erdos-812",
+  "problem_number": 812,
+  "problem_type": {
+    "asymptotic": true,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove_or_disprove",
+    "multi_part": true,
+    "primary_domain": "graph theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_812.html",
+      "raw_html_sha256": "e59c9bd883a4726ff33d350a3c069d64a1a2a386fd299c33fef013f8cf59eb55",
+      "section_sha256": {
+        "references": "33c8b22663d7f255c279cbcbca7bdd2ff5af4c47369e978d88a13fbe363d1bef",
+        "remarks": "d32c7746f0beb4c4cb639b29d44afd5f2d06094c40a1ebebbf81e171b4fa4f1c",
+        "statement": "f165cc01b4151bb895ea69f0030b8e90f8241391913ff55bed2c5d5f2ec9acbe"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_812.json",
+      "source_record_sha256": "558f5c0b2435bacf817aa891473fdbfa3ca509c8fde06835136e26523d72cb7a",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_812.tex",
+    "latex_sha256": "3adc036861dad5e4c53b428198e1ef6d056f68c2e48aeb9040ac6538e6555b3d",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "f165cc01b4151bb895ea69f0030b8e90f8241391913ff55bed2c5d5f2ec9acbe",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "formal_search",
+      "subproblem_decomposition",
+      "shared_infrastructure_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Is it true that\\[\\frac{R(n+1)}{R(n)}\\geq 1+c\\]for some constant $c>0$, for all large $n$?",
+        "focus_question_sha256": "0ab0ac1eb1b186488034ff775b4e0e302571f89b168fc4361cfd7b66a5ec43c8",
+        "parent_statement_sha256": "f165cc01b4151bb895ea69f0030b8e90f8241391913ff55bed2c5d5f2ec9acbe",
+        "part_index": 1,
+        "subproblem_contract_sha256": "c2eb63991ec070506dd73977e5d1b21234cab163cdd7ddae0d0f6278e73ee8d3",
+        "subproblem_id": "erdos-812-part-01-c2eb6399"
+      },
+      {
+        "focus_question": "Is it true that\\[R(n+1)-R(n) \\gg n^2?",
+        "focus_question_sha256": "220b6540b182c8df3be32346c562d404228a52c83a17801ce66fd97dbc294532",
+        "parent_statement_sha256": "f165cc01b4151bb895ea69f0030b8e90f8241391913ff55bed2c5d5f2ec9acbe",
+        "part_index": 2,
+        "subproblem_contract_sha256": "2177a9118ffc764713f6dd74b4197f37aa14ce101d41c91517857a2d71ab534f",
+        "subproblem_id": "erdos-812-part-02-2177a911"
+      }
+    ]
+  },
+  "research_directive_sha256": "dde1c0121169d446b3c3bacd639fd67a60e5b45291352d36d5a273c0377e1d0c",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "formal_search",
+    "subproblem_decomposition",
+    "shared_infrastructure_search"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Is it true that\\[\\frac{R(n+1)}{R(n)}\\geq 1+c\\]for some constant $c>0$, for all large $n$? Is it true that\\[R(n+1)-R(n) \\gg n^2?\\]",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Is it true that\\[\\frac{R(n+1)}{R(n)}\\geq 1+c\\]for some constant $c>0$, for all large $n$? Is it true that\\[R(n+1)-R(n) \\gg n^2?\\]",
+    "original": "Is it true that\\[\\frac{R(n+1)}{R(n)}\\geq 1+c\\]for some constant $c>0$, for all large $n$? Is it true that\\[R(n+1)-R(n) \\gg n^2?\\]",
+    "statement_sha256": "f165cc01b4151bb895ea69f0030b8e90f8241391913ff55bed2c5d5f2ec9acbe"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-812",
+      "part_index": 1,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Is it true that\\[\\frac{R(n+1)}{R(n)}\\geq 1+c\\]for some constant $c>0$, for all large $n$?",
+        "focus_question_sha256": "0ab0ac1eb1b186488034ff775b4e0e302571f89b168fc4361cfd7b66a5ec43c8",
+        "normalized": "Is it true that\\[\\frac{R(n+1)}{R(n)}\\geq 1+c\\]for some constant $c>0$, for all large $n$? Is it true that\\[R(n+1)-R(n) \\gg n^2?\\]",
+        "original": "Is it true that\\[\\frac{R(n+1)}{R(n)}\\geq 1+c\\]for some constant $c>0$, for all large $n$? Is it true that\\[R(n+1)-R(n) \\gg n^2?\\]",
+        "statement_sha256": "f165cc01b4151bb895ea69f0030b8e90f8241391913ff55bed2c5d5f2ec9acbe"
+      },
+      "subproblem_contract_sha256": "c2eb63991ec070506dd73977e5d1b21234cab163cdd7ddae0d0f6278e73ee8d3",
+      "subproblem_id": "erdos-812-part-01-c2eb6399"
+    },
+    {
+      "parent_problem_id": "erdos-812",
+      "part_index": 2,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Is it true that\\[R(n+1)-R(n) \\gg n^2?",
+        "focus_question_sha256": "220b6540b182c8df3be32346c562d404228a52c83a17801ce66fd97dbc294532",
+        "normalized": "Is it true that\\[\\frac{R(n+1)}{R(n)}\\geq 1+c\\]for some constant $c>0$, for all large $n$? Is it true that\\[R(n+1)-R(n) \\gg n^2?\\]",
+        "original": "Is it true that\\[\\frac{R(n+1)}{R(n)}\\geq 1+c\\]for some constant $c>0$, for all large $n$? Is it true that\\[R(n+1)-R(n) \\gg n^2?\\]",
+        "statement_sha256": "f165cc01b4151bb895ea69f0030b8e90f8241391913ff55bed2c5d5f2ec9acbe"
+      },
+      "subproblem_contract_sha256": "2177a9118ffc764713f6dd74b4197f37aa14ce101d41c91517857a2d71ab534f",
+      "subproblem_id": "erdos-812-part-02-2177a911"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

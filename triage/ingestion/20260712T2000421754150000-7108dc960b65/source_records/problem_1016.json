@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1016,
+  "raw_page": {
+    "path": "raw/pages/problem_1016.html",
+    "sha256": "69183a184763649c5a787f5a9aa3a5185ac6e2b794ec8581892c57bd79892dc5"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "d50d16945915edefcaed3f9bdd4a5344d8c44b31c2b1e08c94247419158d1184",
+      "source_region": "div.problem-additional-text",
+      "text": "[Bo71] Bondy, J. A., Pancyclic graphs. I. J. Combinatorial Theory Ser. B (1971), 80--84.\n \n [Er71] Erd\\H{o}s, P., Some unsolved problems in graph theory and combinatorial analysis. Combinatorial Mathematics and its Applications (Proc.\nConf., Oxford, 1969) (1971), 97-109.\n \n [GKW16] George, John C. and Khodkar, Abdollah and Wallis, W. D., Pancyclic and bipancyclic graphs. (2016), xii+108.\n \n [Gr13] S. Griffin, Minimal Pancyclicity. arXiv:1312.0274 (2013)."
+    },
+    "remarks": {
+      "sha256": "a72a94cadfe5e71ee00016e58ebb510aaf70c1164de4216c66b1ee14f6d8ea57",
+      "source_region": "div.problem-additional-text",
+      "text": "Such graphs are called pancyclic. A problem of Bondy \\cite{Bo71}, who claimed a proof (without details) of\\[\\log_2(n-1)-1\\leq h(n) \\leq \\log_2n+\\log_*n+O(1).\\]Erd\\H{o}s \\cite{Er71} believed the upper bound is closer to the truth, but could not even prove $h(n)-\\log_2n\\to \\infty$.\n\nA proof of the above lower bound is provided by Griffin \\cite{Gr13}. The first published proof of the upper bound appears to be in Chapter 4.5 of George, Khodkar, and Wallis \\cite{GKW16}."
+    },
+    "statement": {
+      "sha256": "83c25e5e15bb4994952ced005a99ea9f63204cd0f3c1f90f1c688431ed83c631",
+      "source_region": "div#content",
+      "text": "Let $h(n)$ be minimal such that there is a graph on $n$ vertices with $n+h(n)$ edges which contains a cycle on $k$ vertices, for all $3\\leq k\\leq n$. Estimate $h(n)$. In particular, is it true that\\[h(n) \\geq \\log_2n+\\log_*n-O(1),\\]where $\\log_*n$ is the iterated logarithmic function?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1016"
+}

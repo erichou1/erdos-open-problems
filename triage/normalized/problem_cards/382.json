@@ -1,0 +1,305 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.116
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/382",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "",
+      "remarks": "Erd\\H{o}s and Graham report it follows from results of Ramachandra that $v-u\\leq v^{1/2+o(1)}$. \n\nCambie has observed that the first question boils down to some old conjectures on prime gaps.\nBy Cram\\'{er's conjecture}, for every $\\epsilon>0,$ for every $u$ sufficiently large there is a prime between $u$ and $u+u^\\epsilon$.\nThus for $u+u^\\epsilon<v$, the largest prime divisor of \\( \\prod_{u \\leq m \\leq v} m \\) appears with exponent $1$.\nSince this is not the case in the question, \\( v - u = v^{o(1)} \\).\n\nCambie also gives the following heuristic for the second question. The 'probability' that the largest prime divisor of $n$ is $<n^{1/2}$ is $1-\\log 2>0$. For any fixed $k$, there is therefore a positive 'probability' that there are $k$ consecutive integers around $q^2$ (for a prime $q$) all of whose prime divisors are bounded above by $q$, when $v-u\\geq k$. See [383] for a conjecture along these lines. A similar argument applies if we replace multiplicity $2$ with multiplicity $r$, for any fixed $r\\geq 2$.\n\nSee also [380]."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.04,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.221465
+      ],
+      "probability": 0.079755
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.263,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.016175,
+        0.425855
+      ],
+      "probability": 0.221015
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 13.0,
+      "credible_interval_approx": [
+        0.0,
+        0.134243
+      ],
+      "probability": 0.037037
+    },
+    "p_high_mathematical_value": {
+      "alpha": 1.533,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.349111
+      ],
+      "probability": 0.14557
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 0.7,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.143576
+      ],
+      "probability": 0.044586
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.6,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.0,
+        0.256307
+      ],
+      "probability": 0.10596
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.063431
+      ],
+      "probability": 0.021739
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.0,
+        0.384039
+      ],
+      "probability": 0.173913
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 1,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:16:52.741501+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "6c4bbe74d7d5a3ad994a53680e640db1719c8a5c67f3d6ee1e485a23f6500a8b"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "asymptotic_notation",
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 0,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 178,
+      "statement_tokens_approx": 29
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove_or_disprove",
+      "multi_part": true,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-382",
+  "problem_number": 382,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove_or_disprove",
+    "multi_part": true,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_382.html",
+      "raw_html_sha256": "999af2d5993ae2a4fd631cb721e3643cdbd33f69c4c67a7ab789817fe8d9f97a",
+      "section_sha256": {
+        "references": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "remarks": "f5a17aa3c12dc3ccbc485872edf1e7031f89051da477f8c62d15644826187d8d",
+        "statement": "8dd1d5044ea6fc2fe7b65865b8cc74ed4d22b6c67c8630c42874991b28f9c4d2"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_382.json",
+      "source_record_sha256": "a216ad0b9055e4a121f0e746627437c9818d85e6fc44a57b345ea6cf88c72d13",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_382.tex",
+    "latex_sha256": "f0321c6e620c339bf95e061dbc9f4c7ad94c3fd58e2bcfb46d5f2ff95a09bc0b",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "8dd1d5044ea6fc2fe7b65865b8cc74ed4d22b6c67c8630c42874991b28f9c4d2",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "subproblem_decomposition",
+      "shared_infrastructure_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Let $u\\leq v$ be such that the largest prime dividing $\\prod_{u\\leq m\\leq v}m$ appears with exponent at least $2$. Is it true that $v-u=v^{o(1)}$?",
+        "focus_question_sha256": "004b3c375119abb4e5b135d7a37c6d6ba1941c7c8f40d5a7ebe8d3ecdfb8b127",
+        "parent_statement_sha256": "8dd1d5044ea6fc2fe7b65865b8cc74ed4d22b6c67c8630c42874991b28f9c4d2",
+        "part_index": 1,
+        "subproblem_contract_sha256": "a3d61e8b6dfb7c8c575ba83d49e2e4a2593b3372c7f8a58883834cdbd63afc53",
+        "subproblem_id": "erdos-382-part-01-a3d61e8b"
+      },
+      {
+        "focus_question": "Can $v-u$ be arbitrarily large?",
+        "focus_question_sha256": "c5dbee416df639a82b824636ac1f5fa663d3049e5b950acd3dcec2d882ef718c",
+        "parent_statement_sha256": "8dd1d5044ea6fc2fe7b65865b8cc74ed4d22b6c67c8630c42874991b28f9c4d2",
+        "part_index": 2,
+        "subproblem_contract_sha256": "7b856a0bfadf5c5f09de72c74e375f8164c608c3eea29cc303904a109155fc1c",
+        "subproblem_id": "erdos-382-part-02-7b856a0b"
+      }
+    ]
+  },
+  "research_directive_sha256": "6adaa7e1d7af432c0d19537230f0379b5ed916e65d505b103879a032ea4917e7",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "subproblem_decomposition",
+    "shared_infrastructure_search"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Let $u\\leq v$ be such that the largest prime dividing $\\prod_{u\\leq m\\leq v}m$ appears with exponent at least $2$. Is it true that $v-u=v^{o(1)}$? Can $v-u$ be arbitrarily large?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $u\\leq v$ be such that the largest prime dividing $\\prod_{u\\leq m\\leq v}m$ appears with exponent at least $2$. Is it true that $v-u=v^{o(1)}$? Can $v-u$ be arbitrarily large?",
+    "original": "Let $u\\leq v$ be such that the largest prime dividing $\\prod_{u\\leq m\\leq v}m$ appears with exponent at least $2$. Is it true that $v-u=v^{o(1)}$? Can $v-u$ be arbitrarily large?",
+    "statement_sha256": "8dd1d5044ea6fc2fe7b65865b8cc74ed4d22b6c67c8630c42874991b28f9c4d2"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-382",
+      "part_index": 1,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Let $u\\leq v$ be such that the largest prime dividing $\\prod_{u\\leq m\\leq v}m$ appears with exponent at least $2$. Is it true that $v-u=v^{o(1)}$?",
+        "focus_question_sha256": "004b3c375119abb4e5b135d7a37c6d6ba1941c7c8f40d5a7ebe8d3ecdfb8b127",
+        "normalized": "Let $u\\leq v$ be such that the largest prime dividing $\\prod_{u\\leq m\\leq v}m$ appears with exponent at least $2$. Is it true that $v-u=v^{o(1)}$? Can $v-u$ be arbitrarily large?",
+        "original": "Let $u\\leq v$ be such that the largest prime dividing $\\prod_{u\\leq m\\leq v}m$ appears with exponent at least $2$. Is it true that $v-u=v^{o(1)}$? Can $v-u$ be arbitrarily large?",
+        "statement_sha256": "8dd1d5044ea6fc2fe7b65865b8cc74ed4d22b6c67c8630c42874991b28f9c4d2"
+      },
+      "subproblem_contract_sha256": "a3d61e8b6dfb7c8c575ba83d49e2e4a2593b3372c7f8a58883834cdbd63afc53",
+      "subproblem_id": "erdos-382-part-01-a3d61e8b"
+    },
+    {
+      "parent_problem_id": "erdos-382",
+      "part_index": 2,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Can $v-u$ be arbitrarily large?",
+        "focus_question_sha256": "c5dbee416df639a82b824636ac1f5fa663d3049e5b950acd3dcec2d882ef718c",
+        "normalized": "Let $u\\leq v$ be such that the largest prime dividing $\\prod_{u\\leq m\\leq v}m$ appears with exponent at least $2$. Is it true that $v-u=v^{o(1)}$? Can $v-u$ be arbitrarily large?",
+        "original": "Let $u\\leq v$ be such that the largest prime dividing $\\prod_{u\\leq m\\leq v}m$ appears with exponent at least $2$. Is it true that $v-u=v^{o(1)}$? Can $v-u$ be arbitrarily large?",
+        "statement_sha256": "8dd1d5044ea6fc2fe7b65865b8cc74ed4d22b6c67c8630c42874991b28f9c4d2"
+      },
+      "subproblem_contract_sha256": "7b856a0bfadf5c5f09de72c74e375f8164c608c3eea29cc303904a109155fc1c",
+      "subproblem_id": "erdos-382-part-02-7b856a0b"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

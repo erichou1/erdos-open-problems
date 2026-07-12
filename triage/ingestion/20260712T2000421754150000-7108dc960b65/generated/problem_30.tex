@@ -1,0 +1,59 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#30}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{Prize: \$1000}
+
+\noindent\textbf{Tags:} number theory, sidon sets, additive combinatorics
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $h(N)$ be the maximum size of a Sidon set in $\{1,\ldots,N\}$. Is it true that, for every $\epsilon>0$,\[h(N) = N^{1/2}+O_\epsilon(N^\epsilon)?\]
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+A problem of Erd\H{o}s and Tur\'{a}n. It may even be true that $h(N)=N^{1/2}+O(1)$, but Erd\H{o}s remarks this is perhaps too optimistic. Erd\H{o}s and Tur\'{a}n \cite{ErTu41} proved an upper bound of $N^{1/2}+O(N^{1/4})$, with an alternative proof by Lindstr\"{o}m \cite{Li69}. Both proofs in fact give\[h(N) \leq N^{1/2}+N^{1/4}+1.\]Balogh, F\"{u}redi, and Roy \cite{BFR21} improved the bound in the error term to $0.998N^{1/4}$. This was further optimised by O'Bryant \cite{OB22}. The current record is\[h(N)\leq N^{1/2}+0.98183N^{1/4}+O(1),\]due to Carter, Hunter, and O'Bryant \cite{CHO25}.
+
+Singer \cite{Si38} was the first to show that $h(N)\geq (1-o(1))N^{1/2}$ for all $N$. For a detailed survey of the literature we refer to \cite{OB04}.
+
+See also [241] and [840].
+
+This problem is Problem 31 on Green's open problems list.
+
+This is discussed in problem C9 of Guy's collection \cite{Gu04}.
+
+\bigskip
+\noindent\textbf{References:}
+
+[BFR21] Balogh, J. and F\"{u}redi, Z. and Roy, S., An upper bound on the size of Sidon sets. arXiv:2103.15850 (2021).
+ 
+ [CHO25] Carter, D. and Hunter, Z. and O'Bryant, K., On the diameter of finite Sidon sets. Acta Math. Hungar. (2025), 108--126.
+ 
+ [ErTu41] Erd\H{o}s, P. and Tur\'{a}n, P., On a problem of Sidon in additive number theory, and on some related problems. J. London Math. Soc. (1941), 212-215.
+ 
+ [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.
+ 
+ [Li69] Lindstr\"{o}m, B., An inequality for $B_2$-sequences. J. Combinatorial Theory (1969), 211-212.
+ 
+ [OB04] O'Bryant, Kevin, A complete annotated bibliography of work related to Sidon
+sequences. Electron. J. Combin. (2004), 39.
+ 
+ [OB22] O'Bryant, K., On the size of finite Sidon sets. arXiv:2207.07800 (2022).
+ 
+ [Si38] Singer, James, A theorem in finite projective geometry and some applications
+to number theory. Trans. Amer. Math. Soc. (1938), 377--385.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/30}}
+\end{document}

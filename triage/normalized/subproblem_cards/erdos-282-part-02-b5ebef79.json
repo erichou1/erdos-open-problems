@@ -1,0 +1,30 @@
+{
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "parent_problem_id": "erdos-282",
+  "parent_run_contract_id": null,
+  "part_index": 2,
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "priority_score": 0.113821,
+  "problem_number": 282,
+  "rank": 44,
+  "recommended_attack_modes": [
+    "statement_audit",
+    "human_clarification",
+    "formal_search",
+    "subproblem_decomposition",
+    "shared_infrastructure_search"
+  ],
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "focus_question": "More generally, for which pairs $x$ and $A$ does this process terminate?",
+    "focus_question_sha256": "0e1b62ace0d87f390de42cded66c2640aff749a0c514b8b66c3ca961201d939d",
+    "normalized": "Let $A\\subseteq \\mathbb{N}$ be an infinite set and consider the following greedy algorithm for a rational $x\\in (0,1)$: choose the minimal $n\\in A$ such that $n\\geq 1/x$ and repeat with $x$ replaced by $x-\\frac{1}{n}$. If this terminates after finitely many steps then this produces a representation of $x$ as the sum of distinct unit fractions with denominators from $A$. Does this process always terminate if $x$ has odd denominator and $A$ is the set of odd numbers? More generally, for which pairs $x$ and $A$ does this process terminate?",
+    "original": "Let $A\\subseteq \\mathbb{N}$ be an infinite set and consider the following greedy algorithm for a rational $x\\in (0,1)$: choose the minimal $n\\in A$ such that $n\\geq 1/x$ and repeat with $x$ replaced by $x-\\frac{1}{n}$. If this terminates after finitely many steps then this produces a representation of $x$ as the sum of distinct unit fractions with denominators from $A$.\n\nDoes this process always terminate if $x$ has odd denominator and $A$ is the set of odd numbers? More generally, for which pairs $x$ and $A$ does this process terminate?",
+    "statement_sha256": "aa9b0f168a3df7d118a72656a21ec49708ff7900daf7b89a9b15cb4914a6aa4c"
+  },
+  "subproblem_contract_sha256": "b5ebef79e02002bd5ad62b70a914cfb8a76cb6e78d9bba8d28dbee45bd2a8236",
+  "subproblem_id": "erdos-282-part-02-b5ebef79"
+}

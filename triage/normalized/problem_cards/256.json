@@ -1,0 +1,259 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.785
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "At61",
+      "BeKo96",
+      "BoCh18",
+      "ErSz59",
+      "Od82"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/256",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[At61] Atkinson, F. V., On a problem of Erd\\H{o}s and Szekeres. Canad. Math. Bull. (1961), 7-12.\n \n [BeKo96] Belov, A. S. and Konyagin, S. V., An estimate for the free term of a nonnegative trigonometric\npolynomial with integer coefficients. Mat. Zametki (1996), 627--629.\n \n [BoCh18] Bourgain, J. and Chang, Mei-Chu, On a paper of Erd\\H{o}s and Szekeres. J. Anal. Math. (2018), 253-271.\n \n [ErSz59] Erd\\H{o}s, P. and Szekeres, G., On the product $\\Pi^n_{k=1}(1-z^ak)$. Acad. Serbe Sci. Publ. Inst. Math. (1959), 29-34.\n \n [Od82] Odlyzko, A. M., Minima of cosine sums and maxima of polynomials on the unit\ncircle. J. London Math. Soc. (2) (1982), 412-420.",
+      "remarks": "Erd\\H{o}s and Szekeres \\cite{ErSz59} proved that $\\lim f(n)^{1/n}=1$ and $f(n)>\\sqrt{2n}$. Erd\\H{o}s proved an upper bound of $\\log f(n) \\ll n^{1-c}$ for some constant $c>0$ with probabilistic methods. Atkinson \\cite{At61} showed that $\\log f(n) \\ll n^{1/2}\\log n$.\n\nThis was improved to\\[\\log f(n) \\ll n^{1/3}(\\log n)^{4/3}\\]by Odlyzko \\cite{Od82}.\n\nIf we denote by $f^*(n)$ the analogous quantity with the assumption that $a_1<\\cdots<a_n$ then Bourgain and Chang \\cite{BoCh18} prove that\\[\\log f^*(n)\\ll (n\\log n)^{1/2}\\log\\log n.\\]Atkinson \\cite{At61} noted this is related to the Chowla cosine problem [510], in that if for any set of $n$ integers $A$ there exists $\\theta$ such that $\\sum_{n\\in A}\\cos(n\\theta) < -M_n$ then\\[\\log f^*(n) \\ll M_n \\log n.\\]The answer to the specific question asked is no - Belov and Konyagin \\cite{BeKo96} proved that\\[\\log f(n) \\ll (\\log n)^4.\\]"
+    },
+    "source_state": "open",
+    "tags": [
+      "analysis"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 3.86,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.038543,
+        0.448217
+      ],
+      "probability": 0.24338
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 1.035,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.258556
+      ],
+      "probability": 0.093821
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.3,
+      "beta": 14.0,
+      "credible_interval_approx": [
+        0.0,
+        0.220332
+      ],
+      "probability": 0.084967
+    },
+    "p_high_mathematical_value": {
+      "alpha": 3.6,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.045616,
+        0.525812
+      ],
+      "probability": 0.285714
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.2,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.240436
+      ],
+      "probability": 0.090909
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.5,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.272872
+      ],
+      "probability": 0.111111
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 40.0,
+      "credible_interval_approx": [
+        0.0,
+        0.071043
+      ],
+      "probability": 0.02439
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.436385
+      ],
+      "probability": 0.2
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "minor"
+    },
+    "literature": {
+      "comment_count": 9,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:16:15.503515+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "a3e8017436e48347ddf44031f089f9780a55fdf88d9824fbda27cbed376731a7"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "unspecified_constant",
+        "asymptotic_notation"
+      ],
+      "ambiguity_status": "minor",
+      "quantifier_signal_count": 3,
+      "question_count": 1,
+      "requires_source_audit": true,
+      "statement_characters": 296,
+      "statement_tokens_approx": 40
+    },
+    "structure": {
+      "asymptotic": true,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "prove_or_disprove",
+      "multi_part": false,
+      "primary_domain": "analysis"
+    }
+  },
+  "problem_id": "erdos-256",
+  "problem_number": 256,
+  "problem_type": {
+    "asymptotic": true,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "prove_or_disprove",
+    "multi_part": false,
+    "primary_domain": "analysis"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_256.html",
+      "raw_html_sha256": "9da067a5999431201f3311621bea9a3815751ce8cc453b35277fb000a54ed61e",
+      "section_sha256": {
+        "references": "8967fdc037f03aa4359c4c4b4eeaa973437780424571a99e2e2baf47006c77ec",
+        "remarks": "65d3aeb1e0ee321934b04c6088e40d48ae4045ca309239d7e8f8b88eef37709e",
+        "statement": "51f3c37955353f409aa96a877cb12e269aa30ce1cecf14da098bf14431360017"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_256.json",
+      "source_record_sha256": "3e5e83777878b0d6c274d190418c4127b007c5a84e0d9248ef2f6a47e9347b43",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_256.tex",
+    "latex_sha256": "b7f9d4ec04a09fed8fbf2f8dd6218ea3569cf0738f5c90245faf0b3428fdef15",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "51f3c37955353f409aa96a877cb12e269aa30ce1cecf14da098bf14431360017",
+    "recommended_attack_modes": [
+      "literature_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "f21cad5082399e9ad9b872ce546706f2ab5243077b33208b1fe854a6f0ebd775",
+  "routes": [
+    "literature_search",
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "minor",
+    "intended": "Let $n\\geq 1$ and $f(n)$ be maximal such that for any integers $1\\leq a_1\\leq \\cdots \\leq a_n$ we have\\[\\max_{\\lvert z\\rvert=1}\\left\\lvert \\prod_{i}(1-z^{a_i})\\right\\rvert\\geq f(n).\\]Estimate $f(n)$ - in particular, is it true that there exists some constant $c>0$ such that\\[\\log f(n) \\gg n^c?\\]",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $n\\geq 1$ and $f(n)$ be maximal such that for any integers $1\\leq a_1\\leq \\cdots \\leq a_n$ we have\\[\\max_{\\lvert z\\rvert=1}\\left\\lvert \\prod_{i}(1-z^{a_i})\\right\\rvert\\geq f(n).\\]Estimate $f(n)$ - in particular, is it true that there exists some constant $c>0$ such that\\[\\log f(n) \\gg n^c?\\]",
+    "original": "Let $n\\geq 1$ and $f(n)$ be maximal such that for any integers $1\\leq a_1\\leq \\cdots \\leq a_n$ we have\\[\\max_{\\lvert z\\rvert=1}\\left\\lvert \\prod_{i}(1-z^{a_i})\\right\\rvert\\geq f(n).\\]Estimate $f(n)$ - in particular, is it true that there exists some constant $c>0$ such that\\[\\log f(n) \\gg n^c?\\]",
+    "statement_sha256": "51f3c37955353f409aa96a877cb12e269aa30ce1cecf14da098bf14431360017"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 311,
+  "raw_page": {
+    "path": "raw/pages/problem_311.html",
+    "sha256": "348dbc8b65e9b6d2fda960357809b4ea895487c27a85737112d77c570ebea586"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "cda7bba36d0a1c0be323b358c58bdef3bf928755694a1f2f1911564561b12c1e",
+      "source_region": "div.problem-additional-text",
+      "text": "[ErGr80] Erd\\H{o}s, P. and Graham, R., Old and new problems and results in combinatorial number theory. Monographies de L'Enseignement Mathematique (1980)."
+    },
+    "remarks": {
+      "sha256": "b73ea72cea022b0f0c684ea50daf4f45bcf3ae2fde9ecdcdcb33658339a3012e",
+      "source_region": "div.problem-additional-text",
+      "text": "It is trivial that\\[\\delta(N)\\geq \\frac{1}{[1,\\ldots,N]}=e^{-(1+o(1))N},\\]where $[1,\\ldots,N]$ is the least common multiple of $\\{1,\\ldots,N\\}$. \n\nThe formulation in \\cite{ErGr80} has the additional condition that $A$ contain no $S$ such that $\\sum_{n\\in S}\\frac{1}{n}=1$, but Kovac in the comments has shown that the simpler formulation above is equivalent.\n\nTang has shown that\\[\\delta(N) \\leq \\exp\\left(-c\\frac{N}{(\\log N\\log\\log N)^3}\\right)\\]for some constant $c>0$."
+    },
+    "statement": {
+      "sha256": "a7da7deb0c12db1bd024f0617b92c64d3cb5d3bc68af5590a04a5e7645e96590",
+      "source_region": "div#content",
+      "text": "Let $\\delta(N)$ be the minimal non-zero value of $\\lvert 1-\\sum_{n\\in A}\\frac{1}{n}\\rvert$ as $A$ ranges over all subsets of $\\{1,\\ldots,N\\}$. Is it true that\\[\\delta(N)=e^{-(c+o(1))N}\\]for some constant $c\\in (0,1)$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/311"
+}

@@ -1,0 +1,309 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.542
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "CFS11",
+      "Er90b"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/161",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[CFS11] Conlon, David and Fox, Jacob and Sudakov, Benny, Large almost monochromatic subsets in hypergraphs. Israel J. Math. (2011), 423--432.\n \n [Er90b] Erd\\H{o}s, Paul, Problems and results on graphs and hypergraphs: similarities and differences. Mathematics of Ramsey theory (1990), 12-28.",
+      "remarks": "For $\\alpha=0$ this is the usual Ramsey function.\n\nA conjecture of Erd\\H{o}s, Hajnal, and Rado (see [562]) implies that\\[ F^{(t)}(n,0)\\asymp \\log_{t-1} n\\]and results of Erd\\H{o}s and Spencer imply that\\[F^{(t)}(n,\\alpha) \\gg_\\alpha (\\log n)^{\\frac{1}{t-1}}\\]for all $\\alpha>0$, and a similar upper bound holds for $\\alpha$ close to $1/2$. \n\nErd\\H{o}s said in \\cite{Er90b}: 'If I can hazard a guess completely unsupported by evidence, I am afraid that the jump occurs all in one step at $0$. It would be much more interesting if my conjecture would be wrong and perhaps there is some hope for this for $t>3$. I know nothing and offer \\$500 to anybody who can clear up this mystery.' \n\nConlon, Fox, and Sudakov \\cite{CFS11} have proved that, for any fixed $\\alpha>0$,\\[F^{(3)}(n,\\alpha) \\ll_\\alpha \\sqrt{\\log n}.\\]Coupled with the lower bound above, this implies that there is only one jump for fixed $\\alpha$ when $t=3$, at $\\alpha=0$.\n\nFor all $\\alpha>0$ it is known that\\[F^{(t)}(n,\\alpha)\\gg_t (\\log n)^{c_\\alpha}.\\]See also [563] for more on the case $t=2$.\n\nThis problem is #40 in Ramsey Theory in the graphs problem collection."
+    },
+    "source_state": "open",
+    "tags": [
+      "combinatorics",
+      "ramsey theory",
+      "discrepancy"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.62,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.284884
+      ],
+      "probability": 0.118943
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 2.282,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.0,
+        0.35509
+      ],
+      "probability": 0.165595
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.3,
+      "beta": 13.0,
+      "credible_interval_approx": [
+        0.0,
+        0.234961
+      ],
+      "probability": 0.090909
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.267,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.425526
+      ],
+      "probability": 0.201183
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.0,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.177569
+      ],
+      "probability": 0.0625
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.6,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.0,
+        0.256307
+      ],
+      "probability": 0.10596
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.063431
+      ],
+      "probability": 0.021739
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.0,
+        0.384039
+      ],
+      "probability": 0.173913
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 3,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:15:51.926139+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "9f19ddc3e3962aaefaabbbd8a53f3effa61adc7e068f8b890eb9a55ad052299a"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 0,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 474,
+      "statement_tokens_approx": 73
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "prove",
+      "multi_part": true,
+      "primary_domain": "combinatorics"
+    }
+  },
+  "problem_id": "erdos-161",
+  "problem_number": 161,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "prove",
+    "multi_part": true,
+    "primary_domain": "combinatorics"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_161.html",
+      "raw_html_sha256": "da239e5b975460d9b4004e748e99a4f0a771b1ef91f821f5f76a85a1b38f7dd6",
+      "section_sha256": {
+        "references": "2a5a38f525d0cdea8d9497c9092bbe99994a310550a4737a253a0cab38aa7d71",
+        "remarks": "46a6f2408a1096a2a3f73f2a51dcd7eb5fefebde9c190705f665ecb3e9d4d7f1",
+        "statement": "30b33785828690de98d9b5eb45c7b47f99be5d334e5749b778fbd0d075192213"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_161.json",
+      "source_record_sha256": "b0ef637699ad4e391ce540c53a6b1ec08208a5030d11ec1ce55388bc13fc6a9c",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_161.tex",
+    "latex_sha256": "378f530d56a0b22dd966368248f36a999ae723b3fb00c81eaabebe230e64632b",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "30b33785828690de98d9b5eb45c7b47f99be5d334e5749b778fbd0d075192213",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "subproblem_decomposition",
+      "shared_infrastructure_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Let $\\alpha\\in[0,1/2)$ and $n,t\\geq 1$. Let $F^{(t)}(n,\\alpha)$ be the smallest $m$ such that we can $2$-colour the edges of the complete $t$-uniform hypergraph on $n$ vertices such that if $X\\subseteq [n]$ with $\\lvert X\\rvert \\geq m$ then there are at least $\\alpha \\binom{\\lvert X\\rvert}{t}$ many $t$-subsets of $X$ of each colour. For fixed $n,t$ as we change $\\alpha$ from $0$ to $1/2$ does $F^{(t)}(n,\\alpha)$ increase continuously or are there jumps?",
+        "focus_question_sha256": "373c961f5879f66e09928299a27c814db44f586daa65a294d7bfcef6b9529dcb",
+        "parent_statement_sha256": "30b33785828690de98d9b5eb45c7b47f99be5d334e5749b778fbd0d075192213",
+        "part_index": 1,
+        "subproblem_contract_sha256": "0a8941256c60048b9ac9d2a77912d23fa38ece99136f4d0030e8f5c873b05e10",
+        "subproblem_id": "erdos-161-part-01-0a894125"
+      },
+      {
+        "focus_question": "Only one jump?",
+        "focus_question_sha256": "e76c79ce46b5c7e71f653b3a319f1205a882f877cef0babe55c1c19539f68399",
+        "parent_statement_sha256": "30b33785828690de98d9b5eb45c7b47f99be5d334e5749b778fbd0d075192213",
+        "part_index": 2,
+        "subproblem_contract_sha256": "dfe4eae8a4b7fe1ef41b05750a2c8a2a5078885bd37d2a9f20ed10fc53cda45c",
+        "subproblem_id": "erdos-161-part-02-dfe4eae8"
+      }
+    ]
+  },
+  "research_directive_sha256": "36431c912b16455814700868c9da79aef35541a97efb167c2dfd6a601f282a47",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "subproblem_decomposition",
+    "shared_infrastructure_search"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Let $\\alpha\\in[0,1/2)$ and $n,t\\geq 1$. Let $F^{(t)}(n,\\alpha)$ be the smallest $m$ such that we can $2$-colour the edges of the complete $t$-uniform hypergraph on $n$ vertices such that if $X\\subseteq [n]$ with $\\lvert X\\rvert \\geq m$ then there are at least $\\alpha \\binom{\\lvert X\\rvert}{t}$ many $t$-subsets of $X$ of each colour. \n\nFor fixed $n,t$ as we change $\\alpha$ from $0$ to $1/2$ does $F^{(t)}(n,\\alpha)$ increase continuously or are there jumps? Only one jump?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $\\alpha\\in[0,1/2)$ and $n,t\\geq 1$. Let $F^{(t)}(n,\\alpha)$ be the smallest $m$ such that we can $2$-colour the edges of the complete $t$-uniform hypergraph on $n$ vertices such that if $X\\subseteq [n]$ with $\\lvert X\\rvert \\geq m$ then there are at least $\\alpha \\binom{\\lvert X\\rvert}{t}$ many $t$-subsets of $X$ of each colour. For fixed $n,t$ as we change $\\alpha$ from $0$ to $1/2$ does $F^{(t)}(n,\\alpha)$ increase continuously or are there jumps? Only one jump?",
+    "original": "Let $\\alpha\\in[0,1/2)$ and $n,t\\geq 1$. Let $F^{(t)}(n,\\alpha)$ be the smallest $m$ such that we can $2$-colour the edges of the complete $t$-uniform hypergraph on $n$ vertices such that if $X\\subseteq [n]$ with $\\lvert X\\rvert \\geq m$ then there are at least $\\alpha \\binom{\\lvert X\\rvert}{t}$ many $t$-subsets of $X$ of each colour. \n\nFor fixed $n,t$ as we change $\\alpha$ from $0$ to $1/2$ does $F^{(t)}(n,\\alpha)$ increase continuously or are there jumps? Only one jump?",
+    "statement_sha256": "30b33785828690de98d9b5eb45c7b47f99be5d334e5749b778fbd0d075192213"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-161",
+      "part_index": 1,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Let $\\alpha\\in[0,1/2)$ and $n,t\\geq 1$. Let $F^{(t)}(n,\\alpha)$ be the smallest $m$ such that we can $2$-colour the edges of the complete $t$-uniform hypergraph on $n$ vertices such that if $X\\subseteq [n]$ with $\\lvert X\\rvert \\geq m$ then there are at least $\\alpha \\binom{\\lvert X\\rvert}{t}$ many $t$-subsets of $X$ of each colour. For fixed $n,t$ as we change $\\alpha$ from $0$ to $1/2$ does $F^{(t)}(n,\\alpha)$ increase continuously or are there jumps?",
+        "focus_question_sha256": "373c961f5879f66e09928299a27c814db44f586daa65a294d7bfcef6b9529dcb",
+        "normalized": "Let $\\alpha\\in[0,1/2)$ and $n,t\\geq 1$. Let $F^{(t)}(n,\\alpha)$ be the smallest $m$ such that we can $2$-colour the edges of the complete $t$-uniform hypergraph on $n$ vertices such that if $X\\subseteq [n]$ with $\\lvert X\\rvert \\geq m$ then there are at least $\\alpha \\binom{\\lvert X\\rvert}{t}$ many $t$-subsets of $X$ of each colour. For fixed $n,t$ as we change $\\alpha$ from $0$ to $1/2$ does $F^{(t)}(n,\\alpha)$ increase continuously or are there jumps? Only one jump?",
+        "original": "Let $\\alpha\\in[0,1/2)$ and $n,t\\geq 1$. Let $F^{(t)}(n,\\alpha)$ be the smallest $m$ such that we can $2$-colour the edges of the complete $t$-uniform hypergraph on $n$ vertices such that if $X\\subseteq [n]$ with $\\lvert X\\rvert \\geq m$ then there are at least $\\alpha \\binom{\\lvert X\\rvert}{t}$ many $t$-subsets of $X$ of each colour. \n\nFor fixed $n,t$ as we change $\\alpha$ from $0$ to $1/2$ does $F^{(t)}(n,\\alpha)$ increase continuously or are there jumps? Only one jump?",
+        "statement_sha256": "30b33785828690de98d9b5eb45c7b47f99be5d334e5749b778fbd0d075192213"
+      },
+      "subproblem_contract_sha256": "0a8941256c60048b9ac9d2a77912d23fa38ece99136f4d0030e8f5c873b05e10",
+      "subproblem_id": "erdos-161-part-01-0a894125"
+    },
+    {
+      "parent_problem_id": "erdos-161",
+      "part_index": 2,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Only one jump?",
+        "focus_question_sha256": "e76c79ce46b5c7e71f653b3a319f1205a882f877cef0babe55c1c19539f68399",
+        "normalized": "Let $\\alpha\\in[0,1/2)$ and $n,t\\geq 1$. Let $F^{(t)}(n,\\alpha)$ be the smallest $m$ such that we can $2$-colour the edges of the complete $t$-uniform hypergraph on $n$ vertices such that if $X\\subseteq [n]$ with $\\lvert X\\rvert \\geq m$ then there are at least $\\alpha \\binom{\\lvert X\\rvert}{t}$ many $t$-subsets of $X$ of each colour. For fixed $n,t$ as we change $\\alpha$ from $0$ to $1/2$ does $F^{(t)}(n,\\alpha)$ increase continuously or are there jumps? Only one jump?",
+        "original": "Let $\\alpha\\in[0,1/2)$ and $n,t\\geq 1$. Let $F^{(t)}(n,\\alpha)$ be the smallest $m$ such that we can $2$-colour the edges of the complete $t$-uniform hypergraph on $n$ vertices such that if $X\\subseteq [n]$ with $\\lvert X\\rvert \\geq m$ then there are at least $\\alpha \\binom{\\lvert X\\rvert}{t}$ many $t$-subsets of $X$ of each colour. \n\nFor fixed $n,t$ as we change $\\alpha$ from $0$ to $1/2$ does $F^{(t)}(n,\\alpha)$ increase continuously or are there jumps? Only one jump?",
+        "statement_sha256": "30b33785828690de98d9b5eb45c7b47f99be5d334e5749b778fbd0d075192213"
+      },
+      "subproblem_contract_sha256": "dfe4eae8a4b7fe1ef41b05750a2c8a2a5078885bd37d2a9f20ed10fc53cda45c",
+      "subproblem_id": "erdos-161-part-02-dfe4eae8"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

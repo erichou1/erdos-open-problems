@@ -1,0 +1,261 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.83
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-10-21",
+      "state": "yes"
+    },
+    "references": [
+      "Er79e",
+      "ErPo78",
+      "LuWa25",
+      "TaTe19",
+      "Te18",
+      "Wa21"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/371",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Er79e] Erd\\H{o}s, Paul, Some unconventional problems in number theory. Ast\\'{e}risque (1979), 73-82.\n \n [ErPo78] Erd\\H{o}s, Paul and Pomerance, Carl, On the largest prime factors of {$n$} and {$n+1$}. Aequationes Math. (1978), 311-321.\n \n [LuWa25] L\\\"u, Xiaodong and Wang, Zhiwei, On the largest prime factors of consecutive integers. Monatsh. Math. (2025), 403--418.\n \n [TaTe19] Tao, Terence and Ter\\\"{a}v\\\"{a}inen, Joni, The structure of correlations of multiplicative functions at\nalmost all scales, with applications to the {C}howla and\n{E}lliott conjectures. Algebra Number Theory (2019), 2103--2150.\n \n [Te18] Ter\\\"{a}v\\\"{a}inen, Joni, On binary correlations of multiplicative functions. Forum Math. Sigma (2018), Paper No. e10, 41.\n \n [Wa21] Wang, Zhiwei, Three conjectures on {$P^+(n)$} and {$P^+(n+1)$} hold under\nthe {E}lliott-{H}alberstam conjecture for friable integers. J. Number Theory (2021), 1--11.",
+      "remarks": "Conjectured by Erd\\H{o}s and Pomerance \\cite{ErPo78}, who proved that this set and its complement both have positive upper density. The best unconditional lower bound available is due to L\\\"{u} and Wang \\cite{LuWa25}, who prove that\\[\\#\\{ n<x :P(n)<P(n+1)\\} > (0.2017-o(1))x,\\]and the same lower bound for the complement.\n\nIn \\cite{Er79e} Erd\\H{o}s also asks whether, for every $\\alpha$, the density of the set of $n$ where\\[P(n+1)>P(n)n^\\alpha\\]exists.\n\nTer\\\"{a}v\\\"{a}inen \\cite{Te18} has proved that the logarithmic density of the set of $n$ for which $P(n)<P(n+1)$ is $1/2$. Tao and Ter\\\"{a}v\\\"{a}inen \\cite{TaTe19} have proved that the asymptotic density is $1/2$ at 'almost all scales'.\n\nMore generally, for any $0\\leq \\alpha \\leq1$, Ter\\\"{a}v\\\"{a}inen \\cite{Te18} proved that the logarithmic density of the set of $n$ for which $P(n+1)>P(n)n^\\alpha$ exists and is equal to\\[\\int_{[0,1]^2}1_{y\\geq x+\\alpha}u(x)u(y)\\mathrm{d}x\\mathrm{d}y\\]where $u(x)=x^{-1}\\rho(x^{-1}-1)$ and $\\rho$ is the Dickman function. Wang \\cite{Wa21} has proved the same value holds for the asymptotic density (and in particular provided an affirmative answer to the original question) conditional on the Elliott-Halberstam conjecture for friable integers.\n\nThe sequence of such $n$ is A070089 in the OEIS.\n\nSee also [372] and [928]."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.16,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.333535
+      ],
+      "probability": 0.152542
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.074,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.013547,
+        0.456659
+      ],
+      "probability": 0.235103
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 14.0,
+      "credible_interval_approx": [
+        0.0,
+        0.125322
+      ],
+      "probability": 0.034483
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.933,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.011149,
+        0.480471
+      ],
+      "probability": 0.24581
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.5,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.024059,
+        0.427553
+      ],
+      "probability": 0.225806
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.7,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.375214
+      ],
+      "probability": 0.183673
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 40.0,
+      "credible_interval_approx": [
+        0.0,
+        0.103879
+      ],
+      "probability": 0.043062
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.009216,
+        0.509303
+      ],
+      "probability": 0.259259
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "minor"
+    },
+    "literature": {
+      "comment_count": 4,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:16:50.129075+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "7559192a6a52faa360b30defae370223b6899183ba6612104e33c115530e79cc"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "implicit_convention"
+      ],
+      "ambiguity_status": "minor",
+      "quantifier_signal_count": 0,
+      "question_count": 0,
+      "requires_source_audit": true,
+      "statement_characters": 113,
+      "statement_tokens_approx": 20
+    },
+    "structure": {
+      "asymptotic": true,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove",
+      "multi_part": false,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-371",
+  "problem_number": 371,
+  "problem_type": {
+    "asymptotic": true,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove",
+    "multi_part": false,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_371.html",
+      "raw_html_sha256": "c59a76ddeaf5d3246bdd823ac00a31d8a1fd7b0e8243d6b9c86491dae1f61847",
+      "section_sha256": {
+        "references": "5be03aee19dfe07ebd4576c6af0bff296b300a2f345401b5855286ebc3de2366",
+        "remarks": "5804580ae298093493451b818f2081a9b84ce4c648bb4f5e3358538e629e1b11",
+        "statement": "fc27bae24a32b120971cf2e4f83f36ede06afb8306765c39c51f89a81f075aac"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_371.json",
+      "source_record_sha256": "bf51e9fd8d6e6bc78c6547a2133edcf42871c354480226c39af01c9443bf2b2f",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_371.tex",
+    "latex_sha256": "7ab5f30676a4d63ec46bc96c64ffcbce19469cf933e65838c6dc7446dbd297b5",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "fc27bae24a32b120971cf2e4f83f36ede06afb8306765c39c51f89a81f075aac",
+    "recommended_attack_modes": [
+      "formal_search",
+      "shared_infrastructure_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "e7da62b1138edebf15174fa1e8f6849402aa4dbbcd9da3bcc5f0a7249867a975",
+  "routes": [
+    "formal_search",
+    "shared_infrastructure_search",
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "minor",
+    "intended": "Let $P(n)$ denote the largest prime factor of $n$. Show that the set of $n$ with $P(n)<P(n+1)$ has density $1/2$.",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $P(n)$ denote the largest prime factor of $n$. Show that the set of $n$ with $P(n)<P(n+1)$ has density $1/2$.",
+    "original": "Let $P(n)$ denote the largest prime factor of $n$. Show that the set of $n$ with $P(n)<P(n+1)$ has density $1/2$.",
+    "statement_sha256": "fc27bae24a32b120971cf2e4f83f36ede06afb8306765c39c51f89a81f075aac"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

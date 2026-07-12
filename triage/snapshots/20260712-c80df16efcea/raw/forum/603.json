@@ -1,0 +1,80 @@
+{
+  "problem_number": 603,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/603",
+  "retrieved_at": "2026-07-10T23:17:58.714389+00:00",
+  "page_title": "603 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "cb8d67ec5131ea9b9f6241fff5229edb3f487338549423c9c6bc6a76c230c35c",
+  "comment_count": 14,
+  "comments": [
+    {
+      "post_id": "5668",
+      "text": "GPT-5.4 Pro can produce a counterexample in the current wording of the problem too, and also give an answer for another wording. Here's a short note. (The site has been updated to address this comment.)",
+      "meta": "Przemek Chojecki — 12:15 on 21 Apr 2026 👍 1 📝 1 🤖 0"
+    },
+    {
+      "post_id": "5674",
+      "text": "Thanks! I ran standard check which found no issues. The notes settle two readings of the problem. If $(A_i)$ is an arbitrary collection, no such cardinal $C$ exists. If $(A_i)$ is a countable collection, the smallest $C$ is $2$.",
+      "meta": "Nat Sothanaphan — 14:06 on 21 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5675",
+      "text": "Very nice proof. It seems that this naturally generalizes to prove Komj\\'ath's Conjecture 3 by choosing $V$ to be the edge set of a complete $k$-uniform hypergraph on $\\kappa$. Now the possible values of a finite intersection are $0,1,k+1,\\dots$. This also proves something stronger than what Erdős and Komj\\'ath were asking about since the sets in $\\mathcal{A}$ don't have to be countable, but can have size $\\mu^+$. Finally, Erdős didn't technically ask for the smallest cardinal for which a coloring exists, he said \"Is there a bound on the chromatic number of such a family?\"",
+      "meta": "LouisD — 16:24 on 21 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5684",
+      "text": "I wonder if it would be interesting to study a quantitative version of this question? Say that $\\mathcal{A}$ is $(k, \\lambda, \\mu)$-family if $\\chi(\\mathcal{A})>\\mu$, $|A|=\\lambda$ for all $A\\in \\mathcal{A}$, and $|A\\cap B|\\neq k$ for all distinct $A,B\\in \\mathcal{A}$. Given an integer $k\\geq 2$ and infinite cardinals $\\lambda, \\mu$, let $f(k, \\lambda, \\mu)=\\min\\{|\\bigcup_{A\\in \\mathcal{A}}A|: \\mathcal{A} \\text{ is a $(k, \\lambda, \\mu)$-family}\\}$ and let $g(k, \\lambda, \\mu)=\\min\\{|\\mathcal{A}|: \\mathcal{A} \\text{ is a $(k, \\lambda, \\mu)$-family}\\}$. Now the question becomes estimating the values of $f$ and $g$. From the original problem, it feels like bounding the number of sets in the family is most natural (the function $g$), but given your proof, it feels most natural to bound the size of the ground set (the function $f$). In this language, you proved that $f(2, \\omega, \\mu) \\leq (2^\\mu)^+$ and $g(2, \\omega, \\mu) \\leq ((2^\\mu)^+)^{\\omega}$. Or if you generalize in the ways I mentioned, you get $f(k, \\mu^+, \\mu) \\leq \\beth_{k-1}(\\mu)^+$ and $g(k, \\mu^+, \\mu) \\leq (\\beth_{k-1}(\\mu)^+)^{\\mu^+}$.",
+      "meta": "LouisD — 20:56 on 21 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5693",
+      "text": "Louis, thanks for the comments, nice generalization! I've run your comments through GPT-5.4 Pro to get a more generalized note with the bounds you mention and it is here. Any feedback welcome!",
+      "meta": "Przemek Chojecki — 08:17 on 22 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7276",
+      "text": "I just note that the paper doesn't introduce/ explain the notation. So it is written for people who know partition notation etc",
+      "meta": "StijnC — 12:19 on 30 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7373",
+      "text": "Great, thanks! This is surprisingly simple in the end, being just an immediate corollary of the Erdős-Rado theorem (so perhaps I misinterpreted the question, or Erdős miswrote it, or maybe this was just overlooked!). Here is the construction in full: let $\\kappa$ be the successor of $2^C$, so that by the Erdős-Rado theorem in any $C$-colouring of the edges on the complete graph with $\\kappa$ vertices there is a monochromatic countably infinite complete graph. We can now let $(A_i)$ be the set of all complete graphs on countably infinite subsets of $\\kappa$. The intersection sizes are all either $\\binom{n}{2}$ for some finite $n$, or countable infinite, and in particular never $2$.",
+      "meta": "Thomas Bloom — 06:24 on 06 Jul 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6491",
+      "text": "I have made a Lean 4 / Mathlib formalization attempt repository for Problem 603. The repository is based on Przemek Chojecki's PDF and on the discussion here. It contains formalization attempts for two mathematical interpretations of the problem. The first interpretation is the countable-sequence reading: given a countable sequence of infinite sets, find a finite coloring such that no set in the sequence is monochromatic. The Lean4Web version for this interpretation is here: Erdos603CountableSequenceLean4Web.lean The second interpretation is the arbitrary-size-family reading: construct arbitrarily large families of countably infinite sets whose pairwise intersections never have size 2, but for which every coloring with a prescribed number of colors has a monochromatic member. The Lean4Web version for this interpretation is here: Erdos603ArbitrarySizeConditionalLean4Web.lean The second formalization is conditional: it assumes the relevant Erdős--Rado / partition-relation input, represented in Lean as ArrowOmegaTwo κ μ. Thus it formalizes the construction from that hypothesis, but it is not yet a Lean proof of Erdős--Rado itself. GitHub repository: erdos603-lean I would be grateful for any corrections, comments, or clarification about which interpretation is intended. AI usage disclosure: The code was prepared with assistance from Codex 5.5 using xhigh reasoning.",
+      "meta": "KentaKitamura — 00:40 on 17 May 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6495",
+      "text": "I have confirmed this is correct.",
+      "meta": "Nat Sothanaphan — 12:54 on 17 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5935",
+      "text": "I wrote up a short note on a strengthening of this problem: https://gist.github.com/gavinsherry/ad9b6f85e2afc0a830d015a6b5d6d52a The main finite-color statement is the following. For every integer $r\\geq 1$, there is a family $\\mathcal F_r$ of countably infinite subsets of a countable ground set $X$ such that: 1. for distinct $A,B\\in\\mathcal F_r$, the intersection $A\\cap B$ is either empty or countably infinite, hence in particular $|A\\cap B|\\neq 2$; 2. every $r$-coloring of $X$ makes some member of $\\mathcal F_r$ monochromatic. Here is the construction. Let $N=R_r(3)$ and let $P=[N]^2$ be the edge set of $K_N$. Fix a nonprincipal ultrafilter $\\mathcal U$ on $\\omega$, and set $X=P\\times\\omega$. For each triangle $T\\in [N]^3$ and each choice of sets $B_p\\in\\mathcal U$ for $p\\in [T]^2$, define $$ A(T,(B_p))=\\bigcup_{p\\in [T]^2}(\\{p\\}\\times B_p). $$ Let $\\mathcal F_r$ be the family of all such sets. Each member of $\\mathcal F_r$ is countably infinite. If two triangles are distinct, they share at most one edge. Since $\\mathcal U$ is nonprincipal and closed under finite intersections, any nonempty intersection of two members of $\\mathcal F_r$ is countably infinite. Thus all pairwise intersections have size either $0$ or $\\aleph_0$, never $2$. Now take any $r$-coloring of $X$. For each $p\\in P$, exactly one color class in the fibre $\\{p\\}\\times\\omega$ belongs to $\\mathcal U$; call this color $\\gamma(p)$. This gives an $r$-edge-coloring of $K_N$. By the definition of $R_r(3)$, there is a triangle $T$ whose three edges have the same $\\gamma$-color, say $\\alpha$. For each $p\\in[T]^2$, set $$ B_p=\\{n\\in\\omega:(p,n)\\text{ has color }\\alpha\\}. $$ Then $B_p\\in\\mathcal U$ for all $p\\in[T]^2$, so $A(T,(B_p))\\in\\mathcal F_r$, and this set is monochromatic of color $\\alpha$. Thus even on a countable ground set, and even with the stronger condition that pairwise intersections are only $0$ or $\\aleph_0$, the finite chromatic number is unbounded. This writeup was prepared with AI assistance and checked before posting.",
+      "meta": "gavinsherry — 14:44 on 27 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6006",
+      "text": "I think I must be missing something regarding your example. Isn't the following a much simpler example of the thing you are trying to prove? Theorem: There exists a hypergraph $H=(V,E)$ such that $|V|=\\omega=\\chi(H)$ and for all $e,f\\in E$, $|e\\cap f|=\\omega$. Proof: Let $\\mathcal{U}$ be a non-principle ultrafilter on $\\omega$ and let $H=(\\omega, \\mathcal{U})$. Note that since $\\mathcal{U}$ is an ultrafilter, we have that for all $e,f\\in \\mathcal{U}, |e\\cap f|=\\omega$. Now let $r\\in \\omega$ with $r\\geq 1$ and consider $c:\\omega\\to [r]$. Since $\\mathcal{U}$ is an ultrafilter, there exists $i\\in [r]$ such that $c^{-1}(i)\\in \\mathcal{U}$; i.e. some edge is monochromatic. Thus $\\chi(H)>r$ for all $r\\in \\omega$.",
+      "meta": "LouisD — 19:41 on 28 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6016",
+      "text": "You are right; under the arbitrary-family reading this is a much simpler example. It gives a hypergraph on a countable vertex set withvpairwise intersections of edges all infinite and chromatic number \\(\\omega\\), so in particular there is no finite bound \\(C\\). My earlier construction was overkill for ruling out finite \\(C\\); it was aimed at a stronger cardinal-bound statement. Your ultrafilter example is the cleaner way to refute the finite-bound version under the arbitrary-family interpretation. The distinction with the countable-family reading remains: a nonprincipal ultrafilter is not a countable family of edges, and in the countable-family case two colors suffice.",
+      "meta": "gavinsherry — 01:16 on 29 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "9",
+      "text": "This is trivially false as currently stated; let $X$ be any set with large cardinality, and let the $A_i$ be the sets with exactly two elements in $X$. Then the chromatic number of the $A$-family is $|X|$ itself. I suspect that Erdős meant to specify either that $|A_i| > 2$ for all $i$ or that $A_i$ is infinite for all $i$. Komjáth's paper that Erdős mentions is here. The related result that Erdős mentions is statement 5 in the paper, and it uses the additional assumption that each $A_i$ is infinite, so maybe that's what Erdős meant. (The site has been updated to address this comment.)",
+      "meta": "DesmondWeisenberg — 14:06 on 09 Aug 2025 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "99",
+      "text": "Erdos wrote \"denumerable sets\" (countably infinite sets indeed). Also he asked about a bound, which was not necessarily a finite number $C$, but maybe an ordinal (as the case with intersection 1)",
+      "meta": "StijnC — 12:02 on 14 Aug 2025 👍 1 📝 0 🤖 0"
+    }
+  ]
+}

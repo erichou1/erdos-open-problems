@@ -1,0 +1,20 @@
+{
+  "problem_number": 86,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/86",
+  "retrieved_at": "2026-07-10T23:15:28.877799+00:00",
+  "page_title": "86 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "1b4b13f7414497b9d54373b97931740df6d1100c476ade2c6ddaf84d25a5aad6",
+  "comment_count": 2,
+  "comments": [
+    {
+      "post_id": "6595",
+      "text": "Using Minamo Minamoto's recent Q7/Q8 constructions (arXiv:2603.29127) as the immediate baseline, I found explicit C4-free edge-list certificates for Q9 through Q15. To my knowledge, no explicit C4-free edge-list certificates for Q_n with n >= 9 have previously appeared in the published literature. I would be very happy to be corrected on this point. A secondary numerical point is that the Q9, Q10, and Q11 certificates slightly improve the commonly cited Brass–Harborth–Nienborg general estimate. n certificate edges BHN general estimate difference Q_n 4-cycles checked 9 1,505 1,497.6 +7.4 4,608 10 3,304 3,288.6 +15.4 11,520 11 7,164 7,160.3 +3.7 28,160 12 15,372 15,480.5 -108.5 67,584 13 32,856 33,269.8 -413.8 159,744 14 69,909 71,137.2 -1,228.2 372,736 15 148,126 151,434.7 -3,308.7 860,160 Here I use the general estimate 0.5 * (n + 0.9 sqrt(n)) * 2^(n-1) as cited for general n >= 9 in Minamoto's paper. Each entry is witnessed by an explicit JSON edge-list certificate. I verified each certificate by exhaustive enumeration of all 4-cycles in the corresponding hypercube; the number of violating 4-cycles is zero in all seven cases. The repository is here: https://github.com/rafalwronapl/erdos86-hypercube-c4 It contains: the seven edge-list certificates, SHA-256 hashes, a standalone four-cycle enumeration verifier, a separate sparse cherry-counting verifier, a draft note and lift parameters. The construction uses a two-stage computational pipeline: product lifts via hypercube automorphisms, followed by local ILP repair on C4-incidence neighborhoods. The repair step was essential for the final certificate counts. The current certificate set, including the improved Q11 = 7164 certificate, was independently checked by Minamo Minamoto using a different method, namely sparse cherry counting. This independent check confirmed the certificate-level claims: matching SHA-256 hashes, the stated edge counts, valid hypercube edges, full vertex support, no loops or duplicates, and no C4s. This is not a claim about novelty or optimality; it is an independent certificate-level verification of the explicit edge-list witnesses. These are lower bounds only. I make no exactness claim for any n >= 7. Also, only Q9–Q11 improve the BHN general estimate; Q12–Q15 are included as explicit certificate witnesses and as part of the construction chain, not as improvements over that estimate. AI disclosure: this work was substantially AI-assisted. I used AI to help design and run the computational search pipeline and to draft parts of the accompanying text. I am posting this primarily as a certificate-verification request: the mathematical claim should be judged by the explicit edge lists and the standalone verifiers, not by authorship. I would appreciate verification, error reports, and pointers to any prior published or unpublished explicit certificate constructions for these dimensions.",
+      "meta": "rafalwrona — 13:43 on 22 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1622",
+      "text": "A slightly better bound ($0.60318 n 2^{n-1}$ edges) appears in this work of Baber. (The site has been updated to address this comment.)",
+      "meta": "Alex Grebennikov — 15:33 on 31 Oct 2025 👍 2 📝 2 🤖 0"
+    }
+  ]
+}

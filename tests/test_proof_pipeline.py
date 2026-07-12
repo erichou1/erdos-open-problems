@@ -90,15 +90,109 @@ class PassingRunner:
 
 
 class ProofPipelineTests(unittest.TestCase):
+    def test_stage_cache_restores_context_and_invalidates_changed_prompt(self):
+        class ContextRunner:
+            def __init__(self):
+                self.calls = []
+                self.contexts = {}
+
+            def run(self, prompt, *, stage, isolated):
+                self.calls.append((prompt, stage, isolated))
+                self.contexts[stage] = f"https://chat.test/{stage}/{len(self.calls)}"
+                return f"response {len(self.calls)}"
+
+            def context_id(self, stage):
+                return self.contexts.get(stage, "")
+
+            def restore_context(self, stage, context_id):
+                self.contexts[stage] = context_id
+
+        with tempfile.TemporaryDirectory() as directory:
+            cache = Path(directory)
+            def configured_pipeline(runner):
+                configured = ProofPipeline(
+                    runner,
+                    cache,
+                    pipeline_version="test-pipeline-v1",
+                    model_portfolio="test-model-v1",
+                    execution_config={"stage_timeout_s": 30},
+                    source_snapshot_id="test-snapshot-v1",
+                    source_snapshot_sha256=hashlib.sha256(
+                        b"test source snapshot"
+                    ).hexdigest(),
+                    toolset={"runner": "context-test-runner"},
+                    dependencies={
+                        "requirements_lock_sha256": hashlib.sha256(
+                            b"test dependency lock"
+                        ).hexdigest()
+                    },
+                    runtime={"python": "test-python"},
+                )
+                configured._stage_cache = cache
+                configured._bind_run_contract(
+                    hashlib.sha256(b"test exact statement").hexdigest()
+                )
+                return configured
+
+            first_runner = ContextRunner()
+            first = configured_pipeline(first_runner)
+            self.assertEqual(first._run("original prompt", "review_logic_1"), "response 1")
+            metadata = json.loads((cache / "review_logic_1.meta.json").read_text())
+            self.assertEqual(metadata["context_id"], "https://chat.test/review_logic_1/1")
+            self.assertEqual(
+                metadata["prompt_sha256"],
+                hashlib.sha256(b"original prompt").hexdigest(),
+            )
+
+            resumed_runner = ContextRunner()
+            resumed = configured_pipeline(resumed_runner)
+            self.assertEqual(resumed._run("original prompt", "review_logic_1"), "response 1")
+            self.assertEqual(resumed_runner.calls, [])
+            self.assertEqual(
+                resumed_runner.context_id("review_logic_1"),
+                "https://chat.test/review_logic_1/1",
+            )
+
+            self.assertEqual(resumed._run("changed prompt", "review_logic_1"), "response 1")
+            self.assertEqual(len(resumed_runner.calls), 1)
+
     def test_runs_isolated_stages_and_persists_gate_evidence(self):
         runner = PassingRunner()
         with tempfile.TemporaryDirectory() as directory:
             problem = "For every n, prove P(n)."
             result = ProofPipeline(
-                runner, Path(directory), verification_evidence=evidence_for(problem)
-            ).solve(1, problem)
+                runner, Path(directory), verification_evidence=evidence_for(problem),
+                pipeline_version="test-pipeline-v1",
+                model_portfolio="fake-model-v1",
+                execution_config={"stage_timeout_s": 30},
+            ).solve(1, problem, research_directive={
+                "schema_version": 1,
+                "parent_statement_sha256": make_statement_lock(problem).sha256,
+                "recommended_attack_modes": ["exact_construction_search"],
+                "subproblem_targets": [],
+            })
             self.assertEqual(result.gate.status, "verified_proved")
             self.assertTrue((result.artifact_dir / "manifest.json").exists())
+            manifest = json.loads((result.artifact_dir / "manifest.json").read_text())
+            self.assertEqual(manifest["pipeline_version"], "test-pipeline-v1")
+            self.assertEqual(manifest["model_portfolio"], "fake-model-v1")
+            self.assertEqual(manifest["budget"]["max_revisions"], 2)
+            self.assertEqual(manifest["budget"]["stage_timeout_s"], 30)
+            self.assertEqual(
+                manifest["research_directive"]["recommended_attack_modes"],
+                ["exact_construction_search"],
+            )
+            persisted_directive = json.loads(
+                (result.artifact_dir / "research_directive.json").read_text()
+            )
+            self.assertEqual(
+                persisted_directive["research_directive_sha256"],
+                manifest["research_directive_sha256"],
+            )
+            for stage in ("scout_1", "synthesis", "construction"):
+                prompt = next(prompt for name, _, prompt in runner.calls if name == stage)
+                self.assertIn("exact_construction_search", prompt)
+                self.assertIn("RESEARCH ROUTING DIRECTIVE", prompt)
         self.assertEqual(len(runner.calls), 14)
         self.assertTrue(all(isolated for _, isolated, _ in runner.calls))
         self.assertTrue(all("Do not browse" in prompt for _, _, prompt in runner.calls))
@@ -157,6 +251,26 @@ class ProofPipelineTests(unittest.TestCase):
             ).solve(4, problem)
             self.assertEqual(result.gate.status, "candidate_rejected")
             self.assertTrue((result.artifact_dir / "manifest.json").exists())
+
+    def test_prompt_generated_descriptive_reviewer_role_is_normalized(self):
+        class DescriptiveRoleRunner(PassingRunner):
+            def run(self, prompt, *, stage, isolated):
+                response = super().run(prompt, stage=stage, isolated=isolated)
+                if stage.startswith("review_"):
+                    data = json.loads(response)
+                    data["reviewer_role"] = (
+                        f"independent adversarial referee ({data['reviewer_role']})"
+                    )
+                    return json.dumps(data)
+                return response
+
+        problem = "Prove the reviewer schema is stable."
+        with tempfile.TemporaryDirectory() as directory:
+            result = ProofPipeline(
+                DescriptiveRoleRunner(), Path(directory),
+                verification_evidence=evidence_for(problem),
+            ).solve(41, problem)
+            self.assertEqual(result.gate.status, "verified_proved")
 
     def test_malformed_replan_continues_with_last_valid_graph(self):
         class MalformedReplanRunner(PassingRunner):

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 80,
+  "raw_page": {
+    "path": "raw/pages/problem_80.html",
+    "sha256": "f86998e76db601bd97ffaf029d82e7d3e344588f4b62f519adeca796c4a8b059"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "167b7d863645f47fe0a4cfda75cd8f11e662ad533e777bb9cb5d7218ef8b33ec",
+      "source_region": "div.problem-additional-text",
+      "text": "[FoLo12] Fox, Jacob and Loh, Po-Shen, On a problem of Erd\\H{o}s and {R}othschild on edges in\ntriangles. Combinatorica (2012), 619--628.\n \n [KhNi79] Khadzhiivanov, N. G. and Nikiforov, S. V., Solution of a problem of {P}. Erd\\H{o}s about the maximum\nnumber of triangles with a common edge in a graph. C. R. Acad. Bulgare Sci. (1979), 1315--1318."
+    },
+    "remarks": {
+      "sha256": "4d1d4371d54f3d5d11210e5cdc3653465223293d94174b69cb44dbc5f1af880d",
+      "source_region": "div.problem-additional-text",
+      "text": "A problem of Erd\\H{o}s and Rothschild. Alon and Trotter showed that, provided $c<1/4$, $f_c(n)\\ll_c n^{1/2}$. Szemer\\'{e}di observed that his regularity lemma implies that $f_c(n)\\to \\infty$.\n\nEdwards (unpublished) and Khadzhiivanov and Nikiforov \\cite{KhNi79} proved independently that $f_c(n) \\geq n/6$ when $c>1/4$ (see [905]).\n\nFox and Loh \\cite{FoLo12} proved that\\[f_c(n) \\leq n^{O(1/\\log\\log n)}\\]for all $c<1/4$, disproving the first conjecture of Erd\\H{o}s.\n\nThe best known lower bounds for $f_c(n)$ are those from Szemer\\'{e}di's regularity lemma, and as such remain very poor.\n\nSee also [600] and the entry in the graphs problem collection."
+    },
+    "statement": {
+      "sha256": "c6efc2cbb8ed3bf5da3661dfe305df018d9d4c85cbe6b434a992b2261410e99a",
+      "source_region": "div#content",
+      "text": "Let $c>0$ and let $f_c(n)$ be the maximal $m$ such that every graph $G$ with $n$ vertices and at least $cn^2$ edges, where each edge is contained in at least one triangle, must contain a book of size $m$, that is, an edge shared by at least $m$ different triangles. \n\nEstimate $f_c(n)$. In particular, is it true that $f_c(n)>n^{\\epsilon}$ for some $\\epsilon>0$? Or $f_c(n)\\gg \\log n$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/80"
+}

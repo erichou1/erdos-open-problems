@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 104,
+  "raw_page": {
+    "path": "raw/pages/problem_104.html",
+    "sha256": "4fb5d19f335504a7d63700ae9b516c60ea257dfe99af36f03c561f7fd669ab53"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "2b26da5ec732ce478f63fa845a3bd4da510c17e6d94cff01c5d0ae11f69ba77b",
+      "source_region": "div.problem-additional-text",
+      "text": "[El84] Elekes, G., {$n$} points in the plane can determine $n^{3/2}$ unit\ncircles. Combinatorica (1984), 131.\n \n [Er75h] Erd\\H{o}s, P., Some problems on elementary geometry. Austral. Math. Soc. Gaz. (1975), 2-3.\n \n [Er81d] Erd\\H{o}s, P., Some applications of graph theory and combinatorial methods to number theory and geometry. Algebraic methods in graph theory, Vol. I, II (Szeged, 1978) (1981), 137-148.\n \n [Er92e] Erd\\H{o}s, P\\'{a}l, Some Unsolved problems in Geometry, Number Theory and Combinatorics. Eureka (1992), 44-48.\n \n [HaMe86] Harborth, Heiko and Mengersen, Ingrid, Point sets with many unit circles. Discrete Math. (1986), 193--197."
+    },
+    "remarks": {
+      "sha256": "9ac92d1cd3eaea2569c52d62783972026dc151340d4330cadab47319ca8f6141",
+      "source_region": "div.problem-additional-text",
+      "text": "In \\cite{Er81d} Erd\\H{o}s proved that $\\gg n$ many circles is possible, and that there cannot be more than $O(n^2)$ many circles. The argument is very simple: every pair of points determines at most $2$ unit circles, and the claimed bound follows from double counting. Erd\\H{o}s claims in a number of places this produces the upper bound $n(n-1)$, but Harborth and Mengerson \\cite{HaMe86} note that in fact this delivers an upper bound of $\\frac{n(n-1)}{3}$. \n\nElekes \\cite{El84} has a simple construction of a set with $\\gg n^{3/2}$ such circles. This may be the correct order of magnitude.\n\nIn \\cite{Er75h} and \\cite{Er92e} Erd\\H{o}s also asks how many such unit circles there must be if the points are in general position.\n\nIn \\cite{Er92e} Erd\\H{o}s offered £100 for a proof or disproof that the answer is $O(n^{3/2})$.\n\nThe maximal number of unit circles achieved by $n$ points is A003829 in the OEIS.\n\nSee also [506] and [831]."
+    },
+    "statement": {
+      "sha256": "bd13b7b922bb95b3f97e74d324086f5a61b86a146a086b409a9449302d78aace",
+      "source_region": "div#content",
+      "text": "Given $n$ points in $\\mathbb{R}^2$ the number of distinct unit circles containing at least three points is $o(n^2)$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/104"
+}

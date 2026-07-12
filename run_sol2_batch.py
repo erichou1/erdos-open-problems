@@ -21,6 +21,13 @@ import time
 from pathlib import Path
 
 import erdos_common as C
+from erdos_searcher import (
+    canonical_problem_run_inputs,
+    find_latest_canonical_snapshot,
+    load_canonical_corpus,
+    normalized_budget_config,
+)
+from run_status import has_verified_result, problem_disposition
 
 
 def pid_alive(pid: int) -> bool:
@@ -33,13 +40,30 @@ def pid_alive(pid: int) -> bool:
     return True
 
 
+def should_skip_problem(
+    artifacts: Path, problem_number: int, marker: Path, *,
+    expected_run_contract_id: str | None = None,
+) -> bool:
+    """A legacy marker is advisory; only a verified manifest makes it skippable."""
+    return marker.exists() and has_verified_result(
+        artifacts, problem_number,
+        expected_run_contract_id=expected_run_contract_id,
+    )
+
+
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--category", default="open")
-    ap.add_argument("--min", type=int, required=True)
-    ap.add_argument("--max", type=int, required=True)
+    ap.add_argument("--min", type=int, default=None)
+    ap.add_argument("--max", type=int, default=None)
+    ap.add_argument("--problems", default="",
+                    help="Explicit comma/space-separated problem numbers, in "
+                         "priority order; overrides --min/--max")
     ap.add_argument("--artifacts", default="proof_runs_sol2")
+    ap.add_argument("--triage", default="triage")
     ap.add_argument("--max-revisions", type=int, default=2)
+    ap.add_argument("--max-attempts", type=int, default=8)
+    ap.add_argument("--model-id", required=True)
     ap.add_argument("--stage-timeout", type=float, default=1800)
     ap.add_argument("--backoff", type=float, default=15.0,
                     help="Initial seconds to wait after a rate-limit alert")
@@ -52,8 +76,24 @@ def main() -> None:
     ap.add_argument("--wait-pid", type=int, default=0,
                     help="Wait for this pid to exit before starting")
     args = ap.parse_args()
+    if "unrecorded" in args.model_id.lower() or not args.model_id.strip():
+        ap.error("--model-id must be the exact recorded UI model identity")
 
     artifacts = Path(args.artifacts)
+    triage_dir = Path(args.triage)
+    if not triage_dir.is_absolute():
+        triage_dir = C.REPO_DIR / triage_dir
+    budget_config = normalized_budget_config(
+        max_revisions=args.max_revisions,
+        stage_timeout_s=args.stage_timeout,
+        initial_backoff_s=args.backoff,
+        max_backoff_s=args.max_backoff,
+        request_spacing_s=args.request_spacing,
+        max_attempts=args.max_attempts,
+        browser_headless=args.headless,
+    )
+    canonical_snapshot = find_latest_canonical_snapshot(triage_dir)
+    canonical_sources = load_canonical_corpus(canonical_snapshot)
     done_dir = artifacts / ".done"
     done_dir.mkdir(parents=True, exist_ok=True)
 
@@ -64,18 +104,46 @@ def main() -> None:
         print("[batch] prior run finished; starting.", flush=True)
 
     files = C.get_problem_files(args.category)
-    nums = [
-        C.problem_number(f)
-        for f in files
-        if args.min <= C.problem_number(f) <= args.max
-    ]
-    print(f"[batch] {len(nums)} problems in [{args.min},{args.max}]", flush=True)
+    available = {C.problem_number(f) for f in files}
+    if args.problems.strip():
+        requested = [int(tok) for tok in args.problems.replace(",", " ").split()]
+        nums = [n for n in requested if n in available]
+        missing = [n for n in requested if n not in available]
+        if missing:
+            print(f"[batch] skipping {len(missing)} unknown problems: {missing}",
+                  flush=True)
+        print(f"[batch] {len(nums)} explicit problems queued", flush=True)
+    elif args.min is not None and args.max is not None:
+        nums = [n for n in sorted(available) if args.min <= n <= args.max]
+        print(f"[batch] {len(nums)} problems in [{args.min},{args.max}]", flush=True)
+    else:
+        ap.error("provide --problems or both --min and --max")
 
     for num in nums:
-        marker = done_dir / f"problem_{num}"
-        if marker.exists():
-            print(f"[batch] #{num}: already done, skipping.", flush=True)
+        try:
+            run_inputs = canonical_problem_run_inputs(
+                C.REPO_DIR,
+                triage_dir,
+                num,
+                model_portfolio=args.model_id,
+                budget_config=budget_config,
+                canonical_snapshot=canonical_snapshot,
+                canonical_sources=canonical_sources,
+            )
+        except Exception as exc:
+            print(f"[batch] #{num}: exact context unavailable ({exc}); not started.",
+                  flush=True)
             continue
+        expected_run_contract_id = run_inputs["run_contract_id"]
+        marker = done_dir / f"problem_{num}"
+        if should_skip_problem(
+            artifacts, num, marker,
+            expected_run_contract_id=expected_run_contract_id,
+        ):
+            print(f"[batch] #{num}: verified result already present, skipping.", flush=True)
+            continue
+        if marker.exists():
+            print(f"[batch] #{num}: ignoring stale non-verified done marker.", flush=True)
 
         print(f"[batch] === #{num}: starting verified run ===", flush=True)
         cmd = [
@@ -83,19 +151,30 @@ def main() -> None:
             "--problem", str(num),
             "--category", args.category,
             "--artifacts", args.artifacts,
+            "--triage", args.triage,
             "--max-revisions", str(args.max_revisions),
+            "--max-attempts", str(args.max_attempts),
             "--stage-timeout", str(args.stage_timeout),
             "--backoff", str(args.backoff),
             "--max-backoff", str(args.max_backoff),
             "--request-spacing", str(args.request_spacing),
+            "--model-id", args.model_id,
         ]
         if args.headless:
             cmd.append("--headless")
         returncode = subprocess.run(cmd).returncode
 
-        if returncode == 0:
-            marker.write_text("ok\n", encoding="utf-8")
-            print(f"[batch] #{num}: done.", flush=True)
+        if returncode == 0 and has_verified_result(
+            artifacts, num,
+            expected_run_contract_id=expected_run_contract_id,
+        ):
+            marker.write_text("verified\n", encoding="utf-8")
+            print(f"[batch] #{num}: verified; completion marker written.", flush=True)
+        elif returncode == 0:
+            disposition = problem_disposition(artifacts, num)
+            print(f"[batch] #{num}: run finished as "
+                  f"{disposition['outcome_class']}; left eligible for future policy.",
+                  flush=True)
         else:
             print(f"[batch] #{num}: FAILED (exit {returncode}); "
                   "left unmarked for retry.", flush=True)

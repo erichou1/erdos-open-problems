@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 208,
+  "raw_page": {
+    "path": "raw/pages/problem_208.html",
+    "sha256": "6d3650832fb537f34ae2e657998f280ed8015771840e01093e25c6003feb0c3c"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "080ff8f71babd59670e2783943cc48c855fa1f2f262c72ce7688f38cb4fbad2a",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er51] Erd\\H{o}s, P., Some problems and results in elementary number theory. Publ. Math. Debrecen (1951), 103-109.\n \n [Er79] Erd\\H{o}s, Paul, Some unconventional problems in number theory. Math. Mag. (1979), 67-70.\n \n [FiTr92] Filaseta, M. and Trifonov, O., On gaps between squarefree numbers II. J. London Math. Soc. (1992), 215-221.\n \n [Gr98] Granville, Andrew, {$ABC$} allows us to count squarefrees. Internat. Math. Res. Notices (1998), 991--1009.\n \n [Pa24] Pandey, M., Squarefree numbers in short intervals. arXiv:2401.13981 (2024)."
+    },
+    "remarks": {
+      "sha256": "22a68148edb976cf9dedbfd292e73a67422943dc94a5cae488fbb96a675ee2b4",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s \\cite{Er51} showed that there are infinitely many $n$ such that\\[s_{n+1}-s_n > (1+o(1))\\frac{\\pi^2}{6}\\frac{\\log s_n}{\\log\\log s_n},\\]so this bound would be the best possible. \n\nIn \\cite{Er79} Erd\\H{o}s says perhaps $s_{n+1}-s_n \\ll \\log s_n$, but he is 'very doubtful'.\n\nFilaseta and Trifonov \\cite{FiTr92} proved an upper bound of $s_n^{1/5+o(1)}$. Pandey \\cite{Pa24} has improved this exponent to $1/5-c$ for some constant $c>0$.\n\nGranville \\cite{Gr98} showed that $s_{n+1}-s_n\\ll_\\epsilon s_n^\\epsilon$ for all $\\epsilon>0$ follows from the ABC conjecture.\n\nSee also [489] and [145]. A more general form of this problem is given in [1101]."
+    },
+    "statement": {
+      "sha256": "76f2a2fad09a95a8eb956f4dc0f0cad7cc6eea8b5c984900f1b697cec11637b2",
+      "source_region": "div#content",
+      "text": "Let $s_1<s_2<\\cdots$ be the sequence of squarefree numbers. Is it true that, for any $\\epsilon>0$ and large $n$,\\[s_{n+1}-s_n \\ll_\\epsilon s_n^{\\epsilon}?\\]Is it true that\\[s_{n+1}-s_n \\leq (1+o(1))\\frac{\\pi^2}{6}\\frac{\\log s_n}{\\log\\log s_n}?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/208"
+}

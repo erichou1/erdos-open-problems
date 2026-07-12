@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#1070}
+\date{Last updated: 2025-10-05}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} geometry
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $f(n)$ be maximal such that, given any $n$ points in $\mathbb{R}^2$, there exist $f(n)$ points such that no two are distance $1$ apart. Estimate $f(n)$. In particular, is it true that $f(n)\geq n/4$?
+
+
+
+
+In other words, estimate the minimal independence number of a unit distance graph with $n$ vertices. If $\omega$ is the independence number and $\chi$ is the chromatic number then $\omega \chi\geq n$, and hence $f(n)\geq n/\chi$, where $\chi$ is the answer to the Hadwiger-Nelson problem [508] . The Moser spindle shows $f(n)\leq \frac{2}{7}n\approx 0.285n$. Larman and Rogers \cite{LaRo72} noted that if $m_1$ is the supremum of the upper densities of measurable subsets of $\mathbb{R}^2$ which have no unit distance pairs then\[f(n)\geq m_1n.\]Croft \cite{Cr67} gave the best-known lower bound of $m_1\geq 0.22936$ and hence\[0.22936n \leq f(n) \leq \frac{2}{7}n\approx 0.285n.\]Ambrus, Csisz\'{a}rik, Matolcsi, Varga, and Zs\'{a}mboki \cite{ACMVZ23} have proved that $m_1\leq 0.247$, and hence this approach cannot achieve $f(n)\geq n/4$. See [232] for more on $m_1$. Matolcsi, Ruzsa, Varga, and Zs\'{a}mboki \cite{MRVZ23} have improved the upper bound to\[f(n) \leq \left(\frac{1}{4}+o(1)\right)n.\]They conjecture that $m_1=0.22936\cdots$ (the lower bound of Croft mentioned above) and $f(n)=(1/4+o(1))n$. If we also insist that no two points are distance $&lt;1$ apart then this is problem becomes [1066] .
+
+
+
+
+References
+
+[ACMVZ23] G. Ambrus, A. Csisz\'{a}rik, M. Matolcsi, D. Varga, and P. Zs\'{a}mboki, The density of planar sets avoiding unit distances . arXiv:2207.14179 (2023).
+
+[Cr67] H. T. Croft, Incidence incidents . Eureka (1967), 22-26.
+
+[LaRo72] Larman, D. G. and Rogers, C. A., The realization of distances within sets in Euclidean space . Mathematika (1972), 1-24.
+
+[MRVZ23] M. Matolcsi, I. Z. Ruzsa, D. Varga, and P. Zs\'{a}mboki, The fractional chromatic number of the plane is at least $4$ . arXiv:2311.10069 (2023).
+
+\noindent\textbf{Related OEIS sequences:} possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/1070}}
+\end{document}

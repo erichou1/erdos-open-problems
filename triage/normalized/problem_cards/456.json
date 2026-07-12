@@ -1,0 +1,334 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.329
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2026-06-07",
+      "state": "yes"
+    },
+    "references": [
+      "Er79e"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/456",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Er79e] Erd\\H{o}s, Paul, Some unconventional problems in number theory. Ast\\'{e}risque (1979), 73-82.",
+      "remarks": "Linnik's theorem implies that $p_n\\leq n^{O(1)}$. It is trivial that $m_n\\leq p_n$ always.\n\nIf $n=q-1$ for some prime $q$ then $m_n=p_n$. Erd\\H{o}s \\cite{Er79e} writes it is 'easy to show' that for infinitely many $n$ we have $m_n <p_n$, and that $m_n/n\\to \\infty$ for almost all $n$.\n\nvan Doorn in the comments has noted that if $n=2^{2k+1}$ then $m_n\\leq 2n$ and $p_n\\geq 2n+1$."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.87,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.387179
+      ],
+      "probability": 0.193006
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.644,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.03209,
+        0.449126
+      ],
+      "probability": 0.240608
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 2.0,
+      "beta": 13.0,
+      "credible_interval_approx": [
+        0.0,
+        0.299901
+      ],
+      "probability": 0.133333
+    },
+    "p_high_mathematical_value": {
+      "alpha": 1.933,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.393299
+      ],
+      "probability": 0.176829
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.5,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.01535,
+        0.363028
+      ],
+      "probability": 0.189189
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 3.4,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.015467,
+        0.386899
+      ],
+      "probability": 0.201183
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.092979
+      ],
+      "probability": 0.038462
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.002288,
+        0.452997
+      ],
+      "probability": 0.227642
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 3,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:17:15.807490+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "d3f14cd92c2b5bc65717c6583562a4444a89c31aaa4009f62ca5330d169e4dee"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "which_objects",
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 0,
+      "question_count": 3,
+      "requires_source_audit": true,
+      "statement_characters": 297,
+      "statement_tokens_approx": 51
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "classify",
+      "multi_part": true,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-456",
+  "problem_number": 456,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "classify",
+    "multi_part": true,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_456.html",
+      "raw_html_sha256": "b77a75dd8f0a311611fc5b1557831c290dde25611d988ba717295353db1c4bc7",
+      "section_sha256": {
+        "references": "85915eeb812e27180db9a18aa56e84858bc27ccdc841a1ee31be781e71b5ad29",
+        "remarks": "cadd800ca0d14f078e4b9b2b73562cc59c00b14e65d3032ea86ebd28a819b96b",
+        "statement": "bffaf295987bc037a32da5a2bb1374362e3161a6e88533b8b8bde1d889637d2c"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_456.json",
+      "source_record_sha256": "8aa2f9fb1fd4953eeeb798b1adffa91fb1c3a0a2f3d7f15701f1abd9c32671cc",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_456.tex",
+    "latex_sha256": "ef48c8e3ff0b441c72fccea39c7b8367cc199a14526b22831abeff353d107a30",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "bffaf295987bc037a32da5a2bb1374362e3161a6e88533b8b8bde1d889637d2c",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "formal_search",
+      "subproblem_decomposition",
+      "shared_infrastructure_search",
+      "literature_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Let $p_n$ be the smallest prime $\\equiv 1\\pmod{n}$ and let $m_n$ be the smallest integer such that $n\\mid \\phi(m_n)$. Is it true that $m_n<p_n$ for almost all $n$?",
+        "focus_question_sha256": "79335a5d44cb09b282e3366475997760aaf57f354d3463ef496f406277b80a21",
+        "parent_statement_sha256": "bffaf295987bc037a32da5a2bb1374362e3161a6e88533b8b8bde1d889637d2c",
+        "part_index": 1,
+        "subproblem_contract_sha256": "367776f625bb445c695ab2f56add05484646848e49377b47cb37e6300257432c",
+        "subproblem_id": "erdos-456-part-01-367776f6"
+      },
+      {
+        "focus_question": "Does $p_n/m_n\\to \\infty$ for almost all $n$?",
+        "focus_question_sha256": "3031f3cb5bfdb42141881bb75b4fd194669a85874361d8f5d9ac3a822df4dfc0",
+        "parent_statement_sha256": "bffaf295987bc037a32da5a2bb1374362e3161a6e88533b8b8bde1d889637d2c",
+        "part_index": 2,
+        "subproblem_contract_sha256": "112531fe28b588a90aa8cc40cec3a54508c61feb7585c87d3d47be6bf6086995",
+        "subproblem_id": "erdos-456-part-02-112531fe"
+      },
+      {
+        "focus_question": "Are there infinitely many primes $p$ such that $p-1$ is the only $n$ for which $m_n=p$?",
+        "focus_question_sha256": "bf6b3488ca696bd9cc2ad0451dea700792e92b422cf11b3ff68893c89e37de42",
+        "parent_statement_sha256": "bffaf295987bc037a32da5a2bb1374362e3161a6e88533b8b8bde1d889637d2c",
+        "part_index": 3,
+        "subproblem_contract_sha256": "49240455a3a4cdec7796f3caccb9707a9c68f3a776f64c5139bedd2fb3bd51a4",
+        "subproblem_id": "erdos-456-part-03-49240455"
+      }
+    ]
+  },
+  "research_directive_sha256": "df5d1dfd74c5a08422d58edaee0a01df09256f3d08e07eb34574b89a0481a3d6",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "formal_search",
+    "subproblem_decomposition",
+    "shared_infrastructure_search",
+    "literature_search"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Let $p_n$ be the smallest prime $\\equiv 1\\pmod{n}$ and let $m_n$ be the smallest integer such that $n\\mid \\phi(m_n)$.\n\nIs it true that $m_n<p_n$ for almost all $n$? Does $p_n/m_n\\to \\infty$ for almost all $n$? Are there infinitely many primes $p$ such that $p-1$ is the only $n$ for which $m_n=p$?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $p_n$ be the smallest prime $\\equiv 1\\pmod{n}$ and let $m_n$ be the smallest integer such that $n\\mid \\phi(m_n)$. Is it true that $m_n<p_n$ for almost all $n$? Does $p_n/m_n\\to \\infty$ for almost all $n$? Are there infinitely many primes $p$ such that $p-1$ is the only $n$ for which $m_n=p$?",
+    "original": "Let $p_n$ be the smallest prime $\\equiv 1\\pmod{n}$ and let $m_n$ be the smallest integer such that $n\\mid \\phi(m_n)$.\n\nIs it true that $m_n<p_n$ for almost all $n$? Does $p_n/m_n\\to \\infty$ for almost all $n$? Are there infinitely many primes $p$ such that $p-1$ is the only $n$ for which $m_n=p$?",
+    "statement_sha256": "bffaf295987bc037a32da5a2bb1374362e3161a6e88533b8b8bde1d889637d2c"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-456",
+      "part_index": 1,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Let $p_n$ be the smallest prime $\\equiv 1\\pmod{n}$ and let $m_n$ be the smallest integer such that $n\\mid \\phi(m_n)$. Is it true that $m_n<p_n$ for almost all $n$?",
+        "focus_question_sha256": "79335a5d44cb09b282e3366475997760aaf57f354d3463ef496f406277b80a21",
+        "normalized": "Let $p_n$ be the smallest prime $\\equiv 1\\pmod{n}$ and let $m_n$ be the smallest integer such that $n\\mid \\phi(m_n)$. Is it true that $m_n<p_n$ for almost all $n$? Does $p_n/m_n\\to \\infty$ for almost all $n$? Are there infinitely many primes $p$ such that $p-1$ is the only $n$ for which $m_n=p$?",
+        "original": "Let $p_n$ be the smallest prime $\\equiv 1\\pmod{n}$ and let $m_n$ be the smallest integer such that $n\\mid \\phi(m_n)$.\n\nIs it true that $m_n<p_n$ for almost all $n$? Does $p_n/m_n\\to \\infty$ for almost all $n$? Are there infinitely many primes $p$ such that $p-1$ is the only $n$ for which $m_n=p$?",
+        "statement_sha256": "bffaf295987bc037a32da5a2bb1374362e3161a6e88533b8b8bde1d889637d2c"
+      },
+      "subproblem_contract_sha256": "367776f625bb445c695ab2f56add05484646848e49377b47cb37e6300257432c",
+      "subproblem_id": "erdos-456-part-01-367776f6"
+    },
+    {
+      "parent_problem_id": "erdos-456",
+      "part_index": 2,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Does $p_n/m_n\\to \\infty$ for almost all $n$?",
+        "focus_question_sha256": "3031f3cb5bfdb42141881bb75b4fd194669a85874361d8f5d9ac3a822df4dfc0",
+        "normalized": "Let $p_n$ be the smallest prime $\\equiv 1\\pmod{n}$ and let $m_n$ be the smallest integer such that $n\\mid \\phi(m_n)$. Is it true that $m_n<p_n$ for almost all $n$? Does $p_n/m_n\\to \\infty$ for almost all $n$? Are there infinitely many primes $p$ such that $p-1$ is the only $n$ for which $m_n=p$?",
+        "original": "Let $p_n$ be the smallest prime $\\equiv 1\\pmod{n}$ and let $m_n$ be the smallest integer such that $n\\mid \\phi(m_n)$.\n\nIs it true that $m_n<p_n$ for almost all $n$? Does $p_n/m_n\\to \\infty$ for almost all $n$? Are there infinitely many primes $p$ such that $p-1$ is the only $n$ for which $m_n=p$?",
+        "statement_sha256": "bffaf295987bc037a32da5a2bb1374362e3161a6e88533b8b8bde1d889637d2c"
+      },
+      "subproblem_contract_sha256": "112531fe28b588a90aa8cc40cec3a54508c61feb7585c87d3d47be6bf6086995",
+      "subproblem_id": "erdos-456-part-02-112531fe"
+    },
+    {
+      "parent_problem_id": "erdos-456",
+      "part_index": 3,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Are there infinitely many primes $p$ such that $p-1$ is the only $n$ for which $m_n=p$?",
+        "focus_question_sha256": "bf6b3488ca696bd9cc2ad0451dea700792e92b422cf11b3ff68893c89e37de42",
+        "normalized": "Let $p_n$ be the smallest prime $\\equiv 1\\pmod{n}$ and let $m_n$ be the smallest integer such that $n\\mid \\phi(m_n)$. Is it true that $m_n<p_n$ for almost all $n$? Does $p_n/m_n\\to \\infty$ for almost all $n$? Are there infinitely many primes $p$ such that $p-1$ is the only $n$ for which $m_n=p$?",
+        "original": "Let $p_n$ be the smallest prime $\\equiv 1\\pmod{n}$ and let $m_n$ be the smallest integer such that $n\\mid \\phi(m_n)$.\n\nIs it true that $m_n<p_n$ for almost all $n$? Does $p_n/m_n\\to \\infty$ for almost all $n$? Are there infinitely many primes $p$ such that $p-1$ is the only $n$ for which $m_n=p$?",
+        "statement_sha256": "bffaf295987bc037a32da5a2bb1374362e3161a6e88533b8b8bde1d889637d2c"
+      },
+      "subproblem_contract_sha256": "49240455a3a4cdec7796f3caccb9707a9c68f3a776f64c5139bedd2fb3bd51a4",
+      "subproblem_id": "erdos-456-part-03-49240455"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

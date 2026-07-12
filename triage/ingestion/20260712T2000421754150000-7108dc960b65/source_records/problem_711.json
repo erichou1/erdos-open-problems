@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 711,
+  "raw_page": {
+    "path": "raw/pages/problem_711.html",
+    "sha256": "3e477aa3ad8ee11a275a5d5bffd524ae9929caf51856ebe4488dd7f1a8db031f"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "3f22965624c0f100570d576d4d3b6e78569a7c8290c9248d3541e17520b69d90",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er92c] Erd\\H{o}s, P., Some of my forgotten problems in number theory. Hardy-Ramanujan J. (1992), 34-50.\n \n [ErPo80] P. Erd\\H{o}s and C. Pomerance, Matching the natural numbers up to $n$ with distinct multiples of another interval. Indigationes Math. (1980), 147-151.\n \n [vD26] W. van Doorn, On the length of an interval that contains distinct multiples of the first $n$ positive integers. Integers (2026), #A7."
+    },
+    "remarks": {
+      "sha256": "311181a347df3ade908fd4f5f9225cbf711d457c440208b6485618e7222ce405",
+      "source_region": "div.problem-additional-text",
+      "text": "A problem of Erd\\H{o}s and Pomerance \\cite{ErPo80}, who proved that\\[\\max_m f(n,m) \\ll n^{3/2}\\]and\\[n\\left(\\frac{\\log n}{\\log\\log n}\\right)^{1/2} \\ll f(n,n)\\ll n(\\log n)^{1/2}.\\]In \\cite{Er92c} Erd\\H{o}s offered 1000 rupees for a proof of either; for uniform comparison across prizes I have converted this using the 1992 exchange rates.\n\nvan Doorn \\cite{vD26} has provided an affirmative answer to the second question, proving that, for all large $n$, there exists $m=m(n)$ such that\\[f(n,m)-f(n,n) \\gg \\frac{\\log n}{\\log\\log n}n.\\]See also [710]."
+    },
+    "statement": {
+      "sha256": "8ee74232d598e561e0ec07079034fbe7b358956651090e77119e818c7f6f6271",
+      "source_region": "div#content",
+      "text": "Let $f(n,m)$ be minimal such that in $(m,m+f(n,m))$ there exist distinct integers $a_1,\\ldots,a_n$ such that $k\\mid a_k$ for all $1\\leq k\\leq n$. Prove that\\[\\max_m f(n,m) \\leq n^{1+o(1)}\\]and that\\[\\max_m (f(n,m)-f(n,n))\\to \\infty.\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/711"
+}

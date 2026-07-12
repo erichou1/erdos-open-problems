@@ -1,0 +1,259 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.991
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2026-01-25",
+      "state": "no"
+    },
+    "references": [
+      "BES73",
+      "CGLS23",
+      "EFR86",
+      "Er75b",
+      "RuSz78",
+      "SaSe05",
+      "SoSo17"
+    ],
+    "source_last_update": "2026-01-25",
+    "source_problem_url": "https://www.erdosproblems.com/1178",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[BES73] Brown, W. G. and Erd\\H{o}s, P. and S\\'os, V. T., Some extremal problems on {$r$}-graphs. (1973), 53--63.\n \n [CGLS23] Conlon, David and Gishboliner, Lior and Levanzov, Yevgeny and\nShapira, Asaf, A new bound for the {B}rown-{E}rd\\H os-S\\'os problem. J. Combin. Theory Ser. B (2023), 1--35.\n \n [EFR86] Erd\\H{o}s, P. and Frankl, P. and R\\\"{o}dl, V., The asymptotic number of graphs not containing a fixed subgraph and a problem for hypergraphs having no exponent. Graphs Combin. (1986), 113-121.\n \n [Er75b] Erd\\H{o}s, Paul, Problems and results in combinatorial number theory. Journ\\'{e}es Arithm\\'{e}tiques de Bordeaux (Conf., Univ. Bordeaux, Bordeaux, 1974) (1975), 295-310.\n \n [RuSz78] Ruzsa, I. Z. and Szemer\\'{e}di, E., Triple systems with no six points carrying three triangles. Combinatorics (Proc. Fifth Hungarian Colloq.,\nKeszthely, 1976), Vol. II (1978), 939-945.\n \n [SaSe05] S\\'{a}rk\\\"ozy, G\\'{a}bor N. and Selkow, Stanley, An extension of the {R}uzsa-Szemer\\'edi theorem. Combinatorica (2005), 77--84.\n \n [SoSo17] Solymosi, David and Solymosi, Jozsef, Small cores in 3-uniform hypergraphs. J. Combin. Theory Ser. B (2017), 897--910.",
+      "remarks": "A conjecture of Brown, Erd\\H{o}s, and S\\'{o}s \\cite{BES73}, who proved that $d_r(e)\\geq (r-2)e+3$ (see also [1076]).\n\nRuzsa and Szemer\\'{e}di \\cite{RuSz78} proved $d_3(3)=6$ (see [716]).\n\nErd\\H{o}s, Frankl, and R\\\"{o}dl \\cite{EFR86} proved\\[d_r(3)= (r-2)3+3\\]for all $r\\geq 3$. S\\'{a}rk\\\"{o}zy and Selkow \\cite{SaSe05} proved\\[d_r(e) \\leq (r-2)e+2+\\lfloor \\log_2 e\\rfloor\\]for all $r,e\\geq 3$. Solymosi and Solymosi \\cite{SoSo17} proved that $d_3(10)\\leq 14$. Conlon, Gishboliner, Levanzov, and Shapira \\cite{CGLS23} proved\\[d_3(e)\\leq e+O\\left(\\frac{\\log e}{\\log\\log e}\\right)\\]for all $e\\geq 3$.\n\nIn \\cite{Er75b} Erd\\H{o}s even asks whether, if $\\mathcal{F}$ is the family of $3$-uniform hypergraphs on $k$ vertices with $k-3$ edges,\\[\\mathrm{ex}_3(n,\\mathcal{F})\\asymp n r_{k-3}(n),\\]where $r_{k-3}(n)$ is the maximal size of a subset of $\\{1,\\ldots,n\\}$ that does not contain a non-trivial arithmetic progression of length $k-3$. He states that Ruzsa has proved the lower bound for $k=6,7,8$.\n\nSee [1157] for the general case."
+    },
+    "source_state": "open",
+    "tags": [
+      "graph theory",
+      "hypergraphs"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.04,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.323402
+      ],
+      "probability": 0.145299
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 1.232,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.284812
+      ],
+      "probability": 0.109685
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.144533
+      ],
+      "probability": 0.04
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.2,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.41937
+      ],
+      "probability": 0.196429
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.167,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.23659
+      ],
+      "probability": 0.088608
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.1,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.228734
+      ],
+      "probability": 0.083969
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 40.0,
+      "credible_interval_approx": [
+        0.0,
+        0.071043
+      ],
+      "probability": 0.02439
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.436385
+      ],
+      "probability": 0.2
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "minor"
+    },
+    "literature": {
+      "comment_count": 1,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:20:57.089164+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "9fb5114701a092588f0347394fa6ae151d4fe79f501554d1b83e625409e743b1"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "asymptotic_notation"
+      ],
+      "ambiguity_status": "minor",
+      "quantifier_signal_count": 1,
+      "question_count": 0,
+      "requires_source_audit": true,
+      "statement_characters": 238,
+      "statement_tokens_approx": 29
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove",
+      "multi_part": false,
+      "primary_domain": "graph theory"
+    }
+  },
+  "problem_id": "erdos-1178",
+  "problem_number": 1178,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove",
+    "multi_part": false,
+    "primary_domain": "graph theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_1178.html",
+      "raw_html_sha256": "1b95020c97a1dfba54daed0a88439552c3cf08b340de0f0c193d16ab33fa723d",
+      "section_sha256": {
+        "references": "6009b200749eb7a64afb48cce231745d5e2e1a31d5e9804c76242aa29ff90d45",
+        "remarks": "1d7aa979890cf6313564ec000b44dd57f914ca2189eee67408b65d93427a3403",
+        "statement": "c53216c0a9fb3d7d0a1ef22d079fa46846d03a6e164ed4582acd2bcdd782e1f4"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_1178.json",
+      "source_record_sha256": "53e3fa519c4c3faa807e7099725290fafd5de6c3af6a4aa2810ec3425e9c51c7",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_1178.tex",
+    "latex_sha256": "38b43d8f8defaab676213f20ea466cd6642be79bcb0f88451837ba1b52f15b1d",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "c53216c0a9fb3d7d0a1ef22d079fa46846d03a6e164ed4582acd2bcdd782e1f4",
+    "recommended_attack_modes": [
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "538bcb2042478b7f4d50ae8bf7d7c0429e1822f5d9f3369fbb9106f44a15915c",
+  "routes": [
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "minor",
+    "intended": "For $r\\geq 3$ let $d_r(e)$ be the minimal $d$ such that\\[\\mathrm{ex}_r(n,\\mathcal{F})=o(n^2),\\]where $\\mathcal{F}$ is the family of $r$-uniform hypergraphs on $d$ vertices with $e$ edges.\n\nProve that\\[d_r(e)=(r-2)e+3\\]for all $r,e\\geq 3$.",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "For $r\\geq 3$ let $d_r(e)$ be the minimal $d$ such that\\[\\mathrm{ex}_r(n,\\mathcal{F})=o(n^2),\\]where $\\mathcal{F}$ is the family of $r$-uniform hypergraphs on $d$ vertices with $e$ edges. Prove that\\[d_r(e)=(r-2)e+3\\]for all $r,e\\geq 3$.",
+    "original": "For $r\\geq 3$ let $d_r(e)$ be the minimal $d$ such that\\[\\mathrm{ex}_r(n,\\mathcal{F})=o(n^2),\\]where $\\mathcal{F}$ is the family of $r$-uniform hypergraphs on $d$ vertices with $e$ edges.\n\nProve that\\[d_r(e)=(r-2)e+3\\]for all $r,e\\geq 3$.",
+    "statement_sha256": "c53216c0a9fb3d7d0a1ef22d079fa46846d03a6e164ed4582acd2bcdd782e1f4"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

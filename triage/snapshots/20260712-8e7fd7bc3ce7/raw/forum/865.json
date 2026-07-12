@@ -1,0 +1,65 @@
+{
+  "problem_number": 865,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/865",
+  "retrieved_at": "2026-07-10T23:19:11.012655+00:00",
+  "page_title": "865 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "2607938579d226e644ceeffad88fb07b513ea8161be8e4ebf4f56c2c9ed3b41e",
+  "comment_count": 11,
+  "comments": [
+    {
+      "post_id": "7280",
+      "text": "I have published the paper resolving 865 on arXiv here. Note that the paper may be subject to change, as Stijn has improved the constant (C) to 3 3/8.",
+      "meta": "rickyc — 18:52 on 30 Jun 2026 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "7378",
+      "text": "I've updated the Lean formalization to match the arXiv paper using Aristotle, it can be found here.",
+      "meta": "rickyc — 16:16 on 06 Jul 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7103",
+      "text": "I believe I have a candidate proof of the $k=3$ case (which would resolve the problem), giving the sharp bound $f_3(N)\\leq \\frac{5}{8}N+O(1)$. The main new ingredient is a folded additive lemma. Roughly, if $B\\subseteq \\{1,\\ldots,m-1\\}$ is cyclically weakly sum-free modulo $m$, and if $C$ denotes the set of residues which occur both as a non-wrapped and wrapped pair-sum of two distinct elements of $B$, then $|B|-|C|\\leq \\frac{m}{4}+O(1)$. Folding $A$ around a central element converts these collisions into empty folded coordinates. This gives the $5/8$ bound after a centering argument; the off-center case uses the Choi, Erdős, and Szemerédi $<2/3$ theorem as a coarse input. I am currently preparing a formalization with Aristotle. GPT-5.5 Pro helped me with developing and stress-testing the proof strategy. I will post the full details once Aristotle is finished.",
+      "meta": "rickyc — 00:34 on 21 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7134",
+      "text": "GPT-5.5 Pro has drafted a short paper here. The Aristotle formalization can be found here. Small note: Aristotle treats the coarse theorem as a hypothesis because it is not formalized in Lean yet. Mathematically, this input is from the CES75 paper (which is peer-reviewed) and is also cited on this page. I’m also working on formalizing the input itself in Lean 4 so the whole argument can eventually be Lean-verified (though this may take a while).",
+      "meta": "rickyc — 15:22 on 22 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7207",
+      "text": "As an update to others: I am in touch with Ricky to share some minor comments on the paper, for improvement; and also checking the proof to hopefully confirm this problem is resolved.",
+      "meta": "StijnC — 08:19 on 25 Jun 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7211",
+      "text": "I’ve updated the paper with Stijn’s feedback. The link remains the same.",
+      "meta": "rickyc — 13:02 on 25 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7239",
+      "text": "I've further updated the paper with more of Stijn's feedback, removing the need for the coarse theorem via induction. This makes the Aristotle formalization slightly outdated; I will update it as soon as possible.",
+      "meta": "rickyc — 15:33 on 27 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7245",
+      "text": "So as an update(/review): I have confirmed Ricky's paper, who proves a $\\frac 58 N +6\\frac 38$ bound in his updated paper. (Actually a previous version was read in detail, where I noticed that the $\\frac 58 N +O(1)$ could be improved to approx. $\\frac 58 N +3$, and checked the crucial points of the \"major revision\" only briefly). Since $C=2$ seems out of reach due to the idea of Lemma 2.1 not being able to give $m/4+1$ without drastic additional update, a sharp version seems impossible. Since $C$ already settles this problem, taking $C$ slightly larger gave some room to prevent the more annoying things; so also the critical points were correctly handled as such during the edit in a more efficient way. The version of Lemma 2.1 with a bound $m/4+3$ was even simpler. Thus the answer on this problem with $C=7 \\frac 38$ is actually very elegant. The main idea is to consider the elements from $A\\cap[1,2h]$ that appear multiple times modulo $h$, where $h$ is a well-chosen value near $N/2.$ For this, the structure in $\\frac{\\mathbb Z}{h \\mathbb Z}$ of these double appearing residues are studied, in two steps; lemma 2.1 and lemma 3.1. Finally, using lemma 3.1 the main result is concluded in section 4; here $2$ cases are considered depending on the choice of $h$ being slightly larger or slightly smaller than $N/2.$",
+      "meta": "StijnC — 16:53 on 27 Jun 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7247",
+      "text": "Yes, I agree here: C=2 would require strengthening Lemma 2.1, which does not seem easily plausible. I may still investigate this in the near future to see whether anything could work.",
+      "meta": "rickyc — 17:08 on 27 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "239",
+      "text": "If it is true for large N, it will be for all N (possibly with a slightly larger constant C). Maybe interestingly, for $N=8i+6$, where $i \\le 6$, the maximum is $5i+5$, except for $N=14$ when the maximum is $11.$ The latter attained e.g. by the set $\\{1,2,4\\} \\cup [N/2, N]$. For $N=8i$ and $3\\le i \\le 7$, the construction $[N/8,N/4]\\cup[N/2,N]$ is actually the only extremal construction (not containing a subset of the form $\\{a,b,c,a+b,b+c,a+c\\}$) attaining size $5/8N+2$. So this suggests that likely the answer to the question is yes (and $C$ can be even taken rather small).",
+      "meta": "StijnC — 14:44 on 29 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7242",
+      "text": "I will write the detailed constructions and belief here for all $N$. $\\textbf{Conjecture}$ For all N, the answer is $\\min \\left( N, \\lfloor 5/8N+2 \\rfloor - 1_{\\{N \\equiv 5 \\pmod 8 \\vee N \\not \\in \\{13,21\\}\\}} \\right)$, with the exception of $N=14$, in which case $f_3(N)=\\lfloor 5/8N+3 \\rfloor=11$. When $N \\equiv 0,1,2,3,4,5 \\pmod 8$, a construction showing the lower bound is $$[\\lfloor N/8 \\rfloor,2\\lfloor N/8 \\rfloor] \\cup [\\lfloor N/2 \\rfloor,2\\lfloor N/2 \\rfloor]$$ where $[a,b]=\\{a,a+1, \\ldots, b\\}.$ For $N \\equiv 6,7 \\pmod 8$, take as the construction the restriction of the one for the next 8-fold: $$[\\lceil N/8 \\rceil,2\\lceil N/8 \\rceil] \\cup [\\lfloor N/2 \\rfloor+1,N].$$ The unique construction for $N=14$ attaining the (special) bound is (through computer verification) $$\\{1, 2, 4, 7, 8, 9, 10, 11, 12, 13, 14\\}.$$",
+      "meta": "StijnC — 16:22 on 27 Jun 2026 👍 1 📝 0 🤖 0"
+    }
+  ]
+}

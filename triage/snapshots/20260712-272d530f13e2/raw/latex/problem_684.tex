@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#684}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, primes, binomial coefficients
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+For $0\leq k\leq n$ write\[\binom{n}{k} = uv\]where the only primes dividing $u$ are in $[2,k]$ and the only primes dividing $v$ are in $(k,n]$. Let $f(n)$ be the smallest $k$ such that $u&#62;n^2$. Give bounds for $f(n)$.
+
+
+
+
+A classical theorem of Mahler states that for any $\epsilon&gt;0$ and integers $k$ and $l$ then, writing\[(n+1)\cdots (n+k) = ab\]where the only primes dividing $a$ are $\leq l$ and the only primes dividing $b$ are $&gt;l$, we have $a &lt; n^{1+\epsilon}$ for all sufficiently large (depending on $\epsilon,k,l$) $n$. Mahler's theorem implies $f(n)\to \infty$ as $n\to \infty$, but is ineffective, and so gives no bounds on the growth of $f(n)$. One can similarly ask for estimates on the smallest integer $f(n,k)$ such that if $m$ is the factor of $\binom{n}{k}$ containing all primes $\leq f(n,k)$ then $m &gt; n^2$. Tang and ChatGPT have proved that\[f(n)\leq n^{30/43+o(1)}.\]The same proof would prove $f(n) \leq n^{2/3+o(1)}$ assuming the Riemann Hypothesis (or Density Hypothesis). A heuristic given by Sothanaphan and ChatGPT in the comments suggests that, at least for most $n$, $f(n)\sim 2\log n$. An internal OpenAI model \cite{APSSV26} has given an elementary argument which shows $f(n) \ll (\log n)^2$, and constructs arbitrarily large $n$ such that $f(n)\geq (1/2-o(1))\log n$.
+
+
+
+
+References
+
+[APSSV26] B. Alexeev, M. Putterman, M. Sawhney, M. Sellke, and G. Valiant, Short proofs in combinatorics and number theory . arXiv:2603.29961 (2026).
+
+\noindent\textbf{Related OEIS sequences:} A392019, possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/684}}
+\end{document}

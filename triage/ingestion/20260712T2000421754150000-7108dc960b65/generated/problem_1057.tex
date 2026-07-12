@@ -1,0 +1,49 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#1057}
+\date{Last updated: 2025-09-28}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $C(x)$ count the number of Carmichael numbers in the interval $[1,x]$. Is it true that $C(x)=x^{1-o(1)}$?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Erd\H{o}s \cite{Er56c} proved\[C(x) < x \exp\left(-c \frac{\log x\log\log\log x}{\log\log x}\right)\]for some constant $c>0$. Pomerance \cite{Po89} gave a heuristic suggesting that this is the true order of growth, and in fact\[C(x)= x \exp\left(-(1+o(1))\frac{\log x\log\log\log x}{\log\log x}\right).\]Alford, Granville, and Pomerance \cite{AGP94} proved that $C(x)\to \infty$, and in fact $C(x)>x^{2/7}$ for large $x$. The lower bound\[C(x)> x^{0.33336704}\]was proved by Harman \cite{Ha08}. This exponent was improved to $0.3389$ by Lichtman \cite{Li22}.
+
+Korselt observed that $n$ being a Carmichael number is equivalent to $n$ being squarefree and $p-1\mid n-1$ for all primes $p\mid n$.
+
+This is discussed in problem A13 of Guy's collection \cite{Gu04}.
+
+\bigskip
+\noindent\textbf{References:}
+
+[AGP94] Alford, W. R. and Granville, Andrew and Pomerance, Carl, There are infinitely many {C}armichael numbers. Ann. of Math. (2) (1994), 703--722.
+ 
+ [Er56c] Erd\H{o}s, P., On pseudoprimes and {C}armichael numbers. Publ. Math. Debrecen (1956), 201--206.
+ 
+ [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.
+ 
+ [Ha08] Harman, Glyn, Watt's mean value theorem and {C}armichael numbers. Int. J. Number Theory (2008), 241--248.
+ 
+ [Li22] J. D. Lichtman, Primes in arithmetic progressions to large moduli and shifted primes without large prime factors. arXiv:2211.09641 (2022).
+ 
+ [Po89] Pomerance, Carl, Two methods in elementary analytic number theory. (1989), 135--161.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/1057}}
+\end{document}

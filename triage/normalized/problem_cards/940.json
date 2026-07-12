@@ -1,0 +1,313 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.595
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "yes"
+    },
+    "references": [
+      "BaBr94",
+      "Er76d",
+      "He88"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/940",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[BaBr94] Baker, R. C. and Br\\\"udern, J., On sums of two squarefull numbers. Math. Proc. Cambridge Philos. Soc. (1994), 1--5.\n \n [Er76d] Erd\\H{o}s, P., Problems and results on number theoretic properties of consecutive integers and related questions. Proceedings of the Fifth Manitoba Conference on Numerical Mathematics (Univ. Manitoba, Winnipeg, Man., 1975) (1976), 25-44.\n \n [He88] Heath-Brown, D. R., Ternary quadratic forms and sums of three square-full numbers. (1988), 137--163.",
+      "remarks": "Erd\\H{o}s \\cite{Er76d} claims that the claim that the set has density $0$ is 'easy' for $r=2$ (a potential 'easy argument' is given in the comments by Tao; this was first proved in the literature by Baker and Br\\\"{u}dern \\cite{BaBr94}). For $r=3$ it is not even known if those integers which are the sum of at most three cubes has density $0$.\n\nIn the Oberwolfach problem book this is recorded in 1986 as a problem of Erd\\H{o}s and Ivi\\'{c}. \n\nIn \\cite{Er76d} Erd\\H{o}s claims that 'a simple counting argument' implies that there are infinitely many integers which are not the sum of at most $r$ many $r$-powerful numbers, but Schinzel pointed out he made a mistake.\n\nHeath-Brown \\cite{He88} has proved that all large numbers are the sum of at most three $2$-powerful numbers, see [941].\n\nSee also [1081] for a more refined question concerning the case $r=2$, and [1107] for the case of $r+1$ summands."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 3.57,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.026878,
+        0.431697
+      ],
+      "probability": 0.229287
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.681,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.033651,
+        0.451304
+      ],
+      "probability": 0.242477
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.3,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.207417
+      ],
+      "probability": 0.079755
+    },
+    "p_high_mathematical_value": {
+      "alpha": 3.733,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.052427,
+        0.53396
+      ],
+      "probability": 0.293194
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.667,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.020836,
+        0.372021
+      ],
+      "probability": 0.196429
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 3.6,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.022708,
+        0.398345
+      ],
+      "probability": 0.210526
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.092979
+      ],
+      "probability": 0.038462
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.002288,
+        0.452997
+      ],
+      "probability": 0.227642
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 8,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:19:33.807134+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "7dd8c25e15a3ce84cd18742e0b96d83321521c51496c9e1a2dc9b354f3739bff"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "multiple_questions",
+        "implicit_convention"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 1,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 302,
+      "statement_tokens_approx": 55
+    },
+    "structure": {
+      "asymptotic": true,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "prove",
+      "multi_part": true,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-940",
+  "problem_number": 940,
+  "problem_type": {
+    "asymptotic": true,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "prove",
+    "multi_part": true,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_940.html",
+      "raw_html_sha256": "66fd864d832b6642c634a732b924d6c96f4e9aa0bc49bec89110e2461dbe9814",
+      "section_sha256": {
+        "references": "e3a79e924f00978d1383df2c89724a840cbd62910a7b4b2fc7e40f5d9527571c",
+        "remarks": "f9f0700571a51a788d38e326d8aa946f519ef9db515f4f8bcffdfdede1e25fdb",
+        "statement": "75afd4fc9ace697ae48d6fb33a0e8c357578b8980876fc0760df142798f60d1d"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_940.json",
+      "source_record_sha256": "3cb7bc9e7b6499a2428b95cab41d9a37da2052a448f4605b6bfe19c13c9500c0",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_940.tex",
+    "latex_sha256": "f9457b5332d3b333c30507c062fa76a007426757754ff56d899137309984942d",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "75afd4fc9ace697ae48d6fb33a0e8c357578b8980876fc0760df142798f60d1d",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "formal_search",
+      "subproblem_decomposition",
+      "shared_infrastructure_search",
+      "literature_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Let $r\\geq 3$. A number $n$ is $r$-powerful if for every prime $p$ which divides $n$ we have $p^r\\mid n$. Are there infinitely many integers which are not the sum of at most $r$ many $r$-powerful numbers?",
+        "focus_question_sha256": "21bfbde5778bf1b61bba52b0288ef5147e18202c6e1028f2868ebaaaa0487deb",
+        "parent_statement_sha256": "75afd4fc9ace697ae48d6fb33a0e8c357578b8980876fc0760df142798f60d1d",
+        "part_index": 1,
+        "subproblem_contract_sha256": "1b607b180a5a71e20e563a7b2af4ff70007e0b106a533d75064694b6f59d030b",
+        "subproblem_id": "erdos-940-part-01-1b607b18"
+      },
+      {
+        "focus_question": "Does the set of integers which are the sum of at most $r$ $r$-powerful numbers have density $0$?",
+        "focus_question_sha256": "461e1e82611ae5aee101814690f0b71b69b1511e1dc2b079ffbbe93fd58bb72b",
+        "parent_statement_sha256": "75afd4fc9ace697ae48d6fb33a0e8c357578b8980876fc0760df142798f60d1d",
+        "part_index": 2,
+        "subproblem_contract_sha256": "91ea6d5d922dffca3688deb53bdb6a534b753a9abe4464494d80595c3ab41d57",
+        "subproblem_id": "erdos-940-part-02-91ea6d5d"
+      }
+    ]
+  },
+  "research_directive_sha256": "051a6ad6bfe1266569d5f82d2a6e111aa70f355e8f6fcded30c410cda1383dde",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "formal_search",
+    "subproblem_decomposition",
+    "shared_infrastructure_search",
+    "literature_search"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Let $r\\geq 3$. A number $n$ is $r$-powerful if for every prime $p$ which divides $n$ we have $p^r\\mid n$.\n\nAre there infinitely many integers which are not the sum of at most $r$ many $r$-powerful numbers? Does the set of integers which are the sum of at most $r$ $r$-powerful numbers have density $0$?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $r\\geq 3$. A number $n$ is $r$-powerful if for every prime $p$ which divides $n$ we have $p^r\\mid n$. Are there infinitely many integers which are not the sum of at most $r$ many $r$-powerful numbers? Does the set of integers which are the sum of at most $r$ $r$-powerful numbers have density $0$?",
+    "original": "Let $r\\geq 3$. A number $n$ is $r$-powerful if for every prime $p$ which divides $n$ we have $p^r\\mid n$.\n\nAre there infinitely many integers which are not the sum of at most $r$ many $r$-powerful numbers? Does the set of integers which are the sum of at most $r$ $r$-powerful numbers have density $0$?",
+    "statement_sha256": "75afd4fc9ace697ae48d6fb33a0e8c357578b8980876fc0760df142798f60d1d"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-940",
+      "part_index": 1,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Let $r\\geq 3$. A number $n$ is $r$-powerful if for every prime $p$ which divides $n$ we have $p^r\\mid n$. Are there infinitely many integers which are not the sum of at most $r$ many $r$-powerful numbers?",
+        "focus_question_sha256": "21bfbde5778bf1b61bba52b0288ef5147e18202c6e1028f2868ebaaaa0487deb",
+        "normalized": "Let $r\\geq 3$. A number $n$ is $r$-powerful if for every prime $p$ which divides $n$ we have $p^r\\mid n$. Are there infinitely many integers which are not the sum of at most $r$ many $r$-powerful numbers? Does the set of integers which are the sum of at most $r$ $r$-powerful numbers have density $0$?",
+        "original": "Let $r\\geq 3$. A number $n$ is $r$-powerful if for every prime $p$ which divides $n$ we have $p^r\\mid n$.\n\nAre there infinitely many integers which are not the sum of at most $r$ many $r$-powerful numbers? Does the set of integers which are the sum of at most $r$ $r$-powerful numbers have density $0$?",
+        "statement_sha256": "75afd4fc9ace697ae48d6fb33a0e8c357578b8980876fc0760df142798f60d1d"
+      },
+      "subproblem_contract_sha256": "1b607b180a5a71e20e563a7b2af4ff70007e0b106a533d75064694b6f59d030b",
+      "subproblem_id": "erdos-940-part-01-1b607b18"
+    },
+    {
+      "parent_problem_id": "erdos-940",
+      "part_index": 2,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Does the set of integers which are the sum of at most $r$ $r$-powerful numbers have density $0$?",
+        "focus_question_sha256": "461e1e82611ae5aee101814690f0b71b69b1511e1dc2b079ffbbe93fd58bb72b",
+        "normalized": "Let $r\\geq 3$. A number $n$ is $r$-powerful if for every prime $p$ which divides $n$ we have $p^r\\mid n$. Are there infinitely many integers which are not the sum of at most $r$ many $r$-powerful numbers? Does the set of integers which are the sum of at most $r$ $r$-powerful numbers have density $0$?",
+        "original": "Let $r\\geq 3$. A number $n$ is $r$-powerful if for every prime $p$ which divides $n$ we have $p^r\\mid n$.\n\nAre there infinitely many integers which are not the sum of at most $r$ many $r$-powerful numbers? Does the set of integers which are the sum of at most $r$ $r$-powerful numbers have density $0$?",
+        "statement_sha256": "75afd4fc9ace697ae48d6fb33a0e8c357578b8980876fc0760df142798f60d1d"
+      },
+      "subproblem_contract_sha256": "91ea6d5d922dffca3688deb53bdb6a534b753a9abe4464494d80595c3ab41d57",
+      "subproblem_id": "erdos-940-part-02-91ea6d5d"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

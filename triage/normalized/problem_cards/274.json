@@ -1,0 +1,260 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.632
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "yes"
+    },
+    "references": [
+      "Er77c",
+      "ErGr80",
+      "MaSc19",
+      "Su04"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/274",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Er77c] Erd\\H{o}s, Paul, Problems and results on combinatorial number theory. III. Number theory day (Proc. Conf., Rockefeller Univ.,\nNew York, 1976) (1977), 43-72.\n \n [ErGr80] Erd\\H{o}s, P. and Graham, R., Old and new problems and results in combinatorial number theory. Monographies de L'Enseignement Mathematique (1980).\n \n [MaSc19] Margolis, Leo and Schnabel, Ofir, The {H}erzog-Sch\\\"onheim conjecture for small groups and\nharmonic subgroups. Beitr. Algebra Geom. (2019), 399--418.\n \n [Su04] Sun, Zhi-Wei, On the {H}erzog-Sch\\\"onheim conjecture for uniform covers of\ngroups. J. Algebra (2004), 153--175.",
+      "remarks": "A question of Herzog and Sch\\\"{onheim}, who conjectured more generally that if $G$ is any (not necessarily finite) group and $a_1G_1,\\ldots,a_kG_k$ are finitely many cosets of subgroups of $G$ with distinct indices $[G:G_i]$ then the $a_iG_i$ cannot form a partition of $G$.\n\nThis conjecture was proved in the case when all the $G_i$ are subnormal in $G$ by Sun \\cite{Su04}. In particular if $G$ is abelian (which was the special case asked about in \\cite{Er77c} and \\cite{ErGr80}) the answer to the original question is no.\n\nMargolis and Schnabel \\cite{MaSc19} proved this conjecture for all groups $G$ of size $<1440$."
+    },
+    "source_state": "open",
+    "tags": [
+      "group theory",
+      "covering systems"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 3.62,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.02889,
+        0.434618
+      ],
+      "probability": 0.231754
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 2.051,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.374075
+      ],
+      "probability": 0.170188
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.8,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.190215
+      ],
+      "probability": 0.0625
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.1,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.409873
+      ],
+      "probability": 0.189189
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 4.1,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.048161,
+        0.461156
+      ],
+      "probability": 0.254658
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.7,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.375214
+      ],
+      "probability": 0.183673
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 39.0,
+      "credible_interval_approx": [
+        0.0,
+        0.106373
+      ],
+      "probability": 0.044118
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.009216,
+        0.509303
+      ],
+      "probability": 0.259259
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "clear"
+    },
+    "literature": {
+      "comment_count": 3,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:16:22.342323+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "28fbe6e5f7922f77f46b4e96a1713b5a4949625218db0d2930527bc3d0f38fa4"
+    },
+    "statement": {
+      "ambiguity_markers": [],
+      "ambiguity_status": "clear",
+      "quantifier_signal_count": 0,
+      "question_count": 1,
+      "requires_source_audit": false,
+      "statement_characters": 169,
+      "statement_tokens_approx": 33
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove",
+      "multi_part": false,
+      "primary_domain": "group theory"
+    }
+  },
+  "problem_id": "erdos-274",
+  "problem_number": 274,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove",
+    "multi_part": false,
+    "primary_domain": "group theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_274.html",
+      "raw_html_sha256": "083a5b03c072c593242be01813961f4d8389ae640212ec4059575434e0c90e1a",
+      "section_sha256": {
+        "references": "207efcbf2b60283f23969ed79ff0b297b6994688acd743ce29f3b1af64511f65",
+        "remarks": "a391ac2a907a1f55e5e3610dc4991d1db78ac7d5626c665656019d88e064f998",
+        "statement": "68a113456384ef77ea528fa9f2d6eefe44d2db4885f69e37726364be1c0b509c"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_274.json",
+      "source_record_sha256": "b2b2e3b3a59e030d31a68c02d91ac0a513d8e6aa9afb4f0d02198441095fa80e",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_274.tex",
+    "latex_sha256": "2a2114c513d8f8339300826d22050d37600a569c5c95e8ab5558e396db3df60a",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "68a113456384ef77ea528fa9f2d6eefe44d2db4885f69e37726364be1c0b509c",
+    "recommended_attack_modes": [
+      "formal_search",
+      "shared_infrastructure_search",
+      "literature_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "5112520935236f48cb6539f4268f20a5ba4ce56c5a947016105f9b2fab1398f6",
+  "routes": [
+    "formal_search",
+    "shared_infrastructure_search",
+    "literature_search",
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "clear",
+    "intended": "If $G$ is a group then can there exist an exact covering of $G$ by more than one cosets of different sizes? (i.e. each element is contained in exactly one of the cosets)",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "If $G$ is a group then can there exist an exact covering of $G$ by more than one cosets of different sizes? (i.e. each element is contained in exactly one of the cosets)",
+    "original": "If $G$ is a group then can there exist an exact covering of $G$ by more than one cosets of different sizes? (i.e. each element is contained in exactly one of the cosets)",
+    "statement_sha256": "68a113456384ef77ea528fa9f2d6eefe44d2db4885f69e37726364be1c0b509c"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

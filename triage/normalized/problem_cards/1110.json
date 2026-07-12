@@ -1,0 +1,311 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.821
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-09-28",
+      "state": "no"
+    },
+    "references": [
+      "BMS98",
+      "Er92b",
+      "ErLe96",
+      "YaZh25",
+      "YuCh22"
+    ],
+    "source_last_update": "2025-12-07",
+    "source_problem_url": "https://www.erdosproblems.com/1110",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[BMS98] Blecksmith, Richard and McCallum, Michael and Selfridge, J.\nL., {$3$}-smooth representations of integers. Amer. Math. Monthly (1998), 529--543.\n \n [Er92b] Erd\\H{o}s, Paul, Some of my favourite problems in various branches of combinatorics. Matematiche (Catania) (1992), 231-240.\n \n [ErLe96] Erd\\H{o}s, P. and Lewin, Mordechai, $d$-complete sequences of integers. Math. Comp. (1996), 837-840.\n \n [YaZh25] Yang, Quan-Hui and Zhao, Lilu, A conjecture of {Y}u and {C}hen related to the {E}rd\\H\nos-{L}ewin theorem. Acta Arith. (2025), 277--286.\n \n [YuCh22] Yu, Wang-Xing and Chen, Yong-Gao, On a conjecture of {E}rd\\H{o}s and {L}ewin. J. Number Theory (2022), 763--778.",
+      "remarks": "A problem of Erd\\H{o}s and Lewin \\cite{ErLe96}, who proved that there are finitely many non-representable numbers if and only if $\\{p,q\\}=\\{2,3\\}$.\n\nIndeed, in \\cite{Er92b} Erd\\H{o}s wrote 'last year I made the following silly conjecture': every integer $n$ can be written as the sum of distinct integers of the form $2^k3^l$, none of which divide any other. He wrote 'I mistakenly thought that this was a nice and difficult conjecture but Jansen and several others found a simple proof by induction.' \n\nThis simple proof is as follows: one proves the stronger fact that such a representation always exists, and moreover if $n$ is even then all the summands can be taken to be even: if $n=2m$ we are done applying the inductive hypothesis to $m$. Otherwise if $n$ is odd then let $3^k$ be the largest power of $3$ which is $\\leq n$ and apply the inductive hypothesis to $n-3^k$ (which is even).\n\nYu and Chen \\cite{YuCh22} prove that the set of representable numbers has density zero whenever $q>3$ or $q=3$ and $p>6$ or $q=2$ and $p>10$. They also prove that there are infinitely many coprime non-representable numbers if $q>3$ or $q=3$ and $p\\neq 5$ or $q=2$ and $p\\not\\in \\{3,5,9\\}$.\n\nErd\\H{o}s and Lewin \\cite{ErLe96} also asked whether all large integers $n$ can be written as a sum of $2^k3^l$, none of which divide another, each of which is $>f(n)$ for some $f(n)\\to \\infty$. Let $f(n)$ be the fastest growing such $f(n)$. Yu and Chen \\cite{YuCh22} proved\\[\\frac{n}{(\\log n)^{\\log_23}}\\ll f(n) \\ll \\frac{n}{\\log n}.\\]Yang and Zhao \\cite{YaZh25} improved the lower bound to $f(n)\\gg n/\\log n$. van Doorn has observed in the comments that a result of Blecksmith, McCallum, and Selfridge \\cite{BMS98} already implies\\[f(n)\\sim \\frac{\\log 2\\log 3}{2}\\frac{n}{\\log n}.\\]The case of three powers is the subject of [123], and see also [845] for more on the case $\\{p,q\\}=\\{2,3\\}$. The problem [246] addresses the topic without the non-divisibility condition."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.16,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.333535
+      ],
+      "probability": 0.152542
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.263,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.016175,
+        0.425855
+      ],
+      "probability": 0.221015
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.3,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.207417
+      ],
+      "probability": 0.079755
+    },
+    "p_high_mathematical_value": {
+      "alpha": 3.433,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.037052,
+        0.515226
+      ],
+      "probability": 0.276139
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.0,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.177569
+      ],
+      "probability": 0.0625
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.6,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.0,
+        0.256307
+      ],
+      "probability": 0.10596
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.063431
+      ],
+      "probability": 0.021739
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.0,
+        0.384039
+      ],
+      "probability": 0.173913
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 4,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:20:37.450248+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "4f69c64012d7b924245a4f134b7565c03298c2d2502be658ebac217fb0c58dfa"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "multiple_questions",
+        "implicit_convention"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 0,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 308,
+      "statement_tokens_approx": 49
+    },
+    "structure": {
+      "asymptotic": true,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "prove",
+      "multi_part": true,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-1110",
+  "problem_number": 1110,
+  "problem_type": {
+    "asymptotic": true,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "prove",
+    "multi_part": true,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_1110.html",
+      "raw_html_sha256": "7aecb9c7bab43197d19b4498fbac900f642827d958f55c25e2a561362820e67b",
+      "section_sha256": {
+        "references": "0496e1f3e9d94f0b84df3ee4693b15f116869796c43791e05387eab5b1266c11",
+        "remarks": "48c26af46c30d8f5d7618e1ced92ead27c1ea5da83b461f2509eaface2227c42",
+        "statement": "7a2839a5e442aaf349b69d0bca985e41d310bdfa16f094cb48913dc0903ce962"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_1110.json",
+      "source_record_sha256": "4b6249b3f267d2e77e70d5967d8a94f6b3e7b102571ed6c6fd008458c513c1a9",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_1110.tex",
+    "latex_sha256": "523aa706dac97957f385baa2c0845112506b5118c5b926ddbfbdc64072b536e5",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "7a2839a5e442aaf349b69d0bca985e41d310bdfa16f094cb48913dc0903ce962",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "subproblem_decomposition",
+      "shared_infrastructure_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Let $p>q\\geq 2$ be two coprime integers. We call $n$ representable if it is the sum of integers of the form $p^kq^l$, none of which divide each other. If $\\{p,q\\}\\neq \\{2,3\\}$ then what can be said about the density of non-representable numbers?",
+        "focus_question_sha256": "ad8946dcae55c029203f38d10cfc2ac33504d154e5c650ad0e1c3c60c6b8d19b",
+        "parent_statement_sha256": "7a2839a5e442aaf349b69d0bca985e41d310bdfa16f094cb48913dc0903ce962",
+        "part_index": 1,
+        "subproblem_contract_sha256": "7a79f3d72ab3df1f8561a6c8d35bbe69839c20b62abeaae84362a2c70531155f",
+        "subproblem_id": "erdos-1110-part-01-7a79f3d7"
+      },
+      {
+        "focus_question": "Are there infinitely many coprime non-representable numbers?",
+        "focus_question_sha256": "eeba1e6e169e3111b5e369eb6bd042d0f05125fb195b78ed5160345932f74349",
+        "parent_statement_sha256": "7a2839a5e442aaf349b69d0bca985e41d310bdfa16f094cb48913dc0903ce962",
+        "part_index": 2,
+        "subproblem_contract_sha256": "a4749589802244b17915ec3d7896c27c07881e1fcd449a730a08f9f5e163acae",
+        "subproblem_id": "erdos-1110-part-02-a4749589"
+      }
+    ]
+  },
+  "research_directive_sha256": "c98fdd9b12b889a0206c918942c8b026b0654cd89f527d8aa458e3ddda6d15d6",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "subproblem_decomposition",
+    "shared_infrastructure_search"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Let $p>q\\geq 2$ be two coprime integers. We call $n$ representable if it is the sum of integers of the form $p^kq^l$, none of which divide each other. \n\nIf $\\{p,q\\}\\neq \\{2,3\\}$ then what can be said about the density of non-representable numbers? Are there infinitely many coprime non-representable numbers?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $p>q\\geq 2$ be two coprime integers. We call $n$ representable if it is the sum of integers of the form $p^kq^l$, none of which divide each other. If $\\{p,q\\}\\neq \\{2,3\\}$ then what can be said about the density of non-representable numbers? Are there infinitely many coprime non-representable numbers?",
+    "original": "Let $p>q\\geq 2$ be two coprime integers. We call $n$ representable if it is the sum of integers of the form $p^kq^l$, none of which divide each other. \n\nIf $\\{p,q\\}\\neq \\{2,3\\}$ then what can be said about the density of non-representable numbers? Are there infinitely many coprime non-representable numbers?",
+    "statement_sha256": "7a2839a5e442aaf349b69d0bca985e41d310bdfa16f094cb48913dc0903ce962"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-1110",
+      "part_index": 1,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Let $p>q\\geq 2$ be two coprime integers. We call $n$ representable if it is the sum of integers of the form $p^kq^l$, none of which divide each other. If $\\{p,q\\}\\neq \\{2,3\\}$ then what can be said about the density of non-representable numbers?",
+        "focus_question_sha256": "ad8946dcae55c029203f38d10cfc2ac33504d154e5c650ad0e1c3c60c6b8d19b",
+        "normalized": "Let $p>q\\geq 2$ be two coprime integers. We call $n$ representable if it is the sum of integers of the form $p^kq^l$, none of which divide each other. If $\\{p,q\\}\\neq \\{2,3\\}$ then what can be said about the density of non-representable numbers? Are there infinitely many coprime non-representable numbers?",
+        "original": "Let $p>q\\geq 2$ be two coprime integers. We call $n$ representable if it is the sum of integers of the form $p^kq^l$, none of which divide each other. \n\nIf $\\{p,q\\}\\neq \\{2,3\\}$ then what can be said about the density of non-representable numbers? Are there infinitely many coprime non-representable numbers?",
+        "statement_sha256": "7a2839a5e442aaf349b69d0bca985e41d310bdfa16f094cb48913dc0903ce962"
+      },
+      "subproblem_contract_sha256": "7a79f3d72ab3df1f8561a6c8d35bbe69839c20b62abeaae84362a2c70531155f",
+      "subproblem_id": "erdos-1110-part-01-7a79f3d7"
+    },
+    {
+      "parent_problem_id": "erdos-1110",
+      "part_index": 2,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Are there infinitely many coprime non-representable numbers?",
+        "focus_question_sha256": "eeba1e6e169e3111b5e369eb6bd042d0f05125fb195b78ed5160345932f74349",
+        "normalized": "Let $p>q\\geq 2$ be two coprime integers. We call $n$ representable if it is the sum of integers of the form $p^kq^l$, none of which divide each other. If $\\{p,q\\}\\neq \\{2,3\\}$ then what can be said about the density of non-representable numbers? Are there infinitely many coprime non-representable numbers?",
+        "original": "Let $p>q\\geq 2$ be two coprime integers. We call $n$ representable if it is the sum of integers of the form $p^kq^l$, none of which divide each other. \n\nIf $\\{p,q\\}\\neq \\{2,3\\}$ then what can be said about the density of non-representable numbers? Are there infinitely many coprime non-representable numbers?",
+        "statement_sha256": "7a2839a5e442aaf349b69d0bca985e41d310bdfa16f094cb48913dc0903ce962"
+      },
+      "subproblem_contract_sha256": "a4749589802244b17915ec3d7896c27c07881e1fcd449a730a08f9f5e163acae",
+      "subproblem_id": "erdos-1110-part-02-a4749589"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

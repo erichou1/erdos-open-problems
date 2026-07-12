@@ -1,0 +1,40 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#1184}
+\date{Last updated: 2026-04-04}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, primes
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $f(n,k)$ count the number of $1\leq i\leq k$ such that $P(n+i)>k$ (where $P(m)$ is the largest prime divisor of $m$). Is it true that, if $\alpha>1$ is such that $n=k^{\alpha+o(1)}$, then\[f(n,k)=(1-\rho(\alpha)+o(1))k,\]where $\rho$ is the Dickman function?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Erd\H{o}s \cite{Er76e} proved that, for every $\alpha>1$, if $k$ is sufficiently large and $n>k^\alpha-k$ then\[f(n,k) > \left(1-\frac{1}{\alpha}+c_\alpha\right)k\]for some constant $c_\alpha>0$, and if $1<\alpha<2$ and $n\leq k^\alpha-k$ then\[f(n,k) < (\alpha-1+o(1))k.\]He knew of no non-trivial bounds when $\alpha \geq 2$.
+
+Ramachandra, Shorey, and Tijdeman \cite{RST75b} proved that if $n>\exp(c(\log k)^2)$ for a constant $c>0$ then $f(n,k)\geq k-\pi(k)$.
+
+\bigskip
+\noindent\textbf{References:}
+
+[Er76e] Erd\H{o}s, P., Problems and results on consecutive integers. Publ. Math. Debrecen (1976), 271-282.
+ 
+ [RST75b] Ramachandra, K. and Shorey, T. N. and Tijdeman, R., On {G}rimm's problem relating to factorisation of a block of
+consecutive integers. {II}. J. Reine Angew. Math. (1976), 192--201.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/1184}}
+\end{document}

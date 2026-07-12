@@ -1,0 +1,55 @@
+{
+  "problem_number": 939,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/939",
+  "retrieved_at": "2026-07-10T23:19:33.193609+00:00",
+  "page_title": "939 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "47c274e73ab4ce10eb0546a4229d81abfe08c76b1fe43e1461c7af070bacb183",
+  "comment_count": 9,
+  "comments": [
+    {
+      "post_id": "6655",
+      "text": "Walsh paper has arxiv identifier 2404.03970 (comment to be removed once corrected)",
+      "meta": "StijnC — 11:36 on 26 May 2026 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "6641",
+      "text": "For \\(r=5\\), I found the following example which I did not see listed on the page:\\[ 2^5 17^6 + 7^{11} + 2^5 3^6 7^8 = 3^7 13^7. \\]Numerically,\\[ 772402208 + 1977326743 + 134481277728 = 137231006679. \\]All four numbers are \\(5\\)-powerful, and the three summands have joint gcd \\(1\\). They are not pairwise coprime: the first and third summands share \\(2\\), and the second and third summands share \\(7\\). Equivalently,\\[ 17\\cdot 34^5 + 7\\cdot 49^5 + 1029\\cdot 42^5 = 1521\\cdot 39^5. \\]I am not claiming that this example is new; it may already be among unpublished examples. Also, please feel free to point out any mistake, especially regarding the interpretation of “coprime” here. I put a short reproducible verification here:KitaKen1 GitHub verification repository Since this example appears to be smaller than the displayed \\(r=5\\) example, it might be worth adding to the page as a smaller explicit \\(r=5\\) instance. AI usage disclosure: the numerical search and verification were carried out with assistance from Codex 5.5 using xhigh reasoning.",
+      "meta": "KentaKitamura — 01:50 on 25 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6654",
+      "text": "Correct. As the previous search was not exhaustive, it indeed did not generate the smallest example. For $r=4$, an exhaustive algorithm verified that if $a+b=c$ with $a,b,c$ $4$-powerful coprime, then $\\max(a,b)>10^{14}$. It might be there are no solutions in this case. The latter being a strengthening of Fermat for exponent $4$. For $r=5$, I even do not dare to guess if there is a finite or infinite number of solutions. Having updated the algorithm (using the meet in the middle method), it is deduced that if $a+b+c=d$ has a solution where $d<10^{16}$ then it is either one of the two earlier found solutions, or $\\gcd(a,b),\\gcd(b,c),\\gcd(a,c)>1$ while $\\gcd(a,b,c)=1$. The two solutions found do not immediately indicate how to construct a general family.",
+      "meta": "StijnC — 09:40 on 26 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6640",
+      "text": "We can at least show there are infinitely many such representations for $r\\geq 6$. The idea is the following: Firstly, via binomial expansion, we may write $$(X+Y)^r=(X-Y)^r+\\sum_{\\substack{1\\leq j\\leq r\\\\ j\\text{ odd}}}2\\binom{r}{j}X^{r-j}Y^j.$$ This is a sum of positive terms when $X>Y>0$. The number of odd indices $j$ is $\\lceil r/2\\rceil$, but we need exactly $r-2$ summands, so since $r\\geq 6$, we can split the $j=3$ term. Put $t:= r-2-\\lceil r/2\\rceil=\\lfloor r/2\\rfloor-2\\geq 1$. Choose distinct positive integers $v_1,\\,\\dots,\\,v_t$ with $$v_i=i\\quad(1\\leq i<t),\\qquad v_t=2\\binom{r}{3}-\\binom{t}{2},$$ such that $\\sum_{\\ell=1}^{t}v_{\\ell}=2\\binom{r}{3}$, then $$(X+Y)^r=(X-Y)^r+\\sum_{\\substack{1\\leq j\\leq r\\\\ j\\neq 3\\text{ odd}}}2\\binom{r}{j}X^{r-j}Y^j + \\sum_{\\ell=1}^{t}v_{\\ell}X^{r-3}Y^3$$ has exactly $r-2$ positive summands on the RHS, namely $$(X-Y)^r,\\qquad 2\\binom{r}{j}X^{r-j} Y^j\\quad (1\\leq j\\neq 3\\leq r \\text{ odd}),\\qquad v_{\\ell}X^{r-3}Y^3.$$ We can now force each summand to be $r$-powerful by choosing $X=q^r$, $Y=B^r$, where $B$ is divisible by every prime appearing in the coefficients $v_{\\ell}$ and $2\\binom{r}{j}$ for $j\\neq 3$, and where $q>B$ is a prime not dividing $B$. With this choice, $X>Y>0$ and $\\gcd(X,Y)=1$. Moreover, every non-first summand has the form $cX^a Y^b$, $b\\geq 1$, and every prime divisor of $c$ already divides $B$. Hence, all coefficient primes appear with exponent at least $r$ through $Y=B^r$, while $q$ appears only through powers of $X=q^r$. Therefore, all summands are $r$-powerful. The total sum $(X+Y)^r$ is also an $r$-th power, hence $r$-powerful. Now, joint coprimality comes from separating the first summand. All non-first summands have prime divisors only from $XY$, whereas the first summand is $(X-Y)^r$. Since $\\gcd(X,Y)=1$, we have $\\gcd(X-Y,XY)=1$. Thus, no prime can divide all $r-2$ summands. Finally, there are infinitely many possible primes $q>B$. Varying $q$ gives infinitely many distinct such identities. This argument came from GPT-5.5 Pro, and can be read in greater detail here. I have also gotten Aristotle to autoformalise GPT's argument into Lean here. (The site has been updated to address this comment.)",
+      "meta": "Liam Price — 23:17 on 24 May 2026 👍 5 📝 2 🤖 0"
+    },
+    {
+      "post_id": "6650",
+      "text": "Nice argument :) !",
+      "meta": "StijnC — 19:59 on 25 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1039",
+      "text": "The third question has been solved by P.G. Walsh in his preprint \"A question of Erdös on 3-powerful numbers and an elliptic curve analogue of the Ankeny-Artin-Chowla conjecture\". One can look it here: https://arxiv.org/html/2404.03970v1",
+      "meta": "Alfaiz — 05:32 on 13 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1045",
+      "text": "Notice that that paper refers to Nitaj and Cohn itself, but also concludes the same result indeed.",
+      "meta": "StijnC — 11:54 on 13 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1046",
+      "text": "Cambie, do you think the finitude of solutions in the second question could be deduced by the n conjecture, that is, the abc conjecture for more than three terms?",
+      "meta": "Dogmachine — 12:13 on 13 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1047",
+      "text": "At firt sight, no. More exactly: If Ramaekers's variant would have been true, the answer would have been yes. Since then $a_1+ \\ldots +a_{s}=x$ for coprime $r$-powerful numbers $a_i, 1 \\le i \\le s\\le r-2$ and $x$ implies that $\\lvert x \\rvert \\le \\lvert x \\rvert^{(1+o(1))(s+1)/r}$, and thus $x$ is bounded. But by HKS25, we know that one is false, and the bounds are too weak to conclude. (or one needs additional things, like while the $a_i$ are coprime, they have pairwise large gcd's, for which I do not see any particular reason) For reference on the state of the art on the n conjecture, I had a look at [HKS25].",
+      "meta": "StijnC — 13:00 on 13 Oct 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

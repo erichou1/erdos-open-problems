@@ -1,0 +1,51 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#528}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} geometry
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $f(n,k)$ count the number of self-avoiding walks of $n$ steps (beginning at the origin) in $\mathbb{Z}^k$ (i.e. those walks which do not intersect themselves). Determine\[C_k=\lim_{n\to\infty}f(n,k)^{1/n}.\]
+
+
+
+
+The constant $C_k$ is sometimes known as the connective constant. Hammersley and Morton \cite{HM54} showed that this limit exists, and it is trivial that $k\leq C_k\leq 2k-1$. Kesten \cite{Ke63} proved that $C_k=2k-1-1/2k+O(1/k^2)$, and more precise asymptotics are given by Clisby, Liang, and Slade \cite{CLS07}. Conway and Guttmann \cite{CG93} showed that $C_2\geq 2.62$ and Alm \cite{Al93} showed that $C_2\leq 2.696$. Jacobsen, Scullard, and Guttmann \cite{JSG16} have computed the first few decimal places of $C_2$, showing that\[C_2 = 2.6381585303279\cdots.\]See also [529] .
+
+
+
+
+References
+
+[Al93] Alm, Sven Erick, Upper bounds for the connective constant of self-avoiding walks . Combin. Probab. Comput. (1993), 115-136.
+
+[CG93] Conway, A. R. and Guttmann, A. J., Lower bound on the connective constant for square lattice self-avoiding walks . J. Phys. A (1993), 3719-3724.
+
+[CLS07] Clisby, Nathan and Liang, Richard and Slade, Gordon, Self-avoiding walk enumeration via the lace expansion . J. Phys. A (2007), 10973-11017.
+
+[HM54] Hammersley, J. M. and Morton, K. W., Poor man's Monte Carlo . J. Roy. Statist. Soc. Ser. B (1954), 23-38; discussion 61-75.
+
+[JSG16] Jacobsen, Jesper Lykke and Scullard, Christian R. and Guttmann, Anthony J., On the growth constant for square-lattice self-avoiding walks . J. Phys. A (2016), 494004, 18.
+
+[Ke63] Kesten, Harry, On the number of self-avoiding walks . J. Mathematical Phys. (1963), 960-969.
+
+\noindent\textbf{Related OEIS sequences:} A387897, A156816
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/528}}
+\end{document}

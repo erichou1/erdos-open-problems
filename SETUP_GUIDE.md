@@ -4,7 +4,7 @@ How to set up and run the Erdős solver pipeline on your own machine.
 
 ## 1. Requirements
 
-- Python 3.9+
+- Python 3.10+
 - A ChatGPT account (and optionally a DeepSeek account)
 
 ## 2. Install
@@ -63,6 +63,14 @@ python3 fetch_categories.py
 
 ## 6. Run the pipeline
 
+Submission is fail-closed on a complete canonical source snapshot. The
+repository includes the audited snapshot; to refresh it, resolve and verify a
+new commit-pinned upstream catalog plus every source page with:
+
+```bash
+python3 erdos_ingest.py --canonical
+```
+
 Submit a batch of problems (opens one chat per problem and sends the prompt):
 
 ```bash
@@ -95,9 +103,10 @@ hashed formal-proof, exact-computation, or expert-review artifact in addition to
 unanimous independent model review:
 
 ```bash
-python3 run_verified_pipeline.py --problem 137 --print-statement-sha
+python3 run_verified_pipeline.py --problem 137 --print-statement-sha \
+  --model-id <exact-model-id>
 cp verification-evidence.example.json verification-evidence.json
-python3 run_verified_pipeline.py --problem 137
+python3 run_verified_pipeline.py --problem 137 --model-id <exact-model-id>
 # Review the saved candidate, then fill in its hashes, verifier, outcome,
 # and local artifact path.
 python3 promote_verified_run.py \
@@ -105,12 +114,19 @@ python3 promote_verified_run.py \
   --evidence-json verification-evidence.json --publish
 ```
 
+The legacy collectors use canonical theorem text only and label their private
+chat metadata `UNVERIFIED_CANDIDATE`; an old URL-only entry is resubmitted
+because it cannot prove which statement was sent. Provider throttles wait and
+retry adaptively without consuming a mathematical attempt, with a hard
+120-second maximum for backoff, request spacing, and legacy round delays.
+
 ## 7. Resuming after the computer is closed
 
 Progress is saved to disk continuously, so you can close the computer (or stop a
 script) at any time and pick up where you left off:
 
-- Submitted chats are recorded in the chat maps as they happen.
+- Submitted chats and their exact source/prompt contracts are recorded in the
+  private chat maps as they happen.
 - Each answer is written to disk the moment it is collected.
 
 Just re-run the same commands. Already-submitted problems and already-saved

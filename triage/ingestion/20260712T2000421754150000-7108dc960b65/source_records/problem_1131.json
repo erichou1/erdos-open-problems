@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1131,
+  "raw_page": {
+    "path": "raw/pages/problem_1131.html",
+    "sha256": "3bc0ac4efa457447b316998c3e04f48354981bb665403c92bfe9259fc13c312f"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "73040981d5cffca015c25df3f8ed3da3b1c4c2241ee858bde84111de6f0ca118",
+      "source_region": "div.problem-additional-text",
+      "text": "[ESVV94] Erd\\H{o}s, P. and Szabados, J. and Varma, A. K. and V\\'{e}rtesi,\nP., On an interpolation theoretical extremal problem. Studia Sci. Math. Hungar. (1994), 55--60.\n \n [Fe32] Fej\\'{e}r, Leopold, Bestimmung derjenigen {A}bszissen eines Intervalles, f\\\"ur\nwelche die {Q}uadratsumme der {G}rundfunktionen der\n{L}agrangeschen Interpolation im Intervalle ein\n{M}\\\"oglichst kleines {M}aximum {B}esitzt. Ann. Scuola Norm. Super. Pisa Cl. Sci. (2) (1932), 263--276.\n \n [Sz66] Szabados, J., On a problem of {P}. {E}rd\\H{o}s. Acta Math. Acad. Sci. Hungar. (1966), 155--157."
+    },
+    "remarks": {
+      "sha256": "f132a41056b7b6b47d42046f780f51ef023138e51bf0168f91349fc1efc0d4a3",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s first conjectured this minimum was achieved by taking the $x_i$ to be the roots of the integral of the Legendre polynomial, since Fejer \\cite{Fe32} had earlier shown these to be minimisers of\\[\\max_{x\\in [-1,1]}\\sum_k \\lvert l_k(x)\\rvert^2.\\]This was disproved by Szabados \\cite{Sz66} for every $n>3$. \n\nErd\\H{o}s, Szabados, Varma, and V\\'{e}rtesi \\cite{ESVV94} proved that\\[2-O\\left(\\frac{(\\log n)^2}{n}\\right)\\leq \\min I\\leq 2-\\frac{2}{2n-1}\\]where the upper bound is witnessed by the roots of the integral of the Legendre polynomial as above."
+    },
+    "statement": {
+      "sha256": "eb3c6d320398ddd32f7da2261d6f0b5a0ad608622e30a9eeecddb6a966534351",
+      "source_region": "div#content",
+      "text": "For $x_1,\\ldots,x_n\\in [-1,1]$ let\\[l_k(x)=\\frac{\\prod_{i\\neq k}(x-x_i)}{\\prod_{i\\neq k}(x_k-x_i)},\\]which are such that $l_k(x_k)=1$ and $l_k(x_i)=0$ for $i\\neq k$.\n\nWhat is the minimal value of\\[I(x_1,\\ldots,x_n)=\\int_{-1}^1 \\sum_k \\lvert l_k(x)\\rvert^2\\mathrm{d}x?\\]In particular, is it true that\\[\\min I =2-(1+o(1))\\frac{1}{n}?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1131"
+}

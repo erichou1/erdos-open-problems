@@ -1,0 +1,35 @@
+{
+  "problem_number": 726,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/726",
+  "retrieved_at": "2026-07-10T23:18:35.800996+00:00",
+  "page_title": "726 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "7f46c5b102b2abacaa76015ee8be9e659ea9050b7704f3c5bbb76e152638b0df",
+  "comment_count": 5,
+  "comments": [
+    {
+      "post_id": "384",
+      "text": "Well if you're willing to deal with brackets rather than a strange mod condition, one can rewrite $1_{n \\in (p/2, p) (p)}$ as $\\lfloor 2n/p \\rfloor - 2\\lfloor n/p \\rfloor$. Not quite sure how this helps so far. I've been trying without success with introducing the Heisenberg group somehow.",
+      "meta": "jleng01 — 17:40 on 08 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1401",
+      "text": "Most likely they were motivated by binomial coefficients, since the number of times $p$ divides $\\binom{2n}{n}$ is equal to $1_{n \\in (p/2,p) \\hbox{ mod } p}$ plus some additional terms, by Kummer's theorem.",
+      "meta": "TerenceTao — 19:40 on 23 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "267",
+      "text": "A natural way to attempt to attack such a problem is to bound the exponential sum $\\sum e(n/p)/p$. Via the method of bilinear sums, one is let to considering $\\sum e(n/ab)$ and establishing cancellation when $a,b\\sim \\exp((\\log n)^{o(1)})$. This appears to be out of reach of standard methods (in particular say Chapter 8 in Iwaniec--Kowalski). However by restricting to primes which are between $\\exp((\\log n)^{.99})$ and $n$ (say) one could plausibly prove a bound of $\\gtrsim \\log\\log n$ and $(1-\\Omega(1))\\log\\log n$.",
+      "meta": "msawhney — 18:31 on 31 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "268",
+      "text": "A back of the envelope calculation suggests that Proposition 1.12 of this paper of Matomaki, Radziwill, Shao, Teravainen, and myself should be able to handle the range $p \\geq \\exp(\\log^{2/3+\\varepsilon} n)$, which should give upper and lower bounds of $\\gtrsim \\frac{1}{6} \\log \\log n$ and $\\lesssim \\frac{5}{6} \\log\\log n$ if I did the calculations correctly.",
+      "meta": "TerenceTao — 19:14 on 31 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "297",
+      "text": "Attacking this problem via such exponential sums does seem to require better handling issues which seem plausibly related to the zero free region of zeta. If one wants just an \"average in n\" version (e.g. such a stated holds for 100% of n) the problem does become substantially easier.",
+      "meta": "msawhney — 00:02 on 04 Sep 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

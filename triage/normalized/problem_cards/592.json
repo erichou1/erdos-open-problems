@@ -1,0 +1,258 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.624
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "yes"
+    },
+    "references": [
+      "Ch72",
+      "GaLa74",
+      "Sc10",
+      "Sp57"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/592",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Ch72] Chang, C. C., A partition theorem for the complete graph on {$\\omega\\sp{\\omega }$}. J. Combinatorial Theory Ser. A (1972), 396-452.\n \n [GaLa74] Galvin, Fred and Larson, Jean, Pinning countable ordinals. Fund. Math. (1974/75), 357-361.\n \n [Sc10] Schipperus, Rene, Countable partition ordinals. Ann. Pure Appl. Logic (2010), 1195-1215.\n \n [Sp57] Specker, Ernst, Teilmengen von Mengen mit Relationen. Comment. Math. Helv. (1957), 302-314.",
+      "remarks": "Such $\\alpha$ (in other words, those such that $\\alpha \\to (\\alpha,3)^2$) are called partition ordinals.\n{UL}\n{LI}Specker \\cite{Sp57} proved this holds for $\\beta=2$ and not for $3\\leq \\beta <\\omega$.{/LI}\n{LI} Chang \\cite{Ch72} proved this holds for $\\beta=\\omega$.{/LI}\n{LI} Galvin and Larson \\cite{GaLa74} have shown that if $\\beta\\geq 3$ has this property then $\\beta$ must be 'additively indecomposable', so that in particular $\\beta=\\omega^\\gamma$ for some countable ordinal $\\gamma$. Galvin and Larson conjecture that every $\\beta\\geq 3$ of this form has this property.{/LI}\n{LI}Schipperus \\cite{Sc10} have proved this is holds if $\\beta=\\omega^\\gamma$ in which $\\gamma$ is a countable ordinal which is the sum of one or two indecomposable ordinals, and this fails to hold if $\\gamma$ is the sum of four or more indecomposable ordinals.{/LI}\n{/UL}\nThe remaining open case appears to be when $\\gamma$ is the sum of three indecomposable ordinals.\n\nThe case $\\beta=\\omega$ is the subject of [590], and $\\beta=\\omega^2$ is the subject of [591]. See also [118], and [1169] for the case $\\alpha=\\omega_1^2$."
+    },
+    "source_state": "open",
+    "tags": [
+      "set theory",
+      "ramsey theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.0,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.319945
+      ],
+      "probability": 0.142857
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 2.117,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.380254
+      ],
+      "probability": 0.174746
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.8,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.190215
+      ],
+      "probability": 0.0625
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.167,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.41624
+      ],
+      "probability": 0.19403
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 4.267,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.054809,
+        0.469781
+      ],
+      "probability": 0.262295
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.9,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        2.3e-05,
+        0.389239
+      ],
+      "probability": 0.194631
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 39.0,
+      "credible_interval_approx": [
+        0.0,
+        0.106373
+      ],
+      "probability": 0.044118
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.009216,
+        0.509303
+      ],
+      "probability": 0.259259
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "clear"
+    },
+    "literature": {
+      "comment_count": 0,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:17:53.894601+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "a92b1a5ff287c6a2b2715c236dbf355ef8e14d056780e3ae8adb6dda5755cfda"
+    },
+    "statement": {
+      "ambiguity_markers": [],
+      "ambiguity_status": "clear",
+      "quantifier_signal_count": 1,
+      "question_count": 0,
+      "requires_source_audit": false,
+      "statement_characters": 203,
+      "statement_tokens_approx": 31
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove",
+      "multi_part": false,
+      "primary_domain": "set theory"
+    }
+  },
+  "problem_id": "erdos-592",
+  "problem_number": 592,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove",
+    "multi_part": false,
+    "primary_domain": "set theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_592.html",
+      "raw_html_sha256": "f083c025481412792c374ffc840543602e8f1c675c3f9f1063c66fd5cc3f348c",
+      "section_sha256": {
+        "references": "938b106c141097c0e6cffdbe3a1c1d51b42a2418f9146df79ebebfa925542351",
+        "remarks": "2fdfa72c90ffc63474f26c792946d3935d4e22d5a428231e30acfe3c0388d5f2",
+        "statement": "ba87fbdac99f0c6a86e8f22d0207168c5b7494eb418523840b6a207841ee7d49"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_592.json",
+      "source_record_sha256": "1f01e32a8964672581d22f3871b681902852a33f490de76c5955c3b589ca25ec",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_592.tex",
+    "latex_sha256": "db0e0f93c3db9062e8076c8fb69a79b2b9318d22635b74e3fd6c3c46b17dccb6",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "ba87fbdac99f0c6a86e8f22d0207168c5b7494eb418523840b6a207841ee7d49",
+    "recommended_attack_modes": [
+      "formal_search",
+      "shared_infrastructure_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "5a67d525a6c96374b72cdd1373a1b516ea413bbe3f16c1a864c5d343c755c2a7",
+  "routes": [
+    "formal_search",
+    "shared_infrastructure_search",
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "clear",
+    "intended": "Determine which countable ordinals $\\beta$ have the property that, if $\\alpha=\\omega^{^\\beta}$, then in any red/blue colouring of the edges of $K_\\alpha$ there is either a red $K_\\alpha$ or a blue $K_3$.",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Determine which countable ordinals $\\beta$ have the property that, if $\\alpha=\\omega^{^\\beta}$, then in any red/blue colouring of the edges of $K_\\alpha$ there is either a red $K_\\alpha$ or a blue $K_3$.",
+    "original": "Determine which countable ordinals $\\beta$ have the property that, if $\\alpha=\\omega^{^\\beta}$, then in any red/blue colouring of the edges of $K_\\alpha$ there is either a red $K_\\alpha$ or a blue $K_3$.",
+    "statement_sha256": "ba87fbdac99f0c6a86e8f22d0207168c5b7494eb418523840b6a207841ee7d49"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

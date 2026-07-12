@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 890,
+  "raw_page": {
+    "path": "raw/pages/problem_890.html",
+    "sha256": "96f32bcfae68292322817f37c6aba136fb5626459d71e868733a1e822345ddd6"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "f5b5c233e27d4a15267490177859a3d753207fc56f04d0e78f09fe4d35979402",
+      "source_region": "div.problem-additional-text",
+      "text": "[ErSe67] Erd\\H{o}s, P. and Selfridge, J. L., Some problems on the prime factors of consecutive integers. Illinois J. Math. (1967), 428--430."
+    },
+    "remarks": {
+      "sha256": "17876aa2c3bf7ff50f2e2d45d3f9af2f78855813a0982b54efb844c8a2ac9e0d",
+      "source_region": "div.problem-additional-text",
+      "text": "A question of Erd\\H{o}s and Selfridge \\cite{ErSe67}, who observe that\\[\\liminf_{n\\to \\infty}\\sum_{0\\leq i<k}\\omega_k(n+i)\\geq k-1\\]for every $k$. This follows from P\\'{o}lya's theorem that the set of $k$-smooth integers has unbounded gaps - indeed, provided $n$ is large, all but at most one of $n,n+1,\\ldots,n+k-1$ has a prime factor $>k$ by P\\'{o}lya's theorem.\n\nIt is a classical fact that\\[\\limsup_{n\\to \\infty}\\omega(n)\\frac{\\log\\log n}{\\log n}=1.\\](There appears to be an error in \\cite{ErSe67}, who ask the first question with $\\omega_k$ replaced by $\\omega$, have a bound of $k+\\pi(k)$ rather than $k$, but as explained by Meza and Tao in the comments this formulation is obviously false, and the version given here is most likely what was intended.)"
+    },
+    "statement": {
+      "sha256": "4b41f4477c9ed47a5bed403759d0bbc70be69f98b638245343b8ec2e749ecb67",
+      "source_region": "div#content",
+      "text": "If $\\omega_k(n)$ counts the number of distinct prime factors of $n$ which are $>k$, then is it true that, for every $k\\geq 1$,\\[\\liminf_{n\\to \\infty}\\sum_{0\\leq i<k}\\omega_k(n+i)\\leq k?\\]Is it true that\\[\\limsup_{n\\to \\infty}\\left(\\sum_{0\\leq i<k}\\omega(n+i)\\right) \\frac{\\log\\log n}{\\log n}=1,\\]where $\\omega$ counts the number of distinct prime factors without restriction?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/890"
+}

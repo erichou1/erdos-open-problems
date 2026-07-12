@@ -1,0 +1,39 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#1192}
+\date{Last updated: 2026-04-04}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} additive combinatorics, additive basis
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+For $A\subset \mathbb{N}$ let $f_r(n)$ count the number of solutions to $n=a_1+\cdots+a_r$ with $a_i\in A$.
+
+Does there exist, for all $r\geq 2$, a basis $A$ of order $r$ (so that $f_r(n)>0$ for all large $n$) such that\[\sum_{n\leq x}f_r(n)^2 \ll x\]for all $x$?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Erd\H{o}s and R\'{e}nyi proved by the probabilistic method that there exists a set $A$ such that\[\sum_{n\leq x}f_r(n)^2 \ll x\]and\[\lvert A\cap [1,x]\rvert\gg x^{1/r}\]for all $x$. 
+
+Ruzsa \cite{Ru90} proved that the answer is yes for $r=2$.
+
+\bigskip
+\noindent\textbf{References:}
+
+[Ru90] Ruzsa, Imre Z., A just basis. Monatsh. Math. (1990), 145--151.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/1192}}
+\end{document}

@@ -1,0 +1,54 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#1156}
+\date{Last updated: 2026-01-23}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory, chromatic number
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $G$ be a random graph on $n$ vertices, in which every edge is included independently with probability $1/2$. 
+
+Is there some constant $C$ such that that chromatic number $\chi(G)$ is, almost surely, concentrated on at most $C$ values? 
+
+Is it true that, if $\omega(n)\to \infty$ sufficiently slowly, then for every function $f(n)$\[\mathbb{P}(\lvert\chi(G)-f(n)\rvert<\omega(n))<1/2\]if $n$ is sufficiently large?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Bollob\'{a}s \cite{Bo88} proved that $\chi(G) \sim \frac{n}{2\log_2n}$ with high probability.
+
+Shamir and Spencer \cite{ShSp87} proved that, for any function $\omega(n)$ such that $\omega(n)/\sqrt{n}\to \infty$, there is a function $f(n)$ such that\[\mathbb{P}(\lvert\chi(G)-f(n)\rvert<\omega(n))\to 1\]as $n\to \infty$. This is proved with $\omega(n)\frac{\log n}{\sqrt{n}}\to \infty$ in Exercise 3 of Section 7.9 of Alon and Spencer \cite{AlSp16} (a proof is also given by Scott \cite{Sc17}).
+
+Heckel \cite{He21} proved that if $f$ and $\omega$ are such that\[\mathbb{P}(\lvert\chi(G)-f(n)\rvert<\omega(n))\to 1\]as $n\to \infty$ then, for any $c<1/4$, there are infinitely many $n$ such that $\omega(n)>n^c$. This was improved to any $c<1/2$ by Heckel and Riordan \cite{HeRi23}.
+
+\bigskip
+\noindent\textbf{References:}
+
+[AlSp16] Alon, Noga and Spencer, Joel H., The probabilistic method. (2016), xiv+375.
+ 
+ [Bo88] Bollob\'{a}s, B., The chromatic number of random graphs. Combinatorica (1988), 49-55.
+ 
+ [He21] Heckel, Annika, Non-concentration of the chromatic number of a random graph. J. Amer. Math. Soc. (2021), 245--260.
+ 
+ [HeRi23] Heckel, Annika and Riordan, Oliver, How does the chromatic number of a random graph vary?. J. Lond. Math. Soc. (2) (2023), 1769--1815.
+ 
+ [Sc17] A. Scott, On the concentration of the chromatic number of random graphs. arXiv:0806.0178 (2017).
+ 
+ [ShSp87] Shamir, E. and Spencer, J., Sharp concentration of the chromatic number on random graphs
+{$G_{n,p}$}. Combinatorica (1987), 121--129.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/1156}}
+\end{document}

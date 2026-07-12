@@ -1,0 +1,256 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.866
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "ACJMR25",
+      "BoEr73",
+      "DaJo17",
+      "ErGr75",
+      "JeSk21",
+      "Sc16"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/554",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[ACJMR25] M. Axenovich, W. Cames van Batenburg, O. Janzer, L. Michel, and M. Rundstr\\\"{o}m, An improved upper bound for the multicolour Ramsey number of odd cycles. arXiv:2510.17981 (2025).\n \n [BoEr73] Bondy, J. A. and Erd\\H{o}s, P., Ramsey numbers for cycles in graphs. J. Combinatorial Theory Ser. B (1973), 46-54.\n \n [DaJo17] Day, A. Nicholas and Johnson, J. Robert, Multicolour {R}amsey numbers of odd cycles. J. Combin. Theory Ser. B (2017), 56--63.\n \n [ErGr75] Erd\\H{o}s, P. and Graham, R. L., On partition theorems for finite graphs. Infinite and finite sets (Colloq., Keszthely, 1973;\ndedicated to P. Erd\\H{o}s on his 60th birthday), Vols.\nI, II, III (1975), 515-527.\n \n [JeSk21] Jenssen, Matthew and Skokan, Jozef, Exact {R}amsey numbers of odd cycles via nonlinear\noptimisation. Adv. Math. (2021), Paper No. 107444, 46.\n \n [Sc16] I. Schur, \\\"{U}ber die kongruenz $x^m+y^m=z^m\\pmod{p}$. Jahresbericht der Deutschen Mathematiker-Vereinigung (1916), 114-117.",
+      "remarks": "A problem of Erd\\H{o}s and Graham. The problem is open even for $n=2$.\n\nSchur \\cite{Sc16} proved\\[C^k \\ll R_k(K_3) \\ll k!\\]for some constant $C>0$. Erd\\H{o}s conjectured (see [183]) that $R_k(K_3) \\leq C^k$ for some contant $C>0$.\n\nBondy and Erd\\H{o}s \\cite{BoEr73} and Erd\\H{o}s and Graham \\cite{ErGr75} proved\\[n2^k+1\\leq R_k(C_{2n+1})\\leq 2n(k+2)!.\\]The lower bound is sharp for fixed $k$ and large enough $n$, as shown by Jenssen and Skokan \\cite{JeSk21}. Day and Johnson \\cite{DaJo17} have proved that, for fixed $n$,\\[R_k(C_{2n+1})\\geq 2n(2+c_n)^{k-1}\\]for all large $k$, for some constant $c_n>0$.\n\nAxenovich, Cames van Batenburg, Janzer, Michel, and Rundstr\\\"{o}m \\cite{ACJMR25} have improved the upper bound to\\[R_k(C_{2n+1}) \\leq (4n-2)^k k^{k/n}+1.\\]In particular, there exists some absolute constant $c>0$ such that\\[R_k(C_{2n+1})\\leq (Cn)^kk!^{1/n}.\\]This problem is #23 in Ramsey Theory in the graphs problem collection."
+    },
+    "source_state": "open",
+    "tags": [
+      "graph theory",
+      "ramsey theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.0,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.319945
+      ],
+      "probability": 0.142857
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 1.232,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.284812
+      ],
+      "probability": 0.109685
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.8,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.190215
+      ],
+      "probability": 0.0625
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.167,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.41624
+      ],
+      "probability": 0.19403
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.767,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.298919
+      ],
+      "probability": 0.128329
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.1,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.228734
+      ],
+      "probability": 0.083969
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 39.0,
+      "credible_interval_approx": [
+        0.0,
+        0.07279
+      ],
+      "probability": 0.025
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.436385
+      ],
+      "probability": 0.2
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "clear"
+    },
+    "literature": {
+      "comment_count": 0,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:17:41.078807+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "7ad5ef42b1fb40140783abef301e907e2be8ad402c969ec1f738997885848712"
+    },
+    "statement": {
+      "ambiguity_markers": [],
+      "ambiguity_status": "clear",
+      "quantifier_signal_count": 1,
+      "question_count": 0,
+      "requires_source_audit": false,
+      "statement_characters": 209,
+      "statement_tokens_approx": 29
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove",
+      "multi_part": false,
+      "primary_domain": "graph theory"
+    }
+  },
+  "problem_id": "erdos-554",
+  "problem_number": 554,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove",
+    "multi_part": false,
+    "primary_domain": "graph theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_554.html",
+      "raw_html_sha256": "c5292d0751875b0ff2e77198fe35869bdb061e79d3d364fe5126f5923e6a43e1",
+      "section_sha256": {
+        "references": "47ce66eadb603576fa30b3b82558351aa4d28a803fe9ec9693a9e06e16966f4c",
+        "remarks": "6e3f736b85239bf2c3e50787693a097501128f32533375c614f206d31a07fca4",
+        "statement": "ada394c26d0431a577a89ea1648a818db1c67349381a95050eb2197d854a4cd3"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_554.json",
+      "source_record_sha256": "1ce4440534489d1e4eb701633835fb07bd7e8ced45e7b072c5aed21235727601",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_554.tex",
+    "latex_sha256": "761c1cf1d0e3b6e23fe90d6a19b09215e5d59a96672ed8bc917092ec2108871a",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "ada394c26d0431a577a89ea1648a818db1c67349381a95050eb2197d854a4cd3",
+    "recommended_attack_modes": [
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "75478f101200b4bed4f46c2a13c05da40f4f64e7d21326d6f8a4015a594e197b",
+  "routes": [
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "clear",
+    "intended": "Let $R_k(G)$ denote the minimal $m$ such that if the edges of $K_m$ are $k$-coloured then there is a monochromatic copy of $G$. Show that\\[\\lim_{k\\to \\infty}\\frac{R_k(C_{2n+1})}{R_k(K_3)}=0\\]for any $n\\geq 2$.",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $R_k(G)$ denote the minimal $m$ such that if the edges of $K_m$ are $k$-coloured then there is a monochromatic copy of $G$. Show that\\[\\lim_{k\\to \\infty}\\frac{R_k(C_{2n+1})}{R_k(K_3)}=0\\]for any $n\\geq 2$.",
+    "original": "Let $R_k(G)$ denote the minimal $m$ such that if the edges of $K_m$ are $k$-coloured then there is a monochromatic copy of $G$. Show that\\[\\lim_{k\\to \\infty}\\frac{R_k(C_{2n+1})}{R_k(K_3)}=0\\]for any $n\\geq 2$.",
+    "statement_sha256": "ada394c26d0431a577a89ea1648a818db1c67349381a95050eb2197d854a4cd3"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

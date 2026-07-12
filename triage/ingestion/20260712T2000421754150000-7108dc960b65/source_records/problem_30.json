@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 30,
+  "raw_page": {
+    "path": "raw/pages/problem_30.html",
+    "sha256": "529c6f1209f00886772cc315845a3317192feecdbe4120a051e25eb4459b0290"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "ce710d67bba005518361dd63d5797135a6766c288f0612db2b7f2a8a6ce2fdf0",
+      "source_region": "div.problem-additional-text",
+      "text": "[BFR21] Balogh, J. and F\\\"{u}redi, Z. and Roy, S., An upper bound on the size of Sidon sets. arXiv:2103.15850 (2021).\n \n [CHO25] Carter, D. and Hunter, Z. and O'Bryant, K., On the diameter of finite Sidon sets. Acta Math. Hungar. (2025), 108--126.\n \n [ErTu41] Erd\\H{o}s, P. and Tur\\'{a}n, P., On a problem of Sidon in additive number theory, and on some related problems. J. London Math. Soc. (1941), 212-215.\n \n [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.\n \n [Li69] Lindstr\\\"{o}m, B., An inequality for $B_2$-sequences. J. Combinatorial Theory (1969), 211-212.\n \n [OB04] O'Bryant, Kevin, A complete annotated bibliography of work related to Sidon\nsequences. Electron. J. Combin. (2004), 39.\n \n [OB22] O'Bryant, K., On the size of finite Sidon sets. arXiv:2207.07800 (2022).\n \n [Si38] Singer, James, A theorem in finite projective geometry and some applications\nto number theory. Trans. Amer. Math. Soc. (1938), 377--385."
+    },
+    "remarks": {
+      "sha256": "7f78446f8ae2a06e4fea655b288cba11cf9a821aced883c8bc5b75bc12c6cd58",
+      "source_region": "div.problem-additional-text",
+      "text": "A problem of Erd\\H{o}s and Tur\\'{a}n. It may even be true that $h(N)=N^{1/2}+O(1)$, but Erd\\H{o}s remarks this is perhaps too optimistic. Erd\\H{o}s and Tur\\'{a}n \\cite{ErTu41} proved an upper bound of $N^{1/2}+O(N^{1/4})$, with an alternative proof by Lindstr\\\"{o}m \\cite{Li69}. Both proofs in fact give\\[h(N) \\leq N^{1/2}+N^{1/4}+1.\\]Balogh, F\\\"{u}redi, and Roy \\cite{BFR21} improved the bound in the error term to $0.998N^{1/4}$. This was further optimised by O'Bryant \\cite{OB22}. The current record is\\[h(N)\\leq N^{1/2}+0.98183N^{1/4}+O(1),\\]due to Carter, Hunter, and O'Bryant \\cite{CHO25}.\n\nSinger \\cite{Si38} was the first to show that $h(N)\\geq (1-o(1))N^{1/2}$ for all $N$. For a detailed survey of the literature we refer to \\cite{OB04}.\n\nSee also [241] and [840].\n\nThis problem is Problem 31 on Green's open problems list.\n\nThis is discussed in problem C9 of Guy's collection \\cite{Gu04}."
+    },
+    "statement": {
+      "sha256": "33650b864f57b21ba998828e0cc2b943cb9c520ad5cd7b2aca95bb9d8da1af68",
+      "source_region": "div#content",
+      "text": "Let $h(N)$ be the maximum size of a Sidon set in $\\{1,\\ldots,N\\}$. Is it true that, for every $\\epsilon>0$,\\[h(N) = N^{1/2}+O_\\epsilon(N^\\epsilon)?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/30"
+}

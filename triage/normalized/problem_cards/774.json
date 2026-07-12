@@ -1,0 +1,258 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.607
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2026-04-16",
+      "state": "yes"
+    },
+    "references": [
+      "AlEr85",
+      "NRS24",
+      "Pi83"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/774",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[AlEr85] Alon, Noga and Erd\\H{o}s, P., An application of graph theory to additive number theory. European J. Combin. (1985), 201-203.\n \n [NRS24] Ne\\v set\\v ril, Jaroslav and R\\\"odl, Vojt\\v ech and Sales,\nMarcelo, On {P}isier type theorems. Combinatorica (2024), 1211--1232.\n \n [Pi83] Pisier, Gilles, Arithmetic characterizations of Sidon sets. Bull. Amer. Math. Soc. (N.S.) (1983), 87-89.",
+      "remarks": "This question appears in a paper of Alon and Erd\\H{o}s \\cite{AlEr85}, although the general topic was first considered by Pisier \\cite{Pi83}, who observed that the converse holds, and proved that being proportionately dissociated is equivalent to being a 'Sidon set' in the harmonic analysis sense; that is, whenever $f:A\\to \\mathbb{C}$ there exists some $\\theta\\in [0,1]$ such that\\[\\| f\\|_1 \\ll \\left\\lvert\\sum_{n\\in A} f(n)e(n\\theta)\\right\\rvert,\\]where $e(x)=e^{2\\pi ix}$. \n\nAlon and Erd\\H{o}s write that it 'seems unlikely that [this] is also sufficient'. They also point out the same question can be asked replacing dissociated with Sidon (in the additive combinatorial sense) (see [328]). This latter question was resolved in the negative by Ne\\v{s}et\\v{r}il, R\\\"{o}dl, and Sales \\cite{NRS24}."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.83,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.304778
+      ],
+      "probability": 0.132321
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.117,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.01562,
+        0.459698
+      ],
+      "probability": 0.237659
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.3,
+      "beta": 14.0,
+      "credible_interval_approx": [
+        0.0,
+        0.220332
+      ],
+      "probability": 0.084967
+    },
+    "p_high_mathematical_value": {
+      "alpha": 3.033,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.016343,
+        0.487812
+      ],
+      "probability": 0.252078
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.667,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.030769,
+        0.437316
+      ],
+      "probability": 0.234043
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.9,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        2.3e-05,
+        0.389239
+      ],
+      "probability": 0.194631
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 40.0,
+      "credible_interval_approx": [
+        0.0,
+        0.103879
+      ],
+      "probability": 0.043062
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.009216,
+        0.509303
+      ],
+      "probability": 0.259259
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "minor"
+    },
+    "literature": {
+      "comment_count": 2,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:18:44.764743+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "a02cf27b01772b03bbca0f29ca1acd42b459e391dee468f79ab7bc809fe93042"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "asymptotic_notation"
+      ],
+      "ambiguity_status": "minor",
+      "quantifier_signal_count": 1,
+      "question_count": 1,
+      "requires_source_audit": true,
+      "statement_characters": 392,
+      "statement_tokens_approx": 58
+    },
+    "structure": {
+      "asymptotic": true,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "prove",
+      "multi_part": false,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-774",
+  "problem_number": 774,
+  "problem_type": {
+    "asymptotic": true,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "prove",
+    "multi_part": false,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_774.html",
+      "raw_html_sha256": "034ec3578175545a1ff096cd28264b73faa0f31496be0762bbd2f569419f9385",
+      "section_sha256": {
+        "references": "76208824dd22e9089742dc8b2049c979fb44fcd094dbe68d682e7b8005827ddb",
+        "remarks": "71cba1bc083195e985058331419a03c367ca099c2283c1ae2a557929b4760e7c",
+        "statement": "42930dbcfa4798ad96aa3add7de311f2af47ae121d59a16727877de287cb748e"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_774.json",
+      "source_record_sha256": "d40eaa12e415e0b2240a78ddda6b02aaf729505ee7707a795894c12aabdcaafc",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_774.tex",
+    "latex_sha256": "dd1ddad8cb15cd58cbf8a5a19c1188e659e4cc677b30a5736ace783b88359d2a",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "42930dbcfa4798ad96aa3add7de311f2af47ae121d59a16727877de287cb748e",
+    "recommended_attack_modes": [
+      "formal_search",
+      "shared_infrastructure_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "31934e86780ef474c2ea76dd945914242fca1a87e498c6f485315fae0caa4407",
+  "routes": [
+    "formal_search",
+    "shared_infrastructure_search",
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "minor",
+    "intended": "We call $A\\subset \\mathbb{N}$ dissociated if $\\sum_{n\\in X}n\\neq \\sum_{m\\in Y}m$ for all finite $X,Y\\subset A$ with $X\\neq Y$. \n\nLet $A\\subset \\mathbb{N}$ be an infinite set. We call $A$ proportionately dissociated if every finite $B\\subset A$ contains a dissociated set of size $\\gg \\lvert B\\rvert$.\n\nIs every proportionately dissociated set the union of a finite number of dissociated sets?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "We call $A\\subset \\mathbb{N}$ dissociated if $\\sum_{n\\in X}n\\neq \\sum_{m\\in Y}m$ for all finite $X,Y\\subset A$ with $X\\neq Y$. Let $A\\subset \\mathbb{N}$ be an infinite set. We call $A$ proportionately dissociated if every finite $B\\subset A$ contains a dissociated set of size $\\gg \\lvert B\\rvert$. Is every proportionately dissociated set the union of a finite number of dissociated sets?",
+    "original": "We call $A\\subset \\mathbb{N}$ dissociated if $\\sum_{n\\in X}n\\neq \\sum_{m\\in Y}m$ for all finite $X,Y\\subset A$ with $X\\neq Y$. \n\nLet $A\\subset \\mathbb{N}$ be an infinite set. We call $A$ proportionately dissociated if every finite $B\\subset A$ contains a dissociated set of size $\\gg \\lvert B\\rvert$.\n\nIs every proportionately dissociated set the union of a finite number of dissociated sets?",
+    "statement_sha256": "42930dbcfa4798ad96aa3add7de311f2af47ae121d59a16727877de287cb748e"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

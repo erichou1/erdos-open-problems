@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1132,
+  "raw_page": {
+    "path": "raw/pages/problem_1132.html",
+    "sha256": "cb40779d9ee56122b7eaf2c2647723773f6fa9192bf940639dd51f1e4ffed146"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "fee394ffb607cd5176038631210a21645805115c123bd441c1c3f5f7aea75e5b",
+      "source_region": "div.problem-additional-text",
+      "text": "[Be31] S. Bernstein, Sur la limitation des valeurs d'un polynome $P_n(x)$ de degr\\'{e} n sur tout un segment par ses valeurs en $(n+1)$ points du segment. Izv. Akad. Nauk. SSSR (1931), 1025-1050.\n \n [Er61c] Erd\\H{o}s, P., Problems and results on the theory of interpolation. II. Acta Math. Acad. Sci. Hungar. (1961), 235-244.\n \n [Ta26b] T. Tao, Local Bernstein theory, and lower bounds for Lebesgue constants. arXiv:2603.21453 (2026)."
+    },
+    "remarks": {
+      "sha256": "b89dfcb03d07ff9fb946b8acd2307fa52d4ea6668fa35be9abbfce9a9d842328",
+      "source_region": "div.problem-additional-text",
+      "text": "A result of Bernstein \\cite{Be31} implies that the set of $x\\in(-1,1)$ for which\\[\\limsup_{n\\to \\infty}\\frac{L_n(x)}{\\log n}\\geq \\frac{2}{\\pi}\\]is everywhere dense.\n\nErd\\H{o}s \\cite{Er61c} proved that, for any fixed $x_1,\\ldots,x_n\\in [-1,1]$,\\[\\max_{x\\in [-1,1]}\\sum_{1\\leq k\\leq n}\\lvert l_k(x)\\rvert>\\frac{2}{\\pi}\\log n-O(1).\\]Tao \\cite{Ta26b} has proved that for any function $\\omega(n)$ which tends to infinity with $n$ there exists a dense set of $x\\in (-1,1)$ such that\\[L_n(x)\\geq \\frac{2}{\\pi}\\log n-\\omega(n)\\]for infinitely many $n$. Tao also notes that it is unclear in the question of Erd\\H{o}s whether the constant in the $O(1)$ term may depend on $x$.\n\nSee also [1129] for more on $L_n(x)$, and also [1153]."
+    },
+    "statement": {
+      "sha256": "351143ce7e53fd57a862fead93f54ff511eb7ca3303e824c3ad8911ff721cb2d",
+      "source_region": "div#content",
+      "text": "For $x_1,\\ldots,x_n\\in [-1,1]$ let\\[l_k(x)=\\frac{\\prod_{i\\neq k}(x-x_i)}{\\prod_{i\\neq k}(x_k-x_i)},\\]which are such that $l_k(x_k)=1$ and $l_k(x_i)=0$ for $i\\neq k$.\n\nLet $x_1,x_2,\\ldots\\in [-1,1]$ be an infinite sequence, and let\\[L_n(x) = \\sum_{1\\leq k\\leq n}\\lvert l_k(x)\\rvert,\\]where each $l_k(x)$ is defined above with respect to $x_1,\\ldots,x_n$.\n\nMust there exist $x\\in (-1,1)$ such that\\[L_n(x) >\\frac{2}{\\pi}\\log n-O(1)\\]for infinitely many $n$?\n\nIs it true that\\[\\limsup_{n\\to \\infty}\\frac{L_n(x)}{\\log n}\\geq \\frac{2}{\\pi}\\]for almost all $x\\in (-1,1)$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1132"
+}

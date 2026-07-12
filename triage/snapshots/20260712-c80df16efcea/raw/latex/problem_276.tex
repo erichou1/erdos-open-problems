@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#276}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, covering systems
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Is there an infinite Lucas sequence $a_0,a_1,\ldots$ where $a_{n+2}=a_{n+1}+a_n$ for $n\geq 0$ such that all $a_k$ are composite, and yet no integer has a common factor with every term of the sequence?
+
+
+
+
+Whether such a composite Lucas sequence even exists was open for a while, but using covering systems Graham \cite{Gr64} showed that\[a_0 = 1786772701928802632268715130455793\]and\[a_1 = 1059683225053915111058165141686995\]generate such a sequence. This problem asks whether one can have a composite Lucas sequence without 'an underlying system of covering congruences responsible'. This problem has been 'conjecturally solved' by Ismailescu and Son \cite{IsSo14}, in that they provide an explicit infinite Lucas sequence in which all the terms are composite, and believe that no covering system is responsible for this. See the comment by van Doorn below for more details. See also [1113] for another problem in which the question is whether covering systems are always responsible.
+
+
+
+
+References
+
+[Gr64] Graham, R. L., A Fibonacci-Like Sequence of Composite Numbers . Math. Mag. (1964), 322-324.
+
+[IsSo14] Ismailescu, Dan and Son, Jaesung, A new kind of {F}ibonacci-like sequence of composite numbers . J. Integer Seq. (2014), Article 14.8.2, 9.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/276}}
+\end{document}

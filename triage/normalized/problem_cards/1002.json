@@ -1,0 +1,309 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.265
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2026-04-28",
+      "state": "yes"
+    },
+    "references": [
+      "Ke60"
+    ],
+    "source_last_update": "2025-09-07",
+    "source_problem_url": "https://www.erdosproblems.com/1002",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Ke60] Kesten, Harry, Uniform distribution {${\\rm mod}\\,1$}. Ann. of Math. (2) (1960), 445--471.",
+      "remarks": "Kesten \\cite{Ke60} proved that if\\[f(\\alpha,\\beta,n)=\\frac{1}{\\log n}\\sum_{1\\leq k\\leq n}(\\tfrac{1}{2}-\\{\\beta+\\alpha k\\})\\]then $f(\\alpha,\\beta,n)$ has asymptotic distribution function\\[g(c)=\\frac{1}{\\pi}\\int_{-\\infty}^{\\rho c}\\frac{1}{1+t^2}\\mathrm{d}t,\\]where $\\rho>0$ is an explicit constant."
+    },
+    "source_state": "open",
+    "tags": [
+      "analysis",
+      "diophantine approximation"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.33,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.254949
+      ],
+      "probability": 0.099775
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 2.733,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.0,
+        0.389824
+      ],
+      "probability": 0.192019
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 13.0,
+      "credible_interval_approx": [
+        0.0,
+        0.134243
+      ],
+      "probability": 0.037037
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.067,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.406635
+      ],
+      "probability": 0.186747
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.667,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.020836,
+        0.372021
+      ],
+      "probability": 0.196429
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 3.6,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.022708,
+        0.398345
+      ],
+      "probability": 0.210526
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.092979
+      ],
+      "probability": 0.038462
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.002288,
+        0.452997
+      ],
+      "probability": 0.227642
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 2,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:19:52.365383+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "d7b8d968546ecdce5e0401cb44234ef36b8ca3de498d8d41ff035399b29ca12c"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 1,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 347,
+      "statement_tokens_approx": 35
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove",
+      "multi_part": true,
+      "primary_domain": "analysis"
+    }
+  },
+  "problem_id": "erdos-1002",
+  "problem_number": 1002,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove",
+    "multi_part": true,
+    "primary_domain": "analysis"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_1002.html",
+      "raw_html_sha256": "7cd433c2b7381bbb13b9ff29fb47c1024a5d3704e456b32897c1b92cc71781d1",
+      "section_sha256": {
+        "references": "b50ffc584136ef9bb825e2e60908b4fad4662357b4b58790a62c56ab5c0d7e50",
+        "remarks": "42e41e9fdc54252d9e66606b4d3531e0252ee850fbb65a8cf31b34ca6979b31b",
+        "statement": "b4bdc239ca6fe9ccd991355c70281d8e6731295333992092875ff5c1faf81e80"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_1002.json",
+      "source_record_sha256": "5f20b22374200794f175bcd7a80bb9d6c1dd1d27d38ec2a4f1862b20a329148e",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_1002.tex",
+    "latex_sha256": "a507087e81985a6b2160029d6177a67bb46ce048feaec3c8e3f14339998ad741",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "b4bdc239ca6fe9ccd991355c70281d8e6731295333992092875ff5c1faf81e80",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "formal_search",
+      "subproblem_decomposition",
+      "shared_infrastructure_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "For any $0<\\alpha<1$, let\\[f(\\alpha,n)=\\frac{1}{\\log n}\\sum_{1\\leq k\\leq n}(\\tfrac{1}{2}-\\{ \\alpha k\\}).\\]Does $f(\\alpha,n)$ have an asymptotic distribution function?",
+        "focus_question_sha256": "c893501282253261cc8771d550b805243b7c41526f8d266b151d08b388c7bcca",
+        "parent_statement_sha256": "b4bdc239ca6fe9ccd991355c70281d8e6731295333992092875ff5c1faf81e80",
+        "part_index": 1,
+        "subproblem_contract_sha256": "deae628826f6af4ec2b1185bc8f8573da70495bd3b44c39c3537d6043cee3f15",
+        "subproblem_id": "erdos-1002-part-01-deae6288"
+      },
+      {
+        "focus_question": "In other words, is there a non-decreasing function $g$ such that $g(-\\infty)=0$, $g(\\infty)=1$,\nand\\[\\lim_{n\\to \\infty}\\lvert \\{ \\alpha\\in (0,1): f(\\alpha,n)\\leq c\\}\\rvert=g(c)?",
+        "focus_question_sha256": "490bae2d27788dc1a1d33cf026ec7a2d81878649b71ac992aa68e2e0949e64ba",
+        "parent_statement_sha256": "b4bdc239ca6fe9ccd991355c70281d8e6731295333992092875ff5c1faf81e80",
+        "part_index": 2,
+        "subproblem_contract_sha256": "7ea430e8902f0d572ae322d20f85f08d7fb902396d5c8989d12ea3bdf1a32b13",
+        "subproblem_id": "erdos-1002-part-02-7ea430e8"
+      }
+    ]
+  },
+  "research_directive_sha256": "5bc0476ac222585ed5e6ddb317205a2fa4b09c5d5a917b246a1d12e794bca7aa",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "formal_search",
+    "subproblem_decomposition",
+    "shared_infrastructure_search"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "For any $0<\\alpha<1$, let\\[f(\\alpha,n)=\\frac{1}{\\log n}\\sum_{1\\leq k\\leq n}(\\tfrac{1}{2}-\\{ \\alpha k\\}).\\]Does $f(\\alpha,n)$ have an asymptotic distribution function?\n\nIn other words, is there a non-decreasing function $g$ such that $g(-\\infty)=0$, $g(\\infty)=1$,\nand\\[\\lim_{n\\to \\infty}\\lvert \\{ \\alpha\\in (0,1): f(\\alpha,n)\\leq c\\}\\rvert=g(c)?\\]",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "For any $0<\\alpha<1$, let\\[f(\\alpha,n)=\\frac{1}{\\log n}\\sum_{1\\leq k\\leq n}(\\tfrac{1}{2}-\\{ \\alpha k\\}).\\]Does $f(\\alpha,n)$ have an asymptotic distribution function? In other words, is there a non-decreasing function $g$ such that $g(-\\infty)=0$, $g(\\infty)=1$, and\\[\\lim_{n\\to \\infty}\\lvert \\{ \\alpha\\in (0,1): f(\\alpha,n)\\leq c\\}\\rvert=g(c)?\\]",
+    "original": "For any $0<\\alpha<1$, let\\[f(\\alpha,n)=\\frac{1}{\\log n}\\sum_{1\\leq k\\leq n}(\\tfrac{1}{2}-\\{ \\alpha k\\}).\\]Does $f(\\alpha,n)$ have an asymptotic distribution function?\n\nIn other words, is there a non-decreasing function $g$ such that $g(-\\infty)=0$, $g(\\infty)=1$,\nand\\[\\lim_{n\\to \\infty}\\lvert \\{ \\alpha\\in (0,1): f(\\alpha,n)\\leq c\\}\\rvert=g(c)?\\]",
+    "statement_sha256": "b4bdc239ca6fe9ccd991355c70281d8e6731295333992092875ff5c1faf81e80"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-1002",
+      "part_index": 1,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "For any $0<\\alpha<1$, let\\[f(\\alpha,n)=\\frac{1}{\\log n}\\sum_{1\\leq k\\leq n}(\\tfrac{1}{2}-\\{ \\alpha k\\}).\\]Does $f(\\alpha,n)$ have an asymptotic distribution function?",
+        "focus_question_sha256": "c893501282253261cc8771d550b805243b7c41526f8d266b151d08b388c7bcca",
+        "normalized": "For any $0<\\alpha<1$, let\\[f(\\alpha,n)=\\frac{1}{\\log n}\\sum_{1\\leq k\\leq n}(\\tfrac{1}{2}-\\{ \\alpha k\\}).\\]Does $f(\\alpha,n)$ have an asymptotic distribution function? In other words, is there a non-decreasing function $g$ such that $g(-\\infty)=0$, $g(\\infty)=1$, and\\[\\lim_{n\\to \\infty}\\lvert \\{ \\alpha\\in (0,1): f(\\alpha,n)\\leq c\\}\\rvert=g(c)?\\]",
+        "original": "For any $0<\\alpha<1$, let\\[f(\\alpha,n)=\\frac{1}{\\log n}\\sum_{1\\leq k\\leq n}(\\tfrac{1}{2}-\\{ \\alpha k\\}).\\]Does $f(\\alpha,n)$ have an asymptotic distribution function?\n\nIn other words, is there a non-decreasing function $g$ such that $g(-\\infty)=0$, $g(\\infty)=1$,\nand\\[\\lim_{n\\to \\infty}\\lvert \\{ \\alpha\\in (0,1): f(\\alpha,n)\\leq c\\}\\rvert=g(c)?\\]",
+        "statement_sha256": "b4bdc239ca6fe9ccd991355c70281d8e6731295333992092875ff5c1faf81e80"
+      },
+      "subproblem_contract_sha256": "deae628826f6af4ec2b1185bc8f8573da70495bd3b44c39c3537d6043cee3f15",
+      "subproblem_id": "erdos-1002-part-01-deae6288"
+    },
+    {
+      "parent_problem_id": "erdos-1002",
+      "part_index": 2,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "In other words, is there a non-decreasing function $g$ such that $g(-\\infty)=0$, $g(\\infty)=1$,\nand\\[\\lim_{n\\to \\infty}\\lvert \\{ \\alpha\\in (0,1): f(\\alpha,n)\\leq c\\}\\rvert=g(c)?",
+        "focus_question_sha256": "490bae2d27788dc1a1d33cf026ec7a2d81878649b71ac992aa68e2e0949e64ba",
+        "normalized": "For any $0<\\alpha<1$, let\\[f(\\alpha,n)=\\frac{1}{\\log n}\\sum_{1\\leq k\\leq n}(\\tfrac{1}{2}-\\{ \\alpha k\\}).\\]Does $f(\\alpha,n)$ have an asymptotic distribution function? In other words, is there a non-decreasing function $g$ such that $g(-\\infty)=0$, $g(\\infty)=1$, and\\[\\lim_{n\\to \\infty}\\lvert \\{ \\alpha\\in (0,1): f(\\alpha,n)\\leq c\\}\\rvert=g(c)?\\]",
+        "original": "For any $0<\\alpha<1$, let\\[f(\\alpha,n)=\\frac{1}{\\log n}\\sum_{1\\leq k\\leq n}(\\tfrac{1}{2}-\\{ \\alpha k\\}).\\]Does $f(\\alpha,n)$ have an asymptotic distribution function?\n\nIn other words, is there a non-decreasing function $g$ such that $g(-\\infty)=0$, $g(\\infty)=1$,\nand\\[\\lim_{n\\to \\infty}\\lvert \\{ \\alpha\\in (0,1): f(\\alpha,n)\\leq c\\}\\rvert=g(c)?\\]",
+        "statement_sha256": "b4bdc239ca6fe9ccd991355c70281d8e6731295333992092875ff5c1faf81e80"
+      },
+      "subproblem_contract_sha256": "7ea430e8902f0d572ae322d20f85f08d7fb902396d5c8989d12ea3bdf1a32b13",
+      "subproblem_id": "erdos-1002-part-02-7ea430e8"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

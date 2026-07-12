@@ -1,0 +1,20 @@
+{
+  "problem_number": 334,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/334",
+  "retrieved_at": "2026-07-10T23:16:39.113064+00:00",
+  "page_title": "334 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "d14ee44b8a0ce39155633839e398769b5edf878bdfef121f134ac6b7f02c2612",
+  "comment_count": 2,
+  "comments": [
+    {
+      "post_id": "4575",
+      "text": "Submitted link to A062241 and proved*, with AI's help that it is bounded by A045535. This might not help with theoretical bound but A045535 is a lot easier to compute. * see here https://github.com/vzsky/OEIS-compute/blob/main/A062241/proof/sequences.pdf (The site has been updated to address this comment.)",
+      "meta": "my99n — 21:12 on 03 Mar 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1764",
+      "text": "I asked the Deep Research tool of Gemini for the relevant literature on this problem twice, and both times it couldn't really find anything interesting beyond the already mentioned result by Balog. It did mention that a bound of $f(n) < \\exp(c \\sqrt{\\log n \\log \\log n})$ is known for sums $a+b+c$ of three elements instead of two (see e.g. this paper by Sárközy), similar to how ternary Goldbach is significantly more approachable than binary Goldbach. To paraphrase from the comments on Green's list: even a bound of $f(n) \\le n^{0.1}$ seems extremely difficult, as it implies small quadratic non-residues. To elaborate on that, if all large enough $n$ can be written as $a+b$ with both $a$ and $b$ $n^{0.1}$-smooth, then this in particular holds for all sufficiently large primes $p \\equiv 3 \\pmod{4}$. For these primes this implies that one of $a, b$ is a quadratic non-residue, implying that a quadratic non-residue exists which is at most $p^{0.1}$. The best known upper bound for this problem has exponent $\\frac{1}{4\\sqrt{e}} + \\epsilon \\approx 0.15$ instead of $0.1$, however. Finally, in the Sárközy paper linked above he states that Erdős conjectures that the bound $f(n) < \\exp(c \\sqrt{\\log n \\log \\log n})$ also holds for the binary problem considered here. I did not find the slightly stronger $f(n) < \\exp(c \\sqrt{\\log n})$ conjectured anywhere.",
+      "meta": "Woett — 22:02 on 19 Nov 2025 👍 2 📝 0 🤖 0"
+    }
+  ]
+}

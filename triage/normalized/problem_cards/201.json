@@ -1,0 +1,308 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.47
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "KSS75",
+      "Ri69"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/201",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[KSS75] Koml\\'{o}s, J. and Sulyok, M. and Szemeredi, E., Linear problems in combinatorial number theory. Acta Math. Acad. Sci. Hungar. (1975), 113-121.\n \n [Ri69] Riddell, J., On sets of numbers containing no $l$ terms in arithmetic progression. Nieuw Arch. Wisk. (3) (1969), 204-209.",
+      "remarks": "First asked and investigated by Riddell \\cite{Ri69}. It is trivial that $G_k(N)\\leq R_k(N)$, and it is possible that $G_k(N) <R_k(N)$ (for example $G_3(5)=3$ and $R_3(5)=4$, and $G_3(14)\\leq 7$ and $R_3(14)=8$).\n\nKoml\\'{o}s, Sulyok, and Szemer\\'{e}di \\cite{KSS75} have shown that $R_k(N) \\ll_k G_k(N)$."
+    },
+    "source_state": "open",
+    "tags": [
+      "additive combinatorics",
+      "arithmetic progressions"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.5,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.272872
+      ],
+      "probability": 0.111111
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 2.381,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.0,
+        0.363063
+      ],
+      "probability": 0.171528
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.3,
+      "beta": 13.0,
+      "credible_interval_approx": [
+        0.0,
+        0.234961
+      ],
+      "probability": 0.090909
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.333,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.431549
+      ],
+      "probability": 0.205882
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 0.867,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.163071
+      ],
+      "probability": 0.054622
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.8,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.0,
+        0.27406
+      ],
+      "probability": 0.117647
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.063431
+      ],
+      "probability": 0.021739
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.0,
+        0.384039
+      ],
+      "probability": 0.173913
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 0,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:16:03.901895+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "d214f5729d3d7c622e18f5cd9928552fbe78ab4a0901bba0f25a819c245f6e60"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 1,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 371,
+      "statement_tokens_approx": 55
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "prove_or_disprove",
+      "multi_part": true,
+      "primary_domain": "additive combinatorics"
+    }
+  },
+  "problem_id": "erdos-201",
+  "problem_number": 201,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "prove_or_disprove",
+    "multi_part": true,
+    "primary_domain": "additive combinatorics"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_201.html",
+      "raw_html_sha256": "3b97ec3e029b660973a424c4c806f8b00e290c176ecaf1f65cea8c672a194826",
+      "section_sha256": {
+        "references": "0655e251ed8c7121d8443aefaa7f130ca611eaa50d1baa7403e25b9b939f730d",
+        "remarks": "09460e73b600384af6408554708ba223cfb0f174c9b97a48cd0c5a017b69f46e",
+        "statement": "9cbffacb7cde70a179d7debe501e22acc0f71cd3d03e4120bd4541d3140a09b2"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_201.json",
+      "source_record_sha256": "f0b3187740008aa343f9c2b9fb431db998cf160707bc41c343a9d90ec36b4890",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_201.tex",
+    "latex_sha256": "f3338302be0f615b7f09c838f03c3045c02f9fcc560344886e0862ed502655e2",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "9cbffacb7cde70a179d7debe501e22acc0f71cd3d03e4120bd4541d3140a09b2",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "subproblem_decomposition",
+      "shared_infrastructure_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Let $G_k(N)$ be such that any set of $N$ integers contains a subset of size at least $G_k(N)$ which does not contain a $k$-term arithmetic progression. Determine the size of $G_k(N)$. How does it relate to $R_k(N)$, the size of the largest subset of $\\{1,\\ldots,N\\}$ without a $k$-term arithmetic progression?",
+        "focus_question_sha256": "da814d4d5d5a8521324bfce9326e7007f60863205099fc61e9f4ccb0eff5e01f",
+        "parent_statement_sha256": "9cbffacb7cde70a179d7debe501e22acc0f71cd3d03e4120bd4541d3140a09b2",
+        "part_index": 1,
+        "subproblem_contract_sha256": "7b24b76e6d7db60d6696c353a5e76c99805ca2ec82f89e7f42d7bdd081080f6e",
+        "subproblem_id": "erdos-201-part-01-7b24b76e"
+      },
+      {
+        "focus_question": "Is it true that\\[\\lim_{N\\to \\infty}\\frac{R_3(N)}{G_3(N)}=1?",
+        "focus_question_sha256": "3c048c99f0eb004f0066bde4768bd5b88e20664c164a51ec91d1ce4faebb0a88",
+        "parent_statement_sha256": "9cbffacb7cde70a179d7debe501e22acc0f71cd3d03e4120bd4541d3140a09b2",
+        "part_index": 2,
+        "subproblem_contract_sha256": "7820d3e6e037ba5f9f82241e0a211eb310795a1d75275af5b6951e15697c940c",
+        "subproblem_id": "erdos-201-part-02-7820d3e6"
+      }
+    ]
+  },
+  "research_directive_sha256": "8a90958eda6088ca5d9362f32a09e84fc1810c91794e9e8b125a29f8dd9a6d79",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "subproblem_decomposition",
+    "shared_infrastructure_search"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Let $G_k(N)$ be such that any set of $N$ integers contains a subset of size at least $G_k(N)$ which does not contain a $k$-term arithmetic progression. Determine the size of $G_k(N)$. How does it relate to $R_k(N)$, the size of the largest subset of $\\{1,\\ldots,N\\}$ without a $k$-term arithmetic progression? Is it true that\\[\\lim_{N\\to \\infty}\\frac{R_3(N)}{G_3(N)}=1?\\]",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $G_k(N)$ be such that any set of $N$ integers contains a subset of size at least $G_k(N)$ which does not contain a $k$-term arithmetic progression. Determine the size of $G_k(N)$. How does it relate to $R_k(N)$, the size of the largest subset of $\\{1,\\ldots,N\\}$ without a $k$-term arithmetic progression? Is it true that\\[\\lim_{N\\to \\infty}\\frac{R_3(N)}{G_3(N)}=1?\\]",
+    "original": "Let $G_k(N)$ be such that any set of $N$ integers contains a subset of size at least $G_k(N)$ which does not contain a $k$-term arithmetic progression. Determine the size of $G_k(N)$. How does it relate to $R_k(N)$, the size of the largest subset of $\\{1,\\ldots,N\\}$ without a $k$-term arithmetic progression? Is it true that\\[\\lim_{N\\to \\infty}\\frac{R_3(N)}{G_3(N)}=1?\\]",
+    "statement_sha256": "9cbffacb7cde70a179d7debe501e22acc0f71cd3d03e4120bd4541d3140a09b2"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-201",
+      "part_index": 1,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Let $G_k(N)$ be such that any set of $N$ integers contains a subset of size at least $G_k(N)$ which does not contain a $k$-term arithmetic progression. Determine the size of $G_k(N)$. How does it relate to $R_k(N)$, the size of the largest subset of $\\{1,\\ldots,N\\}$ without a $k$-term arithmetic progression?",
+        "focus_question_sha256": "da814d4d5d5a8521324bfce9326e7007f60863205099fc61e9f4ccb0eff5e01f",
+        "normalized": "Let $G_k(N)$ be such that any set of $N$ integers contains a subset of size at least $G_k(N)$ which does not contain a $k$-term arithmetic progression. Determine the size of $G_k(N)$. How does it relate to $R_k(N)$, the size of the largest subset of $\\{1,\\ldots,N\\}$ without a $k$-term arithmetic progression? Is it true that\\[\\lim_{N\\to \\infty}\\frac{R_3(N)}{G_3(N)}=1?\\]",
+        "original": "Let $G_k(N)$ be such that any set of $N$ integers contains a subset of size at least $G_k(N)$ which does not contain a $k$-term arithmetic progression. Determine the size of $G_k(N)$. How does it relate to $R_k(N)$, the size of the largest subset of $\\{1,\\ldots,N\\}$ without a $k$-term arithmetic progression? Is it true that\\[\\lim_{N\\to \\infty}\\frac{R_3(N)}{G_3(N)}=1?\\]",
+        "statement_sha256": "9cbffacb7cde70a179d7debe501e22acc0f71cd3d03e4120bd4541d3140a09b2"
+      },
+      "subproblem_contract_sha256": "7b24b76e6d7db60d6696c353a5e76c99805ca2ec82f89e7f42d7bdd081080f6e",
+      "subproblem_id": "erdos-201-part-01-7b24b76e"
+    },
+    {
+      "parent_problem_id": "erdos-201",
+      "part_index": 2,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Is it true that\\[\\lim_{N\\to \\infty}\\frac{R_3(N)}{G_3(N)}=1?",
+        "focus_question_sha256": "3c048c99f0eb004f0066bde4768bd5b88e20664c164a51ec91d1ce4faebb0a88",
+        "normalized": "Let $G_k(N)$ be such that any set of $N$ integers contains a subset of size at least $G_k(N)$ which does not contain a $k$-term arithmetic progression. Determine the size of $G_k(N)$. How does it relate to $R_k(N)$, the size of the largest subset of $\\{1,\\ldots,N\\}$ without a $k$-term arithmetic progression? Is it true that\\[\\lim_{N\\to \\infty}\\frac{R_3(N)}{G_3(N)}=1?\\]",
+        "original": "Let $G_k(N)$ be such that any set of $N$ integers contains a subset of size at least $G_k(N)$ which does not contain a $k$-term arithmetic progression. Determine the size of $G_k(N)$. How does it relate to $R_k(N)$, the size of the largest subset of $\\{1,\\ldots,N\\}$ without a $k$-term arithmetic progression? Is it true that\\[\\lim_{N\\to \\infty}\\frac{R_3(N)}{G_3(N)}=1?\\]",
+        "statement_sha256": "9cbffacb7cde70a179d7debe501e22acc0f71cd3d03e4120bd4541d3140a09b2"
+      },
+      "subproblem_contract_sha256": "7820d3e6e037ba5f9f82241e0a211eb310795a1d75275af5b6951e15697c940c",
+      "subproblem_id": "erdos-201-part-02-7820d3e6"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

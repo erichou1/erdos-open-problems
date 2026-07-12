@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 304,
+  "raw_page": {
+    "path": "raw/pages/problem_304.html",
+    "sha256": "29060d921b5e57c134c4e1322657f8f78d00426794463a581f74dcb8bd13c5e1"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "bfcbc919ed52da401b42ceb878e43b7114509c53fe1fe40368672330f2fd76bc",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er50c] Erd\\H{o}s, P., Az $1/x_1 + 1/x_2 + \\ldots + 1/x_n =A/B$ egyenlet eg\\'{e}sz sz\\'{a}m\\'{u} megold\\'{a}sair\\'{o}l. Mat. Lapok (1950), 192-210.\n \n [Vo85] Vose, Michael D., Egyptian fractions. Bull. London Math. Soc. (1985), 21-24.\n \n [vDTa25b] W. van Doorn and Q. Tang, The smallest denominator not contained in a unit fraction decomposition of 1 with fixed length. arXiv:2512.22083 (2025)."
+    },
+    "remarks": {
+      "sha256": "b8ea6b669d451a9156048c5f0532b97cf8e71ae5a6a48ccd3cb7c7981c6ecd72",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s \\cite{Er50c} proved that\\[\\log\\log b \\ll N(b) \\ll \\frac{\\log b}{\\log\\log b}.\\]The upper bound was improved by Vose \\cite{Vo85} to\\[N(b) \\ll \\sqrt{\\log b}.\\]One can also investigate the average of $N(a,b)$ for fixed $b$, and it is known that\\[\\frac{1}{b}\\sum_{1\\leq a<b}N(a,b) \\gg \\log\\log b.\\]Related to [18]. There is also a close connection to [293] (particularly with $N(b-1,b)$), as elucidated by van Doorn and Tang \\cite{vDTa25b}.\n\nThis problem has been formalised in Lean as part of the Google DeepMind Formal Conjectures project."
+    },
+    "statement": {
+      "sha256": "41f34ed3f2035b4a49e5a06d6dd40af71813e0a86a06d7e93bd786b6aa6a4834",
+      "source_region": "div#content",
+      "text": "For integers $1\\leq a<b$ let $N(a,b)$ denote the minimal $k$ such that there exist integers $1<n_1<\\cdots<n_k$ with\\[\\frac{a}{b}=\\frac{1}{n_1}+\\cdots+\\frac{1}{n_k}.\\]Estimate $N(b)=\\max_{1\\leq a<b}N(a,b)$. Is it true that $N(b) \\ll \\log\\log b$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/304"
+}

@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#535}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $r\geq 3$, and let $f_r(N)$ denote the size of the largest subset of $\{1,\ldots,N\}$ such that no subset of size $r$ has the same pairwise greatest common divisor between all elements. Estimate $f_r(N)$.
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Erd\H{o}s \cite{Er64} proved that\[f_r(N) \leq N^{\frac{3}{4}+o(1)},\]and Abbott and Hanson \cite{AbHa70} improved this exponent to $1/2$. Erd\H{o}s \cite{Er64} proved the lower bound, for any $r \geq 3$,\[f_r(N) > N^{\frac{c_r}{\log\log N}}\]for some constant $c_r>0$, and conjectured this should also be an upper bound. 
+
+This is intimately connected with the sunflower problem [20]. Indeed, Erd\H{o}s \cite{Er64} noted that a positive solution to [20] would imply\[f_r(N) \leq N^{\frac{C_r}{\log\log N}}\]for some constant $C_r>0$. Using the recent bounds of Alweiss, Lovett, Wu, and Zhang \cite{ALWZ20} for the sunflower problem yields\[f_r(N) \leq N^{C_r\frac{\log\log\log N}{\log\log N}},\]and in particular $f_r(N) \leq N^{o(1)}$. 
+
+An alternative description of the details of these lower and upper bounds was given by Abbott and Hanson \cite{AbHa67}. (A similar detailed calculation is given in the comments by Hrishi.)
+
+See also [536].
+
+\bigskip
+\noindent\textbf{References:}
+
+[ALWZ20] Alweiss, R. and Lovett, S. and Wu, K. and Zhang, J., Improved bounds for the sunflower lemma. (2020).
+ 
+ [AbHa67] No reference found.
+
+ [AbHa70] Abbott, H. L. and Hanson, D., An extremal problem in number theory. Bull. London Math. Soc. (1970), 324-326.
+ 
+ [Er64] Erd\H{o}s, P., On a problem in elementary number theory and a combinatorial problem. Math. Comp. (1964), 644-646.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/535}}
+\end{document}

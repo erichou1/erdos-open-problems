@@ -1,0 +1,45 @@
+{
+  "problem_number": 1112,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/1112",
+  "retrieved_at": "2026-07-10T23:20:38.504864+00:00",
+  "page_title": "1112 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "53f6bc5a16d3f3796e69701c339d4121d6c98169f442f84f2b7a175ad7280702",
+  "comment_count": 7,
+  "comments": [
+    {
+      "post_id": "2548",
+      "text": "In [Ch00], he proves those results with the constraint that $a_{i+1} -a_i=\\{d_1,d_2\\}$ instead of $d_1<a_{i+1}-a_i<d_2$. Therefore under the notation defined on this page, $r_2(a,b)>2$ if $b>2a$.",
+      "meta": "Adenwalla — 00:47 on 29 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2560",
+      "text": "I don't follow this - Theorem 1 of [Ch00] implies in particular that if $b_{n+1}\\geq 2b_n$ then there is a sequence $A$ in which $a_{n+1}-a_n\\in \\{a,b\\}$ and $(A+A)\\cap B=\\emptyset$. We then certainly have $a\\leq a_{n+1}-a_n\\leq b$, and hence $r_2(a,b)\\leq 2$, using the definitions above.",
+      "meta": "Thomas Bloom — 08:10 on 29 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2565",
+      "text": "Yes, my issue is actually the other way around. \"Chen [Ch00] proved that $r_2(a,b)\\leq 2$ for any integers $a<b$ with $b\\neq 2a$, and that $r_2(a,2a)\\geq 2$ for all integers $a$.\" Due to how $r_k(a,b)$ is phrased here, for $a_1\\leq a<b\\leq b_1$, $r_k(a_1,b_1)\\leq r_k(a,b)$. So as $r_2(a,b)\\leq 2$ for $b<2a$, we must have $r_2(a,b)\\leq 2$ for $b=2a$ when $a>1$.",
+      "meta": "Adenwalla — 10:39 on 29 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2570",
+      "text": "Ah, I see. I still don't think that $r_2(a,b)>2$ if $b>2a$ is right though - I think the simplest fix is just to say that $r_2(a,b)\\leq 2$ for any $a<b$ (noting that this follows from e.g. $r_2(a,b)\\leq r_2(a,a+1)$ and then using [Ch00] with $b=a+1$.",
+      "meta": "Thomas Bloom — 13:20 on 29 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2572",
+      "text": "My first comment was wrong. I agree $r_2(a,b)\\leq 2$ if $b>2a$. Also, Theorem 2 of [CH00] shows that $r_2(1,2)$ does not exist.",
+      "meta": "Adenwalla — 13:23 on 29 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2567",
+      "text": "The question asks about $r\\in \\mathbb{Z}$, so is $r_k(a,b)$ defined as the smallest integer $r$ that satisfies the condition, or the smallest real $r$?",
+      "meta": "Adenwalla — 10:59 on 29 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2571",
+      "text": "I guess it makes sense to have it be smallest real $r$ in the quantitative question of $r_k(a,b)$ (although, as already noted, this is going beyond what Erdős himself ever asked about, and this definition only appears in the later work [BHJ97]).",
+      "meta": "Thomas Bloom — 13:21 on 29 Dec 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

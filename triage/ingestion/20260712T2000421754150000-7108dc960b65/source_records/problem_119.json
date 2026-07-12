@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 119,
+  "raw_page": {
+    "path": "raw/pages/problem_119.html",
+    "sha256": "afbf20a130e1c1e5daa7346890852f7a62e920a7fd6bb8520180260dee9839d1"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "6b134b1c7a6fab0e5465ad0782f0220c889e9ea04c3512ab837110dc9b34344a",
+      "source_region": "div.problem-additional-text",
+      "text": "[Be91] Beck, J., The modulus of polynomials with zeros on the unit circle: A problem of Erd\\H{o}s. Annals of Math. (1991), 609-651.\n \n [Ha74] Hayman, W. K., Research problems in function theory: new problems. (1974), 155--180.\n \n [Li77] Linden, C. N., The modulus of polynomials with zeros on the unit circle. Bull. London Math. Soc. (1977), 65--69.\n \n [Wa80] Wagner, Gerold, On a problem of {E}rd\\H{o}s in {D}iophantine approximation. Bull. London Math. Soc. (1980), 81--88."
+    },
+    "remarks": {
+      "sha256": "0d964bcf3ac674c8f8b965b528262900db43f3306b10f98a2ebbf60c9be44047",
+      "source_region": "div.problem-additional-text",
+      "text": "This is Problem 4.1 in \\cite{Ha74} where it is attributed to Erd\\H{o}s.\n\nThe weaker conjecture that $\\limsup M_n=\\infty$ was proved by Wagner \\cite{Wa80}, who show that there is some $c>0$ with $M_n>(\\log n)^c$ infinitely often.\n\nThe second question was answered by Beck \\cite{Be91}, who proved that there exists some $c>0$ such that\\[\\max_{n\\leq N} M_n > N^c.\\]Erd\\H{o}s (e.g. see \\cite{Ha74}) gave a construction of a sequence with $M_n\\leq n+1$ for all $n$. Linden \\cite{Li77} improved this to give a sequence with $M_n\\ll n^{1-c}$ for some $c>0$.\n\nThe third question seems to remain open."
+    },
+    "statement": {
+      "sha256": "3fb4733dcb5fb863adb5de4fa16dddabf7ab4f829dea3ac34c606ebae5135b91",
+      "source_region": "div#content",
+      "text": "Let $z_i$ be an infinite sequence of complex numbers such that $\\lvert z_i\\rvert=1$ for all $i\\geq 1$, and for $n\\geq 1$ let\\[p_n(z)=\\prod_{i\\leq n} (z-z_i).\\]Let $M_n=\\max_{\\lvert z\\rvert=1}\\lvert p_n(z)\\rvert$. \n\nIs it true that $\\limsup M_n=\\infty$?\n\nIs it true that there exists $c>0$ such that for infinitely many $n$ we have $M_n > n^c$?\n\nIs it true that there exists $c>0$ such that, for all large $n$,\\[\\sum_{k\\leq n}M_k > n^{1+c}?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/119"
+}

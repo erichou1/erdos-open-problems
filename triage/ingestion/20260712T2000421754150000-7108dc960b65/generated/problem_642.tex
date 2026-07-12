@@ -1,0 +1,40 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#642}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory, cycles
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $f(n)$ be the maximal number of edges in a graph on $n$ vertices such that all cycles have more vertices than chords. Is it true that $f(n)\ll n$?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+A problem of Hamburger and Szegedy. A chord is an edge between two vertices of the cycle which are not consecutive in the cycle.
+
+Chen, Erd\H{o}s, and Staton \cite{CES96} proved $f(n) \ll n^{3/2}$. Dragani\'{c}, Methuku, Munh\'{a} Correia, and Sudakov \cite{DMMS24} have improved this to\[f(n) \ll n(\log n)^8.\]
+
+\bigskip
+\noindent\textbf{References:}
+
+[CES96] Chen, Guantao and Erd\H{o}s, Paul and Staton, William, Proof of a conjecture of {B}ollob\'{a}s on nested cycles. J. Combin. Theory Ser. B (1996), 38--43.
+ 
+ [DMMS24] Dragani\'c, Nemanja and Methuku, Abhishek and Munh\'{a}{}
+Correia, David and Sudakov, Benny, Cycles with many chords. Random Structures Algorithms (2024), 3--16.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/642}}
+\end{document}

@@ -10,7 +10,14 @@ import time
 from pathlib import Path
 
 import erdos_common as C
+from erdos_searcher import (
+    canonical_problem_run_inputs,
+    find_latest_canonical_snapshot,
+    load_canonical_corpus,
+    normalized_budget_config,
+)
 from proof_pipeline import ProofPipeline
+from outcome_ledger import record_outcome
 from research_state import make_statement_lock
 from verification import candidate_contract, VerificationEvidence
 
@@ -70,11 +77,11 @@ class ChatGPTBrowserRunner:
         self.browser = browser
         self.page = page
         self.timeout_s = timeout_s
-        self.backoff_s = backoff_s
-        self.max_backoff_s = max(backoff_s, max_backoff_s)
+        self.max_backoff_s = max(0.0, min(120.0, max_backoff_s))
+        self.backoff_s = min(max(0.0, backoff_s), self.max_backoff_s)
         self.rate_limiter = SharedRateLimiter(
             Path(tempfile.gettempdir()) / "erdos_chatgpt_rate_limit.json",
-            backoff_s=backoff_s,
+            backoff_s=self.backoff_s,
             max_backoff_s=self.max_backoff_s,
             request_spacing_s=request_spacing_s,
         )
@@ -83,6 +90,10 @@ class ChatGPTBrowserRunner:
 
     def context_id(self, stage: str) -> str:
         return self.contexts.get(stage, "")
+
+    def restore_context(self, stage: str, context_id: str) -> None:
+        """Restore durable provenance when ProofPipeline replays a cache entry."""
+        self.contexts[stage] = context_id
 
     def _cool_down(self, stage: str, reason: str) -> None:
         """Apply one shared cooldown across every browser worker."""
@@ -134,7 +145,6 @@ class ChatGPTBrowserRunner:
                     continue
 
                 self.contexts[stage] = url
-                self.rate_limiter.record_success()
                 print(f"{stage}: waiting for response at {url}", flush=True)
                 time.sleep(5)
 
@@ -143,6 +153,7 @@ class ChatGPTBrowserRunner:
                     # A throttle can pop up mid-generation; keep the UI clear.
                     if C.detect_rate_limit(self.page):
                         self._cool_down(stage, "rate-limited while generating")
+                        self.rate_limiter.wait_for_slot(stage)
                     time.sleep(5)
 
                 if C.is_generating(self.page):
@@ -163,6 +174,7 @@ class ChatGPTBrowserRunner:
                     time.sleep(15)
                     continue
 
+                self.rate_limiter.record_success()
                 return response
 
             except Exception as exc:
@@ -191,9 +203,9 @@ class SharedRateLimiter:
     def __init__(self, path: Path, *, backoff_s: float,
                  max_backoff_s: float, request_spacing_s: float):
         self.path = path
-        self.backoff_s = backoff_s
-        self.max_backoff_s = max_backoff_s
-        self.request_spacing_s = request_spacing_s
+        self.max_backoff_s = max(0.0, min(120.0, max_backoff_s))
+        self.backoff_s = min(max(0.0, backoff_s), self.max_backoff_s)
+        self.request_spacing_s = max(0.0, min(120.0, request_spacing_s))
         self.path.touch(exist_ok=True)
 
     def _update(self, action):
@@ -219,8 +231,14 @@ class SharedRateLimiter:
             now = time.time()
 
             def reserve(state):
-                ready_at = max(float(state.get("cooldown_until", 0)),
-                               float(state.get("next_request_at", 0)))
+                ceiling = now + 120.0
+                state["cooldown_until"] = min(
+                    float(state.get("cooldown_until", 0)), ceiling
+                )
+                state["next_request_at"] = min(
+                    float(state.get("next_request_at", 0)), ceiling
+                )
+                ready_at = max(state["cooldown_until"], state["next_request_at"])
                 if ready_at <= now:
                     state["next_request_at"] = now + self.request_spacing_s
                     return 0.0
@@ -241,10 +259,17 @@ class SharedRateLimiter:
             wait_s = min(self.backoff_s * (2 ** max(0, streak - 1)),
                          self.max_backoff_s)
             state["rate_limit_streak"] = streak
-            state["cooldown_until"] = max(float(state.get("cooldown_until", 0)),
-                                          now + wait_s)
-            state["next_request_at"] = max(float(state.get("next_request_at", 0)),
-                                           state["cooldown_until"])
+            ceiling = now + 120.0
+            existing_cooldown = min(
+                float(state.get("cooldown_until", 0)), ceiling
+            )
+            existing_request = min(
+                float(state.get("next_request_at", 0)), ceiling
+            )
+            state["cooldown_until"] = max(existing_cooldown, now + wait_s)
+            state["next_request_at"] = max(
+                existing_request, state["cooldown_until"]
+            )
             return streak, wait_s
 
         return self._update(penalize)
@@ -252,7 +277,8 @@ class SharedRateLimiter:
     def record_success(self) -> None:
         def clear_penalty(state):
             state["rate_limit_streak"] = 0
-            state["cooldown_until"] = 0
+            # Another worker may have recorded a newer 429 while this request
+            # was in flight. Never erase shared future cooldown/spacing state.
 
         self._update(clear_penalty)
 
@@ -262,6 +288,7 @@ def main() -> None:
     parser.add_argument("--problem", type=int, required=True)
     parser.add_argument("--category", default="open")
     parser.add_argument("--artifacts", type=Path, default=Path("proof_runs"))
+    parser.add_argument("--triage", type=Path, default=Path("triage"))
     parser.add_argument("--stage-timeout", type=float, default=1800)
     parser.add_argument("--backoff", type=float, default=15.0,
                         help="Initial seconds to wait after a rate-limit alert")
@@ -270,34 +297,76 @@ def main() -> None:
     parser.add_argument("--request-spacing", type=float, default=12.0,
                         help="Minimum seconds between any two worker requests")
     parser.add_argument("--max-revisions", type=int, default=2)
+    parser.add_argument("--max-attempts", type=int, default=8)
+    parser.add_argument(
+        "--model-id", required=True,
+        help="Exact ChatGPT UI model/version disclosure stored in the manifest",
+    )
     parser.add_argument("--print-statement-sha", action="store_true")
     parser.add_argument("--headless", action="store_true")
     args = parser.parse_args()
 
-    problem_file = C.REPO_DIR / args.category / "individual" / f"problem_{args.problem}.tex"
-    if not problem_file.exists():
-        raise SystemExit(f"problem file not found: {problem_file}")
-    statement = C.extract_problem_statement(problem_file)
+    triage_dir = args.triage if args.triage.is_absolute() else C.REPO_DIR / args.triage
     if args.print_statement_sha:
-        print(make_statement_lock(statement).sha256)
+        snapshot = find_latest_canonical_snapshot(triage_dir)
+        sources = load_canonical_corpus(snapshot)
+        if args.problem not in sources:
+            raise SystemExit(f"problem {args.problem} is not source-open")
+        print(make_statement_lock(sources[args.problem]["statement"]).sha256)
         return
-
+    if "unrecorded" in args.model_id.lower() or not args.model_id.strip():
+        parser.error("--model-id must be the exact recorded UI model identity")
+    budget_config = normalized_budget_config(
+        max_revisions=args.max_revisions,
+        stage_timeout_s=args.stage_timeout,
+        initial_backoff_s=args.backoff,
+        max_backoff_s=args.max_backoff,
+        request_spacing_s=args.request_spacing,
+        max_attempts=args.max_attempts,
+        browser_headless=args.headless,
+    )
+    try:
+        run_inputs = canonical_problem_run_inputs(
+            C.REPO_DIR,
+            triage_dir,
+            args.problem,
+            model_portfolio=args.model_id,
+            budget_config=budget_config,
+        )
+    except Exception as error:
+        raise SystemExit(f"exact canonical run context unavailable: {error}") from error
+    statement = run_inputs["statement"]
     C.PROFILE_DIR.mkdir(parents=True, exist_ok=True)
     with C.sync_playwright() as playwright:
         browser = C.launch_browser(playwright, headless=args.headless)
         page = browser.pages[0] if browser.pages else browser.new_page()
         C.ensure_logged_in(page)
         runner = ChatGPTBrowserRunner(
-            browser, page, timeout_s=args.stage_timeout,
-            backoff_s=args.backoff,
-            max_backoff_s=args.max_backoff,
-            request_spacing_s=args.request_spacing,
+            browser, page, timeout_s=budget_config["stage_timeout_s"],
+            backoff_s=budget_config["initial_backoff_s"],
+            max_backoff_s=budget_config["max_backoff_s"],
+            request_spacing_s=budget_config["request_spacing_s"],
+            max_attempts=budget_config["max_attempts"],
         )
         result = ProofPipeline(
             runner,
             args.artifacts,
             max_revisions=args.max_revisions,
-        ).solve(args.problem, statement)
+            pipeline_version=run_inputs["pipeline_version"],
+            model_portfolio=args.model_id,
+            execution_config=run_inputs["execution_config"],
+            source_snapshot_id=run_inputs["source_snapshot_id"],
+            source_snapshot_sha256=run_inputs["source_snapshot_sha256"],
+            toolset=run_inputs["toolset"],
+            dependencies=run_inputs["dependencies"],
+            runtime=run_inputs["runtime"],
+        ).solve(
+            args.problem, statement,
+            research_directive=run_inputs["research_directive"],
+        )
+        record_outcome(
+            triage_dir, args.problem, result.artifact_dir / "manifest.json",
+        )
         browser.close()
 
     print(f"candidate: {result.candidate_outcome}")

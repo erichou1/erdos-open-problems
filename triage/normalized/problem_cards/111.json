@@ -1,0 +1,310 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.442
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "EHS82",
+      "Er81"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/111",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[EHS82] Erd\\H{o}s, P. and Hajnal, A. and Szemer\\'{e}di, E., On almost bipartite large chromatic graphs. Theory and practice of combinatorics (1982), 117-123.\n \n [Er81] Erd\\H{o}s, P., On the combinatorial problems which I would most like to see solved. Combinatorica (1981), 25-42.",
+      "remarks": "A problem of Erd\\H{o}s, Hajnal, and Szemer\\'{e}di \\cite{EHS82}. Every $G$ with chromatic number $\\aleph_1$ must have $h_G(n)\\gg n$ since $G$ must contain, for some $r$, $\\aleph_1$ many vertex disjoint odd cycles of length $2r+1$. \n\nOn the other hand, Erd\\H{o}s, Hajnal, and Szemer\\'{e}di proved that there is a $G$ with chromatic number $\\aleph_1$ such that $h_G(n)\\ll n^{3/2}$. In \\cite{Er81} Erd\\H{o}s conjectured that this can be improved to $\\ll n^{1+\\epsilon}$ for every $\\epsilon>0$. \n\nSee also [74]."
+    },
+    "source_state": "open",
+    "tags": [
+      "graph theory",
+      "chromatic number",
+      "set theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.5,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.272872
+      ],
+      "probability": 0.111111
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 2.712,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.0,
+        0.388312
+      ],
+      "probability": 0.190838
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 13.0,
+      "credible_interval_approx": [
+        0.0,
+        0.134243
+      ],
+      "probability": 0.037037
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.5,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.446054
+      ],
+      "probability": 0.217391
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.033,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.181062
+      ],
+      "probability": 0.064449
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.0,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.0,
+        0.29079
+      ],
+      "probability": 0.129032
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.063431
+      ],
+      "probability": 0.021739
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.0,
+        0.384039
+      ],
+      "probability": 0.173913
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 0,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:15:35.992574+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "f71257c5a3b949b7f36b7b3547204384d38cb7085e0bf0532e13bb8cb19e54ef"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "multiple_questions",
+        "implicit_convention"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 2,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 276,
+      "statement_tokens_approx": 48
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove_or_disprove",
+      "multi_part": true,
+      "primary_domain": "graph theory"
+    }
+  },
+  "problem_id": "erdos-111",
+  "problem_number": 111,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove_or_disprove",
+    "multi_part": true,
+    "primary_domain": "graph theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_111.html",
+      "raw_html_sha256": "570a933302064b5b2ef411d9de477818f8a3edcbf111697ab8b34c5fa005d0e8",
+      "section_sha256": {
+        "references": "a67cdfee4b8724ac679a76e69d8c51f304f24976ddaaeea797bebc6689082d77",
+        "remarks": "05bd5ec457d40a923b66a417a3b7f52a4f58f13499ad1f2ff9d8b4e06f26e294",
+        "statement": "1ad26f57c6ac1baee495908660ae0ca9766e96380949fac7911c3c89a0c49646"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_111.json",
+      "source_record_sha256": "8236901337395eaff7dffe511c81025fe0667807fdcef56fd97dfc974792cec7",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_111.tex",
+    "latex_sha256": "a6e2d70bc796cdf44dc4785c8c0e981eb991b4bd72ca03117b33cb55899126e4",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "1ad26f57c6ac1baee495908660ae0ca9766e96380949fac7911c3c89a0c49646",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "subproblem_decomposition",
+      "shared_infrastructure_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "If $G$ is a graph let $h_G(n)$ be defined such that any subgraph of $G$ on $n$ vertices can be made bipartite after deleting at most $h_G(n)$ edges. What is the behaviour of $h_G(n)$?",
+        "focus_question_sha256": "4e30009d784a6a05e41c62aa48889dfb4edd04381868847c78bcbb565ada2125",
+        "parent_statement_sha256": "1ad26f57c6ac1baee495908660ae0ca9766e96380949fac7911c3c89a0c49646",
+        "part_index": 1,
+        "subproblem_contract_sha256": "c9082969c8e363f62c8b2364d284c906535df59759165f443ad6459550956dea",
+        "subproblem_id": "erdos-111-part-01-c9082969"
+      },
+      {
+        "focus_question": "Is it true that $h_G(n)/n\\to \\infty$ for every graph $G$ with chromatic number $\\aleph_1$?",
+        "focus_question_sha256": "c604cf296837cf3c2dcae31846d7672fd75fda96f12935c5138efadda13ead9b",
+        "parent_statement_sha256": "1ad26f57c6ac1baee495908660ae0ca9766e96380949fac7911c3c89a0c49646",
+        "part_index": 2,
+        "subproblem_contract_sha256": "18a732b0373ef3f279c48d9ef4f6cfbb4acb4578b7aa880085b1cd55c4677341",
+        "subproblem_id": "erdos-111-part-02-18a732b0"
+      }
+    ]
+  },
+  "research_directive_sha256": "4f5cc9fc233b307e31a2857b95382fa58a935a1b07c6e53f9fc3b161ab1d4ce3",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "subproblem_decomposition",
+    "shared_infrastructure_search"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "If $G$ is a graph let $h_G(n)$ be defined such that any subgraph of $G$ on $n$ vertices can be made bipartite after deleting at most $h_G(n)$ edges. \n\nWhat is the behaviour of $h_G(n)$? Is it true that $h_G(n)/n\\to \\infty$ for every graph $G$ with chromatic number $\\aleph_1$?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "If $G$ is a graph let $h_G(n)$ be defined such that any subgraph of $G$ on $n$ vertices can be made bipartite after deleting at most $h_G(n)$ edges. What is the behaviour of $h_G(n)$? Is it true that $h_G(n)/n\\to \\infty$ for every graph $G$ with chromatic number $\\aleph_1$?",
+    "original": "If $G$ is a graph let $h_G(n)$ be defined such that any subgraph of $G$ on $n$ vertices can be made bipartite after deleting at most $h_G(n)$ edges. \n\nWhat is the behaviour of $h_G(n)$? Is it true that $h_G(n)/n\\to \\infty$ for every graph $G$ with chromatic number $\\aleph_1$?",
+    "statement_sha256": "1ad26f57c6ac1baee495908660ae0ca9766e96380949fac7911c3c89a0c49646"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-111",
+      "part_index": 1,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "If $G$ is a graph let $h_G(n)$ be defined such that any subgraph of $G$ on $n$ vertices can be made bipartite after deleting at most $h_G(n)$ edges. What is the behaviour of $h_G(n)$?",
+        "focus_question_sha256": "4e30009d784a6a05e41c62aa48889dfb4edd04381868847c78bcbb565ada2125",
+        "normalized": "If $G$ is a graph let $h_G(n)$ be defined such that any subgraph of $G$ on $n$ vertices can be made bipartite after deleting at most $h_G(n)$ edges. What is the behaviour of $h_G(n)$? Is it true that $h_G(n)/n\\to \\infty$ for every graph $G$ with chromatic number $\\aleph_1$?",
+        "original": "If $G$ is a graph let $h_G(n)$ be defined such that any subgraph of $G$ on $n$ vertices can be made bipartite after deleting at most $h_G(n)$ edges. \n\nWhat is the behaviour of $h_G(n)$? Is it true that $h_G(n)/n\\to \\infty$ for every graph $G$ with chromatic number $\\aleph_1$?",
+        "statement_sha256": "1ad26f57c6ac1baee495908660ae0ca9766e96380949fac7911c3c89a0c49646"
+      },
+      "subproblem_contract_sha256": "c9082969c8e363f62c8b2364d284c906535df59759165f443ad6459550956dea",
+      "subproblem_id": "erdos-111-part-01-c9082969"
+    },
+    {
+      "parent_problem_id": "erdos-111",
+      "part_index": 2,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Is it true that $h_G(n)/n\\to \\infty$ for every graph $G$ with chromatic number $\\aleph_1$?",
+        "focus_question_sha256": "c604cf296837cf3c2dcae31846d7672fd75fda96f12935c5138efadda13ead9b",
+        "normalized": "If $G$ is a graph let $h_G(n)$ be defined such that any subgraph of $G$ on $n$ vertices can be made bipartite after deleting at most $h_G(n)$ edges. What is the behaviour of $h_G(n)$? Is it true that $h_G(n)/n\\to \\infty$ for every graph $G$ with chromatic number $\\aleph_1$?",
+        "original": "If $G$ is a graph let $h_G(n)$ be defined such that any subgraph of $G$ on $n$ vertices can be made bipartite after deleting at most $h_G(n)$ edges. \n\nWhat is the behaviour of $h_G(n)$? Is it true that $h_G(n)/n\\to \\infty$ for every graph $G$ with chromatic number $\\aleph_1$?",
+        "statement_sha256": "1ad26f57c6ac1baee495908660ae0ca9766e96380949fac7911c3c89a0c49646"
+      },
+      "subproblem_contract_sha256": "18a732b0373ef3f279c48d9ef4f6cfbb4acb4578b7aa880085b1cd55c4677341",
+      "subproblem_id": "erdos-111-part-02-18a732b0"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

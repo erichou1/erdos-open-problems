@@ -1,0 +1,95 @@
+{
+  "problem_number": 514,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/514",
+  "retrieved_at": "2026-07-10T23:17:30.363781+00:00",
+  "page_title": "514 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "b499566fdf42c75e75e0cd677cf0a804876bf2937d8661c577c49436b5eb19fd",
+  "comment_count": 17,
+  "comments": [
+    {
+      "post_id": "6827",
+      "text": "What is the state of this problem? Is it solved? It looks like there is some left to do but that was a superficial read through.",
+      "meta": "MalekZ — 13:32 on 04 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6839",
+      "text": "Chojecki addresses questions 1 and 2, and Oriike addresses question 3. If both contributions are accepted by the site then the problem is solved.",
+      "meta": "Nat Sothanaphan — 20:09 on 04 Jun 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6851",
+      "text": "Thank you",
+      "meta": "MalekZ — 09:42 on 05 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6860",
+      "text": "We're working on a joint paper with Yuta to have all the arguments for the problem in one place. I'd say we're 99% there and should have a preprint out soon.",
+      "meta": "Przemek Chojecki — 20:11 on 05 Jun 2026 👍 3 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6862",
+      "text": "Ah, congratulations.",
+      "meta": "MalekZ — 21:06 on 05 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5997",
+      "text": "I would like to share a short note and a Lean 4 formalization related to the third question in Erdős problem #514, both produced using GPT-5.5 Pro (which carried out the natural-language proof and its Lean formalization). The note addresses only the third, comparison-function question, in the following universal sense: the comparison function is fixed in advance and is independent of the transcendental entire function $f$. The main result proved is a negative answer in a strong form. For every nondecreasing function $\\Phi(T)\\to\\infty$, there exists a transcendental entire function $f$ such that every path to infinity $\\gamma$ satisfies $$ \\liminf_{t\\to\\infty} \\frac{|f(\\gamma(t))|}{\\Phi(M_f(|\\gamma(t)|))}=0, \\qquad M_f(r)=\\max_{|z|=r}|f(z)|. $$ Consequently there is no universal comparison function $\\Psi(T)\\to\\infty$, independent of $f$, for which every transcendental entire function has a path to infinity along which $$ |f(z)|/\\Psi(M_f(|z|))\\to\\infty. $$ In particular, this rules out the parenthetical power-type case $\\Psi(T)=T^\\varepsilon$. The note does not attempt to reprove the first two questions in Problem #514. Its purpose is only to give a self-contained proof of the negative answer to the universal-function version of the third question. The argument is independent of the Langley/Wu-based note previously linked in this thread. I would especially welcome corrections concerning references, priority, and the exact interpretation of Erdős’s third question. In particular, if “fixed function of $M(r)$” has a standard interpretation in the literature different from the universal-comparison-function interpretation used here, I would be grateful to know. Note: [PDF] / [TeX] Lean file / repository: [GitHub] Typecheck information: [Lean 4 Web]",
+      "meta": "YutaOriike — 16:48 on 28 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6040",
+      "text": "Congrats! Standard check found no issues and found the Lean to correspond to the result correctly. Combining this with Chojecki's results, if those are also correct, would settle the whole problem.",
+      "meta": "Nat Sothanaphan — 15:00 on 29 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6143",
+      "text": "I prompted with \"Are there any redundant steps in this proof in that its largely reproving something that already exists in literature and just failed to recognize and attribute?\": https://chatgpt.com/s/t_69f4acbd8ddc8191b8ce0c4eb6670924 Bottom Line: There **are** redundant steps, but the main issue is larger than a few unnecessary lemmas. The note appears to be proving something **very close to an existing Hayman theorem**, and possibly a direct corollary of it. The construction may still be valuable as a short, elementary, formalizable proof, but without a discussion of Hayman 1960 and the Langley/Barth-Brannan-Hayman line, the attribution is inadequate. Note this is a somewhat hostile prompt, so take it with a grain of salt and not to meant to be a critique, but I think is worthwhile for anyone who posts proofs, especially AI assisted ones.",
+      "meta": "qrdl — 13:42 on 01 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6314",
+      "text": "Thank you for pointing this out. I checked Hayman's paper, and I agree that the attribution in my note is inadequate. Hayman [1, Theorem 2] appears to give the negative answer to the power-type version directly: his examples may have arbitrarily fast maximum-modulus growth, while every asymptotic path has finite order growth. Moreover, the stronger universal-comparison version in my note appears to follow from the same theorem after an elementary choice of Hayman’s auxiliary growth function relative to the prescribed nondecreasing function $\\Phi$ with $\\Phi(T)\\to\\infty$ as $T\\to\\infty$. I will revise the note to state this as a corollary of Hayman's theorem, add the selection lemma explicitly, and present my construction only as a short direct/formalizable alternative proof rather than as a new result. [1] W. K. Hayman, “On the growth of integral functions on asymptotic paths,” J. Indian Math. Soc. (N.S.) 24 (1960), no. 1–2, 251–264. https://www.informaticsjournals.co.in/index.php/jims/article/view/16910",
+      "meta": "YutaOriike — 08:25 on 07 May 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6321",
+      "text": "1960 seems kinda old though. I guess this is more of a formal paper citation than something you'd include in an informal expert summary, right? Talking with Bloom I realize now that these citations are more critical when you're working on top of recent work rather than older work, though for formal paper submissions are still important. Love to hear your thoughts on this or anyone elses I am working on a skill.md file for citations and expert readable summaries and these type of nuances are extremely helpful!",
+      "meta": "qrdl — 19:52 on 07 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6347",
+      "text": "That distinction makes sense to me. Regarding this particular note, I think even a short expert summary should still mention Hayman, because Theorem 2 is not just background literature: with a brief selection argument for the auxiliary growth function, it appears to imply the stated result. So my current plan is to revise the note to cite Hayman directly and to state that selection step explicitly. The full bibliographic details can go in the formal reference list. In a short summary, I think it would be enough to say that Hayman's asymptotic-path theorem gives the result after that selection step, and that my construction provides a compact, direct, and formalizable proof of that corollary.",
+      "meta": "YutaOriike — 15:33 on 09 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6364",
+      "text": "I have revised the note for the third question in Problem 514. The main change is attribution and presentation: the revised version now puts Hayman's asymptotic-path theorem first. Hayman's Theorem 2 gives the power-type negative answer directly, and with a short monotone selection lemma for Hayman's auxiliary function $\\lambda(r)$, it also gives the stronger universal-comparison-function version stated in my note. I kept my original construction as a direct alternative proof of the same theorem, since its estimates are explicit and match the formalized argument. The note now cites Hayman fully and thanks qrdl for pointing out the connection with Hayman's asymptotic-path theorem. Revised Note: [PDF] / [TeX]",
+      "meta": "YutaOriike — 16:56 on 10 May 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6369",
+      "text": "For the record, I just pasted in a prompt and clicked send. My contribution will come later once I've aggregated expert feedback on how to generate summaries, such as the above. Much appreciated, YutaOriike.",
+      "meta": "qrdl — 18:56 on 10 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5632",
+      "text": "GPT-5.4 Pro claims to have a proof of the first question (+ second) and a negative answer to the third. Here are the notes. Mostly used is a pretty recent result of Langley, and also Wu.",
+      "meta": "Przemek Chojecki — 13:17 on 20 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5641",
+      "text": "Congrats! I ran standard check which found no issues. I note that this resolves the first two questions and only a partial result to the third question (negative answer to the \"power\" version).",
+      "meta": "Nat Sothanaphan — 15:20 on 20 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6363",
+      "text": "I have digested the proof for the first two questions and can vouch for its correctness. Essentially, the result is a short derivation from this 1985 paper by Wu. Wu's Theorem B concerns growth of a subharmonic function along paths. We apply the theorem to the subharmonic function $u = \\max(\\log |f|, 0)$. For a transcendental entire $f$, one has $\\log M(r, f)/\\log r \\to \\infty$, which gives the desired hypothesis to use the theorem. Wu's theorem then gives both existence of the required path and its length estimate. With GPT-5.5 Thinking, I have also produced a streamlined argument in these notes.",
+      "meta": "Nat Sothanaphan — 16:34 on 10 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3318",
+      "text": "Like other similar problems, this needs the qualifier \"transcendental\" on $f$. Source of observation: ChatGPT 5.2 Pro. (The site has been updated to address this comment.)",
+      "meta": "BorisAlexeev — 22:39 on 17 Jan 2026 👍 1 📝 1 🤖 0"
+    }
+  ]
+}

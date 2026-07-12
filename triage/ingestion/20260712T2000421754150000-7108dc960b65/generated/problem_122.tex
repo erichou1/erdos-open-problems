@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#122}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+For which number theoretic functions $f$ is it true that, for any $F(n)$ such that $F(n)/f(n)\to 0$ for almost all $n$, there are infinitely many $x$ such that\[\frac{\#\{ n\in \mathbb{N} : n+f(n)\in (x,x+F(x))\}}{F(x)}\to \infty?\]
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+In \cite{Er97} Erd\H{o}s is only considering number theoretic functions which grow 'slowly' (i.e. slower than $(\log n)^{1-c}$ for some $c>0$). 
+
+This is considered by Erd\H{o}s, Pomerance, and S\'{a}rk\"{o}zy \cite{EPS97}, who prove in particular that if $\omega(n)$ counts the number of distinct prime divisors of $n$, then for all large $x$ there are intervals $I,J\subset [1,x]$ of width\[\lvert I\rvert\asymp \left(\frac{\log x}{\log\log x}\right)^{1/2}\]and\[\lvert J\rvert \asymp (\log\log x)^{1/2}\]such that if $n\in I$ then $n+\omega(n)\in J$. (Note the normal order of $\omega$ is $\log\log x$, and hence $(\log\log n)^{1/2}/\omega(n)\to 0$ for almost all $n$.) 
+
+In \cite{Er97} and \cite{Er97e} Erd\H{o}s reports that he, Pomerance, and S\'{a}rkz\"{o}zy can prove the more general claim above for $f$ being $\tau(n)$, the divisor function, or $\omega(n)$, and states it 'probably fails' for $\phi(n)$ or $\sigma(n)$.
+
+\bigskip
+\noindent\textbf{References:}
+
+[EPS97] Erd\H{o}s, Paul and Pomerance, Carl and S\'{a}rk\"{o}zy, Andr\'{a}s, On locally repeated values of certain arithmetic functions. IV. Ramanujan J. (1997), 227-241.
+ 
+ [Er97] Erd\H{o}s, Paul, Problems in number theory. New Zealand J. Math. (1997), 155-160.
+ 
+ [Er97e] Erd\H{o}s, Paul, Some of my favourite unsolved problems. Math. Japon. (1997), 527-537.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/122}}
+\end{document}

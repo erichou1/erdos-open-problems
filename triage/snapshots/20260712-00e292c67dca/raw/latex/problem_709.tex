@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#709}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $f(n)$ be minimal such that, for any $A=\{a_1,\ldots,a_n\}\subseteq [2,\infty)\cap\mathbb{N}$ of size $n$, in any interval $I$ of $f(n)\max(A)$ consecutive integers there exist distinct $x_1,\ldots,x_n\in I$ such that $a_i\mid x_i$. Obtain good bounds for $f(n)$, or even an asymptotic formula.
+
+
+
+
+A problem of Erd\H{o}s and Sur\'{a}nyi \cite{ErSu59}, who proved\[(\log n)^c \ll f(n) \ll n^{1/2}\]for some constant $c&gt;0$. The lower bound here can be improved, using van Doorn's lower bound for [711] from \cite{vD26}, to\[\frac{\log n}{\log\log n}\ll f(n).\]See also [708] .
+
+
+
+
+References
+
+[ErSu59] Erd\H{o}s, P\'{a}l and Sur\'{a}nyi, J\'{a}nos, Bemerkungen zu einer Aufgabe eines mathematischen {W}ettbewerbs . Mat. Lapok (1959), 39-48.
+
+[vD26] W. van Doorn, On the length of an interval that contains distinct multiples of the first $n$ positive integers . Integers (2026), #A7.
+
+\noindent\textbf{Related OEIS sequences:} possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/709}}
+\end{document}

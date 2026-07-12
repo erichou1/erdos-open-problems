@@ -1,0 +1,25 @@
+{
+  "problem_number": 276,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/276",
+  "retrieved_at": "2026-07-10T23:16:22.884919+00:00",
+  "page_title": "276 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "b29febba04c91430570b56dd61478536511916f3db01df5c6a64c4a1dc1e2257",
+  "comment_count": 3,
+  "comments": [
+    {
+      "post_id": "1817",
+      "text": "The smallest known pair of starting values for which a Graham-type Lucas sequence exists, was gradually brought down by Knuth, Wilf, Nicol and Vsemirnov, with the latter holding the current record with $a_0 = 106276436867$ and $a_1 = 35256392432$ (despite Erdős and Graham writing 'it would be very surprising if a pair existed with both components less than $10^{20}$' in [ErGr80]!). So these starting values lead to a Lucas sequence which, thanks to a covering system, only contains composite values. Fun fact: in what feels like an hommage to Graham, the papers by Knuth, Nicol and Vsemirnov all have almost the same title A (new) Fibonacci-like sequence of composite numbers, which was also the title of Graham's original paper. Wilf's example can be found on the OEIS as A083216. As for a Lucas sequence of composite integers without an underlying covering system (i.e. the question at hand), this was conjecturally solved by Ismailescu and Son in this paper (appropriately titled A new kind of Fibonacci-like sequence of composite numbers), where you can find references to the aforementioned papers as well. With $p = 1$, $q$ a $129$-digit monstrosity (see Theorem 3 on page 6 of their paper), $a_0 = p^2 + q^2$, $a_1 = 2pq + q^2$ and $a_{n+2} = a_{n+1} + a_n$ for all $n \\ge 0$, Ismailescu and Son prove the following: 1) There exists a positive integer $m$ (for which all its prime factors are smaller than $a_0$) such that $\\gcd(m, a_{2n}) > 1$ for all $n \\ge 0$. That is, all even-indexed terms are composite thanks to a covering system. 2) For all $n \\ge 0$ we have $a_{2n+1} = (pF_n + qF_{n+1})(pL_n + qL_{n+1})$ with $F_n$ and $L_n$ the Fibonacci and Lucas numbers respectively. In particular, all odd-indexed terms are composite too. Now, as for these odd-indexed terms, there seems to be no reason to believe that a covering system is responsible here as well. However, they are not actually able to prove the non-existence of an $m$ such that $\\gcd(m, a_{2n+1}) > 1$ holds for all $n \\ge 0$. So that is why one could say that this problem is conjecturally solved. I do wonder if it's possible to use the ideas in Hough's theorem and follow-up work, to reduce deciding whether a covering system is responsible for the odd-indexed terms in the above example, to a finite computation. PS. Due to Dogmachine's comment the assumption on the coprimality of $a_0$ and $a_1$ was removed. However, this assumption is of course important for Graham's example. (The site has been updated to address this comment.)",
+      "meta": "Woett — 13:09 on 24 Nov 2025 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "1820",
+      "text": "It is likely solved then. This problem is of the same type as that of proving that the sequence $(5.2^n+1)$ contains arbitrarily large subsequences of pairwise relatively prime terms, which was asked by Michael Filaseta.",
+      "meta": "Dogmachine — 14:20 on 24 Nov 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "280",
+      "text": "We may the omit the coprime condition here without any problem. (The site has been updated to address this comment.)",
+      "meta": "Dogmachine — 16:01 on 01 Sep 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

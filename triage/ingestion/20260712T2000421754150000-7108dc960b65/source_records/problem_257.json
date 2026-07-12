@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 257,
+  "raw_page": {
+    "path": "raw/pages/problem_257.html",
+    "sha256": "bd2495cee00c36c292c36af87823c6a3131f328561cb391a17860472c442c9c2"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "b9da2939751dacc9ab350a69ee7a3b3cc29267eee1d6dbfa6e5e9b5b85cb2c79",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er48] Erd\\H{o}s, P., On arithmetical properties of Lambert series. J. Indian Math. Soc. (N.S.) (1948), 63-66.\n \n [Er68d] Erd\\H{o}s, P., On the irrationality of certain series. Math. Student (1968), 222--226.\n \n [Er88c] Erd\\H{o}s, P., On the irrationality of certain series: problems and results. New advances in transcendence theory (Durham, 1986) (1988), 102-109.\n \n [KoTa24] Kova\\vC, V. and Tao T., On several irrationality problems for Ahmes series. arXiv:2406.17593 (2024).\n \n [TaTe25] T. Tao and J. Ter\\\"{a}v\\\"{a}inen, Quantitative correlations and some problems on prime factors of consecutive integers. arXiv:2512.01739 (2025)."
+    },
+    "remarks": {
+      "sha256": "4508e815cdf27f70c08583ef842caf4fb8789d2f476cc8446ac7244cb38535c1",
+      "source_region": "div.problem-additional-text",
+      "text": "If $A=\\mathbb{N}$ then this series is $\\sum_{n}\\frac{\\tau(n)}{2^n}$, where $\\tau(n)$ is the number of divisors of $n$, which Erd\\H{o}s \\cite{Er48} proved is irrational. In general, if $f_A(n)$ counts the number of divisors of $n$ which are elements of $A$ then\\[\\sum_{n\\in A}\\frac{1}{2^n-1}=\\sum_n \\frac{f_A(n)}{2^n}.\\]The case when $A$ is the set of primes is [69]. This case (and when $A$ is the set of prime powers) was settled in the affirmative by Tao and Ter\\\"{a}v\\\"{a}inen \\cite{TaTe25}.\n\nErd\\H{o}s \\cite{Er68d} proved this sum is irrational whenever $(a,b)=1$ for all $a\\neq b\\in A$ and $\\sum_{n\\in A}\\frac{1}{n}<\\infty$ (and thought that the condition $(a,b)=1$ could be dropped by complicating his proof).\n\nThere is nothing special about $2$ here, and this sum is likely irrational with $2$ replaced by any integer $t\\geq 2$.\n\nIn \\cite{Er88c} Erd\\H{o}s goes further and speculates that $\\sum_{n\\in A}\\frac{1}{2^n-t_n}$ is irrational for every infinite set $A$ and bounded sequence $t_n$ (presumably of integers, and presumably excluding the case when $t_n=0$ for all $n$). This was disproved by Kova\\v{c} and Tao \\cite{KoTa24}, and in the comments Kova\\v{c} has sketched a proof that there exists some choice of $t_n$ with $1\\leq t_n\\leq 6$ such that this sum is rational."
+    },
+    "statement": {
+      "sha256": "31044825b5e0086d53b38185e0b14d1177becd0ef9bc05228b20657afb5af629",
+      "source_region": "div#content",
+      "text": "Let $A\\subseteq \\mathbb{N}$ be an infinite set. Is\\[\\sum_{n\\in A}\\frac{1}{2^n-1}\\]irrational?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/257"
+}

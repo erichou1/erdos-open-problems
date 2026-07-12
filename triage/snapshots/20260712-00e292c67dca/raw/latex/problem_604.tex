@@ -1,0 +1,48 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#604}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{Prize: \$500}
+
+\noindent\textbf{Tags:} geometry, distances
+
+\medskip
+\noindent\textbf{Note:} pinned distance problem
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Given $n$ distinct points $A\subset\mathbb{R}^2$ must there be a point $x\in A$ such that\[\#\{ d(x,y) : y \in A\} \gg n^{1-o(1)}?\]Or even $\gg n/\sqrt{\log n}$?
+
+
+
+
+The pinned distance problem, a stronger form of [89] . The example of an integer grid show that $n/\sqrt{\log n}$ would be best possible. It may be true that there are $\gg n$ many such points (Hunter has noted in the comments that this trivially follows from the existence of a single point), or that this is true on average - for example, if $d(x)$ counts the number of distinct distances from $x$ then in \cite{Er75f} Erd\H{o}s conjectured\[\sum_{x\in A}d(x) \gg \frac{n^2}{\sqrt{\log n}},\]where $A\subset \mathbb{R}^2$ is any set of $n$ points. In \cite{Er97e} Erd\H{o}s offers \$500 for a solution to this problem, but it is unclear whether he intended this for proving the existence of a single such point or for $\gg n$ many such points. In \cite{Er97e} Erd\H{o}s wrote that he initially 'overconjectured' and thought that the answer to this problem is the same as for the number of distinct distances between all pairs (see [89] ), but this was disproved by Harborth. It could be true that the answers are the same up to an additive factor of $n^{o(1)}$. The best known bound is\[\gg n^{c-o(1)},\]due to Katz and Tardos \cite{KaTa04}, where\[c=\frac{48-14e}{55-16e}=0.864137\cdots.\]
+
+
+
+
+References
+
+[Er75f] Erd\H{o}s, Paul, On some problems of elementary and combinatorial geometry . Ann. Mat. Pura Appl. (4) (1975), 99-108.
+
+[Er97e] Erd\H{o}s, Paul, Some of my favourite unsolved problems . Math. Japon. (1997), 527-537.
+
+[KaTa04] Katz, Nets Hawk and Tardos, G\'{a}bor, A new entropy inequality for the Erd\H{o}s distance problem . Towards a theory of geometric graphs (2004), 119-126.
+
+\noindent\textbf{Related OEIS sequences:} possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/604}}
+\end{document}

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1212,
+  "raw_page": {
+    "path": "raw/pages/problem_1212.html",
+    "sha256": "6a72d1fc96cb7af600252dd3c4c2e8a8ed38910c6a56c0abc9d94af551369df7"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "7fc9c6d439c5fdb3e6fb95b6a2204f23236f769d2a1c109776b33111c98ae6f5",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er80] Erd\\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.\n \n [HeSt71] Herzog, Fritz and Stewart, B. M., Patterns of visible and nonvisible lattice points. Amer. Math. Monthly (1971), 487--496."
+    },
+    "remarks": {
+      "sha256": "901ef230b67f3bf6cc8b7c8a2b5d9edff7070f553f983f06dfc72e19408a795b",
+      "source_region": "div.problem-additional-text",
+      "text": "Herzog and Stewart studied the graph $G$, which they called visible lattice points, and proved that there is only one infinite component, and conjectured that if $p$ is prime and $p\\nmid a$ then $(a,p)$ always belongs to the infinite component. (This is according to \\cite{Er80}; I can find no such results of Herzog and Stewart, who have a paper \\cite{HeSt71} on which finite patterns appear in the set of visible lattice points, but does not address this question.)\n\nErd\\H{o}s originally asked this question with just the condition that $\\min(x,y)>1$ and (as he recounts in \\cite{Er80}) 'foolishly offered 25 dollars for a proof. In the evening Stewart gave the simple proof: $(p_k,p_{k+1})$ can be joined to $(p_{k+1},p_{k+2})$'. Indeed, if $p_k$ is the $k$th prime then there is a path\\[(p_k,p_{k+1})\\to (p_k,p_{k+1}+1)\\to \\cdots \\]\\[\\to (p_{k},p_{k+2})\\to (p_{k}+1,p_{k+2})\\to (p_{k+1},p_{k+2}).\\]This is permissible provided $[p_{k+1},p_{k+2}]$ contains no multiple of $p_k$, which is true provided $p_{k+2}<2p_{k}$, which is true for all $k\\geq 4$.\n\nOne could further demand that the path be monotone (i.e. every step increases the distance from the origin). Is there a monotone path where we change direction after a bounded number of steps?\n\nThe first $50\\times 50$ block of the graph $G$ restricted to those vertices $(x,y)$ with both $x,y>1$ and at least one of $x$ or $y$ composite is shown {IMAGE=1212,here}."
+    },
+    "statement": {
+      "sha256": "fa70acc2f9efa255aa24089d51cdb7e5a3c94c26ae003a6a2c309d618f4b5bdb",
+      "source_region": "div#content",
+      "text": "Let $G$ be the graph with vertex set those pairs $(x,y)\\in \\mathbb{N}^2$ with $\\mathrm{gcd}(x,y)=1$, in which we join two vertices if the differ in only one coordinate, and there by $\\pm 1$.\n\nIs there a path going to infinity on $G$, say $P$, such that for all $(x,y)\\in P$ both $\\min(x,y)>1$ and at least one of $x$ or $y$ is composite?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1212"
+}

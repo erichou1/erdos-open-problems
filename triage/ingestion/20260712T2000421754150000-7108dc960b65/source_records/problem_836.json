@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 836,
+  "raw_page": {
+    "path": "raw/pages/problem_836.html",
+    "sha256": "ab2226eef5fb0085de2982109dce921b7e4592996adcf2eeb803287c8d2f66f9"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "004e781d6ed2275dcfd22b913fceecb3494cda5b8538ffeec9f6be7f4ef03e08",
+      "source_region": "div.problem-additional-text",
+      "text": "[ErLo75] Erd\\H{o}s, P. and Lov\\'{a}sz, L., Problems and results on {$3$}-chromatic hypergraphs and some\nrelated questions. (1975), 609--627."
+    },
+    "remarks": {
+      "sha256": "53bd1e5846432019f6084b0c6b3d08402e6803078edfa7b0f79849ae223892f0",
+      "source_region": "div.problem-additional-text",
+      "text": "A problem of Erd\\H{o}s and Shelah. The Fano geometry gives an example where there are no two edges which meet in $r-1$ vertices. Are there any other examples?\n\nErd\\H{o}s and Lov\\'{a}sz \\cite{ErLo75} proved that there must be two edges which meet in $\\gg \\frac{r}{\\log r}$ many vertices.\n\nAlon has provided the following counterexample to the first question: as vertices take two sets $X$ and $Y$ of sizes $2r-2$ and $\\frac{1}{2}\\binom{2r-2}{r-1}$ respectively, where $Y$ corresponds to all partitions of $X$ into two equal parts. The edges are all subsets of $X$ of size $r$, and also all sets consisting of a subset of $X$ of size $r-1$ together with the unique element of $Y$ corresponding to the induced partition of $X$.\n\nThis hypergraph is intersecting, its chromatic number is $3$, and it has $\\asymp 4^r/\\sqrt{r}$ many vertices."
+    },
+    "statement": {
+      "sha256": "f7f4aa53b212c85be31a7968578c73ec4e948db6b370f991123c380b9df0802f",
+      "source_region": "div#content",
+      "text": "Let $r\\geq 2$ and $G$ be a $r$-uniform hypergraph with chromatic number $3$ (that is, there is a $3$-colouring of the vertices of $G$ such that no edge is monochromatic).\n\nSuppose any two edges of $G$ have a non-empty intersection. Must $G$ contain $O(r^2)$ many vertices? Must there be two edges which meet in $\\gg r$ many vertices?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/836"
+}

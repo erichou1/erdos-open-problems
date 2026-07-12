@@ -1,0 +1,51 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#416}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $V(x)$ count the number of $n\leq x$ such that $\phi(m)=n$ is solvable. Does $V(2x)/V(x)\to 2$? Is there an asymptotic formula for $V(x)$?
+
+
+
+
+Pillai \cite{Pi29} proved $V(x)=o(x)$. Erd\H{o}s \cite{Er35b} proved $V(x)=x(\log x)^{-1+o(1)}$. The behaviour of $V(x)$ is now almost completely understood. Maier and Pomerance \cite{MaPo88} proved\[V(x)=\frac{x}{\log x}e^{(C+o(1))(\log\log\log x)^2},\]for some explicit constant $C&gt;0$. Ford \cite{Fo98} improved this to\[V(x)\asymp\frac{x}{\log x}e^{C_1(\log\log\log x-\log\log\log\log x)^2+C_2\log\log\log x-C_3\log\log\log\log x}\]for some explicit constants $C_1,C_2,C_3&gt;0$. Unfortunately this falls just short of an asymptotic formula for $V(x)$ and determining whether $V(2x)/V(x)\to 2$. In \cite{Er79e} Erd\H{o}s asks further to estimate the number of $n\leq x$ such that the smallest solution to $\phi(m)=n$ satisfies $kx&lt;m\leq (k+1)x$. See also [417] and [821] . This is discussed in problem B36 of Guy's collection \cite{Gu04}.
+
+
+
+
+References
+
+[Er35b] Erd\H{o}s, P., On the normal number of prime factors of $p-1$ and some related problems concerning Euler's $\varphi$-function . Quart. J. Math. (1935), 205-213.
+
+[Er79e] Erd\H{o}s, Paul, Some unconventional problems in number theory . Ast\'{e}risque (1979), 73-82.
+
+[Fo98] Ford, Kevin, The distribution of totients . Ramanujan J. (1998), 67-151.
+
+[Gu04] Guy, Richard K., Unsolved problems in number theory . (2004), xviii+437.
+
+[MaPo88] Maier, Helmut and Pomerance, Carl, On the number of distinct values of Euler's $\phi$-function . Acta Arith. (1988), 263-275.
+
+[Pi29] Pillai, S. Sivasankaranarayana, On some functions connected with {$\phi(n)$} . Bull. Amer. Math. Soc. (1929), 832-836.
+
+\noindent\textbf{Related OEIS sequences:} A264810
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/416}}
+\end{document}

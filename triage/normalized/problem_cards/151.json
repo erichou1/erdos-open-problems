@@ -1,0 +1,253 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.506
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "EGT92",
+      "Er88"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/151",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[EGT92] Erd\\H{o}s, Paul and Gallai, Tibor and Tuza, Zsolt, Covering the cliques of a graph with vertices. Discrete Math. (1992), 279-289.\n \n [Er88] Erd\\H{o}s, P, Problems and results in combinatorial analysis and graph theory. Discrete Math. (1988), 81-92.",
+      "remarks": "It is easy to see that $\\tau(G) \\leq n-\\sqrt{n}$. Note also that if $G$ is triangle-free then trivially $\\tau(G)\\leq n-H(n)$.\n\nThis is listed in \\cite{Er88} as a problem of Erd\\H{o}s and Gallai, who were unable to make progress even assuming $G$ is $K_4$-free. There Erd\\H{o}s remarked that this conjecture is 'perhaps completely wrongheaded'. \n\nIt later appeared as Problem 1 in \\cite{EGT92}.\n\nThe general behaviour of $\\tau(G)$ is the subject of [610]."
+    },
+    "source_state": "open",
+    "tags": [
+      "graph theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.54,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.276932
+      ],
+      "probability": 0.113737
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 1.175,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277471
+      ],
+      "probability": 0.105159
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.3,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.251666
+      ],
+      "probability": 0.097744
+    },
+    "p_high_mathematical_value": {
+      "alpha": 1.7,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.36835
+      ],
+      "probability": 0.158879
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.0,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.216508
+      ],
+      "probability": 0.076923
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 0.9,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.203695
+      ],
+      "probability": 0.069767
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 40.0,
+      "credible_interval_approx": [
+        0.0,
+        0.071043
+      ],
+      "probability": 0.02439
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.436385
+      ],
+      "probability": 0.2
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "minor"
+    },
+    "literature": {
+      "comment_count": 1,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:15:48.207279+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "9bfb4bf71afddc1a9e9ea37c318592e92083699464abb745091436c10e61202a"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "implicit_convention"
+      ],
+      "ambiguity_status": "minor",
+      "quantifier_signal_count": 0,
+      "question_count": 1,
+      "requires_source_audit": true,
+      "statement_characters": 389,
+      "statement_tokens_approx": 64
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "prove",
+      "multi_part": false,
+      "primary_domain": "graph theory"
+    }
+  },
+  "problem_id": "erdos-151",
+  "problem_number": 151,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "prove",
+    "multi_part": false,
+    "primary_domain": "graph theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_151.html",
+      "raw_html_sha256": "0a0a1b464cf9a672ddcbc72a393aaddb74d67d3c5cd99f6ddc6cfe7e80cda3a1",
+      "section_sha256": {
+        "references": "d9e3ddea5c5b1a723cf6f508c508cd4ca43aa49e3367b5a601e8422d143c4b5f",
+        "remarks": "137b0d399f5f0da36a6cc0f6913ef2ae112264f1802db1f8113f2569cf3b0cc2",
+        "statement": "44d5ac48e776a93e1edcbbfa43e26436d810e4168ebdf0abc2dbcbbd140c284f"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_151.json",
+      "source_record_sha256": "a492b9f0e2cb9334e5301128c4f54f10c2cc09ab47ae1e650c9f890d509ae00b",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_151.tex",
+    "latex_sha256": "5631b79f23098349f8155972eea3b78c97f177bde0fd2d4b5113c815066d0450",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "44d5ac48e776a93e1edcbbfa43e26436d810e4168ebdf0abc2dbcbbd140c284f",
+    "recommended_attack_modes": [
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "0dc4cb7bb13c38f46692849d72f73575c308bfa6c1fcdadbeef7502595c34ed9",
+  "routes": [
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "minor",
+    "intended": "For a graph $G$ let $\\tau(G)$ denote the minimal number of vertices that include at least one from each maximal clique of $G$ on at least two vertices (sometimes called the clique transversal number).\n\nLet $H(n)$ be maximal such that every triangle-free graph on $n$ vertices contains an independent set on $H(n)$ vertices.\n\nIf $G$ is a graph on $n$ vertices then is\\[\\tau(G)\\leq n-H(n)?\\]",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "For a graph $G$ let $\\tau(G)$ denote the minimal number of vertices that include at least one from each maximal clique of $G$ on at least two vertices (sometimes called the clique transversal number). Let $H(n)$ be maximal such that every triangle-free graph on $n$ vertices contains an independent set on $H(n)$ vertices. If $G$ is a graph on $n$ vertices then is\\[\\tau(G)\\leq n-H(n)?\\]",
+    "original": "For a graph $G$ let $\\tau(G)$ denote the minimal number of vertices that include at least one from each maximal clique of $G$ on at least two vertices (sometimes called the clique transversal number).\n\nLet $H(n)$ be maximal such that every triangle-free graph on $n$ vertices contains an independent set on $H(n)$ vertices.\n\nIf $G$ is a graph on $n$ vertices then is\\[\\tau(G)\\leq n-H(n)?\\]",
+    "statement_sha256": "44d5ac48e776a93e1edcbbfa43e26436d810e4168ebdf0abc2dbcbbd140c284f"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

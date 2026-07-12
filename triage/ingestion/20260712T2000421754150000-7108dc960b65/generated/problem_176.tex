@@ -1,0 +1,42 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#176}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} additive combinatorics, arithmetic progressions, discrepancy
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $N(k,\ell)$ be the minimal $N$ such that for any $f:\{1,\ldots,N\}\to\{-1,1\}$ there must exist a $k$-term arithmetic progression $P$ such that\[ \left\lvert \sum_{n\in P}f(n)\right\rvert\geq \ell.\]Find good upper bounds for $N(k,\ell)$. Is it true that for any $c>0$ there exists some $C>1$ such that\[N(k,ck)\leq C^k?\]What about\[N(k,2)\leq C^k\]or\[N(k,\sqrt{k})\leq C^k?\]
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+When $\ell=k$ this is the van der Waerden number $W(k)$ (see [138]). Spencer \cite{Sp73} has proved that if $k=2^tm$ with $m$ odd then\[N(k,1)=2^t(k-1)+1.\]Erd\H{o}s and Graham write that 'no decent bound' is known even for $N(k,2)$.
+
+Erd\H{o}s \cite{Er63d} proved that, for every $c>0$,\[N(k,ck)> (1+\alpha_c)^k\]where $\alpha_c\to 0$ as $c\to 0$ and $\alpha_c\to \sqrt{2}-1$ as $c\to 1$. 
+
+Hunter in the comment section observes that the local lemma implies an improved bound of\[N(k,ck) \gg \frac{2^k}{k^{O(1)}\sum_{i>\frac{1+c}{2}k}\binom{k}{i}},\]so that in particular as $c\to 1$ we have, for all large $k$, $N(k,ck)\geq (2-o(1))^k$ (where the $o(1)$ term $\to 0$ as $c\to 1$).
+
+\bigskip
+\noindent\textbf{References:}
+
+[Er63d] Erd\H{o}s, P\'{a}l, On combinatorial questions connected with a theorem of
+{R}amsey and van der {W}aerden. Mat. Lapok (1963), 29--37.
+ 
+ [Sp73] J. Spencer, Problems 185. Bull. Canad. Math. Soc. (1973), 185.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/176}}
+\end{document}

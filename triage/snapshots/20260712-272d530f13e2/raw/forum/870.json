@@ -1,0 +1,55 @@
+{
+  "problem_number": 870,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/870",
+  "retrieved_at": "2026-07-10T23:19:12.200530+00:00",
+  "page_title": "870 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "f28a1000371d603f3b7f1bb57c37316ce4c13331a7783b3946482032148e512e",
+  "comment_count": 9,
+  "comments": [
+    {
+      "post_id": "6228",
+      "text": "Surely the more natural statement of this problem is where $r(n)$ counts the number of representations of $n$ as a sum of exactly $k$ terms? From my read of Erdős, this is what he was intending.",
+      "meta": "DanielLarsen — 04:39 on 04 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5788",
+      "text": "LATER UPDATE (May 2): I have updated the write-up to address the concerns that explicitly or implicitly had to do with the k=3 case; as small as it is, it takes way longer to justify than k>=4, which all fall with a simpler argument. The Overleaf link stays the same, and the original version of the write-up can be found under main_apr24.pdf at the same link, while main.pdf is the newest version. The writing is still convoluted, and I verified this new version of the write-up by my own judgment and by scrutinizing it (wholly, or parts of it) using GPT-5.5-Pro. I aim to make it more human-parsable when time allows. ORIGINAL COMMENT: I claim a solution to this problem, specifically a total refutation: the answer is no, for all $k \\geq 3$. The writeup is at this Overleaf link. The proof was developed via an automated multi-turn scaffold that I built, which iteratively queried ChatGPT-5.4-Pro (Extended Thinking), then, starting yesterday, ChatGPT-5.5-Pro (Extended Thinking) running in total for approximately 40+ consecutive turns/prompts (about 20 for each model). The constructions in all cases ($k=3$ and $k \\geq 4$) are inspired by the Larsen-Larsen 2026 robust order-2 basis without minimal subbases (their resolution of Erdős Problem #868), combined with (i) a finite filler gadget lifting to every $k\\ge4$, and (ii) a finite-shift clustered canary strengthening handling $k=3$. Here is GPT-5.5-Heavy Thinking verifying the solution: check 1, check 2, check 3. (I would have used Pro for verification but I used it so much that I got rate-limited, no joke...) I have been attempting a Lean 4 / Mathlib Aristotle-based autoformalization, but it is hindered by the fact that the underlying Larsen-Larsen (2026) preprint is itself not straightforwardly formalizable, likely related to how it is a probabilistic random-construction argument; comments on the #868 page note the same formalization obstacle.",
+      "meta": "DavidTurturean — 19:15 on 24 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5861",
+      "text": "Looking at the Benchmarks it seems that extended thinking has almost caught up to Pro in 5.5. Are you using the API? If so, perhaps going through the Persona nonsense will get you higher rate limits, thought it all sounds quite costly.",
+      "meta": "qrdl — 04:10 on 25 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5862",
+      "text": "I was not using the API this time around because the model had not been made available in the API yet",
+      "meta": "DavidTurturean — 04:29 on 25 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5866",
+      "text": "Hmm, strange. https://openrouter.ai/openai/gpt-5.5-pro $180 per M token outputs. Yikes!",
+      "meta": "qrdl — 07:18 on 25 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5871",
+      "text": "Congrats. Standard check claimed some number of issues, perhaps repairable. For Lean, I think we accept (by pragmatic considerations) a proof conditional on standard theorems or literature results that are generally accepted to be correct.",
+      "meta": "Nat Sothanaphan — 10:20 on 25 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5895",
+      "text": "I have spent some time thinking about this problem, but this strategy is unfamiliar to me, so for now it's difficult for me to give an assessment. I will say, skimming through the paper, I already have seen a claim that looks quite questionable to me. It's very possible this is easily correctable, but it would surprise me if the proof in its current form was precisely correct. Given that there are no fundamental obstructions to formalization if the basic strategy is viable, I would be very curious to see if the agents can push this through to a formalized proof or at least a readable draft.",
+      "meta": "DanielLarsen — 21:57 on 25 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6186",
+      "text": "I have updated the write-up to address the concerns in the replies that explicitly or implicitly had to do with the k=3 case; as small as it is, it takes way longer to justify than k>=4, which all fall with a simpler argument. The Overleaf link stays the same, and the original version of the write-up can be found under main_apr24.pdf at the same link, while main.pdf is the newest version. The writing is still convoluted, and I verified this new version of the write-up by my own judgment and by scrutinizing it (wholly, or parts of it) using GPT-5.5-Pro. I aim to make it more human-parsable when time allows.",
+      "meta": "DavidTurturean — 19:12 on 02 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4191",
+      "text": "probably good to mention that an additive basis is minimal if removing any infinite set breaks the basis property (in most other problems involving this notion, you've reminded the readers of this).",
+      "meta": "zach hunter — 08:39 on 05 Feb 2026 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

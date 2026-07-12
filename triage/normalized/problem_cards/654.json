@@ -1,0 +1,311 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.696
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "Er87b",
+      "Er97e",
+      "ErPa90",
+      "Fe26"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/654",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Er87b] Erd\\H{o}s, P., Some combinatorial and metric problems in geometry. Intuitive geometry (Si\\'{o}fok, 1985) (1987), 167-177.\n \n [Er97e] Erd\\H{o}s, Paul, Some of my favourite unsolved problems. Math. Japon. (1997), 527-537.\n \n [ErPa90] Erd\\H{o}s, P. and Pach, J., Variations on the theme of repeated distances. Combinatorica (1990), 261--269.\n \n [Fe26] T. Feng et al, Semi-Autonomous Mathematics Discovery with Gemini: A Case Study on the Erd\\H{o}s Problems. arXiv:2601.22401 (2026).",
+      "remarks": "It is trivial that $f(n) \\geq (n-1)/3$. In \\cite{Er97e} Erd\\H{o}s asks whether $f(n)>(1-o(1))n$, but says this is 'perhaps too optimistic but I am sure that [the trivial bound] can be significantly improved'.\n\nIn \\cite{Er87b} and \\cite{ErPa90} Erd\\H{o}s and Pach ask this under the additional assumption that there are no three points on a line (so that the points are in general position), although they only ask the weaker question whether there is a lower bound of the shape $(\\tfrac{1}{3}+c)n$ for some constant $c>0$.\n\nThey suggest the lower bound $(1-o(1))n$ is true under the assumption that any circle around a point $x_i$ contains at most $2$ other $x_j$.\n\nThe strongest form of this conjecture was disproved by Aletheia \\cite{Fe26}, which constructed a set of $n$ points in $\\mathbb{R}^2$, no four on a circle, such that there are at most $\\frac{3}{4}n$ distinct distances from any single point (although this construction has all the points on the union of two lines, so does not help with the stronger version with the points in general position)."
+    },
+    "source_state": "open",
+    "tags": [
+      "geometry",
+      "distances"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.0,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.319945
+      ],
+      "probability": 0.142857
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 2.533,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.0,
+        0.374895
+      ],
+      "probability": 0.180479
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 13.0,
+      "credible_interval_approx": [
+        0.0,
+        0.134243
+      ],
+      "probability": 0.037037
+    },
+    "p_high_mathematical_value": {
+      "alpha": 3.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.014612,
+        0.485388
+      ],
+      "probability": 0.25
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.2,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.197843
+      ],
+      "probability": 0.074074
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.2,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.0,
+        0.306613
+      ],
+      "probability": 0.140127
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.063431
+      ],
+      "probability": 0.021739
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.0,
+        0.384039
+      ],
+      "probability": 0.173913
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 0,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:18:11.825340+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "7b6e4fd7d46431313831c995bba4a89c7ca9b6b20665330fb73e86e7edf1a942"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "asymptotic_notation",
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 5,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 317,
+      "statement_tokens_approx": 49
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove_or_disprove",
+      "multi_part": true,
+      "primary_domain": "geometry"
+    }
+  },
+  "problem_id": "erdos-654",
+  "problem_number": 654,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove_or_disprove",
+    "multi_part": true,
+    "primary_domain": "geometry"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_654.html",
+      "raw_html_sha256": "71938c2be7dab9394705947b1dbdb2c9d5eabce37899c95979276294c0c2e4a3",
+      "section_sha256": {
+        "references": "fcb3cb599e1ee2452e4d7a80e2f07985533f29a1c3760cf665dcd3badd1d28d2",
+        "remarks": "ad716d87ca208a5c46406612a12b355d9e346ad7c606a6adc0eda8bbfd1384dc",
+        "statement": "a2bead0d857b160c49532197e9637dbcd2b3eb6cf9638fbd5df1bbc871efaca9"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_654.json",
+      "source_record_sha256": "ad07d8ef26e7740d9b3e276f66375cc9ff05431b7d9d19bb7a1ad6a49d40378b",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_654.tex",
+    "latex_sha256": "ba8b874b7a8b3d1a2d4688b1713301c4a61649c4d023789683b6f28cf767d274",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "a2bead0d857b160c49532197e9637dbcd2b3eb6cf9638fbd5df1bbc871efaca9",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "subproblem_decomposition",
+      "shared_infrastructure_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Let $f(n)$ be such that, given any $x_1,\\ldots,x_n\\in \\mathbb{R}^2$ with no four points on a circle, there exists some $x_i$ with at least $f(n)$ many distinct distances to other $x_j$. Estimate $f(n)$ - in particular, is it true that\\[f(n)>(1-o(1))n?",
+        "focus_question_sha256": "b4c989443dd1c7a3b23a569c9c569151c1a7b2e3c59799c0e3b55d70449d9a5e",
+        "parent_statement_sha256": "a2bead0d857b160c49532197e9637dbcd2b3eb6cf9638fbd5df1bbc871efaca9",
+        "part_index": 1,
+        "subproblem_contract_sha256": "76779faa769b9a233575bd0ff07f5760fc27419e1d9793589cddaf9f3d31ba98",
+        "subproblem_id": "erdos-654-part-01-76779faa"
+      },
+      {
+        "focus_question": "\\]Or at least\\[f(n) > (1/3+c)n\\]for some $c>0$, for all large $n$?",
+        "focus_question_sha256": "7f782cb7d4ee9e319076a166452f0e1aa9204237ad1f2cfc43496e7e22d898de",
+        "parent_statement_sha256": "a2bead0d857b160c49532197e9637dbcd2b3eb6cf9638fbd5df1bbc871efaca9",
+        "part_index": 2,
+        "subproblem_contract_sha256": "677b68098b9b6a03bbf362a0c9bde86fec50a65f687f3aa6377f65b6c4c04306",
+        "subproblem_id": "erdos-654-part-02-677b6809"
+      }
+    ]
+  },
+  "research_directive_sha256": "785f48b447b1ccac7b21d986e44ca1cc89c64f387981a35dd1a3b6ef1f93aafa",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "subproblem_decomposition",
+    "shared_infrastructure_search"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Let $f(n)$ be such that, given any $x_1,\\ldots,x_n\\in \\mathbb{R}^2$ with no four points on a circle, there exists some $x_i$ with at least $f(n)$ many distinct distances to other $x_j$. Estimate $f(n)$ - in particular, is it true that\\[f(n)>(1-o(1))n?\\]Or at least\\[f(n) > (1/3+c)n\\]for some $c>0$, for all large $n$?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $f(n)$ be such that, given any $x_1,\\ldots,x_n\\in \\mathbb{R}^2$ with no four points on a circle, there exists some $x_i$ with at least $f(n)$ many distinct distances to other $x_j$. Estimate $f(n)$ - in particular, is it true that\\[f(n)>(1-o(1))n?\\]Or at least\\[f(n) > (1/3+c)n\\]for some $c>0$, for all large $n$?",
+    "original": "Let $f(n)$ be such that, given any $x_1,\\ldots,x_n\\in \\mathbb{R}^2$ with no four points on a circle, there exists some $x_i$ with at least $f(n)$ many distinct distances to other $x_j$. Estimate $f(n)$ - in particular, is it true that\\[f(n)>(1-o(1))n?\\]Or at least\\[f(n) > (1/3+c)n\\]for some $c>0$, for all large $n$?",
+    "statement_sha256": "a2bead0d857b160c49532197e9637dbcd2b3eb6cf9638fbd5df1bbc871efaca9"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-654",
+      "part_index": 1,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Let $f(n)$ be such that, given any $x_1,\\ldots,x_n\\in \\mathbb{R}^2$ with no four points on a circle, there exists some $x_i$ with at least $f(n)$ many distinct distances to other $x_j$. Estimate $f(n)$ - in particular, is it true that\\[f(n)>(1-o(1))n?",
+        "focus_question_sha256": "b4c989443dd1c7a3b23a569c9c569151c1a7b2e3c59799c0e3b55d70449d9a5e",
+        "normalized": "Let $f(n)$ be such that, given any $x_1,\\ldots,x_n\\in \\mathbb{R}^2$ with no four points on a circle, there exists some $x_i$ with at least $f(n)$ many distinct distances to other $x_j$. Estimate $f(n)$ - in particular, is it true that\\[f(n)>(1-o(1))n?\\]Or at least\\[f(n) > (1/3+c)n\\]for some $c>0$, for all large $n$?",
+        "original": "Let $f(n)$ be such that, given any $x_1,\\ldots,x_n\\in \\mathbb{R}^2$ with no four points on a circle, there exists some $x_i$ with at least $f(n)$ many distinct distances to other $x_j$. Estimate $f(n)$ - in particular, is it true that\\[f(n)>(1-o(1))n?\\]Or at least\\[f(n) > (1/3+c)n\\]for some $c>0$, for all large $n$?",
+        "statement_sha256": "a2bead0d857b160c49532197e9637dbcd2b3eb6cf9638fbd5df1bbc871efaca9"
+      },
+      "subproblem_contract_sha256": "76779faa769b9a233575bd0ff07f5760fc27419e1d9793589cddaf9f3d31ba98",
+      "subproblem_id": "erdos-654-part-01-76779faa"
+    },
+    {
+      "parent_problem_id": "erdos-654",
+      "part_index": 2,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "\\]Or at least\\[f(n) > (1/3+c)n\\]for some $c>0$, for all large $n$?",
+        "focus_question_sha256": "7f782cb7d4ee9e319076a166452f0e1aa9204237ad1f2cfc43496e7e22d898de",
+        "normalized": "Let $f(n)$ be such that, given any $x_1,\\ldots,x_n\\in \\mathbb{R}^2$ with no four points on a circle, there exists some $x_i$ with at least $f(n)$ many distinct distances to other $x_j$. Estimate $f(n)$ - in particular, is it true that\\[f(n)>(1-o(1))n?\\]Or at least\\[f(n) > (1/3+c)n\\]for some $c>0$, for all large $n$?",
+        "original": "Let $f(n)$ be such that, given any $x_1,\\ldots,x_n\\in \\mathbb{R}^2$ with no four points on a circle, there exists some $x_i$ with at least $f(n)$ many distinct distances to other $x_j$. Estimate $f(n)$ - in particular, is it true that\\[f(n)>(1-o(1))n?\\]Or at least\\[f(n) > (1/3+c)n\\]for some $c>0$, for all large $n$?",
+        "statement_sha256": "a2bead0d857b160c49532197e9637dbcd2b3eb6cf9638fbd5df1bbc871efaca9"
+      },
+      "subproblem_contract_sha256": "677b68098b9b6a03bbf362a0c9bde86fec50a65f687f3aa6377f65b6c4c04306",
+      "subproblem_id": "erdos-654-part-02-677b6809"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

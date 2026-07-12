@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#1005}
+\date{Last updated: 2025-09-09}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $\frac{a_1}{b_1},\frac{a_2}{b_2},\ldots$ be the Farey fractions of order $n\geq 4$. Let $f(n)$ be the largest integer such that if $1\leq k<l\leq k+f(n)$ then $\frac{a_k}{b_k}$ and $\frac{a_l}{b_l}$ are similarly ordered - in other words,\[(a_k-a_l)(b_k-b_l)\geq 0.\]Estimate $f(n)$ - in particular, is there a constant $c>0$ such that $f(n)=(c+o(1))n$ for all large $n$?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+The function $f(n)$ was first considered by Mayer \cite{Ma42}, who proved $f(n)\to \infty$ as $n\to \infty$. Erd\H{o}s \cite{Er43} proved $f(n)\gg n$.
+
+van Doorn \cite{vD25b} has proved that\[\left(\frac{1}{12}-o(1)\right)n\leq f(n) \leq \frac{1}{4}n+O(1),\]and conjectures that the upper bound is optimal.
+
+\bigskip
+\noindent\textbf{References:}
+
+[Er43] Erd\H{o}s, P., A note on {F}arey series. Quart. J. Math. Oxford Ser. (1943), 82--85.
+ 
+ [Ma42] Mayer, A. E., A mean value theorem concerning {F}arey series. Quart. J. Math. Oxford Ser. (1942), 48--57.
+ 
+ [vD25b] W. van Doorn, Improved bounds for the Mayer-Erd\H{o}s phenomenon on similarly ordered Farey fractions. arXiv:2509.00121 (2025).
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/1005}}
+\end{document}

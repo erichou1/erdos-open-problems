@@ -8,6 +8,8 @@ from dataclasses import asdict
 from pathlib import Path
 
 from proof_pipeline import PipelineResult
+from outcome_ledger import record_outcome
+from erdos_searcher import write_json
 from run_verified_pipeline import load_evidence, publish_verified_result
 from verification import Review, candidate_contract, evaluate_gate
 
@@ -34,6 +36,7 @@ def promote(
     publish: bool,
     category: str,
     base_dir: Path | None = None,
+    triage_dir: Path | None = None,
 ) -> PipelineResult:
     manifest_path = run_dir / "manifest.json"
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
@@ -50,7 +53,8 @@ def promote(
     )
     manifest["gate"] = asdict(decision)
     manifest["verification_evidence"] = [asdict(item) for item in evidence]
-    manifest_path.write_text(json.dumps(manifest, indent=2) + "\n", encoding="utf-8")
+    manifest["candidate_sha256"] = candidate_sha
+    write_json(manifest_path, manifest)
     result = PipelineResult(
         problem_number=int(manifest["problem_number"]),
         candidate_outcome=str(manifest["candidate_outcome"]),
@@ -61,6 +65,8 @@ def promote(
         publish_verified_result(
             result, category, base_dir or Path(__file__).parent
         )
+    if triage_dir is not None:
+        record_outcome(triage_dir, result.problem_number, manifest_path)
     return result
 
 
@@ -70,10 +76,12 @@ def main() -> None:
     parser.add_argument("--evidence-json", type=Path, required=True)
     parser.add_argument("--category", default="open")
     parser.add_argument("--publish", action="store_true")
+    parser.add_argument("--triage", type=Path, default=Path("triage"))
     args = parser.parse_args()
     result = promote(
         args.run_dir.resolve(), args.evidence_json.resolve(),
         publish=args.publish, category=args.category,
+        triage_dir=args.triage.resolve(),
     )
     print(f"gate: {result.gate.status}")
     for reason in result.gate.reasons:

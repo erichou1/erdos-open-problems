@@ -1,0 +1,32 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#563}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory, ramsey theory, hypergraphs
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $F(n,\alpha)$ denote the smallest $m$ such that there exists a $2$-colouring of the edges of $K_n$ so that every $X\subseteq [n]$ with $\lvert X\rvert\geq m$ contains more than $\alpha \binom{\lvert X\rvert}{2}$ many edges of each colour. Prove that, for every $0\leq \alpha&#60; 1/2$,\[F(n,\alpha)\sim c_\alpha\log n\]for some constant $c_\alpha$ depending only on $\alpha$.
+
+
+
+
+It is easy to show via the probabilistic method that, for every $0\leq \alpha&lt;1/2$,\[F(n,\alpha)\asymp_\alpha \log n.\]Note that when $\alpha=0$ this is just asking for a $2$-colouring of the edges of $K_n$ which contains no monochromatic clique of size $m$, and hence we recover the classical Ramsey numbers. See also [161] for a generalisation to hypergraphs. This problem is #39 in Ramsey Theory in the graphs problem collection.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/563}}
+\end{document}

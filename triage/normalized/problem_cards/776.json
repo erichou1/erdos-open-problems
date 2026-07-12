@@ -1,0 +1,252 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.377
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "HeTa26b"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/776",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[HeTa26b] Y. He and Q. Tang, An Erd\\H{o}s--Trotter problem on antichains with multiplicity r on each occurring level. arXiv:2602.09803 (2026).",
+      "remarks": "A problem of Erd\\H{o}s and Trotter. For $r=1$ and $n>3$ the maximum possible is $n-2$. For $r>1$ and $n$ sufficiently large $n-3$ is achievable, but $n-2$ is never achievable.\n\nLet $n_0(r)$ be such that whenever $n>n_0(r)$ there exists such a family with $n-3$ distinct set sizes. He and Tang \\cite{HeTa26b} (with ChatGPT) have proved that $n_0(2)=3$, $n_0(3)=8$, and for all $r\\geq 4$\\[2r+2\\leq n_0(r)\\leq 2r+2\\log_2r+O(\\log\\log r),\\]and hence $n_0(r)\\sim 2r$ as $r\\to \\infty$."
+    },
+    "source_state": "open",
+    "tags": [
+      "combinatorics"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.99,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.003601,
+        0.395331
+      ],
+      "probability": 0.199466
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 1.003,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.253977
+      ],
+      "probability": 0.091148
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.8,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.190215
+      ],
+      "probability": 0.0625
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.033,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.40336
+      ],
+      "probability": 0.18429
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 2.1,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.328512
+      ],
+      "probability": 0.148936
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.5,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.272872
+      ],
+      "probability": 0.111111
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 39.0,
+      "credible_interval_approx": [
+        0.0,
+        0.07279
+      ],
+      "probability": 0.025
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.436385
+      ],
+      "probability": 0.2
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "clear"
+    },
+    "literature": {
+      "comment_count": 6,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:18:45.302670+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "498ee953a3f660d13701aba7803e0bc6d71de894059d6212da8b503866671e73"
+    },
+    "statement": {
+      "ambiguity_markers": [],
+      "ambiguity_status": "clear",
+      "quantifier_signal_count": 4,
+      "question_count": 1,
+      "requires_source_audit": false,
+      "statement_characters": 362,
+      "statement_tokens_approx": 63
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove",
+      "multi_part": false,
+      "primary_domain": "combinatorics"
+    }
+  },
+  "problem_id": "erdos-776",
+  "problem_number": 776,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove",
+    "multi_part": false,
+    "primary_domain": "combinatorics"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_776.html",
+      "raw_html_sha256": "d4d7aeaf20e7af8470b1819bda0cc08edeca7291e487dd6beed6d59f153ed286",
+      "section_sha256": {
+        "references": "c0f10adc77a6dcc391ba0a84e74333905f7def25b44091311373d4b4fb8fc7c6",
+        "remarks": "80562b29fff2d7679fcefb6c1b9b4699c2c69b87f5bdcf365240cf8fd0e0e4b6",
+        "statement": "db5f8c737af3149e6f6ed029a75627577a4bbb1477d002425ebff0558e8ea8a6"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_776.json",
+      "source_record_sha256": "47559d21f4d01956f6d81546746f9e14eec65c40f7222e311d2a26420fe895ae",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_776.tex",
+    "latex_sha256": "d5b8ad777f5cad229d14b4f401abd4a2e8644451ed030da0e430469c6f9cad58",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "db5f8c737af3149e6f6ed029a75627577a4bbb1477d002425ebff0558e8ea8a6",
+    "recommended_attack_modes": [
+      "literature_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "d500e1125afac396e6986336238dc753426f721ab72a094de0da9d05949cf2db",
+  "routes": [
+    "literature_search",
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "clear",
+    "intended": "Let $r\\geq 2$ and $A_1,\\ldots,A_m\\subseteq \\{1,\\ldots,n\\}$ be such that $A_i\\not\\subseteq A_j$ for all $i\\neq j$ and for any $t$ if there exists some $i$ with $\\lvert A_i\\rvert=t$ then there must exist at least $r$ sets of that size.\n\nHow large must $n$ be (as a function of $r$) to ensure that there is such a family which achieves $n-3$ distinct sizes of sets?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $r\\geq 2$ and $A_1,\\ldots,A_m\\subseteq \\{1,\\ldots,n\\}$ be such that $A_i\\not\\subseteq A_j$ for all $i\\neq j$ and for any $t$ if there exists some $i$ with $\\lvert A_i\\rvert=t$ then there must exist at least $r$ sets of that size. How large must $n$ be (as a function of $r$) to ensure that there is such a family which achieves $n-3$ distinct sizes of sets?",
+    "original": "Let $r\\geq 2$ and $A_1,\\ldots,A_m\\subseteq \\{1,\\ldots,n\\}$ be such that $A_i\\not\\subseteq A_j$ for all $i\\neq j$ and for any $t$ if there exists some $i$ with $\\lvert A_i\\rvert=t$ then there must exist at least $r$ sets of that size.\n\nHow large must $n$ be (as a function of $r$) to ensure that there is such a family which achieves $n-3$ distinct sizes of sets?",
+    "statement_sha256": "db5f8c737af3149e6f6ed029a75627577a4bbb1477d002425ebff0558e8ea8a6"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

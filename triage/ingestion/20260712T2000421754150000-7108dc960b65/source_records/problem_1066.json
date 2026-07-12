@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1066,
+  "raw_page": {
+    "path": "raw/pages/problem_1066.html",
+    "sha256": "cfccc5d0533bcc387e08f0437a8554e2081cc97046fbdf62b83dda87ee0e4b25"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "a0c950ac466197cff1d64ede803602e6da013c294a3bad1d7667d028d6d26fd4",
+      "source_region": "div.problem-additional-text",
+      "text": "[Cs98] Csizmadia, G., On the independence number of minimum distance graphs. Discrete Comput. Geom. (1998), 179--187.\n \n [PaTo96] Pach, J\\'{a}nos and T\\'oth, G\\'{e}za, On the independence number of coin graphs. Geombinatorics (1996), 30--33.\n \n [Po85] Pollack, R., Increasing the minimum distance of a set of points. J. Combin. Theory Ser. A (1985), 450.\n \n [Sw02] Swanepoel, Konrad J., Independence numbers of planar contact graphs. Discrete Comput. Geom. (2002), 649--670."
+    },
+    "remarks": {
+      "sha256": "ccb7df2aa9a6f5a1683615126beb7d0ad866b59756979602acfdd1c0c5773dab",
+      "source_region": "div.problem-additional-text",
+      "text": "Such graphs are always planar. Erd\\H{o}s initially thought that $g(n)=n/3$, but Chung and Graham, and independently Pach, gave a construction that shows $g(n)\\leq \\frac{6}{19}n$. Pach and Toth \\cite{PaTo96} improved this to $g(n)\\leq \\frac{5}{16}n$.\n\nPollack \\cite{Po85} noted that the Four colour theorem implies $g(n)\\geq n/4$, since the graph is planar. Pollack reports that Pach observed that this in for unit distance graphs the four colour theorem can be proved by a simple induction. \n\nThis lower bound has been improved to $\\frac{9}{35}n$ by Csizmadia \\cite{Cs98} and then $\\frac{8}{31}n$ by Swanepoel \\cite{Sw02}. The current record bounds are therefore\\[\\frac{8}{31}n \\approx 0.258n \\leq g(n) \\leq 0.3125n=\\frac{5}{16}n.\\]Pollack \\cite{Po85} also reports a letter from Erd\\H{o}s which poses the more general problem of, given $n$ points in $\\mathbb{R}^d$ with minimum distance $1$, let $g_d(n)$ be maximal such that there always exist at least $g_d(n)$ many points which have minimum distance $>1$. Is it true that $g_d(n) \\gg n/d$ in general? The upper bound $g_d(n) \\ll n/d$ is trivial, considering widely spaced unit simplices.\n\nSee [1070] for the general estimate of independence number of unit distance graphs."
+    },
+    "statement": {
+      "sha256": "986e4547983d9d2a1b67b57fd6f3508f602a73e14c99f5a4a0a61a35d8251f5f",
+      "source_region": "div#content",
+      "text": "Let $G$ be a graph given by $n$ points in $\\mathbb{R}^2$, where any two distinct points are at least distance $1$ apart, and we draw an edge between two points if they are distance $1$ apart.\n\nLet $g(n)$ be maximal such that any such graph always has an independent set on at least $g(n)$ vertices. Estimate $g(n)$, or perhaps $\\lim \\frac{g(n)}{n}$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1066"
+}

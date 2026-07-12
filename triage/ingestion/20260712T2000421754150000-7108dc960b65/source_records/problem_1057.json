@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1057,
+  "raw_page": {
+    "path": "raw/pages/problem_1057.html",
+    "sha256": "80ebf5d20dbbce37091ae1f62bf29d260e1c55ea8e39dac024997407224b880c"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "9fb09eb006f26c42ea00f0d37a82045f1a0aa8d7c3d7093c98aadbac4d0a5515",
+      "source_region": "div.problem-additional-text",
+      "text": "[AGP94] Alford, W. R. and Granville, Andrew and Pomerance, Carl, There are infinitely many {C}armichael numbers. Ann. of Math. (2) (1994), 703--722.\n \n [Er56c] Erd\\H{o}s, P., On pseudoprimes and {C}armichael numbers. Publ. Math. Debrecen (1956), 201--206.\n \n [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.\n \n [Ha08] Harman, Glyn, Watt's mean value theorem and {C}armichael numbers. Int. J. Number Theory (2008), 241--248.\n \n [Li22] J. D. Lichtman, Primes in arithmetic progressions to large moduli and shifted primes without large prime factors. arXiv:2211.09641 (2022).\n \n [Po89] Pomerance, Carl, Two methods in elementary analytic number theory. (1989), 135--161."
+    },
+    "remarks": {
+      "sha256": "deb7a0650c02d32df92ef33db6f14e2295b325cce877341e90b13ed0a3aad6e1",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s \\cite{Er56c} proved\\[C(x) < x \\exp\\left(-c \\frac{\\log x\\log\\log\\log x}{\\log\\log x}\\right)\\]for some constant $c>0$. Pomerance \\cite{Po89} gave a heuristic suggesting that this is the true order of growth, and in fact\\[C(x)= x \\exp\\left(-(1+o(1))\\frac{\\log x\\log\\log\\log x}{\\log\\log x}\\right).\\]Alford, Granville, and Pomerance \\cite{AGP94} proved that $C(x)\\to \\infty$, and in fact $C(x)>x^{2/7}$ for large $x$. The lower bound\\[C(x)> x^{0.33336704}\\]was proved by Harman \\cite{Ha08}. This exponent was improved to $0.3389$ by Lichtman \\cite{Li22}.\n\nKorselt observed that $n$ being a Carmichael number is equivalent to $n$ being squarefree and $p-1\\mid n-1$ for all primes $p\\mid n$.\n\nThis is discussed in problem A13 of Guy's collection \\cite{Gu04}."
+    },
+    "statement": {
+      "sha256": "e9b180faf77e67d48ea7e8337760dfa1ec98032cc9cc0a3ad4b15b8eae6a8660",
+      "source_region": "div#content",
+      "text": "Let $C(x)$ count the number of Carmichael numbers in the interval $[1,x]$. Is it true that $C(x)=x^{1-o(1)}$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1057"
+}

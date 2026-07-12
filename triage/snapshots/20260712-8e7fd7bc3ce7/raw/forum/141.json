@@ -1,0 +1,30 @@
+{
+  "problem_number": 141,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/141",
+  "retrieved_at": "2026-07-10T23:15:44.308390+00:00",
+  "page_title": "141 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "c767325c9db3b33bcff700ee87536c2a1617d04728c528abfc6a9c220350f19d",
+  "comment_count": 4,
+  "comments": [
+    {
+      "post_id": "4240",
+      "text": "It is well known that the existence of arbitrarily long arithmetic progressions of consecutive primes (CPAPs) is open unconditionally. The purpose of this post is to record a clean and explicit argument showing that the conjecture follows conditionally from Schinzel’s Hypothesis H (equivalently, Dickson’s conjecture for linear forms), using a Chinese Remainder Theorem construction to force all intermediate terms to be composite. This implication is generally regarded as folklore; variants appear implicitly or explicitly in several places (see references below). I am posting this mainly as a self contained exposition. Conditional theorem (Hypothesis H). Assume Schinzel’s Hypothesis H (prime values of admissible systems of linear forms). Then for every $k \\ge 3$, there exist infinitely many $k$-term arithmetic progressions of consecutive primes. Construction. Fix $k \\ge 3$, and let\\[ d = k^\\# = \\prod_{p \\le k} p \\]be the primorial. Define the set of “between-term offsets” $B := { r : 1 \\le r \\le (k-1)d - 1,\\ d \\nmid r }$. For each $r \\in B$, choose a distinct prime $q_r > (k-1)d$, and set $M := \\prod_{r \\in B} q_r$. By the Chinese Remainder Theorem, choose an integer $b$ such that $b + r \\equiv 0 \\pmod{q_r}$ for all $r \\in B$, and $b \\not\\equiv 0 \\pmod p$ for every prime $p \\le k$. Define linear forms $L_j(n) := Mn + b + jd$ for $j = 0,1,\\dots,k-1$. Properties. Forced compositeness between terms. For any $r \\in B$, $Mn + b + r \\equiv 0 \\pmod{q_r}$, so every integer strictly between consecutive terms of the progression is composite. Admissibility. The system ${L_0,\\dots,L_{k-1}}$ has no fixed prime divisor: – If $p \\le k$, then $p \\mid d$ and $L_j(n) \\equiv b \\not\\equiv 0 \\pmod p$. – If $p \\mid M$, then $p = q_r$ for some $r \\in B$, and $L_j(n) \\equiv b + jd \\equiv -r + jd \\not\\equiv 0 \\pmod p$, since $q_r > (k-1)d$. – If $p > k$ and $p \\nmid M$, there are at most $k < p$ forbidden residue classes of $n \\pmod p$. Prime values. By Schinzel’s Hypothesis H, there exist infinitely many $n$ such that all $L_j(n)$ are prime. Conclusion. For such $n$, the primes $L_0(n), L_1(n), \\dots, L_{k-1}(n)$ form an arithmetic progression of length $k$ with common difference $d$, and every integer between consecutive terms is composite. Hence they are $k$ consecutive primes. Thus, conditional on Hypothesis H, CPAPs of arbitrary length exist. References / attribution. Schinzel–Sierpiński (1958), Sur certaines hypothèses concernant les nombres premiers, Acta Arith. Dubner–Forbes–Lygeros–Mizony–Nelson–Zimmermann (2001), Consecutive primes in arithmetic progression, Math. Comp. MathOverflow discussion noting the conditional implication as folklore: https://mathoverflow.net/questions/187096/",
+      "meta": "Abel — 23:01 on 08 Feb 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4243",
+      "text": "If $p\\leq k$ then surely $L_j(n) \\equiv Mn+b\\mod p$.",
+      "meta": "Adenwalla — 06:58 on 09 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "64",
+      "text": "It's worth noting that if the Hardy-Littlewood prime $k$-tuples conjecture is true, then if $A \\subseteq \\mathbb{N}$ is admissible, then there are infinitely many translations of $A$ into sets of consecutive primes. To see this, let $n_1$ be an element that is in between elements of $A$ but not in $A$ itself, and let $k_1$ be larger than $|A|$. Then we can construct a set $B_1$ by adding elements larger than those in $A$ in a way that preserves admissibility and occupies every residue class of $k_1$ except for the residue class of $n_1$. Then, let $n_2$ be another element in between elements of $A$ that's not in $A$ itself, let $k_2 > |A \\cup B_1|$, create $B_2$ similarly, and repeat until each $n_i$ is taken care of. Let $B$ be the union of all $B_i$. Then the elements of $B$ are all greater than the elements in $A$, $A \\cup B$ is admissible, and (with at most finitely many exceptions) any translation of $A \\cup B$ into the primes cannot have any primes in between elements of $A$ except for the elements of $A$ themselves. If the prime $k$-tuples conjecture is true, then $A \\cup B$ has infinitely many translations into the primes, which completes the proof. (Side note: I wouldn't be surprised if this argument already appears in the literature somewhere; please do let me know if that's the case. EDIT: Dogmachine has found a reference - thanks!)",
+      "meta": "DesmondWeisenberg — 16:28 on 11 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "66",
+      "text": "@DesmondWeisenberg, this was certainly shown by Schinzel and Sierpinski in the 1958 paper, Sur certaines hypothèses concernant les nombres premiers.",
+      "meta": "Dogmachine — 16:58 on 11 Aug 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

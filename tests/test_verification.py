@@ -100,6 +100,20 @@ OUTCOME: CANDIDATE_DISPROVED
         contradictory = disproved + "\n<result>\nOUTCOME: CANDIDATE_PROVED\n</result>"
         self.assertEqual(candidate_status(contradictory), "candidate_unclassified")
 
+    def test_candidate_parser_accepts_semicolon_delimited_single_line_result(self):
+        response = (
+            "<result> OUTCOME: RESOURCE_EXHAUSTED COMPLETENESS_SCORE: 67 "
+            "PROOF_CONFIDENCE: 90 ADVERSARIAL_SURVIVAL_SCORE: 84 "
+            "OPEN_GAPS: exact classification remains open UNCHECKED_IMPORTS: NONE "
+            "CLAIMS_CHECKED: 2 CLAIMS_TOTAL: 2 CLAIM_IDS: C1;GOAL </result>"
+        )
+        self.assertEqual(candidate_status(response), "resource_exhausted")
+        contract = candidate_contract(response)
+        self.assertTrue(contract.fields_complete)
+        self.assertEqual(contract.claims_total, 2)
+        self.assertEqual(contract.claim_ids, ("C1", "GOAL"))
+        self.assertEqual(contract.open_gaps, ("exact classification remains open",))
+
     def test_missing_gap_fields_and_external_evidence_fail_closed(self):
         response = """<result>
 OUTCOME: CANDIDATE_PROVED

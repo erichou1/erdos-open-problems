@@ -1,0 +1,256 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.712
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "CFW23",
+      "EFRS78b",
+      "ErRo93",
+      "NeRo78"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/560",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[CFW23] Conlon, David and Fox, Jacob and Wigderson, Yuval, Three early problems on size Ramsey numbers. Combinatorica (2023), 743-768.\n \n [EFRS78b] Erd\\H{o}s, P. and Faudree, R. J. and Rousseau, C. C. and Schelp, R. H., The size Ramsey number. Period. Math. Hungar. (1978), 145-161.\n \n [ErRo93] Erd\\H{o}s, P. and Rousseau, C. C., The size Ramsey number of a complete bipartite graph. Discrete Math. (1993), 259-262.\n \n [NeRo78] Ne\\vSet\\v{r}il, J. and R\\\"{o}dl, V., The structure of critical Ramsey graphs. Acta Math. Acad. Sci. Hungar. (1978), 295-300.",
+      "remarks": "We know that\\[\\frac{1}{60}n^22^n<\\hat{R}(K_{n,n})< \\frac{3}{2}n^32^n.\\]The lower bound (which holds for $n\\geq 6$) was proved by Erd\\H{o}s and Rousseau \\cite{ErRo93}. The upper bound was proved by Erd\\H{o}s, Faudree, Rousseau, and Schelp \\cite{EFRS78b} and Ne\\v{s}et\\v{r}il and R\\\"{o}dl \\cite{NeRo78}.\n\nConlon, Fox, and Wigderson \\cite{CFW23} have proved that, for any $s\\leq t$,\\[\\hat{R}(K_{s,t})\\gg s^{2-\\frac{s}{t}}t2^s,\\]and prove that when $t\\gg s\\log s$ we have $\\hat{R}(K_{s,t})\\asymp s^2t2^s$. They conjecture that this should hold for all $s\\leq t$, and so in particular we should have $\\hat{R}(K_{n,n})\\asymp n^32^n$. \n\nThis problem is #29 in Ramsey Theory in the graphs problem collection."
+    },
+    "source_state": "open",
+    "tags": [
+      "graph theory",
+      "ramsey theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.0,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.319945
+      ],
+      "probability": 0.142857
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 1.232,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.284812
+      ],
+      "probability": 0.109685
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.144533
+      ],
+      "probability": 0.04
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.167,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.41624
+      ],
+      "probability": 0.19403
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.167,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.23659
+      ],
+      "probability": 0.088608
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.1,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.228734
+      ],
+      "probability": 0.083969
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 40.0,
+      "credible_interval_approx": [
+        0.0,
+        0.071043
+      ],
+      "probability": 0.02439
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.436385
+      ],
+      "probability": 0.2
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "minor"
+    },
+    "literature": {
+      "comment_count": 0,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:17:43.157494+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "b17d4107517aba22e786e762e91d193474b317a305c0c668729af756239f6539"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "implicit_convention"
+      ],
+      "ambiguity_status": "minor",
+      "quantifier_signal_count": 1,
+      "question_count": 0,
+      "requires_source_audit": true,
+      "statement_characters": 331,
+      "statement_tokens_approx": 53
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove",
+      "multi_part": false,
+      "primary_domain": "graph theory"
+    }
+  },
+  "problem_id": "erdos-560",
+  "problem_number": 560,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove",
+    "multi_part": false,
+    "primary_domain": "graph theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_560.html",
+      "raw_html_sha256": "e3b876956808f1e58f4722a0b43531e932e49001d760abf3b1ce5656f78af5c9",
+      "section_sha256": {
+        "references": "ceb244d17c8b2f7d47bcfc764127c4f449e574a7f40ea3536ecfa24571b0c870",
+        "remarks": "e144e5698160413e0fecb4c6f212663115cdb32cfd7416a7c78504606e319c30",
+        "statement": "44284ec00ebec077a9b24bd0684d5d1fafe87839854fa87fd7aa3065d680d931"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_560.json",
+      "source_record_sha256": "808e7a3ff160eb5500a85f02662535c25f4868934a7959b8a26b132ed4fc0472",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_560.tex",
+    "latex_sha256": "956c4f0a524029f78d3a78a3c1b9d5266b00517a1abfd46c2d5873d0b369bc3e",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "44284ec00ebec077a9b24bd0684d5d1fafe87839854fa87fd7aa3065d680d931",
+    "recommended_attack_modes": [
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "e0bd740a566aa5e5184aec90c1f94847e6d01ca6b879e69954ecdbc4764cf0cb",
+  "routes": [
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "minor",
+    "intended": "Let $\\hat{R}(G)$ denote the size Ramsey number, the minimal number of edges $m$ such that there is a graph $H$ with $m$ edges such that in any $2$-colouring of the edges of $H$ there is a monochromatic copy of $G$. \n\nDetermine\\[\\hat{R}(K_{n,n}),\\]where $K_{n,n}$ is the complete bipartite graph with $n$ vertices in each component.",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $\\hat{R}(G)$ denote the size Ramsey number, the minimal number of edges $m$ such that there is a graph $H$ with $m$ edges such that in any $2$-colouring of the edges of $H$ there is a monochromatic copy of $G$. Determine\\[\\hat{R}(K_{n,n}),\\]where $K_{n,n}$ is the complete bipartite graph with $n$ vertices in each component.",
+    "original": "Let $\\hat{R}(G)$ denote the size Ramsey number, the minimal number of edges $m$ such that there is a graph $H$ with $m$ edges such that in any $2$-colouring of the edges of $H$ there is a monochromatic copy of $G$. \n\nDetermine\\[\\hat{R}(K_{n,n}),\\]where $K_{n,n}$ is the complete bipartite graph with $n$ vertices in each component.",
+    "statement_sha256": "44284ec00ebec077a9b24bd0684d5d1fafe87839854fa87fd7aa3065d680d931"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

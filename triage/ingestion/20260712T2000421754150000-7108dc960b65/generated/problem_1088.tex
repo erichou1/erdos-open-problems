@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#1088}
+\date{Last updated: 2025-10-17}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} geometry
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $f_d(n)$ be the minimal $m$ such that any set of $m$ points in $\mathbb{R}^d$ contains a set of $n$ points such that any two determined distances are distinct. Estimate $f_d(n)$. In particular, is it true that, for fixed $n\geq 3$,\[f_d(n)=2^{o(d)}?\]
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+It is easy to prove that $f_d(n) \leq n^{O_d(1)}$. Erd\H{o}s \cite{Er75f} claimed that he and Straus proved $f_d(n)\leq c_n^d$ for some constant $c_n>0$.
+
+When $d=1$ this is the subject of [530], and $f_1(n)\asymp n^2$.
+
+When $n=3$ this is the subject of [503]. Erd\H{o}s could prove $f_2(3)=7$ and Croft \cite{Cr62} proved $f_3(3)=9$. The results described at [503] demonstrate that $f_d(3)=d^2/2+O(d)$. 
+
+The behaviour of $f_d(n)$ for fixed $d$ as $n\to \infty$ is the subject of [1208].
+
+\bigskip
+\noindent\textbf{References:}
+
+[Cr62] Croft, H. T., $9$-point and $7$-point configurations in $3$-space. Proc. London Math. Soc. (3) (1962), 400-424.
+ 
+ [Er75f] Erd\H{o}s, Paul, On some problems of elementary and combinatorial geometry. Ann. Mat. Pura Appl. (4) (1975), 99-108.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/1088}}
+\end{document}

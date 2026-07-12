@@ -1,0 +1,55 @@
+{
+  "problem_number": 1056,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/1056",
+  "retrieved_at": "2026-07-10T23:20:18.305784+00:00",
+  "page_title": "1056 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "9e1c2a94a0dc61782046f03670f6457490b92047833b04fba6fbc3c09f544f93",
+  "comment_count": 9,
+  "comments": [
+    {
+      "post_id": "7108",
+      "text": "Every $2\\leq k\\leq 14$ has an explicit finite witness for Problem #1056. This follows from the OEIS entry A060427 [2] and its b-file [3], following up on the comment by StijnC — 17:24 on 28 Sep 2025 [1]. The OEIS entry defines $a(n)$ as the smallest prime $p$ for which there are $n$ strings of consecutive integers whose products are $1 \\pmod p$, and the b-file lists $a(2)=11,\\ldots,a(14)=10428007$. Here is the case $k=14$ written out explicitly. For $p=10428007$, the following fifteen factorials are all congruent to the same residue, $8978998$, modulo $p$: 816488!, 1251081!, 3384225!, 4112650!, 4237275!, 4431559!, 4467010!, 4835062!, 7328694!, 7385077!, 7415726!, 8460938!, 8689396!, 9295594!, 9661614!. Hence the adjacent intervals [816489,1251081], [1251082,3384225], [3384226,4112650], [4112651,4237275], [4237276,4431559], [4431560,4467010], [4467011,4835062], [4835063,7328694], [7328695,7385077], [7385078,7415726], [7415727,8460938], [8460939,8689396], [8689397,9295594], [9295595,9661614] all have product congruent to $1 \\pmod {10428007}$. Indeed, if $q_i! \\equiv q_{i+1}! \\equiv r \\pmod p$ with $r\\not\\equiv 0\\pmod p$, then the product over the adjacent interval is $\\prod_{n=q_i+1}^{q_{i+1}} n = q_{i+1}!/q_i! \\equiv r/r \\equiv 1 \\pmod p$. I also verified directly that $10428007$ is prime and that each of the 14 listed interval products is $1$ modulo $10428007$. The displayed $k=14$ witness also gives witnesses for every smaller $k\\geq 2$ by taking the first $k$ intervals. This does not address the arbitrary-$k$ question, but it records the finite range $2\\leq k\\leq 14$ explicitly. References: [1] StijnC — 17:24 on 28 Sep 2025: https://www.erdosproblems.com/forum/thread/1056, [2] OEIS A060427: https://oeis.org/A060427, [3] OEIS A060427 b-file: https://oeis.org/A060427/b060427.txt AI usage disclosure: the writeup were prepared with assistance from Codex 5.5 and ChatGPT 5.5 Pro.",
+      "meta": "KentaKitamura — 06:09 on 21 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6812",
+      "text": "Hernández Santiago and I, with the help of ChatGPT 5.5 Pro, have proven the following: There exist infinitely many primes $p$ such that there exist $k_{1},k_{2},k_{3},k_{4}$ distinct such that\\[ k_{1}! \\equiv k_{2}! \\equiv k_{3}! \\equiv k_{4}! \\equiv 1 \\pmod{p}. \\]A note and the Lean formalisation can be found here: https://github.com/octavioalberto/tetrads",
+      "meta": "octavioalberto — 18:14 on 03 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6815",
+      "text": "One sentence summary: if $q \\equiv 1 \\pmod{6}$ and $p$ is a prime divisor of $q!-1$, then one can take $(k_1, k_2, k_3, k_4) = (1, q, p-1-q, p-2)$.",
+      "meta": "Woett — 19:23 on 03 Jun 2026 👍 3 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6819",
+      "text": "This type of construction is found in paper \"A Modified Problem of Pillai and Some Related Questions\", by G. E. Hardy and M. V. Subbarao. In fact you can use not only $1\\pmod 6$ but any $ b \\pmod a$ If $(a,2b+1)>1$",
+      "meta": "Dogmachine — 22:54 on 03 Jun 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6820",
+      "text": "Thanks for the reference!",
+      "meta": "octavioalberto — 23:14 on 03 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6821",
+      "text": "Hardy–Subbarao's construction is indeed related, and Remark 2.8 of their paper in the American Mathematical Monthly explains the use of arithmetic progressions to force $2n+1$ to be composite. In the tetrad problem, however, we need two exceptional values, $q+2$ and $2q+1$. Thus the condition $\\gcd(a,2b+1)>1$ alone is insufficient; one also needs to exclude $q+2$, for instance by requiring $\\gcd(a,b+2)>1$. Concretely: $\\gcd(10,2\\cdot 7 +1) = \\gcd(10,15)=5>1$, but $q+2=7K+10+2 = 7K+12$ can be prime (taking $K=1$, for example, having $q=17$), while $2q+1=2(7K+10)+1 = 14K+21$ is composite. The choice $q=6t+1$ is a simple one satisfying both requirements.",
+      "meta": "octavioalberto — 23:44 on 03 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2713",
+      "text": "The Noll–Simmons formulation can be directly derived from the original Erdős problem. A Lean formalization of this reduction is available here. This observation was made with the help of Aristotle.",
+      "meta": "LorenzoLuccioli — 21:50 on 03 Jan 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2720",
+      "text": "Yes, I imagine the reduction is given consecutive intervals $I_1,\\ldots, I_k$ which satisfy the question for a prime $p$ and letting the largest integer in $I_j$ be $n_j$ for $1\\leq j \\leq k$, we can take $q_j=n_j$ in the Noll-Simon question for the same prime $p$.",
+      "meta": "Adenwalla — 14:08 on 04 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "757",
+      "text": "Guy's collection has 1000s of citations, so hard to check if some of its problems are open. The related sequence in oeis is A060427. Especially for the additional question of Noll and Simons, one may expect that the answer is yes, by the extended birthday problem versions.",
+      "meta": "StijnC — 17:24 on 28 Sep 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "problem_number": 1194,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/1194",
+  "retrieved_at": "2026-07-10T23:21:02.404859+00:00",
+  "page_title": "1194 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "e70188d1b14ef94f066fba4cf8863abeb444a57b7d874114a7aa022568083678",
+  "comment_count": 8,
+  "comments": [
+    {
+      "post_id": "6188",
+      "text": "GPT-5.5 Pro + Codex + a verification harness found the following improvement. Let\\[ \\lambda=\\frac{1}{2\\log 2}, \\qquad B_1=\\frac12+\\gamma-\\log(\\log 2). \\]For every fixed $B>B_1$, infinitely many $n$ satisfy\\[ a_n> \\lambda\\frac{n^2}{\\log n-\\log\\log n+B}. \\]Consequently,\\[ \\limsup_{n\\to\\infty} \\frac{a_n(\\log n-\\log\\log n+B_1)}{n^2} \\ge \\lambda = \\frac{1}{2\\log 2}. \\]The endpoint $B=B_1$ is only claimed in this limsup form, not as a pointwise infinitely-often inequality. Lean repository: https://github.com/lechmazur/erdos_1194 Proof sketch: floor_saving_proof_sketch.pdf Full proof: floor_saving_lower_bound_final_version.pdf",
+      "meta": "Lech Mazur — 22:55 on 02 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6204",
+      "text": "Congrats. Standard check claimed 1 minor issue in the writeup. However, since the writeup was long, the check was plausibly less reliable here. On the plus side, the Lean appeared to formalize this result correctly. From discussion with GPT, it seemed that one might be able to extract a shorter proof for $a_n \\gg n^2/\\log n$ infinitely often; the full writeup looked like the same idea but with more precise bookkeeping. This overcame the bound in the problem description that $a_n \\gg n^2/f(n)$ infinitely often whenever $\\sum 1/(n f(n))$ converged and seemed to be the main conceptual point. I have not attempted to properly extract this argument.",
+      "meta": "Nat Sothanaphan — 12:42 on 03 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5740",
+      "text": "Although not specified here, I would assume this result is known. Regardless, GPT-5.4 pro claims a partial solution here.",
+      "meta": "Liam Price — 17:09 on 23 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5741",
+      "text": "Nice, thanks! Your result is that $a_n \\gg n^{3/2}$ infinitely often. When looking at it I realised there is in fact an even simpler argument that proves $a_n\\gg n^2$ for all $n$: note that $a_2-a_1,\\ldots,a_n-a_{n-1}$ are all distinct positive integers and hence\\[n^2\\ll \\sum_{1\\leq i\\leq n-1}i\\leq \\sum_{n-1\\geq i\\geq 1}(a_{i+1}-a_i)=a_n-a_1\\leq a_n.\\]EDIT: Or even more simply, the differences $a_i-a_j$ with $1\\leq i<j\\leq n$ are $\\binom{n}{2}$ distinct integers in $[1,a_n)$. This is basically the 'correct' form of the counting argument currently recorded in the remarks, which over complicates things. It may even be that the $a_n/n$ is a typo in [Er80], and he meant $a_n/n^2$. Using the result of Erdős on growth of Sidon sets mentioned in the remarks improves this to $a_n\\gg n^2(\\log n)$ for infinitely many $n$, for example, since $\\{a_1,\\ldots,a_n\\}$ is a Sidon set in $[1,a_n]$. EDIT 2: Ah no, I was misreading the $a_n$ definition, I was wondering why I had missed this trivial argument earlier. $a_n$ is not, as usual the $n$th element of $A$, but is the larger element in the representation $n=a_n-b_n$. I knew that when writing this problem/remarks, but had forgotten it today. I'll leave this comment to avoid others making the same mistake! So I don't know better than your $n^{3/2}$ result. Your argument is, in brief, letting $A=\\{x_1<\\cdots\\}$ be the sequence (to avoid confusion with the $a_n$ notation), then $d_k=x_k-x_{k-1}$, and so $a_{d_k}=x_k$. If $a_n\\ll n^c$ for all $n$ then $d_k \\gg x_k^{1/c}$, but then summing the first $k$ consecutive differences yields\\[x_k \\gg \\sum_{i<k}d_i\\gg \\sum_i x_i^{1/c},\\]whence $x_k\\gg k^{\\frac{c}{c-1}}$, and hence there are $\\ll x^{1-\\frac{1}{c}}$ elements of $A$ in $[1,x]$, but then by the argument in the remarks this implies $a_n \\gg n^{\\frac{c}{2c-2}}$. Balancing $c=\\frac{c}{2c-2}$ at $c=3/2$ implies $a_n \\gg n^{3/2}$ infinitely often.",
+      "meta": "Thomas Bloom — 17:36 on 23 Apr 2026 👍 3 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5745",
+      "text": "I asked GPT Pro to try and improve on this, and it improved it to $a_n \\gg n^{2-o(1)}$ infinitely often. It's argument was quite wordy, but here is the distilled version. Suppose that $a_n\\ll n^c$ for all $n$. Let $A=\\{x_1<\\cdots\\}$ and consider $D_k=\\{ x_k-x_i : 1\\leq i<k\\}$. Note that $\\lvert D_k\\cap [1,X]\\rvert$ is just $\\lvert A\\cap [x_k-X,x_k)\\rvert$. If $x_k > 2X$ then any consecutive elements $u<v$ in $[x_k-X,x)$\\[v-u \\gg v^{1/c}\\gg x_k^{1/c},\\]and hence the interval $[x_k-X,x_k)$ contains $\\ll X/x_k^{1/c}$ many elements of $A$, so\\[\\lvert D_k\\cap [1,X]\\rvert \\ll X/x_k^{1/c}.\\]But by the argument in your note (see my other comment for a condensed form) we have $x_k \\gg k^{\\frac{c}{c-1}}$ so\\[\\lvert D_k\\cap [1,X]\\rvert \\ll Xk^{-\\frac{1}{c-1}}.\\]This holds whenever $k\\gg X^{1-1/c}$. For small $k$ we use the trivial $\\lvert D_k\\cap [1,X]\\rvert\\ll k$, so that\\[X= \\sum_{k\\geq 1}\\lvert D_k\\cap [1,X]\\rvert \\ll \\sum_{k\\leq K}k+X\\sum_{k>K}k^{-\\frac{1}{c-1}}\\ll K^2+XK^{\\frac{c-2}{c-1}}\\]so $X\\ll X^{2-2/c}$, which is a contradiction for $c<2$. EDIT: I believe that optimising this proves that $a_n \\gg n^2/f(n)$ infinitely often, where $f(n)$ is any 'reasonable' function such that $\\sum \\frac{1}{nf(n)}$ converges. For example, $a_n \\gg (n/\\log n)^2$ infinitely often.",
+      "meta": "Thomas Bloom — 21:26 on 23 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5782",
+      "text": "I believe \"diverges\" should be \"converges\".",
+      "meta": "Nat Sothanaphan — 15:20 on 24 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5784",
+      "text": "Oops yes, thanks corrected.",
+      "meta": "Thomas Bloom — 15:33 on 24 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5781",
+      "text": "Congrats. Standard check (now with GPT-5.5 Thinking!) found no issues. It did not find this to be known in literature though.",
+      "meta": "Nat Sothanaphan — 15:17 on 24 Apr 2026 👍 1 📝 0 🤖 0"
+    }
+  ]
+}

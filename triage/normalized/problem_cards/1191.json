@@ -1,0 +1,312 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.378
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2026-04-04",
+      "state": "no"
+    },
+    "references": [
+      "Er80",
+      "HaRo66"
+    ],
+    "source_last_update": "2026-04-04",
+    "source_problem_url": "https://www.erdosproblems.com/1191",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Er80] Erd\\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.\n \n [HaRo66] Halberstam, H. and Roth, K. F., Sequences. {V}ol. I. (1966), xx+291.",
+      "remarks": "Erd\\H{o}s proved (see for example \\cite{HaRo66}) that if $A$ is an infinite Sidon set then\\[\\liminf_{x\\to \\infty} \\frac{\\lvert A\\cap [1,x]\\rvert}{x^{1/2}}(\\log x)^{1/2}\\leq c\\]for some constant $c>0$. In \\cite{Er80} he offered \\$1000 'for clearing up the problems' raised by this; he may have meant for finding the optimal function $f$ such that\\[\\liminf_{x\\to \\infty} \\frac{\\lvert A\\cap [1,x]\\rvert}{x^{1/2}}f(x)=0\\]for all infinite Sidon sets $A$.\n\nThe second question is a stronger form of [39]. See also [729] for the behaviour of the $\\limsup$."
+    },
+    "source_state": "open",
+    "tags": [
+      "additive combinatorics",
+      "sidon sets"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.5,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.272872
+      ],
+      "probability": 0.111111
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 2.427,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.0,
+        0.366668
+      ],
+      "probability": 0.174237
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 3.3,
+      "beta": 13.0,
+      "credible_interval_approx": [
+        0.0131,
+        0.391808
+      ],
+      "probability": 0.202454
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.5,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.446054
+      ],
+      "probability": 0.217391
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.033,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.181062
+      ],
+      "probability": 0.064449
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.0,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.0,
+        0.29079
+      ],
+      "probability": 0.129032
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.092979
+      ],
+      "probability": 0.038462
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.6,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.0,
+        0.437301
+      ],
+      "probability": 0.214876
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 0,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:21:01.326476+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "493b92b4ffa1b6aea9a389a1300c22aa887755fb7c973e9d573bb936299eb6fa"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 2,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 294,
+      "statement_tokens_approx": 32
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": true,
+      "finite_signal": true,
+      "goal": "prove_or_disprove",
+      "multi_part": true,
+      "primary_domain": "additive combinatorics"
+    }
+  },
+  "problem_id": "erdos-1191",
+  "problem_number": 1191,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": true,
+    "finite_signal": true,
+    "goal": "prove_or_disprove",
+    "multi_part": true,
+    "primary_domain": "additive combinatorics"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_1191.html",
+      "raw_html_sha256": "c741e99e4389b425fe3be5e086d77ac3e66cfb7c3df02041b3d97ad5667142a5",
+      "section_sha256": {
+        "references": "679f8af36cf250c59de479e6cb4801b4cd1b8cdbbad58d2bc205c3e993b428b7",
+        "remarks": "dd570a46746d2da4df40f420d0e3a4a212361be735b5041509d8088342057d61",
+        "statement": "cbbe904f2b958d4c73aa50bf9532c6c3bb341e797b7b2b62e8d8d0a22c26c239"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_1191.json",
+      "source_record_sha256": "f873789a3d87eabe3c2ca23e891e19f0236540740c4b1819234a7b7eb73c9f37",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_1191.tex",
+    "latex_sha256": "ef41c74aa9ee83c911218378ffb2936a9657f1b269b141c0a59f42942364cf92",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "cbbe904f2b958d4c73aa50bf9532c6c3bb341e797b7b2b62e8d8d0a22c26c239",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "exact_computation",
+      "counterexample_search",
+      "subproblem_decomposition",
+      "shared_infrastructure_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Let $A\\subset\\mathbb{N}$ be an infinite Sidon set. Is it true that\\[\\liminf_{x\\to \\infty} \\frac{\\lvert A\\cap [1,x]\\rvert}{x^{1/2}}(\\log x)^{1/2}=0?",
+        "focus_question_sha256": "16dc5eba9a9d9bde9ab1226b02372e9b83c85ef0b3ee7d063f1132fc124c82d3",
+        "parent_statement_sha256": "cbbe904f2b958d4c73aa50bf9532c6c3bb341e797b7b2b62e8d8d0a22c26c239",
+        "part_index": 1,
+        "subproblem_contract_sha256": "adbc6bcd9599413caa5278b73b70c49f5e56dbc01c21f0b69d816fa49effac3e",
+        "subproblem_id": "erdos-1191-part-01-adbc6bcd"
+      },
+      {
+        "focus_question": "\\]Does there exist an infinite Sidon set $A$ such that\\[\\liminf_{x\\to \\infty} \\frac{\\lvert A\\cap [1,x]\\rvert}{x^{1/2}}(\\log x)^c>0\\]for some $c>0$?",
+        "focus_question_sha256": "163b7728b41a5042874c37e26a33348478f835aa1d3a63f200f578c9ece66ccb",
+        "parent_statement_sha256": "cbbe904f2b958d4c73aa50bf9532c6c3bb341e797b7b2b62e8d8d0a22c26c239",
+        "part_index": 2,
+        "subproblem_contract_sha256": "56c2893f551e8e06078fb8d655e680173b2a70bf5fdc6d52c49f28f8363a2fb9",
+        "subproblem_id": "erdos-1191-part-02-56c2893f"
+      }
+    ]
+  },
+  "research_directive_sha256": "1be6253346042c572bffad9289488124f474e62cf526d8fb49246fa6aa9242fc",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "exact_computation",
+    "counterexample_search",
+    "subproblem_decomposition",
+    "shared_infrastructure_search"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Let $A\\subset\\mathbb{N}$ be an infinite Sidon set. Is it true that\\[\\liminf_{x\\to \\infty} \\frac{\\lvert A\\cap [1,x]\\rvert}{x^{1/2}}(\\log x)^{1/2}=0?\\]Does there exist an infinite Sidon set $A$ such that\\[\\liminf_{x\\to \\infty} \\frac{\\lvert A\\cap [1,x]\\rvert}{x^{1/2}}(\\log x)^c>0\\]for some $c>0$?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $A\\subset\\mathbb{N}$ be an infinite Sidon set. Is it true that\\[\\liminf_{x\\to \\infty} \\frac{\\lvert A\\cap [1,x]\\rvert}{x^{1/2}}(\\log x)^{1/2}=0?\\]Does there exist an infinite Sidon set $A$ such that\\[\\liminf_{x\\to \\infty} \\frac{\\lvert A\\cap [1,x]\\rvert}{x^{1/2}}(\\log x)^c>0\\]for some $c>0$?",
+    "original": "Let $A\\subset\\mathbb{N}$ be an infinite Sidon set. Is it true that\\[\\liminf_{x\\to \\infty} \\frac{\\lvert A\\cap [1,x]\\rvert}{x^{1/2}}(\\log x)^{1/2}=0?\\]Does there exist an infinite Sidon set $A$ such that\\[\\liminf_{x\\to \\infty} \\frac{\\lvert A\\cap [1,x]\\rvert}{x^{1/2}}(\\log x)^c>0\\]for some $c>0$?",
+    "statement_sha256": "cbbe904f2b958d4c73aa50bf9532c6c3bb341e797b7b2b62e8d8d0a22c26c239"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-1191",
+      "part_index": 1,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Let $A\\subset\\mathbb{N}$ be an infinite Sidon set. Is it true that\\[\\liminf_{x\\to \\infty} \\frac{\\lvert A\\cap [1,x]\\rvert}{x^{1/2}}(\\log x)^{1/2}=0?",
+        "focus_question_sha256": "16dc5eba9a9d9bde9ab1226b02372e9b83c85ef0b3ee7d063f1132fc124c82d3",
+        "normalized": "Let $A\\subset\\mathbb{N}$ be an infinite Sidon set. Is it true that\\[\\liminf_{x\\to \\infty} \\frac{\\lvert A\\cap [1,x]\\rvert}{x^{1/2}}(\\log x)^{1/2}=0?\\]Does there exist an infinite Sidon set $A$ such that\\[\\liminf_{x\\to \\infty} \\frac{\\lvert A\\cap [1,x]\\rvert}{x^{1/2}}(\\log x)^c>0\\]for some $c>0$?",
+        "original": "Let $A\\subset\\mathbb{N}$ be an infinite Sidon set. Is it true that\\[\\liminf_{x\\to \\infty} \\frac{\\lvert A\\cap [1,x]\\rvert}{x^{1/2}}(\\log x)^{1/2}=0?\\]Does there exist an infinite Sidon set $A$ such that\\[\\liminf_{x\\to \\infty} \\frac{\\lvert A\\cap [1,x]\\rvert}{x^{1/2}}(\\log x)^c>0\\]for some $c>0$?",
+        "statement_sha256": "cbbe904f2b958d4c73aa50bf9532c6c3bb341e797b7b2b62e8d8d0a22c26c239"
+      },
+      "subproblem_contract_sha256": "adbc6bcd9599413caa5278b73b70c49f5e56dbc01c21f0b69d816fa49effac3e",
+      "subproblem_id": "erdos-1191-part-01-adbc6bcd"
+    },
+    {
+      "parent_problem_id": "erdos-1191",
+      "part_index": 2,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "\\]Does there exist an infinite Sidon set $A$ such that\\[\\liminf_{x\\to \\infty} \\frac{\\lvert A\\cap [1,x]\\rvert}{x^{1/2}}(\\log x)^c>0\\]for some $c>0$?",
+        "focus_question_sha256": "163b7728b41a5042874c37e26a33348478f835aa1d3a63f200f578c9ece66ccb",
+        "normalized": "Let $A\\subset\\mathbb{N}$ be an infinite Sidon set. Is it true that\\[\\liminf_{x\\to \\infty} \\frac{\\lvert A\\cap [1,x]\\rvert}{x^{1/2}}(\\log x)^{1/2}=0?\\]Does there exist an infinite Sidon set $A$ such that\\[\\liminf_{x\\to \\infty} \\frac{\\lvert A\\cap [1,x]\\rvert}{x^{1/2}}(\\log x)^c>0\\]for some $c>0$?",
+        "original": "Let $A\\subset\\mathbb{N}$ be an infinite Sidon set. Is it true that\\[\\liminf_{x\\to \\infty} \\frac{\\lvert A\\cap [1,x]\\rvert}{x^{1/2}}(\\log x)^{1/2}=0?\\]Does there exist an infinite Sidon set $A$ such that\\[\\liminf_{x\\to \\infty} \\frac{\\lvert A\\cap [1,x]\\rvert}{x^{1/2}}(\\log x)^c>0\\]for some $c>0$?",
+        "statement_sha256": "cbbe904f2b958d4c73aa50bf9532c6c3bb341e797b7b2b62e8d8d0a22c26c239"
+      },
+      "subproblem_contract_sha256": "56c2893f551e8e06078fb8d655e680173b2a70bf5fdc6d52c49f28f8363a2fb9",
+      "subproblem_id": "erdos-1191-part-02-56c2893f"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

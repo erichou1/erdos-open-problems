@@ -1,0 +1,262 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.543
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-09-10",
+      "state": "no"
+    },
+    "references": [
+      "Er93",
+      "Si72",
+      "To72"
+    ],
+    "source_last_update": "2025-09-13",
+    "source_problem_url": "https://www.erdosproblems.com/1032",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Er93] Erd\\H{o}s, Paul, Some of my favorite solved and unsolved problems in graph theory. Quaestiones Math. (1993), 333-350.\n \n [Si72] Simonovits, M., On colour-critical graphs. Studia Sci. Math. Hungar. (1972), 67--81.\n \n [To72] Toft, B., Two theorems on critical {$4$}-chromatic graphs. Studia Sci. Math. Hungar. (1972), 83--89.",
+      "remarks": "In \\cite{Er93} Erd\\H{o}s said he asked this 'more than 20 years ago'. \n\nDirac gave an example of a $6$-chromatic critical graph with minimum degree $>n/2$. This problem is also open for $5$-chromatic critical graphs.\n\nSimonovits \\cite{Si72} and Toft \\cite{To72} independently constructed $4$-chromatic critical graphs with minimum degree $\\gg n^{1/3}$. Toft conjectured that a $4$-chromatic critical graph on $n$ vertices has at least $(\\frac{5}{3}+o(1))n$ vertices, and has examples to show this would be the best possible.\n\nSee also [917] and [944]."
+    },
+    "source_state": "open",
+    "tags": [
+      "graph theory",
+      "chromatic number"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 3.41,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.020437,
+        0.422133
+      ],
+      "probability": 0.221285
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 1.232,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.284812
+      ],
+      "probability": 0.109685
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 3.3,
+      "beta": 14.0,
+      "credible_interval_approx": [
+        0.010738,
+        0.370765
+      ],
+      "probability": 0.190751
+    },
+    "p_high_mathematical_value": {
+      "alpha": 3.1,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.019804,
+        0.492593
+      ],
+      "probability": 0.256198
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 0.867,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.199281
+      ],
+      "probability": 0.067358
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.1,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.228734
+      ],
+      "probability": 0.083969
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 40.0,
+      "credible_interval_approx": [
+        0.0,
+        0.103879
+      ],
+      "probability": 0.043062
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.6,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.492884
+      ],
+      "probability": 0.245283
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "minor"
+    },
+    "literature": {
+      "comment_count": 4,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:19:57.812520+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "30d2504ddb68233afdf3d09bfd954c475224008f6d040c42fe4c17ee73028108"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "asymptotic_notation",
+        "implicit_convention"
+      ],
+      "ambiguity_status": "minor",
+      "quantifier_signal_count": 1,
+      "question_count": 1,
+      "requires_source_audit": true,
+      "statement_characters": 252,
+      "statement_tokens_approx": 42
+    },
+    "structure": {
+      "asymptotic": true,
+      "exact_search_affordance": true,
+      "finite_signal": true,
+      "goal": "estimate",
+      "multi_part": false,
+      "primary_domain": "graph theory"
+    }
+  },
+  "problem_id": "erdos-1032",
+  "problem_number": 1032,
+  "problem_type": {
+    "asymptotic": true,
+    "exact_search_affordance": true,
+    "finite_signal": true,
+    "goal": "estimate",
+    "multi_part": false,
+    "primary_domain": "graph theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_1032.html",
+      "raw_html_sha256": "d16e7af6b3f748be6f4ecad77dfb62bfac7cfaffaa826b4227e9c6aa7726cf7e",
+      "section_sha256": {
+        "references": "8418b512e6f087f29094406d6e08dd7630547efdec9bc3e4fea886e7762c5bb8",
+        "remarks": "35c60ce67c12c84897bda7a40404d528671c692d7fcab06ab6f968d8596f9fcc",
+        "statement": "29f3a88404ba1ddc9c5639f4e89ff1a82c59888a930f3f241d7d840fca74a08f"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_1032.json",
+      "source_record_sha256": "3321ace102f3514f05dd81e43dce1db2aa0eeb3078b202de97371237bd348fcf",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_1032.tex",
+    "latex_sha256": "1295a055753d060030374d8fb0f50720d981327aa0533bdde45563c85425cd0d",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "29f3a88404ba1ddc9c5639f4e89ff1a82c59888a930f3f241d7d840fca74a08f",
+    "recommended_attack_modes": [
+      "exact_computation",
+      "counterexample_search",
+      "literature_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "f536547e0cbfe6ee7322f43def5611ffb70733f46936d7e59536ff94bae5900c",
+  "routes": [
+    "exact_computation",
+    "counterexample_search",
+    "literature_search",
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "minor",
+    "intended": "We say that a graph is $4$-chromatic critical if it has chromatic number $4$, and removing any edge decreases the chromatic number to $3$.\n\nIs there, for arbitrarily large $n$, a $4$-chromatic critical graph on $n$ vertices with minimum degree $\\gg n$?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "We say that a graph is $4$-chromatic critical if it has chromatic number $4$, and removing any edge decreases the chromatic number to $3$. Is there, for arbitrarily large $n$, a $4$-chromatic critical graph on $n$ vertices with minimum degree $\\gg n$?",
+    "original": "We say that a graph is $4$-chromatic critical if it has chromatic number $4$, and removing any edge decreases the chromatic number to $3$.\n\nIs there, for arbitrarily large $n$, a $4$-chromatic critical graph on $n$ vertices with minimum degree $\\gg n$?",
+    "statement_sha256": "29f3a88404ba1ddc9c5639f4e89ff1a82c59888a930f3f241d7d840fca74a08f"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

@@ -1,0 +1,259 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.588
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2026-04-16",
+      "state": "yes"
+    },
+    "references": [
+      "BGS74",
+      "FuPa84",
+      "Gr76",
+      "SoSt13"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/101",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[BGS74] Burr, Stefan A. and Gr\\\"{u}nbaum, Branko and Sloane, N. J. A., The orchard problem. Geometriae Dedicata (1974), 397-424.\n \n [FuPa84] F\\\"{u}redi, Z. and Pal\\'{a}sti, I., Arrangements of lines with a large number of triangles. Proc. Amer. Math. Soc. (1984), 561-566.\n \n [Gr76] Gr\\\"{u}nbaum, Branko, New views on some old questions of combinatorial geometry. Colloquio Internazionale sulle Teorie Combinatorie\n(Roma, 1973), Tomo I (1976), 451-468.\n \n [SoSt13] Solymosi, J\\'{o}zsef and Stojakovi\\'C, Milo\\vS, Many collinear {$k$}-tuples with no {$k+1$} collinear points. Discrete Comput. Geom. (2013), 811-820.",
+      "remarks": "There are examples of sets of $n$ points with $\\sim n^2/6$ many collinear triples and no four points on a line. Such constructions are given by Burr, Gr\\\"{u}nbaum, and Sloane \\cite{BGS74} and F\\\"{u}redi and Pal\\'{a}sti \\cite{FuPa84}. \n\nGr\\\"{u}nbaum \\cite{Gr76} constructed an example with $\\gg n^{3/2}$ such lines. Erd\\H{o}s speculated this may be the correct order of magnitude. This is false: Solymosi and Stojakovi\\'{c} \\cite{SoSt13} have constructed a set with no five on a line and at least\\[n^{2-O(1/\\sqrt{\\log n})}\\]many lines containing exactly four points.\n\nSee also [102] and [669]. A generalisation of this problem is asked in [588].\n\nThis problem is Problem 71 on Green's open problems list."
+    },
+    "source_state": "open",
+    "tags": [
+      "geometry"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.0,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.319945
+      ],
+      "probability": 0.142857
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 2.207,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.388339
+      ],
+      "probability": 0.180782
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.144533
+      ],
+      "probability": 0.04
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.5,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.024059,
+        0.427553
+      ],
+      "probability": 0.225806
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.7,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.375214
+      ],
+      "probability": 0.183673
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 40.0,
+      "credible_interval_approx": [
+        0.0,
+        0.103879
+      ],
+      "probability": 0.043062
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.009216,
+        0.509303
+      ],
+      "probability": 0.259259
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "minor"
+    },
+    "literature": {
+      "comment_count": 0,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:15:33.376335+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "641e32fe80b99868187cf5191f09e562d1deb7f09138dcfc0cdba59e6f861f19"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "asymptotic_notation"
+      ],
+      "ambiguity_status": "minor",
+      "quantifier_signal_count": 0,
+      "question_count": 0,
+      "requires_source_audit": true,
+      "statement_characters": 123,
+      "statement_tokens_approx": 22
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove",
+      "multi_part": false,
+      "primary_domain": "geometry"
+    }
+  },
+  "problem_id": "erdos-101",
+  "problem_number": 101,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove",
+    "multi_part": false,
+    "primary_domain": "geometry"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_101.html",
+      "raw_html_sha256": "863989041e8087a78888c8182406cc2ccd81fe2236b49ce3a3d20134bd4cb907",
+      "section_sha256": {
+        "references": "758332ef6dc3718467442990da89812fe6e86a1cd0447efc7a37d1d3245dee64",
+        "remarks": "97e48e90ccb273896ca52bb989c43f2bc15b485063e2355062e4983c56ba6e8b",
+        "statement": "44e8f650aea4d8798577ca23c8f0469ce7ace9463521b257c7ddc628cf951a3d"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_101.json",
+      "source_record_sha256": "6f62d5bbc5744920a8e01734eebea07611ce16a84035fb3467f9edd785bbb975",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_101.tex",
+    "latex_sha256": "bbd35b72fa901ec7911a413958f0deee48f67342ed7ecbca32fb5ce8d911bca4",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "44e8f650aea4d8798577ca23c8f0469ce7ace9463521b257c7ddc628cf951a3d",
+    "recommended_attack_modes": [
+      "formal_search",
+      "shared_infrastructure_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "2f95f3518e33697c1d1567daeaf7d5b3c483dd88591d240255b63c1811874c36",
+  "routes": [
+    "formal_search",
+    "shared_infrastructure_search",
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "minor",
+    "intended": "Given $n$ points in $\\mathbb{R}^2$, no five of which are on a line, the number of lines containing four points is $o(n^2)$.",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Given $n$ points in $\\mathbb{R}^2$, no five of which are on a line, the number of lines containing four points is $o(n^2)$.",
+    "original": "Given $n$ points in $\\mathbb{R}^2$, no five of which are on a line, the number of lines containing four points is $o(n^2)$.",
+    "statement_sha256": "44e8f650aea4d8798577ca23c8f0469ce7ace9463521b257c7ddc628cf951a3d"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

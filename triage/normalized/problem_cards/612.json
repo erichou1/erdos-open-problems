@@ -1,0 +1,257 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.777
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "CDS09",
+      "CSS21",
+      "CSS23",
+      "CaJo25",
+      "EPPT89"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/612",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[CDS09] Czabarka, \\'{e}. and Dankelmann, P. and Sz\\'{e}kely, L. A., Diameter of 4-colourable graphs. European J. Combin. (2009), 1082--1089.\n \n [CSS21] Czabarka, \\'{e}va and Singgih, Inne and Sz\\'{e}kely, L\\'{a}szl\\'{o}{}\nA., Counterexamples to a conjecture of {E}rd\\H{o}s, {P}ach,\n{P}ollack and Tuza. J. Combin. Theory Ser. B (2021), 38--45.\n \n [CSS23] Czabarka, \\'{e}va and Smith, Stephen J. and Sz\\'{e}kely,\nL\\'{a}szl\\'{o}, Maximum diameter of 3- and 4-colorable graphs. J. Graph Theory (2023), 262--270.\n \n [CaJo25] S. Cambie and J. Jooken, Sharp results for the Erd\\H{o}s, Pach, Pollack and Tuza problem. arXiv:2502.08626 (2025).\n \n [EPPT89] Erd\\H{o}s, Paul and Pach, J\\'{a}nos and Pollack, Richard and Tuza, Zsolt, Radius, diameter, and minimum degree. J. Combin. Theory Ser. B (1989), 73-79.",
+      "remarks": "A problem of Erd\\H{o}s, Pach, Pollack, and Tuza \\cite{EPPT89}, who gave constructions showing that the above bounds would be sharp, and proved the case $2r+1=3$. It is known (see \\cite{EPPT89} for example) that any connected graph on $n$ vertices with minimum degree $d$ has diameter\\[D\\leq 3\\frac{n}{d+1}+O(1).\\]This was disproven for the case of $K_{2r}$-free graphs with $r\\geq 2$ by Czabarka, Singgih, and Sz\\'{e}kely \\cite{CSS21}, who constructed arbitrarily large connected graphs on $n$ vertices which contain no $K_{2r}$ and have minimum degree $d$, and diameter\\[\\frac{6r-5}{(2r-1)d+2r-3}n+O(1),\\]which contradicts the above conjecture for each fixed $r$ as $d\\to \\infty$.\n\nThey suggest the amended conjecture, which no longer divides into two cases, that if $G$ is a connected graph on $n$ vertices with minimum degree $d$ which contains no $K_{k+1}$ then the diameter of $G$ is at most\\[(3-\\tfrac{2}{k})\\frac{n}{d}+O(1).\\]This bound is known under the weaker assumption that $G$ is $k$-colourable when $k=3$ and $k=4$, shown by Czabarka, Dankelmann, and Sz\\'{e}kely \\cite{CDS09} and Czabarka, Smith, and Sz\\'{e}kely \\cite{CSS23}.\n\nCambie and Jooken \\cite{CaJo25} have given an example that shows the diameter for $K_4$-free graphs with minimum degree $16$ is at least $\\frac{31}{216}n+O(1)$, giving another counterexample to the original conjecture.\n\nSee also the entry in the graphs problem collection."
+    },
+    "source_state": "open",
+    "tags": [
+      "graph theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.04,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.323402
+      ],
+      "probability": 0.145299
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 1.175,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277471
+      ],
+      "probability": 0.105159
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.144533
+      ],
+      "probability": 0.04
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.033,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.40336
+      ],
+      "probability": 0.18429
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 0.7,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.175964
+      ],
+      "probability": 0.055118
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 0.9,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.203695
+      ],
+      "probability": 0.069767
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 40.0,
+      "credible_interval_approx": [
+        0.0,
+        0.071043
+      ],
+      "probability": 0.02439
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.436385
+      ],
+      "probability": 0.2
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "minor"
+    },
+    "literature": {
+      "comment_count": 1,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:18:00.841809+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "8981e561fddd513219df9fd0cf269c8cd06d1083543166e96ec866b8a841b40f"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "asymptotic_notation",
+        "implicit_convention"
+      ],
+      "ambiguity_status": "minor",
+      "quantifier_signal_count": 0,
+      "question_count": 0,
+      "requires_source_audit": true,
+      "statement_characters": 303,
+      "statement_tokens_approx": 38
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "estimate",
+      "multi_part": false,
+      "primary_domain": "graph theory"
+    }
+  },
+  "problem_id": "erdos-612",
+  "problem_number": 612,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "estimate",
+    "multi_part": false,
+    "primary_domain": "graph theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_612.html",
+      "raw_html_sha256": "02e958e94bbf7a8e7d2eeaa9439131aabb39b3e5b6ad7aafc3598c19f8d6ab75",
+      "section_sha256": {
+        "references": "fa735766e7bb55d7d9a070e628d00c6343af4adc0f5f734ccceae0c01469a5e9",
+        "remarks": "b080642555645dba4d11e8f381cfd70e88ca31c6fed9b2bb24bc05f974652799",
+        "statement": "0dd2b502cbfb8276fff23b929f36b835bc39cfe2f3b5f33d95253b9379a25d4b"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_612.json",
+      "source_record_sha256": "96db569b1848776c1b5d2a80286d36e240467c2e33d61bf518e7e51af0d2a373",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_612.tex",
+    "latex_sha256": "32788a1fb551a8c87fd4a293437a1be54c6ee7d3b5c511bd1b5eadcdb81dc089",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "0dd2b502cbfb8276fff23b929f36b835bc39cfe2f3b5f33d95253b9379a25d4b",
+    "recommended_attack_modes": [
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "9f32f6b561b8a50dbbd1dd076dbdc144f52e28680d1f3ce3b0cf3d7aa7b0ecfb",
+  "routes": [
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "minor",
+    "intended": "Let $G$ be a connected graph with $n$ vertices, minimum degree $d$, and diameter $D$. Show if that $G$ contains no $K_{2r}$ and $(r-1)(3r+2)\\mid d$ then\\[D\\leq \\frac{2(r-1)(3r+2)}{2r^2-1}\\frac{n}{d}+O(1),\\]and if $G$ contains no $K_{2r+1}$ and $3r-1 \\mid d$ then\\[D\\leq \\frac{3r-1}{r}\\frac{n}{d}+O(1).\\]",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $G$ be a connected graph with $n$ vertices, minimum degree $d$, and diameter $D$. Show if that $G$ contains no $K_{2r}$ and $(r-1)(3r+2)\\mid d$ then\\[D\\leq \\frac{2(r-1)(3r+2)}{2r^2-1}\\frac{n}{d}+O(1),\\]and if $G$ contains no $K_{2r+1}$ and $3r-1 \\mid d$ then\\[D\\leq \\frac{3r-1}{r}\\frac{n}{d}+O(1).\\]",
+    "original": "Let $G$ be a connected graph with $n$ vertices, minimum degree $d$, and diameter $D$. Show if that $G$ contains no $K_{2r}$ and $(r-1)(3r+2)\\mid d$ then\\[D\\leq \\frac{2(r-1)(3r+2)}{2r^2-1}\\frac{n}{d}+O(1),\\]and if $G$ contains no $K_{2r+1}$ and $3r-1 \\mid d$ then\\[D\\leq \\frac{3r-1}{r}\\frac{n}{d}+O(1).\\]",
+    "statement_sha256": "0dd2b502cbfb8276fff23b929f36b835bc39cfe2f3b5f33d95253b9379a25d4b"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

@@ -87,6 +87,11 @@ REQUIRED_ROLES = frozenset({
 TRUSTED_EVIDENCE_KINDS = frozenset({
     "formal_proof", "exact_computation", "expert_review"
 })
+RESULT_FIELD_NAMES = (
+    "OUTCOME", "COMPLETENESS_SCORE", "PROOF_CONFIDENCE",
+    "ADVERSARIAL_SURVIVAL_SCORE", "OPEN_GAPS", "UNCHECKED_IMPORTS",
+    "CLAIMS_CHECKED", "CLAIMS_TOTAL", "CLAIM_IDS",
+)
 
 
 def evaluate_gate(
@@ -186,42 +191,60 @@ def evaluate_gate(
     return GateDecision(promoted, ("all mandatory independent reviews passed",))
 
 
-def candidate_status(response: str) -> str:
-    """Extract the outcome from exactly one bounded result block."""
+def _result_fields(response: str) -> dict[str, list[str]]:
+    """Extract labeled fields from one bounded block, independent of line layout."""
     blocks = re.findall(r"<result>\s*(.*?)\s*</result>", response,
                         re.IGNORECASE | re.DOTALL)
     if len(blocks) != 1:
+        return {}
+    label = "|".join(RESULT_FIELD_NAMES)
+    matches = list(re.finditer(
+        rf"(?<![A-Z0-9_])({label})\s*:\s*",
+        blocks[0], re.IGNORECASE,
+    ))
+    fields: dict[str, list[str]] = {}
+    for index, match in enumerate(matches):
+        end = matches[index + 1].start() if index + 1 < len(matches) else len(blocks[0])
+        value = blocks[0][match.end():end].strip().strip(";").strip()
+        fields.setdefault(match.group(1).upper(), []).append(value)
+    return fields
+
+
+def candidate_status(response: str) -> str:
+    """Extract the outcome from exactly one bounded result block."""
+    fields = _result_fields(response)
+    outcomes = fields.get("OUTCOME", [])
+    if len(outcomes) != 1:
         return "candidate_unclassified"
-    matches = re.findall(
-        r"^OUTCOME:\s*(CANDIDATE_PROVED|CANDIDATE_DISPROVED|RESOURCE_EXHAUSTED)\s*$",
-        blocks[0], re.MULTILINE | re.IGNORECASE,
+    match = re.fullmatch(
+        r"CANDIDATE_PROVED|CANDIDATE_DISPROVED|RESOURCE_EXHAUSTED",
+        outcomes[0], re.IGNORECASE,
     )
-    if len(matches) != 1:
+    if not match:
         return "candidate_unclassified"
-    return matches[0].lower()
+    return match.group(0).lower()
 
 
 def candidate_contract(response: str) -> CandidateContract:
     """Parse the complete candidate result block; missing fields fail closed."""
-    blocks = re.findall(r"<result>\s*(.*?)\s*</result>", response,
-                        re.IGNORECASE | re.DOTALL)
-    block = blocks[0] if len(blocks) == 1 else ""
+    fields = _result_fields(response)
     present: set[str] = set()
 
     def integer(name: str) -> int:
-        match = re.search(rf"^{name}:\s*(\d+)\s*$", block, re.MULTILINE | re.IGNORECASE)
-        if match:
+        values = fields.get(name, [])
+        if len(values) == 1 and re.fullmatch(r"\d+", values[0]):
             present.add(name)
-        return int(match.group(1)) if match else -1
+            return int(values[0])
+        return -1
 
     def items(name: str) -> tuple[str, ...]:
-        match = re.search(rf"^{name}:\s*(.+?)\s*$", block, re.MULTILINE | re.IGNORECASE)
-        if not match:
+        values = fields.get(name, [])
+        if len(values) != 1 or not values[0]:
             return ()
         present.add(name)
-        if match.group(1).strip().upper() == "NONE":
+        if values[0].strip().upper() == "NONE":
             return ()
-        return tuple(item.strip() for item in match.group(1).split(";") if item.strip())
+        return tuple(item.strip() for item in values[0].split(";") if item.strip())
 
     contract = CandidateContract(
         outcome=candidate_status(response),

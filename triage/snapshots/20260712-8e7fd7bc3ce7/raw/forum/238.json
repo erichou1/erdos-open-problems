@@ -1,0 +1,55 @@
+{
+  "problem_number": 238,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/238",
+  "retrieved_at": "2026-07-10T23:16:10.292343+00:00",
+  "page_title": "238 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "d44d4594229953b2f8806bb518b72ac2ac5b993c9789669a7984cfcda8f5554c",
+  "comment_count": 9,
+  "comments": [
+    {
+      "post_id": "4373",
+      "text": "\"depending on $c_1$\" should of course be \"depending on $c_2$\". (The site has been updated to address this comment.)",
+      "meta": "zach hunter — 23:17 on 18 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "271",
+      "text": "It seems likely that one could deduce this from a sufficiently uniform version of the prime tuples conjecture.",
+      "meta": "TerenceTao — 23:39 on 31 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3087",
+      "text": "Indeed, looks like the following argument would work: Let $c_1,c_2>0$ and put $c=\\lfloor c_2\\rfloor$. We seek a block of $>c_1\\log x$ consecutive primes $\\le x$ whose adjacent gaps all exceed $c$. A natural conditional route is to assume a short-interval, uniformly averaged Hardy--Littlewood $k$-tuple conjecture at the scale $T\\asymp(\\log x)^2$: for each fixed $m\\ge1$, uniformly over intervals $I=[u,u+T]\\subset[x/2,x]$ and distinct shifts $H=\\{h_1,\\dots,h_m\\}\\subset[0,T+c]$,\\[ \\#\\{n\\in I:\\ n+h_i\\ \\text{prime for all }i\\} = (1+o(1))\\,\\mathfrak S(H)\\,\\frac{T}{(\\log x)^m},\\]as $x\\to \\infty$, with $o(1)$ uniform in $I,H$. (One can weaken “uniform in $I$” to “for all but $o(1)$ of such intervals”, consistent with Maier-type irregularities.) This hypothesis implies both concentration of the prime count $N(I)$ around $T/\\log x$ and Poisson-type statistics for rare local patterns such as prime pairs at separations $\\le c$ inside a typical interval of length $T$. Take $T=A(\\log x)^2$ with fixed $A>c_1$ and partition $[x/2,x]$ into disjoint intervals $I_j$ of length $T$. By the $m=1,2$ cases, $N(I_j)$ has mean $\\sim A\\log x$ and variance $O(\\log x)$, so $N(I_j)\\ge c_1\\log x$ for all but $o(1)$ of the $I_j$ (Chebyshev). Let $B(I_j)$ be the number of prime pairs $(p,q)\\subset I_j$ with $0<q-p\\le c$. Using the fixed-$m$ cases of the conjecture and inclusion--exclusion/moment methods (à la Gallagher), one gets that $B(I_j)$ converges in distribution to $\\mathrm{Poisson}(\\lambda)$ with $\\lambda=A\\sum_{h=1}^c \\mathfrak S(\\{0,h\\})$, hence $\\mathbb P(B(I_j)=0)\\to e^{-\\lambda}>0$ for a positive proportion of intervals. Therefore some $I_j$ simultaneously satisfies $N(I_j)\\ge c_1\\log x$ and $B(I_j)=0$; the primes in that interval are automatically consecutive in the global sequence and, since there is no pair within distance $\\le c$, every adjacent prime gap inside the block exceeds $c$, yielding $>c_1\\log x$ consecutive primes $\\le x$ with all pairwise differences $>c_2$.",
+      "meta": "Przemek Chojecki — 14:28 on 13 Jan 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2909",
+      "text": "\"This is well-known if $c_1$ is sufficiently small.\" Does this mean that $\\exists \\epsilon, \\forall 0 < c_1<\\epsilon, \\forall 0 < c_2, ...$ or $\\forall 0 < c_2, \\exists \\epsilon, \\forall 0 < c_1 <\\epsilon...$? The first one is clearly stronger becauce $\\epsilon$ does not depend on $c_2$.",
+      "meta": "Yongxi Lin — 17:31 on 10 Jan 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2916",
+      "text": "I undertand It as the first option, or Else Erdos would likely had use Epsilon notation Instead of $c$'s.",
+      "meta": "Dogmachine — 19:44 on 10 Jan 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2917",
+      "text": "I think only the weaker second formulation is easy to establish. (There are $\\sim x/\\log x$ prime gaps in $[x/2,x]$, of which $O(c_2 x/\\log^2 x)$ of them are of size $\\leq c_2$ by standard sieve theory bounds; hence, by the pigeonhole principle, one can find a sequence of $\\gg \\frac{1}{c_2} \\log x$ consecutive gaps in $[x,2x]$ of size $> c_2$, giving the second form (in fact one can take $c_1$ proportional to $1/c_2$.)) The stronger first version might still be true (it seems plausible from standard probabilistic heuristics, which in fact predict consecutive runs as large as $\\gg_{c_2} \\log x \\log\\log x$), but looks much harder to establish unconditionally.",
+      "meta": "TerenceTao — 20:06 on 10 Jan 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2921",
+      "text": "I am asking because I want to formalize this in Lean. According to [Er55c], the following two references may give an answer to my confusion: 1. P.Erdos, Acta Szeged, 15 (1949), 57-63. 2. M. Cugiani Annali di Matomatica Serie IV, 38 (1955), 309-320. But I am having difficulty finding them.",
+      "meta": "Yongxi Lin — 21:34 on 10 Jan 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2922",
+      "text": "The first paper is here. The second is here.",
+      "meta": "TerenceTao — 22:00 on 10 Jan 2026 👍 3 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2969",
+      "text": "Erdos proved the second formulation $∀0<c_2,∃ϵ,∀0<c1<ϵ...$ in theorem 3 of the first reference.",
+      "meta": "Yongxi Lin — 14:59 on 11 Jan 2026 👍 3 📝 0 🤖 0"
+    }
+  ]
+}

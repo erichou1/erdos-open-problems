@@ -117,6 +117,13 @@ def scan_outputs() -> dict:
     return best
 
 
+def feed_problem_numbers(problem_numbers: list, records: dict) -> list:
+    """Use the canonical local open corpus; outputs are only a no-corpus fallback."""
+    if problem_numbers:
+        return sorted(set(problem_numbers))
+    return sorted(records)
+
+
 def build():
     records = scan_outputs()
     catalog = load_catalog()
@@ -124,11 +131,7 @@ def build():
     # Include every open problem, not just the ones that have been run, so the
     # site can show what is still pending. Problems with no output file get a
     # lightweight "not run" record.
-    numbers = all_problem_numbers()
-    if not numbers:
-        numbers = sorted(records)
-    else:
-        numbers = sorted(set(numbers) | set(records))
+    numbers = feed_problem_numbers(all_problem_numbers(), records)
 
     problems = []
     for n in numbers:

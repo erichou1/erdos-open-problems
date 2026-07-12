@@ -1,0 +1,52 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#138}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{Prize: \$500}
+
+\noindent\textbf{Tags:} additive combinatorics
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let the van der Waerden number $W(k)$ be such that whenever $N\geq W(k)$ and $\{1,\ldots,N\}$ is $2$-coloured there must exist a monochromatic $k$-term arithmetic progression. Improve the bounds for $W(k)$ - for example, prove that $W(k)^{1/k}\to \infty$.
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+When $p$ is prime Berlekamp \cite{Be68} has proved $W(p+1)\geq p2^p$. Gowers \cite{Go01} has proved\[W(k) \leq 2^{2^{2^{2^{2^{k+9}}}}}.\]The best general lower bound is $W(k)\gg 2^k$, due to Kozik and Shabanov \cite{KoSh16}.
+
+In \cite{Er81} Erd\H{o}s further asks whether $W(k+1)/W(k)\to \infty$, or $W(k+1)-W(k)\to \infty$. DeepMind has proved (see the comments) that\[W(k+1)\geq W(k)+k,\]answering the second question.
+
+In \cite{Er80} Erd\H{o}s asks whether $W(k)/2^k\to \infty$, and offers \$500 for a proof or disproof of $W(k)^{1/k}\to \infty$.
+
+The analogous question for $r\geq 3$ colours was resolved by Fox and Hunter \cite{FoHu26}, who proved\[W_3(k)^{1/k}\geq C^{\log_*k}\]for some constant $C>1$.
+
+\bigskip
+\noindent\textbf{References:}
+
+[Be68] Berlekamp, E. R., A construction for partitions which avoid long arithmetic progressions. Canad. Math. Bull. (1968), 409-414.
+ 
+ [Er80] Erd\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.
+ 
+ [Er81] Erd\H{o}s, P., On the combinatorial problems which I would most like to see solved. Combinatorica (1981), 25-42.
+ 
+ [FoHu26] J. Fox and Z. Hunter, Three-color van der Waerden numbers grow super-exponentially. arXiv:2606.02541 (2026).
+ 
+ [Go01] Gowers, W. T., A new proof of Szemer\'{e}di's theorem. Geom. Funct. Anal. (2001), 465-588.
+ 
+ [KoSh16] Kozik, Jakub and Shabanov, Dmitry, Improved algorithms for colorings of simple hypergraphs and
+applications. J. Combin. Theory Ser. B (2016), 312--332.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/138}}
+\end{document}

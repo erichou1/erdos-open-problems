@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 950,
+  "raw_page": {
+    "path": "raw/pages/problem_950.html",
+    "sha256": "1ec683d82f13ec4da82c1a49ad77915721a19f6e87125e6106b6b8340bd22524"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_region": "div.problem-additional-text",
+      "text": ""
+    },
+    "remarks": {
+      "sha256": "d36602741f2b7b0f6dbeba6a56011b6e4ba6ba71df9c88dbba020da3f539890f",
+      "source_region": "div.problem-additional-text",
+      "text": "This function was considered by de Bruijn, Erd\\H{o}s, and Tur\\'{a}n, who showed that\\[\\sum_{n<x}f(n)\\sim \\sum_{n<x}f(n)^2\\sim x.\\]They give no proofs, but a proof of the (harder) second claim is given by Gorodetsky here. The existence of some $c>0$ such that there are $\\gg n^c/\\log n$ many primes in $[n,n+n^c]$ implies that $\\liminf f(n)>0$. \n\nErd\\H{o}s writes that a 'weaker conjecture which is perhaps not quite inaccessible' is that, for every $\\epsilon>0$, if $x$ is sufficiently large there exists $y<x$ such that\\[\\pi(x)< \\pi(y)+\\epsilon \\pi(x-y).\\](Compare this to [855].) He notes that if\\[\\pi(x)< \\pi(y)+O\\left(\\frac{x-y}{\\log x}\\right)\\]for all $y<x-(\\log x)^C$ for some constant $C>0$ then $f(n)\\ll \\log\\log\\log n$.\n\nThe study of $f(p)$ is even harder, and Erd\\H{o}s could not prove that\\[\\sum_{p<x}f(p)^2\\sim \\pi(x).\\]See also [1210]."
+    },
+    "statement": {
+      "sha256": "8ef988b926c225e54e3cab765a3e268286696df08ab865971342b824aa9cc69a",
+      "source_region": "div#content",
+      "text": "Let\\[f(n) = \\sum_{p<n}\\frac{1}{n-p}.\\]Is it true that\\[\\liminf f(n)=1\\]and\\[\\limsup f(n)=\\infty?\\]Is it true that $f(n)=o(\\log\\log n)$ for all $n$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/950"
+}

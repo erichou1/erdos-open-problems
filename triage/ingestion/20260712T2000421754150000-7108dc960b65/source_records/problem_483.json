@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 483,
+  "raw_page": {
+    "path": "raw/pages/problem_483.html",
+    "sha256": "a755bd614526ae5ff2e70ffe31ba3e33bac584559860e70f8e8aef4239f0606a"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "bc7cad890dd7187f831586dd606a55dd8a3af0c1a8cafe33526af8783894827c",
+      "source_region": "div.problem-additional-text",
+      "text": "[ACPPRT21] R. Ageron, P. Casteras, T. Pellerin, Y. Portella, A. Rimmel, and J. Tomasik, New lower bounds for Schur and weak Schur numbers. arXiv:2112.03175 (2021).\n \n [El19] No reference found.\n\n [Ex94] Exoo, G., A lower bound for Schur numbers and multicolor Ramsey numbers. Electronic J. of Combinatorics (1994).\n \n [FrSw00] Fredricksen, Harold and Sweet, Melvin M., Symmetric sum-free partitions and lower bounds for Schur\nnumbers. Electron. J. Combin. (2000), Research Paper 32, 9.\n \n [He17] M. Heuele, Schur Number Five. arXiv:1711.08076 (2017).\n \n [Wa97] Wan, Honghui, Upper bounds for {R}amsey numbers {$R(3,3,\\cdots,3)$} and\nSchur numbers. J. Graph Theory (1997), 119--122.\n \n [Wh73] Whitehead, Jr., Earl Glen, The {R}amsey number {$N(3,\\,3,\\,3,\\,3;\\,2)$}. Discrete Math. (1973), 389--396.\n \n [XXC02] Xu, Xiao Dong and Xie, Zheng and Chen, Zhi, Upper bounds for {R}amsey numbers {$R_n(3)$} and Schur\nnumbers. Math. Econ. (2002), 81--84."
+    },
+    "remarks": {
+      "sha256": "3c5b3d52468c308bf0acd5fd3b4fb5a374e9c4db06d267d5f2d04099df99e0c5",
+      "source_region": "div.problem-additional-text",
+      "text": "The values of $f(k)$ are known as Schur numbers. The best-known bounds for large $k$ are\\[(380)^{k/5}-O(1)\\leq f(k) \\leq (e-\\tfrac{1}{6}) k!.\\]Note that $380^{1/5}\\approx 3.2806$. The lower bound is due to Ageron, Casteras, Pellerin, Portella, Rimmel, and Tomasik \\cite{ACPPRT21} (improving previous bounds of Exoo \\cite{Ex94} and Fredricksen and Sweet \\cite{FrSw00}). The upper bound is due to Xu, Xie, and Chen \\cite{XXC02} (improving previous bounds of Wan \\cite{Wa97} and Whitehead \\cite{Wh73}). See Eliahou \\cite{El19} for more on the upper bound.\n\nThe known values of $f$ are $f(1)=2$, $f(2)=5$, $f(3)=14$, $f(4)=45$, and $f(5)=161$ (see A030126). (The equality $f(5)=161$ was established by Heule \\cite{He17}).\n\nSee also [183] (in particular a folklore observation gives $f(k)\\leq R(3;k)-1$)."
+    },
+    "statement": {
+      "sha256": "b92c5bd9778b27b61c1f1cadc5f2f6186aff2755d63ae7864b870e0302834d2e",
+      "source_region": "div#content",
+      "text": "Let $f(k)$ be the minimal $N$ such that if $\\{1,\\ldots,N\\}$ is $k$-coloured then there is a monochromatic solution to $a+b=c$. Estimate $f(k)$. In particular, is it true that $f(k) < c^k$ for some constant $c>0$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/483"
+}

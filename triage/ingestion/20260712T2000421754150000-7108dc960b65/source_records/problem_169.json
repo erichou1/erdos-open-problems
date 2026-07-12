@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 169,
+  "raw_page": {
+    "path": "raw/pages/problem_169.html",
+    "sha256": "a7eff97757ca7c15261d5a35f0bdb87f376c9d0623c02c03e087ef1d0dccea57"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "2c59648a22f695d85f5e14dbade8f12fd7f1874eb936f2f8480a5f5e7391e8aa",
+      "source_region": "div.problem-additional-text",
+      "text": "[Be68] Berlekamp, E. R., A construction for partitions which avoid long arithmetic progressions. Canad. Math. Bull. (1968), 409-414.\n \n [Er80] Erd\\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.\n \n [Ge77] Gerver, Joseph L., The sum of the reciprocals of a set of integers with no\narithmetic progression of {$k$} terms. Proc. Amer. Math. Soc. (1977), 211--214.\n \n [Wa25] A. Walker, Integer sets of large harmonic sum which avoid long arithmetic progressions. arXiv:2203.06045 (2025).\n \n [Wr84] Wr\\'oblewski, J., A nonaveraging set of integers with a large sum of reciprocals. Math. Comp. (1984), 261--262."
+    },
+    "remarks": {
+      "sha256": "6ea6ae88d8a42b09032b170d4c5b64c20ec36168cb7bd7281739e994f0bd70b9",
+      "source_region": "div.problem-additional-text",
+      "text": "Berlekamp \\cite{Be68} proved $f(k) \\geq \\frac{\\log 2}{2}k$. Gerver \\cite{Ge77} proved\\[f(k) \\geq (1-o(1))k\\log k.\\]It is trivial that\\[\\frac{f(k)}{\\log W(k)}\\geq \\frac{1}{2},\\]but improving the right-hand side to any constant $>1/2$ is open.\n\nGerver also proved (see the comments for an alternative argument of Tao) that [3] is equivalent to $f(k)$ being finite for all $k$.\n\nThe current record for $f(3)$ is $f(3)\\geq 3.00849$, due to Wr\\'{o}blewski \\cite{Wr84}. Walker \\cite{Wa25} proved $f(4)\\geq 4.43975$.\n\nWalker \\cite{Wa25} has shown that it suffices to consider Kempner sets (that is, sets of integers defined as all those whose base $b$ digits are contained in some $S\\subset \\{0,\\ldots,b-1\\}$ for fixed $b$ and $S$), in the sense that for any $k\\geq 3$ and $\\epsilon>0$ there is a Kempner set $A$ lacking $k$-term arithmetic progressions such that\\[\\sum_{n\\in A}\\frac{1}{n}\\geq f(k)-\\epsilon.\\]In \\cite{Er80} Erd\\H{o}s asks whether for every $\\epsilon>0$ and $k\\geq 3$ if $A$ is a set of integers without a $k$-term arithmetic progression such that $\\min(A)$ is sufficiently large in terms of $\\epsilon$ and $k$ then $\\sum_{n\\in A}\\frac{1}{n}<\\epsilon$."
+    },
+    "statement": {
+      "sha256": "aff7663f1d31c812c26e462c35cf432f367540eb1167dd9bf7e82cced79ea5ba",
+      "source_region": "div#content",
+      "text": "Let $k\\geq 3$ and $f(k)$ be the supremum of $\\sum_{n\\in A}\\frac{1}{n}$ as $A$ ranges over all sets of positive integers which do not contain a $k$-term arithmetic progression. Estimate $f(k)$. \n\nIs\\[\\lim_{k\\to \\infty}\\frac{f(k)}{\\log W(k)}=\\infty\\]where $W(k)$ is the van der Waerden number?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/169"
+}

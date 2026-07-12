@@ -1,0 +1,25 @@
+{
+  "problem_number": 1137,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/1137",
+  "retrieved_at": "2026-07-10T23:20:43.239213+00:00",
+  "page_title": "1137 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "8136f5ebe11aa4a6d2dee1aa15c6c91a40dcfea38eee4da1110d2a9e4224e59a",
+  "comment_count": 3,
+  "comments": [
+    {
+      "post_id": "4074",
+      "text": "Heuristically this is not true by Cramer like conjecture. Let $d_n=p_{n+1}-p_n$ be prime gaps and define $M(x):=\\max_{n<x} d_n$ and $P(x):=\\max_{n<x} d_{n-1}d_n$. In a Cramer-Poisson heuristic one treats the normalized gaps\\[ X_n:=\\frac{d_n}{\\log p_n} \\]as approximately i.i.d. exponential random variables with mean $1$ (locally, on the scale of $\\log p_n$), and also approximately independent for neighboring indices. For $N$ i.i.d. $\\mathrm{Exp}(1)$ variables, the maximum satisfies $X_{(1)}=\\max_{1\\le n\\le N}X_n=(1+o(1))\\log N$ with high probability. Translating back, this predicts\\[ M(x)\\approx (\\log p_x)\\,\\log x, \\]up to lower-order factors, consistent with the usual extreme-value behavior in the model. Consider adjacent pairs $(X_n,X_{n-1})$ and set a threshold $t=a\\log N$. Under independence,\\[ \\mathbb{E}\\#\\{1\\le n\\le N:\\; X_{n-1}\\ge t,\\ X_n\\ge t\\} \\approx N\\,\\mathbb{P}(X\\ge t)^2 = N e^{-2t} = N^{\\,1-2a}. \\]Hence for any $a<\\tfrac12$ there are typically many indices with $X_{n-1},X_n\\ge a\\log N$, while for $a>\\tfrac12$ there are typically none; this places the largest adjacent pair around $t\\approx \\tfrac12\\log N$ in each coordinate. Consequently,\\[ \\max_{n\\le N} X_{n-1}X_n \\approx \\left(\\tfrac12 \\log N\\right)^2 \\quad\\text{while}\\quad \\left(\\max_{n\\le N}X_n\\right)^2 \\approx (\\log N)^2, \\]so the ratio $P(x)/M(x)^2$ is heuristically bounded away from $0$ (on the order of a positive constant, plausibly about $1/4$ in this simplified model), rather than tending to $0$.",
+      "meta": "Przemek Chojecki — 12:24 on 02 Feb 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3744",
+      "text": "Related OEIS: The numerator is the record version of A083550 and the denominator the square of A005250. (The site has been updated to address this comment.)",
+      "meta": "FelixPernegger — 06:57 on 25 Jan 2026 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "3754",
+      "text": "How can I see the record version of an OEIS entry?",
+      "meta": "old-bielefelder — 11:35 on 25 Jan 2026 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

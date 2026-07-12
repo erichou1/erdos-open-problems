@@ -1,0 +1,263 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.443
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-12-11",
+      "state": "yes"
+    },
+    "references": [
+      "DaIl22",
+      "HHKP25",
+      "Ki95"
+    ],
+    "source_last_update": "2025-10-26",
+    "source_problem_url": "https://www.erdosproblems.com/1104",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[DaIl22] Davies, Ewan and Illingworth, Freddie, The {$\\chi$}-{R}amsey problem for triangle-free graphs. SIAM J. Discrete Math. (2022), 1124--1134.\n \n [HHKP25] Z. Hefty, P. Horn, D. King, and F. Pfender, Improving $R(3,k)$ in just two bites. arXiv:2510.19718 (2025).\n \n [Ki95] Kim, J. H., The Ramsey number $R(3,t)$ has order of magnitude $t^2/\\log t$. Random Structures and Algorithms (1995), 173-207.",
+      "remarks": "The best bounds available are\\[(1-o(1))(n/\\log n)^{1/2}\\leq f(n) \\leq (2+o(1))(n/\\log n)^{1/2}.\\]The upper bound is due to Davies and Illingworth \\cite{DaIl22}, the lower bound follows from a construction of Hefty, Horn, King, and Pfender \\cite{HHKP25}.\n\nOne can ask a similar question for the maximum possible chromatic number of a triangle-free graph on $m$ edges. Let this be $g(m)$. Davies and Illingworth \\cite{DaIl22} prove\\[g(m) \\leq (3^{5/3}+o(1))\\left(\\frac{m}{(\\log m)^2}\\right)^{1/3}.\\]Kim \\cite{Ki95} gave a construction which implies $g(m) \\gg (m/(\\log m)^2)^{1/3}$.\n\nThe function $f(n)$ is the inverse to the function $h_3(k)$ considered in [1013].\n\nA generalisation of $f(n)$ is considered in [920]."
+    },
+    "source_state": "open",
+    "tags": [
+      "graph theory",
+      "chromatic number"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.83,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.304778
+      ],
+      "probability": 0.132321
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 2.431,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.407666
+      ],
+      "probability": 0.195546
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 3.3,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.016014,
+        0.415359
+      ],
+      "probability": 0.215686
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.067,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.406635
+      ],
+      "probability": 0.186747
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.2,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.011999,
+        0.409054
+      ],
+      "probability": 0.210526
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.7,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.375214
+      ],
+      "probability": 0.183673
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 2.6,
+      "beta": 40.0,
+      "credible_interval_approx": [
+        0.0,
+        0.132092
+      ],
+      "probability": 0.061033
+    },
+    "p_verified_partial_progress": {
+      "alpha": 3.4,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.043607,
+        0.552885
+      ],
+      "probability": 0.298246
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "minor"
+    },
+    "literature": {
+      "comment_count": 2,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:20:34.753733+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "5569e55bad918d5ce83d1b1ae01a9271847a50a398f4af850742c9e4af176d90"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "implicit_convention"
+      ],
+      "ambiguity_status": "minor",
+      "quantifier_signal_count": 0,
+      "question_count": 0,
+      "requires_source_audit": true,
+      "statement_characters": 110,
+      "statement_tokens_approx": 17
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": true,
+      "finite_signal": true,
+      "goal": "estimate",
+      "multi_part": false,
+      "primary_domain": "graph theory"
+    }
+  },
+  "problem_id": "erdos-1104",
+  "problem_number": 1104,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": true,
+    "finite_signal": true,
+    "goal": "estimate",
+    "multi_part": false,
+    "primary_domain": "graph theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_1104.html",
+      "raw_html_sha256": "f2281133256763e4e91639f73295fc638d25541f99731500f3b234d694ed276a",
+      "section_sha256": {
+        "references": "151b3bd6a8eea386776bfba3b90218f276304569f93454c8930e1d8c30c9078a",
+        "remarks": "b8b0470d1ca975f220447d83c29631648ad861614b6054e95371d1467b6915dc",
+        "statement": "3c868344378f366ed20186f7718ff7739ac5d70a124f717b169a1a82119ea980"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_1104.json",
+      "source_record_sha256": "ef8d1711f5b075950bb377216fb7f2bbe9c185c45ef517df3787a5033835d0bf",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_1104.tex",
+    "latex_sha256": "9a73981a09856b0253fdb8986bea3e45907a698ff7acffe7117a4cd19b9daf98",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "3c868344378f366ed20186f7718ff7739ac5d70a124f717b169a1a82119ea980",
+    "recommended_attack_modes": [
+      "formal_search",
+      "exact_computation",
+      "counterexample_search",
+      "shared_infrastructure_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "184e1c0e1fb22e117119f413d1e302a79d7b52d6f67f579eaeb492efc6d2bcc3",
+  "routes": [
+    "formal_search",
+    "exact_computation",
+    "counterexample_search",
+    "shared_infrastructure_search",
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "minor",
+    "intended": "Let $f(n)$ be the maximum possible chromatic number of a triangle-free graph on $n$ vertices. Estimate $f(n)$.",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $f(n)$ be the maximum possible chromatic number of a triangle-free graph on $n$ vertices. Estimate $f(n)$.",
+    "original": "Let $f(n)$ be the maximum possible chromatic number of a triangle-free graph on $n$ vertices. Estimate $f(n)$.",
+    "statement_sha256": "3c868344378f366ed20186f7718ff7739ac5d70a124f717b169a1a82119ea980"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

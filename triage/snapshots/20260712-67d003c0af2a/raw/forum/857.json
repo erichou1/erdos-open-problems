@@ -1,0 +1,15 @@
+{
+  "problem_number": 857,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/857",
+  "retrieved_at": "2026-07-10T23:19:08.882707+00:00",
+  "page_title": "857 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "42d09b6d28ea6ebf3722405920601d2757a5bcd292ba838430cd3a1802449cec",
+  "comment_count": 1,
+  "comments": [
+    {
+      "post_id": "4499",
+      "text": "I have been working on a fully formal Lean 4 development of the weak sunflower numbers M(n,3). Exact values certified so far: M(1,3)=2 through M(4,3)=8 are certified in Lean using native_decide, with both lower and upper bounds formalized. M(5,3)=12 and M(6,3)=19 are certified via a SAT+LRAT bridge. The SAT encodings are generated from Lean, and the resulting LRAT certificates are verified independently. M(7,3)=29 is certified via SAT+LRAT. At target size 30, four independent SAT solvers (CaDiCaL, Glucose4, MapleSAT, Lingeling) all return UNSAT, and verified LRAT certificates are included in the repository. The lower bound (existence at 29) is also formalized. All proofs in the Lean development are sorry-free. Every result is verified locally by the Lean kernel using lake build, independent of any external service. The SAT+LRAT certificates for M(5,3), M(6,3), and M(7,3) are fully reproducible and can be re-checked using any independent LRAT verifier without involvement from any language model. Beyond exact values, the development includes: A formally proved Local Turán-type inequality. A formal statement of the Balance conjecture with low/high frequency case structure developed. Pair-weight counting machinery for structured extremal arguments. A reusable Lean-to-SAT pipeline with verified LRAT checking for combinatorial certification. The development was carried out collaboratively with language models (primarily OpenAI Codex via Codex CLI and Anthropic Claude via Claude CLI) generating candidate proof attempts. However, all acceptance criteria were enforced locally: every theorem was only committed if the Lean kernel verified it without sorry. The Lean kernel is the ground truth; models generated candidates, and invalid attempts were rejected and rolled back. Early in the project I made a single exploratory call to Aristotle to inspect how it would structure a Lean formalization; those example files remain in the repository. All substantive development was subsequently performed using Codex and Claude. The SAT+LRAT results and Lean proofs are independent of any language model once generated; they are mechanically checkable artifacts. Repository: https://github.com/SproutSeeds/sunflower-lean",
+      "meta": "sproutseeds — 13:40 on 26 Feb 2026 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

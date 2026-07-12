@@ -1,0 +1,332 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.176
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2026-01-20",
+      "state": "yes"
+    },
+    "references": [],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/770",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "",
+      "remarks": "It is easy to see that $h(n)=n+1$ if and only if $n+1$ is prime, and that $h(n)$ is unbounded for odd $n$. \n\nIt is probably true that $h(n)=3$ for infinitely many $n$.\n\nSee also [820]."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.74,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.378075
+      ],
+      "probability": 0.185889
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.681,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.033651,
+        0.451304
+      ],
+      "probability": 0.242477
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.3,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.207417
+      ],
+      "probability": 0.079755
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.667,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.459822
+      ],
+      "probability": 0.228571
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.367,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.01098,
+        0.355626
+      ],
+      "probability": 0.183303
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 3.6,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.022708,
+        0.398345
+      ],
+      "probability": 0.210526
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.092979
+      ],
+      "probability": 0.038462
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.002288,
+        0.452997
+      ],
+      "probability": 0.227642
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 6,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:18:43.537396+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "40a14291a80c7de6c85192c627c969654114b9a87147493c86faaaa38faa2618"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "multiple_questions",
+        "implicit_convention"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 1,
+      "question_count": 3,
+      "requires_source_audit": true,
+      "statement_characters": 297,
+      "statement_tokens_approx": 44
+    },
+    "structure": {
+      "asymptotic": true,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "prove_or_disprove",
+      "multi_part": true,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-770",
+  "problem_number": 770,
+  "problem_type": {
+    "asymptotic": true,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "prove_or_disprove",
+    "multi_part": true,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_770.html",
+      "raw_html_sha256": "519f16e6728fb9c84105155443d704a7b734c217732c43827acced18e36f4f99",
+      "section_sha256": {
+        "references": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "remarks": "7c49fb2e6df602bfd88d5ad1301621bc701170921f1ce526ca57e464b076ab9b",
+        "statement": "ebc73dfe95cb4d19cdc8bf1b3c0a8b18ad7735b027a7c45777e8f7e7ff519fbb"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_770.json",
+      "source_record_sha256": "09ce9f3ec34f839c6f43ac2763ee59fb373a3c49509cebeeef20f53d38b3f97a",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_770.tex",
+    "latex_sha256": "5930858cab7756bc1e7e61802558fababa321e73a7e52ad2c0b386163621182a",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "ebc73dfe95cb4d19cdc8bf1b3c0a8b18ad7735b027a7c45777e8f7e7ff519fbb",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "formal_search",
+      "subproblem_decomposition",
+      "shared_infrastructure_search",
+      "literature_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Let $h(n)$ be minimal such that $2^n-1,3^n-1,\\ldots,h(n)^n-1$ are mutually coprime. Does, for every prime $p$, the density $\\delta_p$ of integers with $h(n)=p$ exist?",
+        "focus_question_sha256": "3c3b9fe71562ae5c46b06a9119bee54454903bbc3f814963b6909bf2e9e770cc",
+        "parent_statement_sha256": "ebc73dfe95cb4d19cdc8bf1b3c0a8b18ad7735b027a7c45777e8f7e7ff519fbb",
+        "part_index": 1,
+        "subproblem_contract_sha256": "40e70b2de80f94627c6f5e5539877c1ce39cf0d95e6f057b10d40ecc2f88e445",
+        "subproblem_id": "erdos-770-part-01-40e70b2d"
+      },
+      {
+        "focus_question": "Does $\\liminf h(n)=\\infty$?",
+        "focus_question_sha256": "99ddce43df0d8653b6d71147dafd9c686901dcb93dd614d713d6ebd91e676553",
+        "parent_statement_sha256": "ebc73dfe95cb4d19cdc8bf1b3c0a8b18ad7735b027a7c45777e8f7e7ff519fbb",
+        "part_index": 2,
+        "subproblem_contract_sha256": "5c326512af8f4841e00a56972afee0afa3fe8fd779f9cf5ae104c0fd8da60f50",
+        "subproblem_id": "erdos-770-part-02-5c326512"
+      },
+      {
+        "focus_question": "Is it true that if $p$ is the greatest prime such that $p-1\\mid n$ and $p>n^\\epsilon$ then $h(n)=p$?",
+        "focus_question_sha256": "0e824462474dbf7ba28cb3396e018a536ea7d0a42f78333fc548650296b51857",
+        "parent_statement_sha256": "ebc73dfe95cb4d19cdc8bf1b3c0a8b18ad7735b027a7c45777e8f7e7ff519fbb",
+        "part_index": 3,
+        "subproblem_contract_sha256": "9668144838a683a7277e89500916426b4fe1cb7ee321d32c950330a161e0c4eb",
+        "subproblem_id": "erdos-770-part-03-96681448"
+      }
+    ]
+  },
+  "research_directive_sha256": "1f575b56de973396ca3f36982f68c597da537351be7358ac52a522f2e44787b6",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "formal_search",
+    "subproblem_decomposition",
+    "shared_infrastructure_search",
+    "literature_search"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Let $h(n)$ be minimal such that $2^n-1,3^n-1,\\ldots,h(n)^n-1$ are mutually coprime. \n\nDoes, for every prime $p$, the density $\\delta_p$ of integers with $h(n)=p$ exist? Does $\\liminf h(n)=\\infty$? Is it true that if $p$ is the greatest prime such that $p-1\\mid n$ and $p>n^\\epsilon$ then $h(n)=p$?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $h(n)$ be minimal such that $2^n-1,3^n-1,\\ldots,h(n)^n-1$ are mutually coprime. Does, for every prime $p$, the density $\\delta_p$ of integers with $h(n)=p$ exist? Does $\\liminf h(n)=\\infty$? Is it true that if $p$ is the greatest prime such that $p-1\\mid n$ and $p>n^\\epsilon$ then $h(n)=p$?",
+    "original": "Let $h(n)$ be minimal such that $2^n-1,3^n-1,\\ldots,h(n)^n-1$ are mutually coprime. \n\nDoes, for every prime $p$, the density $\\delta_p$ of integers with $h(n)=p$ exist? Does $\\liminf h(n)=\\infty$? Is it true that if $p$ is the greatest prime such that $p-1\\mid n$ and $p>n^\\epsilon$ then $h(n)=p$?",
+    "statement_sha256": "ebc73dfe95cb4d19cdc8bf1b3c0a8b18ad7735b027a7c45777e8f7e7ff519fbb"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-770",
+      "part_index": 1,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Let $h(n)$ be minimal such that $2^n-1,3^n-1,\\ldots,h(n)^n-1$ are mutually coprime. Does, for every prime $p$, the density $\\delta_p$ of integers with $h(n)=p$ exist?",
+        "focus_question_sha256": "3c3b9fe71562ae5c46b06a9119bee54454903bbc3f814963b6909bf2e9e770cc",
+        "normalized": "Let $h(n)$ be minimal such that $2^n-1,3^n-1,\\ldots,h(n)^n-1$ are mutually coprime. Does, for every prime $p$, the density $\\delta_p$ of integers with $h(n)=p$ exist? Does $\\liminf h(n)=\\infty$? Is it true that if $p$ is the greatest prime such that $p-1\\mid n$ and $p>n^\\epsilon$ then $h(n)=p$?",
+        "original": "Let $h(n)$ be minimal such that $2^n-1,3^n-1,\\ldots,h(n)^n-1$ are mutually coprime. \n\nDoes, for every prime $p$, the density $\\delta_p$ of integers with $h(n)=p$ exist? Does $\\liminf h(n)=\\infty$? Is it true that if $p$ is the greatest prime such that $p-1\\mid n$ and $p>n^\\epsilon$ then $h(n)=p$?",
+        "statement_sha256": "ebc73dfe95cb4d19cdc8bf1b3c0a8b18ad7735b027a7c45777e8f7e7ff519fbb"
+      },
+      "subproblem_contract_sha256": "40e70b2de80f94627c6f5e5539877c1ce39cf0d95e6f057b10d40ecc2f88e445",
+      "subproblem_id": "erdos-770-part-01-40e70b2d"
+    },
+    {
+      "parent_problem_id": "erdos-770",
+      "part_index": 2,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Does $\\liminf h(n)=\\infty$?",
+        "focus_question_sha256": "99ddce43df0d8653b6d71147dafd9c686901dcb93dd614d713d6ebd91e676553",
+        "normalized": "Let $h(n)$ be minimal such that $2^n-1,3^n-1,\\ldots,h(n)^n-1$ are mutually coprime. Does, for every prime $p$, the density $\\delta_p$ of integers with $h(n)=p$ exist? Does $\\liminf h(n)=\\infty$? Is it true that if $p$ is the greatest prime such that $p-1\\mid n$ and $p>n^\\epsilon$ then $h(n)=p$?",
+        "original": "Let $h(n)$ be minimal such that $2^n-1,3^n-1,\\ldots,h(n)^n-1$ are mutually coprime. \n\nDoes, for every prime $p$, the density $\\delta_p$ of integers with $h(n)=p$ exist? Does $\\liminf h(n)=\\infty$? Is it true that if $p$ is the greatest prime such that $p-1\\mid n$ and $p>n^\\epsilon$ then $h(n)=p$?",
+        "statement_sha256": "ebc73dfe95cb4d19cdc8bf1b3c0a8b18ad7735b027a7c45777e8f7e7ff519fbb"
+      },
+      "subproblem_contract_sha256": "5c326512af8f4841e00a56972afee0afa3fe8fd779f9cf5ae104c0fd8da60f50",
+      "subproblem_id": "erdos-770-part-02-5c326512"
+    },
+    {
+      "parent_problem_id": "erdos-770",
+      "part_index": 3,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Is it true that if $p$ is the greatest prime such that $p-1\\mid n$ and $p>n^\\epsilon$ then $h(n)=p$?",
+        "focus_question_sha256": "0e824462474dbf7ba28cb3396e018a536ea7d0a42f78333fc548650296b51857",
+        "normalized": "Let $h(n)$ be minimal such that $2^n-1,3^n-1,\\ldots,h(n)^n-1$ are mutually coprime. Does, for every prime $p$, the density $\\delta_p$ of integers with $h(n)=p$ exist? Does $\\liminf h(n)=\\infty$? Is it true that if $p$ is the greatest prime such that $p-1\\mid n$ and $p>n^\\epsilon$ then $h(n)=p$?",
+        "original": "Let $h(n)$ be minimal such that $2^n-1,3^n-1,\\ldots,h(n)^n-1$ are mutually coprime. \n\nDoes, for every prime $p$, the density $\\delta_p$ of integers with $h(n)=p$ exist? Does $\\liminf h(n)=\\infty$? Is it true that if $p$ is the greatest prime such that $p-1\\mid n$ and $p>n^\\epsilon$ then $h(n)=p$?",
+        "statement_sha256": "ebc73dfe95cb4d19cdc8bf1b3c0a8b18ad7735b027a7c45777e8f7e7ff519fbb"
+      },
+      "subproblem_contract_sha256": "9668144838a683a7277e89500916426b4fe1cb7ee321d32c950330a161e0c4eb",
+      "subproblem_id": "erdos-770-part-03-96681448"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

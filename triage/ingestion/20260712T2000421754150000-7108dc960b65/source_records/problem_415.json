@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 415,
+  "raw_page": {
+    "path": "raw/pages/problem_415.html",
+    "sha256": "fbeffd01a825f645be625b654f1c524c0596f5b9b779aa48235860dc06af425b"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "7dd10e4c36da35bcae57cbb750368d2f5d5960e5aec0dbe2253a82e4b0f6a78f",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er36b] Erd\\H{o}s, P., On a problem of Chowla and some related problems. Proc. Cambridge Philos. Soc. (1936), 530-540.\n \n [ErGr80] Erd\\H{o}s, P. and Graham, R., Old and new problems and results in combinatorial number theory. Monographies de L'Enseignement Mathematique (1980).\n \n [PPT13] Pollack, Paul and Pomerance, Carl and Trevi\\~no, Enrique, Sets of monotonicity for {E}uler's totient function. Ramanujan J. (2013), 379--398."
+    },
+    "remarks": {
+      "sha256": "a3bf4fd78230590456868fa0d37ea13e21b371ff80898cdaa24dc828cbdc68fd",
+      "source_region": "div.problem-additional-text",
+      "text": "In \\cite{ErGr80} it is left ambiguous whether an 'ordering pattern' involves strict inequalities or allows equality. Weisenberg has observed that the final question only makes sense if we allow equality. \n\nIn \\cite{ErGr80} it is claimed that Erd\\H{o}s \\cite{Er36b} proved that\\[F(n)\\asymp \\log\\log\\log n,\\]and similarly if we replace $\\phi$ with $\\sigma$ or $\\tau$ or $\\nu$ or any 'decent' additive or multiplicative function, but this does not seem to be present in \\cite{Er36b}, which only shows that the number of $m\\leq n$ such that $\\phi(m)<\\phi(m+1)$ is $\\sim n/2$, and similarly for $\\phi(m)>\\phi(m+1)$. The following asymptotic shows that such a result is false regardless.\n\nPollack, Pomerance, and Trevi\\~{n}o \\cite{PPT13} have proved that, if $G(n)$ is the maximum $k$ such that\\[\\phi(m+1)> \\phi(m+2)>\\cdots > \\phi(m+k)\\]for some $m$ with $m+k\\leq n$, then\\[G(n)\\sim \\frac{\\log\\log\\log n}{\\log\\log\\log\\log\\log\\log n}.\\]The same asymptotic holds if we replace $>$ with $<,\\leq,\\geq$. Since $F(n)\\leq G(n)$ trivially, this answers the first question in the negative.\n\nChojecki and GPT-5.4 have sketched how the proof of \\cite{PPT13} can be adapted to obtain the same asymptotic for an arbitrary pattern of (strict) inequalities.\n\nNote that a positive answer to the final question would imply that there exist infinitely many $n$ with $\\phi(n)=\\phi(n+1)$, which is the subject of [1003]."
+    },
+    "statement": {
+      "sha256": "ecc6d8f29d98488aa9224cd45fc6f9d681c61e3ae6028581906665b1ce2c3d78",
+      "source_region": "div#content",
+      "text": "For any $n$ let $F(n)$ be the largest $k$ such that any of the $k!$ possible ordering patterns appears in some sequence of $\\phi(m+1),\\ldots,\\phi(m+k)$ with $m+k\\leq n$. Is it true that\\[F(n)=(c+o(1))\\log\\log\\log n\\]for some constant $c$? Is the first pattern which fails to appear always\\[\\phi(m+1)>\\phi(m+2)>\\cdots >\\phi(m+k)?\\]Is it true that the 'natural' ordering which mimics what happens to $\\phi(1),\\ldots,\\phi(k)$ is the most likely to appear?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/415"
+}

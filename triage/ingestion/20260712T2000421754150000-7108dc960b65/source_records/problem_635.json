@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 635,
+  "raw_page": {
+    "path": "raw/pages/problem_635.html",
+    "sha256": "0d533481b3ec63a7afcb8d4fabf63d0c90f7b0cab85ec5be9eb5a2c2915bfa2d"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "5a8571dc5f067d189a88e001af1fdc1e4e25fd1156bb085cfac3ef0e75274fd0",
+      "source_region": "div.problem-additional-text",
+      "text": "[El79] Elliott, P. D. T. A., Probabilistic number theory. I. (1979), xxii+359+xxxiii pp. (2 plates)."
+    },
+    "remarks": {
+      "sha256": "95bb0f56f1c8268323e1391b42fdb93c6466ab2ef0dd701666aedcb658f663b3",
+      "source_region": "div.problem-additional-text",
+      "text": "Asked by Erd\\H{o}s in a letter to Ruzsa in around 1980. Erd\\H{o}s observes that when $t=1$ the maximum possible is\\[\\lvert A\\rvert=\\left\\lfloor\\frac{N+1}{2}\\right\\rfloor,\\]achieved by taking $A$ to be all odd numbers in $\\{1,\\ldots,N\\}$. He also observes that when $t=2$ there exists such an $A$ with\\[\\lvert A\\rvert \\geq \\frac{N}{2}+c\\log N\\]for some constant $c>0$: take $A$ to be the union of all odd numbers together with numbers of the shape $2^k$ with $k$ odd.\n\nThe second question has been resolved in the affirmative by ChatGPT-5.2 (prompted by Leeham); Tao has since observed that a positive answer also follows fairly quickly from an inequality due to Elliott \\cite{El79}."
+    },
+    "statement": {
+      "sha256": "b1b5ec57e01bfa838d5fdaf649749d3b98f6376f3ae31eaff2a47f96af0e0061",
+      "source_region": "div#content",
+      "text": "Let $t\\geq 1$ and $A\\subseteq \\{1,\\ldots,N\\}$ be such that whenever $a,b\\in A$ with $b-a\\geq t$ we have $b-a\\nmid b$. How large can $\\lvert A\\rvert$ be? Is it true that\\[\\lvert A\\rvert \\leq \\left(\\frac{1}{2}+o_t(1)\\right)N?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/635"
+}

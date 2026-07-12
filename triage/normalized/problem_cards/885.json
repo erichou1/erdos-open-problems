@@ -1,0 +1,257 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.515
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2026-01-05",
+      "state": "yes"
+    },
+    "references": [
+      "Br19",
+      "ErRo97",
+      "Ji99"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/885",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Br19] Bremner, Andrew, On a problem of Erd\\H{o}s related to common factor\ndifferences. Int. J. Number Theory (2019), 1059--1068.\n \n [ErRo97] Erd\\H{o}s, Paul and Rosenfeld, Moshe, The factor-difference set of integers. Acta Arith. (1997), 353--359.\n \n [Ji99] Jim\\'{e}nez-Urroz, Jorge, A note on a conjecture of Erd\\H{o}s and {R}osenfeld. J. Number Theory (1999), 140--143.",
+      "remarks": "A question of Erd\\H{o}s and Rosenfeld \\cite{ErRo97}, who proved this is true for $k=2$. Jim\\'{e}nez-Urroz \\cite{Ji99} proved this for $k=3$ and Bremner \\cite{Br19} proved this for $k=4$."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory",
+      "divisors"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.83,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.304778
+      ],
+      "probability": 0.132321
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.117,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.01562,
+        0.459698
+      ],
+      "probability": 0.237659
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.6,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.282916
+      ],
+      "probability": 0.117647
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.233,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.422465
+      ],
+      "probability": 0.198813
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.967,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.042823,
+        0.454046
+      ],
+      "probability": 0.248434
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.9,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        2.3e-05,
+        0.389239
+      ],
+      "probability": 0.194631
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 39.0,
+      "credible_interval_approx": [
+        0.0,
+        0.106373
+      ],
+      "probability": 0.044118
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.009216,
+        0.509303
+      ],
+      "probability": 0.259259
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "clear"
+    },
+    "literature": {
+      "comment_count": 2,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:19:17.639846+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "4974ce85bc984448e16d9b922fac532edcc7d7a1533249ebd39e35fdce8237e9"
+    },
+    "statement": {
+      "ambiguity_markers": [],
+      "ambiguity_status": "clear",
+      "quantifier_signal_count": 1,
+      "question_count": 1,
+      "requires_source_audit": false,
+      "statement_characters": 229,
+      "statement_tokens_approx": 35
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "prove_or_disprove",
+      "multi_part": false,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-885",
+  "problem_number": 885,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "prove_or_disprove",
+    "multi_part": false,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_885.html",
+      "raw_html_sha256": "f0a5f22a057424f2a4cf638082dfdfd658e2311fa09c934431b761b26494e768",
+      "section_sha256": {
+        "references": "b2bbd924c3db612c6339a41eecb5beba6e1f58b37927b92b83ba3a4800e7e34d",
+        "remarks": "6dbf370863234251b0453cc05814bb72c36394b706722c87e2d4737260da394a",
+        "statement": "1159f5c9e27df77690bfde0bac40cece5b23f3ba2c84c84c0cc4c0f91b08e3a1"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_885.json",
+      "source_record_sha256": "f27c3b8a49414dd77e0e536150fe84bf32f48acdc49d897544600aaada3bbfcc",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_885.tex",
+    "latex_sha256": "95b916d1fd9b562a663122e12431aeb9fe622ecbf747f8d676dced5379aa5b6a",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "1159f5c9e27df77690bfde0bac40cece5b23f3ba2c84c84c0cc4c0f91b08e3a1",
+    "recommended_attack_modes": [
+      "formal_search",
+      "shared_infrastructure_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "d6b47a40944ac930e166ca85c04f63b600821fd0187eac4609c196de6260153d",
+  "routes": [
+    "formal_search",
+    "shared_infrastructure_search",
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "clear",
+    "intended": "For integer $n\\geq 1$ we define the factor difference set of $n$ by\\[D(n) = \\{\\lvert a-b\\rvert : n=ab\\}.\\]Is it true that, for every $k\\geq 1$, there exist integers $N_1<\\cdots<N_k$ such that\\[\\lvert \\cap_i D(N_i)\\rvert \\geq k?\\]",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "For integer $n\\geq 1$ we define the factor difference set of $n$ by\\[D(n) = \\{\\lvert a-b\\rvert : n=ab\\}.\\]Is it true that, for every $k\\geq 1$, there exist integers $N_1<\\cdots<N_k$ such that\\[\\lvert \\cap_i D(N_i)\\rvert \\geq k?\\]",
+    "original": "For integer $n\\geq 1$ we define the factor difference set of $n$ by\\[D(n) = \\{\\lvert a-b\\rvert : n=ab\\}.\\]Is it true that, for every $k\\geq 1$, there exist integers $N_1<\\cdots<N_k$ such that\\[\\lvert \\cap_i D(N_i)\\rvert \\geq k?\\]",
+    "statement_sha256": "1159f5c9e27df77690bfde0bac40cece5b23f3ba2c84c84c0cc4c0f91b08e3a1"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#415}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+For any $n$ let $F(n)$ be the largest $k$ such that any of the $k!$ possible ordering patterns appears in some sequence of $\phi(m+1),\ldots,\phi(m+k)$ with $m+k\leq n$. Is it true that\[F(n)=(c+o(1))\log\log\log n\]for some constant $c$? Is the first pattern which fails to appear always\[\phi(m+1)>\phi(m+2)>\cdots >\phi(m+k)?\]Is it true that the 'natural' ordering which mimics what happens to $\phi(1),\ldots,\phi(k)$ is the most likely to appear?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+In \cite{ErGr80} it is left ambiguous whether an 'ordering pattern' involves strict inequalities or allows equality. Weisenberg has observed that the final question only makes sense if we allow equality. 
+
+In \cite{ErGr80} it is claimed that Erd\H{o}s \cite{Er36b} proved that\[F(n)\asymp \log\log\log n,\]and similarly if we replace $\phi$ with $\sigma$ or $\tau$ or $\nu$ or any 'decent' additive or multiplicative function, but this does not seem to be present in \cite{Er36b}, which only shows that the number of $m\leq n$ such that $\phi(m)<\phi(m+1)$ is $\sim n/2$, and similarly for $\phi(m)>\phi(m+1)$. The following asymptotic shows that such a result is false regardless.
+
+Pollack, Pomerance, and Trevi\~{n}o \cite{PPT13} have proved that, if $G(n)$ is the maximum $k$ such that\[\phi(m+1)> \phi(m+2)>\cdots > \phi(m+k)\]for some $m$ with $m+k\leq n$, then\[G(n)\sim \frac{\log\log\log n}{\log\log\log\log\log\log n}.\]The same asymptotic holds if we replace $>$ with $<,\leq,\geq$. Since $F(n)\leq G(n)$ trivially, this answers the first question in the negative.
+
+Chojecki and GPT-5.4 have sketched how the proof of \cite{PPT13} can be adapted to obtain the same asymptotic for an arbitrary pattern of (strict) inequalities.
+
+Note that a positive answer to the final question would imply that there exist infinitely many $n$ with $\phi(n)=\phi(n+1)$, which is the subject of [1003].
+
+\bigskip
+\noindent\textbf{References:}
+
+[Er36b] Erd\H{o}s, P., On a problem of Chowla and some related problems. Proc. Cambridge Philos. Soc. (1936), 530-540.
+ 
+ [ErGr80] Erd\H{o}s, P. and Graham, R., Old and new problems and results in combinatorial number theory. Monographies de L'Enseignement Mathematique (1980).
+ 
+ [PPT13] Pollack, Paul and Pomerance, Carl and Trevi\~no, Enrique, Sets of monotonicity for {E}uler's totient function. Ramanujan J. (2013), 379--398.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/415}}
+\end{document}

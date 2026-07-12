@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#935}
+\date{Last updated: 2025-09-04}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+For any integer $n=\prod p^{k_p}$ let $Q_2(n)$ be the powerful part of $n$, so that\[Q_2(n) = \prod_{\substack{p\\ k_p\geq 2}}p^{k_p}.\]Is it true that, for every $\epsilon&#62;0$ and $\ell\geq 1$, if $n$ is sufficiently large then\[Q_2(n(n+1)\cdots(n+\ell))&#60;n^{2+\epsilon}?\]If $\ell\geq 2$ then is\[\limsup_{n\to \infty}\frac{Q_2(n(n+1)\cdots(n+\ell))}{n^2}\]infinite? If $\ell\geq 2$ then is\[\lim_{n\to \infty}\frac{Q_2(n(n+1)\cdots(n+\ell))}{n^{\ell+1}}=0?\]
+
+
+
+
+Erd\H{o}s \cite{Er76d} writes that if this is true then it 'seems very difficult to prove'. A result of Mahler implies, for every $\ell\geq 1$,\[\limsup_{n\to \infty}\frac{Q_2(n(n+1)\cdots(n+\ell))}{n^2}\geq 1.\]All these questions can be asked replacing $Q_2$ by $Q_r$ for $r&gt;2$, only keeping those prime powers with exponent $\geq r$. The second part of this problem is essentially the same (up to constants) as [367] . The construction given there by van Doorn (also given by Aletheia \cite{Fe26}) proves the second part in the affirmative, since a construction via solutions to the Pell equation $x^2-8y^2=1$ implies\[\limsup_{n\to \infty}\frac{Q_2(n(n+1)(n+2))}{n^2}=\infty.\]In \cite{Fe26} it is similarly noted that the ABC conjecture implies a positive answer to the third question.
+
+
+
+
+References
+
+[Er76d] Erd\H{o}s, P., Problems and results on number theoretic properties of consecutive integers and related questions . Proceedings of the Fifth Manitoba Conference on Numerical Mathematics (Univ. Manitoba, Winnipeg, Man., 1975) (1976), 25-44.
+
+[Fe26] T. Feng et al, Semi-Autonomous Mathematics Discovery with Gemini: A Case Study on the Erd\H{o}s Problems . arXiv:2601.22401 (2026).
+
+\noindent\textbf{Related OEIS sequences:} A057521, A389244, possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/935}}
+\end{document}

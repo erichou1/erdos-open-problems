@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 793,
+  "raw_page": {
+    "path": "raw/pages/problem_793.html",
+    "sha256": "4f3c0cd621104b7bab1ef618d01b2af79c4f1c2952bfa05cfb400cb937bba9f1"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "6cad7360064b52113a5ae36009d17770de5f9d6a797747829f7f30245555013b",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er38] P. Erd\\H{o}s, On sequences of integers no one of which divides the product of two others and on related problems. Tomsk. Gos. Univ. Ucen Zap. (1938), 74-82.\n \n [Er69] Erd\\H{o}s, Paul, Some applications of graph theory to number theory. The Many Facets of Graph Theory (Proc. Conf.,\nWestern Mich. Univ., Kalamazoo, Mich., 1968) (1969), 77-82."
+    },
+    "remarks": {
+      "sha256": "5ee280b8e78440c05f0bf69c7d34d34d6343e3fbf46718222f74a69f5926dcd3",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s \\cite{Er38} proved there exist constants $0<c_1\\leq c_2$ such that\\[\\pi(n)+c_1n^{2/3}(\\log n)^{-2}\\leq F(n) \\leq \\pi(n)+c_2n^{2/3}(\\log n)^{-2}.\\]Erd\\H{o}s \\cite{Er69} gave a simple proof that $F(n) \\leq \\pi(n)+n^{2/3}$: define a graph with vertex set the union of those integers in $[1,n^{2/3}]$ with all primes $p\\in (n^{2/3},n]$. We have an edge $u\\sim v$ if and only if $uv\\in A$. It is easy to see that every $m\\leq n$ can be written as $uv$ where $u\\leq n^{2/3}$ and $v$ is either prime or $\\leq n^{2/3}$, and hence there are $\\geq \\lvert A\\rvert$ many edges. This graph contains no path of length $3$ and hence must be a tree and have fewer edges than vertices, and we are done. This can be improved to give the upper bound mentioned by using a subset of integers in $[1,n^{2/3}]$.\n\nMore generally, one can ask for such an asymptotic for the size of sets such that no $a\\in A$ divides the product of $r$ distinct other elements of $A$, with the exponent $2/3$ replaced by $\\frac{2}{r+1}$.\n\nFor further discussion and references concerning this generalisation to $r\\geq 3$ see the comment by Wouter van Doorn.\n\nSee also [425]."
+    },
+    "statement": {
+      "sha256": "2ca264e05750ab979c6cdb013f9f4ad6f8ddfc4c88c6aa6c5e431aa2725af363",
+      "source_region": "div#content",
+      "text": "Let $F(n)$ be the maximum possible size of a subset $A\\subseteq\\{1,\\ldots,n\\}$ such that $a\\nmid bc$ whenever $a,b,c\\in A$ with $a\\neq b$ and $a\\neq c$. Is there a constant $C$ such that\\[F(n)=\\pi(n)+(C+o(1))n^{2/3}(\\log n)^{-2}?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/793"
+}

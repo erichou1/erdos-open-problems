@@ -1,0 +1,338 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.926
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2026-02-13",
+      "state": "yes"
+    },
+    "references": [
+      "Er54",
+      "Gu04",
+      "Ko96",
+      "Lo54",
+      "Ru98c",
+      "Wo96"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/32",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Er54] Erd\\H{o}s, Paul, Some results on additive number theory. Proc. Amer. Math. Soc. (1954), 847-853.\n \n [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.\n \n [Ko96] Kolountzakis, Mihail N., On the additive complements of the primes and sets of similar\ngrowth. Acta Arith. (1996), 1--8.\n \n [Lo54] Lorentz, G. G., On a problem of additive number theory. Proc. Amer. Math. Soc. (1954), 838-841.\n \n [Ru98c] Ruzsa, Imre Z., On the additive completion of primes. Acta Arith. (1998), 269-275.\n \n [Wo96] Wolke, Dieter, On a problem of Erd\\H{o}s in additive number theory. J. Number Theory (1996), 209-213.",
+      "remarks": "Such a set is called an additive complement to the primes.\n\nErd\\H{o}s \\cite{Er54} proved that such a set $A$ exists with $\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert\\ll (\\log N)^2$ (improving a previous result of Lorentz \\cite{Lo54} who achieved $\\ll (\\log N)^3$). \n\nWolke \\cite{Wo96} has shown that such a bound is almost true, in that we can achieve $\\ll (\\log N)^{1+o(1)}$ if we only ask for almost all integers to be representable. Kolountzakis \\cite{Ko96} improved this to $\\ll (\\log N)(\\log\\log N)$, and Ruzsa \\cite{Ru98c} further improved this to $\\ll \\omega(N)\\log N$ for any $\\omega\\to \\infty$.\n\nThe answer to the third question is yes: Ruzsa \\cite{Ru98c} has shown that we must have\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{\\log N}\\geq e^\\gamma\\approx 1.781.\\]This is discussed in problem E1 of Guy's collection \\cite{Gu04}, where it is stated that Erd\\H{o}s offered \\$50 for determining whether $O(\\log N)$ can be achieved."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory",
+      "additive basis"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.04,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.323402
+      ],
+      "probability": 0.145299
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.681,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.033651,
+        0.451304
+      ],
+      "probability": 0.242477
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.3,
+      "beta": 13.0,
+      "credible_interval_approx": [
+        0.0,
+        0.234961
+      ],
+      "probability": 0.090909
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.7,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.462493
+      ],
+      "probability": 0.230769
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.667,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.020836,
+        0.372021
+      ],
+      "probability": 0.196429
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 3.6,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.022708,
+        0.398345
+      ],
+      "probability": 0.210526
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.092979
+      ],
+      "probability": 0.038462
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.002288,
+        0.452997
+      ],
+      "probability": 0.227642
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 1,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:15:14.205231+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "6cba215f7c86e2df74e89bf3298ad2c4831e7e2d463ee794d4985dcac2f31fe5"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "asymptotic_notation",
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 1,
+      "question_count": 3,
+      "requires_source_audit": true,
+      "statement_characters": 316,
+      "statement_tokens_approx": 44
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "prove",
+      "multi_part": true,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-32",
+  "problem_number": 32,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "prove",
+    "multi_part": true,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_32.html",
+      "raw_html_sha256": "54dd0c5374f596c762755046de29bdbece360aab5cf91e1d596a8afa22305e61",
+      "section_sha256": {
+        "references": "fd06a79a0794fbb50dd748688bb7c3ffcb23f490df40c847f6061d5fa271f918",
+        "remarks": "86129c12033323249e23d20a8f21065df64d9a69b4fda4a8e9f24bfdb514ff5e",
+        "statement": "c0ac8c660fdea36d3d85e69c91f89c35cb6385c2ac146cf09bf52c7fd27ef577"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_32.json",
+      "source_record_sha256": "e2f51a3d23fdf985194fe68906b384f9e8daca0027074eaa47261e907a19a902",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_32.tex",
+    "latex_sha256": "cf202a552895e2fd10b03b33fb500b41885234abcb45872bdb4fe16114b3c349",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "c0ac8c660fdea36d3d85e69c91f89c35cb6385c2ac146cf09bf52c7fd27ef577",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "formal_search",
+      "subproblem_decomposition",
+      "shared_infrastructure_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Is there a set $A\\subset\\mathbb{N}$ such that\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert = o((\\log N)^2)\\]and such that every large integer can be written as $p+a$ for some prime $p$ and $a\\in A$?",
+        "focus_question_sha256": "b05cd335668f13efe0a54ce0e10439655cec58046f64ced2235683cb390fa65a",
+        "parent_statement_sha256": "c0ac8c660fdea36d3d85e69c91f89c35cb6385c2ac146cf09bf52c7fd27ef577",
+        "part_index": 1,
+        "subproblem_contract_sha256": "2960cb2c819d81bf3c5b0add8f2979c9c9c859d5e3c3b67fbc2a355450325965",
+        "subproblem_id": "erdos-32-part-01-2960cb2c"
+      },
+      {
+        "focus_question": "Can the bound $O(\\log N)$ be achieved?",
+        "focus_question_sha256": "8f1f00dc6a8195383c7c56afd8be60e2a224737d698896556d13616625ec8443",
+        "parent_statement_sha256": "c0ac8c660fdea36d3d85e69c91f89c35cb6385c2ac146cf09bf52c7fd27ef577",
+        "part_index": 2,
+        "subproblem_contract_sha256": "633b828eabb070348e8a1b5bfbbf32295f41042db129e447d0ba945da72a47e8",
+        "subproblem_id": "erdos-32-part-02-633b828e"
+      },
+      {
+        "focus_question": "Must such an $A$ satisfy\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{\\log N}> 1?",
+        "focus_question_sha256": "b9ddb96b9dc4a2d2422fe62ab69ae29f6a007925074d796b055fc2e86a87e942",
+        "parent_statement_sha256": "c0ac8c660fdea36d3d85e69c91f89c35cb6385c2ac146cf09bf52c7fd27ef577",
+        "part_index": 3,
+        "subproblem_contract_sha256": "d3bfec87fcbc793f0ac4b9f0e9a98f0f77a9626a63783cde8b25461566575f0f",
+        "subproblem_id": "erdos-32-part-03-d3bfec87"
+      }
+    ]
+  },
+  "research_directive_sha256": "2d06639e031023912a8df91b145493f362de2bd800fd566bb26c5fc16797fb13",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "formal_search",
+    "subproblem_decomposition",
+    "shared_infrastructure_search"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Is there a set $A\\subset\\mathbb{N}$ such that\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert = o((\\log N)^2)\\]and such that every large integer can be written as $p+a$ for some prime $p$ and $a\\in A$? \n\nCan the bound $O(\\log N)$ be achieved? Must such an $A$ satisfy\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{\\log N}> 1?\\]",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Is there a set $A\\subset\\mathbb{N}$ such that\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert = o((\\log N)^2)\\]and such that every large integer can be written as $p+a$ for some prime $p$ and $a\\in A$? Can the bound $O(\\log N)$ be achieved? Must such an $A$ satisfy\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{\\log N}> 1?\\]",
+    "original": "Is there a set $A\\subset\\mathbb{N}$ such that\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert = o((\\log N)^2)\\]and such that every large integer can be written as $p+a$ for some prime $p$ and $a\\in A$? \n\nCan the bound $O(\\log N)$ be achieved? Must such an $A$ satisfy\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{\\log N}> 1?\\]",
+    "statement_sha256": "c0ac8c660fdea36d3d85e69c91f89c35cb6385c2ac146cf09bf52c7fd27ef577"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-32",
+      "part_index": 1,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Is there a set $A\\subset\\mathbb{N}$ such that\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert = o((\\log N)^2)\\]and such that every large integer can be written as $p+a$ for some prime $p$ and $a\\in A$?",
+        "focus_question_sha256": "b05cd335668f13efe0a54ce0e10439655cec58046f64ced2235683cb390fa65a",
+        "normalized": "Is there a set $A\\subset\\mathbb{N}$ such that\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert = o((\\log N)^2)\\]and such that every large integer can be written as $p+a$ for some prime $p$ and $a\\in A$? Can the bound $O(\\log N)$ be achieved? Must such an $A$ satisfy\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{\\log N}> 1?\\]",
+        "original": "Is there a set $A\\subset\\mathbb{N}$ such that\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert = o((\\log N)^2)\\]and such that every large integer can be written as $p+a$ for some prime $p$ and $a\\in A$? \n\nCan the bound $O(\\log N)$ be achieved? Must such an $A$ satisfy\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{\\log N}> 1?\\]",
+        "statement_sha256": "c0ac8c660fdea36d3d85e69c91f89c35cb6385c2ac146cf09bf52c7fd27ef577"
+      },
+      "subproblem_contract_sha256": "2960cb2c819d81bf3c5b0add8f2979c9c9c859d5e3c3b67fbc2a355450325965",
+      "subproblem_id": "erdos-32-part-01-2960cb2c"
+    },
+    {
+      "parent_problem_id": "erdos-32",
+      "part_index": 2,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Can the bound $O(\\log N)$ be achieved?",
+        "focus_question_sha256": "8f1f00dc6a8195383c7c56afd8be60e2a224737d698896556d13616625ec8443",
+        "normalized": "Is there a set $A\\subset\\mathbb{N}$ such that\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert = o((\\log N)^2)\\]and such that every large integer can be written as $p+a$ for some prime $p$ and $a\\in A$? Can the bound $O(\\log N)$ be achieved? Must such an $A$ satisfy\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{\\log N}> 1?\\]",
+        "original": "Is there a set $A\\subset\\mathbb{N}$ such that\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert = o((\\log N)^2)\\]and such that every large integer can be written as $p+a$ for some prime $p$ and $a\\in A$? \n\nCan the bound $O(\\log N)$ be achieved? Must such an $A$ satisfy\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{\\log N}> 1?\\]",
+        "statement_sha256": "c0ac8c660fdea36d3d85e69c91f89c35cb6385c2ac146cf09bf52c7fd27ef577"
+      },
+      "subproblem_contract_sha256": "633b828eabb070348e8a1b5bfbbf32295f41042db129e447d0ba945da72a47e8",
+      "subproblem_id": "erdos-32-part-02-633b828e"
+    },
+    {
+      "parent_problem_id": "erdos-32",
+      "part_index": 3,
+      "run_contract_id": null,
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Must such an $A$ satisfy\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{\\log N}> 1?",
+        "focus_question_sha256": "b9ddb96b9dc4a2d2422fe62ab69ae29f6a007925074d796b055fc2e86a87e942",
+        "normalized": "Is there a set $A\\subset\\mathbb{N}$ such that\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert = o((\\log N)^2)\\]and such that every large integer can be written as $p+a$ for some prime $p$ and $a\\in A$? Can the bound $O(\\log N)$ be achieved? Must such an $A$ satisfy\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{\\log N}> 1?\\]",
+        "original": "Is there a set $A\\subset\\mathbb{N}$ such that\\[\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert = o((\\log N)^2)\\]and such that every large integer can be written as $p+a$ for some prime $p$ and $a\\in A$? \n\nCan the bound $O(\\log N)$ be achieved? Must such an $A$ satisfy\\[\\liminf \\frac{\\lvert A\\cap\\{1,\\ldots,N\\}\\rvert}{\\log N}> 1?\\]",
+        "statement_sha256": "c0ac8c660fdea36d3d85e69c91f89c35cb6385c2ac146cf09bf52c7fd27ef577"
+      },
+      "subproblem_contract_sha256": "d3bfec87fcbc793f0ac4b9f0e9a98f0f77a9626a63783cde8b25461566575f0f",
+      "subproblem_id": "erdos-32-part-03-d3bfec87"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

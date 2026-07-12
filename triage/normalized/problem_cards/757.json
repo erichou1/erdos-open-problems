@@ -1,0 +1,257 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.414
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2026-01-08",
+      "state": "yes"
+    },
+    "references": [
+      "GyLe95",
+      "MaTa26"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/757",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[GyLe95] Gy\\'{a}rf\\'{a}s, Andr\\'{a}s and Lehel, Jen\\H{o}, Linear sets with five distinct differences among any four\nelements. J. Combin. Theory Ser. B (1995), 108-118.\n \n [MaTa26] J. Ma and Q. Tang, Largest Sidon subsets in weak Sidon sets. arXiv:2602.23282 (2026).",
+      "remarks": "For comparison, note that if $B$ were a Sidon set then $\\lvert B-B\\rvert=13$, so this condition is saying that at most one difference is 'missing' from $B-B$. Equivalently, one can view $A$ as a set such that every four points determine at least five distinct distances, and ask for a subset with all distances distinct.\n\nWithout loss of generality, one can assume $A\\subset \\mathbb{N}$. \n\nErd\\H{o}s and S\\'{o}s proved that $c\\geq 1/2$. Gy\\'{a}rf\\'{a}s and Lehel \\cite{GyLe95} proved\\[\\frac{1}{2}+\\frac{1}{141\\cdot 76}\\leq c\\leq\\frac{3}{5}.\\](The example proving the upper bound is the set of the first $n$ Fibonacci numbers.)\nMa and Tang \\cite{MaTa26} have improved these bounds to\\[\\frac{9}{17}\\leq c\\leq \\frac{4}{7}.\\]"
+    },
+    "source_state": "open",
+    "tags": [
+      "geometry",
+      "distances",
+      "sidon sets"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.78,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.300163
+      ],
+      "probability": 0.129173
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 2.207,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.388339
+      ],
+      "probability": 0.180782
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.8,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.190215
+      ],
+      "probability": 0.0625
+    },
+    "p_high_mathematical_value": {
+      "alpha": 1.9,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.389865
+      ],
+      "probability": 0.174312
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 4.1,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.048161,
+        0.461156
+      ],
+      "probability": 0.254658
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.7,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.375214
+      ],
+      "probability": 0.183673
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 39.0,
+      "credible_interval_approx": [
+        0.0,
+        0.106373
+      ],
+      "probability": 0.044118
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.009216,
+        0.509303
+      ],
+      "probability": 0.259259
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "clear"
+    },
+    "literature": {
+      "comment_count": 7,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:18:40.807821+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "4847a20ff2fbdbf2cfa71d7f71543b9a586614dfb8857bb0d3cc2a289b229767"
+    },
+    "statement": {
+      "ambiguity_markers": [],
+      "ambiguity_status": "clear",
+      "quantifier_signal_count": 0,
+      "question_count": 0,
+      "requires_source_audit": false,
+      "statement_characters": 234,
+      "statement_tokens_approx": 41
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove",
+      "multi_part": false,
+      "primary_domain": "geometry"
+    }
+  },
+  "problem_id": "erdos-757",
+  "problem_number": 757,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove",
+    "multi_part": false,
+    "primary_domain": "geometry"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_757.html",
+      "raw_html_sha256": "58ba9a2ae1e1f84d313baca5205bc8a6e1b25c279e351d8d3b6cb96ad341463b",
+      "section_sha256": {
+        "references": "301fffc5f7ebd1165c6c63262a7f223caf9024f09687c1baf4aae3cd35c45049",
+        "remarks": "b362f47c9bdf483293af3a86f258bbb711db6d21eae66a2383db3a7c68036aa3",
+        "statement": "6d75d6ed1cb7cc7f4baa34a12a9e302bafbc70382b7bd187187414507c866707"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_757.json",
+      "source_record_sha256": "24858414ccbc633769ad220ce54e17de2608e19c397719fc2a008c2804b7d8d2",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_757.tex",
+    "latex_sha256": "d13ee5bfa1427b6295def9040f14d049f66a711cf3651c3609439ad9da8a0ab0",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "6d75d6ed1cb7cc7f4baa34a12a9e302bafbc70382b7bd187187414507c866707",
+    "recommended_attack_modes": [
+      "formal_search",
+      "shared_infrastructure_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "766b5b2c718567af08b040e69c849b7f1283ce231985df2c5e2db2b7330e28db",
+  "routes": [
+    "formal_search",
+    "shared_infrastructure_search",
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "clear",
+    "intended": "Let $A\\subset \\mathbb{R}$ be a set of size $n$ such that every subset $B\\subseteq A$ with $\\lvert B\\rvert =4$ has $\\lvert B-B\\rvert\\geq 11$. Find the best constant $c>0$ such that $A$ must always contain a Sidon set of size $\\geq cn$.",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $A\\subset \\mathbb{R}$ be a set of size $n$ such that every subset $B\\subseteq A$ with $\\lvert B\\rvert =4$ has $\\lvert B-B\\rvert\\geq 11$. Find the best constant $c>0$ such that $A$ must always contain a Sidon set of size $\\geq cn$.",
+    "original": "Let $A\\subset \\mathbb{R}$ be a set of size $n$ such that every subset $B\\subseteq A$ with $\\lvert B\\rvert =4$ has $\\lvert B-B\\rvert\\geq 11$. Find the best constant $c>0$ such that $A$ must always contain a Sidon set of size $\\geq cn$.",
+    "statement_sha256": "6d75d6ed1cb7cc7f4baa34a12a9e302bafbc70382b7bd187187414507c866707"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

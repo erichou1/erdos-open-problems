@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#827}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} geometry
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $n_k$ be minimal such that if $n_k$ points in $\mathbb{R}^2$ are in general position then there exists a subset of $k$ points such that all $\binom{k}{3}$ triples determine circles of different radii.
+
+Determine $n_k$.
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+In \cite{Er75h} Erd\H{o}s asks whether $n_k$ exists. In \cite{Er78c} he gave a simple argument which proves that it does, and in fact\[n_k \leq k+2\binom{k-1}{2}\binom{k-1}{3},\]but this argument is incorrect, as explained by Martinez and Rold\'{a}n-Pensado \cite{MaRo15}.
+
+Martinez and Rold\'{a}n-Pensado give a corrected argument that proves $n_k\ll k^9$. A simple probabilistic argument, given in the comments by FlaredRain, improves this to $n_k\ll k^5$.
+
+\bigskip
+\noindent\textbf{References:}
+
+[Er75h] Erd\H{o}s, P., Some problems on elementary geometry. Austral. Math. Soc. Gaz. (1975), 2-3.
+ 
+ [Er78c] Erd\H{o}s, P., Some more problems on elementary geometry. Austral. Math. Soc. Gaz. (1978), 52-54.
+ 
+ [MaRo15] Mart\'Inez, L. and Rold\'{a}n-Pensado, E., Points defining triangles with distinct circumradii. Acta Math. Hungar. (2015), 136--141.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/827}}
+\end{document}

@@ -1,0 +1,32 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#477}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Is there a polynomial $f:\mathbb{Z}\to \mathbb{Z}$ of degree at least $2$ and a set $A\subset \mathbb{Z}$ such that for any $n\in \mathbb{Z}$ there is exactly one $a\in A$ and $b\in \{ f(k) : k\in\mathbb{Z}\}$ such that $n=a+b$?
+
+
+
+
+A question of Erd\H{o}s and Graham, who thought the answer was negative. Clearly any such $A$ must be infinite. A simple proof that this is impossible for $f$ of degree $2$ is given in the comments (with the combined efforts of AlphaProof and Adenwalla): let $f(x)=c_2x^2+c_1x+c_0$ with $c_1\neq 0$. For any infinite $A$ there exist $a,b\in A$ such that $a-b=2c_1k$ for some $k\geq 1$, whence\[0\neq a-b=f(k)-f(-k)\]and so $n=a+f(-k)=b+f(k)$ has two distinct solutions. If $c_1=0$ then we can argue similarly finding $a,b\in A$ with $a-b=4c_2k$ for some $k\geq 1$, whence\[0\neq a-b=f(k+1)-f(k-1).\]The same argument works for any $f$ such that $f(\mathbb{Z})-f(\mathbb{Z})$ contains all multiples of some fixed $q\geq 1$, such as any polynomial of the shape\[f(x)=g((x-k)^2)+c_1x+c_0\]for some $g\in \mathbb{Z}[x]$ and $k,c_1,c_0\in \mathbb{Z}$ with $c_1\neq 0$.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/477}}
+\end{document}

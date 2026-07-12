@@ -1,0 +1,258 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.237
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2026-01-03",
+      "state": "yes"
+    },
+    "references": [
+      "EGS82"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/390",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[EGS82] Erd\\H{o}s, P. and Guy, R. K. and Selfridge, J. L., Another property of {$239$} and some related questions. Congr. Numer. (1982), 243-257.",
+      "remarks": "Erd\\H{o}s, Guy, and Selfridge \\cite{EGS82} have shown that\\[f(n)-2n \\asymp \\frac{n}{\\log n}.\\]"
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory",
+      "factorials"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.37,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.259269
+      ],
+      "probability": 0.102468
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.049,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.012405,
+        0.454968
+      ],
+      "probability": 0.233686
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.2,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.240436
+      ],
+      "probability": 0.090909
+    },
+    "p_high_mathematical_value": {
+      "alpha": 1.433,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.336925
+      ],
+      "probability": 0.13738
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.2,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.011999,
+        0.409054
+      ],
+      "probability": 0.210526
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.7,
+      "beta": 12.5,
+      "credible_interval_approx": [
+        0.0,
+        0.363751
+      ],
+      "probability": 0.177632
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 40.0,
+      "credible_interval_approx": [
+        0.0,
+        0.103879
+      ],
+      "probability": 0.043062
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.009216,
+        0.509303
+      ],
+      "probability": 0.259259
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "minor"
+    },
+    "literature": {
+      "comment_count": 3,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:16:56.719095+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "e85f43c34830efde8a996cdebde3eca886b3e07fe57172276b5accbc6e812051"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "unspecified_constant",
+        "asymptotic_notation"
+      ],
+      "ambiguity_status": "minor",
+      "quantifier_signal_count": 0,
+      "question_count": 1,
+      "requires_source_audit": true,
+      "statement_characters": 175,
+      "statement_tokens_approx": 28
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "compute",
+      "multi_part": false,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-390",
+  "problem_number": 390,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "compute",
+    "multi_part": false,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_390.html",
+      "raw_html_sha256": "af8af7054444c68650ace60ce3a97546b2f2ed3f85ec24665e1dee57bd6a439b",
+      "section_sha256": {
+        "references": "dfed08ffb2f059fba14a609dacadb02bf7f105aad68cb831ab350213400e08c3",
+        "remarks": "4ae90af29e5b1dd7356bd4cfc9685139498eb637c92f532991559f3806753762",
+        "statement": "337b5d7f066376c3d73f1979075014767b4c370574fdc14ea8a2843dbd897af7"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_390.json",
+      "source_record_sha256": "ea4327c2c04ca59af2e0950479b8185dc42649233159dffe2a905f9e876881e9",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_390.tex",
+    "latex_sha256": "e4d107ae6a70880ccfceaf7a9e8e4ec247818f8ac72236751e5a1254f7ff65e1",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "337b5d7f066376c3d73f1979075014767b4c370574fdc14ea8a2843dbd897af7",
+    "recommended_attack_modes": [
+      "formal_search",
+      "shared_infrastructure_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "c67a98e792f9c30febaa3960033e374ad41f7aa8a5a684e4954bbbcfddfa4b18",
+  "routes": [
+    "formal_search",
+    "shared_infrastructure_search",
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "minor",
+    "intended": "Let $f(n)$ be the minimal $m$ such that\\[n! = a_1\\cdots a_k\\]with $n< a_1<\\cdots <a_k=m$. Is there (and what is it) a constant $c$ such that\\[f(n)-2n \\sim c\\frac{n}{\\log n}?\\]",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $f(n)$ be the minimal $m$ such that\\[n! = a_1\\cdots a_k\\]with $n< a_1<\\cdots <a_k=m$. Is there (and what is it) a constant $c$ such that\\[f(n)-2n \\sim c\\frac{n}{\\log n}?\\]",
+    "original": "Let $f(n)$ be the minimal $m$ such that\\[n! = a_1\\cdots a_k\\]with $n< a_1<\\cdots <a_k=m$. Is there (and what is it) a constant $c$ such that\\[f(n)-2n \\sim c\\frac{n}{\\log n}?\\]",
+    "statement_sha256": "337b5d7f066376c3d73f1979075014767b4c370574fdc14ea8a2843dbd897af7"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

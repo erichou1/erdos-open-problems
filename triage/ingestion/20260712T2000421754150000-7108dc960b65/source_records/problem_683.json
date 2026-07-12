@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 683,
+  "raw_page": {
+    "path": "raw/pages/problem_683.html",
+    "sha256": "1d8d080256f9e60c3927b85ffcaa74935a73f608f380923cb9fa5e02420a1c7c"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "cee8517ac2833d979f740f09faab9819b9a7c0c7bd688596b60d5e480fe2be9b",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er34] Erd\\H{o}s, Paul, A Theorem of Sylvester and Schur. J. London Math. Soc. (1934), 282--288.\n \n [Er55d] Erd\\H{o}s, P., On consecutive integers. Nieuw Arch. Wisk. (3) (1955), 124--128.\n \n [Er79d] Erd\\H{o}s, P., Some unconventional problems in number theory. Acta Math. Acad. Sci. Hungar. (1979), 71-80."
+    },
+    "remarks": {
+      "sha256": "c88f520d1ceb134cc27c76c97c7676710c79f1a8e73fa7c52baae4f3cd004da7",
+      "source_region": "div.problem-additional-text",
+      "text": "A theorem of Sylvester and Schur (see \\cite{Er34}) states that $P(\\binom{n}{k})>k$ if $k\\leq n/2$. Erd\\H{o}s \\cite{Er55d} proved that there exists some $c>0$ such that, whenever $k\\leq n/2$,\\[P\\left(\\binom{n}{k}\\right)\\gg k\\log k.\\]Erd\\H{o}s \\cite{Er79d} writes it 'seems certain' that this holds for every $c>0$, with only a finite number of exceptions (depending on $c$). Standard heuristics on prime gaps suggest that the largest prime divisor of $\\binom{n}{k}$ is, for $k\\leq n/2$, in fact\\[>e^{c\\sqrt{k}}\\]for some constant $c>0$. \n\nThis is essentially equivalent to [961]."
+    },
+    "statement": {
+      "sha256": "7fbea58892289af689123ab0c3900e9fa398dc34517f48d45f2532bc59b45a2f",
+      "source_region": "div#content",
+      "text": "Is it true that for every $1\\leq k\\leq n$ the largest prime divisor of $\\binom{n}{k}$, say $P(\\binom{n}{k})$, satisfies\\[P\\left(\\binom{n}{k}\\right)\\geq \\min(n-k+1, k^{1+c})\\]for some constant $c>0$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/683"
+}

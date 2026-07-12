@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1113,
+  "raw_page": {
+    "path": "raw/pages/problem_1113.html",
+    "sha256": "8082926a9cf6cb6ab9122f0acba262e4e4ff8d4329cafc0f23f2034b713b10aa"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "42d60e70b599382595c776c3104be46d5a97d6b298c2b77099b25434c8c219c2",
+      "source_region": "div.problem-additional-text",
+      "text": "[ErGr80] Erd\\H{o}s, P. and Graham, R., Old and new problems and results in combinatorial number theory. Monographies de L'Enseignement Mathematique (1980).\n \n [FFK08] Filaseta, Michael and Finch, Carrie and Kozek, Mark, On powers associated with Sierpi\\'nski numbers, {R}iesel\nnumbers and {P}olignac's conjecture. J. Number Theory (2008), 1916--1940.\n \n [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.\n \n [Iz95] Izotov, Anatoly S., A note on Sierpi\\'nski numbers. Fibonacci Quart. (1995), 206--207.\n \n [Si60] Sierpi\\'nski, W., Sur un probl\\`eme concernant les nombres {$k\\cdot 2\\sp{n}+1$}. Elem. Math. (1960), 73--74."
+    },
+    "remarks": {
+      "sha256": "8d2e2edd453fa733a4bfad25491e0121acfa0666e12ab60c24334a0484571fbb",
+      "source_region": "div.problem-additional-text",
+      "text": "Sierpinski \\cite{Si60} proved that there are infinitely many Sierpinski numbers, using covering systems to construct suitable covering sets for any $m$ satisfying a certain congruence. This establishes that there is a positive density set of such $m$.\n\nThe smallest Sierpinski number is believed to be $78557$, which was found by Selfridge.\n\nErd\\H{o}s and Graham \\cite{ErGr80} asked whether there are Sierpinski numbers for which a covering system is not 'responsible', for which the best interpretation seems to be the above question. This is formulated precisely in problem F13 of Guy's collection \\cite{Gu04}. Erd\\H{o}s and Graham thought the answer is yes (in that there are such Sierpinski numbers), since otherwise this would imply there are infinitely many Fermat primes.\n\nThere is now further evidence with a concrete example: an argument of Izotov \\cite{Iz95}, given in more detail by Filaseta, Finch, and Kozek \\cite{FFK08}, suggests that $m=734110615000775^4$ is a Sierpinski number without a covering set. (Izotov proved that this $m$ is indeed a Sierpinski number.)\n\nFilaseta, Finch, and Kozek \\cite{FFK08} give a revised conjecture, suggesting that every Sierpinski number is either a perfect power or else has a finite covering set of primes. They also prove that for every $l\\geq 1$ there is an $m$ such that $2^km^i+1$ is composite for all $1\\leq i\\leq l$ and $k\\geq 0$.\n\nSee also [203], and [276] for another problem in which the question is whether covering systems are always responsible."
+    },
+    "statement": {
+      "sha256": "10dfd71e6cdc569c1229762922a9ddbb2615d527366b3d753d1e98fc0d0a087e",
+      "source_region": "div#content",
+      "text": "A positive odd integer $m$ such that none of $2^km+1$ are prime for $k\\geq 0$ is called a Sierpinski number. We say that a set of primes $P$ is a covering set for $m$ if every $2^km+1$ is divisible by some $p\\in P$.\n\nAre there Sierpinski numbers with no finite covering set of primes?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1113"
+}

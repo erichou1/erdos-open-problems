@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#119}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{Prize: \$100}
+
+\noindent\textbf{Tags:} analysis, polynomials
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $z_i$ be an infinite sequence of complex numbers such that $\lvert z_i\rvert=1$ for all $i\geq 1$, and for $n\geq 1$ let\[p_n(z)=\prod_{i\leq n} (z-z_i).\]Let $M_n=\max_{\lvert z\rvert=1}\lvert p_n(z)\rvert$. Is it true that $\limsup M_n=\infty$? Is it true that there exists $c&#62;0$ such that for infinitely many $n$ we have $M_n &#62; n^c$? Is it true that there exists $c&#62;0$ such that, for all large $n$,\[\sum_{k\leq n}M_k &#62; n^{1+c}?\]
+
+
+
+
+This is Problem 4.1 in \cite{Ha74} where it is attributed to Erd\H{o}s. The weaker conjecture that $\limsup M_n=\infty$ was proved by Wagner \cite{Wa80}, who show that there is some $c&#62;0$ with $M_n&#62;(\log n)^c$ infinitely often. The second question was answered by Beck \cite{Be91}, who proved that there exists some $c&#62;0$ such that\[\max_{n\leq N} M_n &#62; N^c.\]Erd\H{o}s (e.g. see \cite{Ha74}) gave a construction of a sequence with $M_n\leq n+1$ for all $n$. Linden \cite{Li77} improved this to give a sequence with $M_n\ll n^{1-c}$ for some $c&#62;0$. The third question seems to remain open.
+
+
+
+
+References
+
+[Be91] Beck, J., The modulus of polynomials with zeros on the unit circle: A problem of Erd\H{o}s . Annals of Math. (1991), 609-651.
+
+[Ha74] Hayman, W. K., Research problems in function theory: new problems . (1974), 155--180.
+
+[Li77] Linden, C. N., The modulus of polynomials with zeros on the unit circle . Bull. London Math. Soc. (1977), 65--69.
+
+[Wa80] Wagner, Gerold, On a problem of {E}rd\H{o}s in {D}iophantine approximation . Bull. London Math. Soc. (1980), 81--88.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/119}}
+\end{document}

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 413,
+  "raw_page": {
+    "path": "raw/pages/problem_413.html",
+    "sha256": "579504624b1e9d128ebf6dfccf81cb937938b147beede2bb1ecafe35e1e7ae1b"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "a1754fdd22fe91c9aa5ede81b1c35729211b7e9a250b51c08adea30f7341ca7b",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er79] Erd\\H{o}s, Paul, Some unconventional problems in number theory. Math. Mag. (1979), 67-70.\n \n [Er79d] Erd\\H{o}s, P., Some unconventional problems in number theory. Acta Math. Acad. Sci. Hungar. (1979), 71-80.\n \n [ErGr80] Erd\\H{o}s, P. and Graham, R., Old and new problems and results in combinatorial number theory. Monographies de L'Enseignement Mathematique (1980).\n \n [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.\n \n [La26] C. F. Lau, On the number of prime factors of consecutive integers. arXiv:2604.15042 (2026)."
+    },
+    "remarks": {
+      "sha256": "c2996a8aa52c39bfda9dc4d90a1651dd4c3ca4fc86beb632e72aba7cbd6f30fb",
+      "source_region": "div.problem-additional-text",
+      "text": "In \\cite{Er79} Erd\\H{o}s calls such an $n$ a 'barrier' for $\\omega$. Some other natural number theoretic functions (such as $\\phi$ and $\\sigma$) have no barriers because they increase too rapidly. Erd\\H{o}s believed that $\\omega$ should have infinitely many barriers. In \\cite{Er79d} he proves that $F(n)=\\prod k_i$, where $n=\\prod p_i^{k_i}$, has infinitely many barriers (in fact the set of barriers has positive density in the integers).\n\nErd\\H{o}s also believed that $\\Omega$, the count of the number of prime factors with multiplicity), should have infinitely many barriers. Selfridge found the largest barrier for $\\Omega$ which is $<10^5$ is $99840$.\n\nIn \\cite{ErGr80} this problem is suggested as a way of showing that the iterated behaviour of $n\\mapsto n+\\omega(n)$ eventually settles into a single sequence, regardless of the starting value of $n$ (see also [412] and [414]). \n\nErd\\H{o}s and Graham report it could be attacked by sieve methods, but 'at present these methods are not strong enough'. \n\nLau \\cite{La26} (see [679]) has provided a positive answer to the second question, and proved a weaker version of the first: there exists a constant $C$ such that, for infinitely many $n$,\\[m+\\omega(m) \\leq n\\]for all $1\\leq m\\leq n-C$.\n\nThe sequence of barriers for $\\omega$ is A005236 in the OEIS.\n\nThis is discussed in problem B8 of Guy's collection \\cite{Gu04}. See also [647] and [679]"
+    },
+    "statement": {
+      "sha256": "fcf4e2e3721aa9347c721f491f3231e2b3db441ca7b8d59666ae758ff95ac016",
+      "source_region": "div#content",
+      "text": "Let $\\omega(n)$ count the number of distinct primes dividing $n$. Are there infinitely many $n$ such that, for all $m<n$, we have $m+\\omega(m) \\leq n$?\n\nCan one show that there exists an $\\epsilon>0$ such that there are infinitely many $n$ where $m+\\epsilon \\omega(m)\\leq n$ for all $m<n$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/413"
+}

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 576,
+  "raw_page": {
+    "path": "raw/pages/problem_576.html",
+    "sha256": "be5b91208da084e2b281fe9163b6137950ef176d5c0cdc2a75000d9ac23f53d1"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "8aff164c4fe9577a2c9025ebc59ec9132a996ae38edf0056d06cb1b337af1b4c",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er74c] Erd\\H{o}s, Paul, Extremal problems on graphs and hypergraphs. (1974), 75-84.\n \n [Er81] Erd\\H{o}s, P., On the combinatorial problems which I would most like to see solved. Combinatorica (1981), 25-42.\n \n [Er93] Erd\\H{o}s, Paul, Some of my favorite solved and unsolved problems in graph theory. Quaestiones Math. (1993), 333-350.\n \n [ErSi70] Erd\\H{o}s, P. and Simonovits, M., Some extremal problems in graph theory. Combinatorial theory and its applications, I-III (Proc. Colloq., Balatonf\\\"{u}red, 1969) (1970), 377-390.\n \n [JaSu22] Janzer, O. and Sudakov, B., On the Tur\\'{a}n number of the hypercube. arXiv:2211.02015 (2024).\n \n [SuTo22] Sudakov, Benny and Tomon, Istv\\'{a}n, The extremal number of tight cycles. Int. Math. Res. Not. IMRN (2022), 9663-9684."
+    },
+    "remarks": {
+      "sha256": "2762f29a0d0b8cc02eb6ff7a08c90c3d42a1179c2b00616e39db82cb7f1e4682",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s and Simonovits \\cite{ErSi70} proved that\\[(\\tfrac{1}{2}+o(1))n^{3/2}\\leq \\mathrm{ex}(n;Q_3) \\ll n^{8/5}.\\](In \\cite{ErSi70} they mention that Erd\\H{o}s had originally conjectured that $ \\mathrm{ex}(n;Q_3)\\gg n^{5/3}$.) Erd\\H{o}s and Simonovits also proved that, if $G$ is the graph $Q_3$ with a missing edge, then $\\mathrm{ex}(n;G)\\asymp n^{3/2}$.\n\nIn \\cite{Er74c}, \\cite{Er81}, and \\cite{Er93} Erd\\H{o}s asked whether it is $\\mathrm{ex}(n;Q_3)\\asymp n^{8/5}$.\n\nA theorem of Sudakov and Tomon \\cite{SuTo22} implies\\[\\mathrm{ex}(n;Q_k)=o(n^{2-\\frac{1}{k}}).\\]Janzer and Sudakov \\cite{JaSu22} have improved this to\\[\\mathrm{ex}(n;Q_k)\\ll_k n^{2-\\frac{1}{k-1}+\\frac{1}{(k-1)2^{k-1}}}.\\]See also [1035].\n\nThis problem is #52 in Extremal Graph Theory in the graphs problem collection."
+    },
+    "statement": {
+      "sha256": "63fe1f4bdae4fbbba888c1c7b63d3c2aff777c1c04da6387863581e747f67551",
+      "source_region": "div#content",
+      "text": "Let $Q_k$ be the $k$-dimensional hypercube graph (so that $Q_k$ has $2^k$ vertices and $k2^{k-1}$ edges). Determine the behaviour of\\[\\mathrm{ex}(n;Q_k).\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/576"
+}

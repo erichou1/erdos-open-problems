@@ -1,0 +1,258 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.494
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2026-06-24",
+      "state": "yes"
+    },
+    "references": [
+      "Er80",
+      "HeSt71"
+    ],
+    "source_last_update": "2026-04-04",
+    "source_problem_url": "https://www.erdosproblems.com/1212",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Er80] Erd\\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.\n \n [HeSt71] Herzog, Fritz and Stewart, B. M., Patterns of visible and nonvisible lattice points. Amer. Math. Monthly (1971), 487--496.",
+      "remarks": "Herzog and Stewart studied the graph $G$, which they called visible lattice points, and proved that there is only one infinite component, and conjectured that if $p$ is prime and $p\\nmid a$ then $(a,p)$ always belongs to the infinite component. (This is according to \\cite{Er80}; I can find no such results of Herzog and Stewart, who have a paper \\cite{HeSt71} on which finite patterns appear in the set of visible lattice points, but does not address this question.)\n\nErd\\H{o}s originally asked this question with just the condition that $\\min(x,y)>1$ and (as he recounts in \\cite{Er80}) 'foolishly offered 25 dollars for a proof. In the evening Stewart gave the simple proof: $(p_k,p_{k+1})$ can be joined to $(p_{k+1},p_{k+2})$'. Indeed, if $p_k$ is the $k$th prime then there is a path\\[(p_k,p_{k+1})\\to (p_k,p_{k+1}+1)\\to \\cdots \\]\\[\\to (p_{k},p_{k+2})\\to (p_{k}+1,p_{k+2})\\to (p_{k+1},p_{k+2}).\\]This is permissible provided $[p_{k+1},p_{k+2}]$ contains no multiple of $p_k$, which is true provided $p_{k+2}<2p_{k}$, which is true for all $k\\geq 4$.\n\nOne could further demand that the path be monotone (i.e. every step increases the distance from the origin). Is there a monotone path where we change direction after a bounded number of steps?\n\nThe first $50\\times 50$ block of the graph $G$ restricted to those vertices $(x,y)$ with both $x,y>1$ and at least one of $x$ or $y$ composite is shown {IMAGE=1212,here}."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory",
+      "primes"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.5,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.272872
+      ],
+      "probability": 0.111111
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.117,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.01562,
+        0.459698
+      ],
+      "probability": 0.237659
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.144533
+      ],
+      "probability": 0.04
+    },
+    "p_high_mathematical_value": {
+      "alpha": 1.833,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.382871
+      ],
+      "probability": 0.169231
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.667,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.030769,
+        0.437316
+      ],
+      "probability": 0.234043
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.9,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        2.3e-05,
+        0.389239
+      ],
+      "probability": 0.194631
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 40.0,
+      "credible_interval_approx": [
+        0.0,
+        0.103879
+      ],
+      "probability": 0.043062
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.009216,
+        0.509303
+      ],
+      "probability": 0.259259
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "minor"
+    },
+    "literature": {
+      "comment_count": 0,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:21:08.953904+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "3bee2bc5b00e276f10577db92e0f864f73c586ac58f04046196976397ba78349"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "implicit_convention"
+      ],
+      "ambiguity_status": "minor",
+      "quantifier_signal_count": 1,
+      "question_count": 1,
+      "requires_source_audit": true,
+      "statement_characters": 337,
+      "statement_tokens_approx": 61
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove",
+      "multi_part": false,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-1212",
+  "problem_number": 1212,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove",
+    "multi_part": false,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_1212.html",
+      "raw_html_sha256": "6a72d1fc96cb7af600252dd3c4c2e8a8ed38910c6a56c0abc9d94af551369df7",
+      "section_sha256": {
+        "references": "7fc9c6d439c5fdb3e6fb95b6a2204f23236f769d2a1c109776b33111c98ae6f5",
+        "remarks": "901ef230b67f3bf6cc8b7c8a2b5d9edff7070f553f983f06dfc72e19408a795b",
+        "statement": "fa70acc2f9efa255aa24089d51cdb7e5a3c94c26ae003a6a2c309d618f4b5bdb"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_1212.json",
+      "source_record_sha256": "9f1dc061e2c9c7d960f19e23f811590d7a52e3e960fb108a9748be624315c65c",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_1212.tex",
+    "latex_sha256": "51f46bdf95677916f4d0219e73ead747e42341405e3d456f0c71087e39dfb8b3",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "fa70acc2f9efa255aa24089d51cdb7e5a3c94c26ae003a6a2c309d618f4b5bdb",
+    "recommended_attack_modes": [
+      "formal_search",
+      "shared_infrastructure_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "ad439ff8211f9efbb418cb3a50a812a30f3730c06aebe176653ba92775b1b7f8",
+  "routes": [
+    "formal_search",
+    "shared_infrastructure_search",
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "minor",
+    "intended": "Let $G$ be the graph with vertex set those pairs $(x,y)\\in \\mathbb{N}^2$ with $\\mathrm{gcd}(x,y)=1$, in which we join two vertices if the differ in only one coordinate, and there by $\\pm 1$.\n\nIs there a path going to infinity on $G$, say $P$, such that for all $(x,y)\\in P$ both $\\min(x,y)>1$ and at least one of $x$ or $y$ is composite?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $G$ be the graph with vertex set those pairs $(x,y)\\in \\mathbb{N}^2$ with $\\mathrm{gcd}(x,y)=1$, in which we join two vertices if the differ in only one coordinate, and there by $\\pm 1$. Is there a path going to infinity on $G$, say $P$, such that for all $(x,y)\\in P$ both $\\min(x,y)>1$ and at least one of $x$ or $y$ is composite?",
+    "original": "Let $G$ be the graph with vertex set those pairs $(x,y)\\in \\mathbb{N}^2$ with $\\mathrm{gcd}(x,y)=1$, in which we join two vertices if the differ in only one coordinate, and there by $\\pm 1$.\n\nIs there a path going to infinity on $G$, say $P$, such that for all $(x,y)\\in P$ both $\\min(x,y)>1$ and at least one of $x$ or $y$ is composite?",
+    "statement_sha256": "fa70acc2f9efa255aa24089d51cdb7e5a3c94c26ae003a6a2c309d618f4b5bdb"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

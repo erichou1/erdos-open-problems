@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 604,
+  "raw_page": {
+    "path": "raw/pages/problem_604.html",
+    "sha256": "41db7f484f36654c01dc8b48e3954379b2027ae2418e06fc0e78c55467f826cf"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "89fbc8721de7d62ffde5af05d3741ef114678585f6871939ccea9a94003bb37b",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er75f] Erd\\H{o}s, Paul, On some problems of elementary and combinatorial geometry. Ann. Mat. Pura Appl. (4) (1975), 99-108.\n \n [Er97e] Erd\\H{o}s, Paul, Some of my favourite unsolved problems. Math. Japon. (1997), 527-537.\n \n [KaTa04] Katz, Nets Hawk and Tardos, G\\'{a}bor, A new entropy inequality for the Erd\\H{o}s distance problem. Towards a theory of geometric graphs (2004), 119-126."
+    },
+    "remarks": {
+      "sha256": "9354552c079c6dcafd29b8958241e4d047d92f3ce203b602be992149cbd72370",
+      "source_region": "div.problem-additional-text",
+      "text": "The pinned distance problem, a stronger form of [89]. The example of an integer grid show that $n/\\sqrt{\\log n}$ would be best possible.\n\nIt may be true that there are $\\gg n$ many such points (Hunter has noted in the comments that this trivially follows from the existence of a single point), or that this is true on average - for example, if $d(x)$ counts the number of distinct distances from $x$ then in \\cite{Er75f} Erd\\H{o}s conjectured\\[\\sum_{x\\in A}d(x) \\gg \\frac{n^2}{\\sqrt{\\log n}},\\]where $A\\subset \\mathbb{R}^2$ is any set of $n$ points.\n\nIn \\cite{Er97e} Erd\\H{o}s offers \\$500 for a solution to this problem, but it is unclear whether he intended this for proving the existence of a single such point or for $\\gg n$ many such points.\n\nIn \\cite{Er97e} Erd\\H{o}s wrote that he initially 'overconjectured' and thought that the answer to this problem is the same as for the number of distinct distances between all pairs (see [89]), but this was disproved by Harborth. It could be true that the answers are the same up to an additive factor of $n^{o(1)}$.\n\nThe best known bound is\\[\\gg n^{c-o(1)},\\]due to Katz and Tardos \\cite{KaTa04}, where\\[c=\\frac{48-14e}{55-16e}=0.864137\\cdots.\\]"
+    },
+    "statement": {
+      "sha256": "0a4b0ea75a93229a681dfd43217f85b96c42761129692c12d2f920ea711ef785",
+      "source_region": "div#content",
+      "text": "Given $n$ distinct points $A\\subset\\mathbb{R}^2$ must there be a point $x\\in A$ such that\\[\\#\\{ d(x,y) : y \\in A\\} \\gg n^{1-o(1)}?\\]Or even $\\gg n/\\sqrt{\\log n}$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/604"
+}

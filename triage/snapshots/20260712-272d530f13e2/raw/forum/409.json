@@ -1,0 +1,30 @@
+{
+  "problem_number": 409,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/409",
+  "retrieved_at": "2026-07-10T23:17:01.203869+00:00",
+  "page_title": "409 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "0ecbc008578ce37d653ef4fbc916c7d2a5a7d25c3124032f7e8201bc8207f7fd",
+  "comment_count": 4,
+  "comments": [
+    {
+      "post_id": "7111",
+      "text": "I would like to share explicit examples with $F(n)=67$ for Problem #409. Let $F(n)$ be the number of iterations of $n \\mapsto \\phi(n)+1$ needed to reach a prime, with $F(p)=0$ for prime $p$. The three checked examples are: 2548851069, 3398468092, 5097702138. All three reach the prime 9005041. The first trajectory is: 2548851069 -> 1699234045 -> 1359387233 -> 1357766149 -> 1277897537 -> 1091468593 -> 1090197109 -> 1090097101 -> 1054480897 -> 1047381793 -> 1025097029 -> 931906381 -> 794593681 -> 681080293 -> 673559041 -> 651831301 -> 590981521 -> 539896321 -> 539849813 -> 516378061 -> 514939325 -> 410757361 -> 351891889 -> 341863201 -> 333912853 -> 330957761 -> 328495409 -> 298632181 -> 296567041 -> 295161301 -> 291425005 -> 228740929 -> 228693041 -> 221937409 -> 215098801 -> 208160101 -> 207935105 -> 142584049 -> 134196737 -> 129867781 -> 129666413 -> 127631089 -> 126198001 -> 125833973 -> 123955789 -> 116507137 -> 109099585 -> 74426689 -> 71022337 -> 70462981 -> 70202701 -> 64437121 -> 55231813 -> 43699825 -> 30401281 -> 30390193 -> 30089201 -> 28254529 -> 27791281 -> 22566601 -> 22543313 -> 20809201 -> 17808001 -> 17149441 -> 16946161 -> 15534081 -> 10356049 -> 9005041. The other two merge after one step: 3398468092 -> 1699234045, 5097702138 -> 1699234045 Computation scope: 1. Exhaustive forward sweep: I computed $F(n)$ for every $1 \\le n \\le 1.5\\cdot 10^9$ using a totient sieve and the recurrence $F(n)=F(\\phi(n)+1)+1$ for composite $n$. In this exhaustive range the largest value found was $F(n)=66$, at $n=1371524731$. 2. Targeted inverse-totient extension beyond this range: starting from high-$F$ values found by the sweep, I enumerated and verified inverse preimages satisfying $\\phi(m)=n-1$ on the frontier. The frontier counts in this run were: F=63 seeds -> 43 verified F=64 candidates F=64 candidates -> 10 verified F=65 candidates F=65 candidates -> 10 verified F=66 candidates F=66 candidates -> 3 verified F=67 candidates F=67 candidates -> no inverse preimages found in this run Thus the search beyond $1.5\\cdot 10^9$ was not an exhaustive sweep over all larger integers; it was this targeted inverse-preimage extension from the high-$F$ frontier. AI usage disclosure: This computation and comment were prepared with assistance from Codex 5.5 using xhigh reasoning, and ChatGPT 5.5 Pro.",
+      "meta": "KentaKitamura — 08:56 on 21 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2197",
+      "text": "The page number is 81. Looking at it, the questions for $n \\mapsto \\sigma(n)-1$ are slightly different from that of $n \\mapsto \\varphi(n)+1$. The questions are now instead: \"Is it true that iterates of this always reach a prime? If so, how soon?\". (The question of \"can infinitely many $n$ reach the same prime?\" is easily seen to be no in this case, because the orbits are now non-decreasing rather than non-increasing; this was first observed by Aristotle.) (The site has been updated to address this comment.)",
+      "meta": "TerenceTao — 03:53 on 15 Dec 2025 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "975",
+      "text": "For the first question; the answer is trivially $o(n)$, and likely it is about getting upper bounds that are as good as possible. The lower bound of one is of course infinitely often attained. It may be at some point subjective when the problem is resolved. It is conjectured that the density (second, third subquestion) there are only finitely many integers ending in a prime, and thus density zero for a fixed prime, as mentioned in OEIS sequence A229487.",
+      "meta": "StijnC — 10:13 on 10 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "15",
+      "text": "Such problems will probably require entirely new fields and methods in mathematics, since even Collatz-like iterations can lead to complex behaviours.",
+      "meta": "Dogmachine — 17:21 on 09 Aug 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

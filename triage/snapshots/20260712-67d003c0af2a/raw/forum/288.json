@@ -1,0 +1,45 @@
+{
+  "problem_number": 288,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/288",
+  "retrieved_at": "2026-07-10T23:16:25.053006+00:00",
+  "page_title": "288 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "d04ef9a6c2d2065f61dbc96965b5f74b3e5f8ed375ca856be4fd367fd45dece8",
+  "comment_count": 7,
+  "comments": [
+    {
+      "post_id": "6213",
+      "text": "I've put together a brief research note on this problem, with a great deal of assistance from GPT 5.5 Thinking. The research note is only partial progress toward a complete solution, but it solves the intersecting case in its entirety, and then gives several obstructions in the disjoint case using $p$-adic methods, denominator inequalities, and CRT/smoothness conditions. For example, for any disjoint solution with intervals $[a,b]$ and $[c,d]$, the upper denominators must divide $$ \\Lambda_b = \\operatorname{lcm}(1,2,\\ldots,b). $$ In the sufficiently large fixed length case, the remaining problem is reduced to a pretty rigid smooth CRT condition. In the special case $L=2$, this gives an obstruction of the form $$ c = P_0u_0,\\qquad c+1 = P_1u_1,\\qquad P_1u_1-P_0u_0=1, $$ where the $P_i$ contain most of the large prime factors, while the $u_i$ are small smooth cofactors. I would really appreciate any comments, especially on whether the $L=2$ obstruction can be pushed further.",
+      "meta": "Ritvik Nayak — 15:11 on 03 May 2026 👍 3 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6217",
+      "text": "I'm not going to pretend I am knowledgeable on this, or even remotely close to others on the site, but I do wonder if you can compress the $L=2$ obstruction a tiny bit. Writing $P=P_0P_1$, the relation $P_1u_1-P_0u_0=1$ gives $u_0P_0^2+P_0-Pu_1=0$, so $1+4Pu_0u_1=Y^2$. Maybe you can rule out $Y^2=1+4PW$ with $W=u_0u_1\\mid B_b(z_b)^2$, $\\log W=O(b/\\log b)$, and $\\log P=b+o(b)$.",
+      "meta": "sammausberg — 16:54 on 03 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6221",
+      "text": "Thanks! Standard check claimed 1 minor issue in the notes.",
+      "meta": "Nat Sothanaphan — 17:47 on 03 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5710",
+      "text": "FWIW, the variant where we consider the difference of such numbers was mentioned as an unsolved problem by Erdös and Niven, in the paper \"Some properties of partial sums of harmonic numbers\". One example is $1/2+1/3+1/4-1/12=1$.",
+      "meta": "Dogmachine — 17:33 on 22 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "21",
+      "text": "Richard K. Guy had asserted that only finitely solutions exist, even in the general case of any number of intervals. As far as I know, he never gave any proof nor said the names of anyone who might have proved this, so the problem still lacks a solution.",
+      "meta": "Dogmachine — 18:04 on 09 Aug 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4100",
+      "text": "I asked Claude to do a literature search. It was unable to locate any published result of this form. It did note a survey of Graham from 2013 (likely outdated at this point) on this general subject, and a recent paper of Lim and Steinerberger showing that a single sum $\\sum_{n_1 \\in I_1} \\frac{1}{n_1}$ can be rather close to $1$, which points towards the problem being difficult. One small observation: if $N$ is the largest element of $I_1 \\cup I_2$ then the length of either interval should be $o(N)$. Otherwise, by the prime number theorem there would be a large prime $p \\asymp N$ that only divides $O(1)$ of the elements of $I_1$ and $I_2$ (with bounded cofactors) and it is then easy to see that the sum $\\sum_{n_1 \\in I_1} \\frac{1}{n_1} + \\sum_{n_2 \\in I_2} \\frac{1}{n_2}$ will have a negative $p$-valuation and so cannot be an integer (or a p-adic integer). Indeed the enemy seems to be a dyadic-type interval $I_1 = [\\alpha M, M]$ and a very short interval $I_2 = [N-h, N]$ where $N$ is significantly larger than $M$ (perhaps even exponentially larger: many of the primes in $I_1$ will likely also have to divide elements of $I_2$.)",
+      "meta": "TerenceTao — 18:46 on 02 Feb 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4036",
+      "text": "I wrote a short note about the “singleton” variant of Erdős Problem 288 (the case $|I_2|=1$), clarifying a useful reduction but not claiming a complete solution of #288. Main points. If $H(a,b)+1/m\\in\\mathbb Z$ for some $m$, then necessarily $m$ equals the reduced denominator of $H(a,b)$, so there is at most one candidate $m$ per interval $[a,b]$. For odd primes $p$ with $p^2>b$, a $p$-adic analysis shows a dichotomy: either $T_p\\not\\equiv 0\\pmod p$ and then $v_p(m)=1$ with a forced congruence $m\\equiv r_p\\pmod{p^2}$, or $T_p\\equiv 0\\pmod p$ and then $p\\nmid m$ (no $p^2$ constraint). Combining the “good” primes by CRT forces any solution to lie in a single residue class $m\\equiv r(a,b)\\pmod{Q(a,b)}$, with $Q(a,b)=\\prod_{p\\in P_1(a,b)}p^2$. This reframes the singleton case as a global obstruction problem: show that this forced class contains no $b$-smooth integer in the natural range $m\\le \\mathrm{lcm}(a,\\dots,b)$ for all sufficiently large $b$. I also include computations for $b\\le 1600$ (with code) as a consistency check. Note (preprint): doi:10.13140/RG.2.2.10862.47684/1",
+      "meta": "Zeraoulia Rafik — 15:19 on 01 Feb 2026 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

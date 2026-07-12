@@ -1,0 +1,255 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.753
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "BBCGHMST24",
+      "CGMS23",
+      "Er88",
+      "Er93",
+      "GNNW24"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/77",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[BBCGHMST24] Balister, P. and Bollob\\'{a}s, B. and Campos, M. and Griffiths, S. and Hurley, E. \nand Morris, R. and Sahasrabudhe, J. and Tiba, M., Upper bounds for multicolour Ramsey numbers. arXiv:2410.17197 (2024).\n \n [CGMS23] Campos, Marcelo and Griffiths, Simon and Morris, Robert and Sahasrabudhe, Julian, An exponential improvement for diagonal Ramsey. arXiv:2303.09521 (2023).\n \n [Er88] Erd\\H{o}s, P, Problems and results in combinatorial analysis and graph theory. Discrete Math. (1988), 81-92.\n \n [Er93] Erd\\H{o}s, Paul, Some of my favorite solved and unsolved problems in graph theory. Quaestiones Math. (1993), 333-350.\n \n [GNNW24] Gupta, P. and Ndiaye, N. and Norin, S. and Wei, L., Optimizing the CGMS upper bound on Ramsey numbers. arXiv:2407.19026 (2024).",
+      "remarks": "Erd\\H{o}s offered \\$100 for just a proof of the existence of this constant, without determining its value. He also offered \\$1000 for a proof that the limit does not exist, but says 'this is really a joke as [it] certainly exists'. (In \\cite{Er88} he raises this prize to \\$10000). Erd\\H{o}s proved\\[\\sqrt{2}\\leq \\liminf_{k\\to \\infty}R(k)^{1/k}\\leq \\limsup_{k\\to \\infty}R(k)^{1/k}\\leq 4.\\]The upper bound has been improved to $4-\\tfrac{1}{128}$ by Campos, Griffiths, Morris, and Sahasrabudhe \\cite{CGMS23}. This was improved to $3.7992\\cdots$ by Gupta, Ndiaye, Norin, and Wei \\cite{GNNW24}.\n\nA shorter and simpler proof of an upper bound of the strength $4-c$ for some constant $c>0$ (and a generalisation to the case of more than two colours) was given by Balister, Bollob\\'{a}s, Campos, Griffiths, Hurley, Morris, Sahasrabudhe, and Tiba \\cite{BBCGHMST24}.\n\nIn \\cite{Er93} Erd\\H{o}s writes 'I have no idea what the value of $\\lim R(k)^{1/k}$ should be, perhaps it is $2$ but we have no real evidence for this.'\n\nThis problem is #3 in Ramsey Theory in the graphs problem collection.\n\nSee also [1029] for a problem concerning a lower bound for $R(k)$ and discussion of lower bounds in general. The limit in this question is closely related to the limit in [627].\n\nA famous quote of Erd\\H{o}s concerns the difficulty of finding exact values for $R(k)$. This is often repeated in the words of Spencer, who phrased it as an alien attacking race. The earliest such quote in a paper of Erd\\H{o}s I have found is in \\cite{Er93}, where he writes:\n\n'Sometime ago, I made the following joke. If an evil spirit would appear and say \"unless you give me the value of $R(5)$ within a year, I will exterminate humanity\", then our best bet would be perhaps to get all our computers working on $R(5)$ and we probably would get its value in a year. \n\nIf he would ask for $R(6)$, the best strategy probably would be to destroy it before it can destroy us. If we would be so clever that we could give the answer by mathematics, we would just tell him: \"if you try to do something you will see what will happent to you...\". I think we are strong enugh now and the only evil spirit we have to feel is the one which is in ourselves (quoting somebody: I have seen the enemy and them are us). Now enough of the idle talk and back to Mathematics.'"
+    },
+    "source_state": "open",
+    "tags": [
+      "graph theory",
+      "ramsey theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.12,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.330196
+      ],
+      "probability": 0.150142
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 1.165,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.276105
+      ],
+      "probability": 0.104325
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.5,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.272872
+      ],
+      "probability": 0.111111
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.1,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.409873
+      ],
+      "probability": 0.189189
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.3,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.251666
+      ],
+      "probability": 0.097744
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 0.9,
+      "beta": 12.5,
+      "credible_interval_approx": [
+        0.0,
+        0.196449
+      ],
+      "probability": 0.067164
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 39.0,
+      "credible_interval_approx": [
+        0.0,
+        0.07279
+      ],
+      "probability": 0.025
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.436385
+      ],
+      "probability": 0.2
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "clear"
+    },
+    "literature": {
+      "comment_count": 3,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:15:24.825445+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "97999f5dfcaca242a3abbe6fa3fdf1c238f8245a5dd054fa5bdc80baa7fc76a3"
+    },
+    "statement": {
+      "ambiguity_markers": [],
+      "ambiguity_status": "clear",
+      "quantifier_signal_count": 0,
+      "question_count": 0,
+      "requires_source_audit": false,
+      "statement_characters": 205,
+      "statement_tokens_approx": 32
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "compute",
+      "multi_part": false,
+      "primary_domain": "graph theory"
+    }
+  },
+  "problem_id": "erdos-77",
+  "problem_number": 77,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "compute",
+    "multi_part": false,
+    "primary_domain": "graph theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_77.html",
+      "raw_html_sha256": "1d7e5a07d3f1a4dea657a1284c93c4e012634eb637d2a552ec7d17778d9e1800",
+      "section_sha256": {
+        "references": "831980dc5509dabc70e7dd6f767fa8d76afe0681cc1e5519be34a99d9b8725f7",
+        "remarks": "049bf131acb49251261734220f500482707f36a8eba85158092fc229f8dbeaae",
+        "statement": "51ec0cd9904149f67d14c24584eb2e85c4f4ea41853e02ee22d48e63446a64a9"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_77.json",
+      "source_record_sha256": "61e665bbddfa266e4092398d7efc222953664f1a9f84c7804ee2838833cf2fd2",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_77.tex",
+    "latex_sha256": "96c0929cf36fe07a88c346ac4e533bd3bc1faf9fd308a4ec20a4e799834ac47e",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "51ec0cd9904149f67d14c24584eb2e85c4f4ea41853e02ee22d48e63446a64a9",
+    "recommended_attack_modes": [
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "91ab639634204f459c1bdc8db962510fb2b26c41e14c00015d8b12ee1c5fa089",
+  "routes": [
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "clear",
+    "intended": "If $R(k)$ is the Ramsey number for $K_k$, the minimal $n$ such that every $2$-colouring of the edges of $K_n$ contains a monochromatic copy of $K_k$, then find the value of\\[\\lim_{k\\to \\infty}R(k)^{1/k}.\\]",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "If $R(k)$ is the Ramsey number for $K_k$, the minimal $n$ such that every $2$-colouring of the edges of $K_n$ contains a monochromatic copy of $K_k$, then find the value of\\[\\lim_{k\\to \\infty}R(k)^{1/k}.\\]",
+    "original": "If $R(k)$ is the Ramsey number for $K_k$, the minimal $n$ such that every $2$-colouring of the edges of $K_n$ contains a monochromatic copy of $K_k$, then find the value of\\[\\lim_{k\\to \\infty}R(k)^{1/k}.\\]",
+    "statement_sha256": "51ec0cd9904149f67d14c24584eb2e85c4f4ea41853e02ee22d48e63446a64a9"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 78,
+  "raw_page": {
+    "path": "raw/pages/problem_78.html",
+    "sha256": "899a0ad2977704dabb7cee7ef8de39f4114166517feae61e490e0790c954936f"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "2f18eeccd111414b24afc2eb194e2685240f6f20b15b8fa2f0ead595e97abb4e",
+      "source_region": "div.problem-additional-text",
+      "text": "[Co15] Gil Cohen, Two-Source Dispersers for Polylogarithmic Entropy and Improved Ramsey Graphs. Electronic Colloquium on Computational Complexity (2015).\n \n [Er69b] Erd\\H{o}s, P., Problems and results in chromatic graph theory. Proof Techniques in Graph Theory (Proc. Second Ann\nArbor Graph Theory Conf., Ann Arbor, Mich.,\n1968) (1969), 27-35.\n \n [Li23b] Li, X., Two Source Extractors for Asymptotically Optimal Entropy, and (Many) More. arXiv:2303.06802 (2023)."
+    },
+    "remarks": {
+      "sha256": "96b711a57ab83061bfb5362e5e7d827c3df9dcc0751ff93e30836009f50224be",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s gave a simple probabilistic proof that $R(k) \\gg k2^{k/2}$. \n\nEquivalently, this question asks for an explicit construction of a graph on $n$ vertices which does not contain any clique or independent set of size $\\geq c\\log n$ for some constant $c>0$. \n\nIn \\cite{Er69b} Erd\\H{o}s asks for even a construction whose largest clique or independent set has size $o(n^{1/2})$, which is now known.\n\n Cohen \\cite{Co15} (see the introduction for further history) constructed a graph on $n$ vertices which does not contain any clique or independent set of size\\[\\geq 2^{(\\log\\log n)^{C}}\\]for some constant $C>0$. Li \\cite{Li23b} has recently improved this to\\[\\geq (\\log n)^{C}\\]for some constant $C>0$.\n\nThis problem is #4 in Ramsey Theory in the graphs problem collection."
+    },
+    "statement": {
+      "sha256": "1216490575cc54fbff8892b1ba79a303ff5d13a138eca198410d261f8c7a2045",
+      "source_region": "div#content",
+      "text": "Let $R(k)$ be the Ramsey number for $K_k$, the minimal $n$ such that every $2$-colouring of the edges of $K_n$ contains a monochromatic copy of $K_k$.\n\nGive a constructive proof that $R(k)>C^k$ for some constant $C>1$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/78"
+}

@@ -1,0 +1,254 @@
+{
+  "allocation_context_id": null,
+  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.406
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2026-04-04",
+      "state": "no"
+    },
+    "references": [
+      "Er80",
+      "ErRu80"
+    ],
+    "source_last_update": "2026-04-04",
+    "source_problem_url": "https://www.erdosproblems.com/1200",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Er80] Erd\\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.\n \n [ErRu80] Erd\\H{o}s, P. and Ruzsa, I. Z., On the small sieve. I. Sifting by primes. J. Number Theory (1980), 385--394.",
+      "remarks": "A conjecture of Erd\\H{o}s and Ruzsa which Erd\\H{o}s described in \\cite{Er80} as 'surprising'. He says that if this is correct then 'very likely' the $\\epsilon_n$ in [688] is $\\gg 1$ - certainly proving $\\epsilon_n\\geq c$ would prove this conjecture (taking $P$ to be all primes in $[x^c,x]$). \n\nIn \\cite{ErRu80} this is asked as a question: if $p_1<\\cdots<p_k<x$ are primes with $\\sum \\frac{1}{p_i}\\leq C$ and $a_i\\pmod{p_i}$ are any residue classes then must there always be $\\gg_K x$ many integers $n<x$ avoiding all of them? (Of course is the answer is yes then this disproves the main conjecture.)\n\nErd\\H{o}s and Ruzsa \\cite{ErRu80} proved that for any $C>0$ there exists a set of primes $P$ such that $\\sum_{p\\in P}\\frac{1}{p}\\leq C$ and the number of integers $n\\leq x$ divisible by at least one $p\\in P$ is $\\gg_C x$.\n\nSee also [783] and [784]."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory",
+      "primes"
+    ]
+  },
+  "model_portfolio": "chatgpt-ui-unrecorded",
+  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.54,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.276932
+      ],
+      "probability": 0.113737
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 1.93,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.362493
+      ],
+      "probability": 0.161773
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.3,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.251666
+      ],
+      "probability": 0.097744
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.033,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.40336
+      ],
+      "probability": 0.18429
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.333,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.255312
+      ],
+      "probability": 0.1
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.3,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.251666
+      ],
+      "probability": 0.097744
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 40.0,
+      "credible_interval_approx": [
+        0.0,
+        0.071043
+      ],
+      "probability": 0.02439
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.436385
+      ],
+      "probability": 0.2
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "minor"
+    },
+    "literature": {
+      "comment_count": 1,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:21:03.712672+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "badec04a115a998254a59a01c98382082660a5d3c0008af9d5373c5db80c0596"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "unspecified_constant"
+      ],
+      "ambiguity_status": "minor",
+      "quantifier_signal_count": 2,
+      "question_count": 0,
+      "requires_source_audit": true,
+      "statement_characters": 262,
+      "statement_tokens_approx": 39
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "prove",
+      "multi_part": false,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-1200",
+  "problem_number": 1200,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "prove",
+    "multi_part": false,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_1200.html",
+      "raw_html_sha256": "6f873c2a1be1b907e4b0c15027e56bfcc4fc6f518ceefdf7eb30f98836c67b61",
+      "section_sha256": {
+        "references": "8f5c876fb750aaf049db8dfcb4954a636467c8ad80bef588c5ac48421b7db935",
+        "remarks": "832033d904e002c3270ecbfa11a7b24b8f5fbd37a316e29d755c8a584643550b",
+        "statement": "20286087c87e770a840ecaefca9cece227fa4c6e3a7a32f7074e60f0e7825c6f"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_1200.json",
+      "source_record_sha256": "86f8816e6d0fa10ca1c94f7e9831040bda0f9cbf44cc8446dfb9d159dcf4dd4a",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_1200.tex",
+    "latex_sha256": "8346f8a3d59cc67965aafde1557dafb508b614cb261026f8c071a01eaffa29f2",
+    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "20286087c87e770a840ecaefca9cece227fa4c6e3a7a32f7074e60f0e7825c6f",
+    "recommended_attack_modes": [
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "3eeafb1b6c5582ed45cd59ccd52bc791742ef4e5279855b5ea4ebf9f74dc453b",
+  "routes": [
+    "natural_language_research"
+  ],
+  "run_contract": null,
+  "run_contract_id": null,
+  "schema_version": 2,
+  "snapshot_id": "20260712-00e292c67dca",
+  "statement": {
+    "ambiguity_status": "minor",
+    "intended": "There exists a constant $C$ such that for all large $x$ there is a collection of primes $p_1<\\ldots<p_k<x$ with $\\sum\\frac{1}{p_i}<C$ together with a system of congruences $a_i\\pmod{p_i}$ such that every integer $n<x$ satisfies at least one of these congruences.",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "There exists a constant $C$ such that for all large $x$ there is a collection of primes $p_1<\\ldots<p_k<x$ with $\\sum\\frac{1}{p_i}<C$ together with a system of congruences $a_i\\pmod{p_i}$ such that every integer $n<x$ satisfies at least one of these congruences.",
+    "original": "There exists a constant $C$ such that for all large $x$ there is a collection of primes $p_1<\\ldots<p_k<x$ with $\\sum\\frac{1}{p_i}<C$ together with a system of congruences $a_i\\pmod{p_i}$ such that every integer $n<x$ satisfies at least one of these congruences.",
+    "statement_sha256": "20286087c87e770a840ecaefca9cece227fa4c6e3a7a32f7074e60f0e7825c6f"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}
