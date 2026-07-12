@@ -130,7 +130,9 @@ def main() -> None:
     parser.add_argument("--request-spacing", type=float, default=12.0)
     parser.add_argument("--max-revisions", type=int, default=2)
     parser.add_argument("--max-attempts", type=int, default=8)
-    parser.add_argument("--model-id", required=True)
+    parser.add_argument("--model-id",
+                        default=os.environ.get("CHATGPT_MODEL_PORTFOLIO", ""),
+                        help="Exact recorded UI model identity (or set CHATGPT_MODEL_PORTFOLIO)")
     parser.add_argument("--max-problems", type=int, default=0, help="0 = unlimited")
     parser.add_argument("--rerank-interval", type=float, default=1800.0,
                         help="Seconds between searcher re-ranks; 0 disables")

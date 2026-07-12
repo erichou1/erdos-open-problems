@@ -2220,6 +2220,35 @@ def matching_outcome_records(card: dict, records: list[dict]) -> list[dict]:
     ]
 
 
+ATTEMPT_EXCLUSIONS_FILENAME = "attempt_exclusions.json"
+
+
+def load_attempt_exclusions(root: Path) -> set[int]:
+    """Problem numbers to keep out of every attack lane.
+
+    These are problems that carry a known solution (e.g. an erdosproblems.com
+    forum thread) even though the canonical ``source_state`` is still ``open``,
+    so re-ingestion keeps them in the corpus. The exclusion is applied to the
+    ranking/allocation only: cards and corpus audit stay complete, but the
+    solver never spends a run on them.
+    """
+    path = Path(root) / ATTEMPT_EXCLUSIONS_FILENAME
+    try:
+        data = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, ValueError):
+        return set()
+    excluded: set[int] = set()
+    for item in data.get("excluded", []) if isinstance(data, dict) else []:
+        number = item.get("problem") if isinstance(item, dict) else item
+        if isinstance(number, bool):
+            continue
+        if isinstance(number, int):
+            excluded.add(number)
+        elif isinstance(number, str) and number.strip().isdigit():
+            excluded.add(int(number))
+    return excluded
+
+
 def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
                    top_k: int,
                    model_portfolio: str = DEFAULT_MODEL_PORTFOLIO,
@@ -2259,6 +2288,7 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
     source_snapshot_manifest = canonical_snapshot / "manifest.json"
     source_snapshot_sha256 = sha256_file(source_snapshot_manifest)
     entries = catalog.get("problems", {})
+    attempt_exclusions = load_attempt_exclusions(root)
     cards: list[dict] = []
     cards_dir = output_root / "normalized" / "problem_cards"
     cards_dir.mkdir(parents=True, exist_ok=True)
@@ -2346,7 +2376,11 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
         if stale_subproblem.name not in current_subproblem_names:
             stale_subproblem.unlink()
 
-    eligible = [card for card in cards if not card["metadata"]["source_reports_resolved"]]
+    eligible = [
+        card for card in cards
+        if not card["metadata"]["source_reports_resolved"]
+        and card["problem_number"] not in attempt_exclusions
+    ]
     direct = sorted(
         eligible,
         key=lambda card: (
@@ -2396,6 +2430,7 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
         ),
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "eligible_problems": len(eligible),
+        "attempt_exclusions": sorted(attempt_exclusions),
         "corpus_integrity": integrity,
         "unranked_missing_source_records": integrity["missing_open_problem_numbers"],
         "direct_solve_probability": direct_records,
@@ -2823,7 +2858,8 @@ def main() -> None:
     parser.add_argument("--output", type=Path, default=Path("triage"))
     parser.add_argument("--snapshot-date", default=datetime.now(timezone.utc).date().isoformat())
     parser.add_argument("--top-k", type=int, default=25)
-    parser.add_argument("--model-portfolio", default=DEFAULT_MODEL_PORTFOLIO)
+    parser.add_argument("--model-portfolio",
+                        default=os.environ.get("CHATGPT_MODEL_PORTFOLIO", DEFAULT_MODEL_PORTFOLIO))
     parser.add_argument("--budget", default=DEFAULT_BUDGET)
     parser.add_argument("--record", type=Path)
     args = parser.parse_args()
