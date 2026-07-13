@@ -400,6 +400,24 @@ class ProofPipelineTests(unittest.TestCase):
                 (result.artifact_dir / "statement_lock.json").read_text(encoding="utf-8"))
             self.assertEqual(lock["sha256"], make_statement_lock("Prove T.").sha256)
 
+    def test_malformed_synthesis_falls_back_to_minimal_graph(self):
+        class BadSynthesisRunner(PassingRunner):
+            def run(self, prompt, *, stage, isolated):
+                if stage == "synthesis":
+                    self.calls.append((stage, isolated, prompt))
+                    return '{\n"summary": "a "quoted" phrase breaks json", "subgoals": []\n}'
+                return super().run(prompt, stage=stage, isolated=isolated)
+
+        runner = BadSynthesisRunner()
+        with tempfile.TemporaryDirectory() as directory:
+            result = ProofPipeline(runner, Path(directory) / "runs").solve(7, "Prove T.")
+            # the run completes despite the unparseable planner response
+            self.assertTrue((result.artifact_dir / "manifest.json").exists())
+            self.assertTrue((result.artifact_dir / "synthesis_error.txt").exists())
+            graph = json.loads(
+                (result.artifact_dir / "subgoal_graph.json").read_text(encoding="utf-8"))
+            self.assertIn("GOAL", json.dumps(graph))
+
 
 if __name__ == "__main__":
     unittest.main()

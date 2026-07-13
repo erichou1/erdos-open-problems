@@ -642,7 +642,26 @@ class ProofPipeline:
             ),
             "synthesis",
         )
-        planner_data = _json_object(synthesis_raw)
+        try:
+            planner_data = _json_object(synthesis_raw)
+        except (ValueError, json.JSONDecodeError) as error:
+            # All scouts already succeeded; a malformed planner response (e.g. an
+            # unescaped quote in a JSON string) must not discard the whole run.
+            # Fall back to a minimal single-goal graph and let construction
+            # proceed from the scout reports, mirroring the replan fallback.
+            (out / "synthesis_error.txt").write_text(
+                f"Malformed synthesis response: {error}\n\n{synthesis_raw}",
+                encoding="utf-8",
+            )
+            planner_data = {
+                "summary": "planner output was unparseable; using a minimal "
+                           "single-goal graph so construction can still proceed",
+                "bottleneck_ids": ["GOAL"],
+                "subgoals": [{
+                    "id": "GOAL", "claim": lock.original_statement,
+                    "dependencies": [], "centrality": 5, "falsifiable": True,
+                }],
+            }
         graph = graph_as_dict(planner_data, parse_subgoal_graph(planner_data))
         graph_text = json.dumps(graph, indent=2)
         (out / "subgoal_graph.json").write_text(graph_text + "\n", encoding="utf-8")
