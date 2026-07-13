@@ -139,6 +139,12 @@ def main() -> None:
     parser.add_argument("--rerank-top-k", type=int, default=600)
     parser.add_argument("--headless", action="store_true")
     parser.add_argument(
+        "--adjudicator", choices=["same", "deepseek"], default="same",
+        help="Model for the final adjudication stage. 'deepseek' routes it "
+             "through a distinct model (Expert + DeepThink) so the adjudicator "
+             "is not the same model that produced and reviewed the candidate.",
+    )
+    parser.add_argument(
         "--new-campaign", action="store_true",
         help="Release all unverified claims before starting. Use only when no "
              "other continuous workers are active.",
@@ -190,6 +196,23 @@ def main() -> None:
             request_spacing_s=budget_config["request_spacing_s"],
             max_attempts=budget_config["max_attempts"],
         )
+        adjudicator_runner = None
+        if args.adjudicator == "deepseek":
+            import deepseek_common as DS
+            from deepseek_runner import DeepSeekBrowserRunner
+            ds_browser = DS.launch_browser(playwright, headless=args.headless)
+            ds_page = ds_browser.pages[0] if ds_browser.pages else ds_browser.new_page()
+            DS.ensure_logged_in(ds_page)
+            adjudicator_runner = DeepSeekBrowserRunner(
+                ds_browser, ds_page,
+                timeout_s=budget_config["stage_timeout_s"],
+                backoff_s=budget_config["initial_backoff_s"],
+                max_backoff_s=budget_config["max_backoff_s"],
+                request_spacing_s=budget_config["request_spacing_s"],
+                max_attempts=budget_config["max_attempts"],
+            )
+            print("[continuous] distinct adjudicator: DeepSeek (Expert + DeepThink)",
+                  flush=True)
 
         while True:
             ranking = maybe_rerank(
@@ -252,6 +275,7 @@ def main() -> None:
                 toolset=run_inputs["toolset"],
                 dependencies=run_inputs["dependencies"],
                 runtime=run_inputs["runtime"],
+                adjudicator_runner=adjudicator_runner,
             )
             print(f"\n[continuous] === #{number}: starting (worker {args.worker_id}) ===",
                   flush=True)

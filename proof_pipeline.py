@@ -881,7 +881,9 @@ class ProofPipeline:
             raw_adjudication, encoding="utf-8"
         )
         raw_reviews.append(raw_adjudication)
-        adjudication_context = self.runner.context_id(adjudication_stage)
+        # Provenance for the adjudication must come from the runner that served
+        # it — which is a distinct model when an adjudicator_runner is supplied.
+        adjudication_context = self.adjudicator_runner.context_id(adjudication_stage)
         try:
             reviews.append(_review(
                 _json_object(raw_adjudication),

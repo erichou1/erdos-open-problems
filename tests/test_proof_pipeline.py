@@ -346,6 +346,32 @@ class ProofPipelineTests(unittest.TestCase):
             self.assertTrue(any(s.startswith("scout_") for s in primary_stages))
             self.assertFalse(any(s.startswith("scout_") for s in adjudicator_stages))
 
+    def test_distinct_adjudicator_provenance_reads_from_adjudicator(self):
+        class RecordingContextRunner(PassingRunner):
+            def __init__(self):
+                super().__init__()
+                self.context_id_calls = []
+
+            def context_id(self, stage):
+                self.context_id_calls.append(stage)
+                return super().context_id(stage)
+
+        primary = RecordingContextRunner()
+        adjudicator = RecordingContextRunner()
+        with tempfile.TemporaryDirectory() as directory:
+            ProofPipeline(
+                primary, Path(directory) / "runs",
+                adjudicator_runner=adjudicator,
+            ).solve(7, "Prove T.")
+            # The adjudication's provenance must be looked up on the adjudicator
+            # runner (the distinct model), never the primary that reviewed itself.
+            self.assertTrue(
+                any(s.startswith("adjudication_") for s in adjudicator.context_id_calls)
+            )
+            self.assertFalse(
+                any(s.startswith("adjudication_") for s in primary.context_id_calls)
+            )
+
 
 if __name__ == "__main__":
     unittest.main()
