@@ -324,6 +324,7 @@ class ErdosSearcherTests(unittest.TestCase):
                 "highest_probability_verified_partial_progress",
                 "highest_probability_lean_verification",
                 "best_finite_computation_targets",
+                "tractable_frontier",
                 "most_likely_stale_literature_records",
                 "highest_value_uncertain_problems",
                 "highest_mathematical_value_targets",

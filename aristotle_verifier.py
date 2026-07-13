@@ -1,31 +1,25 @@
 #!/usr/bin/env python3
-"""Aristotle (Harmonic) Lean-verification adapter for the deterministic gate.
+"""Aristotle (Harmonic) Lean-verification adapter — `aristotle` CLI wrapper.
 
-The verified pipeline already *consumes* external formal evidence: ``verification
-.evaluate_gate`` promotes a run to ``verified_proved`` only when the independent
-reviews pass AND a trusted ``formal_proof`` ``VerificationEvidence`` is present,
-and ``promote_verified_run.py`` applies such evidence to a run. This module is the
-missing *producer*: it sends a run's locked informal statement to Aristotle, which
-autoformalizes and proves it in Lean, then emits the ``formal_proof`` evidence JSON
-(plus the Lean artifact) in exactly the shape ``promote_verified_run`` expects.
+Harmonic's Aristotle (https://aristotle.harmonic.fun) is driven through the
+`aristotle` CLI from the `aristotlelib` package (NOT a raw HTTP API):
 
-Access is HTTP + bearer token, configured entirely from the environment so no
-vendor endpoint or schema is hard-coded:
+    aristotle submit "<prompt>" [--project-dir DIR]   -> prints a project id
+    aristotle show <project_id>                        -> "COMPLETE ..." + summary
+    aristotle download <project_id> --destination <a>  -> tar.gz project archive
 
-    ARISTOTLE_API_BASE      full URL of the prove endpoint (required)
-    ARISTOTLE_API_KEY       bearer token, read from env/.env only (required)
-    ARISTOTLE_STATEMENT_FIELD  request field carrying the statement (default "statement")
-    ARISTOTLE_MODEL         optional model/profile field sent in the request
-    ARISTOTLE_AUTH_SCHEME   auth scheme (default "Bearer")
-    ARISTOTLE_RESULT_URL    optional async result URL template containing "{job_id}"
-    ARISTOTLE_POLL_INTERVAL_S / ARISTOTLE_TIMEOUT_S
+The API key is read from ARISTOTLE_API_KEY (env or .env); no base URL is used.
+A completed archive contains `RequestProject/Main.lean` (the Lean proof) and
+`ARISTOTLE_SUMMARY.md`. A proof is trusted only when the project is COMPLETE and
+`Main.lean` exists with no `sorry`/`admit`.
 
-The response field mapping is centralized in ``parse_aristotle_response`` (it tries
-the common field names); confirm it against Harmonic's live API and adjust there.
+This adapter submits a run's locked statement (with the candidate as reference),
+waits for completion, extracts the Lean proof, and emits a `formal_proof`
+VerificationEvidence that `promote_verified_run` feeds to the deterministic gate.
 
 Usage:
-    ARISTOTLE_API_BASE=... ARISTOTLE_API_KEY=... \\
-      .venv/bin/python aristotle_verifier.py --run-dir <run> --promote --publish
+    ARISTOTLE_API_KEY=... .venv/bin/python aristotle_verifier.py \\
+        --run-dir <run> --promote --publish
 """
 
 from __future__ import annotations
@@ -34,56 +28,98 @@ import argparse
 import hashlib
 import json
 import os
+import re
+import shutil
+import subprocess
+import sys
+import tarfile
+import tempfile
 import time
-import urllib.error
-import urllib.request
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
 
-DEFAULT_TIMEOUT_S = 1800.0
-DEFAULT_POLL_INTERVAL_S = 10.0
-_TRUTHY = {"true", "1", "yes", "ok", "success", "valid"}
-_PROVED = {"proved", "verified", "valid", "success", "true", "ok", "qed"}
-_DISPROVED = {"disproved", "refuted", "false", "counterexample"}
+from lean_verify import (
+    BUILD_FAILED,
+    HAS_SORRY,
+    KERNEL_VERIFIED,
+    TOOL_UNAVAILABLE,
+    extract_formal_statements,
+    find_lean_proof,
+    has_incomplete_proof,
+    verify_project,
+)
+
+DEFAULT_TIMEOUT_S = 6 * 60 * 60.0
+DEFAULT_POLL_INTERVAL_S = 30.0
+_UUID_RE = re.compile(
+    r"[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
+)
+_STATE_RE = re.compile(
+    r"\b(COMPLETE|COMPLETED|SUCCEEDED|RUNNING|IDLE|QUEUED|PENDING|FAILED|ERROR|CANCELLED|CANCELED)\b",
+    re.IGNORECASE,
+)
+_TERMINAL_OK = {"COMPLETE", "COMPLETED", "SUCCEEDED"}
+_TERMINAL_BAD = {"FAILED", "ERROR", "CANCELLED", "CANCELED"}
 
 
 class AristotleError(RuntimeError):
-    """Raised when Aristotle cannot be reached or returns an unusable response."""
+    """Raised when the Aristotle CLI is missing, fails, or returns no proof."""
+
+
+def _load_dotenv_files() -> None:
+    """Populate os.environ from the repo .env and the workspace-level .env.
+
+    The first non-empty value for a key wins and a real environment variable
+    always wins (empty placeholder lines are ignored).
+    """
+    here = Path(__file__).resolve().parent
+    for path in (here / ".env", here.parent / ".env"):
+        try:
+            text = path.read_text(encoding="utf-8")
+        except OSError:
+            continue
+        for line in text.splitlines():
+            line = line.strip()
+            if not line or line.startswith("#") or "=" not in line:
+                continue
+            key, value = line.split("=", 1)
+            key, value = key.strip(), value.strip()
+            if value and os.environ.get(key, "") == "":
+                os.environ[key] = value
+
+
+def _default_cli_path() -> str:
+    # Do not resolve() sys.executable: that follows the venv symlink to the real
+    # interpreter and loses the venv's bin dir where the console script lives.
+    for candidate in (
+        Path(sys.executable).parent / "aristotle",
+        Path(sys.prefix) / "bin" / "aristotle",
+    ):
+        if candidate.exists():
+            return str(candidate)
+    return shutil.which("aristotle") or "aristotle"
 
 
 @dataclass(frozen=True)
 class AristotleConfig:
-    base_url: str
     api_key: str
-    statement_field: str = "statement"
-    auth_scheme: str = "Bearer"
-    model: str = ""
-    extra_fields: dict = field(default_factory=dict)
-    result_url: str = ""
+    cli_path: str = ""
     poll_interval_s: float = DEFAULT_POLL_INTERVAL_S
     timeout_s: float = DEFAULT_TIMEOUT_S
 
     @classmethod
     def from_env(cls, env: dict | None = None) -> "AristotleConfig":
-        env = env if env is not None else os.environ
-        base = str(env.get("ARISTOTLE_API_BASE", "")).strip()
+        if env is None:
+            _load_dotenv_files()
+            env = os.environ
         key = str(env.get("ARISTOTLE_API_KEY", "")).strip()
-        if not base:
-            raise AristotleError(
-                "ARISTOTLE_API_BASE is not set; point it at the Aristotle prove endpoint"
-            )
         if not key:
             raise AristotleError(
-                "ARISTOTLE_API_KEY is not set; put the token in the environment or .env"
+                "ARISTOTLE_API_KEY is not set; put the Harmonic Aristotle key in .env"
             )
         return cls(
-            base_url=base,
             api_key=key,
-            statement_field=str(env.get("ARISTOTLE_STATEMENT_FIELD", "statement")),
-            auth_scheme=str(env.get("ARISTOTLE_AUTH_SCHEME", "Bearer")),
-            model=str(env.get("ARISTOTLE_MODEL", "")),
-            result_url=str(env.get("ARISTOTLE_RESULT_URL", "")),
+            cli_path=str(env.get("ARISTOTLE_CLI", "")).strip() or _default_cli_path(),
             poll_interval_s=float(env.get("ARISTOTLE_POLL_INTERVAL_S", DEFAULT_POLL_INTERVAL_S)),
             timeout_s=float(env.get("ARISTOTLE_TIMEOUT_S", DEFAULT_TIMEOUT_S)),
         )
@@ -93,106 +129,181 @@ class AristotleConfig:
 class AristotleResult:
     verified: bool
     verdict: str          # "proved" | "disproved" | "unknown"
+    state: str
+    project_id: str
     lean_source: str
-    formal_statement: str
-    raw: dict
+    summary: str
+    verification_method: str = "aristotle_reported"  # or "local_lean_kernel"
+    lean_status: str = "not_checked"
+    formal_statements: tuple = ()
+    raw: dict = field(default_factory=dict)
 
 
-def _first(raw: dict, *keys: str, default: Any = "") -> Any:
-    for key in keys:
-        value = raw.get(key)
-        if value not in (None, ""):
-            return value
-    return default
+# ── pure parsing / assessment helpers (unit-testable, no CLI) ────────────────
+
+def parse_project_id(text: str) -> str:
+    match = _UUID_RE.search(text or "")
+    return match.group(0) if match else ""
 
 
-def parse_aristotle_response(raw: Any) -> AristotleResult:
-    """Normalize Aristotle's JSON. Field names are best-effort across common
-    shapes; this is the single place to adjust for the live API."""
-    if not isinstance(raw, dict):
-        raise AristotleError("Aristotle response was not a JSON object")
-    lean_source = str(_first(raw, "lean", "lean_code", "lean_proof", "proof", "code"))
-    formal_statement = str(_first(raw, "formal_statement", "lean_statement", "theorem"))
-    verdict_raw = str(_first(raw, "outcome", "result", "verdict", "status")).strip().lower()
-    verified_flag = _first(raw, "verified", "is_verified", "kernel_verified", "success", default=None)
-    verified = (
-        verified_flag is True
-        or (isinstance(verified_flag, str) and verified_flag.strip().lower() in _TRUTHY)
-        or verdict_raw in _PROVED
+def parse_state(show_output: str) -> str:
+    match = _STATE_RE.search(show_output or "")
+    return match.group(1).upper() if match else "UNKNOWN"
+
+
+def read_summary(root: Path) -> str:
+    summaries = sorted(root.rglob("ARISTOTLE_SUMMARY.md"))
+    if not summaries:
+        return ""
+    return summaries[0].read_text(encoding="utf-8", errors="ignore")
+
+
+def assess_project(state: str, extracted_root: Path, *, project_id: str = "",
+                   target_outcome: str = "candidate_proved",
+                   run_kernel: bool = True, kernel_runner=None,
+                   fetch_cache: bool = True) -> AristotleResult:
+    """Turn a downloaded, extracted project into a trust decision.
+
+    When Lean/lake is available the proof is independently re-checked by the
+    local kernel (``verification_method="local_lean_kernel"``); otherwise it
+    falls back to Aristotle's own COMPLETE + no-sorry report
+    (``"aristotle_reported"``), which is recorded so a strict policy can refuse
+    to promote on an unverified-by-kernel proof.
+    """
+    root = Path(extracted_root)
+    lean_file = find_lean_proof(root)
+    lean_source = lean_file.read_text(encoding="utf-8", errors="ignore") if lean_file else ""
+    summary = read_summary(root)
+    formal_statements = tuple(extract_formal_statements(lean_source))
+
+    complete = bool(
+        state.upper() in _TERMINAL_OK
+        and lean_source.strip()
+        and not has_incomplete_proof(lean_source)
     )
-    if verdict_raw in _PROVED:
-        verdict = "proved"
-    elif verdict_raw in _DISPROVED:
-        verdict = "disproved"
-    else:
-        verdict = "proved" if verified else "unknown"
-    # A formal proof is trustworthy only if the kernel accepted it AND we were
-    # actually handed Lean source to persist as the audit artifact.
-    verified = bool(verified and lean_source.strip())
-    return AristotleResult(verified, verdict, lean_source, formal_statement, raw)
+    method = "aristotle_reported"
+    lean_status = "not_checked"
+    if run_kernel and complete:
+        verification = verify_project(root, runner=kernel_runner, fetch_cache=fetch_cache)
+        lean_status = verification.status
+        if verification.status == KERNEL_VERIFIED:
+            method = "local_lean_kernel"
+        elif verification.status in (BUILD_FAILED, HAS_SORRY):
+            method = "local_lean_kernel"
+            complete = False  # the kernel overrides a vendor-reported "complete"
 
+    verified = bool(complete)
+    if verified:
+        verdict = "disproved" if target_outcome == "candidate_disproved" else "proved"
+    else:
+        verdict = "unknown"
+    return AristotleResult(
+        verified=verified, verdict=verdict, state=state.upper(),
+        project_id=project_id, lean_source=lean_source, summary=summary,
+        verification_method=method, lean_status=lean_status,
+        formal_statements=formal_statements,
+        raw={"lean_file": str(lean_file) if lean_file else ""},
+    )
+
+
+# ── CLI client ───────────────────────────────────────────────────────────────
 
 class AristotleClient:
-    """Thin HTTP client; stdlib-only so the module has no runtime dependency."""
+    """Wraps the `aristotle` CLI; the command runner is injectable for tests."""
 
-    def __init__(self, config: AristotleConfig):
+    def __init__(self, config: AristotleConfig, runner=None):
         self.config = config
+        self._runner = runner or self._default_runner
 
-    def _headers(self) -> dict[str, str]:
-        token = f"{self.config.auth_scheme} {self.config.api_key}".strip()
-        return {"Content-Type": "application/json", "Authorization": token}
+    def _default_runner(self, args: list[str]) -> subprocess.CompletedProcess:
+        env = dict(os.environ)
+        env["ARISTOTLE_API_KEY"] = self.config.api_key
+        return subprocess.run(
+            [self.config.cli_path, *args],
+            capture_output=True, text=True, env=env, check=False,
+            timeout=self.config.timeout_s,
+        )
 
-    def _send(self, request: urllib.request.Request) -> dict:
+    def _run(self, args: list[str]) -> str:
         try:
-            with urllib.request.urlopen(request, timeout=self.config.timeout_s) as response:
-                body = response.read().decode("utf-8")
-        except urllib.error.HTTPError as error:
-            raise AristotleError(f"Aristotle HTTP {error.code}: {error.reason}") from error
-        except (urllib.error.URLError, TimeoutError, OSError) as error:
-            raise AristotleError(f"Aristotle request failed: {error}") from error
-        try:
-            return json.loads(body)
-        except ValueError as error:
-            raise AristotleError("Aristotle returned a non-JSON response") from error
+            proc = self._runner(args)
+        except FileNotFoundError as error:
+            raise AristotleError(
+                f"aristotle CLI not found at '{self.config.cli_path}'; "
+                "install with `pip install aristotlelib`"
+            ) from error
+        except subprocess.TimeoutExpired as error:
+            raise AristotleError(
+                f"aristotle {args[0]} timed out after {self.config.timeout_s:.0f}s"
+            ) from error
+        if getattr(proc, "returncode", 1) != 0:
+            raise AristotleError(
+                f"aristotle {args[0]} failed (exit {proc.returncode}): "
+                f"{(proc.stderr or proc.stdout or '').strip()[:400]}"
+            )
+        # The CLI prints identifiers/status to stdout or stderr depending on the
+        # subcommand (e.g. `submit` writes "Project created: <id>" to stderr), so
+        # parse from both streams.
+        return "\n".join(part for part in (proc.stdout, proc.stderr) if part)
 
-    def _post(self, url: str, payload: dict) -> dict:
-        data = json.dumps(payload).encode("utf-8")
-        return self._send(urllib.request.Request(
-            url, data=data, headers=self._headers(), method="POST"))
+    def submit(self, prompt: str, *, project_dir: Path | None = None) -> str:
+        args = ["submit", prompt]
+        if project_dir is not None:
+            args += ["--project-dir", str(project_dir)]
+        project_id = parse_project_id(self._run(args))
+        if not project_id:
+            raise AristotleError("aristotle submit did not return a project id")
+        return project_id
 
-    def _get(self, url: str) -> dict:
-        return self._send(urllib.request.Request(
-            url, headers=self._headers(), method="GET"))
+    def show(self, project_id: str) -> str:
+        return self._run(["show", project_id])
 
-    def _poll(self, job_id: str) -> dict:
-        deadline = time.time() + self.config.timeout_s
-        url = self.config.result_url.format(job_id=job_id)
-        while time.time() < deadline:
-            raw = self._get(url)
-            status = str(raw.get("status", "")).strip().lower()
-            terminal = status in {
-                "completed", "complete", "done", "succeeded", "finished",
-                "failed", "error", *(_PROVED | _DISPROVED),
-            }
-            if terminal or raw.get("verified") is not None or _first(
-                raw, "lean", "lean_code", "proof", default=None
-            ) is not None:
-                return raw
-            time.sleep(self.config.poll_interval_s)
-        raise AristotleError("Aristotle result polling timed out")
+    def project_status(self, project_id: str) -> str:
+        """Non-streaming project status (RUNNING/IDLE/...) via `list`.
 
-    def prove(self, statement: str) -> AristotleResult:
-        payload: dict[str, Any] = {self.config.statement_field: statement}
-        if self.config.model:
-            payload["model"] = self.config.model
-        payload.update(self.config.extra_fields)
-        raw = self._post(self.config.base_url, payload)
-        if self.config.result_url:
-            job_id = str(_first(raw, "id", "job_id", "task_id", "request_id"))
-            if job_id:
-                raw = self._poll(job_id)
-        return parse_aristotle_response(raw)
+        `show` follows a running project and never returns, so status polling
+        must go through `list` instead.
+        """
+        for line in self._run(["list", "--limit", "100"]).splitlines():
+            if project_id in line:
+                tokens = line.split()
+                return tokens[-1].upper() if tokens else "UNKNOWN"
+        return "UNKNOWN"
 
+    def download(self, project_id: str, destination: Path) -> Path:
+        destination = Path(destination)
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        self._run(["download", project_id, "--destination", str(destination)])
+        if not destination.exists():
+            raise AristotleError("aristotle download produced no archive")
+        return destination
+
+    def prove(self, prompt: str, *, project_dir: Path | None = None,
+              target_outcome: str = "candidate_proved") -> AristotleResult:
+        # `submit --wait` blocks server-side until the proof finishes and writes
+        # the completed project archive; this avoids `show`, which streams a
+        # running project's events and never returns.
+        with tempfile.TemporaryDirectory() as work:
+            archive = Path(work) / "project.tar.gz"
+            args = ["submit", prompt]
+            if project_dir is not None:
+                args += ["--project-dir", str(project_dir)]
+            args += ["--wait", "--destination", str(archive)]
+            output = self._run(args)
+            project_id = parse_project_id(output)
+            if not archive.exists():
+                raise AristotleError("aristotle submit --wait produced no archive")
+            extracted = Path(work) / "extracted"
+            extracted.mkdir()
+            with tarfile.open(archive, "r:*") as tar:
+                tar.extractall(extracted, filter="data")  # guard path traversal
+            return assess_project(
+                "COMPLETE", extracted, project_id=project_id,
+                target_outcome=target_outcome,
+            )
+
+
+# ── evidence emission + run integration ──────────────────────────────────────
 
 def _read_manifest(run_dir: Path) -> dict:
     return json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
@@ -205,54 +316,79 @@ def _statement_for_run(run_dir: Path, manifest: dict) -> str:
     return str(manifest.get("statement", ""))
 
 
-def write_formal_proof_evidence(
-    run_dir: Path, result: AristotleResult, *, verifier: str = "aristotle",
-) -> Path:
-    """Persist the Lean artifact and a ``formal_proof`` evidence JSON for the gate.
+def _build_prompt(statement: str, target_outcome: str) -> str:
+    goal = (
+        "prove that it is FALSE (i.e. prove its negation)"
+        if target_outcome == "candidate_disproved"
+        else "prove that it is TRUE"
+    )
+    return (
+        "Formalize the following mathematical statement in Lean 4 using Mathlib "
+        f"and {goal}. Produce a complete Lean proof with no `sorry`.\n\n"
+        f"Statement:\n{statement.strip()}\n"
+    )
 
-    ``passed`` is true only when Aristotle's kernel-checked verdict *agrees with
-    the candidate's own claimed direction* — a formal proof of the opposite of
-    what ChatGPT claimed must never promote the candidate.
+
+def write_formal_proof_evidence(
+    run_dir: Path, result: AristotleResult, *,
+    target_outcome: str, verifier: str = "aristotle",
+    require_kernel: bool = False,
+) -> Path:
+    """Persist the Lean artifact and a `formal_proof` evidence JSON for the gate.
+
+    ``passed`` requires a COMPLETE, sorry-free Lean proof for the candidate's own
+    claimed direction. With ``require_kernel`` it additionally requires that the
+    proof was re-checked by the local Lean kernel (not merely Aristotle-reported).
+    The autoformalized theorem statements are captured for a separate
+    statement-fidelity review (``statement_fidelity="unreviewed"``): a kernel pass
+    proves the Lean theorem, not that it faithfully models the Erdos problem.
     """
     run_dir = Path(run_dir)
     manifest = _read_manifest(run_dir)
     candidate_path = run_dir / "candidate.md"
     candidate_sha256 = hashlib.sha256(candidate_path.read_bytes()).hexdigest()
     statement_sha256 = str(manifest.get("statement_sha256", ""))
-    candidate_outcome = str(manifest.get("candidate_outcome", "")).strip().lower()
-    target_outcome = (
-        candidate_outcome
-        if candidate_outcome in {"candidate_proved", "candidate_disproved"}
+    target = (
+        target_outcome
+        if target_outcome in {"candidate_proved", "candidate_disproved"}
         else "candidate_proved"
     )
-    aristotle_outcome = {
-        "proved": "candidate_proved", "disproved": "candidate_disproved",
-    }.get(result.verdict, "")
-    agrees = aristotle_outcome == target_outcome
-    passed = bool(result.verified and agrees)
+    kernel_ok = result.verification_method == "local_lean_kernel"
+    passed = bool(
+        result.verified
+        and result.verdict != "unknown"
+        and (not require_kernel or kernel_ok)
+    )
 
     artifact_dir = run_dir / "aristotle"
     artifact_dir.mkdir(parents=True, exist_ok=True)
-    artifact_path = artifact_dir / "proof.lean"
+    artifact_path = artifact_dir / "Main.lean"
     artifact_path.write_text(result.lean_source or "", encoding="utf-8")
-    # Persist the autoformalized statement + raw response for statement-fidelity
-    # review (the Lean statement faithfully matching the Erdos problem is a
-    # separate, still-manual audit).
-    (artifact_dir / "formal_statement.lean").write_text(
-        result.formal_statement or "", encoding="utf-8")
-    (artifact_dir / "aristotle_response.json").write_text(
-        json.dumps(result.raw, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    (artifact_dir / "ARISTOTLE_SUMMARY.md").write_text(result.summary or "", encoding="utf-8")
+    # Capture informal vs formal statements for the fidelity review.
+    (artifact_dir / "fidelity.json").write_text(json.dumps({
+        "informal_statement": _statement_for_run(run_dir, manifest),
+        "formal_statements": list(result.formal_statements),
+        "statement_fidelity": "unreviewed",
+        "note": "A kernel pass proves the Lean theorem; a human/independent review "
+                "must confirm the Lean statement faithfully models the Erdos problem.",
+    }, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
 
     record = {
         "kind": "formal_proof",
         "verifier": verifier,
-        "outcome": target_outcome,
+        "outcome": target,
         "statement_sha256": statement_sha256,
         "candidate_sha256": candidate_sha256,
         "artifact_path": str(artifact_path),
         "passed": passed,
+        "verification_method": result.verification_method,
+        "lean_status": result.lean_status,
+        "statement_fidelity": "unreviewed",
+        "formal_statements": list(result.formal_statements),
+        "aristotle_project_id": result.project_id,
+        "aristotle_state": result.state,
         "aristotle_verdict": result.verdict,
-        "aristotle_agrees_with_candidate": agrees,
     }
     evidence_path = artifact_dir / "evidence.json"
     evidence_path.write_text(
@@ -261,32 +397,45 @@ def write_formal_proof_evidence(
 
 
 def verify_run(
-    run_dir: Path,
-    *,
+    run_dir: Path, *,
     config: AristotleConfig | None = None,
     client: AristotleClient | None = None,
     promote_result: bool = False,
     publish: bool = False,
     triage_dir: Path | None = None,
     category: str = "open",
+    require_kernel: bool = False,
 ):
-    """Run Aristotle on a completed proof run and emit formal evidence.
+    """Verify a completed proof run with Aristotle and emit formal evidence.
 
-    Returns ``(AristotleResult, evidence_path, promoted_or_None)``. Passing
-    ``promote_result`` (or ``publish``) applies the evidence through the gate via
-    ``promote_verified_run.promote``.
+    Returns ``(AristotleResult, evidence_path, promoted_or_None)``.
     """
     run_dir = Path(run_dir)
     manifest = _read_manifest(run_dir)
     statement = _statement_for_run(run_dir, manifest)
     if not statement.strip():
         raise AristotleError(f"run {run_dir} has no statement to verify")
+    target = str(manifest.get("candidate_outcome", "")).strip().lower()
+    if target not in {"candidate_proved", "candidate_disproved"}:
+        target = "candidate_proved"
+
+    project_dir = run_dir / "aristotle" / "input"
+    project_dir.mkdir(parents=True, exist_ok=True)
+    (project_dir / "statement.md").write_text(statement, encoding="utf-8")
+    candidate = run_dir / "candidate.md"
+    if candidate.exists():
+        (project_dir / "candidate.md").write_text(
+            candidate.read_text(encoding="utf-8"), encoding="utf-8")
+
     client = client or AristotleClient(config or AristotleConfig.from_env())
-    result = client.prove(statement)
-    evidence_path = write_formal_proof_evidence(run_dir, result)
+    result = client.prove(
+        _build_prompt(statement, target), project_dir=project_dir, target_outcome=target,
+    )
+    evidence_path = write_formal_proof_evidence(
+        run_dir, result, target_outcome=target, require_kernel=require_kernel)
     promoted = None
     if promote_result or publish:
-        from promote_verified_run import promote  # lazy: avoids heavy imports
+        from promote_verified_run import promote
         promoted = promote(
             run_dir, evidence_path, publish=publish, category=category,
             triage_dir=Path(triage_dir) if triage_dir is not None else None,
@@ -312,7 +461,8 @@ def main() -> None:
         triage_dir=args.triage.resolve(),
         category=args.category,
     )
-    print(f"aristotle verdict: {result.verdict}  verified={result.verified}")
+    print(f"aristotle: project={result.project_id} state={result.state} "
+          f"verified={result.verified}")
     print(f"evidence: {evidence_path}")
     if promoted is not None:
         print(f"gate: {promoted.gate.status}")

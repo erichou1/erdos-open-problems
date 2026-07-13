@@ -331,6 +331,21 @@ class ProofPipelineTests(unittest.TestCase):
             self.assertIn("[verified-proved]", output.name)
             self.assertTrue(output.exists())
 
+    def test_distinct_adjudicator_runner_handles_only_adjudication(self):
+        primary = PassingRunner()
+        adjudicator = PassingRunner()
+        with tempfile.TemporaryDirectory() as directory:
+            ProofPipeline(
+                primary, Path(directory) / "runs",
+                adjudicator_runner=adjudicator,
+            ).solve(7, "Prove T.")
+            primary_stages = [stage for stage, _, _ in primary.calls]
+            adjudicator_stages = [stage for stage, _, _ in adjudicator.calls]
+            self.assertTrue(any(s.startswith("adjudication_") for s in adjudicator_stages))
+            self.assertFalse(any(s.startswith("adjudication_") for s in primary_stages))
+            self.assertTrue(any(s.startswith("scout_") for s in primary_stages))
+            self.assertFalse(any(s.startswith("scout_") for s in adjudicator_stages))
+
 
 if __name__ == "__main__":
     unittest.main()

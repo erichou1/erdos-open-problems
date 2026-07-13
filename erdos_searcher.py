@@ -2220,6 +2220,34 @@ def matching_outcome_records(card: dict, records: list[dict]) -> list[dict]:
     ]
 
 
+def tractable_frontier_ranking(cards: list[dict], limit: int) -> list[dict]:
+    """Problems most amenable to formal verification or exact computation.
+
+    This is the frontier where an autoformalize-and-prove system (e.g. Aristotle)
+    has the best realistic odds: an existing/likely Lean route, a finite exact
+    target, and a clear statement. It is not a claim of novel resolution.
+    """
+    def score(card: dict) -> float:
+        posterior = card["posterior"]
+        lean = posterior["p_lean_verified_exact_target"]["probability"]
+        compute = posterior["p_finite_computational_resolution"]["probability"]
+        lean_route = card["probe_summary"]["formal"]["lean_route_available"]
+        clear = card["statement"]["ambiguity_status"] == "clear"
+        return 0.5 * lean + 0.4 * compute + 0.15 * bool(lean_route) + 0.05 * bool(clear)
+
+    ordered = sorted(
+        cards, key=lambda card: (-score(card), card["problem_number"])
+    )[:limit]
+    return [
+        ranking_record(
+            card, rank,
+            reason="formal/exact-computation tractable frontier",
+            posterior_key="p_lean_verified_exact_target",
+        )
+        for rank, card in enumerate(ordered, 1)
+    ]
+
+
 ATTEMPT_EXCLUSIONS_FILENAME = "attempt_exclusions.json"
 
 
@@ -2452,6 +2480,7 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
             eligible, "p_finite_computational_resolution", top_k,
             "highest finite exact-computation posterior",
         ),
+        "tractable_frontier": tractable_frontier_ranking(eligible, top_k),
         "most_likely_stale_literature_records": posterior_ranking(
             eligible, "p_correct_but_already_known", top_k,
             "highest already-known/literature-cleanup posterior",
@@ -2525,6 +2554,10 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
         "best_finite_computation_targets": (
             "Best Finite-Computation Targets",
             "P(finite computational resolution)",
+        ),
+        "tractable_frontier": (
+            "Formal / Exact-Computation Tractable Frontier",
+            "P(Lean-verified exact target)",
         ),
         "most_likely_stale_literature_records": (
             "Most Likely Stale Literature Records",

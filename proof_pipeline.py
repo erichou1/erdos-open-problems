@@ -276,8 +276,12 @@ class ProofPipeline:
         toolset: dict[str, Any] | None = None,
         dependencies: dict[str, Any] | None = None,
         runtime: dict[str, Any] | None = None,
+        adjudicator_runner: IsolatedRunner | None = None,
     ):
         self.runner = runner
+        # A distinct model for the final adjudicator breaks the correlated blind
+        # spots of a model reviewing its own work. Defaults to the same runner.
+        self.adjudicator_runner = adjudicator_runner or runner
         self.artifact_root = Path(artifact_root)
         self.max_revisions = max(0, max_revisions)
         self.verification_evidence = verification_evidence
@@ -462,11 +466,15 @@ class ProofPipeline:
             and recorded_at.tzinfo is not None
         )
 
-    def _run(self, prompt: str, stage: str) -> str:
+    def _run(self, prompt: str, stage: str, runner=None) -> str:
         """Call the isolated runner, caching each stage's raw response to disk so
         an interrupted run resumes from the last finished stage instead of
         regenerating it. Isolation is preserved: a cache hit replays the exact
-        response that stage already produced in its own fresh conversation."""
+        response that stage already produced in its own fresh conversation.
+
+        ``runner`` overrides the model for a single stage (e.g. a distinct
+        adjudicator model); it defaults to this pipeline's primary runner."""
+        runner = runner or self.runner
         cache_file = self._stage_cache / f"{stage}.txt"
         metadata_file = self._stage_cache / f"{stage}.meta.json"
         prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
@@ -474,7 +482,7 @@ class ProofPipeline:
             # Without an exact statement/source/model/tool/runtime contract there
             # is no defensible cache key. The solver may continue, but no stage
             # response is persisted or replayed under an ambiguous identity.
-            return self.runner.run(prompt, stage=stage, isolated=True)
+            return runner.run(prompt, stage=stage, isolated=True)
 
         active_contract = validate_run_contract(self._active_run_contract)
         active_contract_id = run_contract_id(active_contract)
@@ -502,7 +510,7 @@ class ProofPipeline:
                 expected_cache_context_id=cache_context_id,
             ):
                 context_id = str(metadata.get("context_id", ""))
-                restore_context = getattr(self.runner, "restore_context", None)
+                restore_context = getattr(runner, "restore_context", None)
                 if context_id and callable(restore_context):
                     try:
                         restore_context(stage, context_id)
@@ -516,8 +524,8 @@ class ProofPipeline:
                 else:
                     print(f"{stage}: reusing validated cached response", flush=True)
                     return cached
-        response = self.runner.run(prompt, stage=stage, isolated=True)
-        context_id = self.runner.context_id(stage)
+        response = runner.run(prompt, stage=stage, isolated=True)
+        context_id = runner.context_id(stage)
         metadata = {
             "cache_schema_version": STAGE_CACHE_SCHEMA_VERSION,
             "stage": stage,
@@ -786,6 +794,7 @@ class ProofPipeline:
             "execution_id": out.name,
             "pipeline_version": self.pipeline_version,
             "model_portfolio": self.model_portfolio,
+            "adjudicator_distinct_model": self.adjudicator_runner is not self.runner,
             "budget": {
                 **self.execution_config,
                 **self._budget(),
@@ -866,6 +875,7 @@ class ProofPipeline:
                 reviews="\n\n".join(raw_reviews),
             ),
             adjudication_stage,
+            runner=self.adjudicator_runner,
         )
         (attempt_dir / "adjudication.json").write_text(
             raw_adjudication, encoding="utf-8"
