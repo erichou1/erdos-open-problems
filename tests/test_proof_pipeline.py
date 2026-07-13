@@ -372,6 +372,34 @@ class ProofPipelineTests(unittest.TestCase):
                 any(s.startswith("adjudication_") for s in primary.context_id_calls)
             )
 
+    def test_literature_grounds_search_stages_only(self):
+        runner = PassingRunner()
+        marker = "LITMARKER_UNIQUE_TOKEN"
+        grounding = {"enabled": True, "source": "local_corpus",
+                     "rediscovery_eligible": True, "related_problems": [1, 2]}
+        with tempfile.TemporaryDirectory() as directory:
+            result = ProofPipeline(
+                runner, Path(directory) / "runs",
+                literature_context=marker,
+                literature_grounding=grounding,
+            ).solve(7, "Prove T.")
+            first_prompt = {}
+            for stage, _isolated, prompt in runner.calls:
+                first_prompt.setdefault(stage, prompt)
+            self.assertTrue(any(s.startswith("scout_") for s in first_prompt))
+            for stage, prompt in first_prompt.items():
+                if stage.startswith("scout_") or stage == "construction":
+                    self.assertIn(marker, prompt)
+                if stage.startswith("review_") or stage.startswith("adjudication_"):
+                    self.assertNotIn(marker, prompt)
+            manifest = json.loads(
+                (result.artifact_dir / "manifest.json").read_text(encoding="utf-8"))
+            self.assertEqual(manifest["literature_grounding"], grounding)
+            # grounding must never alter the locked statement
+            lock = json.loads(
+                (result.artifact_dir / "statement_lock.json").read_text(encoding="utf-8"))
+            self.assertEqual(lock["sha256"], make_statement_lock("Prove T.").sha256)
+
 
 if __name__ == "__main__":
     unittest.main()

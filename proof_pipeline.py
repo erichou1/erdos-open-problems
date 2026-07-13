@@ -277,11 +277,18 @@ class ProofPipeline:
         dependencies: dict[str, Any] | None = None,
         runtime: dict[str, Any] | None = None,
         adjudicator_runner: IsolatedRunner | None = None,
+        literature_context: str = "",
+        literature_grounding: dict | None = None,
     ):
         self.runner = runner
         # A distinct model for the final adjudicator breaks the correlated blind
         # spots of a model reviewing its own work. Defaults to the same runner.
         self.adjudicator_runner = adjudicator_runner or runner
+        # Optional offline related-work grounding, injected into the SEARCH
+        # stages only (scouts + construction); reviews/adjudication stay blind
+        # so the adversarial check is never softened by "known result" framing.
+        self.literature_context = literature_context or ""
+        self.literature_grounding = literature_grounding
         self.artifact_root = Path(artifact_root)
         self.max_revisions = max(0, max_revisions)
         self.verification_evidence = verification_evidence
@@ -595,6 +602,19 @@ class ProofPipeline:
             f"ROUTING_PACKET_SHA256: {directive_sha256}\n"
             + json.dumps(directive, indent=2, ensure_ascii=False, sort_keys=True)
         )
+        search_context = research_context
+        if self.literature_context:
+            (out / "literature_context.md").write_text(
+                self.literature_context, encoding="utf-8"
+            )
+            search_context = (
+                research_context
+                + "\n\nUNTRUSTED RELATED-WORK CONTEXT (recall aid only; NOT part "
+                  "of the locked problem; never cite as authority; state and "
+                  "verify the exact hypotheses of any theorem you use):\n"
+                  "<untrusted_literature>\n" + self.literature_context
+                + "\n</untrusted_literature>"
+            )
         (out / "problem.txt").write_text(lock.original_statement, encoding="utf-8")
         (out / "statement_lock.json").write_text(
             json.dumps(asdict(lock), indent=2) + "\n", encoding="utf-8"
@@ -604,7 +624,7 @@ class ProofPipeline:
         for index, role in enumerate(SCOUT_ROLES, 1):
             prompt = SCOUT_PROMPT_TEMPLATE.format(
                 offline=OFFLINE_POLICY, role=role, search=SEARCH_POLICY,
-                problem=research_context,
+                problem=search_context,
             )
             response = self._run(prompt, f"scout_{index}")
             (out / f"scout_{index}.md").write_text(response, encoding="utf-8")
@@ -634,7 +654,7 @@ class ProofPipeline:
         candidate = self._run(
             CONSTRUCTION_PROMPT_TEMPLATE.format(
                 candidate_prompt=CANDIDATE_PROMPT_TEMPLATE.format(
-                    problem=research_context
+                    problem=search_context
                 ),
                 synthesis=graph_text,
                 scouts=scout_bundle,
@@ -795,6 +815,7 @@ class ProofPipeline:
             "pipeline_version": self.pipeline_version,
             "model_portfolio": self.model_portfolio,
             "adjudicator_distinct_model": self.adjudicator_runner is not self.runner,
+            "literature_grounding": self.literature_grounding,
             "budget": {
                 **self.execution_config,
                 **self._budget(),

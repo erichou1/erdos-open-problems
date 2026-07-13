@@ -26,6 +26,7 @@ from pathlib import Path
 
 import erdos_common as C
 from proof_pipeline import ProofPipeline
+from literature_research import research_literature
 from run_verified_pipeline import ChatGPTBrowserRunner, publish_verified_result
 from outcome_ledger import record_outcome
 from problem_queue import (
@@ -143,6 +144,12 @@ def main() -> None:
         help="Model for the final adjudication stage. 'deepseek' routes it "
              "through a distinct model (Expert + DeepThink) so the adjudicator "
              "is not the same model that produced and reviewed the candidate.",
+    )
+    parser.add_argument(
+        "--research-similar", action="store_true",
+        help="Ground the search stages (scouts + construction) in related "
+             "problems and known results retrieved offline from the local "
+             "corpus; such runs are recorded as rediscovery-eligible.",
     )
     parser.add_argument(
         "--new-campaign", action="store_true",
@@ -263,6 +270,12 @@ def main() -> None:
                     f"problem {number} source/run contract changed after ranking"
                 )
             statement = run_inputs["statement"]
+            literature = (
+                research_literature(root, number) if args.research_similar else None
+            )
+            if literature is not None:
+                print(f"[continuous] #{number}: literature grounding "
+                      f"({len(literature.related)} related problems)", flush=True)
             pipeline = ProofPipeline(
                 runner,
                 artifacts,
@@ -276,6 +289,10 @@ def main() -> None:
                 dependencies=run_inputs["dependencies"],
                 runtime=run_inputs["runtime"],
                 adjudicator_runner=adjudicator_runner,
+                literature_context=literature.rendered if literature else "",
+                literature_grounding=(
+                    literature.grounding_record() if literature else None
+                ),
             )
             print(f"\n[continuous] === #{number}: starting (worker {args.worker_id}) ===",
                   flush=True)

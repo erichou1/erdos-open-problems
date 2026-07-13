@@ -17,6 +17,7 @@ from erdos_searcher import (
     normalized_budget_config,
 )
 from proof_pipeline import ProofPipeline
+from literature_research import research_literature
 from outcome_ledger import record_outcome
 from research_state import make_statement_lock
 from verification import candidate_contract, VerificationEvidence
@@ -304,6 +305,11 @@ def main() -> None:
     )
     parser.add_argument("--print-statement-sha", action="store_true")
     parser.add_argument("--headless", action="store_true")
+    parser.add_argument(
+        "--research-similar", action="store_true",
+        help="Ground the search stages in related problems and known results "
+             "retrieved offline from the local corpus (rediscovery-eligible).",
+    )
     args = parser.parse_args()
 
     triage_dir = args.triage if args.triage.is_absolute() else C.REPO_DIR / args.triage
@@ -348,6 +354,10 @@ def main() -> None:
             request_spacing_s=budget_config["request_spacing_s"],
             max_attempts=budget_config["max_attempts"],
         )
+        literature = (
+            research_literature(C.REPO_DIR, args.problem)
+            if args.research_similar else None
+        )
         result = ProofPipeline(
             runner,
             args.artifacts,
@@ -360,6 +370,10 @@ def main() -> None:
             toolset=run_inputs["toolset"],
             dependencies=run_inputs["dependencies"],
             runtime=run_inputs["runtime"],
+            literature_context=literature.rendered if literature else "",
+            literature_grounding=(
+                literature.grounding_record() if literature else None
+            ),
         ).solve(
             args.problem, statement,
             research_directive=run_inputs["research_directive"],
