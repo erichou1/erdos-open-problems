@@ -30,6 +30,7 @@ from pathlib import Path
 
 from egmra import __version__
 from egmra.compute.spec import ExperimentSpec
+from egmra.compute.service import ComputeService
 from egmra.config import SECRET_ENV_VARS, EgmraConfig
 from egmra.corpus import (
     ProblemInput,
@@ -54,7 +55,7 @@ from egmra.orchestrator import (
     research,
 )
 from egmra.policy import PolicyEnforcer, PolicyError, default_policy_path, load_policy, sign_policy
-from egmra.m2 import PostgresEventStore
+from egmra.m2 import ContentAddressedObjectStore, PostgresEventStore
 from egmra.oeis import OEISClient
 from egmra.lean.kernel_checker import (
     build_lean_replay_target,
@@ -258,11 +259,14 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
     event_log = _make_event_log(args, problem.problem_id)
     retrieval_corpus = _build_retrieval_corpus(args, config)
     oeis_client = _build_oeis_client(args, config)
+    # Durable content-addressed store for model-exchange transcripts (task 4.10).
+    artifact_store = ContentAddressedObjectStore(root=Path(config.artifact_store_dir))
     worker = RunnerWorker(
         runner=runner,
         goal_claim_id="goal",
         goal_formula=problem.display_statement,
         role=args.role,
+        compute_service=ComputeService(),
     )
     try:
         result = research(
@@ -277,6 +281,7 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
             event_log=event_log,
             retrieval_corpus=retrieval_corpus,
             oeis_client=oeis_client,
+            artifact_store=artifact_store,
             status_claims=list(problem.status_claims),
             novelty_verdict=problem.novelty_verdict,
             intent_review=_load_intent_review(args.intent_review),
@@ -701,7 +706,8 @@ def cmd_campaign(args: argparse.Namespace) -> int:
         number = int(problem_id.split("-", 1)[1])
         problem = from_erdos_number(number, corpus_tex_path=corpus_tex, catalog_path=catalog)
         worker = RunnerWorker(runner=runner, goal_claim_id="goal",
-                              goal_formula=problem.display_statement, role=args.role)
+                              goal_formula=problem.display_statement, role=args.role,
+                              compute_service=ComputeService())
         # A distinct event log per attempt keeps each try's chain clean on resume.
         events_path = Path(config.events_dir) / f"{problem.problem_id}.{fencing_token}.jsonl"
         event_log = _make_event_log(args, f"{problem.problem_id}.{fencing_token}")

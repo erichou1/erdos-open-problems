@@ -24,11 +24,18 @@ from __future__ import annotations
 
 import json
 import re
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, replace
 from typing import Any
 
 from egmra.agents.runner import DeterministicRunner, ModelRunner, RunnerResponse
-from egmra.orchestrator.loop import WorkerOutput
+from egmra.compute.artifact import ReplayReport
+from egmra.compute.service import ComputeService
+from egmra.compute.spec import ExperimentSpec
+from egmra.orchestrator.loop import (
+    WorkerOutput,
+    _default_independent_replay_executor,
+    _execute_finite_experiment,
+)
 from egmra.provenance.hashing import sha256_hex
 
 _CLAIM_ID_RE = re.compile(r"[^A-Za-z0-9_.-]")
@@ -140,14 +147,28 @@ def parse_worker_response(text: str) -> dict[str, Any]:
         if terms:
             sequences.append(list(terms))
 
-    experiments: list[dict[str, str]] = []
+    experiments: list[dict[str, Any]] = []
     for exp in (document.get("experiments") or [])[:_MAX_LIST]:
         if not isinstance(exp, dict):
             raise WorkerResponseSchemaError("each experiment must be an object")
         description = str(exp.get("description", "")).strip()
-        if description:
-            experiments.append({"description": description,
-                                "kind": str(exp.get("kind", "unspecified")).strip() or "unspecified"})
+        if not description:
+            continue
+        entry: dict[str, Any] = {
+            "description": description,
+            "kind": str(exp.get("kind", "unspecified")).strip() or "unspecified",
+        }
+        # Optional finite-check payload: a capability-free `experiment(inputs)`
+        # the sandbox will contain (task 4.5). Executed only if a compute service
+        # is configured; a match yields at most COMPUTATIONAL_EVIDENCE, never a proof.
+        code = exp.get("code")
+        if isinstance(code, str) and code.strip():
+            inputs = exp.get("inputs")
+            entry["code"] = code
+            entry["inputs"] = inputs if isinstance(inputs, dict) else {}
+            entry["claim_id"] = str(exp.get("claim_id", "")).strip()
+            entry["coverage"] = str(exp.get("coverage", "")).strip()
+        experiments.append(entry)
 
     return {
         "goal_restatement": str(document.get("goal_restatement", "")).strip(),
@@ -198,11 +219,17 @@ def branch_prompt(statement: str, *, role: str, branch_id: str, packet_summary: 
         "retrieval queries, candidate integer sequences for OEIS lookup, and "
         "finite experiments. Do NOT assert the target is proved; proof requires "
         "independent verification you do not perform.\n"
+        "For a finite experiment you MAY include a capability-free Python function "
+        "`def experiment(inputs): ...` returning {\"result\": bool, \"coverage\": str} "
+        "in an 'code' field (with 'inputs' object, a 'claim_id' it checks, and a "
+        "'coverage' string). No imports, file, or network access are available; it "
+        "runs in a sandbox and yields only finite computational evidence.\n"
         "Return ONLY a JSON object with keys: goal_restatement (string), claims "
         "(list of {claim_id, statement, depends_on, scope, confidence}), "
         "falsifiers (list), search_queries (list), candidate_sequences (list of "
-        "integer lists), experiments (list of {description, kind}), open_subgoals "
-        "(list), bottleneck (string), confidence (number 0..1)."
+        "integer lists), experiments (list of {description, kind, code?, inputs?, "
+        "claim_id?, coverage?}), open_subgoals (list), bottleneck (string), "
+        "confidence (number 0..1)."
     )
 
 
@@ -227,7 +254,20 @@ class RunnerWorker:
     role: str = "prover"
     max_repair_attempts: int = 1
     referee: ModelRunner | None = None
+    compute_service: ComputeService | None = None
+    replay_sandbox: object | None = field(default_factory=_default_independent_replay_executor)
     parsed_responses: list[dict[str, Any]] = field(default_factory=list)
+
+    def for_role(self, role: str) -> "RunnerWorker":
+        """A role-specialized view (distinct branch role) sharing the same runner.
+
+        The orchestrator allocates a distinct role per mechanism branch so the
+        prover / experimentalist / formalizer reason from different prompts; the
+        shared ``parsed_responses`` keeps one audit trail across roles.
+        """
+        if not role or role == self.role:
+            return self
+        return replace(self, role=role)
 
     def _statement(self, contract) -> str:
         if self.goal_formula:
@@ -324,14 +364,59 @@ class RunnerWorker:
                 statement, parsed["claims"], failures, falsifiers, bottleneck
             )
 
+        evidence, experiment_replays = self._run_experiments(
+            parsed["experiments"], branch_id=branch_id, seen=seen, failures=failures)
+
         return WorkerOutput(
             claim_proposals=proposals,
+            evidence=evidence,
+            replay_reports=experiment_replays,
             falsifiers=falsifiers,
             search_queries=parsed["search_queries"],
             generated_sequences=parsed["candidate_sequences"],
             failures=failures,
             bottleneck=bottleneck,
         )
+
+    def _run_experiments(self, experiments, *, branch_id: str, seen: set[str],
+                         failures: list[str]) -> tuple[list[dict], list[ReplayReport]]:
+        """Execute model-proposed finite experiments in the trusted sandbox (task 4.5).
+
+        Runs at most three coded experiments; each is contained by the compute
+        service's capability-free sandbox and yields ``exact_computation`` evidence
+        only when the predicate returns True and an independent replay matches — so
+        the goal can reach at most COMPUTATIONAL_EVIDENCE, never a proof.
+        """
+        evidence: list[dict] = []
+        replays: list[ReplayReport] = []
+        if self.compute_service is None:
+            return evidence, replays
+        executed = 0
+        for index, exp in enumerate(experiments):
+            code = exp.get("code")
+            if not code:
+                continue
+            if executed >= 3:
+                break
+            executed += 1
+            requested = exp.get("claim_id") or ""
+            target = requested if requested in seen else self.goal_claim_id
+            try:
+                spec = ExperimentSpec(
+                    purpose=f"{branch_id}:{target}:{index}",
+                    claim_ids=(target,), branch_ids=(branch_id,),
+                    inputs=exp.get("inputs") or {}, coverage=exp.get("coverage") or "",
+                    arithmetic_mode="exact",
+                )
+            except (ValueError, TypeError) as exc:
+                failures.append(f"invalid_experiment_spec:{branch_id}:{exc}")
+                continue
+            ev, rp, fl = _execute_finite_experiment(
+                self.compute_service, self.replay_sandbox, spec, code, target)
+            evidence.extend(ev)
+            replays.extend(rp)
+            failures.extend(fl)
+        return evidence, replays
 
     def _referee_pass(self, statement, claims, failures, falsifiers, bottleneck):
         """Independent skeptical pass; its objections augment falsifiers, never approve."""

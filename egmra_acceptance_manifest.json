@@ -2,9 +2,9 @@
   "schema_version": 1,
   "generated_at": "2026-07-13",
   "overall_verdict": "INCOMPLETE",
-  "verdict_note": "Code defects 4.2/4.3/4.8/4.4/4.9 are reproduced-then-fixed with red-green tests; Postgres was live-verified on a disposable postgres:16 (fixing a real autocommit durability bug). The pinned Lean v4.28.0 + Mathlib v4.28.0 kernel is BUILT, the Aristotle path is live-verified against the real service (submit->poll->download->safe-extract, fixing TWO real async/archive SDK-adapter bugs), and the SEALED local Lean kernel replay now works end-to-end: a real `lake env lean` definitional obligation seals a LocalLeanReplayAttestation, reachable via `egmra formalize`. Scenario 5 -> PASS (live-sealed over the actual downloaded Aristotle tree). Full suite: 972 passed, rc=0. Scenario 4 (browser->Lean->FORMALLY_VERIFIED_CANDIDATE) remains BLOCKED_EXTERNAL only on wiring a browser-produced proof through the formal path; several production-wiring items (4.5/4.6 run-path/4.10/4.11) remain. Verdict stays INCOMPLETE (not COMPLETE).",
-  "test_baseline": {"passed": 972, "exit_code": 0,
-    "note": "3 live-Postgres tests are gated on EGMRA_TEST_POSTGRES_DSN (skip without a server: 969 passed, 3 skipped, rc=0). Live Aristotle + live Lean-kernel sealing are driven manually with a real key/toolchain, not in the automated suite (11 hermetic kernel-checker tests cover the contract).",
+  "verdict_note": "Code defects 4.2/4.3/4.8/4.4/4.9 are reproduced-then-fixed with red-green tests; Postgres was live-verified on a disposable postgres:16 (fixing a real autocommit durability bug). The pinned Lean v4.28.0 + Mathlib v4.28.0 kernel is BUILT, the Aristotle path is live-verified against the real service (submit->poll->download->safe-extract, fixing TWO real async/archive SDK-adapter bugs), and the SEALED local Lean kernel replay works end-to-end (reachable via `egmra formalize`; scenario 5 PASS). Production wiring since: distinct per-branch worker roles (4.11), durable content-addressed model-exchange artifacts + signed MODEL_EXCHANGE_RECORDED events (4.10), and model-proposed finite experiments executed in the hardened sandbox reaching at most COMPUTATIONAL_EVIDENCE (4.5). Full suite: 981 passed, rc=0. Remaining: 4.1 (full typed worker schema) and 4.6 (browser->Lean formal-candidate path inside `egmra run`; the sealed checker itself is done). Verdict stays INCOMPLETE (not COMPLETE).",
+  "test_baseline": {"passed": 981, "exit_code": 0,
+    "note": "3 live-Postgres tests are gated on EGMRA_TEST_POSTGRES_DSN (skip without a server: 978 passed, 3 skipped, rc=0). Live Aristotle + live Lean-kernel sealing are driven manually with a real key/toolchain; hermetic tests cover the contracts.",
     "command": "python -m pytest egmra/tests tests"},
   "scenarios": [
     {"id": 1, "name": "False statement -> CANDIDATE_DISPROOF", "status": "PASS",
@@ -85,13 +85,25 @@
      "tests": ["egmra/tests/test_aristotle_sdk.py (fetch quarantine + symlink-in-archive rejection + async fake)"]},
     {"id": "4.7-checker", "title": "Sealed local Lean kernel checker + `egmra formalize` (scenario 5)", "status": "FIXED",
      "detail": "Added source_root + expected_type_source to CheckerRequest (threaded via LeanReplayTarget/LeanReplayVerifier) and a real pinned checker (egmra/lean/kernel_checker.py): it binds the attestation to the source-tree hash, rejects sorry/native escapes, runs the REAL Lean kernel via `lake env lean` on a definitional obligation (example : <expected_type> := @<decl>) + `#print axioms`, and computes candidate_type_hash from the exact intended type so verify_for's candidate_type_hash==expected_type_hash is sound (no blind echo). write_pinned_checker pins the checker with the EGMRA-capable interpreter. `egmra formalize --formalizer local|aristotle` makes it reachable. Live-verified: sealed a LocalLeanReplayAttestation over the actual downloaded Aristotle proof AND via `egmra formalize --formalizer local`.",
-     "tests": ["egmra/tests/test_kernel_checker.py (11 hermetic: pass/sorry/native/hash-mismatch/kernel-fail/missing-decl/axiom-whitelist/end-to-end-seal/tamper-binding)"]}
+     "tests": ["egmra/tests/test_kernel_checker.py (11 hermetic: pass/sorry/native/hash-mismatch/kernel-fail/missing-decl/axiom-whitelist/end-to-end-seal/tamper-binding)"]},
+    {"id": "4.11", "title": "Distinct worker roles per mechanism branch, wired to allocation", "status": "FIXED",
+     "detail": "research() now assigns a distinct method-specific role per mechanism branch (prover / experimentalist / formalizer via WORKER_ROLE_BY_FAMILY), records it in each branch's mechanism_fingerprint and memory, and drives the worker with it via RunnerWorker.for_role() so the prompt is role-specific. Branches already carried distinct fingerprints, posteriors, and read-slices; the role is the added allocation dimension.",
+     "tests": ["egmra/tests/test_production_wiring.py::test_for_role_specializes_and_shares_runner",
+                "egmra/tests/test_production_wiring.py::test_branch_role_mapping_is_distinct",
+                "egmra/tests/test_production_wiring.py::test_research_records_distinct_branch_roles"]},
+    {"id": "4.10", "title": "Durable content-addressed model-exchange artifacts + signed events", "status": "FIXED",
+     "detail": "Added a MODEL_EXCHANGE_RECORDED event action and _record_model_exchanges(): research() (given an artifact_store, which the CLI now constructs) persists each model/browser exchange's provenance to the content-addressed ContentAddressedObjectStore and appends a signed event referencing the artifact hash. Raw response text is never stored (only hashes/URL/provenance). Idempotent across shared runners.",
+     "tests": ["egmra/tests/test_production_wiring.py::test_record_model_exchanges_persists_and_signs",
+                "egmra/tests/test_production_wiring.py::test_research_records_model_exchanges"]},
+    {"id": "4.5", "title": "Model experiment proposals executed via the trusted sandbox", "status": "FIXED",
+     "detail": "RunnerWorker now accepts an optional capability-free `experiment(inputs)` in a model's experiment proposal and executes it via a shared _execute_finite_experiment() in the ComputeService's hardened RestrictedPython/container sandbox; research() generalizes trusted_compute_service to any worker owning a compute service and re-authenticates the artifact + independent replay. The CLI gives the RunnerWorker a ComputeService. A finite check yields at most COMPUTATIONAL_EVIDENCE (admitted exact_computation evidence) and never proves a general claim — the sound boundary is enforced and tested.",
+     "tests": ["egmra/tests/test_production_wiring.py::test_execute_finite_experiment_true_yields_evidence",
+                "egmra/tests/test_production_wiring.py::test_execute_finite_experiment_false_yields_no_evidence",
+                "egmra/tests/test_production_wiring.py::test_runner_worker_executes_model_experiment_as_computational_evidence",
+                "egmra/tests/test_production_wiring.py::test_runner_worker_without_compute_service_does_not_execute"]}
   ],
   "remaining_defects_not_addressed_this_session": [
     {"id": "4.1", "title": "Full typed worker-output schema (proof steps, assumptions, formalization requests, Lean declaration candidates)", "status": "PARTIAL"},
-    {"id": "4.5", "title": "Model experiment proposals -> executed ExperimentSpec via trusted compute in production", "status": "NOT_DONE"},
-    {"id": "4.6", "title": "LeanService wired into egmra run/campaign; live kernel run", "status": "PARTIAL (live Lean-kernel replay + SEALED attestation DONE via egmra/lean/kernel_checker.py + `egmra formalize`; research() run/campaign still consume lean_service but the formal-candidate path is not exercised via `egmra run`)"},
-    {"id": "4.10", "title": "Durable content-addressed browser transcript artifacts + signed claim->exchange events", "status": "NOT_DONE"},
-    {"id": "4.11", "title": "Distinct worker roles/packets/priors + branch fingerprints wired to allocation", "status": "PARTIAL"}
+    {"id": "4.6", "title": "LeanService wired into egmra run/campaign formal-candidate path; live kernel run", "status": "PARTIAL (sealed local Lean-kernel replay DONE + reachable via `egmra formalize`; research() consumes lean_service but the RunnerWorker does not yet emit formal_candidates, so the browser->Lean->FORMALLY_VERIFIED_CANDIDATE chain in `egmra run` is not exercised end-to-end)"}
   ]
 }

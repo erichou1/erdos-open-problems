@@ -43,6 +43,14 @@
 > - **Tests.** 11 hermetic checker tests (injected fake `lake`): pass path, `sorry`/native/hash-mismatch/kernel-failure/missing-declaration rejections, axiom-whitelist flagging, end-to-end seal through `AttestedKernelRunner` + `verify_for` + `LeanReplayVerifier`, and the soundness property that tampering the expected type breaks the hash binding.
 > - **Scenario 4** (browser → Lean) is no longer blocked on the checker; only wiring a browser-produced Lean proof through the formal path remains.
 
+> ## Session update (production wiring — defects 4.11, 4.10, 4.5)
+> - **4.11 — distinct per-branch worker roles.** `research()` assigns a method-specific role per mechanism branch (`WORKER_ROLE_BY_FAMILY`: prover / experimentalist / formalizer), records it in each branch's `mechanism_fingerprint` and memory, and drives the worker via `RunnerWorker.for_role()` so the prompt is role-specific. Branches already carried distinct fingerprints, posteriors, and read-slices; role is the added allocation dimension.
+> - **4.10 — durable content-addressed model-exchange artifacts + signed events.** New `MODEL_EXCHANGE_RECORDED` action + `_record_model_exchanges()`: given an artifact store (the CLI now builds a `ContentAddressedObjectStore`), `research()` persists each model/browser exchange's provenance (never raw response text) to the content-addressed store and appends a signed event referencing the artifact hash — so the informal reasoning that produced claims is tamper-evident.
+> - **4.5 — model-proposed finite experiments executed in the trusted sandbox.** `RunnerWorker` accepts an optional capability-free `experiment(inputs)` and runs it via a shared `_execute_finite_experiment()` in the ComputeService's hardened RestrictedPython/container sandbox; `research()` re-authenticates the artifact + independent replay against the worker's own service. A finite check reaches at most **COMPUTATIONAL_EVIDENCE** (admitted `exact_computation` evidence) and never proves a general claim — the sound boundary is enforced and tested.
+> - Tests: `egmra/tests/test_production_wiring.py` (9). Full suite: **981 passed**, rc=0.
+> - Remaining: 4.1 (full typed worker-output schema) and 4.6 (emit `formal_candidates` from the worker so the browser→Lean formal-candidate path fires inside `egmra run`; the sealed checker itself is done).
+
+
 
 
 

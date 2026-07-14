@@ -53,6 +53,7 @@ ACTIONS = frozenset(
         "CHECKPOINT_TAKEN",
         "HUMAN_INTERVENTION",
         "RATE_LIMIT_PAUSE",
+        "MODEL_EXCHANGE_RECORDED",
     }
 )
 

@@ -35,7 +35,7 @@ from egmra.learning import LongTermMemory
 from egmra.lean import LeanService, verify_formal_correspondence_certificate
 from egmra.oeis import OEISClient, OEISUnavailable
 from egmra.policy import PolicyEnforcer
-from egmra.provenance.hashing import content_id, is_sha256, sha256_hex
+from egmra.provenance.hashing import canonical_json, content_id, is_sha256, sha256_hex
 from egmra.release.certificate import ReleaseCertificate
 from egmra.release.compiler import CompiledProof, assemble_from_admitted_graph
 from egmra.release.gates import FiveGateResult, run_five_gates
@@ -231,6 +231,61 @@ class BudgetLedger:
         return True
 
 
+def _execute_finite_experiment(
+    compute_service: "ComputeService", replay_sandbox: object | None,
+    spec: ExperimentSpec, code: str, claim_id: str,
+) -> tuple[list[dict], list[ReplayReport], list[str]]:
+    """Run one finite experiment in the sandbox and shape trusted evidence.
+
+    Shared by the fixture worker and the model-backed worker (task 4.5). Emits
+    ``exact_computation`` evidence only when the sandboxed predicate returns
+    literal True, an independent replay matches, and the claim is bound to the
+    spec — so a model-proposed experiment can reach at most COMPUTATIONAL_EVIDENCE
+    (a finite result), never a general proof. The RestrictedPython/container
+    sandbox contains untrusted, model-authored code.
+    """
+    evidence: list[dict] = []
+    replays: list[ReplayReport] = []
+    failures: list[str] = []
+    job = compute_service.submit_experiment(
+        spec, code, claimed_classification="exhaustive_finite_subcase")
+    if compute_service.poll(job) != "done":
+        failures.append(f"computation job {job} failed")
+        return evidence, replays, failures
+    artifact = compute_service.artifact(job)
+    replay = compute_service.replay(artifact.artifact_id, sandbox=replay_sandbox)
+    replays.append(replay)
+    output_result = artifact.output.get("result") if isinstance(artifact.output, Mapping) else None
+    claim_bound = claim_id in spec.claim_ids
+    if output_result is True and replay.replayed and replay.output_hash_matches \
+            and replay.independent_environment and claim_bound:
+        classification = validator_classification(artifact.effective_classification())
+        evidence.append({
+            "evidence_id": f"ev_{claim_id}",
+            "claim_ids": [claim_id],
+            "kind": "exact_computation",
+            "artifact_id": artifact.artifact_id,
+            "artifact_hash": artifact.content_id(),
+            "replay_result": "pass",
+            "findings": {
+                "classification": classification,
+                "exact_arithmetic": spec.arithmetic_mode == "exact",
+                "coverage_statement": bool(artifact.coverage),
+                "result_verified": True,
+            },
+            "environment_hash": artifact.environment_hash,
+        })
+    elif output_result is False:
+        failures.append("experiment predicate returned false")
+    elif not claim_bound:
+        failures.append("experiment lacks locked claim binding")
+    elif replay.replayed and replay.output_hash_matches and not replay.independent_environment:
+        failures.append("independent replay environment unavailable")
+    else:
+        failures.append("experiment result missing or replay failed")
+    return evidence, replays, failures
+
+
 @dataclass
 class DeterministicWorker:
     """A credential-free worker that produces genuine evidence for a fixture.
@@ -269,53 +324,9 @@ class DeterministicWorker:
         replay_reports: list[ReplayReport] = []
         failures: list[str] = []
         if self.experiment_code and self.experiment_spec is not None:
-            job = self.compute_service.submit_experiment(
-                self.experiment_spec, self.experiment_code,
-                claimed_classification="exhaustive_finite_subcase")
-            if self.compute_service.poll(job) == "done":
-                artifact = self.compute_service.artifact(job)
-                replay = self.compute_service.replay(
-                    artifact.artifact_id, sandbox=self.replay_sandbox,
-                )
-                replay_reports.append(replay)
-                output_result = (
-                    artifact.output.get("result") if isinstance(artifact.output, Mapping) else None
-                )
-                # An exhaustive run supports the proposed claim only when its
-                # mathematical predicate returned literal True and replay matched.
-                # A False/absent result is not converted into positive evidence.
-                claim_bound = self.goal_claim_id in self.experiment_spec.claim_ids
-                if output_result is True and replay.replayed and replay.output_hash_matches \
-                        and replay.independent_environment and claim_bound:
-                    classification = validator_classification(artifact.effective_classification())
-                    evidence.append({
-                        "evidence_id": f"ev_{self.goal_claim_id}",
-                        "claim_ids": [self.goal_claim_id],
-                        "kind": "exact_computation",
-                        "artifact_id": artifact.artifact_id,
-                        "artifact_hash": artifact.content_id(),
-                        "replay_result": "pass",
-                        "findings": {
-                            "classification": classification,
-                            "exact_arithmetic": self.experiment_spec.arithmetic_mode == "exact",
-                            "coverage_statement": bool(artifact.coverage),
-                            "result_verified": True,
-                        },
-                        "environment_hash": artifact.environment_hash,
-                    })
-                else:
-                    if output_result is False:
-                        reason = "experiment predicate returned false"
-                    elif not claim_bound:
-                        reason = "experiment lacks locked claim binding"
-                    elif replay.replayed and replay.output_hash_matches \
-                            and not replay.independent_environment:
-                        reason = "independent replay environment unavailable"
-                    else:
-                        reason = "experiment result missing or replay failed"
-                    failures.append(reason)
-            else:
-                failures.append(f"computation job {job} failed")
+            evidence, replay_reports, failures = _execute_finite_experiment(
+                self.compute_service, self.replay_sandbox, self.experiment_spec,
+                self.experiment_code, self.goal_claim_id)
         return WorkerOutput(
             claim_proposals=proposals, evidence=evidence, replay_reports=replay_reports,
             failures=failures, bottleneck="close the goal claim",
@@ -384,6 +395,56 @@ class ResearchResult:
         }
 
 
+# Distinct worker roles per mechanism branch (task 4.11): the prover attacks the
+# target directly, the experimentalist drives finite computation, and the
+# formalizer works library/lemma-first. The role shapes the model prompt and is
+# recorded in each branch's mechanism fingerprint, so allocation is role-aware.
+WORKER_ROLE_BY_FAMILY = {
+    "direct_structural": "prover",
+    "computational_finite_reduction": "experimentalist",
+    "formal_library_first": "formalizer",
+}
+
+
+def _branch_role(family: str, worker: "Worker") -> str:
+    return WORKER_ROLE_BY_FAMILY.get(family, getattr(worker, "role", "prover"))
+
+
+def _record_model_exchanges(log, artifact_store, problem_id: str, *, runners) -> int:
+    """Persist browser/model exchange provenance durably + sign an event (task 4.10).
+
+    Each exchange's provenance record (never the raw response text) is written to
+    the content-addressed object store, and a signed ``MODEL_EXCHANGE_RECORDED``
+    event references the artifact hash — so the informal reasoning that produced
+    claims is tamper-evident and auditable. Idempotent across shared runners.
+    """
+    seen_runners: set[int] = set()
+    seen_exchanges: set[tuple] = set()
+    recorded = 0
+    for runner in runners:
+        if runner is None or id(runner) in seen_runners:
+            continue
+        seen_runners.add(id(runner))
+        for transcript in list(getattr(runner, "records", []) or []):
+            record = transcript.to_dict() if hasattr(transcript, "to_dict") else dict(transcript)
+            key = (record.get("stage", ""), record.get("prompt_hash", ""),
+                   record.get("response_hash", ""))
+            if key in seen_exchanges:
+                continue
+            seen_exchanges.add(key)
+            artifact_hash = artifact_store.put(canonical_json(record).encode("utf-8"))
+            log.append(
+                action="MODEL_EXCHANGE_RECORDED", actor=ACTOR, object_ids=[problem_id],
+                output_hashes=[artifact_hash], reason_code="model_exchange",
+                human_readable_reason=f"model exchange at stage {record.get('stage', '')}",
+                payload={key: record.get(key) for key in (
+                    "stage", "prompt_hash", "response_hash", "conversation_url",
+                    "model_label", "account_class", "attested", "created_at")},
+            )
+            recorded += 1
+    return recorded
+
+
 def research(
     *,
     problem_id: str,
@@ -407,6 +468,7 @@ def research(
     lean_service: LeanService | None = None,
     trusted_compute_service: ComputeService | None = None,
     memory: LongTermMemory | None = None,
+    artifact_store: Any = None,
     intent_review: IntentCertificate | None = None,
     formal_correspondence_reviews: Mapping[
         str, FormalCorrespondenceCertificate
@@ -613,6 +675,7 @@ def research(
                 "formalization_route": (
                     "local Lean" if program.family == "formal_library_first" else ""
                 ),
+                "worker_role": _branch_role(program.family, worker),
                 "fingerprint_hash": fingerprint.fingerprint_hash(),
                 "quality_diversity_bin": list(fingerprint.quality_diversity_bin()),
             },
@@ -630,8 +693,11 @@ def research(
     blackboard = Blackboard(graph, authority_guard=authority_issuer)
     packet_payload = packet.to_dict()
     board_packet_hash = content_id(packet_payload)
-    if trusted_compute_service is None and type(worker) is DeterministicWorker:
-        trusted_compute_service = worker.compute_service
+    if trusted_compute_service is None:
+        # The orchestrator re-authenticates evidence against the SAME compute
+        # service the worker executed on, so a worker that owns a sandboxed
+        # service (fixture or model-backed) makes finite computation reachable.
+        trusted_compute_service = getattr(worker, "compute_service", None)
     phases.append("deep_branches")
     attempted: set[str] = set()
     for _ in range(max_iterations):
@@ -701,8 +767,13 @@ def research(
             branch_id=branch_id, packet_hash=board_packet_hash,
             packet=packet_payload, token=worker_token,
         )
+        # A distinct role per mechanism branch: prover / experimentalist /
+        # formalizer reason from different prompts (task 4.11). The base worker is
+        # reused when it does not support role specialization.
+        branch_role = _branch_role(branch_id, worker)
+        branch_worker = worker.for_role(branch_role) if hasattr(worker, "for_role") else worker
         try:
-            output = worker.work_branch(
+            output = branch_worker.work_branch(
                 contract, packet, branch_id=branch_id, budget=action_budget,
                 fencing_token=lease.fencing_token, branch_slice=branch_slice,
             )
@@ -729,6 +800,7 @@ def research(
             "problem_id": problem_id,
             "stage": "branch",
             "branch_id": branch_id,
+            "role": branch_role,
             "failures": list(output.failures),
             "falsifiers": list(output.falsifiers),
             "sequence_hashes": [content_id(sequence) for sequence in output.generated_sequences],
@@ -955,6 +1027,12 @@ def research(
             blueprint.direct_attempted = True
         if supported:
             break
+
+    # Durable, content-addressed model-exchange artifacts + signed events (4.10).
+    if artifact_store is not None:
+        _record_model_exchanges(log, artifact_store, problem_id,
+                                runners=(runner, getattr(worker, "runner", None)))
+        phases.append("record_exchanges")
 
     # 15. compile from admitted graph
     compiled = None
