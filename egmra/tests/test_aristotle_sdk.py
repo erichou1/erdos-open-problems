@@ -16,6 +16,26 @@ from egmra.provenance.hashing import canonical_json, sha256_bytes, sha256_hex
 _ENV = {"ARISTOTLE_API_KEY": "aristotle-test-key-not-a-real-secret"}
 
 
+def _tar_gz_bytes(files, symlink=None):
+    """Build a tar.gz blob the way the real SDK returns project results."""
+    import io
+    import tarfile
+
+    buf = io.BytesIO()
+    with tarfile.open(fileobj=buf, mode="w:gz") as tar:
+        for name, body in files:
+            data = body.encode("utf-8")
+            info = tarfile.TarInfo(name=name)
+            info.size = len(data)
+            tar.addfile(info, io.BytesIO(data))
+        if symlink is not None:
+            link = tarfile.TarInfo(name=symlink)
+            link.type = tarfile.SYMTYPE
+            link.linkname = "/etc/passwd"
+            tar.addfile(link)
+    return buf.getvalue()
+
+
 class _FakeTask:
     def __init__(self, task_id="task-1", status="COMPLETE"):
         self.agent_task_id = task_id
@@ -44,12 +64,9 @@ class _FakeProject:
     def get_files(self, destination):
         from pathlib import Path
 
-        dest = Path(destination)
-        dest.mkdir(parents=True, exist_ok=True)
-        for name, body in self._files:
-            (dest / name).write_text(body, encoding="utf-8")
-        if self._symlink is not None:
-            (dest / self._symlink).symlink_to("/etc/passwd")
+        # The real SDK writes a single archive blob to the destination FILE path.
+        Path(destination).write_bytes(_tar_gz_bytes(self._files, self._symlink))
+        return Path(destination)
 
 
 class _FakeSdk:
@@ -190,3 +207,92 @@ def test_vendor_complete_alone_does_not_promote_only_local_replay_does(tmp_path)
         artifact, LeanReplayVerifier(checker=_Checker(), environment=env, target=target),
         expected_claim_id="goal")
     assert result.verified is True and result.promotable is True
+
+
+# ── the official SDK is async: the client must drive coroutines correctly ───
+
+class _AsyncFakeTask:
+    def __init__(self, task_id="task-async-1", status="COMPLETE"):
+        self.agent_task_id = task_id
+        self.status = SimpleNamespace(name=status)
+        self.percent_complete = 100
+        self.waited = False
+
+    async def refresh(self):
+        return None
+
+    async def wait_for_completion(self, num_events: int = 3):
+        self.waited = True
+
+
+class _AsyncFakeProject:
+    def __init__(self, project_id="proj-async-1", task=None,
+                 files=(("Proof.lean", "theorem t : True := trivial"),)):
+        self.project_id = project_id
+        self._task = task or _AsyncFakeTask()
+        self._files = files
+
+    async def get_tasks(self, limit=10, **kw):
+        return [self._task], None
+
+    async def get_files(self, destination):
+        from pathlib import Path
+
+        # Mirror the real SDK: write a single archive blob to the destination file.
+        Path(destination).write_bytes(_tar_gz_bytes(self._files))
+        return Path(destination)
+
+
+class _AsyncFakeSdk:
+    """Mirrors the real ``aristotlelib`` shape: async methods, sync set_api_key."""
+
+    def __init__(self, project):
+        self._project = project
+        self.api_key = None
+        outer = self
+
+        class Project:
+            @staticmethod
+            async def create_from_directory(prompt, project_dir, *a, **k):
+                outer._project.prompt = prompt
+                return outer._project
+
+            @staticmethod
+            async def from_id(object_id):
+                return outer._project
+
+        class AgentTask:
+            @staticmethod
+            async def from_id(object_id):
+                return outer._project._task
+
+        self.Project = Project
+        self.AgentTask = AgentTask
+
+    def set_api_key(self, key):
+        self.api_key = key
+        return key
+
+
+def test_client_drives_async_sdk_submit_poll_fetch(tmp_path):
+    # Regression: the real SDK's Project/AgentTask methods are coroutines. The
+    # client must await them (on its own loop) — calling them synchronously would
+    # hand a coroutine to the control flow and never reach the service.
+    (tmp_path / "lp").mkdir()
+    task = _AsyncFakeTask()
+    client = AristotleSdkClient(
+        quarantine_root=tmp_path / "quar", project_dir=tmp_path / "lp",
+        sdk=_AsyncFakeSdk(_AsyncFakeProject(task=task)), env=_ENV)
+    try:
+        assert client.sdk.api_key == _ENV["ARISTOTLE_API_KEY"]  # sync set_api_key ran
+        sub = client.submit("prove True")
+        assert sub.project_id == "proj-async-1" and sub.agent_task_id == "task-async-1"
+        status = client.poll(sub)
+        assert status.vendor_reports_complete is True and status.promotable is False
+        artifact = client.fetch(sub, wait=True)
+        assert task.waited is True  # awaited wait_for_completion
+        assert artifact.promotable is False
+        assert any(p.name == "Proof.lean" for p in artifact.extracted_files)
+    finally:
+        client.close()
+

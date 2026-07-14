@@ -27,6 +27,16 @@
 > - Full suite: **960 passed**, rc=0 (3 live-Postgres tests run when `EGMRA_TEST_POSTGRES_DSN` is set; else they skip → 957 passed, 3 skipped, rc=0).
 > - **Still not done** (verdict remains INCOMPLETE): compute-execution wiring (4.5), `LeanService`-into-`run` + live kernel (4.6), `--formalizer` flag (4.7), durable browser transcript artifacts (4.10), distinct-role allocation (4.11); and live scenarios 4 (authenticated browser + built Mathlib kernel) and 5 (live Aristotle key + built Lean project) remain **BLOCKED_EXTERNAL**.
 
+> ## Session update (live Aristotle round-trip + pinned Lean kernel built)
+> - **Pinned Lean kernel BUILT + operational.** `aristotle_lean_project` built with Lean v4.28.0 + Mathlib v4.28.0 (`lake build` rc=0, 8027 jobs). Verified it checks a *real* Mathlib theorem (`n + 0 = n ∧ Nat.Prime 7`) and extracts the axiom closure `[propext, Classical.choice, Quot.sound]` (within the whitelist). This lifts the toolchain prerequisite for scenarios 4 and 5.
+> - **Live Aristotle round-trip VERIFIED against the real service** (operator-provided key, stored only in the gitignored `egmra.keys.sh`). `submit → poll (queued→in_progress→complete, ~5 min) → download`; Aristotle produced `theorem egmra_live_check : 2 + 2 = 4 := rfl`; the adapter safe-extracted the vendor tar.gz into a hardened quarantine (`promotable=false`), and the produced Lean was **re-checked by the local pinned kernel** (`lake env lean`, rc=0). Scenario 5 is now **PARTIAL** (live round-trip + local kernel verification done; the sealed attestation is the remaining step).
+> - **Two real SDK-adapter bugs found-and-fixed by the live run** (the sync test fake had hidden both):
+>   - *Async:* the official `aristotlelib` SDK is fully async (every `Project`/`AgentTask` method is a coroutine); `AristotleSdkClient` called them synchronously. Fixed to drive coroutines on a persistent client-owned event loop; added an async-fake regression test.
+>   - *Archive fetch:* the real `get_files(destination)` writes a single `tar.gz` blob to a **file** path (not a directory) — the adapter passed a directory and hit `IsADirectoryError`. Fixed to download to a temp file then `safe_extract_archive` into the quarantine under strict traversal/symlink/bomb limits; both fakes updated to emit a real `tar.gz`.
+> - **Remaining for a *sealed* result (scenarios 4 & 5).** The `AttestedKernelRunner` attestation needs interface work: `CheckerRequest` carries only hashes (no source path), and there is no canonical elaborated-type-hash Lean helper, so a *sound* production checker (binding `candidate_type_hash == expected_type_hash`) is not yet shippable. Local kernel verification is real; the sealed promotion ceremony is scoped but not done — not faked.
+> - Full suite: **961 passed**, rc=0.
+
+
 
 The confirmed local defects (epistemic-invariant and security violations,
 packaging, provider wiring, doctor readiness, event-store protocol conformance)

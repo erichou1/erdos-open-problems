@@ -17,6 +17,9 @@ kernel replay seals a :class:`LocalLeanReplayAttestation`
 
 from __future__ import annotations
 
+import asyncio
+import inspect
+import tempfile
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -34,6 +37,7 @@ from egmra.lean.aristotle_api import (
     LocalReplayResult,
     UnsafeJobIdError,
     resolve_quarantine_dir,
+    safe_extract_archive,
     scan_quarantine_tree,
     validate_job_id,
     verify_local_replay,
@@ -88,6 +92,7 @@ class AristotleSdkClient:
     max_total_bytes: int = _DEFAULT_MAX_TOTAL_BYTES
     _projects: dict[str, Any] = field(default_factory=dict, init=False, repr=False)
     _tasks: dict[str, Any] = field(default_factory=dict, init=False, repr=False)
+    _loop_obj: Any = field(default=None, init=False, repr=False)
 
     def __post_init__(self) -> None:
         if self.sdk is None:
@@ -99,15 +104,46 @@ class AristotleSdkClient:
             raise AristotleClientError(
                 "ARISTOTLE_API_KEY is not configured; export it in the environment"
             )
-        self.sdk.set_api_key(key)  # never logged
+        self._await(self.sdk.set_api_key(key))  # sync in the real SDK; never logged
+
+    # The official ``aristotlelib`` SDK is async (every Project/AgentTask method
+    # is a coroutine); the orchestrator/CLI drive this client synchronously. We
+    # run each awaitable to completion on a persistent, client-owned event loop.
+    # Non-awaitable values (the synchronous fake SDK in tests) pass through
+    # unchanged, so the same control flow exercises both.
+    def _await(self, value: Any) -> Any:
+        if not inspect.isawaitable(value):
+            return value
+        try:
+            asyncio.get_running_loop()
+        except RuntimeError:
+            pass
+        else:  # pragma: no cover - the sync CLI/orchestrator never nest a loop
+            raise AristotleClientError(
+                "AristotleSdkClient must be driven from synchronous code, "
+                "not from within a running event loop"
+            )
+        if self._loop_obj is None or self._loop_obj.is_closed():
+            self._loop_obj = asyncio.new_event_loop()
+        return self._loop_obj.run_until_complete(value)
+
+    def close(self) -> None:
+        """Close the client-owned event loop (best-effort teardown)."""
+        loop = self._loop_obj
+        self._loop_obj = None
+        if loop is not None and not loop.is_closed():  # pragma: no cover - teardown
+            loop.close()
 
     def submit(self, prompt: str) -> AristotleSubmission:
         """Create a project from the pinned Lean dir and start the first task."""
         if not isinstance(prompt, str) or not prompt.strip():
             raise AristotleClientError("prompt must be a non-empty string")
         try:
-            project = self.sdk.Project.create_from_directory(prompt, str(self.project_dir))
-            tasks, _ = project.get_tasks(limit=1)
+            project = self._await(
+                self.sdk.Project.create_from_directory(prompt, str(self.project_dir)))
+            tasks, _ = self._await(project.get_tasks(limit=1))
+        except AristotleClientError:
+            raise
         except Exception as exc:  # normalize SDK errors
             raise AristotleClientError(f"aristotle submit failed: {exc}") from exc
         if not tasks:
@@ -122,14 +158,15 @@ class AristotleSdkClient:
     def _task(self, submission: AristotleSubmission):
         task = self._tasks.get(submission.agent_task_id)
         if task is None:
-            task = self.sdk.AgentTask.from_id(validate_job_id(submission.agent_task_id))
+            task = self._await(
+                self.sdk.AgentTask.from_id(validate_job_id(submission.agent_task_id)))
             self._tasks[submission.agent_task_id] = task
         return task
 
     def poll(self, submission: AristotleSubmission) -> AristotleStatus:
         task = self._task(submission)
         try:
-            task.refresh()
+            self._await(task.refresh())
         except Exception as exc:
             raise AristotleClientError(f"aristotle poll failed: {exc}") from exc
         raw = str(getattr(task.status, "name", task.status)).strip().lower()
@@ -146,19 +183,37 @@ class AristotleSdkClient:
         """Download the produced Lean into a hardened quarantine (never promotable)."""
         project = self._projects.get(submission.project_id)
         if project is None:
-            project = self.sdk.Project.from_id(validate_job_id(submission.project_id))
+            project = self._await(
+                self.sdk.Project.from_id(validate_job_id(submission.project_id)))
         task = self._task(submission)
+        quarantine_dir = self._resolve_quarantine_dir(submission.project_id)
         try:
             if wait:
-                task.wait_for_completion()
-            quarantine_dir = self._resolve_quarantine_dir(submission.project_id)
-            project.get_files(str(quarantine_dir))
+                self._await(task.wait_for_completion())
+            # The official SDK writes the result as a SINGLE archive blob to a
+            # file path (not a directory). Download it to a throwaway temp file,
+            # read the bytes, then extract it ourselves under strict
+            # traversal/symlink/bomb-safe limits into the quarantine dir.
+            with tempfile.NamedTemporaryFile(
+                    prefix="aristotle_", suffix=".tar.gz", delete=False) as handle:
+                archive_path = Path(handle.name)
+            try:
+                self._await(project.get_files(str(archive_path)))
+                archive_bytes = archive_path.read_bytes()
+            finally:
+                archive_path.unlink(missing_ok=True)
         except UnsafeJobIdError:
             raise
         except Exception as exc:
             raise AristotleClientError(f"aristotle fetch failed: {exc}") from exc
-        # The SDK wrote files we did not control — scan for symlinks/escape/bombs.
-        files, total = scan_quarantine_tree(
+        # Extract the vendor archive under strict limits (rejects traversal,
+        # symlinks, and archive bombs), then re-scan the written tree as defense
+        # in depth. A vendor archive is never trusted on arrival.
+        files, total = safe_extract_archive(
+            archive_bytes, quarantine_dir, max_entries=self.max_entries,
+            max_entry_bytes=self.max_entry_bytes, max_total_bytes=self.max_total_bytes,
+        )
+        scan_quarantine_tree(
             quarantine_dir, max_entries=self.max_entries,
             max_entry_bytes=self.max_entry_bytes, max_total_bytes=self.max_total_bytes,
         )
