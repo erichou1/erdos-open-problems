@@ -152,3 +152,91 @@ def test_context_manager_closes_backend():
     with _runner(backend) as runner:
         runner.run("p", stage="s")
     assert backend.closed is True
+
+
+class _MidGenBackend:
+    """Not throttled pre-submission, but shows a rate limit right AFTER generation
+    for the first ``throttled_generations`` responses (models often surface a
+    throttle only once reasoning has run for a while)."""
+
+    def __init__(self, responses, *, throttled_generations):
+        self._responses = list(responses)
+        self._throttled = throttled_generations
+        self._generated = 0
+        self._just_generated = False
+        self.conversations = 0
+        self.dismissed = 0
+        self.closed = False
+
+    def open_conversation(self):
+        self.conversations += 1
+
+    def send(self, prompt):
+        pass
+
+    def wait_response(self, *, timeout_s):
+        self._just_generated = True
+        return self._responses.pop(0)
+
+    def conversation_url(self):
+        return f"https://chatgpt.com/c/{self.conversations}"
+
+    def is_rate_limited(self):
+        throttled = self._just_generated and self._generated < self._throttled
+        if self._just_generated:
+            self._just_generated = False
+            if throttled:
+                self._generated += 1
+        return throttled
+
+    def dismiss_rate_limit(self):
+        self.dismissed += 1
+        return True
+
+    def close(self):
+        self.closed = True
+
+
+def test_mid_generation_rate_limit_is_detected_and_retried():
+    # A throttle that appears WHILE generating is discarded and retried on the
+    # cooldown budget — the throttle text is never returned as a result, and it is
+    # counted as a rate-limit pause, not a malformed-response retry.
+    backend = _MidGenBackend(["throttled 1", "throttled 2", "recovered answer"],
+                             throttled_generations=2)
+    slept = []
+    runner = _runner(backend, sleep=slept.append, base_cooldown_s=5.0, cooldown_factor=2.0)
+    resp = runner.run("p", stage="s")
+    assert resp.text == "recovered answer"
+    assert backend.dismissed == 2 and backend.conversations == 3
+    assert runner.records[0].rate_limit_pauses == 2
+    assert runner.records[0].response_retries == 0
+    assert slept == [5.0, 10.0]
+
+
+def test_persistent_mid_generation_rate_limit_is_provider_unavailable_not_a_result():
+    # A perpetual mid-generation throttle exhausts the shared pause budget and
+    # signals a transient outage (retained/resumed by the caller) — never a
+    # mathematical result, never a BrowserResponseError.
+    backend = _MidGenBackend(["x"] * 10, throttled_generations=999)
+    runner = _runner(backend, sleep=lambda _s: None, max_rate_limit_pauses=3)
+    with pytest.raises(BrowserProviderUnavailable):
+        runner.run("p", stage="s")
+
+
+def test_pre_and_mid_generation_throttles_share_one_pause_budget():
+    # 2 pre-submission + 2 mid-generation throttles with a budget of 3 -> the 4th
+    # cooldown trips the budget (they are not counted independently).
+    class _BothBackend(_MidGenBackend):
+        def __init__(self):
+            super().__init__(["a", "b", "c"], throttled_generations=2)
+            self._pre = 2
+
+        def is_rate_limited(self):
+            if not self._just_generated and self._pre > 0:
+                self._pre -= 1
+                return True  # pre-submission throttle
+            return super().is_rate_limited()
+
+    runner = _runner(_BothBackend(), sleep=lambda _s: None, max_rate_limit_pauses=3)
+    with pytest.raises(BrowserProviderUnavailable):
+        runner.run("p", stage="s")

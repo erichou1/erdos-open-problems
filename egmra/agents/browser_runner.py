@@ -151,34 +151,44 @@ class BrowserChatGPTRunner:
         raw = self.base_cooldown_s * (self.cooldown_factor ** pause_index)
         return min(raw, self.max_cooldown_s)
 
-    def _await_capacity(self) -> int:
-        """Pause through rate-limit throttling; return the number of pauses taken.
+    def _pause_once(self, pause_index: int) -> None:
+        """Take one bounded rate-limit cooldown (dismiss + backoff sleep).
 
-        A shared throttle (when configured) coordinates cooldowns across the five
-        browser workers and persists them across restarts. Raises
-        :class:`BrowserProviderUnavailable` only after exhausting the pause budget
-        — a transient outage signal, not a mathematical failure.
+        ``pause_index`` is the number of cooldowns already taken in this run; when
+        it reaches the budget we raise :class:`BrowserProviderUnavailable` — a
+        transient outage signal (the caller retains/resumes the job), never a
+        mathematical failure. A shared throttle coordinates cooldowns across the
+        browser worker pool and persists them across restarts.
+        """
+        if pause_index >= self.max_rate_limit_pauses:
+            raise BrowserProviderUnavailable(
+                f"ChatGPT browser throttled after {pause_index} cooldown(s); "
+                "pause and resume — this is not a mathematical result"
+            )
+        self.backend.dismiss_rate_limit()
+        retry_after = self._retry_after()
+        if self.throttle is not None:
+            # Register the hit centrally so peer workers also pause.
+            self.sleep(self.throttle.record_rate_limit(retry_after=retry_after))
+        else:
+            base = self._cooldown_for(pause_index)
+            self.sleep(base if retry_after is None else min(
+                max(base, retry_after), self.max_cooldown_s))
+
+    def _await_capacity(self, *, already_paused: int = 0) -> int:
+        """Pause through pre-submission throttling; return the pauses taken.
+
+        Cooldowns share one budget with mid-generation throttles via
+        ``already_paused`` so a single run can never exceed
+        ``max_rate_limit_pauses`` total cooldowns before signaling a transient
+        outage (which the caller retains/resumes, never a mathematical failure).
         """
         pauses = 0
         # Honor any cross-worker cooldown a peer already registered.
         if self.throttle is not None:
             self.throttle.wait_if_cooling()
         while self.backend.is_rate_limited():
-            if pauses >= self.max_rate_limit_pauses:
-                raise BrowserProviderUnavailable(
-                    f"ChatGPT browser throttled after {pauses} cooldown(s); "
-                    "pause and resume — this is not a mathematical result"
-                )
-            self.backend.dismiss_rate_limit()
-            retry_after = self._retry_after()
-            if self.throttle is not None:
-                # Register the hit centrally so peer workers also pause.
-                cooldown = self.throttle.record_rate_limit(retry_after=retry_after)
-                self.sleep(cooldown)
-            else:
-                base = self._cooldown_for(pauses)
-                self.sleep(base if retry_after is None else min(
-                    max(base, retry_after), self.max_cooldown_s))
+            self._pause_once(already_paused + pauses)
             pauses += 1
         if self.throttle is not None and pauses:
             self.throttle.clear()
@@ -203,20 +213,32 @@ class BrowserChatGPTRunner:
     def run(self, prompt: str, *, stage: str) -> RunnerResponse:
         prompt_hash = sha256_hex(prompt)
         total_pauses = 0
-        last_text = ""
-        for attempt in range(self.max_response_retries + 1):
-            total_pauses += self._await_capacity()
+        response_attempts = 0
+        while True:
+            # Pre-submission capacity wait (shares the cooldown budget with any
+            # mid-generation throttles already taken this run).
+            total_pauses += self._await_capacity(already_paused=total_pauses)
             # Conversation isolation: a fresh chat per attempt.
             self.backend.open_conversation()
             self.backend.send(prompt)
             text = self.backend.wait_response(timeout_s=self.response_timeout_s)
-            last_text = text
+            # A rate limit that surfaced DURING generation (a modal, or a throttle
+            # message returned as the response body) is a provider outage, not a
+            # result: take a bounded cooldown on the shared budget and retry — it is
+            # never returned as a mathematical answer, and never counted as a
+            # malformed-response retry.
+            if self.backend.is_rate_limited():
+                self._pause_once(total_pauses)
+                total_pauses += 1
+                continue
             if not self._looks_malformed(text):
-                return self._record(stage, prompt_hash, text, total_pauses, attempt)
-        raise BrowserResponseError(
-            f"browser returned an unusable response for stage {stage!r} after "
-            f"{self.max_response_retries + 1} attempt(s)"
-        )
+                return self._record(stage, prompt_hash, text, total_pauses, response_attempts)
+            response_attempts += 1
+            if response_attempts > self.max_response_retries:
+                raise BrowserResponseError(
+                    f"browser returned an unusable response for stage {stage!r} after "
+                    f"{response_attempts} attempt(s)"
+                )
 
     def _record(
         self, stage: str, prompt_hash: str, text: str, pauses: int, retries: int
