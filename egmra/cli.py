@@ -56,6 +56,15 @@ from egmra.orchestrator import (
 from egmra.policy import PolicyEnforcer, PolicyError, default_policy_path, load_policy, sign_policy
 from egmra.m2 import PostgresEventStore
 from egmra.oeis import OEISClient
+from egmra.lean.kernel_checker import (
+    build_lean_replay_target,
+    make_attested_kernel_runner,
+    write_pinned_checker,
+)
+from egmra.lean.aristotle_sdk import AristotleSdkClient
+from egmra.lean.replay import LeanReplayVerifier
+from egmra.lean.service import CheckerConfigurationError, LeanEnvironment
+from egmra.provenance.hashing import sha256_hex
 from egmra.retrieval.erdos_corpus import build_erdos_corpus
 from egmra.retrieval.records import TheoremRecord
 from egmra.truth.events import EventLog, EventLogError
@@ -527,6 +536,104 @@ def cmd_verify_events(args: argparse.Namespace) -> int:
     return 0 if ok else 1
 
 
+def _formalize_candidate_dir(args: argparse.Namespace, lean_project: Path) -> Path:
+    """Obtain a quarantine directory holding the candidate Lean to verify."""
+    quar_root = Path("egmra_quarantine") / "formalize"
+    if args.formalizer == "local":
+        if not args.lean_file:
+            raise ValueError("--formalizer local requires --lean-file PATH")
+        src = Path(args.lean_file)
+        if src.is_symlink() or not src.is_file():
+            raise ValueError("--lean-file must be a regular non-symlink file")
+        if src.stat().st_size > 4_000_000:
+            raise ValueError("--lean-file is too large")
+        job = quar_root / "local"
+        if job.exists():
+            shutil.rmtree(job)
+        job.mkdir(parents=True)
+        (job / (src.name if src.suffix == ".lean" else "Candidate.lean")).write_text(
+            src.read_text(encoding="utf-8", errors="ignore"), encoding="utf-8")
+        return job
+    if not args.prompt:
+        raise ValueError("--formalizer aristotle requires --prompt TEXT")
+    client = AristotleSdkClient(quarantine_root=quar_root / "aristotle",
+                                project_dir=lean_project, env=os.environ)
+    try:
+        submission = client.submit(args.prompt)
+        artifact = client.fetch(submission, wait=True)
+    finally:
+        client.close()
+    return artifact.quarantine_dir
+
+
+def cmd_formalize(args: argparse.Namespace) -> int:
+    """Re-check a candidate Lean proof with the real local kernel and seal an attestation.
+
+    The candidate is produced locally (``--formalizer local --lean-file``) or by
+    the live Aristotle service (``--formalizer aristotle --prompt``); either way
+    it is independently re-verified by the pinned Lean kernel — a definitional
+    target obligation (``example : <expected-type> := @<declaration>``) plus an
+    axiom-whitelist audit. A vendor ``COMPLETE`` never promotes on its own; only
+    a sealed local kernel replay is promotable.
+    """
+    lean_project = Path(args.lean_project)
+    if lean_project.is_symlink() or not lean_project.is_dir():
+        raise ValueError(f"--lean-project must be a built Lean project directory: {lean_project}")
+    if not (lean_project / ".lake").is_dir():
+        raise ValueError(
+            f"Lean project is not built (no .lake): run 'cd {lean_project} && lake exe cache get "
+            "&& lake build' first")
+
+    candidate_dir = _formalize_candidate_dir(args, lean_project)
+
+    import egmra as _egmra_pkg
+
+    repo_root = Path(_egmra_pkg.__file__).resolve().parent.parent
+    checker_path = Path("egmra_quarantine") / "formalize" / "pinned_lean_checker.py"
+    checker_path.parent.mkdir(parents=True, exist_ok=True)
+    write_pinned_checker(checker_path, lean_project=lean_project, repo_root=repo_root)
+
+    toolchain_file = lean_project / "lean-toolchain"
+    toolchain = toolchain_file.read_text(encoding="utf-8", errors="ignore").strip() \
+        if toolchain_file.is_file() else ""
+    env = LeanEnvironment(
+        lean_version=(toolchain.split(":")[-1] or "unknown") if toolchain else "unknown",
+        mathlib_commit=args.mathlib_commit,
+        project_hash=sha256_hex(str(lean_project.resolve())))
+    target = build_lean_replay_target(
+        claim_id=args.claim_id, declaration_name=args.declaration,
+        expected_type_source=args.expected_type, environment=env)
+    verifier = LeanReplayVerifier(
+        checker=make_attested_kernel_runner(checker_path), environment=env, target=target)
+    try:
+        sealed = verifier(candidate_dir)
+    except CheckerConfigurationError as exc:
+        raise ValueError(f"formal checker is not configured: {exc}") from exc
+
+    result = {
+        "formalizer": args.formalizer,
+        "declaration": args.declaration,
+        "expected_type": args.expected_type,
+        "lean_project": str(lean_project),
+        "candidate_dir": str(candidate_dir),
+        "sealed": sealed is not None,
+        "promotable_local_replay": sealed is not None,
+        "note": (
+            "sealed a local Lean kernel replay attestation (promotable); a vendor status "
+            "alone is never trusted" if sealed is not None else
+            "the local kernel did NOT verify the declaration has the expected type — "
+            "not promotable (never a mathematical result)"),
+    }
+    if sealed is not None:
+        result |= {
+            "claim_id": sealed.claim_id, "source_hash": sealed.source_hash,
+            "lean_version": sealed.lean_version, "mathlib_commit": sealed.mathlib_commit,
+            "checker_id": sealed.checker_id,
+        }
+    print(json.dumps(result, indent=2))
+    return 0 if sealed is not None else 3
+
+
 def cmd_fixtures(_args: argparse.Namespace) -> int:
     for fx in FIXTURE_PROBLEMS:
         print(f"{fx.problem_id}\t[{fx.expected_outcome}]\tL{fx.level}\t{fx.statement.decode()[:60]}")
@@ -902,6 +1009,28 @@ def build_parser() -> argparse.ArgumentParser:
         help="expected run/subject identifier authenticated by every event",
     )
     verify.set_defaults(func=cmd_verify_events)
+
+    formalize = sub.add_parser(
+        "formalize",
+        help="re-check a candidate Lean proof with the local kernel and seal an attestation")
+    formalize.add_argument("--formalizer", choices=("local", "aristotle"), default="local",
+                           help="candidate source: a local Lean file or the live Aristotle service")
+    formalize.add_argument("--declaration", required=True,
+                           help="the Lean declaration name the proof must establish")
+    formalize.add_argument("--expected-type", required=True,
+                           help="the intended Lean type the declaration must prove "
+                                "(e.g. '2 + 2 = 4')")
+    formalize.add_argument("--lean-file", type=Path, default=None,
+                           help="candidate Lean file (--formalizer local)")
+    formalize.add_argument("--prompt", default=None,
+                           help="task prompt for the Aristotle agent (--formalizer aristotle)")
+    formalize.add_argument("--lean-project", type=Path, default=Path("aristotle_lean_project"),
+                           help="built pinned Lean project (must contain .lake)")
+    formalize.add_argument("--mathlib-commit", default="v4.28.0",
+                           help="Mathlib revision recorded in the attestation")
+    formalize.add_argument("--claim-id", default="goal",
+                           help="claim id bound into the sealed replay attestation")
+    formalize.set_defaults(func=cmd_formalize)
 
     fixtures = sub.add_parser("fixtures", help="list local evaluation fixtures")
     fixtures.set_defaults(func=cmd_fixtures)

@@ -132,6 +132,12 @@ class CheckerRequest:
     expected_type_hash: str
     immutable_target_module_hash: str
     trust_policy_hash: str
+    # Where the attested candidate tree lives (so a real checker can locate and
+    # kernel-check the exact source that hashes to ``source_hash``), and the
+    # intended Lean type expression the candidate declaration must prove. Both
+    # default to empty for backward compatibility with hash-only test checkers.
+    source_root: str = ""
+    expected_type_source: str = ""
 
     def to_dict(self) -> dict[str, str]:
         return dict(self.__dict__)

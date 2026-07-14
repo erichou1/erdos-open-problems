@@ -36,6 +36,14 @@
 > - **Remaining for a *sealed* result (scenarios 4 & 5).** The `AttestedKernelRunner` attestation needs interface work: `CheckerRequest` carries only hashes (no source path), and there is no canonical elaborated-type-hash Lean helper, so a *sound* production checker (binding `candidate_type_hash == expected_type_hash`) is not yet shippable. Local kernel verification is real; the sealed promotion ceremony is scoped but not done — not faked.
 > - Full suite: **961 passed**, rc=0.
 
+> ## Session update (sealed local Lean kernel checker — scenario 5 PASS)
+> - **The sealed-attestation gap is closed.** Added `source_root` + `expected_type_source` to `CheckerRequest` (threaded through `LeanReplayTarget`/`LeanReplayVerifier`) and a real pinned checker, [egmra/lean/kernel_checker.py](egmra/lean/kernel_checker.py): it verifies the candidate tree hashes to `source_hash`, rejects `sorry`/`native_decide`, runs the **real Lean kernel** via `lake env lean` on a **definitional obligation** (`example : <expected_type> := @<declaration>`) plus a `#print axioms` audit, and computes `candidate_type_hash` from the exact intended type (no blind echo) so `verify_for`'s `candidate_type_hash == expected_type_hash` is sound. `write_pinned_checker` pins the checker (embedding the EGMRA-capable interpreter, not a bare `/usr/bin/env python3`).
+> - **LIVE sealed attestation.** The real kernel sealed a `LocalLeanReplayAttestation` for Aristotle's `egmra_live_check : 2 + 2 = 4 := rfl` (claim `goal`, Lean 4.28.0, Mathlib v4.28.0, bound to the source-tree hash). The full chain — submit → poll → download → safe-extract (`promotable=false`) → **sealed local replay** — is live-verified. **Scenario 5 → PASS.**
+> - **CLI reachability.** New `egmra formalize --formalizer local|aristotle --declaration NAME --expected-type "T"` re-checks a candidate (local file or live Aristotle) with the pinned kernel and prints the sealed attestation or an honest rejection; it fails clearly if the project is not built or the checker key is unset.
+> - **Tests.** 11 hermetic checker tests (injected fake `lake`): pass path, `sorry`/native/hash-mismatch/kernel-failure/missing-declaration rejections, axiom-whitelist flagging, end-to-end seal through `AttestedKernelRunner` + `verify_for` + `LeanReplayVerifier`, and the soundness property that tampering the expected type breaks the hash binding.
+> - **Scenario 4** (browser → Lean) is no longer blocked on the checker; only wiring a browser-produced Lean proof through the formal path remains.
+
+
 
 
 The confirmed local defects (epistemic-invariant and security violations,

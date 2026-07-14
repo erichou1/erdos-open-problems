@@ -48,6 +48,11 @@ class LeanReplayTarget:
     expected_type_hash: str
     immutable_target_module_hash: str
     trust_policy_hash: str
+    # The intended Lean type expression the candidate declaration must prove. A
+    # real kernel checker uses this to build a definitional-equality obligation
+    # (``example : <expected_type_source> := @<declaration_name>``); hash-only
+    # test checkers ignore it.
+    expected_type_source: str = ""
 
 
 @dataclass
@@ -78,6 +83,8 @@ class LeanReplayVerifier:
             expected_type_hash=self.target.expected_type_hash,
             immutable_target_module_hash=self.target.immutable_target_module_hash,
             trust_policy_hash=self.target.trust_policy_hash,
+            source_root=str(quarantine_dir),
+            expected_type_source=self.target.expected_type_source,
         )
         try:
             attestation = self.checker.run(request)
