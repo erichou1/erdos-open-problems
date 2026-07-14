@@ -29,7 +29,10 @@ from egmra.provenance.hashing import sha256_hex
 from egmra.retrieval.records import TheoremRecord
 
 # Live fetches are confined to these hosts (no user-supplied URLs are ever fetched).
-_ALLOWED_HOSTS = frozenset({"export.arxiv.org", "api.crossref.org"})
+_ALLOWED_HOSTS = frozenset({
+    "export.arxiv.org", "api.crossref.org",
+    "api.semanticscholar.org", "api.stackexchange.com",
+})
 _ARXIV_NS = "{http://www.w3.org/2005/Atom}"
 _MAX_RESULTS = 25
 _JATS_TAG = re.compile(r"<[^>]+>")
@@ -90,6 +93,36 @@ class CrossrefRetriever:
             "query": _normalize(query)[:400], "rows": _clip_results(limit),
         })
         return parse_crossref_json(self.fetcher(url), retrieved_at=_now())
+
+
+@dataclass
+class SemanticScholarRetriever:
+    """Semantic Scholar graph API (JSON; keyless/rate-limited). Never a proof."""
+
+    fetcher: Fetcher
+    source_id: str = "semanticscholar"
+
+    def search(self, query: str, *, limit: int = 5) -> list[TheoremRecord]:
+        url = "https://api.semanticscholar.org/graph/v1/paper/search?" + urlencode({
+            "query": _normalize(query)[:400], "limit": _clip_results(limit),
+            "fields": "title,abstract,authors,year,url,externalIds",
+        })
+        return parse_semantic_scholar_json(self.fetcher(url), retrieved_at=_now())
+
+
+@dataclass
+class MathOverflowRetriever:
+    """MathOverflow via the StackExchange API (JSON; keyless/low-quota). Never a proof."""
+
+    fetcher: Fetcher
+    source_id: str = "mathoverflow"
+
+    def search(self, query: str, *, limit: int = 5) -> list[TheoremRecord]:
+        url = "https://api.stackexchange.com/2.3/search/advanced?" + urlencode({
+            "order": "desc", "sort": "relevance", "q": _normalize(query)[:400],
+            "site": "mathoverflow", "pagesize": _clip_results(limit), "filter": "withbody",
+        })
+        return parse_mathoverflow_json(self.fetcher(url), retrieved_at=_now())
 
 
 def parse_arxiv_atom(text: str, *, retrieved_at: str = "") -> list[TheoremRecord]:
@@ -187,9 +220,110 @@ def parse_crossref_json(text: str, *, retrieved_at: str = "") -> list[TheoremRec
     return records
 
 
+def _loads_object(text: str, source: str) -> dict:
+    try:
+        document = json.loads(text)
+    except (json.JSONDecodeError, ValueError) as exc:
+        raise ScholarlyRetrievalError(f"{source} response is not valid JSON: {exc}") from exc
+    if not isinstance(document, dict):
+        raise ScholarlyRetrievalError(f"{source} response must be a JSON object")
+    return document
+
+
+def parse_semantic_scholar_json(text: str, *, retrieved_at: str = "") -> list[TheoremRecord]:
+    """Parse a Semantic Scholar paper-search response into auditable records."""
+    document = _loads_object(text, "Semantic Scholar")
+    items = document.get("data")
+    if not isinstance(items, list):
+        raise ScholarlyRetrievalError("Semantic Scholar 'data' is not a list")
+    records: list[TheoremRecord] = []
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        paper_id = _normalize(str(item.get("paperId", "")))
+        title = _normalize(str(item.get("title", "") or ""))
+        if not (paper_id and title):
+            continue
+        abstract = _normalize(str(item.get("abstract", "") or ""))
+        authors = tuple(
+            _normalize(str(a.get("name", "")))
+            for a in (item.get("authors") or [])
+            if isinstance(a, dict) and _normalize(str(a.get("name", "")))
+        )
+        year = _normalize(str(item.get("year", "") or ""))
+        source_uri = _normalize(str(item.get("url", ""))) \
+            or f"https://www.semanticscholar.org/paper/{paper_id}"
+        extract = f"{title}\n\n{abstract}".strip()
+        records.append(TheoremRecord(
+            theorem_id=f"s2:{paper_id}",
+            canonical_statement=title,
+            conclusion=title,
+            source_uri=source_uri,
+            source_version=year or paper_id,
+            source_content_hash=sha256_hex(f"{title}\n{abstract}"),
+            verbatim_theorem_and_hypothesis_extract=extract,
+            extraction_method="semantic_scholar_api",
+            extraction_confidence=0.4,
+            retrieved_at=retrieved_at,
+            authors=authors,
+            date=year,
+            proof_status="unknown",
+            independent_verification_status="unverified",
+            license="see Semantic Scholar terms",
+        ))
+    return records
+
+
+def parse_mathoverflow_json(text: str, *, retrieved_at: str = "") -> list[TheoremRecord]:
+    """Parse a StackExchange (MathOverflow) search response into auditable records.
+
+    A MathOverflow question is a *discussion*, not a theorem: it is recorded as
+    unverified provenance that only seeds hypotheses/queries.
+    """
+    document = _loads_object(text, "MathOverflow")
+    items = document.get("items")
+    if not isinstance(items, list):
+        raise ScholarlyRetrievalError("MathOverflow 'items' is not a list")
+    records: list[TheoremRecord] = []
+    for item in items:
+        if not isinstance(item, dict):
+            continue
+        question_id = _normalize(str(item.get("question_id", "")))
+        title = _normalize(str(item.get("title", "") or ""))
+        if not (question_id and title):
+            continue
+        body = _normalize(_JATS_TAG.sub(" ", str(item.get("body", "") or "")))
+        owner = item.get("owner") if isinstance(item.get("owner"), dict) else {}
+        author = _normalize(str(owner.get("display_name", "") or ""))
+        created = _normalize(str(item.get("creation_date", "") or ""))
+        source_uri = _normalize(str(item.get("link", ""))) \
+            or f"https://mathoverflow.net/questions/{question_id}"
+        extract = f"{title}\n\n{body}".strip()
+        records.append(TheoremRecord(
+            theorem_id=f"mathoverflow:{question_id}",
+            canonical_statement=title,
+            conclusion=title,
+            source_uri=source_uri,
+            source_version=created or question_id,
+            source_content_hash=sha256_hex(f"{title}\n{body}"),
+            verbatim_theorem_and_hypothesis_extract=extract,
+            extraction_method="mathoverflow_api",
+            extraction_confidence=0.3,  # a discussion thread, not a theorem statement
+            retrieved_at=retrieved_at,
+            authors=(author,) if author else (),
+            date=created,
+            proof_status="unknown",
+            independent_verification_status="unverified",
+            license="CC BY-SA (StackExchange)",
+        ))
+    return records
+
+
 _RETRIEVERS: dict[str, type] = {
     "arxiv": ArxivRetriever,
     "crossref": CrossrefRetriever,
+    "semanticscholar": SemanticScholarRetriever,
+    "mathoverflow": MathOverflowRetriever,
 }
 
 SCHOLARLY_SOURCES = tuple(_RETRIEVERS)
@@ -254,4 +388,14 @@ class UrllibFetcher:  # pragma: no cover - performs live network I/O
             raise ScholarlyRetrievalError(f"scholarly fetch failed: {exc}") from exc
         if len(data) > self.max_bytes:
             raise ScholarlyRetrievalError("scholarly response exceeded the size cap")
+        # The StackExchange (MathOverflow) API always gzips its responses.
+        if data[:2] == b"\x1f\x8b":
+            import gzip
+
+            try:
+                data = gzip.decompress(data)
+            except OSError as exc:
+                raise ScholarlyRetrievalError(f"could not gunzip response: {exc}") from exc
+            if len(data) > self.max_bytes:
+                raise ScholarlyRetrievalError("decompressed response exceeded the size cap")
         return data.decode("utf-8", errors="replace")

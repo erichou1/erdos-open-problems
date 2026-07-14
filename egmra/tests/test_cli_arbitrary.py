@@ -643,3 +643,43 @@ def test_run_retrieval_arxiv_builds_scholarly_corpus(tmp_path, monkeypatch, caps
     out = json.loads(capsys.readouterr().out)
     assert out["retrieval"]["mode"] == "arxiv"
     assert out["retrieval"]["corpus_records"] >= 1  # a real, auditable scholarly record
+
+
+def test_campaign_scholarly_retrieval_is_built_per_problem(tmp_path, monkeypatch):
+    # A scholarly campaign rebuilds a query-specific corpus for EACH problem
+    # (not a single shared snapshot).
+    from types import SimpleNamespace
+    import egmra.cli as cli_module
+
+    arxiv_xml = ('<?xml version="1.0"?><feed xmlns="http://www.w3.org/2005/Atom">'
+                 '<entry><id>http://arxiv.org/abs/2401.00001v1</id>'
+                 '<published>2024-01-01T00:00:00Z</published>'
+                 '<title>On prime gaps</title><summary>We study gaps.</summary>'
+                 '<author><name>Ada</name></author></entry></feed>')
+
+    class _FakeFetcher:
+        def __init__(self, *a, **k):
+            pass
+
+        def __call__(self, url):
+            return arxiv_xml
+
+    monkeypatch.setattr(cli_module, "UrllibFetcher", _FakeFetcher)
+    monkeypatch.setattr(cli_module, "from_erdos_number",
+                        lambda number, **kw: SimpleNamespace(
+                            problem_id=f"erdos-{number}", source_bytes=b"S", source_id="fx",
+                            display_statement="gaps between consecutive primes",
+                            status_claims=[], novelty_verdict="N1"))
+    seen: list = []
+    monkeypatch.setattr(cli_module, "research",
+                        lambda **kwargs: seen.append(kwargs["retrieval_corpus"]) or object())
+    monkeypatch.setattr(cli_module, "classify_result",
+                        lambda result, **kw: SimpleNamespace(state="OPEN_NO_PROGRESS"))
+    cfg = _config_file(tmp_path)
+    policy = _signed_policy_file(tmp_path)
+    rc = main(["--config", str(cfg), "campaign", "--provider", "deterministic", "--workers", "1",
+               "--erdos-range", "5-6", "--policy", str(policy),
+               "--state", str(tmp_path / "c.json"), "--retrieval", "arxiv"])
+    assert rc == 0
+    # One query-specific, non-empty auditable corpus per problem (2 problems).
+    assert len(seen) == 2 and all(corpus for corpus in seen)

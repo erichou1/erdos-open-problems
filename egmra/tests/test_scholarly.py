@@ -16,6 +16,8 @@ from egmra.retrieval.scholarly import (
     build_scholarly_corpus,
     parse_arxiv_atom,
     parse_crossref_json,
+    parse_mathoverflow_json,
+    parse_semantic_scholar_json,
 )
 
 _ARXIV_XML = """<?xml version="1.0" encoding="UTF-8"?>
@@ -36,6 +38,19 @@ _CROSSREF_JSON = (
     '"author": [{"given": "Carl", "family": "Gauss"}], '
     '"URL": "https://doi.org/10.1000/xyz", '
     '"issued": {"date-parts": [[2020, 5]]}}]}}'
+)
+
+_S2_JSON = (
+    '{"total": 1, "data": [{"paperId": "abc123", '
+    '"title": "On the distribution of primes", "abstract": "We refine bounds.", '
+    '"authors": [{"name": "Bernhard Riemann"}], "year": 1859, '
+    '"url": "https://www.semanticscholar.org/paper/abc123"}]}'
+)
+
+_MO_JSON = (
+    '{"items": [{"question_id": 42, "title": "Is every prime gap bounded?", '
+    '"body": "<p>Consider the gaps.</p>", "owner": {"display_name": "Terry"}, '
+    '"creation_date": 1600000000, "link": "https://mathoverflow.net/questions/42/x"}]}'
 )
 
 
@@ -85,7 +100,8 @@ def test_build_scholarly_corpus_merges_sources_and_dedups():
             return _CROSSREF_JSON
         raise AssertionError(f"unexpected url: {url}")
 
-    records = build_scholarly_corpus("prime gaps", fetcher=fetcher, limit=5)
+    records = build_scholarly_corpus("prime gaps", fetcher=fetcher, limit=5,
+                                     sources=("arxiv", "crossref"))
     assert {r.theorem_id for r in records} == {"arxiv:2401.00001v1", "doi:10.1000/xyz"}
     assert all(r.is_auditable() and r.proof_status == "unknown" for r in records)
 
@@ -102,6 +118,54 @@ def test_build_scholarly_corpus_skips_a_source_outage():
 
 def test_build_scholarly_corpus_empty_query_returns_empty():
     assert build_scholarly_corpus("   ", fetcher=lambda url: _ARXIV_XML) == []
+
+
+def test_parse_semantic_scholar_json_is_auditable_and_unproven():
+    records = parse_semantic_scholar_json(_S2_JSON)
+    assert len(records) == 1
+    record = records[0]
+    assert record.theorem_id == "s2:abc123"
+    assert record.source_uri == "https://www.semanticscholar.org/paper/abc123"
+    assert record.source_version == "1859" and record.authors == ("Bernhard Riemann",)
+    assert "refine bounds" in record.verbatim_theorem_and_hypothesis_extract
+    assert record.is_auditable() and record.proof_status == "unknown"
+
+
+def test_parse_mathoverflow_json_strips_html_and_is_auditable():
+    records = parse_mathoverflow_json(_MO_JSON)
+    assert len(records) == 1
+    record = records[0]
+    assert record.theorem_id == "mathoverflow:42"
+    assert record.source_uri == "https://mathoverflow.net/questions/42/x"
+    assert record.authors == ("Terry",)
+    assert "Consider the gaps." in record.verbatim_theorem_and_hypothesis_extract
+    assert "<p>" not in record.verbatim_theorem_and_hypothesis_extract
+    assert record.is_auditable() and record.proof_status == "unknown"
+
+
+def test_new_backend_parsers_reject_malformed_payloads():
+    with pytest.raises(ScholarlyRetrievalError):
+        parse_semantic_scholar_json("[1, 2, 3]")  # not an object
+    with pytest.raises(ScholarlyRetrievalError):
+        parse_mathoverflow_json("not json")
+
+
+def test_build_scholarly_corpus_merges_all_four_sources():
+    def fetcher(url: str) -> str:
+        if "export.arxiv.org" in url:
+            return _ARXIV_XML
+        if "api.crossref.org" in url:
+            return _CROSSREF_JSON
+        if "api.semanticscholar.org" in url:
+            return _S2_JSON
+        if "api.stackexchange.com" in url:
+            return _MO_JSON
+        raise AssertionError(f"unexpected url: {url}")
+
+    records = build_scholarly_corpus("primes", fetcher=fetcher)  # default sources = all four
+    assert {r.theorem_id for r in records} == {
+        "arxiv:2401.00001v1", "doi:10.1000/xyz", "s2:abc123", "mathoverflow:42"}
+    assert all(r.is_auditable() and r.proof_status == "unknown" for r in records)
 
 
 def test_urllib_fetcher_refuses_non_allowlisted_urls():

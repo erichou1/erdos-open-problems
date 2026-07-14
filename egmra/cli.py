@@ -945,9 +945,10 @@ def cmd_campaign(args: argparse.Namespace) -> int:
         for formalizer in formalizers_by_worker.values():
             formalizer.close()
         raise
-    # Build the immutable literature corpus once; it is shared read-only across
-    # worker threads (the retrieval service copies it per packet).
-    retrieval_corpus = _build_retrieval_corpus(args, config)
+    # Literature corpus: built once (shared, read-only) for the packaged snapshot,
+    # or rebuilt per-problem for the query-specific LIVE scholarly modes.
+    scholarly_mode = args.retrieval not in {"corpus", "none"}
+    shared_corpus = None if scholarly_mode else _build_retrieval_corpus(args, config)
 
     def run_one(problem_id: str, fencing_token: int, worker_id: str) -> str:
         # Each worker drives its own browser tab (or shares the deterministic runner)
@@ -955,6 +956,9 @@ def cmd_campaign(args: argparse.Namespace) -> int:
         worker_runner = runners_by_worker[worker_id] if browser_engine is not None else runner
         number = int(problem_id.split("-", 1)[1])
         problem = from_erdos_number(number, corpus_tex_path=corpus_tex, catalog_path=catalog)
+        retrieval_corpus = (
+            _build_retrieval_corpus(args, config, query=problem.display_statement)
+            if scholarly_mode else shared_corpus)
         worker = RunnerWorker(runner=worker_runner, goal_claim_id="goal",
                               goal_formula=problem.display_statement, role=args.role,
                               compute_service=ComputeService(),
@@ -1198,11 +1202,14 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--dsn", default=None,
                      help="Postgres DSN for --event-store postgres (or set EGMRA_POSTGRES_DSN); "
                           "credentials are read from the environment and never logged")
-    run.add_argument("--retrieval", choices=("corpus", "arxiv", "crossref", "scholarly", "none"),
+    run.add_argument("--retrieval",
+                     choices=("corpus", "arxiv", "crossref", "semanticscholar", "mathoverflow",
+                              "scholarly", "none"),
                      default="corpus",
                      help="literature retrieval: 'corpus' (packaged Erdős snapshot), "
-                          "'arxiv'/'crossref'/'scholarly' (LIVE query-specific scholarly "
-                          "retrieval on the problem statement), or 'none' (empty)")
+                          "'arxiv'/'crossref'/'semanticscholar'/'mathoverflow' or 'scholarly' "
+                          "(LIVE query-specific scholarly retrieval on the problem statement; "
+                          "'scholarly' merges all sources), or 'none' (empty)")
     run.add_argument("--oeis", choices=("auto", "offline", "live"), default="auto",
                      help="OEIS sequence lookups: 'auto' (config), 'offline' (cache only), "
                           "or 'live' (oeis.org)")
@@ -1263,8 +1270,12 @@ def build_parser() -> argparse.ArgumentParser:
                                "uses --dsn or EGMRA_POSTGRES_DSN)")
     campaign.add_argument("--dsn", default=None,
                           help="Postgres DSN for --event-store postgres (or EGMRA_POSTGRES_DSN)")
-    campaign.add_argument("--retrieval", choices=("corpus", "none"), default="corpus",
-                          help="literature retrieval corpus source (default: Erdős snapshot)")
+    campaign.add_argument("--retrieval",
+                          choices=("corpus", "arxiv", "crossref", "semanticscholar",
+                                   "mathoverflow", "scholarly", "none"),
+                          default="corpus",
+                          help="literature retrieval source (default: Erdős snapshot); the "
+                               "scholarly modes retrieve LIVE per problem statement")
     campaign.add_argument("--oeis", choices=("auto", "offline", "live"), default="auto",
                           help="OEIS lookup mode ('auto', 'offline', or 'live')")
     campaign.add_argument("--lean-project", type=Path, default=None,
