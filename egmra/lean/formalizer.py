@@ -137,3 +137,110 @@ class AristotleFormalizer:
                 close()
             except Exception:  # noqa: BLE001 - best-effort teardown
                 pass
+
+
+def extract_lean_source(text: str) -> str:
+    """Extract Lean source from a model reply (fenced block preferred)."""
+    if not isinstance(text, str) or not text.strip():
+        return ""
+    marker = "```lean"
+    start = text.find(marker)
+    if start < 0:
+        marker = "```"
+        start = text.find(marker)
+    if start >= 0:
+        body_start = start + len(marker)
+        end = text.find("```", body_start)
+        if end > body_start:
+            return text[body_start:end].strip()
+    # No fence: accept only text that plausibly IS a Lean file.
+    stripped = text.strip()
+    if stripped.startswith("import ") or "theorem " in stripped or "lemma " in stripped:
+        return stripped
+    return ""
+
+
+@dataclass
+class ApiFormalizer:
+    """A prover portfolio member backed by any :class:`ModelRunner`.
+
+    Point it at an attested API runner (e.g. ``deepseek-api`` — DeepSeek's
+    prover models are OpenAI-compatible) for a second, independent formal
+    engine beside Aristotle.  Its output is exactly as untrusted as any other
+    formalizer's: the pinned kernel re-checks every candidate downstream, so a
+    weak or hallucinating provider can waste budget but never mint a proof.
+    """
+
+    runner: Any
+    formalizer_id: str = "api"
+
+    def formalize(self, *, declaration_name: str, expected_type: str,
+                  informal_statement: str, previous_source: str = "",
+                  kernel_feedback: str = "") -> str | None:
+        prompt = build_formalization_prompt(
+            declaration_name=declaration_name, expected_type=expected_type,
+            informal_statement=informal_statement,
+            previous_source=previous_source, kernel_feedback=kernel_feedback)
+        response = self.runner.run(prompt, stage="formalize")
+        return extract_lean_source(getattr(response, "text", "")) or None
+
+    def close(self) -> None:
+        close = getattr(self.runner, "close", None)
+        if callable(close):
+            try:
+                close()
+            except Exception:  # noqa: BLE001 - best-effort teardown
+                pass
+
+
+@dataclass
+class PortfolioFormalizer:
+    """Try several formal engines in order until one produces a candidate (R6).
+
+    A member outage or empty answer falls through to the next member; the
+    portfolio never fabricates source.  Repair rounds forward the kernel
+    feedback to every member the same way, so whichever engine answers gets
+    the diagnostics.
+    """
+
+    members: list[Any]
+    formalizer_id: str = "portfolio"
+
+    def formalize(self, *, declaration_name: str, expected_type: str,
+                  informal_statement: str, previous_source: str = "",
+                  kernel_feedback: str = "") -> str | None:
+        for member in self.members:
+            try:
+                produced = member.formalize(
+                    declaration_name=declaration_name,
+                    expected_type=expected_type,
+                    informal_statement=informal_statement,
+                    previous_source=previous_source,
+                    kernel_feedback=kernel_feedback,
+                )
+            except TypeError:
+                # A legacy member without repair kwargs still serves round 1.
+                if previous_source or kernel_feedback:
+                    continue
+                try:
+                    produced = member.formalize(
+                        declaration_name=declaration_name,
+                        expected_type=expected_type,
+                        informal_statement=informal_statement,
+                    )
+                except Exception:  # noqa: BLE001 - member outage is not a failure
+                    continue
+            except Exception:  # noqa: BLE001 - member outage is not a math failure
+                continue
+            if produced and produced.strip():
+                return produced
+        return None
+
+    def close(self) -> None:
+        for member in self.members:
+            close = getattr(member, "close", None)
+            if callable(close):
+                try:
+                    close()
+                except Exception:  # noqa: BLE001 - best-effort teardown
+                    pass

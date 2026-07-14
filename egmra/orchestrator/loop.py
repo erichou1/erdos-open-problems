@@ -20,6 +20,7 @@ from contextlib import contextmanager
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 import inspect
+import json
 import re
 import sys
 import threading
@@ -45,6 +46,7 @@ from egmra.policy import PolicyEnforcer
 from egmra.provenance.hashing import canonical_json, content_id, is_sha256, sha256_hex
 from egmra.release.certificate import ReleaseCertificate
 from egmra.release.compiler import CompiledProof, assemble_from_admitted_graph
+from egmra.release.expert_review import ExpertReviewCertificate, expert_reviewed_for_run
 from egmra.release.gates import FiveGateResult, run_five_gates
 from egmra.release.policy import PromotionDecision, PromotionPolicy
 from egmra.retrieval.packet import LiteratureQuery, SourcePacket
@@ -714,6 +716,30 @@ def _import_applicable(claim_formula: str, record: Any) -> bool:
     return overlap >= 0.5
 
 
+def _seed_controller_from_memory(controller: Controller, memory: LongTermMemory,
+                                 programs: list[ResearchProgram]) -> None:
+    """Replay bounded cross-problem branch-family outcomes as posterior updates."""
+    families = {program.family for program in programs}
+    replayed = 0
+    for record in reversed(memory.procedural.records):
+        if replayed >= 24:
+            break
+        if not isinstance(record, dict) \
+                or record.get("kind") != "branch_family_outcome":
+            continue
+        family = record.get("branch_family")
+        if family not in families:
+            continue
+        try:
+            controller.update_posterior(
+                family, success=bool(record.get("supported")),
+                debt_reduction=0.0,
+            )
+        except (KeyError, ValueError):
+            continue
+        replayed += 1
+
+
 def _supports_repair(formalizer: Any) -> bool:
     """True when the formalizer's ``formalize`` accepts repair feedback.
 
@@ -731,13 +757,15 @@ def _write_branch_checkpoint(
     checkpoint_dir: Path | str, *, problem_id: str, branch_id: str,
     log: EventLog, contract: ProblemContract, interp: Any,
     graph: EpistemicGraph, budget_ledger: "BudgetLedger", failures: list[str],
+    attempted: set[str] | None = None,
 ) -> Path | None:
     """Seal and persist one signed within-problem checkpoint (ops aid).
 
     The checkpoint commits to the exact event-log prefix (merkle root), the
-    graph view hash, and the remaining budget; ``resume()`` can later verify
-    it against a stored event log.  Any failure here is recorded as an
-    operational failure string — never a mathematical verdict.
+    graph view hash, the attempted-branch set, and the remaining budget;
+    ``resume()`` can later verify it against a stored event log.  Any failure
+    here is recorded as an operational failure string — never a mathematical
+    verdict.
     """
     try:
         checkpoint = take_checkpoint(
@@ -745,7 +773,9 @@ def _write_branch_checkpoint(
             problem_contract_hash=contract.source_bytes_hash,
             interpretation_hashes=(interpretation_review_hash(interp),),
             graph_view_hash=graph.view_hash(),
-            controller_posteriors={},
+            controller_posteriors={
+                "attempted_branches": sorted(attempted or ()),
+            },
             budgets={"remaining": float(budget_ledger.remaining),
                      "total": float(budget_ledger.total)},
             seeds={},
@@ -769,6 +799,76 @@ def _write_branch_checkpoint(
         failures.append(
             f"checkpoint_write_failed:{branch_id}:{type(exc).__name__}")
         return None
+
+
+def _load_resume_checkpoint(
+    resume_from: Path | str, *, problem_id: str, contract: ProblemContract,
+    log: EventLog, failures: list[str],
+) -> tuple[list[str], float, bool] | None:
+    """Load and verify the latest checkpoint; fail closed to a fresh start.
+
+    Returns ``(attempted_branches, prior_spend, chain_verified)``.  The
+    signature and the problem-contract binding are always required.  The full
+    event-chain prefix additionally verifies when the current run continues
+    the SAME event log (same run id); a fresh log yields an honest warm start
+    (branch skip + budget carry) without claiming chain continuity.
+    """
+    from egmra.orchestrator.checkpoint import Checkpoint, resume as verify_resume
+
+    directory = Path(resume_from) / problem_id
+    try:
+        candidates = sorted(directory.glob("checkpoint_*.json"))
+    except OSError:
+        candidates = []
+    if not candidates:
+        return None
+    path = candidates[-1]
+    try:
+        if path.is_symlink():
+            raise ValueError("checkpoint file is a symlink")
+        record = json.loads(path.read_text(encoding="utf-8"))
+        checkpoint = Checkpoint(
+            run_id=record["run_id"], last_sequence=record["last_sequence"],
+            last_event_id=record["last_event_id"],
+            merkle_root=record["merkle_root"],
+            problem_contract_hash=record["problem_contract_hash"],
+            interpretation_hashes=tuple(record["interpretation_hashes"]),
+            graph_view_hash=record["graph_view_hash"],
+            controller_posteriors=record["controller_posteriors"],
+            budgets=record["budgets"], seeds=record["seeds"],
+            active_leases=tuple(record["active_leases"]),
+            behavior_closure_fingerprint=record["behavior_closure_fingerprint"],
+            stage_caches=record["stage_caches"],
+            rate_limit_state=record["rate_limit_state"],
+            in_flight_calls=tuple(record["in_flight_calls"]),
+            _sealed_hash=record["sealed_hash"], _signature=record["signature"],
+        )
+    except (OSError, KeyError, TypeError, ValueError, CheckpointError) as exc:
+        failures.append(f"resume_rejected:malformed:{type(exc).__name__}")
+        return None
+    if not checkpoint.verify_checkpoint_hash():
+        failures.append("resume_rejected:signature")
+        return None
+    if checkpoint.problem_contract_hash != contract.source_bytes_hash:
+        failures.append("resume_rejected:contract_mismatch")
+        return None
+    chain_verified = False
+    if checkpoint.run_id == log.run_id:
+        try:
+            chain_verified = verify_resume(
+                checkpoint, log=log,
+                current_closure_fingerprint=sha256_hex(_RESEARCH_LOOP_CLOSURE),
+            ).ok
+        except (CheckpointError, TypeError, ValueError):
+            chain_verified = False
+    branches = [
+        str(branch) for branch in
+        checkpoint.controller_posteriors.get("attempted_branches", ())
+    ]
+    budgets = checkpoint.budgets
+    prior_spend = max(
+        0.0, float(budgets.get("total", 0.0)) - float(budgets.get("remaining", 0.0)))
+    return branches, prior_spend, chain_verified
 
 
 def _proposed_dependency_cone(graph: EpistemicGraph, goal_claim_id: str) -> list[str]:
@@ -831,6 +931,9 @@ def research(
     informal_reviewers: list[tuple[str, ModelRunner]] | None = None,
     lean_repair_rounds: int = 0,
     checkpoint_dir: Path | str | None = None,
+    resume_from: Path | str | None = None,
+    expert_review: ExpertReviewCertificate | None = None,
+    explore_blocked: bool = False,
     max_iterations: int = 4,
 ) -> ResearchResult:
     """Run the full research loop for one problem."""
@@ -973,6 +1076,17 @@ def research(
     selector = ProblemSelector(seed=0)
     selected = selector.select([(features, CompetingRiskPosterior())], k=1)
     acquired = problem_id in selected and budget_ledger.remaining > 0
+    # Interpretation ambiguity is the dominant live funnel drop: the selector
+    # honestly declines targets whose reading is disputed, so blocked problems
+    # end with zero branch work. ``explore_blocked`` overrides ACQUISITION
+    # only — lemmas, falsifiers, and experiments still accumulate under the
+    # primary interpretation while release stays blocked (a blocked
+    # interpretation can never certify), and the override is recorded.
+    if explore_blocked and release_blocked and not acquired \
+            and budget_ledger.remaining > 0 and interp.conclusion.strip():
+        acquired = True
+        failures.append("acquisition_overridden_for_blocked_exploration")
+        phases.append("explore_blocked_override")
     phases.append("score_and_acquire")
 
     # 9-10. Instantiate mechanism-distinct programs and a direct-first AND/OR
@@ -1047,6 +1161,11 @@ def research(
     controller = Controller(global_budget=budget_ledger.remaining, seed=0)
     for program in programs:
         controller.register(BranchPosterior(program.family))
+    # R12-lite cross-problem priors: earlier runs sharing this LongTermMemory
+    # (a campaign) recorded per-family outcomes into procedural memory; replay
+    # them (bounded) so families that actually produce supported claims start
+    # ahead. Never a truth signal — only search-order preference.
+    _seed_controller_from_memory(controller, memory, programs)
     leases = lease_manager or LeaseManager()
     authority_issuer = AuthorityTokenIssuer()
     blackboard = Blackboard(graph, authority_guard=authority_issuer)
@@ -1059,6 +1178,24 @@ def research(
         trusted_compute_service = getattr(worker, "compute_service", None)
     phases.append("deep_branches")
     attempted: set[str] = set()
+    # Consume a durable within-problem checkpoint: a verified prior snapshot
+    # seeds the attempted-branch set (no branch is re-bought) and re-books the
+    # budget already spent.  Verification fails closed — a bad checkpoint is
+    # recorded and the run simply starts fresh.
+    if resume_from is not None:
+        resumed = _load_resume_checkpoint(
+            resume_from, problem_id=problem_id, contract=contract, log=log,
+            failures=failures,
+        )
+        if resumed is not None:
+            resumed_branches, prior_spend, chain_verified = resumed
+            attempted.update(resumed_branches)
+            if prior_spend > 0:
+                budget_ledger.allocate(
+                    "resumed_prior_spend",
+                    min(budget_ledger.remaining, prior_spend))
+            phases.append(
+                "resume_verified" if chain_verified else "resume_warm_start")
     for _ in range(max_iterations):
         if not acquired or not programs or not controller.has_budget():
             break
@@ -1553,6 +1690,13 @@ def research(
         controller.update_posterior(
             branch_id, success=supported, debt_reduction=debt_reduction,
         )
+        memory.procedural.admit({
+            "kind": "branch_family_outcome",
+            "problem_id": problem_id,
+            "branch_family": branch_id,
+            "supported": bool(supported),
+            "cross_problem_usable": True,
+        })
         leaf = blueprint.nodes.get(f"leaf:{branch_id}")
         if leaf is not None:
             leaf.closed = supported
@@ -1567,6 +1711,7 @@ def research(
                 checkpoint_dir, problem_id=problem_id, branch_id=branch_id,
                 log=log, contract=contract, interp=interp, graph=graph,
                 budget_ledger=budget_ledger, failures=failures,
+                attempted=attempted,
             )
             if "checkpoint" not in phases:
                 phases.append("checkpoint")
@@ -1698,6 +1843,11 @@ def research(
             novelty_verdict=novelty_verdict, informal_only=informal_only,
             responsive=bool(compiled and compiled.complete),
             non_vacuous=_non_vacuous_supported_result(goal),
+            expert_reviewed=expert_reviewed_for_run(
+                expert_review,
+                source_bytes_hash=contract.source_bytes_hash,
+                informal_claim_hash=informal_claim_hash,
+            ),
             dependency_audit_complete=dependency_audit_complete,
             replay_reports=replay_reports,
             source_bytes_hash=contract.source_bytes_hash,

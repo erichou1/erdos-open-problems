@@ -37,6 +37,25 @@ def build_outcome_record(
     certificate = getattr(result, "certificate", None)
     compiled = getattr(result, "compiled_proof", None)
     graph = getattr(result, "graph", None)
+    # R7 salvage: a failed goal often leaves genuinely supported subsidiary
+    # claims (and cleanly refuted ones). Record them — id, canonical hash,
+    # scope, and the supporting dimensions — so later attempts and audits can
+    # reuse the work without re-deriving it. Never a release signal.
+    salvage: dict[str, list[dict]] = {"supported": [], "refuted": []}
+    goal_id = getattr(compiled, "goal_id", None) or "goal"
+    for claim_id, claim in (getattr(graph, "claims", None) or {}).items():
+        if claim_id == goal_id:
+            continue
+        status = getattr(getattr(claim, "truth_status", None), "value", "")
+        if status not in ("SUPPORTED", "REFUTED"):
+            continue
+        profile = getattr(claim, "evidence_profile", None)
+        salvage["supported" if status == "SUPPORTED" else "refuted"].append({
+            "claim_id": claim_id,
+            "canonical_hash": getattr(claim, "canonical_hash", ""),
+            "scope": getattr(claim, "scope", ""),
+            "profile": profile.to_dict() if profile is not None else None,
+        })
     return {
         "schema_version": SCHEMA_VERSION,
         "problem_id": problem_id,
@@ -53,6 +72,7 @@ def build_outcome_record(
         ),
         "gate_profile": gates.profile() if gates is not None else None,
         "event_count": len(graph.log) if graph is not None else 0,
+        "salvage": salvage,
     }
 
 

@@ -184,6 +184,13 @@ def _build_runner(provider: str, *, throttle: "SharedThrottle | None" = None):
     """
     if provider == "deterministic":
         return StructuredDemoRunner()
+    if provider in ("openai-api", "deepseek-api", "anthropic-api"):
+        from egmra.agents.api_runner import ApiProviderError, build_api_runner
+
+        try:
+            return build_api_runner(provider)
+        except ApiProviderError as exc:
+            raise ValueError(str(exc)) from exc
     if provider == "browser":
         try:
             from egmra.agents.browser_runner import (
@@ -370,69 +377,146 @@ def _build_lean_service(args: argparse.Namespace):
 
 
 def _build_formalizer(args: argparse.Namespace):
-    """Build an autonomous formalization worker for `egmra run` (task #5).
+    """Build an autonomous formalization worker for `egmra run` (task #5 + R6).
 
-    ``--formalizer aristotle`` makes the research controller dispatch a *pinned*
-    formalization obligation (declaration name + intended Lean type) to the live
-    Aristotle service and re-check the produced Lean with the pinned kernel — so
-    Aristotle becomes an integrated formalization worker, not a tool beside the
-    pipeline. The vendor supplies only the proof term; a vendor status never
-    promotes on its own. Requires a built ``--lean-project`` (to formalize against
-    the pinned toolchain and to have a LeanService kernel to verify) and
-    ``ARISTOTLE_API_KEY``. Returns ``None`` for the default ``none``.
+    ``aristotle`` dispatches pinned obligations to the live Aristotle service;
+    ``api`` uses an attested API provider (``--formalizer-provider``) as the
+    formal engine; ``portfolio`` tries Aristotle first then the API engine —
+    a real prover portfolio with no single point of failure. Every produced
+    candidate is re-checked by the pinned kernel; a vendor status never
+    promotes on its own. Returns ``None`` for the default ``none``.
     """
-    if getattr(args, "formalizer", "none") != "aristotle":
+    kind = getattr(args, "formalizer", "none")
+    if kind == "none":
         return None
     lean_project = getattr(args, "lean_project", None)
     if not lean_project:
         raise ValueError(
-            "--formalizer aristotle requires --lean-project (the built pinned Lean "
+            f"--formalizer {kind} requires --lean-project (the built pinned Lean "
             "project used to formalize and to re-check with the kernel)")
-    quarantine_root = Path("egmra_quarantine") / "formalize_run"
-    try:
-        client = AristotleSdkClient(
-            quarantine_root=quarantine_root, project_dir=Path(lean_project), env=os.environ)
-    except (Exception, SystemExit) as exc:  # noqa: BLE001 - surface as a clean CLI error
-        raise ValueError(
-            f"aristotle formalizer is not operational ({type(exc).__name__}: {exc}); "
-            "set ARISTOTLE_API_KEY and pass a built --lean-project, or use "
-            "--formalizer none"
-        ) from exc
-    return AristotleFormalizer(client=client)
+    members: list = []
+    if kind in ("aristotle", "portfolio"):
+        quarantine_root = Path("egmra_quarantine") / "formalize_run"
+        try:
+            client = AristotleSdkClient(
+                quarantine_root=quarantine_root, project_dir=Path(lean_project), env=os.environ)
+        except (Exception, SystemExit) as exc:  # noqa: BLE001 - surface as a clean CLI error
+            if kind == "aristotle":
+                raise ValueError(
+                    f"aristotle formalizer is not operational ({type(exc).__name__}: {exc}); "
+                    "set ARISTOTLE_API_KEY and pass a built --lean-project, or use "
+                    "--formalizer none"
+                ) from exc
+        else:
+            members.append(AristotleFormalizer(client=client))
+    if kind in ("api", "portfolio"):
+        from egmra.agents.api_runner import ApiProviderError, build_api_runner
+        from egmra.lean.formalizer import ApiFormalizer
+
+        provider = getattr(args, "formalizer_provider", None) or "deepseek-api"
+        try:
+            members.append(ApiFormalizer(
+                runner=build_api_runner(provider),
+                formalizer_id=f"api:{provider}"))
+        except ApiProviderError as exc:
+            if kind == "api" or not members:
+                raise ValueError(str(exc)) from exc
+    if not members:
+        raise ValueError(f"--formalizer {kind}: no formal engine is operational")
+    if len(members) == 1:
+        return members[0]
+    from egmra.lean.formalizer import PortfolioFormalizer
+
+    return PortfolioFormalizer(members=members)
 
 
 def _build_worker_formalizers(args: argparse.Namespace, worker_ids: tuple[str, ...]) -> dict:
-    """Build one autonomous Aristotle formalizer per campaign worker (task #5).
+    """Build one autonomous formalizer per campaign worker (task #5 + R6).
 
-    Each worker gets its OWN :class:`AristotleSdkClient` (its own event loop): the
-    SDK client is driven synchronously on a single loop and is not shared across
-    the concurrent worker threads. Returns ``{}`` for the default ``none``. Any
-    partially built clients are closed if construction later fails.
+    Each worker gets its OWN engine instances: the Aristotle SDK client is
+    driven synchronously on a single loop and is not shared across the
+    concurrent worker threads; API formalizers are stateless per call. Returns
+    ``{}`` for the default ``none``. Any partially built clients are closed if
+    construction later fails.
     """
-    if getattr(args, "formalizer", "none") != "aristotle":
+    kind = getattr(args, "formalizer", "none")
+    if kind == "none":
         return {}
     lean_project = getattr(args, "lean_project", None)
     if not lean_project:
         raise ValueError(
-            "--formalizer aristotle requires --lean-project (the built pinned Lean "
+            f"--formalizer {kind} requires --lean-project (the built pinned Lean "
             "project used to formalize and to re-check with the kernel)")
     formalizers: dict = {}
     for worker_id in worker_ids:
-        quarantine_root = Path("egmra_quarantine") / "formalize_campaign" / worker_id
-        try:
-            client = AristotleSdkClient(
-                quarantine_root=quarantine_root, project_dir=Path(lean_project),
-                env=os.environ)
-        except (Exception, SystemExit) as exc:  # noqa: BLE001 - clean CLI error
+        members: list = []
+        if kind in ("aristotle", "portfolio"):
+            quarantine_root = Path("egmra_quarantine") / "formalize_campaign" / worker_id
+            try:
+                client = AristotleSdkClient(
+                    quarantine_root=quarantine_root, project_dir=Path(lean_project),
+                    env=os.environ)
+            except (Exception, SystemExit) as exc:  # noqa: BLE001 - clean CLI error
+                if kind == "aristotle":
+                    for built in formalizers.values():
+                        built.close()
+                    raise ValueError(
+                        f"aristotle formalizer is not operational ({type(exc).__name__}: {exc}); "
+                        "set ARISTOTLE_API_KEY and pass a built --lean-project, or use "
+                        "--formalizer none"
+                    ) from exc
+            else:
+                members.append(AristotleFormalizer(client=client))
+        if kind in ("api", "portfolio"):
+            from egmra.agents.api_runner import ApiProviderError, build_api_runner
+            from egmra.lean.formalizer import ApiFormalizer
+
+            provider = getattr(args, "formalizer_provider", None) or "deepseek-api"
+            try:
+                members.append(ApiFormalizer(
+                    runner=build_api_runner(provider),
+                    formalizer_id=f"api:{provider}"))
+            except ApiProviderError as exc:
+                if kind == "api" or not members:
+                    for built in formalizers.values():
+                        built.close()
+                    raise ValueError(str(exc)) from exc
+        if not members:
             for built in formalizers.values():
                 built.close()
-            raise ValueError(
-                f"aristotle formalizer is not operational ({type(exc).__name__}: {exc}); "
-                "set ARISTOTLE_API_KEY and pass a built --lean-project, or use "
-                "--formalizer none"
-            ) from exc
-        formalizers[worker_id] = AristotleFormalizer(client=client)
+            raise ValueError(f"--formalizer {kind}: no formal engine is operational")
+        if len(members) == 1:
+            formalizers[worker_id] = members[0]
+        else:
+            from egmra.lean.formalizer import PortfolioFormalizer
+
+            formalizers[worker_id] = PortfolioFormalizer(members=members)
     return formalizers
+
+
+def _build_hostile_reviewers(count: int, providers: list[str] | None,
+                             fallback_runner) -> list[tuple[str, object]]:
+    """Build the hostile-review panel.
+
+    With ``--hostile-review-provider`` each reviewer is an ATTESTED API runner
+    (cycling through the given providers; two distinct providers = two genuine
+    lineages, the T3 requirement).  Without it, reviewers reuse the main
+    provider runner — honest but lineage-collapsed for unattested providers.
+    """
+    if count <= 0:
+        return []
+    if not providers:
+        return [(f"hostile-{i + 1}", fallback_runner) for i in range(count)]
+    from egmra.agents.api_runner import ApiProviderError, build_api_runner
+
+    reviewers: list[tuple[str, object]] = []
+    for i in range(count):
+        provider = providers[i % len(providers)]
+        try:
+            reviewers.append((f"hostile-{i + 1}", build_api_runner(provider)))
+        except ApiProviderError as exc:
+            raise ValueError(str(exc)) from exc
+    return reviewers
 
 
 def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
@@ -493,12 +577,8 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
         max_rounds=worker_rounds,
         formal_target=formal_target,
     )
-    # Hostile reviewers reuse the provider runner: each review is a fresh
-    # isolated conversation, but an unattested model lineage collapses to one
-    # reviewer family, so N>1 here still caps the review dimension at SINGLE.
-    informal_reviewers = [
-        (f"hostile-{i + 1}", runner) for i in range(hostile_review)
-    ]
+    informal_reviewers = _build_hostile_reviewers(
+        hostile_review, getattr(args, "hostile_review_provider", None), runner)
     try:
         result = research(
             problem_id=problem.problem_id,
@@ -527,6 +607,9 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
             informal_reviewers=informal_reviewers or None,
             lean_repair_rounds=lean_repair_rounds,
             checkpoint_dir=getattr(args, "checkpoint_dir", None),
+            resume_from=getattr(args, "resume_from", None),
+            expert_review=_load_expert_review(getattr(args, "expert_review", None)),
+            explore_blocked=bool(getattr(args, "explore_blocked", False)),
             runner=runner,
         )
     except BrowserProviderUnavailable as exc:
@@ -698,6 +781,23 @@ def _load_intent_review(path: Path | None) -> IntentCertificate | None:
     document = dict(document)
     document["verdict"] = Verdict(document.get("verdict", "UNRESOLVED"))
     return IntentCertificate(**document)
+
+
+def _load_expert_review(path: Path | None):
+    """Load a signed expert significance review (verified by the orchestrator)."""
+    if path is None:
+        return None
+    from egmra.release.expert_review import ExpertReviewCertificate
+
+    if path.is_symlink() or not path.is_file():
+        raise ValueError("expert review path must be a regular non-symlink file")
+    if path.stat().st_size > 1_000_000:
+        raise ValueError("expert review artifact is too large")
+    document = json.loads(
+        path.read_text(encoding="utf-8"),
+        object_pairs_hook=_reject_duplicate_json_keys,
+    )
+    return ExpertReviewCertificate.from_dict(document)
 
 
 def _load_formal_target(path: Path | None) -> str:
@@ -875,6 +975,75 @@ def cmd_sign_review_intent(args: argparse.Namespace) -> int:
             f"the review methods {list(_INTENT_REVIEW_METHODS)} and is independent of "
             "generation/intake. The binding is only trustworthy if that key is held by "
             "such a reviewer — an operator self-signing all keys is a self-review."
+        ),
+    }, indent=2))
+    return 0
+
+
+def cmd_calibrate(args: argparse.Namespace) -> int:
+    """Aggregate outcome ledgers into an honest calibration report (R11)."""
+    from egmra.orchestrator.calibration import build_calibration_report
+
+    report = build_calibration_report(list(args.outcomes))
+    rendered = json.dumps(report, indent=2)
+    if args.output is not None:
+        output = Path(args.output)
+        if output.exists():
+            raise ValueError(f"refusing to overwrite {output}")
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(rendered + "\n", encoding="utf-8")
+        print(json.dumps({
+            "output": str(output),
+            "total_runs": report["total_runs"],
+            "by_state": report["by_state"],
+        }, indent=2))
+    else:
+        print(rendered)
+    return 0
+
+
+def cmd_sign_review_expert(args: argparse.Namespace) -> int:
+    """Sign an expert significance review with the expert-review key.
+
+    Binds the exact problem source bytes and the locked informal claim — the
+    same hashes the orchestrator recomputes — so the judgement can never be
+    stretched over a different statement.  Significance only: the truth plane
+    alone decides correctness, and this key can never touch it.
+    """
+    from egmra.release.expert_review import (
+        ExpertReviewCertificate,
+        sign_expert_review,
+    )
+
+    problem = _resolve_problem_input(args)
+    contract = build_problem_contract(
+        problem_id=problem.problem_id, source_bytes=problem.source_bytes,
+        source_id=problem.source_id,
+    )
+    interp = contract.lattice.nodes[0]
+    certificate = sign_expert_review(ExpertReviewCertificate(
+        certificate_id=args.certificate_id or f"expert-{problem.problem_id}",
+        source_bytes_hash=contract.source_bytes_hash,
+        informal_claim_hash=sha256_hex(interp.conclusion),
+        reviewer_id=args.reviewer_id,
+        verdict=args.verdict,
+        statement_of_significance=args.significance,
+        independent_from=("governor", "release"),
+        created_at=_utc_now(),
+    ))
+    _write_signed_review(Path(args.output), certificate.to_dict())
+    print(json.dumps({
+        "certificate_id": certificate.certificate_id,
+        "problem_id": problem.problem_id,
+        "verdict": certificate.verdict,
+        "reviewer_key_id": certificate.reviewer_key_id,
+        "output": str(args.output),
+        "note": (
+            "signed with EGMRA_EXPERT_REVIEW_KEY; asserts the named HUMAN expert "
+            "judged the result's significance and is independent of generation "
+            "and release. It raises S1\u2192S2 only \u2014 it can never affect "
+            "truth. The binding is only trustworthy if that key is held by such "
+            "an expert; an operator self-signing all keys is a self-review."
         ),
     }, indent=2))
     return 0
@@ -1166,6 +1335,9 @@ def cmd_campaign(args: argparse.Namespace) -> int:
     campaign_repair_rounds = int(getattr(args, "lean_repair_rounds", 0) or 0)
     if not 0 <= campaign_repair_rounds <= 3:
         raise ValueError("--lean-repair-rounds must be between 0 and 3")
+    campaign_hostile_review = int(getattr(args, "hostile_review", 0) or 0)
+    if not 0 <= campaign_hostile_review <= 4:
+        raise ValueError("--hostile-review must be between 0 and 4")
     state_path = Path(args.state)
     workers = tuple(f"w{i}" for i in range(int(args.workers)))
     # Durable campaign state: a signed local JSON file by default, or an opt-in
@@ -1176,6 +1348,12 @@ def cmd_campaign(args: argparse.Namespace) -> int:
         campaign_store = PostgresCampaignStore(
             _resolve_postgres_dsn(args), name=(args.campaign_id or state_path.stem))
     campaign = Campaign(state_path, worker_ids=workers, store=campaign_store)
+    # R12-lite: one in-process memory shared across the campaign's runs, so
+    # branch families that actually produce supported claims earn cross-problem
+    # posterior priors (search-order preference only, never a truth signal).
+    from egmra.learning import LongTermMemory
+
+    campaign_memory = LongTermMemory()
 
     if args.status:
         try:
@@ -1283,6 +1461,16 @@ def cmd_campaign(args: argparse.Namespace) -> int:
                 intent_review=None, runner=worker_runner,
                 lean_repair_rounds=campaign_repair_rounds,
                 checkpoint_dir=getattr(args, "checkpoint_dir", None),
+                # A campaign retry warm-starts from its own checkpoint dir: the
+                # verified snapshot skips already-attempted branches and
+                # re-books the budget already spent. Fail-closed to fresh.
+                resume_from=getattr(args, "checkpoint_dir", None),
+                explore_blocked=bool(getattr(args, "explore_blocked", False)),
+                memory=campaign_memory,
+                informal_reviewers=_build_hostile_reviewers(
+                    campaign_hostile_review,
+                    getattr(args, "hostile_review_provider", None),
+                    worker_runner) or None,
             )
         finally:
             _close_event_log(event_log)
@@ -1498,7 +1686,10 @@ def build_parser() -> argparse.ArgumentParser:
                           "counterexample/boundary probes enumerate over the small domain; "
                           "AST-restricted to numeric expressions (no imports, attribute "
                           "access, or arbitrary calls). Applies to --erdos/--statement runs")
-    run.add_argument("--provider", choices=("browser", "deterministic"), default="browser",
+    run.add_argument("--provider",
+                     choices=("browser", "deterministic", "openai-api",
+                              "deepseek-api", "anthropic-api"),
+                     default="browser",
                      help="reasoning provider: 'browser' (primary) or 'deterministic' "
                           "(tests/demos only)")
     run.add_argument("--role", default="prover",
@@ -1536,11 +1727,20 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--mathlib-commit", default="v4.28.0",
                      help="Mathlib revision recorded in formal candidates")
     run.add_argument(
-        "--formalizer", choices=("none", "aristotle"), default="none",
+        "--formalizer", choices=("none", "aristotle", "api", "portfolio"),
+        default="none",
         help="autonomous formalization worker: 'aristotle' dispatches pinned "
              "formalization obligations to the live Aristotle service (requires "
-             "--lean-project + ARISTOTLE_API_KEY; the produced Lean is re-checked by "
-             "the pinned kernel), or 'none' (model-authored Lean only)")
+             "--lean-project + ARISTOTLE_API_KEY), 'api' uses an attested API "
+             "provider (--formalizer-provider, e.g. deepseek-api), 'portfolio' "
+             "tries aristotle then the API engine (R6: no single formal-engine "
+             "point of failure). Every produced Lean is re-checked by the "
+             "pinned kernel. Default 'none' (model-authored Lean only)")
+    run.add_argument(
+        "--formalizer-provider", choices=("openai-api", "deepseek-api", "anthropic-api"),
+        default=None,
+        help="attested API provider for --formalizer api|portfolio "
+             "(default: deepseek-api)")
     run.add_argument(
         "--intent-review", type=Path, default=None,
         help="independently signed intent-review JSON bound to the problem",
@@ -1569,6 +1769,15 @@ def build_parser() -> argparse.ArgumentParser:
              "attested independent lineages) (default: 0, off)",
     )
     run.add_argument(
+        "--hostile-review-provider", action="append", default=None,
+        choices=("openai-api", "deepseek-api", "anthropic-api"),
+        help="attested API provider(s) for the hostile reviewers (repeatable); "
+             "two DISTINCT providers give two attested lineages \u2014 the "
+             "requirement for DOUBLE_INDEPENDENT/T3. Without this flag the "
+             "reviewers reuse the main provider runner (unattested for "
+             "browser, capping at SINGLE)",
+    )
+    run.add_argument(
         "--lean-repair-rounds", type=int, default=0, metavar="N",
         help="when a Lean candidate is REJECTED by the pinned kernel, send it "
              "back to the configured --formalizer with the kernel diagnostics "
@@ -1581,6 +1790,28 @@ def build_parser() -> argparse.ArgumentParser:
         help="write a signed within-problem checkpoint (event-log prefix + "
              "graph view hash + remaining budget) after each completed branch "
              "so long runs leave verifiable durable state (default: off)",
+    )
+    run.add_argument(
+        "--resume-from", type=Path, default=None,
+        help="consume the latest signed checkpoint for this problem from the "
+             "given directory: verified snapshots skip already-attempted "
+             "branches and re-book prior spend (full event-chain verification "
+             "when continuing the same log; honest warm start otherwise; "
+             "fail-closed to a fresh run)",
+    )
+    run.add_argument(
+        "--expert-review", type=Path, default=None,
+        help="signed expert significance review JSON (egmra sign-review "
+             "expert); a verified approval bound to this problem's locked "
+             "claim raises the significance gate S1\u2192S2 \u2014 it never "
+             "affects truth",
+    )
+    run.add_argument(
+        "--explore-blocked", action="store_true",
+        help="explore interpretation-blocked problems anyway: branch work "
+             "(lemmas, falsifiers, experiments) proceeds under the primary "
+             "interpretation while release stays blocked and the override is "
+             "recorded (default: the selector declines disputed readings)",
     )
     run.add_argument(
         "--formal-target-file", type=Path, default=None,
@@ -1627,7 +1858,10 @@ def build_parser() -> argparse.ArgumentParser:
     campaign.add_argument("--state", type=Path, default=Path("egmra_campaign.json"),
                           help="durable campaign state file (resume by reusing it)")
     campaign.add_argument("--campaign-id", default=None)
-    campaign.add_argument("--provider", choices=("browser", "deterministic"), default="browser")
+    campaign.add_argument("--provider",
+                          choices=("browser", "deterministic", "openai-api",
+                                   "deepseek-api", "anthropic-api"),
+                          default="browser")
     campaign.add_argument("--role", default="prover")
     campaign.add_argument("--worker-rounds", type=int, default=1,
                           help="model rounds per mechanism branch (1-8); see "
@@ -1658,10 +1892,18 @@ def build_parser() -> argparse.ArgumentParser:
                                "path so worker/Aristotle Lean is re-checked by the kernel")
     campaign.add_argument("--mathlib-commit", default="v4.28.0",
                           help="Mathlib revision recorded in formal candidates")
-    campaign.add_argument("--formalizer", choices=("none", "aristotle"), default="none",
+    campaign.add_argument("--formalizer", choices=("none", "aristotle", "api", "portfolio"),
+                          default="none",
                           help="autonomous formalization worker per campaign worker: "
-                               "'aristotle' (requires --lean-project + ARISTOTLE_API_KEY; "
-                               "produced Lean is re-checked by the pinned kernel) or 'none'")
+                               "'aristotle' (requires --lean-project + ARISTOTLE_API_KEY), "
+                               "'api' (attested --formalizer-provider engine), 'portfolio' "
+                               "(aristotle then api); produced Lean is re-checked by the "
+                               "pinned kernel. Default 'none'")
+    campaign.add_argument("--formalizer-provider",
+                          choices=("openai-api", "deepseek-api", "anthropic-api"),
+                          default=None,
+                          help="attested API provider for --formalizer api|portfolio "
+                               "(default: deepseek-api)")
     campaign.add_argument("--lean-repair-rounds", type=int, default=0, metavar="N",
                           help="bounded kernel-feedback repair rounds per rejected Lean "
                                "candidate (0-3); same semantics as 'egmra run "
@@ -1670,6 +1912,18 @@ def build_parser() -> argparse.ArgumentParser:
                           help="write signed within-problem checkpoints after each "
                                "completed branch; same semantics as 'egmra run "
                                "--checkpoint-dir'")
+    campaign.add_argument("--hostile-review", type=int, default=0, metavar="N",
+                          help="hostile NL reviews per problem (0-4); same semantics as "
+                               "'egmra run --hostile-review'")
+    campaign.add_argument("--hostile-review-provider", action="append", default=None,
+                          choices=("openai-api", "deepseek-api", "anthropic-api"),
+                          help="attested API provider(s) for campaign hostile reviewers "
+                               "(repeatable); same semantics as 'egmra run "
+                               "--hostile-review-provider'")
+    campaign.add_argument("--explore-blocked", action="store_true",
+                          help="explore interpretation-blocked problems anyway (release "
+                               "stays blocked); same semantics as 'egmra run "
+                               "--explore-blocked'")
     campaign.add_argument("--status", action="store_true", help="print campaign status and exit")
     campaign.set_defaults(func=cmd_campaign)
     initdb = sub.add_parser("init-db", help="create/verify the Postgres event schema")
@@ -1741,9 +1995,51 @@ def build_parser() -> argparse.ArgumentParser:
                      help="destination for the signed certificate (created 0600; never overwritten)")
     src.set_defaults(func=cmd_sign_review_correspondence)
 
+    sre = signrev_sub.add_parser(
+        "expert",
+        help="sign an expert SIGNIFICANCE review (S1\u2192S2); a human judgement "
+             "that a result fully resolves the stated problem \u2014 never a "
+             "correctness authority")
+    sre_selector = sre.add_mutually_exclusive_group(required=True)
+    sre_selector.add_argument("--erdos", type=int, default=None,
+                              help="Erd\u0151s problem number to resolve from the corpus snapshot")
+    sre_selector.add_argument("--statement", default=None,
+                              help="verbatim problem statement reviewed")
+    sre_selector.add_argument("--statement-file", type=Path, default=None,
+                              help="path to a file containing the problem statement")
+    sre_selector.add_argument("--fixture", default=None,
+                              help="bundled regression fixture id reviewed")
+    sre.add_argument("--corpus-tex", type=Path, default=None,
+                     help="override the corpus TeX snapshot used by --erdos")
+    sre.add_argument("--catalog", type=Path, default=None,
+                     help="override the problem catalog used by --erdos")
+    sre.add_argument("--reviewer-id", default="independent-expert-reviewer",
+                     help="identity of the human expert signing the certificate")
+    sre.add_argument("--verdict", choices=("approved", "rejected"), default="approved",
+                     help="the expert's verdict (default: approved)")
+    sre.add_argument("--significance", required=True,
+                     help="the expert's written statement of why the result fully "
+                          "resolves the problem (required; empty approvals are refused)")
+    sre.add_argument("--certificate-id", default=None,
+                     help="certificate id (default: expert-<problem_id>)")
+    sre.add_argument("--output", "-o", type=Path, required=True,
+                     help="destination for the signed certificate (created 0600; never overwritten)")
+    sre.set_defaults(func=cmd_sign_review_expert)
+
     show = sub.add_parser("policy-show", help="print the signed feature policy")
     show.add_argument("--policy", type=Path, default=None)
     show.set_defaults(func=cmd_policy_show)
+
+    calibrate = sub.add_parser(
+        "calibrate",
+        help="aggregate outcome ledgers into an honest calibration report "
+             "(observed frequencies; never a release authority)")
+    calibrate.add_argument("--outcomes", type=Path, action="append", required=True,
+                           help="outcome-ledger JSONL path (repeatable)")
+    calibrate.add_argument("--output", "-o", type=Path, default=None,
+                           help="write the report JSON here (refuses overwrite); "
+                                "prints to stdout when omitted")
+    calibrate.set_defaults(func=cmd_calibrate)
 
     verify = sub.add_parser("verify-events", help="verify an event log's integrity")
     verify.add_argument("--events", type=Path, default=None,

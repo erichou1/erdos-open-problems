@@ -28,6 +28,7 @@ TEST_KEYS = {
     ),
     "EGMRA_LEGACY_REVIEW_KEY": "legacy-review-test-key-that-is-at-least-32-bytes",
     "EGMRA_LEGACY_EVIDENCE_KEY": "legacy-evidence-test-key-that-is-at-least-32-bytes",
+    "EGMRA_EXPERT_REVIEW_KEY": "expert-review-test-key-that-is-at-least-32-bytes",
 }
 
 
