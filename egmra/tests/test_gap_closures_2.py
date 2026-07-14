@@ -28,6 +28,7 @@ from egmra.lean.formalizer import (
 from egmra.orchestrator import research
 from egmra.orchestrator.calibration import build_calibration_report
 from egmra.orchestrator.outcome_ledger import build_outcome_record
+from egmra.corpus.status import StatusClaim
 from egmra.release.expert_review import (
     ExpertReviewCertificate,
     ExpertReviewError,
@@ -247,6 +248,90 @@ def test_explore_blocked_researches_but_never_releases(tmp_path):
     assert len(result.graph.log) > 2
     # ...but a blocked interpretation can never certify.
     assert result.certificate is None and result.gates is None
+
+
+# ---------------------------------------------------------------------------
+# intent review resolves parser ambiguity (the I2 lift)
+
+
+def _ambiguous_intent(problem_id, *, source_id):
+    from egmra.intake import build_problem_contract
+    from egmra.intake.review import (
+        interpretation_review_hash,
+        sign_intent_certificate,
+    )
+    from egmra.provenance.hashing import sha256_hex
+    from egmra.truth.entities import IntentCertificate, Verdict
+
+    contract = build_problem_contract(
+        problem_id=problem_id, source_bytes=AMBIGUOUS_STATEMENT,
+        source_id=source_id)
+    interp = contract.lattice.nodes[0]
+    return sign_intent_certificate(IntentCertificate(
+        certificate_id=f"intent-{problem_id}",
+        source_bytes_hash=contract.source_bytes_hash,
+        interpretation_hash=interpretation_review_hash(interp),
+        informal_claim_hash=sha256_hex(interp.conclusion),
+        methods=["independent_parse", "examples", "anti_examples",
+                 "paraphrase", "local_mutation"],
+        reviewer_ids=["semantic-reviewer"],
+        reviewer_independence_and_conflicts=[{
+            "reviewer_id": "semantic-reviewer",
+            "independent_from": ["governor", "intake_retrieval"],
+            "conflicts": [],
+        }],
+        verdict=Verdict.APPROVED,
+    ))
+
+
+def test_valid_intent_review_resolves_parser_ambiguity(tmp_path):
+    result = research(
+        problem_id="lift-1", source_bytes=AMBIGUOUS_STATEMENT, source_id="l1",
+        budget=100.0, enforcer=_enforcer(), worker=_fixture_worker(),
+        goal_claim_id="goal", events_path=tmp_path / "e.jsonl",
+        retrieval_corpus=_corpus(), informal_only=True,
+        status_claims=_status("lift-1"),
+        intent_review=_ambiguous_intent("lift-1", source_id="l1"),
+    )
+    assert "interpretation_resolved_by_intent_review" in result.phases
+    assert "intent_review_rejected" not in result.failures
+    assert not result.contract.lattice.release_blocked   # ambiguity resolved
+    # honest residue: intake probes without a predicate still gate RELEASE
+    assert result.certificate is None
+
+
+def test_mismatched_intent_review_never_lifts_ambiguity(tmp_path):
+    # a certificate signed for a DIFFERENT statement cannot resolve this one
+    wrong = _intent("lift-2", source_id="l2")     # bound to TRUE_STATEMENT
+    result = research(
+        problem_id="lift-2", source_bytes=AMBIGUOUS_STATEMENT, source_id="l2",
+        budget=100.0, enforcer=_enforcer(), worker=_fixture_worker(),
+        goal_claim_id="goal", events_path=tmp_path / "e.jsonl",
+        retrieval_corpus=_corpus(), informal_only=True,
+        status_claims=_status("lift-2"), intent_review=wrong,
+    )
+    assert "interpretation_resolved_by_intent_review" not in result.phases
+    assert "intent_review_rejected" in result.failures
+    assert result.contract.lattice.release_blocked
+
+
+def test_intent_review_never_lifts_a_status_conflict(tmp_path):
+    conflicted = [
+        StatusClaim(problem_id="lift-3", status="open", source="local://a",
+                    review_date="2026-07-13", source_independence="a"),
+        StatusClaim(problem_id="lift-3", status="known", source="local://b",
+                    review_date="2026-07-13", source_independence="b"),
+    ]
+    result = research(
+        problem_id="lift-3", source_bytes=AMBIGUOUS_STATEMENT, source_id="l3",
+        budget=100.0, enforcer=_enforcer(), worker=_fixture_worker(),
+        goal_claim_id="goal", events_path=tmp_path / "e.jsonl",
+        retrieval_corpus=_corpus(), informal_only=True,
+        status_claims=conflicted,
+        intent_review=_ambiguous_intent("lift-3", source_id="l3"),
+    )
+    assert "interpretation_resolved_by_intent_review" not in result.phases
+    assert result.certificate is None
 
 
 # ---------------------------------------------------------------------------

@@ -974,17 +974,38 @@ def research(
     }
     expected_interpretation_hash = interpretation_review_hash(interp)
     expected_claim_hash = sha256_hex(interp.conclusion)
-    if intent_review is None:
-        failures.append("intent_review_unavailable")
-    elif (
-        not release_blocked
+    intent_review_valid = (
+        intent_review is not None
         and intent_review.verdict is Verdict.APPROVED
         and intent_review.source_bytes_hash == contract.source_bytes_hash
         and intent_review.interpretation_hash == expected_interpretation_hash
         and intent_review.informal_claim_hash == expected_claim_hash
         and review_methods.issubset(set(intent_review.methods))
         and verify_intent_certificate(intent_review)
-    ):
+    )
+    # An authenticated intent review that binds THIS exact source and THIS
+    # exact interpretation IS the human resolution of parser ambiguity — that
+    # is what the review's independent_parse/paraphrase methods certify.  It
+    # lifts only lattice ambiguity (the reviewer chose the reading); a failed
+    # intake probe, a malformed statement, or a status conflict is a fact
+    # about the problem no signature can lift.
+    if intent_review_valid and contract.lattice.release_blocked \
+            and not status.blocks_proof_campaign:
+        for ambiguity in list(contract.lattice.open_ambiguities):
+            contract.lattice.resolve_ambiguity(ambiguity)
+        contract.lattice.approve(interp.interpretation_id)
+        phases.append("interpretation_resolved_by_intent_review")
+        if not contract.release_blocked:
+            release_blocked = False
+    if intent_review is None:
+        failures.append("intent_review_unavailable")
+    elif intent_review_valid and not contract.lattice.release_blocked \
+            and not status.blocks_proof_campaign:
+        # The reading is settled (clean parse, or resolved by this very
+        # certificate) and the status is clean: the intent binds and I2 is
+        # earned.  Failed intake probes (e.g. no executable countermodel)
+        # still block RELEASE via ``release_blocked`` — they are a fact about
+        # falsifiability, not about the reviewer's reading.
         contract.lattice.approve(interp.interpretation_id)
         intent_cert = intent_review
     else:
