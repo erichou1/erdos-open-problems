@@ -183,10 +183,11 @@ def parse_worker_response(text: str) -> dict[str, Any]:
         source = str(cand.get("source", "")).strip()
         declaration_name = str(cand.get("declaration_name", "")).strip()
         expected_type = str(cand.get("expected_type", "")).strip()
-        # A well-formed formal candidate needs a declaration name, its Lean source,
-        # and the intended type it must prove; incomplete ones are dropped (never
-        # a fabricated formal artifact).
-        if not (source and declaration_name and expected_type):
+        # A candidate needs a declaration name and the intended type it must prove.
+        # The proof ``source`` is optional: a source-less candidate is a *pinned
+        # formalization request* an autonomous formalizer (e.g. Aristotle) fills
+        # in; either way the pinned kernel re-checks it (never a fabricated proof).
+        if not (declaration_name and expected_type):
             continue
         lean_candidates.append({
             "claim_id": str(cand.get("claim_id", "")).strip(),
@@ -296,6 +297,7 @@ class RunnerWorker:
     mathlib_commit: str = ""
     lean_project: Any = None
     trust_policy: str = "classical-whitelist"
+    formalizer: Any = None
     parsed_responses: list[dict[str, Any]] = field(default_factory=list)
 
     def for_role(self, role: str) -> "RunnerWorker":
@@ -407,7 +409,8 @@ class RunnerWorker:
         evidence, experiment_replays = self._run_experiments(
             parsed["experiments"], branch_id=branch_id, seen=seen, failures=failures)
         formal_candidates = self._build_formal_candidates(
-            parsed["lean_declaration_candidates"], branch_id=branch_id, seen=seen)
+            parsed["lean_declaration_candidates"], branch_id=branch_id, seen=seen,
+            failures=failures)
 
         return WorkerOutput(
             claim_proposals=proposals,
@@ -425,7 +428,7 @@ class RunnerWorker:
         )
 
     def _build_formal_candidates(self, candidates, *, branch_id: str,
-                                 seen: set[str]) -> list[dict]:
+                                 seen: set[str], failures: list[str] | None = None) -> list[dict]:
         """Turn model Lean declaration candidates into formal_candidates (task 4.6).
 
         Hashes are computed deterministically here (never trusted from the model):
@@ -434,6 +437,12 @@ class RunnerWorker:
         ``candidate_type_hash == expected_type_hash`` binding is sound. Emitted
         only when a pinned Lean environment is configured; a candidate is inert
         unless research() also has a LeanService to run the real kernel.
+
+        A source-less candidate is a *pinned formalization request*: when a
+        ``formalizer`` (e.g. Aristotle) is configured, the vendor produces the
+        PROOF while the obligation (``declaration_name`` + ``expected_type``) stays
+        pinned here; the produced Lean is untrusted and re-checked by the pinned
+        kernel downstream. A vendor status never promotes on its own.
         """
         if not (self.lean_version and self.mathlib_commit):
             return []
@@ -446,9 +455,30 @@ class RunnerWorker:
             requested = cand.get("claim_id") or ""
             target = requested if requested in seen else self.goal_claim_id
             expected_type = cand["expected_type"]
+            source = (cand.get("source") or "").strip()
+            if not source and self.formalizer is not None:
+                try:
+                    produced = self.formalizer.formalize(
+                        declaration_name=cand["declaration_name"],
+                        expected_type=expected_type,
+                        informal_statement=self.goal_formula or expected_type,
+                    )
+                    source = (produced or "").strip()
+                except Exception as exc:  # noqa: BLE001 - vendor outage is not a math failure
+                    source = ""
+                    if failures is not None:
+                        failures.append(
+                            f"formalizer_error:{branch_id}:{type(exc).__name__}")
+                if not source and failures is not None:
+                    failures.append(
+                        f"formalization_unavailable:{branch_id}:{cand['declaration_name']}")
+            if not source:
+                # Nothing to verify (no proof source, no/failed formalizer); never
+                # fabricate a formal artifact.
+                continue
             out.append({
                 "claim_id": target,
-                "source": cand["source"],
+                "source": source,
                 "declaration_name": cand["declaration_name"],
                 "expected_type_source": expected_type,
                 "lean_version": self.lean_version,

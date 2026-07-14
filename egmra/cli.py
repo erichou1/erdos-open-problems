@@ -68,6 +68,7 @@ from egmra.lean.kernel_checker import (
     write_pinned_checker,
 )
 from egmra.lean.aristotle_sdk import AristotleSdkClient
+from egmra.lean.formalizer import AristotleFormalizer
 from egmra.lean.replay import LeanReplayVerifier
 from egmra.lean.service import CheckerConfigurationError, LeanEnvironment, LeanService
 from egmra.provenance.hashing import sha256_hex
@@ -308,6 +309,38 @@ def _build_lean_service(args: argparse.Namespace):
     return service, lean_version, args.mathlib_commit
 
 
+def _build_formalizer(args: argparse.Namespace):
+    """Build an autonomous formalization worker for `egmra run` (task #5).
+
+    ``--formalizer aristotle`` makes the research controller dispatch a *pinned*
+    formalization obligation (declaration name + intended Lean type) to the live
+    Aristotle service and re-check the produced Lean with the pinned kernel — so
+    Aristotle becomes an integrated formalization worker, not a tool beside the
+    pipeline. The vendor supplies only the proof term; a vendor status never
+    promotes on its own. Requires a built ``--lean-project`` (to formalize against
+    the pinned toolchain and to have a LeanService kernel to verify) and
+    ``ARISTOTLE_API_KEY``. Returns ``None`` for the default ``none``.
+    """
+    if getattr(args, "formalizer", "none") != "aristotle":
+        return None
+    lean_project = getattr(args, "lean_project", None)
+    if not lean_project:
+        raise ValueError(
+            "--formalizer aristotle requires --lean-project (the built pinned Lean "
+            "project used to formalize and to re-check with the kernel)")
+    quarantine_root = Path("egmra_quarantine") / "formalize_run"
+    try:
+        client = AristotleSdkClient(
+            quarantine_root=quarantine_root, project_dir=Path(lean_project), env=os.environ)
+    except (Exception, SystemExit) as exc:  # noqa: BLE001 - surface as a clean CLI error
+        raise ValueError(
+            f"aristotle formalizer is not operational ({type(exc).__name__}: {exc}); "
+            "set ARISTOTLE_API_KEY and pass a built --lean-project, or use "
+            "--formalizer none"
+        ) from exc
+    return AristotleFormalizer(client=client)
+
+
 def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
     """Run the real research loop on an arbitrary problem via a reasoning worker.
 
@@ -332,6 +365,9 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
     # Optional real formal-candidate path (task 4.6): a LeanService whose kernel
     # runner is the pinned checker, so worker-proposed Lean is re-checked live.
     lean_service, lean_version, mathlib_commit = _build_lean_service(args)
+    # Optional autonomous formalization worker (task #5): Aristotle produces the
+    # proof for a pinned obligation; the pinned kernel above re-checks it.
+    formalizer = _build_formalizer(args)
     worker = RunnerWorker(
         runner=runner,
         goal_claim_id="goal",
@@ -341,6 +377,7 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
         lean_version=lean_version,
         mathlib_commit=mathlib_commit,
         lean_project=args.lean_project,
+        formalizer=formalizer,
     )
     try:
         result = research(
@@ -385,6 +422,8 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
     finally:
         _close_runner(runner)
         _close_event_log(event_log)
+        if formalizer is not None:
+            formalizer.close()
     classification = classify_result(result, goal_claim_id="goal")
     rendered = result.render() | {
         "provider": args.provider,
@@ -1090,6 +1129,12 @@ def build_parser() -> argparse.ArgumentParser:
                           "formal-candidate path (worker-proposed Lean re-checked by the kernel)")
     run.add_argument("--mathlib-commit", default="v4.28.0",
                      help="Mathlib revision recorded in formal candidates")
+    run.add_argument(
+        "--formalizer", choices=("none", "aristotle"), default="none",
+        help="autonomous formalization worker: 'aristotle' dispatches pinned "
+             "formalization obligations to the live Aristotle service (requires "
+             "--lean-project + ARISTOTLE_API_KEY; the produced Lean is re-checked by "
+             "the pinned kernel), or 'none' (model-authored Lean only)")
     run.add_argument(
         "--intent-review", type=Path, default=None,
         help="independently signed intent-review JSON bound to the problem",

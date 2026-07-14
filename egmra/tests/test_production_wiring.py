@@ -551,3 +551,93 @@ def test_cli_loaded_signed_correspondence_admits_kernel_checked_formal_proof(tmp
                         if r.attack == "formal_audit")
     assert second_audit.passed is True
 
+
+# ── #5: autonomous formalizer fills a source-less (pinned) candidate ─────────────
+
+class _FakeFormalizer:
+    """Returns canned Lean 'produced by the vendor'; the obligation is pinned by us."""
+
+    formalizer_id = "fake"
+
+    def __init__(self, source: str) -> None:
+        self._source = source
+        self.calls: list[tuple[str, str]] = []
+
+    def formalize(self, *, declaration_name: str, expected_type: str,
+                  informal_statement: str) -> str:
+        self.calls.append((declaration_name, expected_type))
+        return self._source
+
+
+class _FormalizeRequestRunner:
+    """Emits a source-LESS lean_declaration_candidate — a pinned formalization request."""
+
+    runner_id = "formalize-request"
+
+    def __init__(self) -> None:
+        self._delegate = DeterministicRunner()
+
+    def run(self, prompt: str, *, stage: str) -> RunnerResponse:
+        base = self._delegate.run(prompt, stage=stage)
+        if stage.startswith("branch:"):
+            payload = {"goal_restatement": "", "claims": [], "proof_steps": [],
+                       "assumptions": [], "falsifiers": [], "search_queries": [],
+                       "candidate_sequences": [], "experiments": [],
+                       "formalization_requests": ["formalize the goal"],
+                       "lean_declaration_candidates": [{
+                           "claim_id": "goal", "declaration_name": "egmra_demo",
+                           "expected_type": "2 + 2 = 4"}],  # NO source -> formalizer fills it
+                       "open_subgoals": [], "bottleneck": "formalize", "confidence": 0.4}
+        else:
+            payload = {"falsifiers": [], "search_queries": [], "bottleneck": "", "confidence": 0.1}
+        return RunnerResponse(text=json.dumps(payload), model=base.model,
+                              context_id=base.context_id, prompt_hash=base.prompt_hash)
+
+
+def test_runner_worker_formalizes_source_less_candidate_via_formalizer():
+    from types import SimpleNamespace
+
+    formalizer = _FakeFormalizer(_LEAN_SRC)
+    worker = RunnerWorker(runner=_FormalizeRequestRunner(), goal_claim_id="goal",
+                          goal_formula="2 + 2 = 4", lean_version="4.28.0",
+                          mathlib_commit="v4.28.0", formalizer=formalizer)
+    output = worker.work_branch(SimpleNamespace(), SimpleNamespace(),
+                                branch_id="formal_library_first", budget=10.0, fencing_token=1)
+    assert output.formal_candidates
+    candidate = output.formal_candidates[0]
+    assert candidate["declaration_name"] == "egmra_demo"
+    # The vendor supplied the PROOF source (untrusted, re-checked by the kernel)...
+    assert candidate["source"] == _LEAN_SRC.strip()
+    # ...while the OBLIGATION was pinned deterministically by us, not the vendor.
+    assert candidate["expected_type_hash"] == _canon_type_hash("2 + 2 = 4")
+    assert formalizer.calls == [("egmra_demo", "2 + 2 = 4")]
+
+
+def test_runner_worker_source_less_candidate_without_formalizer_yields_nothing():
+    from types import SimpleNamespace
+
+    worker = RunnerWorker(runner=_FormalizeRequestRunner(), goal_claim_id="goal",
+                          goal_formula="2 + 2 = 4", lean_version="4.28.0",
+                          mathlib_commit="v4.28.0")  # no formalizer configured
+    output = worker.work_branch(SimpleNamespace(), SimpleNamespace(),
+                                branch_id="formal_library_first", budget=10.0, fencing_token=1)
+    assert output.formal_candidates == []  # a source-less candidate is never fabricated
+
+
+def test_runner_worker_records_formalizer_outage_as_failure():
+    from types import SimpleNamespace
+
+    class _DownFormalizer:
+        formalizer_id = "down"
+
+        def formalize(self, **_kwargs):
+            raise RuntimeError("aristotle unavailable")
+
+    worker = RunnerWorker(runner=_FormalizeRequestRunner(), goal_claim_id="goal",
+                          goal_formula="2 + 2 = 4", lean_version="4.28.0",
+                          mathlib_commit="v4.28.0", formalizer=_DownFormalizer())
+    output = worker.work_branch(SimpleNamespace(), SimpleNamespace(),
+                                branch_id="formal_library_first", budget=10.0, fencing_token=1)
+    assert output.formal_candidates == []
+    assert any("formalizer_error" in f for f in output.failures)
+

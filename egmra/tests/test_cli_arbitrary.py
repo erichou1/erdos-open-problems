@@ -480,3 +480,48 @@ def test_campaign_browser_workers_no_longer_capped_to_one(tmp_path, monkeypatch)
                "--erdos-range", "5-7", "--policy", str(policy),
                "--state", str(tmp_path / "camp.json")])
     assert rc == 0  # was rc 2 (ValueError: browser supports --workers 1)
+
+
+# ── autonomous Aristotle formalizer wired into egmra run (task #5) ──────────────
+
+def test_build_formalizer_none_returns_none():
+    from types import SimpleNamespace
+    from egmra.cli import _build_formalizer
+
+    assert _build_formalizer(SimpleNamespace(formalizer="none")) is None
+
+
+def test_run_formalizer_aristotle_requires_lean_project(tmp_path, capsys):
+    cfg = _config_file(tmp_path)
+    policy = _signed_policy_file(tmp_path)
+    rc = main(["--config", str(cfg), "run", "--statement", "A statement.",
+               "--provider", "deterministic", "--policy", str(policy),
+               "--formalizer", "aristotle"])
+    assert rc == 2
+    err = json.loads(capsys.readouterr().err)
+    assert err["error"] == "ValueError"
+    assert "--lean-project" in err["detail"]
+
+
+def test_run_passes_formalizer_to_worker(tmp_path, monkeypatch):
+    # `egmra run` builds the formalizer and hands it to the RunnerWorker, so
+    # Aristotle is an integrated formalization worker (not a tool beside the run).
+    from types import SimpleNamespace
+    import egmra.cli as cli_module
+    from egmra.agents.browser_runner import BrowserProviderUnavailable
+
+    sentinel = SimpleNamespace(close=lambda: None)
+    monkeypatch.setattr(cli_module, "_build_formalizer", lambda args: sentinel)
+    captured: dict = {}
+
+    def _capture(**kwargs):
+        captured.update(kwargs)
+        raise BrowserProviderUnavailable("captured")
+
+    monkeypatch.setattr(cli_module, "research", _capture)
+    cfg = _config_file(tmp_path)
+    policy = _signed_policy_file(tmp_path)
+    rc = main(["--config", str(cfg), "run", "--statement", "A statement.",
+               "--provider", "deterministic", "--policy", str(policy)])
+    assert rc == 4
+    assert captured["worker"].formalizer is sentinel
