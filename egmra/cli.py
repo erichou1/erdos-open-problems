@@ -50,7 +50,10 @@ from egmra.agents.async_browser import build_browser_runner_pool
 from egmra.agents.throttle import SharedThrottle
 from egmra.corpus.status import StatusClaim
 from egmra.eval.datasets import FIXTURE_PROBLEMS, fixture
-from egmra.intake.review import interpretation_review_hash
+from egmra.intake import build_problem_contract
+from egmra.intake.predicate import compile_bounded_predicate
+from egmra.intake.review import interpretation_review_hash, sign_intent_certificate
+from egmra.lean.correspondence import sign_formal_correspondence_certificate
 from egmra.orchestrator import (
     Campaign,
     DeterministicWorker,
@@ -65,6 +68,7 @@ from egmra.m2 import ContentAddressedObjectStore, PostgresEventStore
 from egmra.oeis import OEISClient
 from egmra.lean.kernel_checker import (
     build_lean_replay_target,
+    expected_type_hash,
     make_attested_kernel_runner,
     write_pinned_checker,
 )
@@ -404,6 +408,13 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
     if not 1 <= int(args.workers) <= 5:
         raise ValueError("--workers must be between 1 and 5")
     problem = _resolve_problem_input(args)
+    # Optional operator-supplied bounded predicate (a safe expression over ``n``)
+    # so the counterexample/boundary probes genuinely enumerate small cases on the
+    # arbitrary/browser path — the fixture path already carries its own predicate.
+    probe_predicate = (
+        compile_bounded_predicate(args.predicate)
+        if getattr(args, "predicate", None) else None
+    )
     runner = _build_runner(args.provider, throttle=_browser_throttle(config, args.provider))
     policy = load_policy(Path(args.policy) if args.policy else default_policy_path())
     enforcer = PolicyEnforcer(policy)
@@ -441,6 +452,7 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
             goal_claim_id="goal",
             events_path=events_path,
             event_log=event_log,
+            probe_predicate=probe_predicate,
             retrieval_corpus=retrieval_corpus,
             oeis_client=oeis_client,
             artifact_store=artifact_store,
@@ -695,6 +707,138 @@ def cmd_policy_sign(args: argparse.Namespace) -> int:
         finally:
             raise
     print(json.dumps({"policy_hash": policy.policy_hash, "output": str(output)}))
+    return 0
+
+
+_INTENT_REVIEW_METHODS = (
+    "independent_parse", "examples", "anti_examples", "paraphrase", "local_mutation",
+)
+_CORRESPONDENCE_REVIEW_METHODS = (
+    "backtranslation", "examples", "anti_examples", "paraphrase", "local_mutation",
+)
+
+
+def _utc_now() -> str:
+    return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+
+
+def _write_signed_review(output: Path, document: dict) -> None:
+    """Write a signed review artifact to a new mode-0600 file, never overwriting."""
+    if os.path.lexists(output):
+        raise FileExistsError(f"refusing to overwrite existing path: {output}")
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
+    descriptor = os.open(output, flags, 0o600)
+    try:
+        with os.fdopen(descriptor, "w", encoding="utf-8") as handle:
+            json.dump(document, handle, sort_keys=True, separators=(",", ":"))
+            handle.write("\n")
+    except Exception:
+        try:
+            output.unlink(missing_ok=True)
+        finally:
+            raise
+
+
+def cmd_sign_review_intent(args: argparse.Namespace) -> int:
+    """Sign an intent-review certificate for a problem with the review key.
+
+    The reviewer's own key (``EGMRA_INTENT_REVIEW_KEY``) authenticates the verdict,
+    and the certificate binds the exact source bytes, locked interpretation, and
+    informal claim of the resolved problem — recomputed here the same way the
+    orchestrator does, so the artifact binds a matching run. This is a facility for
+    a genuine independent reviewer to record and sign their own judgement; it does
+    not perform the review, and the binding is only trustworthy if the key is held
+    by a party independent of generation and intake.
+    """
+    problem = _resolve_problem_input(args)
+    contract = build_problem_contract(
+        problem_id=problem.problem_id, source_bytes=problem.source_bytes,
+        source_id=problem.source_id,
+    )
+    interp = contract.lattice.nodes[0]
+    verdict = Verdict.APPROVED if args.verdict == "approved" else Verdict.REJECTED
+    certificate = sign_intent_certificate(IntentCertificate(
+        certificate_id=args.certificate_id or f"intent-{problem.problem_id}",
+        source_bytes_hash=contract.source_bytes_hash,
+        interpretation_hash=interpretation_review_hash(interp),
+        informal_claim_hash=sha256_hex(interp.conclusion),
+        methods=list(_INTENT_REVIEW_METHODS),
+        reviewer_ids=[args.reviewer_id],
+        reviewer_independence_and_conflicts=[{
+            "reviewer_id": args.reviewer_id,
+            "independent_from": ["governor", "intake_retrieval"],
+            "conflicts": [],
+        }],
+        verdict=verdict,
+        created_at=_utc_now(),
+    ))
+    _write_signed_review(Path(args.output), certificate.to_dict())
+    print(json.dumps({
+        "certificate_id": certificate.certificate_id,
+        "problem_id": problem.problem_id,
+        "verdict": str(certificate.verdict),
+        "reviewer_key_id": certificate.reviewer_key_id,
+        "output": str(args.output),
+        "note": (
+            "signed with EGMRA_INTENT_REVIEW_KEY; asserts the named reviewer performed "
+            f"the review methods {list(_INTENT_REVIEW_METHODS)} and is independent of "
+            "generation/intake. The binding is only trustworthy if that key is held by "
+            "such a reviewer — an operator self-signing all keys is a self-review."
+        ),
+    }, indent=2))
+    return 0
+
+
+def cmd_sign_review_correspondence(args: argparse.Namespace) -> int:
+    """Sign a formal-correspondence certificate binding a Lean declaration to a claim.
+
+    Reads the signed intent artifact (``--intent-review``) for the certificate id
+    and informal-claim hash it must bind, then binds the Lean declaration name and
+    its elaborated type (``--expected-type`` must match the kernel-checked
+    candidate's type exactly for the orchestrator to admit the declaration as a
+    formal proof of the informal claim). Signed with
+    ``EGMRA_FORMAL_CORRESPONDENCE_KEY``; the binding is only trustworthy if that key
+    is held by a reviewer independent of formalization and release.
+    """
+    intent = _load_intent_review(Path(args.intent_review))
+    if intent is None:
+        raise ValueError("--intent-review is required to bind the intent certificate")
+    verdict = Verdict.APPROVED if args.verdict == "approved" else Verdict.REJECTED
+    certificate = sign_formal_correspondence_certificate(FormalCorrespondenceCertificate(
+        certificate_id=args.certificate_id or f"formal-correspondence-{args.declaration}",
+        intent_certificate_id=intent.certificate_id,
+        informal_claim_hash=intent.informal_claim_hash,
+        lean_declaration_name=args.declaration,
+        elaborated_type_hash=expected_type_hash(args.expected_type),
+        notation_and_definition_map_hash=sha256_hex(args.notation_map or ""),
+        methods=list(_CORRESPONDENCE_REVIEW_METHODS),
+        reviewer_ids=[args.reviewer_id],
+        reviewer_independence_and_conflicts=[{
+            "reviewer_id": args.reviewer_id,
+            "independent_from": ["formalization_authority", "governor"],
+            "conflicts": [],
+        }],
+        verdict=verdict,
+        created_at=_utc_now(),
+    ))
+    _write_signed_review(Path(args.output), certificate.to_dict())
+    print(json.dumps({
+        "certificate_id": certificate.certificate_id,
+        "intent_certificate_id": certificate.intent_certificate_id,
+        "lean_declaration_name": certificate.lean_declaration_name,
+        "elaborated_type_hash": certificate.elaborated_type_hash,
+        "verdict": str(certificate.verdict),
+        "reviewer_key_id": certificate.reviewer_key_id,
+        "output": str(args.output),
+        "note": (
+            "signed with EGMRA_FORMAL_CORRESPONDENCE_KEY; asserts the named reviewer "
+            "confirmed the Lean declaration/type faithfully formalizes the informal "
+            "claim and is independent of formalization/release. --expected-type must "
+            "equal the kernel-checked candidate's elaborated type for the run to bind it."
+        ),
+    }, indent=2))
     return 0
 
 
@@ -1181,6 +1325,12 @@ def build_parser() -> argparse.ArgumentParser:
                      help="path to a file containing the problem statement")
     run.add_argument("--fixture", default=None,
                      help="bundled regression fixture id (see 'egmra fixtures')")
+    run.add_argument("--predicate", default=None,
+                     help="safe bounded predicate expression over the integer 'n' (e.g. "
+                          "'n*n >= 0' or 'all(k*k >= 0 for k in range(n+1))') that the "
+                          "counterexample/boundary probes enumerate over the small domain; "
+                          "AST-restricted to numeric expressions (no imports, attribute "
+                          "access, or arbitrary calls). Applies to --erdos/--statement runs")
     run.add_argument("--provider", choices=("browser", "deterministic"), default="browser",
                      help="reasoning provider: 'browser' (primary) or 'deterministic' "
                           "(tests/demos only)")
@@ -1305,6 +1455,57 @@ def build_parser() -> argparse.ArgumentParser:
     sign.add_argument("--input", type=Path, required=True)
     sign.add_argument("--output", type=Path, required=True)
     sign.set_defaults(func=cmd_policy_sign)
+
+    signrev = sub.add_parser(
+        "sign-review",
+        help="sign an intent or formal-correspondence review certificate with the review key")
+    signrev_sub = signrev.add_subparsers(dest="review_kind", required=True)
+
+    sri = signrev_sub.add_parser(
+        "intent", help="sign an intent-review certificate bound to a resolved problem")
+    sri_selector = sri.add_mutually_exclusive_group(required=True)
+    sri_selector.add_argument("--erdos", type=int, default=None,
+                              help="Erdős problem number to resolve from the corpus snapshot")
+    sri_selector.add_argument("--statement", default=None,
+                              help="verbatim problem statement to review")
+    sri_selector.add_argument("--statement-file", type=Path, default=None,
+                              help="path to a file containing the problem statement")
+    sri.add_argument("--corpus-tex", type=Path, default=None,
+                     help="override the corpus TeX snapshot used by --erdos")
+    sri.add_argument("--catalog", type=Path, default=None,
+                     help="override the problem catalog used by --erdos")
+    sri.add_argument("--reviewer-id", default="independent-intent-reviewer",
+                     help="identity of the independent reviewer signing the certificate")
+    sri.add_argument("--verdict", choices=("approved", "rejected"), default="approved",
+                     help="the reviewer's verdict (default: approved)")
+    sri.add_argument("--certificate-id", default=None,
+                     help="certificate id (default: intent-<problem_id>)")
+    sri.add_argument("--output", "-o", type=Path, required=True,
+                     help="destination for the signed certificate (created 0600; never overwritten)")
+    sri.set_defaults(func=cmd_sign_review_intent)
+
+    src = signrev_sub.add_parser(
+        "correspondence",
+        help="sign a formal-correspondence certificate binding a Lean declaration to a claim")
+    src.add_argument("--intent-review", type=Path, required=True,
+                     help="the signed intent-review JSON whose certificate id + informal-claim "
+                          "hash this correspondence binds")
+    src.add_argument("--declaration", required=True,
+                     help="the Lean declaration name the kernel-checked candidate establishes")
+    src.add_argument("--expected-type", required=True,
+                     help="the exact Lean type the declaration proves (must match the "
+                          "kernel-checked candidate's elaborated type)")
+    src.add_argument("--notation-map", default=None,
+                     help="optional notation/definition map text bound into the certificate")
+    src.add_argument("--reviewer-id", default="independent-formal-reviewer",
+                     help="identity of the independent reviewer signing the certificate")
+    src.add_argument("--verdict", choices=("approved", "rejected"), default="approved",
+                     help="the reviewer's verdict (default: approved)")
+    src.add_argument("--certificate-id", default=None,
+                     help="certificate id (default: formal-correspondence-<declaration>)")
+    src.add_argument("--output", "-o", type=Path, required=True,
+                     help="destination for the signed certificate (created 0600; never overwritten)")
+    src.set_defaults(func=cmd_sign_review_correspondence)
 
     show = sub.add_parser("policy-show", help="print the signed feature policy")
     show.add_argument("--policy", type=Path, default=None)
