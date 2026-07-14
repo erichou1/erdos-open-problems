@@ -358,3 +358,49 @@ def test_run_without_formal_correspondence_review_passes_none(tmp_path, monkeypa
                "--provider", "deterministic", "--policy", str(policy)])
     assert rc == 4
     assert captured["formal_correspondence_reviews"] is None
+
+
+# ── informal_only is driven by whether a Lean project is configured (task 4.6) ──
+
+def test_run_sets_informal_only_false_when_lean_enabled(tmp_path, monkeypatch):
+    import egmra.cli as cli_module
+    from egmra.agents.browser_runner import BrowserProviderUnavailable
+    from types import SimpleNamespace
+
+    captured: dict = {}
+
+    def _capture(**kwargs):
+        captured.update(kwargs)
+        raise BrowserProviderUnavailable("captured")
+
+    monkeypatch.setattr(cli_module, "research", _capture)
+    # A configured Lean project makes this a formal run without needing a real .lake.
+    monkeypatch.setattr(cli_module, "_build_lean_service",
+                        lambda args: (SimpleNamespace(), "4.28.0", "v4.28.0"))
+    cfg = _config_file(tmp_path)
+    policy = _signed_policy_file(tmp_path)
+    rc = main(["--config", str(cfg), "run", "--statement", "A statement.",
+               "--provider", "deterministic", "--policy", str(policy)])
+    assert rc == 4
+    assert captured["lean_service"] is not None
+    assert captured["informal_only"] is False
+
+
+def test_run_informal_only_true_without_lean(tmp_path, monkeypatch):
+    import egmra.cli as cli_module
+    from egmra.agents.browser_runner import BrowserProviderUnavailable
+
+    captured: dict = {}
+
+    def _capture(**kwargs):
+        captured.update(kwargs)
+        raise BrowserProviderUnavailable("captured")
+
+    monkeypatch.setattr(cli_module, "research", _capture)
+    cfg = _config_file(tmp_path)
+    policy = _signed_policy_file(tmp_path)
+    rc = main(["--config", str(cfg), "run", "--statement", "A statement.",
+               "--provider", "deterministic", "--policy", str(policy)])
+    assert rc == 4
+    assert captured["lean_service"] is None
+    assert captured["informal_only"] is True

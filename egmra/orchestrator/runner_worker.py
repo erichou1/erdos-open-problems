@@ -417,6 +417,9 @@ class RunnerWorker:
             falsifiers=falsifiers,
             search_queries=parsed["search_queries"],
             generated_sequences=parsed["candidate_sequences"],
+            proof_steps=parsed["proof_steps"],
+            assumptions=parsed["assumptions"],
+            formalization_requests=parsed["formalization_requests"],
             failures=failures,
             bottleneck=bottleneck,
         )

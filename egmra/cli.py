@@ -329,6 +329,9 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
             oeis_client=oeis_client,
             artifact_store=artifact_store,
             lean_service=lean_service,
+            # A configured Lean project means this is a formal run: the referee's
+            # formal audit expects a real kernel artifact, not an informal pass.
+            informal_only=lean_service is None,
             status_claims=list(problem.status_claims),
             novelty_verdict=problem.novelty_verdict,
             intent_review=_load_intent_review(args.intent_review),

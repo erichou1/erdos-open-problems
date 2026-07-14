@@ -6,8 +6,12 @@ in the trusted sandbox (4.5).
 from __future__ import annotations
 
 import json
+import time
+
+import pytest
 
 from egmra.compute.service import ComputeService
+from egmra.control.leases import LeaseError, LeaseManager
 from egmra.intake import build_problem_contract
 from egmra.intake.review import interpretation_review_hash, sign_intent_certificate
 from egmra.agents.runner import DeterministicRunner, RunnerResponse
@@ -21,6 +25,7 @@ from egmra.orchestrator.loop import (
     _branch_role,
     _default_independent_replay_executor,
     _execute_finite_experiment,
+    _lease_heartbeat,
     _record_model_exchanges,
 )
 from egmra.compute.spec import ExperimentSpec
@@ -379,6 +384,75 @@ def _fake_attested_checker_runner(tmp_path):
     return make_attested_kernel_runner(_fake_attested_checker(tmp_path))
 
 
+# ── branch lease heartbeat: long browser reasoning is not rejected as stale ─────
+
+def _wait_until(predicate, *, timeout: float = 2.0) -> None:
+    deadline = time.time() + timeout
+    while not predicate() and time.time() < deadline:
+        time.sleep(0.01)
+    assert predicate(), "condition not reached within timeout"
+
+
+def test_lease_heartbeat_keeps_a_slow_branch_lease_alive():
+    # A worker that reasons far longer than the lease grace window keeps its lease
+    # via the heartbeat, so its work is NOT rejected as stale. The clock is
+    # injected so the expiry assertion is deterministic; each simulated step stays
+    # within the grace window (as real 20s heartbeats do against a 60s grace).
+    clock = {"t": 0.0}
+    leases = LeaseManager(now_fn=lambda: clock["t"])
+    lease = leases.acquire(branch_id="b", holder="h", stage="deep_branch",
+                           run_contract_id="rc", grace_seconds=10.0)
+    with _lease_heartbeat(leases, lease, interval=0.02):
+        clock["t"] = 8.0
+        _wait_until(lambda: leases.leases["b"].heartbeat_at >= 8.0)
+        clock["t"] = 15.0  # total lease age 15s > 10s grace, but heartbeated
+        _wait_until(lambda: leases.leases["b"].heartbeat_at >= 15.0)
+    # Would raise "lease has expired" without the heartbeat renewals.
+    leases.assert_current("b", "h", lease.fencing_token)
+
+
+def test_without_heartbeat_a_slow_branch_lease_expires():
+    clock = {"t": 0.0}
+    leases = LeaseManager(now_fn=lambda: clock["t"])
+    lease = leases.acquire(branch_id="b", holder="h", stage="deep_branch",
+                           run_contract_id="rc", grace_seconds=10.0)
+    clock["t"] = 15.0  # no heartbeat -> past grace -> expired
+    with pytest.raises(LeaseError, match="lease has expired"):
+        leases.assert_current("b", "h", lease.fencing_token)
+
+
+def test_lease_heartbeat_stops_when_branch_is_superseded():
+    # If a replacement worker legitimately takes over the branch (fencing bump),
+    # the heartbeat's renewal fails closed and the stale worker is still rejected.
+    clock = {"t": 0.0}
+    leases = LeaseManager(now_fn=lambda: clock["t"])
+    lease = leases.acquire(branch_id="b", holder="h", stage="deep_branch",
+                           run_contract_id="rc", grace_seconds=10.0)
+    with _lease_heartbeat(leases, lease, interval=0.02):
+        clock["t"] = 20.0  # expire, then a new holder takes over
+        taken = leases.transfer_if_expired(branch_id="b", new_holder="h2",
+                                           run_contract_id="rc")
+        assert taken is not None and taken.fencing_token != lease.fencing_token
+        time.sleep(0.05)  # give the heartbeat a chance to (fail to) renew
+    with pytest.raises(LeaseError):
+        leases.assert_current("b", "h", lease.fencing_token)
+
+
+# ── typed worker-output schema is carried, not dropped (4.1 consumption) ───────
+
+def test_worker_output_carries_typed_schema_fields():
+    from types import SimpleNamespace
+
+    worker = RunnerWorker(runner=_FormalRunner(), goal_claim_id="goal",
+                          goal_formula="2 + 2 = 4")
+    output = worker.work_branch(SimpleNamespace(), SimpleNamespace(),
+                                branch_id="formal_library_first", budget=10.0,
+                                fencing_token=1)
+    assert output.proof_steps == ["p"]
+    assert output.formalization_requests == ["formalize"]
+    assert output.assumptions == []
+
+
 def _signed_correspondence(*, intent, informal_claim_hash, declaration_name,
                            elaborated_type_hash):
     """An independently signed correspondence review binding the intent, informal
@@ -467,4 +541,13 @@ def test_cli_loaded_signed_correspondence_admits_kernel_checked_formal_proof(tmp
     assert goal.evidence_profile.to_dict()["formal_verification"] == "KERNEL_CHECKED"
     assert goal.evidence_profile.to_dict()[
         "formal_correspondence_certificate_id"] == signed.certificate_id
+    # The referee's formal_audit now tests the real kernel artifact (not informal_only):
+    # a formal run with no admitted kernel proof (pass 1) fails it, and it passes once
+    # the correspondence-bound kernel evidence is admitted (pass 2).
+    first_audit = next(r for r in first.referee_result.attack_report.results
+                       if r.attack == "formal_audit")
+    assert first_audit.passed is False
+    second_audit = next(r for r in second.referee_result.attack_report.results
+                        if r.attack == "formal_audit")
+    assert second_audit.passed is True
 

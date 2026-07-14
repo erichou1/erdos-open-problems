@@ -98,8 +98,13 @@ class OEISClient:
             raw = json.loads(text, object_pairs_hook=_reject_duplicate_keys)
         except (json.JSONDecodeError, ValueError) as exc:
             raise OEISUnavailable(f"OEIS response is not valid JSON: {exc}") from exc
+        # Live OEIS may return either the classic ``{"results": [...]}`` object or a
+        # bare top-level array of result objects; normalize the array form so the
+        # rest of the client sees a single consistent shape.
+        if isinstance(raw, list):
+            raw = {"results": raw}
         if not isinstance(raw, dict):
-            raise OEISUnavailable("OEIS JSON response must be an object")
+            raise OEISUnavailable("OEIS JSON response must be an object or array")
         results = raw.get("results")
         if results is not None and not isinstance(results, list):
             raise OEISUnavailable("OEIS JSON results must be an array or null")

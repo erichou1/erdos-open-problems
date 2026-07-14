@@ -109,6 +109,25 @@ def test_client_uses_injected_fetcher_and_caches(tmp_path):
     assert r2.from_cache and calls["n"] == 1
 
 
+def test_client_accepts_top_level_json_array(tmp_path):
+    # Live OEIS now returns a bare top-level array instead of {"results": [...]}.
+    def fake_fetcher(url):
+        return '[{"number": 108, "data": "1,1,2,5,14,42"}]'
+
+    client = OEISClient(fetcher=fake_fetcher, cache_dir=tmp_path, offline=False)
+    r = client.query_terms([1, 1, 2, 5, 14, 42])
+    assert r.entries()[0]["number"] == 108
+
+
+def test_parse_response_normalizes_array_and_object():
+    assert OEISClient._parse_response('[{"number": 1}]') == {"results": [{"number": 1}]}
+    parsed = OEISClient._parse_response('{"results": [{"number": 2}]}')
+    assert parsed["results"][0]["number"] == 2
+    assert OEISClient._parse_response("{}") == {}  # empty no-match object stays valid
+    with pytest.raises(OEISUnavailable):
+        OEISClient._parse_response("[1, 2, 3]")  # array of non-objects is rejected
+
+
 # ── matching workflow ──────────────────────────────────────────────────────────
 
 def test_prefix_overlap():

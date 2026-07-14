@@ -16,9 +16,11 @@ records this order so it is auditable.
 from __future__ import annotations
 
 from collections.abc import Mapping
+from contextlib import contextmanager
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 import sys
+import threading
 from typing import Any, Callable, Protocol
 
 from egmra.agents import AuthorityTokenIssuer
@@ -73,6 +75,45 @@ from egmra.truth.validators import attest_evidence
 from egmra.verification.attacks import AttackResult, REQUIRED_ATTACKS
 from egmra.verification.referee import AdversarialReferee, DiversityProfile, RefereeResult
 
+
+# Branch leases are heartbeated while a (possibly slow) worker reasons, so that
+# legitimately long browser/model generation is never rejected as a stale lease.
+_BRANCH_LEASE_GRACE_SECONDS = 60.0
+_BRANCH_LEASE_HEARTBEAT_SECONDS = 20.0
+
+
+@contextmanager
+def _lease_heartbeat(leases, lease, *, interval: float = _BRANCH_LEASE_HEARTBEAT_SECONDS):
+    """Keep a branch lease alive while its worker runs.
+
+    Modern browser reasoning routinely exceeds the lease grace window, and the
+    fence is only checked *after* the worker returns; without a heartbeat, valid
+    work is discarded as ``stale_worker_rejected: lease has expired``. A daemon
+    thread renews the lease every ``interval`` seconds (strictly less than the
+    grace window) so long-but-live reasoning is preserved. If the lease is
+    legitimately superseded (a replacement worker bumped the fencing token), the
+    renewal fails closed and the subsequent fence check still rejects this
+    worker's entire output batch — liveness is extended, safety is not weakened.
+    """
+    stop = threading.Event()
+
+    def _beat() -> None:
+        while not stop.wait(interval):
+            try:
+                leases.renew(lease.branch_id, lease.holder,
+                             fencing_token=lease.fencing_token)
+            except LeaseError:
+                return  # superseded/expired; assert_current will reject the batch
+
+    thread = threading.Thread(
+        target=_beat, name=f"lease-heartbeat:{lease.branch_id}", daemon=True)
+    thread.start()
+    try:
+        yield
+    finally:
+        stop.set()
+        thread.join(timeout=interval)
+
 ACTOR = {"type": "agent", "id": "governor", "model": "local", "version": "1"}
 
 
@@ -99,6 +140,9 @@ class WorkerOutput:
     formal_candidates: list[dict] = field(default_factory=list)
     failures: list[str] = field(default_factory=list)
     bottleneck: str = ""
+    proof_steps: list[str] = field(default_factory=list)
+    assumptions: list[str] = field(default_factory=list)
+    formalization_requests: list[str] = field(default_factory=list)
 
 
 class Worker(Protocol):
@@ -150,6 +194,16 @@ class MechanicalAttackEvaluator:
             and record.verbatim_theorem_and_hypothesis_extract
             for record in packet.theorem_records
         )
+        # A formal result is audited against an actual kernel/formal artifact: a
+        # valid Lean/ATP proof evidence bound to a formal-correspondence certificate
+        # (only admitted after independent correspondence review). ``informal_only``
+        # runs carry no formal obligation, so the audit passes vacuously there.
+        formal_artifact_ok = any(
+            evidence.valid
+            and evidence.kind in {EvidenceKind.LEAN_PROOF, EvidenceKind.ATP_PROOF}
+            and bool(evidence.formal_correspondence_certificate_id)
+            for evidence in graph.evidence.values()
+        )
         checks = {
             "target_diff": (
                 bool(intent_cert) and not contract.release_blocked,
@@ -182,7 +236,7 @@ class MechanicalAttackEvaluator:
                 "no matching computation replay report reached the referee",
             ),
             "formal_audit": (
-                informal_only,
+                informal_only or formal_artifact_ok,
                 "formal result has no local kernel/formal audit artifact",
             ),
             "proof_reconstruction": (
@@ -755,7 +809,8 @@ def research(
         attempted.add(branch_id)
         lease = leases.acquire(
             branch_id=branch_id, holder="local:orchestrator", stage="deep_branch",
-            run_contract_id=contract.contract_hash(), grace_seconds=60.0,
+            run_contract_id=contract.contract_hash(),
+            grace_seconds=_BRANCH_LEASE_GRACE_SECONDS,
         )
         worker_token = authority_issuer.issue(
             authority_name="program_worker",
@@ -773,10 +828,11 @@ def research(
         branch_role = _branch_role(branch_id, worker)
         branch_worker = worker.for_role(branch_role) if hasattr(worker, "for_role") else worker
         try:
-            output = branch_worker.work_branch(
-                contract, packet, branch_id=branch_id, budget=action_budget,
-                fencing_token=lease.fencing_token, branch_slice=branch_slice,
-            )
+            with _lease_heartbeat(leases, lease):
+                output = branch_worker.work_branch(
+                    contract, packet, branch_id=branch_id, budget=action_budget,
+                    fencing_token=lease.fencing_token, branch_slice=branch_slice,
+                )
             # The fence is checked after the worker finishes and immediately
             # before any proposal, evidence, or replay report is consumed.
             # Losing the lease therefore invalidates the entire returned batch.
@@ -803,6 +859,9 @@ def research(
             "role": branch_role,
             "failures": list(output.failures),
             "falsifiers": list(output.falsifiers),
+            "proof_steps": list(output.proof_steps),
+            "assumptions": list(output.assumptions),
+            "formalization_requests": list(output.formalization_requests),
             "sequence_hashes": [content_id(sequence) for sequence in output.generated_sequences],
             "cross_problem_usable": False,
         })
