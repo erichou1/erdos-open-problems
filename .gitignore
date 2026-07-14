@@ -37,3 +37,25 @@ venv/
 *.pyc
 # Local temporary and backup files
 solve_rename.py.backup
+egmra.keys.sh
+# EGMRA secrets / signed artifacts (never commit)
+*.keys.sh
+signed-policy.json
+policy-template.json
+cfg.json
+# EGMRA generated run data / state (kept local)
+egmra_runs/
+egmra_artifacts/
+egmra_cache/
+egmra_quarantine/
+egmra_campaign*.json
+*.throttle.json
+browser_throttle.json
+# Build outputs
+build/
+dist/
+# Lean build outputs under the pinned project (config is tracked; build is not)
+aristotle_lean_project/.lake/
+aristotle_lean_project/lake-manifest.json
+aristotle_lean_project/lakefile.olean
+egmra.keys.sh
