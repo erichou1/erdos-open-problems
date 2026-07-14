@@ -50,6 +50,13 @@
 > - Tests: `egmra/tests/test_production_wiring.py` (9). Full suite: **981 passed**, rc=0.
 > - Remaining: 4.1 (full typed worker-output schema) and 4.6 (emit `formal_candidates` from the worker so the browser→Lean formal-candidate path fires inside `egmra run`; the sealed checker itself is done).
 
+> ## Session update (typed worker schema + formal-candidate path in `egmra run` — 4.1, 4.6)
+> - **4.1 — full typed worker-output schema.** `parse_worker_response` now captures `proof_steps`, `assumptions`, `formalization_requests`, and `lean_declaration_candidates` (`{claim_id, declaration_name, source, expected_type}`) alongside the existing fields; incomplete Lean candidates are dropped (never a fabricated formal artifact). `branch_prompt` requests the full schema.
+> - **4.6 — formal-candidate path wired into `egmra run`.** `RunnerWorker` converts `lean_declaration_candidates` into `WorkerOutput.formal_candidates`, computing every hash **deterministically** — `expected_type_hash` is the canonical hash the pinned kernel checker recomputes (so `candidate_type_hash == expected_type_hash` is sound), and `project_hash`/`immutable_target_module_hash` are derived, never model-trusted. `egmra run --lean-project <built>` builds a real `LeanService` whose kernel runner is the pinned checker; `LeanService.verify_declaration` writes the candidate into a hardened quarantine and binds `source_root` so the **real Lean kernel** (`lake env lean`) re-checks the declaration. `DeterministicWorker`/existing callers are unaffected (the bridge only activates with a configured `lean_project` + an `AttestedKernelRunner`).
+> - **Trust boundary preserved.** A kernel-verified declaration is still **not** admitted as a formal proof of the *informal* claim without an independently signed formal-correspondence review (`egmra run` records `formal_correspondence_required` otherwise) — tested.
+> - Tests: 4 more in `egmra/tests/test_production_wiring.py`. Full suite: **985 passed**, rc=0. All enumerated code defects **4.1–4.11 are addressed**; scenario 4's full browser→Lean→`FORMALLY_VERIFIED_CANDIDATE` chain still needs a live authenticated browser emitting valid Lean **and** a signed formal-correspondence review, so the verdict stays **INCOMPLETE**.
+
+
 
 
 

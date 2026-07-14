@@ -910,6 +910,7 @@ def research(
                 declaration_name=accepted["declaration_name"],
                 expected_type_hash=accepted["expected_type_hash"],
                 immutable_target_module_hash=accepted["immutable_target_module_hash"],
+                expected_type_source=accepted.get("expected_type_source", ""),
                 claim_bindings={
                     accepted["claim_id"]: graph.claims[
                         accepted["claim_id"]

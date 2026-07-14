@@ -238,3 +238,137 @@ def test_runner_worker_without_compute_service_does_not_execute():
                                 branch_id="computational_finite_reduction", budget=10.0,
                                 fencing_token=1)
     assert output.evidence == []  # no compute service configured -> nothing executed
+
+
+# ── 4.1: full typed worker-output schema ────────────────────────────────────────
+
+def test_parse_worker_response_captures_full_typed_schema():
+    from egmra.orchestrator.runner_worker import parse_worker_response
+
+    doc = {
+        "claims": [], "proof_steps": ["reduce to finite check", "apply lemma A"],
+        "assumptions": ["n is a natural number"],
+        "formalization_requests": ["formalize the reduction to Lean"],
+        "lean_declaration_candidates": [
+            {"claim_id": "goal", "declaration_name": "egmra_demo",
+             "source": "import Mathlib\ntheorem egmra_demo : 2 + 2 = 4 := rfl",
+             "expected_type": "2 + 2 = 4"},
+            {"declaration_name": "", "source": "x", "expected_type": "y"},  # incomplete -> dropped
+        ],
+        "falsifiers": [], "search_queries": [], "candidate_sequences": [], "experiments": [],
+        "open_subgoals": [], "bottleneck": "", "confidence": 0.5,
+    }
+    parsed = parse_worker_response(json.dumps(doc))
+    assert parsed["proof_steps"] == ["reduce to finite check", "apply lemma A"]
+    assert parsed["assumptions"] == ["n is a natural number"]
+    assert parsed["formalization_requests"] == ["formalize the reduction to Lean"]
+    assert len(parsed["lean_declaration_candidates"]) == 1  # incomplete candidate dropped
+    assert parsed["lean_declaration_candidates"][0]["declaration_name"] == "egmra_demo"
+
+
+# ── 4.6: formal candidates emitted + verified via a real LeanService ────────────
+
+from egmra.orchestrator.runner_worker import parse_worker_response  # noqa: E402
+from egmra.lean.kernel_checker import expected_type_hash as _canon_type_hash  # noqa: E402
+from egmra.lean.kernel_checker import make_attested_kernel_runner  # noqa: E402
+from egmra.lean.service import LeanService  # noqa: E402
+from egmra.provenance.hashing import is_sha256  # noqa: E402
+
+_LEAN_SRC = "import Mathlib\n\ntheorem egmra_demo : 2 + 2 = 4 := rfl\n"
+
+
+class _FormalRunner:
+    """Emits a branch response proposing a Lean declaration candidate."""
+
+    runner_id = "formal-wiring-test"
+
+    def __init__(self):
+        self._delegate = DeterministicRunner()
+
+    def run(self, prompt: str, *, stage: str) -> RunnerResponse:
+        base = self._delegate.run(prompt, stage=stage)
+        if stage.startswith("branch:"):
+            payload = {"goal_restatement": "", "claims": [], "proof_steps": ["p"],
+                       "assumptions": [], "falsifiers": [], "search_queries": [],
+                       "candidate_sequences": [], "experiments": [],
+                       "formalization_requests": ["formalize"],
+                       "lean_declaration_candidates": [{
+                           "claim_id": "goal", "declaration_name": "egmra_demo",
+                           "source": _LEAN_SRC, "expected_type": "2 + 2 = 4"}],
+                       "open_subgoals": [], "bottleneck": "formalize", "confidence": 0.4}
+        else:
+            payload = {"falsifiers": [], "search_queries": [], "bottleneck": "", "confidence": 0.1}
+        return RunnerResponse(text=json.dumps(payload), model=base.model,
+                              context_id=base.context_id, prompt_hash=base.prompt_hash)
+
+
+def _fake_attested_checker(tmp_path):
+    """A pinned checker script that echoes a verdict verify_for accepts."""
+    script = tmp_path / "fake_lean_checker.py"
+    script.write_text(
+        "#!/usr/bin/env python3\n"
+        "import sys, json, hashlib\n"
+        "req = json.load(sys.stdin)\n"
+        "def h(s): return hashlib.sha256(s.encode()).hexdigest()\n"
+        "sys.stdout.write(json.dumps({\n"
+        "  'kernel_verified': True, 'candidate_type_hash': req['expected_type_hash'],\n"
+        "  'source_tree_hash': h('st'), 'imports_hash': h('im'),\n"
+        "  'candidate_declaration_hash': h('cd'), 'proof_term_hash': h('pt'),\n"
+        "  'transitive_axioms': ['propext'], 'placeholder_findings': [],\n"
+        "  'unsafe_findings': [], 'imports_audited': True, 'axiom_closure_verified': True,\n"
+        "  'immutable_target_isolated': True, 'clean_replay': True, 'network_disabled': True}))\n",
+        encoding="utf-8")
+    script.chmod(0o755)
+    return script
+
+
+def test_runner_worker_emits_formal_candidates():
+    from types import SimpleNamespace
+
+    worker = RunnerWorker(runner=_FormalRunner(), goal_claim_id="goal",
+                          goal_formula="2 + 2 = 4", lean_version="4.28.0",
+                          mathlib_commit="v4.28.0")
+    output = worker.work_branch(SimpleNamespace(), SimpleNamespace(),
+                                branch_id="formal_library_first", budget=10.0, fencing_token=1)
+    assert output.formal_candidates
+    fc = output.formal_candidates[0]
+    assert fc["declaration_name"] == "egmra_demo" and fc["claim_id"] == "goal"
+    assert fc["expected_type_hash"] == _canon_type_hash("2 + 2 = 4")  # deterministic, not model-trusted
+    assert is_sha256(fc["project_hash"]) and is_sha256(fc["immutable_target_module_hash"])
+    assert fc["expected_type_source"] == "2 + 2 = 4"
+
+
+def test_runner_worker_no_formal_candidates_without_lean_env():
+    from types import SimpleNamespace
+
+    worker = RunnerWorker(runner=_FormalRunner(), goal_claim_id="goal", goal_formula="P")
+    output = worker.work_branch(SimpleNamespace(), SimpleNamespace(),
+                                branch_id="formal_library_first", budget=10.0, fencing_token=1)
+    assert output.formal_candidates == []
+
+
+def test_research_formal_candidate_verified_by_lean_service(tmp_path):
+    lean_service = LeanService(kernel_runner=_fake_attested_checker_runner(tmp_path))
+    worker = RunnerWorker(runner=_FormalRunner(), goal_claim_id="goal",
+                          goal_formula="for all n, n*n >= 0", lean_version="4.28.0",
+                          mathlib_commit="v4.28.0")
+    result = research(
+        problem_id="erdos-formal-1", source_bytes=_TRUE, source_id="fx-formal",
+        budget=100.0, enforcer=_enforcer(), worker=worker, goal_claim_id="goal",
+        events_path=tmp_path / "e.jsonl", retrieval_corpus=_corpus(),
+        runner=_FormalRunner(), lean_service=lean_service,
+        probe_predicate=lambda n: n * n >= 0, status_claims=_status("erdos-formal-1"),
+        intent_review=_intent_review("erdos-formal-1", "fx-formal"))
+    # The formal-candidate path fired: the LeanService verified the declaration.
+    assert result.formal_reports, "expected a formal verification report"
+    report = result.formal_reports[0]
+    assert report["declaration_name"] == "egmra_demo"
+    assert report["kernel_verified"] is True and report["target_type_matches"] is True
+    # No signed formal-correspondence review was provided, so a verified
+    # declaration is NOT admitted as a formal proof of the informal claim.
+    assert any("formal_correspondence_required" in f for f in result.failures)
+
+
+def _fake_attested_checker_runner(tmp_path):
+    return make_attested_kernel_runner(_fake_attested_checker(tmp_path))
+

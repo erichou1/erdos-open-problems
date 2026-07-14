@@ -2,9 +2,9 @@
   "schema_version": 1,
   "generated_at": "2026-07-13",
   "overall_verdict": "INCOMPLETE",
-  "verdict_note": "Code defects 4.2/4.3/4.8/4.4/4.9 are reproduced-then-fixed with red-green tests; Postgres was live-verified on a disposable postgres:16 (fixing a real autocommit durability bug). The pinned Lean v4.28.0 + Mathlib v4.28.0 kernel is BUILT, the Aristotle path is live-verified against the real service (submit->poll->download->safe-extract, fixing TWO real async/archive SDK-adapter bugs), and the SEALED local Lean kernel replay works end-to-end (reachable via `egmra formalize`; scenario 5 PASS). Production wiring since: distinct per-branch worker roles (4.11), durable content-addressed model-exchange artifacts + signed MODEL_EXCHANGE_RECORDED events (4.10), and model-proposed finite experiments executed in the hardened sandbox reaching at most COMPUTATIONAL_EVIDENCE (4.5). Full suite: 981 passed, rc=0. Remaining: 4.1 (full typed worker schema) and 4.6 (browser->Lean formal-candidate path inside `egmra run`; the sealed checker itself is done). Verdict stays INCOMPLETE (not COMPLETE).",
-  "test_baseline": {"passed": 981, "exit_code": 0,
-    "note": "3 live-Postgres tests are gated on EGMRA_TEST_POSTGRES_DSN (skip without a server: 978 passed, 3 skipped, rc=0). Live Aristotle + live Lean-kernel sealing are driven manually with a real key/toolchain; hermetic tests cover the contracts.",
+  "verdict_note": "Code defects 4.2/4.3/4.8/4.4/4.9 are reproduced-then-fixed with red-green tests; Postgres was live-verified on a disposable postgres:16 (fixing a real autocommit durability bug). The pinned Lean v4.28.0 + Mathlib v4.28.0 kernel is BUILT, the Aristotle path is live-verified against the real service (fixing TWO real async/archive SDK-adapter bugs), and the SEALED local Lean kernel replay works end-to-end (scenario 5 PASS). Production wiring: distinct per-branch worker roles (4.11), durable content-addressed model-exchange artifacts + signed events (4.10), model-proposed finite experiments executed in the hardened sandbox reaching at most COMPUTATIONAL_EVIDENCE (4.5), the full typed worker-output schema (4.1: proof steps, assumptions, formalization requests, Lean declaration candidates), and the formal-candidate path wired into `egmra run` (4.6: RunnerWorker emits formal_candidates with deterministic hashes; `egmra run --lean-project` builds a real LeanService whose kernel runner is the pinned checker, which re-checks the declaration with the REAL Lean kernel). Full suite: 985 passed, rc=0. All enumerated code defects (4.1-4.11) are now addressed; scenario 4's full browser->Lean->FORMALLY_VERIFIED_CANDIDATE chain still needs a live authenticated browser emitting valid Lean AND an independently signed formal-correspondence review, so the verdict stays INCOMPLETE (not COMPLETE).",
+  "test_baseline": {"passed": 985, "exit_code": 0,
+    "note": "3 live-Postgres tests are gated on EGMRA_TEST_POSTGRES_DSN (skip without a server: 982 passed, 3 skipped, rc=0). Live Aristotle, live Lean-kernel sealing, and the live formal bridge are driven manually with a real key/toolchain; hermetic tests cover the contracts.",
     "command": "python -m pytest egmra/tests tests"},
   "scenarios": [
     {"id": 1, "name": "False statement -> CANDIDATE_DISPROOF", "status": "PASS",
@@ -100,10 +100,15 @@
      "tests": ["egmra/tests/test_production_wiring.py::test_execute_finite_experiment_true_yields_evidence",
                 "egmra/tests/test_production_wiring.py::test_execute_finite_experiment_false_yields_no_evidence",
                 "egmra/tests/test_production_wiring.py::test_runner_worker_executes_model_experiment_as_computational_evidence",
-                "egmra/tests/test_production_wiring.py::test_runner_worker_without_compute_service_does_not_execute"]}
+                "egmra/tests/test_production_wiring.py::test_runner_worker_without_compute_service_does_not_execute"]},
+    {"id": "4.1", "title": "Full typed worker-output schema", "status": "FIXED",
+     "detail": "parse_worker_response now captures proof_steps, assumptions, formalization_requests, and lean_declaration_candidates ({claim_id, declaration_name, source, expected_type}) in addition to claims/falsifiers/queries/sequences/experiments; incomplete Lean candidates are dropped (never a fabricated formal artifact). branch_prompt requests the full schema.",
+     "tests": ["egmra/tests/test_production_wiring.py::test_parse_worker_response_captures_full_typed_schema"]},
+    {"id": "4.6", "title": "Formal-candidate path wired into egmra run (worker emits formal_candidates; real LeanService)", "status": "FIXED",
+     "detail": "RunnerWorker converts lean_declaration_candidates into WorkerOutput.formal_candidates, computing every hash deterministically (expected_type_hash is the canonical hash the pinned checker recomputes, so candidate_type_hash==expected_type_hash is sound; project_hash + immutable_target_module_hash are derived, never model-trusted). `egmra run --lean-project` builds a real LeanService whose kernel runner is the pinned checker; LeanService.verify_declaration writes the candidate into a hardened quarantine and binds source_root so the REAL Lean kernel (lake env lean) re-checks the declaration. Verified live via the LeanService bridge (kernel_verified + target_type_matches on a real proof). A verified declaration is still NOT admitted as a formal proof of the informal claim without an independently signed formal-correspondence review (enforced).",
+     "tests": ["egmra/tests/test_production_wiring.py::test_runner_worker_emits_formal_candidates",
+                "egmra/tests/test_production_wiring.py::test_runner_worker_no_formal_candidates_without_lean_env",
+                "egmra/tests/test_production_wiring.py::test_research_formal_candidate_verified_by_lean_service"]}
   ],
-  "remaining_defects_not_addressed_this_session": [
-    {"id": "4.1", "title": "Full typed worker-output schema (proof steps, assumptions, formalization requests, Lean declaration candidates)", "status": "PARTIAL"},
-    {"id": "4.6", "title": "LeanService wired into egmra run/campaign formal-candidate path; live kernel run", "status": "PARTIAL (sealed local Lean-kernel replay DONE + reachable via `egmra formalize`; research() consumes lean_service but the RunnerWorker does not yet emit formal_candidates, so the browser->Lean->FORMALLY_VERIFIED_CANDIDATE chain in `egmra run` is not exercised end-to-end)"}
-  ]
+  "remaining_defects_not_addressed_this_session": []
 }

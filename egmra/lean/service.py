@@ -652,11 +652,17 @@ class LeanService:
     def __init__(self, *, kernel_runner: Any = None,
                  independent_checker: Any = None,
                  axiom_whitelist: frozenset[str] = DEFAULT_AXIOM_WHITELIST,
-                 checker_env: dict[str, str] | None = None):
+                 checker_env: dict[str, str] | None = None,
+                 lean_project: Any = None):
         self._kernel_runner = kernel_runner
         self._independent_checker = independent_checker
         self.axiom_whitelist = axiom_whitelist
         self._checker_env = dict(checker_env) if checker_env is not None else None
+        # When set (with an AttestedKernelRunner), verify_declaration writes the
+        # candidate into a hardened quarantine and asks the pinned checker to run
+        # the REAL kernel over that tree (source_root path), rather than only
+        # binding a source-string hash.
+        self._lean_project = lean_project
 
     def create_environment(self, *, lean_version: str, mathlib_commit: str,
                            project_hash: str, trust_policy: str = "classical-whitelist",
@@ -710,24 +716,50 @@ class LeanService:
         kernel_result: Any = None,
         claim_bindings: dict[str, str] | None = None,
         artifact_hashes: tuple[str, ...] = (),
+        expected_type_source: str = "",
     ) -> FormalCertificate:
         """Produce a certificate; only a bound checker attestation may pass.
 
         ``kernel_result`` is retained solely for backwards-compatible parsing of
         old callers.  It is never trusted, regardless of whether it is ``True``,
         ``"kernel_verified"``, or an object with a similarly named status.
+
+        When a pinned ``lean_project`` and ``expected_type_source`` are configured,
+        the candidate is written into a hardened quarantine and the pinned checker
+        runs the REAL Lean kernel over that tree (binding ``source_root`` and the
+        definitional target); otherwise only the source-string hash is bound.
         """
         placeholders = tuple(["sorry/admit"] if has_placeholder(source) else [])
         unsafe = tuple(native_findings(source))
+        source_root = ""
+        source_hash = sha256_hex(source)
+        _tmp_ctx = None
+        if self._lean_project is not None and expected_type_source \
+                and isinstance(self._kernel_runner, AttestedKernelRunner):
+            import tempfile
+
+            from egmra.lean.aristotle_api import hash_quarantine_tree
+
+            _tmp_ctx = tempfile.TemporaryDirectory(prefix="egmra_formal_")
+            candidate_dir = Path(_tmp_ctx.name)
+            (candidate_dir / "Candidate.lean").write_text(source, encoding="utf-8")
+            source_root = str(candidate_dir)
+            source_hash = hash_quarantine_tree(candidate_dir)
         request = CheckerRequest(
             environment_id=environment.environment_id,
-            source_hash=sha256_hex(source),
+            source_hash=source_hash,
             declaration_name=declaration_name,
             expected_type_hash=expected_type_hash,
             immutable_target_module_hash=immutable_target_module_hash,
             trust_policy_hash=sha256_hex(environment.trust_policy),
+            source_root=source_root,
+            expected_type_source=expected_type_source,
         )
-        attestation = self._run_kernel(request, kernel_result)
+        try:
+            attestation = self._run_kernel(request, kernel_result)
+        finally:
+            if _tmp_ctx is not None:
+                _tmp_ctx.cleanup()
         attested = bool(
             attestation is not None
             and verification_method == LOCAL_KERNEL_METHOD

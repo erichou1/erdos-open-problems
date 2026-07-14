@@ -64,7 +64,7 @@ from egmra.lean.kernel_checker import (
 )
 from egmra.lean.aristotle_sdk import AristotleSdkClient
 from egmra.lean.replay import LeanReplayVerifier
-from egmra.lean.service import CheckerConfigurationError, LeanEnvironment
+from egmra.lean.service import CheckerConfigurationError, LeanEnvironment, LeanService
 from egmra.provenance.hashing import sha256_hex
 from egmra.retrieval.erdos_corpus import build_erdos_corpus
 from egmra.retrieval.records import TheoremRecord
@@ -240,6 +240,38 @@ def _build_oeis_client(args: argparse.Namespace, config: EgmraConfig) -> OEISCli
     return OEISClient(cache_dir=config.oeis_cache_dir, offline=offline)
 
 
+def _build_lean_service(args: argparse.Namespace):
+    """Construct a real LeanService for the formal-candidate path (task 4.6).
+
+    Returns ``(lean_service, lean_version, mathlib_commit)``. When ``--lean-project``
+    is given (a built pinned project), the service's kernel runner is the pinned
+    checker (egmra/lean/kernel_checker.py), so a worker-proposed Lean declaration
+    candidate is re-checked by the REAL Lean kernel inside ``egmra run``. Without
+    it, the formal path stays unconfigured (no formal candidates are emitted).
+    """
+    lean_project = getattr(args, "lean_project", None)
+    if not lean_project:
+        return None, "", ""
+    lean_project = Path(lean_project)
+    if lean_project.is_symlink() or not lean_project.is_dir() \
+            or not (lean_project / ".lake").is_dir():
+        raise ValueError(
+            f"--lean-project must be a built Lean project (with .lake): {lean_project}")
+    import egmra as _egmra_pkg
+
+    repo_root = Path(_egmra_pkg.__file__).resolve().parent.parent
+    checker_path = Path("egmra_quarantine") / "formal" / "pinned_lean_checker.py"
+    checker_path.parent.mkdir(parents=True, exist_ok=True)
+    write_pinned_checker(checker_path, lean_project=lean_project, repo_root=repo_root)
+    runner = make_attested_kernel_runner(checker_path)
+    toolchain_file = lean_project / "lean-toolchain"
+    toolchain = toolchain_file.read_text(encoding="utf-8", errors="ignore").strip() \
+        if toolchain_file.is_file() else ""
+    lean_version = (toolchain.split(":")[-1] or "unknown") if toolchain else "unknown"
+    service = LeanService(kernel_runner=runner, lean_project=lean_project)
+    return service, lean_version, args.mathlib_commit
+
+
 def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
     """Run the real research loop on an arbitrary problem via a reasoning worker.
 
@@ -261,12 +293,18 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
     oeis_client = _build_oeis_client(args, config)
     # Durable content-addressed store for model-exchange transcripts (task 4.10).
     artifact_store = ContentAddressedObjectStore(root=Path(config.artifact_store_dir))
+    # Optional real formal-candidate path (task 4.6): a LeanService whose kernel
+    # runner is the pinned checker, so worker-proposed Lean is re-checked live.
+    lean_service, lean_version, mathlib_commit = _build_lean_service(args)
     worker = RunnerWorker(
         runner=runner,
         goal_claim_id="goal",
         goal_formula=problem.display_statement,
         role=args.role,
         compute_service=ComputeService(),
+        lean_version=lean_version,
+        mathlib_commit=mathlib_commit,
+        lean_project=args.lean_project,
     )
     try:
         result = research(
@@ -282,6 +320,7 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
             retrieval_corpus=retrieval_corpus,
             oeis_client=oeis_client,
             artifact_store=artifact_store,
+            lean_service=lean_service,
             status_claims=list(problem.status_claims),
             novelty_verdict=problem.novelty_verdict,
             intent_review=_load_intent_review(args.intent_review),
@@ -942,6 +981,11 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--oeis", choices=("auto", "offline", "live"), default="auto",
                      help="OEIS sequence lookups: 'auto' (config), 'offline' (cache only), "
                           "or 'live' (oeis.org)")
+    run.add_argument("--lean-project", type=Path, default=None,
+                     help="built pinned Lean project (with .lake); enables the real "
+                          "formal-candidate path (worker-proposed Lean re-checked by the kernel)")
+    run.add_argument("--mathlib-commit", default="v4.28.0",
+                     help="Mathlib revision recorded in formal candidates")
     run.add_argument(
         "--intent-review", type=Path, default=None,
         help="independently signed intent-review JSON bound to the problem",

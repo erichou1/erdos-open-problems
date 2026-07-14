@@ -25,12 +25,14 @@ from __future__ import annotations
 import json
 import re
 from dataclasses import dataclass, field, replace
+from pathlib import Path
 from typing import Any
 
 from egmra.agents.runner import DeterministicRunner, ModelRunner, RunnerResponse
 from egmra.compute.artifact import ReplayReport
 from egmra.compute.service import ComputeService
 from egmra.compute.spec import ExperimentSpec
+from egmra.lean.kernel_checker import expected_type_hash as _canonical_type_hash
 from egmra.orchestrator.loop import (
     WorkerOutput,
     _default_independent_replay_executor,
@@ -46,10 +48,14 @@ _MAX_SEQ_TERMS = 64
 WORKER_RESPONSE_SCHEMA = {
     "goal_restatement": "str",
     "claims": "list[{claim_id, statement, depends_on[], scope, confidence}]",
+    "proof_steps": "list[str]",
+    "assumptions": "list[str]",
     "falsifiers": "list[str]",
     "search_queries": "list[str]",
     "candidate_sequences": "list[list[int]]",
-    "experiments": "list[{description, kind}]",
+    "experiments": "list[{description, kind, code?, inputs?, claim_id?, coverage?}]",
+    "formalization_requests": "list[str]",
+    "lean_declaration_candidates": "list[{claim_id, declaration_name, source, expected_type}]",
     "open_subgoals": "list[str]",
     "bottleneck": "str",
     "confidence": "number 0..1",
@@ -170,13 +176,37 @@ def parse_worker_response(text: str) -> dict[str, Any]:
             entry["coverage"] = str(exp.get("coverage", "")).strip()
         experiments.append(entry)
 
+    lean_candidates: list[dict[str, str]] = []
+    for cand in (document.get("lean_declaration_candidates") or [])[:_MAX_LIST]:
+        if not isinstance(cand, dict):
+            raise WorkerResponseSchemaError("each lean_declaration_candidate must be an object")
+        source = str(cand.get("source", "")).strip()
+        declaration_name = str(cand.get("declaration_name", "")).strip()
+        expected_type = str(cand.get("expected_type", "")).strip()
+        # A well-formed formal candidate needs a declaration name, its Lean source,
+        # and the intended type it must prove; incomplete ones are dropped (never
+        # a fabricated formal artifact).
+        if not (source and declaration_name and expected_type):
+            continue
+        lean_candidates.append({
+            "claim_id": str(cand.get("claim_id", "")).strip(),
+            "declaration_name": declaration_name,
+            "source": source,
+            "expected_type": expected_type,
+        })
+
     return {
         "goal_restatement": str(document.get("goal_restatement", "")).strip(),
         "claims": claims,
+        "proof_steps": _as_str_list(document.get("proof_steps"), field_name="proof_steps"),
+        "assumptions": _as_str_list(document.get("assumptions"), field_name="assumptions"),
         "falsifiers": _as_str_list(document.get("falsifiers"), field_name="falsifiers"),
         "search_queries": _as_str_list(document.get("search_queries"), field_name="search_queries"),
         "candidate_sequences": sequences,
         "experiments": experiments,
+        "formalization_requests": _as_str_list(
+            document.get("formalization_requests"), field_name="formalization_requests"),
+        "lean_declaration_candidates": lean_candidates,
         "open_subgoals": _as_str_list(document.get("open_subgoals"), field_name="open_subgoals"),
         "bottleneck": str(document.get("bottleneck", "")).strip(),
         "confidence": _confidence(document.get("confidence")),
@@ -224,12 +254,18 @@ def branch_prompt(statement: str, *, role: str, branch_id: str, packet_summary: 
         "in an 'code' field (with 'inputs' object, a 'claim_id' it checks, and a "
         "'coverage' string). No imports, file, or network access are available; it "
         "runs in a sandbox and yields only finite computational evidence.\n"
+        "You MAY also request formalization and propose Lean declaration candidates: "
+        "each is {claim_id, declaration_name, source (Lean 4 + Mathlib, `import Mathlib`), "
+        "expected_type (the exact intended Lean type it proves)}. These are re-checked "
+        "by an independent pinned Lean kernel; a claim is never proved because you assert it.\n"
         "Return ONLY a JSON object with keys: goal_restatement (string), claims "
-        "(list of {claim_id, statement, depends_on, scope, confidence}), "
-        "falsifiers (list), search_queries (list), candidate_sequences (list of "
-        "integer lists), experiments (list of {description, kind, code?, inputs?, "
-        "claim_id?, coverage?}), open_subgoals (list), bottleneck (string), "
-        "confidence (number 0..1)."
+        "(list of {claim_id, statement, depends_on, scope, confidence}), proof_steps "
+        "(list of strings), assumptions (list of strings), falsifiers (list), "
+        "search_queries (list), candidate_sequences (list of integer lists), "
+        "experiments (list of {description, kind, code?, inputs?, claim_id?, coverage?}), "
+        "formalization_requests (list of strings), lean_declaration_candidates (list of "
+        "{claim_id, declaration_name, source, expected_type}), open_subgoals (list), "
+        "bottleneck (string), confidence (number 0..1)."
     )
 
 
@@ -256,6 +292,10 @@ class RunnerWorker:
     referee: ModelRunner | None = None
     compute_service: ComputeService | None = None
     replay_sandbox: object | None = field(default_factory=_default_independent_replay_executor)
+    lean_version: str = ""
+    mathlib_commit: str = ""
+    lean_project: Any = None
+    trust_policy: str = "classical-whitelist"
     parsed_responses: list[dict[str, Any]] = field(default_factory=list)
 
     def for_role(self, role: str) -> "RunnerWorker":
@@ -366,17 +406,58 @@ class RunnerWorker:
 
         evidence, experiment_replays = self._run_experiments(
             parsed["experiments"], branch_id=branch_id, seen=seen, failures=failures)
+        formal_candidates = self._build_formal_candidates(
+            parsed["lean_declaration_candidates"], branch_id=branch_id, seen=seen)
 
         return WorkerOutput(
             claim_proposals=proposals,
             evidence=evidence,
             replay_reports=experiment_replays,
+            formal_candidates=formal_candidates,
             falsifiers=falsifiers,
             search_queries=parsed["search_queries"],
             generated_sequences=parsed["candidate_sequences"],
             failures=failures,
             bottleneck=bottleneck,
         )
+
+    def _build_formal_candidates(self, candidates, *, branch_id: str,
+                                 seen: set[str]) -> list[dict]:
+        """Turn model Lean declaration candidates into formal_candidates (task 4.6).
+
+        Hashes are computed deterministically here (never trusted from the model):
+        ``expected_type_hash`` is the canonical hash of the intended type — the
+        same one the pinned kernel checker recomputes — so the orchestrator's
+        ``candidate_type_hash == expected_type_hash`` binding is sound. Emitted
+        only when a pinned Lean environment is configured; a candidate is inert
+        unless research() also has a LeanService to run the real kernel.
+        """
+        if not (self.lean_version and self.mathlib_commit):
+            return []
+        if self.lean_project is not None:
+            project_hash = sha256_hex(str(Path(self.lean_project).resolve()))
+        else:
+            project_hash = sha256_hex(f"{self.lean_version}\n{self.mathlib_commit}")
+        out: list[dict] = []
+        for cand in candidates:
+            requested = cand.get("claim_id") or ""
+            target = requested if requested in seen else self.goal_claim_id
+            expected_type = cand["expected_type"]
+            out.append({
+                "claim_id": target,
+                "source": cand["source"],
+                "declaration_name": cand["declaration_name"],
+                "expected_type_source": expected_type,
+                "lean_version": self.lean_version,
+                "mathlib_commit": self.mathlib_commit,
+                "project_hash": project_hash,
+                "expected_type_hash": _canonical_type_hash(expected_type),
+                "immutable_target_module_hash": sha256_hex(
+                    f"module\n{self.lean_version}\n{self.mathlib_commit}\n"
+                    f"{cand['declaration_name']}"),
+                "trust_policy": self.trust_policy,
+            })
+        return out
 
     def _run_experiments(self, experiments, *, branch_id: str, seen: set[str],
                          failures: list[str]) -> tuple[list[dict], list[ReplayReport]]:
