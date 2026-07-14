@@ -16,6 +16,10 @@ The primary ``run`` path drives the real research loop on an arbitrary problem;
 it does not call the fixture loader. Real provider/Lean/OEIS integrations require
 credentials/toolchains and are documented in DECISIONS.md. A *verified* release
 also requires an independently signed intent-review artifact (``--intent-review``).
+A FORMALLY_VERIFIED_CANDIDATE additionally requires an independently signed
+formal-correspondence review (``--formal-correspondence-review``) binding the
+kernel-checked Lean declaration to the informal claim; both review artifacts are
+signed out-of-band in the independent review domain and only consumed here.
 """
 
 from __future__ import annotations
@@ -69,7 +73,11 @@ from egmra.provenance.hashing import sha256_hex
 from egmra.retrieval.erdos_corpus import build_erdos_corpus
 from egmra.retrieval.records import TheoremRecord
 from egmra.truth.events import EventLog, EventLogError
-from egmra.truth.entities import IntentCertificate, Verdict
+from egmra.truth.entities import (
+    FormalCorrespondenceCertificate,
+    IntentCertificate,
+    Verdict,
+)
 from egmra.truth.graph import EpistemicGraph
 from egmra.truth.snapshots import TruthSnapshotError
 
@@ -324,6 +332,9 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
             status_claims=list(problem.status_claims),
             novelty_verdict=problem.novelty_verdict,
             intent_review=_load_intent_review(args.intent_review),
+            formal_correspondence_reviews=_load_formal_correspondence_reviews(
+                args.formal_correspondence_review
+            ),
             runner=runner,
         )
     except BrowserProviderUnavailable as exc:
@@ -484,6 +495,57 @@ def _load_intent_review(path: Path | None) -> IntentCertificate | None:
     document = dict(document)
     document["verdict"] = Verdict(document.get("verdict", "UNRESOLVED"))
     return IntentCertificate(**document)
+
+
+def _load_formal_correspondence_reviews(
+    specs: list[str] | None,
+) -> dict[str, FormalCorrespondenceCertificate] | None:
+    """Load independently signed formal-correspondence review artifacts (task 4.6).
+
+    Each ``--formal-correspondence-review`` value is ``CLAIM_ID=PATH`` (or a bare
+    ``PATH`` for the default ``goal`` claim, so the common single-goal case needs
+    no prefix); the file is a signed :class:`FormalCorrespondenceCertificate` JSON.
+    A kernel-verified Lean declaration is admitted as a formal proof of the informal
+    claim ONLY when such an independently signed review binds the intent certificate,
+    the informal claim, the declaration name, and the elaborated type. Without one,
+    ``research()`` records ``formal_correspondence_required`` rather than promoting —
+    a kernel-checked declaration alone is never a formal proof of the informal claim.
+    Signing happens out-of-band in the independent review domain; this loader only
+    consumes and (via the orchestrator) re-verifies the signature.
+    """
+    if not specs:
+        return None
+    reviews: dict[str, FormalCorrespondenceCertificate] = {}
+    for spec in specs:
+        claim_id, separator, raw_path = spec.partition("=")
+        if not separator or "/" in claim_id or "\\" in claim_id:
+            claim_id, raw_path = "goal", spec  # bare path binds the default goal claim
+        claim_id = claim_id.strip()
+        if not claim_id:
+            raise ValueError("formal-correspondence-review claim id must be non-empty")
+        if claim_id in reviews:
+            raise ValueError(
+                f"duplicate formal-correspondence-review for claim: {claim_id}"
+            )
+        path = Path(raw_path)
+        if path.is_symlink() or not path.is_file():
+            raise ValueError(
+                "formal-correspondence-review path must be a regular non-symlink file"
+            )
+        if path.stat().st_size > 1_000_000:
+            raise ValueError("formal-correspondence-review artifact is too large")
+        document = json.loads(
+            path.read_text(encoding="utf-8"),
+            object_pairs_hook=_reject_duplicate_json_keys,
+        )
+        if not isinstance(document, dict):
+            raise ValueError(
+                "formal-correspondence-review artifact must be a JSON object"
+            )
+        document = dict(document)
+        document["verdict"] = Verdict(document.get("verdict", "UNRESOLVED"))
+        reviews[claim_id] = FormalCorrespondenceCertificate(**document)
+    return reviews
 
 
 def cmd_policy_sign(args: argparse.Namespace) -> int:
@@ -989,6 +1051,14 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument(
         "--intent-review", type=Path, default=None,
         help="independently signed intent-review JSON bound to the problem",
+    )
+    run.add_argument(
+        "--formal-correspondence-review", action="append", default=None,
+        metavar="[CLAIM_ID=]PATH",
+        help="independently signed formal-correspondence review JSON binding a "
+             "kernel-verified Lean declaration to the informal claim (repeatable; "
+             "CLAIM_ID defaults to 'goal'); required to reach a "
+             "FORMALLY_VERIFIED_CANDIDATE",
     )
     run.set_defaults(func=cmd_run)
 

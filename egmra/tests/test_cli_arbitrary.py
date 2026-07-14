@@ -4,8 +4,13 @@ from __future__ import annotations
 
 import json
 
+import pytest
+
 from egmra.cli import main
+from egmra.lean import sign_formal_correspondence_certificate
 from egmra.policy import sign_policy
+from egmra.provenance.hashing import sha256_hex
+from egmra.truth.entities import FormalCorrespondenceCertificate, Verdict
 
 
 def _signed_policy_file(tmp_path):
@@ -234,3 +239,122 @@ def test_doctor_reports_unloadable_default_policy(capsys, monkeypatch):
     out = json.loads(capsys.readouterr().out)
     assert out["policy"]["loadable"] is False
     assert out["ready_for"]["local_research"] is False
+
+
+# ── --formal-correspondence-review loader + wiring (task 4.6) ────────────────────
+
+def _correspondence_file(tmp_path, name="corr.json"):
+    """Write an independently signed formal-correspondence review JSON artifact."""
+    signed = sign_formal_correspondence_certificate(FormalCorrespondenceCertificate(
+        certificate_id="corr-goal",
+        intent_certificate_id="intent-1",
+        informal_claim_hash=sha256_hex("claim"),
+        lean_declaration_name="egmra_demo",
+        elaborated_type_hash=sha256_hex("2 + 2 = 4"),
+        notation_and_definition_map_hash=sha256_hex("map"),
+        methods=["backtranslation", "examples", "anti_examples", "paraphrase",
+                 "local_mutation"],
+        reviewer_ids=["formal-correspondence-reviewer"],
+        reviewer_independence_and_conflicts=[{
+            "reviewer_id": "formal-correspondence-reviewer",
+            "independent_from": ["formalization_authority", "governor"],
+            "conflicts": [],
+        }],
+        verdict=Verdict.APPROVED,
+    ))
+    path = tmp_path / name
+    path.write_text(json.dumps(signed.to_dict()), encoding="utf-8")
+    return path, signed
+
+
+def test_load_formal_correspondence_reviews_none_is_none():
+    from egmra.cli import _load_formal_correspondence_reviews
+
+    assert _load_formal_correspondence_reviews(None) is None
+    assert _load_formal_correspondence_reviews([]) is None
+
+
+def test_load_formal_correspondence_reviews_explicit_and_default_claim(tmp_path):
+    from egmra.cli import _load_formal_correspondence_reviews
+
+    path, signed = _correspondence_file(tmp_path)
+    # Explicit CLAIM_ID=PATH keys the review to the named claim.
+    explicit = _load_formal_correspondence_reviews([f"branch-lemma={path}"])
+    assert set(explicit) == {"branch-lemma"}
+    assert explicit["branch-lemma"].certificate_id == signed.certificate_id
+    assert explicit["branch-lemma"].verdict is Verdict.APPROVED
+    # A bare path (even one containing '=' in the directory) binds the goal claim.
+    default = _load_formal_correspondence_reviews([str(path)])
+    assert set(default) == {"goal"}
+    assert default["goal"].lean_declaration_name == "egmra_demo"
+
+
+def test_load_formal_correspondence_reviews_rejects_symlink(tmp_path):
+    from egmra.cli import _load_formal_correspondence_reviews
+
+    path, _ = _correspondence_file(tmp_path)
+    link = tmp_path / "link.json"
+    link.symlink_to(path)
+    with pytest.raises(ValueError, match="regular non-symlink file"):
+        _load_formal_correspondence_reviews([f"goal={link}"])
+
+
+def test_load_formal_correspondence_reviews_rejects_oversize(tmp_path):
+    from egmra.cli import _load_formal_correspondence_reviews
+
+    big = tmp_path / "big.json"
+    big.write_text("x" * 1_000_001, encoding="utf-8")
+    with pytest.raises(ValueError, match="too large"):
+        _load_formal_correspondence_reviews([f"goal={big}"])
+
+
+def test_load_formal_correspondence_reviews_rejects_duplicate_claim(tmp_path):
+    from egmra.cli import _load_formal_correspondence_reviews
+
+    path, _ = _correspondence_file(tmp_path)
+    with pytest.raises(ValueError, match="duplicate formal-correspondence-review"):
+        _load_formal_correspondence_reviews([f"goal={path}", f"goal={path}"])
+
+
+def test_run_passes_formal_correspondence_review_through(tmp_path, monkeypatch):
+    # The run path parses --formal-correspondence-review, loads the signed artifact,
+    # and hands it to research() as the claim-keyed formal_correspondence_reviews.
+    import egmra.cli as cli_module
+    from egmra.agents.browser_runner import BrowserProviderUnavailable
+
+    captured: dict = {}
+
+    def _capture(**kwargs):
+        captured.update(kwargs)
+        raise BrowserProviderUnavailable("captured")  # cleanly retained -> rc 4
+
+    monkeypatch.setattr(cli_module, "research", _capture)
+    path, signed = _correspondence_file(tmp_path)
+    cfg = _config_file(tmp_path)
+    policy = _signed_policy_file(tmp_path)
+    rc = main(["--config", str(cfg), "run", "--statement", "A statement.",
+               "--provider", "deterministic", "--policy", str(policy),
+               "--formal-correspondence-review", f"goal={path}"])
+    assert rc == 4  # research() short-circuited after capture; not a math verdict
+    reviews = captured["formal_correspondence_reviews"]
+    assert set(reviews) == {"goal"}
+    assert reviews["goal"].certificate_id == signed.certificate_id
+
+
+def test_run_without_formal_correspondence_review_passes_none(tmp_path, monkeypatch):
+    import egmra.cli as cli_module
+    from egmra.agents.browser_runner import BrowserProviderUnavailable
+
+    captured: dict = {}
+
+    def _capture(**kwargs):
+        captured.update(kwargs)
+        raise BrowserProviderUnavailable("captured")
+
+    monkeypatch.setattr(cli_module, "research", _capture)
+    cfg = _config_file(tmp_path)
+    policy = _signed_policy_file(tmp_path)
+    rc = main(["--config", str(cfg), "run", "--statement", "A statement.",
+               "--provider", "deterministic", "--policy", str(policy)])
+    assert rc == 4
+    assert captured["formal_correspondence_reviews"] is None

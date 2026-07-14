@@ -13,6 +13,7 @@ from egmra.intake.review import interpretation_review_hash, sign_intent_certific
 from egmra.agents.runner import DeterministicRunner, RunnerResponse
 from egmra.agents.browser_runner import BrowserTranscript
 from egmra.corpus.status import StatusClaim
+from egmra.lean import sign_formal_correspondence_certificate
 from egmra.m2 import ContentAddressedObjectStore
 from egmra.orchestrator import DeterministicWorker, RunnerWorker, research
 from egmra.orchestrator.loop import (
@@ -27,7 +28,12 @@ from egmra.policy import PolicyEnforcer, sign_policy
 from egmra.provenance.hashing import sha256_hex
 from egmra.retrieval.records import TheoremRecord
 from egmra.truth.events import EventLog
-from egmra.truth.entities import IntentCertificate, Verdict
+from egmra.truth.entities import (
+    EvidenceKind,
+    FormalCorrespondenceCertificate,
+    IntentCertificate,
+    Verdict,
+)
 
 _POLICY_ENV = {"EGMRA_POLICY_KEY": "production-wiring-test-policy-key-32b"}
 _TRUE = b"Prove that for all natural numbers n, n squared is at least 0."
@@ -371,4 +377,94 @@ def test_research_formal_candidate_verified_by_lean_service(tmp_path):
 
 def _fake_attested_checker_runner(tmp_path):
     return make_attested_kernel_runner(_fake_attested_checker(tmp_path))
+
+
+def _signed_correspondence(*, intent, informal_claim_hash, declaration_name,
+                           elaborated_type_hash):
+    """An independently signed correspondence review binding the intent, informal
+    claim, Lean declaration, and elaborated type (the artifact an operator feeds
+    to ``egmra run --formal-correspondence-review``)."""
+    return sign_formal_correspondence_certificate(FormalCorrespondenceCertificate(
+        certificate_id="formal-correspondence-goal",
+        intent_certificate_id=intent.certificate_id,
+        informal_claim_hash=informal_claim_hash,
+        lean_declaration_name=declaration_name,
+        elaborated_type_hash=elaborated_type_hash,
+        notation_and_definition_map_hash=sha256_hex("notation-map"),
+        methods=["backtranslation", "examples", "anti_examples", "paraphrase",
+                 "local_mutation"],
+        reviewer_ids=["formal-correspondence-reviewer"],
+        reviewer_independence_and_conflicts=[{
+            "reviewer_id": "formal-correspondence-reviewer",
+            "independent_from": ["formalization_authority", "governor"],
+            "conflicts": [],
+        }],
+        verdict=Verdict.APPROVED,
+    ))
+
+
+def _formal_research(tmp_path, *, correspondence_reviews, events_name, intent):
+    return research(
+        problem_id="erdos-formal-corr", source_bytes=_TRUE, source_id="fx-formal-corr",
+        budget=100.0, enforcer=_enforcer(), goal_claim_id="goal",
+        worker=RunnerWorker(runner=_FormalRunner(), goal_claim_id="goal",
+                            goal_formula="for all n, n*n >= 0", lean_version="4.28.0",
+                            mathlib_commit="v4.28.0"),
+        events_path=tmp_path / events_name, retrieval_corpus=_corpus(),
+        runner=_FormalRunner(),
+        lean_service=LeanService(kernel_runner=_fake_attested_checker_runner(tmp_path)),
+        probe_predicate=lambda n: n * n >= 0, status_claims=_status("erdos-formal-corr"),
+        informal_only=False, intent_review=intent,
+        formal_correspondence_reviews=correspondence_reviews)
+
+
+def test_cli_loaded_signed_correspondence_admits_kernel_checked_formal_proof(tmp_path):
+    # The formal-correspondence gap closed through the CLI's
+    # --formal-correspondence-review loader: a kernel-verified Lean declaration is
+    # admitted as a formal (KERNEL_CHECKED) proof of the informal claim ONLY once an
+    # independently signed correspondence review (loaded from a JSON file) binds the
+    # intent, informal claim, declaration name, and elaborated type. Reaching the
+    # public FORMALLY_VERIFIED_CANDIDATE state additionally requires the independent
+    # adversarial referee to observe a genuinely passing verification (all required
+    # attacks + model/replay independence) — a separate gate that a single mock
+    # checker deliberately cannot fake, and which the CLI flag does not control.
+    from egmra.cli import _load_formal_correspondence_reviews
+
+    intent = _intent_review("erdos-formal-corr", "fx-formal-corr")
+
+    # Pass 1 (no correspondence): kernel-verified, but NOT admitted as a formal
+    # proof of the informal claim — the formal axis stays unset.
+    first = _formal_research(tmp_path, correspondence_reviews=None,
+                             events_name="e1.jsonl", intent=intent)
+    assert any("formal_correspondence_required" in f for f in first.failures)
+    assert first.graph.claims["goal"].evidence_profile.to_dict()[
+        "formal_verification"] != "KERNEL_CHECKED"
+    goal_hash = first.graph.claims["goal"].canonical_hash
+
+    # An independent reviewer signs the correspondence off-band; the operator
+    # supplies it to the CLI as a signed JSON artifact.
+    signed = _signed_correspondence(
+        intent=intent, informal_claim_hash=goal_hash, declaration_name="egmra_demo",
+        elaborated_type_hash=_canon_type_hash("2 + 2 = 4"))
+    cert_path = tmp_path / "correspondence.json"
+    cert_path.write_text(json.dumps(signed.to_dict()), encoding="utf-8")
+
+    # Pass 2: the CLI loader consumes the signed artifact keyed to the goal claim.
+    loaded = _load_formal_correspondence_reviews([f"goal={cert_path}"])
+    assert set(loaded) == {"goal"}
+    second = _formal_research(tmp_path, correspondence_reviews=loaded,
+                              events_name="e2.jsonl", intent=intent)
+    # The correspondence requirement is discharged and the declaration is admitted
+    # as a claim-bound, kernel-checked formal proof of the informal claim.
+    assert not any("formal_correspondence_required" in f for f in second.failures)
+    lean_evidence = [e for e in second.graph.evidence.values()
+                     if e.kind is EvidenceKind.LEAN_PROOF]
+    assert len(lean_evidence) == 1
+    assert lean_evidence[0].formal_correspondence_certificate_id == signed.certificate_id
+    assert lean_evidence[0].intent_certificate_id == intent.certificate_id
+    goal = second.graph.claims["goal"]
+    assert goal.truth_status.value == "SUPPORTED"
+    assert goal.evidence_profile.to_dict()["formal_verification"] == "KERNEL_CHECKED"
+    assert goal.evidence_profile.to_dict()[
+        "formal_correspondence_certificate_id"] == signed.certificate_id
 
