@@ -19,7 +19,7 @@ from collections.abc import Mapping
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 import sys
-from typing import Callable, Protocol
+from typing import Any, Callable, Protocol
 
 from egmra.agents import AuthorityTokenIssuer
 from egmra.agents.runner import DeterministicRunner, ModelRunner
@@ -394,6 +394,7 @@ def research(
     worker: Worker,
     goal_claim_id: str,
     events_path: Path | str,
+    event_log: Any = None,
     retrieval_corpus: list[TheoremRecord] | None = None,
     status_claims: list[StatusClaim] | None = None,
     probe_predicate: Callable[[int], bool] | None = None,
@@ -464,7 +465,7 @@ def research(
         intent_cert = intent_review
     else:
         failures.append("intent_review_rejected")
-    log = EventLog(Path(events_path), run_id=problem_id)
+    log = event_log if event_log is not None else EventLog(Path(events_path), run_id=problem_id)
     graph = EpistemicGraph(log)
     graph.add_problem(Problem(
         problem_id=problem_id,

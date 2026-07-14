@@ -14,6 +14,7 @@ import json
 import os
 import stat
 import tempfile
+import threading
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any, Protocol, runtime_checkable
@@ -68,12 +69,15 @@ class PostgresEventStore:
         self._dsn = dsn
         self.run_id = run_id
         self._key = _resolve_key(env)
+        self._conn = None
+        self._lock = threading.RLock()
         host = parsed.hostname
         if parsed.port:
             host = f"{host}:{parsed.port}"
         self.dsn = urlunsplit((parsed.scheme, host, parsed.path, parsed.query, ""))
 
     def connect(self):  # pragma: no cover - requires a database server
+        """Open a fresh connection and ensure the schema exists (runs migrations)."""
         try:
             import psycopg  # type: ignore[import-not-found]
         except ImportError as exc:
@@ -85,11 +89,35 @@ class PostgresEventStore:
             with connection.cursor() as cursor:
                 cursor.execute(self.schema_ddl)
             connection.commit()
+            # Autocommit + explicit ``transaction()`` blocks: each append is a real
+            # top-level BEGIN/COMMIT (durable on its own), and read queries never
+            # leave a lingering open transaction that would demote a subsequent
+            # append to a savepoint and silently discard it when the reused
+            # connection closes.
+            connection.autocommit = True
             return connection
         except Exception as exc:
             raise RuntimeError(
                 f"Postgres connection/schema initialization failed for {self.dsn}"
             ) from exc
+
+    def migrate(self) -> None:  # pragma: no cover - requires a database server
+        """Idempotently create/upgrade the schema (used by ``egmra init-db``)."""
+        self.connect().close()
+
+    def _connection(self):  # pragma: no cover - requires a database server
+        """Return a reused connection (opened + migrated once)."""
+        if self._conn is None or getattr(self._conn, "closed", False):
+            self._conn = self.connect()
+        return self._conn
+
+    def close(self) -> None:  # pragma: no cover - requires a database server
+        with self._lock:
+            if self._conn is not None:
+                try:
+                    self._conn.close()
+                finally:
+                    self._conn = None
 
     def _business_record(self, *, sequence: int, prev_event_id: str, action: str,
                          actor: dict, object_ids: list, timestamp: str | None,
@@ -128,8 +156,8 @@ class PostgresEventStore:
         payload: dict[str, Any] | None = None, timestamp: str | None = None,
     ) -> Event:
         """Append a signed, hash-chained event using the shared sealing logic."""
-        connection = self.connect()
-        try:
+        with self._lock:
+            connection = self._connection()
             with connection.transaction():
                 with connection.cursor() as cursor:
                     cursor.execute(
@@ -153,11 +181,10 @@ class PostgresEventStore:
                         (event.event_id, event.sequence, event.prev_event_id, self.run_id,
                          canonical_json(event.to_dict()), event.signature))
             return event
-        finally:
-            connection.close()
 
-    def _load_events(self, connection) -> list[Event]:  # pragma: no cover - needs a server
-        with connection.cursor() as cursor:
+    def _load_events(self, connection=None) -> list[Event]:  # pragma: no cover - needs a server
+        conn = connection if connection is not None else self._connection()
+        with conn.cursor() as cursor:
             cursor.execute(
                 "SELECT payload FROM events WHERE run_id = %s ORDER BY sequence ASC",
                 (self.run_id,))
@@ -180,15 +207,28 @@ class PostgresEventStore:
                 payload=doc.get("payload", {}), signature=doc.get("signature", "")))
         return events
 
+    @property
+    def events(self) -> list[Event]:  # pragma: no cover - needs a server
+        with self._lock:
+            return self._load_events()
+
+    def __len__(self) -> int:  # pragma: no cover - needs a server
+        with self._lock:
+            conn = self._connection()
+            with conn.cursor() as cursor:
+                cursor.execute("SELECT COUNT(*) FROM events WHERE run_id = %s", (self.run_id,))
+                return int(cursor.fetchone()[0])
+
+    def last_event_id(self) -> str:  # pragma: no cover - needs a server
+        events = self.events
+        return events[-1].event_id if events else _GENESIS
+
     def verify_integrity(self, **kwargs: Any) -> bool:  # pragma: no cover - needs a server
         """Verify sequence numbering, hash chaining, ids, and signatures."""
         import hmac as _hmac
 
-        connection = self.connect()
-        try:
-            events = self._load_events(connection)
-        finally:
-            connection.close()
+        with self._lock:
+            events = self._load_events()
         prev = _GENESIS
         seen: set[str] = set()
         for i, event in enumerate(events):
@@ -206,11 +246,8 @@ class PostgresEventStore:
         return True
 
     def merkle_root(self) -> str:  # pragma: no cover - needs a server
-        connection = self.connect()
-        try:
-            events = self._load_events(connection)
-        finally:
-            connection.close()
+        with self._lock:
+            events = self._load_events()
         return merkle_root([e.event_id for e in events])
 
 

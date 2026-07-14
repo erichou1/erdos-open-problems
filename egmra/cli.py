@@ -54,6 +54,9 @@ from egmra.orchestrator import (
     research,
 )
 from egmra.policy import PolicyEnforcer, PolicyError, default_policy_path, load_policy, sign_policy
+from egmra.m2 import PostgresEventStore
+from egmra.oeis import OEISClient
+from egmra.retrieval.erdos_corpus import build_erdos_corpus
 from egmra.retrieval.records import TheoremRecord
 from egmra.truth.events import EventLog, EventLogError
 from egmra.truth.entities import IntentCertificate, Verdict
@@ -166,6 +169,67 @@ def _browser_throttle(config: EgmraConfig, provider: str) -> "SharedThrottle | N
     return SharedThrottle(state, max_cooldown_s=config.max_backoff_seconds)
 
 
+def _resolve_postgres_dsn(args: argparse.Namespace) -> str:
+    """Resolve the Postgres DSN from --dsn or the environment (never logged)."""
+    dsn = getattr(args, "dsn", None) or os.environ.get("EGMRA_POSTGRES_DSN", "")
+    if not dsn:
+        raise ValueError(
+            "postgres event store requires a DSN: pass --dsn or set EGMRA_POSTGRES_DSN "
+            "(credentials are read from the environment and never written to logs)"
+        )
+    return dsn
+
+
+def _make_event_log(args: argparse.Namespace, run_id: str):
+    """Build the event-log backend for a run (task 4.9).
+
+    Returns ``None`` for the JSONL default (research builds its own file-backed
+    append-only log at ``events_path``), or a connected
+    :class:`PostgresEventStore` when ``--event-store postgres`` is selected. The
+    DSN is read from the environment/CLI and never written to logs.
+    """
+    if getattr(args, "event_store", "jsonl") == "postgres":
+        return PostgresEventStore(_resolve_postgres_dsn(args), run_id=run_id)
+    return None
+
+
+def _close_event_log(log) -> None:
+    close = getattr(log, "close", None)
+    if callable(close):  # pragma: no cover - only PostgresEventStore holds a connection
+        try:
+            close()
+        except Exception:  # noqa: BLE001 - best-effort teardown
+            pass
+
+
+def _build_retrieval_corpus(args: argparse.Namespace, config: EgmraConfig):
+    """Construct the literature retrieval corpus (task 4.4).
+
+    ``--retrieval corpus`` (default) builds auditable TheoremRecords from the
+    packaged Erdős snapshot so the frozen solver packet handed to the worker after
+    the blind cold pass carries real source URIs, versions, content hashes, and
+    verbatim statements; ``--retrieval none`` disables it (empty corpus).
+    """
+    if getattr(args, "retrieval", "corpus") != "corpus":
+        return None
+    corpus_tex = getattr(args, "corpus_tex", None) or default_corpus_tex_path()
+    catalog = getattr(args, "catalog", None) or default_catalog_path()
+    return build_erdos_corpus(corpus_tex, catalog)
+
+
+def _build_oeis_client(args: argparse.Namespace, config: EgmraConfig) -> OEISClient:
+    """Construct the OEIS client (task 4.4).
+
+    Always returns a client so the integer-sequence search stage is reachable.
+    ``--oeis live`` performs real oeis.org lookups, ``offline`` uses only the
+    local cache, and ``auto`` (default) follows the signed config. An OEIS match
+    can seed conjectures but never establishes proof status.
+    """
+    mode = getattr(args, "oeis", "auto")
+    offline = config.oeis_offline if mode == "auto" else (mode != "live")
+    return OEISClient(cache_dir=config.oeis_cache_dir, offline=offline)
+
+
 def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
     """Run the real research loop on an arbitrary problem via a reasoning worker.
 
@@ -182,6 +246,9 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
     policy = load_policy(Path(args.policy) if args.policy else default_policy_path())
     enforcer = PolicyEnforcer(policy)
     events_path = Path(config.events_dir) / f"{problem.problem_id}.jsonl"
+    event_log = _make_event_log(args, problem.problem_id)
+    retrieval_corpus = _build_retrieval_corpus(args, config)
+    oeis_client = _build_oeis_client(args, config)
     worker = RunnerWorker(
         runner=runner,
         goal_claim_id="goal",
@@ -198,6 +265,9 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
             worker=worker,
             goal_claim_id="goal",
             events_path=events_path,
+            event_log=event_log,
+            retrieval_corpus=retrieval_corpus,
+            oeis_client=oeis_client,
             status_claims=list(problem.status_claims),
             novelty_verdict=problem.novelty_verdict,
             intent_review=_load_intent_review(args.intent_review),
@@ -211,6 +281,7 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
             "problem_id": problem.problem_id,
             "provider": args.provider,
             "retain": True,
+            "event_store": getattr(args, "event_store", "jsonl"),
             "events_path": str(events_path),
             "detail": str(exc),
             "note": "transient provider outage; resume later — not a mathematical result",
@@ -218,9 +289,16 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
         return 4
     finally:
         _close_runner(runner)
+        _close_event_log(event_log)
     classification = classify_result(result, goal_claim_id="goal")
     rendered = result.render() | {
         "provider": args.provider,
+        "event_store": getattr(args, "event_store", "jsonl"),
+        "retrieval": {
+            "mode": getattr(args, "retrieval", "corpus"),
+            "corpus_records": len(retrieval_corpus) if retrieval_corpus is not None else 0,
+            "oeis_mode": getattr(args, "oeis", "auto"),
+        },
         "input": {
             "problem_id": problem.problem_id,
             "source_id": problem.source_id,
@@ -391,11 +469,57 @@ def cmd_policy_show(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_init_db(args: argparse.Namespace) -> int:
+    """Create/verify the Postgres event schema (idempotent)."""
+    store = PostgresEventStore(_resolve_postgres_dsn(args), run_id="_bootstrap")
+    try:
+        store.migrate()
+    finally:
+        store.close()
+    print(json.dumps({
+        "status": "ok", "action": "init-db", "dsn": store.dsn,
+        "schema": "events", "note": "event schema created/verified (credentials not logged)",
+    }, indent=2))
+    return 0
+
+
+def cmd_migrate_db(args: argparse.Namespace) -> int:
+    """Apply Postgres event-store migrations (idempotent)."""
+    store = PostgresEventStore(_resolve_postgres_dsn(args), run_id="_bootstrap")
+    try:
+        store.migrate()
+    finally:
+        store.close()
+    print(json.dumps({
+        "status": "ok", "action": "migrate-db", "dsn": store.dsn,
+        "note": "migrations applied (idempotent; credentials not logged)",
+    }, indent=2))
+    return 0
+
+
 def cmd_verify_events(args: argparse.Namespace) -> int:
+    if getattr(args, "event_store", "jsonl") == "postgres":
+        log = PostgresEventStore(_resolve_postgres_dsn(args), run_id=args.run_id)
+        try:
+            ok = log.verify_integrity()
+            summary = {
+                "run_id": args.run_id,
+                "event_store": "postgres",
+                "events": len(log),
+                "merkle_root": log.merkle_root(),
+                "integrity": ok,
+            }
+        finally:
+            log.close()
+        print(json.dumps(summary))
+        return 0 if ok else 1
+    if args.events is None:
+        raise ValueError("verify-events --event-store jsonl requires --events PATH")
     log = EventLog(Path(args.events), run_id=args.run_id)
     ok = log.verify_integrity()
     print(json.dumps({
         "run_id": args.run_id,
+        "event_store": "jsonl",
         "events": len(log),
         "merkle_root": log.merkle_root(),
         "integrity": ok,
@@ -462,6 +586,9 @@ def cmd_campaign(args: argparse.Namespace) -> int:
             "use --provider deterministic for real multi-worker concurrency"
         )
     runner = _build_runner(args.provider, throttle=_browser_throttle(config, args.provider))
+    # Build the immutable literature corpus once; it is shared read-only across
+    # worker threads (the retrieval service copies it per packet).
+    retrieval_corpus = _build_retrieval_corpus(args, config)
 
     def run_one(problem_id: str, fencing_token: int, worker_id: str) -> str:
         number = int(problem_id.split("-", 1)[1])
@@ -470,13 +597,21 @@ def cmd_campaign(args: argparse.Namespace) -> int:
                               goal_formula=problem.display_statement, role=args.role)
         # A distinct event log per attempt keeps each try's chain clean on resume.
         events_path = Path(config.events_dir) / f"{problem.problem_id}.{fencing_token}.jsonl"
-        result = research(
-            problem_id=problem.problem_id, source_bytes=problem.source_bytes,
-            source_id=problem.source_id, budget=float(args.budget), enforcer=enforcer,
-            worker=worker, goal_claim_id="goal", events_path=events_path,
-            status_claims=list(problem.status_claims), novelty_verdict=problem.novelty_verdict,
-            intent_review=None, runner=runner,
-        )
+        event_log = _make_event_log(args, f"{problem.problem_id}.{fencing_token}")
+        oeis_client = _build_oeis_client(args, config)
+        try:
+            result = research(
+                problem_id=problem.problem_id, source_bytes=problem.source_bytes,
+                source_id=problem.source_id, budget=float(args.budget), enforcer=enforcer,
+                worker=worker, goal_claim_id="goal", events_path=events_path,
+                event_log=event_log, retrieval_corpus=retrieval_corpus,
+                oeis_client=oeis_client,
+                status_claims=list(problem.status_claims),
+                novelty_verdict=problem.novelty_verdict,
+                intent_review=None, runner=runner,
+            )
+        finally:
+            _close_event_log(event_log)
         return str(classify_result(result, goal_claim_id="goal").state)
 
     try:
@@ -683,6 +818,17 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--budget", type=float, default=50.0,
                      help="research budget for the run (default: 50)")
     run.add_argument("--policy", type=Path, default=None)
+    run.add_argument("--event-store", choices=("jsonl", "postgres"), default="jsonl",
+                     help="event-log backend: 'jsonl' (default, file-backed) or 'postgres'")
+    run.add_argument("--dsn", default=None,
+                     help="Postgres DSN for --event-store postgres (or set EGMRA_POSTGRES_DSN); "
+                          "credentials are read from the environment and never logged")
+    run.add_argument("--retrieval", choices=("corpus", "none"), default="corpus",
+                     help="literature retrieval corpus: 'corpus' (packaged Erdős snapshot) "
+                          "or 'none' (empty)")
+    run.add_argument("--oeis", choices=("auto", "offline", "live"), default="auto",
+                     help="OEIS sequence lookups: 'auto' (config), 'offline' (cache only), "
+                          "or 'live' (oeis.org)")
     run.add_argument(
         "--intent-review", type=Path, default=None,
         help="independently signed intent-review JSON bound to the problem",
@@ -713,8 +859,27 @@ def build_parser() -> argparse.ArgumentParser:
     campaign.add_argument("--policy", type=Path, default=None)
     campaign.add_argument("--corpus-tex", type=Path, default=None)
     campaign.add_argument("--catalog", type=Path, default=None)
+    campaign.add_argument("--event-store", choices=("jsonl", "postgres"), default="jsonl",
+                          help="event-log backend for each attempt ('jsonl' or 'postgres')")
+    campaign.add_argument("--dsn", default=None,
+                          help="Postgres DSN for --event-store postgres (or EGMRA_POSTGRES_DSN)")
+    campaign.add_argument("--retrieval", choices=("corpus", "none"), default="corpus",
+                          help="literature retrieval corpus source (default: Erdős snapshot)")
+    campaign.add_argument("--oeis", choices=("auto", "offline", "live"), default="auto",
+                          help="OEIS lookup mode ('auto', 'offline', or 'live')")
     campaign.add_argument("--status", action="store_true", help="print campaign status and exit")
     campaign.set_defaults(func=cmd_campaign)
+
+    initdb = sub.add_parser("init-db", help="create/verify the Postgres event schema")
+    initdb.add_argument("--dsn", default=None,
+                        help="Postgres DSN (or set EGMRA_POSTGRES_DSN); credentials never logged")
+    initdb.set_defaults(func=cmd_init_db)
+
+    migratedb = sub.add_parser("migrate-db",
+                               help="apply Postgres event-store migrations (idempotent)")
+    migratedb.add_argument("--dsn", default=None,
+                           help="Postgres DSN (or set EGMRA_POSTGRES_DSN); credentials never logged")
+    migratedb.set_defaults(func=cmd_migrate_db)
 
     sign = sub.add_parser("policy-sign", help="sign a policy template into a new file")
     sign.add_argument("--input", type=Path, required=True)
@@ -726,7 +891,12 @@ def build_parser() -> argparse.ArgumentParser:
     show.set_defaults(func=cmd_policy_show)
 
     verify = sub.add_parser("verify-events", help="verify an event log's integrity")
-    verify.add_argument("--events", type=Path, required=True)
+    verify.add_argument("--events", type=Path, default=None,
+                        help="JSONL event-log path (required for --event-store jsonl)")
+    verify.add_argument("--event-store", choices=("jsonl", "postgres"), default="jsonl",
+                        help="event-log backend to verify ('jsonl' or 'postgres')")
+    verify.add_argument("--dsn", default=None,
+                        help="Postgres DSN for --event-store postgres (or EGMRA_POSTGRES_DSN)")
     verify.add_argument(
         "--run-id", required=True,
         help="expected run/subject identifier authenticated by every event",

@@ -19,6 +19,15 @@
 > - **B2 Aristotle — DONE (official SDK, code+tests); live needs the built Lean project.** The operator supplied the official docs: Aristotle ships as `aristotlelib` (v2.1.0) and is Lean-native (Lean v4.28.0 + Mathlib v4.28.0). Per the task, I use the **official SDK** (`Project.create_from_directory` → `AgentTask.wait_for_completion` → `project.get_files`) via [egmra/lean/aristotle_sdk.py](egmra/lean/aristotle_sdk.py) `AristotleSdkClient` instead of guessed REST. Key read from env only (never logged); downloaded Lean is quarantined + symlink/escape/bomb-scanned; a vendor `COMPLETE` is never promotable — promotion requires the B1 sealed local replay. `.[aristotle]` extra added; hermetic fake-SDK tests. A pinned Lean project scaffold is at `aristotle_lean_project/` (lean-toolchain + lakefile.toml at v4.28.0). Live submit needs `lake build` of that project + `ARISTOTLE_API_KEY`.
 > - Full suite: **934 passed + 44 subtests**, rc=0.
 
+> ## Session update (retrieval/OEIS + Postgres CLI wiring — defects 4.4, 4.9)
+> - **Defect 4.4 (live retrieval + OEIS not wired into the CLI) — FIXED.** Added [egmra/retrieval/erdos_corpus.py](egmra/retrieval/erdos_corpus.py) `build_erdos_corpus()`, which parses the packaged Erdős TeX snapshot into **auditable `TheoremRecord`s** — each carries `source_uri` (`https://www.erdosproblems.com/N`), a sha256 content hash, and a verbatim statement extract, and is deduped by problem number. The CLI `run`/`campaign` now build the retrieval corpus (`--retrieval corpus|none`) and an `OEISClient` (`--oeis auto|offline|live`) and pass **both** into `research()` via the existing `retrieval_corpus`/`oeis_client` params, so the `RetrievalService` freezes a **provenance-bearing solver packet** for the worker after the blind cold pass and the OEIS integer-sequence stage is reachable. An OEIS/retrieval match seeds conjectures only — it **never** promotes proof status (enforced by the `ImportAuditor` exact-consequence check and the separate novelty query log). Live: `egmra run --erdos 1 --retrieval corpus` reported `retrieval.corpus_records=613`.
+> - **Defect 4.9 (`--event-store postgres` not wired) — FIXED.** `PostgresEventStore` ([egmra/m2.py](egmra/m2.py)) is now a full `EventLog` drop-in — reused connection, `events` property, `__len__`, `last_event_id`, `close`, `migrate` — consumed by `research()` through a new additive `event_log=` injection (JSONL stays the default). The CLI adds `--event-store jsonl|postgres` + `--dsn` (DSN from `--dsn` or `EGMRA_POSTGRES_DSN`, **never logged**; only a credential-redacted DSN is printed), the `egmra init-db` / `egmra migrate-db` subcommands (idempotent schema), and `egmra verify-events --event-store postgres`.
+> - **Live durability bug found-and-fixed by acceptance.** On a disposable `postgres:16`, the first `verify-events` after a run showed **0 events** even though the run reported success: reusing a **non-autocommit** connection left the initial `COUNT`'s implicit transaction open, so each subsequent `append()`'s `transaction()` became a **savepoint** inside it that was discarded when the reused connection closed. Fixed by switching the reused connection to **autocommit** so every append is a durable top-level `BEGIN`/`COMMIT` and reads never leave a lingering transaction.
+> - **Live Postgres acceptance (scenario 11) — VERIFIED.** Disposable `postgres:16` on port **5433** (the operator's own `:5432` untouched): `init-db` created the `events` table (`UNIQUE(run_id,sequence)`); `egmra run --event-store postgres` persisted the research chain (2 rows, seq 0..1); a **fresh process** `egmra verify-events --event-store postgres` reconnected + replayed with `integrity: true` and reproduced the merkle head; the gated live pytest suite proves append/len/events, reconnect+replay-merkle parity, **transaction rollback leaves no partial write**, and out-of-band payload **tamper → `verify_integrity: false`**. Container torn down after.
+> - Full suite: **960 passed**, rc=0 (3 live-Postgres tests run when `EGMRA_TEST_POSTGRES_DSN` is set; else they skip → 957 passed, 3 skipped, rc=0).
+> - **Still not done** (verdict remains INCOMPLETE): compute-execution wiring (4.5), `LeanService`-into-`run` + live kernel (4.6), `--formalizer` flag (4.7), durable browser transcript artifacts (4.10), distinct-role allocation (4.11); and live scenarios 4 (authenticated browser + built Mathlib kernel) and 5 (live Aristotle key + built Lean project) remain **BLOCKED_EXTERNAL**.
+
+
 The confirmed local defects (epistemic-invariant and security violations,
 packaging, provider wiring, doctor readiness, event-store protocol conformance)
 are repaired with reproduced-then-fixed regression tests. The end-to-end
@@ -96,7 +105,7 @@ self-reported and left for independent re-audit.
 | 8 | Five workers, no index lost | PARTIAL | `--workers 1-5` validated; full durable pool BLOCKED |
 | 9 | Clean wheel runs an Erdős input outside checkout | DONE | `run --erdos 312 --provider deterministic` from `/tmp` |
 | 10 | Malformed/malicious Aristotle artifact rejected | DONE | `test_aristotle_api.py` traversal/symlink/bomb/size tests |
-| 11 | PostgreSQL replay reproduces state + head | BLOCKED | no server; protocol conformance + sealing parity tested |
+| 11 | PostgreSQL replay reproduces state + head | DONE (live) | `--event-store postgres` live on disposable `postgres:16`: append/reconnect/replay/rollback/tamper; merkle head reproduced |
 | 12 | doctor distinguishes installed vs operational | DONE | `test_doctor_distinguishes_launcher_from_operational_lean` |
 | 13 | Open problem → OPEN_NO_PROGRESS / PARTIAL_PROGRESS | DONE | `egmra run --statement …` → OPEN_NO_PROGRESS |
 
@@ -111,9 +120,12 @@ self-reported and left for independent re-audit.
 3. **Aristotle (scenario 5 live):** `ARISTOTLE_API_KEY` + base URL; then
    `HttpAristotleTransport` → `AristotleApiClient` submit/poll/download →
    `bind_local_replay` with the Lean kernel verifier.
-4. **PostgreSQL (scenario 11):** a reachable server + `pip install -e .[postgres]`;
-   `PostgresEventStore(dsn).connect()` initializes the schema; then replay parity.
-5. **Live OEIS / retrieval (§G):** set `oeis_offline=false` + network egress.
+4. **PostgreSQL (scenario 11):** DONE — `--event-store postgres` + `init-db`/`migrate-db`
+   are wired and live-verified on a disposable `postgres:16` (append/reconnect/replay/
+   rollback/tamper). `pip install -e .[postgres]`; DSN via `EGMRA_POSTGRES_DSN`.
+5. **Live OEIS network fetch (§G):** retrieval-with-provenance and the OEIS client are
+   wired into the CLI (offline path live-verified); only a live `oeis.org` network fetch
+   (`--oeis live`, needs egress) was not exercised this session.
 6. **Durable 5-worker campaign + kill/restart resume (scenarios 7, 8):** the
    campaign orchestrator over the durable store (checkpoint/resume) is not wired
    into a single `run`; the per-run event log is durable but campaign resume needs
@@ -128,10 +140,12 @@ self-reported and left for independent re-audit.
 - `egmra/agents/chatgpt_browser.py` (new) — vendored, self-contained browser glue.
 - `egmra/agents/throttle.py` (new) — `SharedThrottle` cross-worker coordinator.
 - `egmra/agents/browser_runner.py` — shared throttle, generation-start gate, packaged glue.
-- `egmra/cli.py` — `--provider/--role/--workers`, provider builder, provider-unavailable retain, real doctor probes.
-- `egmra/m2.py` — `PostgresEventStore` full protocol via shared `seal_event`.
+- `egmra/cli.py` — `--provider/--role/--workers`, provider builder, provider-unavailable retain, real doctor probes; `--event-store jsonl|postgres` + `--dsn`, `init-db`/`migrate-db`, `--retrieval`/`--oeis` wiring, `verify-events --event-store postgres`.
+- `egmra/m2.py` — `PostgresEventStore` full `EventLog` drop-in (reused **autocommit** connection, `events`/`__len__`/`last_event_id`/`close`/`migrate`) via shared `seal_event`.
+- `egmra/orchestrator/loop.py` — additive `event_log=` injection into `research()` (JSONL default; Postgres when supplied).
+- `egmra/retrieval/erdos_corpus.py` (new) — `build_erdos_corpus()` builds auditable `TheoremRecord`s (source URI, content hash, verbatim extract) from the packaged corpus.
 - `egmra/truth/events.py` — extracted shared `seal_event`.
 - `egmra/corpus/sources.py` — packaged corpus lookup.
 - `egmra/data/*` (new) — packaged corpus snapshot.
 - `pyproject.toml` — package-data, `.[dev]`/`.[all]`/`.[postgres]` deps.
-- Tests: `test_runner_worker.py`, `test_throttle.py`, `test_m2_postgres_conformance.py` (new); expanded `test_result_states.py`, `test_aristotle_api.py`, `test_cli_arbitrary.py`.
+- Tests: `test_runner_worker.py`, `test_throttle.py`, `test_m2_postgres_conformance.py` (10 no-server + 3 live gated), `test_erdos_corpus.py` (new); expanded `test_result_states.py`, `test_aristotle_api.py`, `test_cli.py` (retrieval/OEIS + Postgres CLI wiring).

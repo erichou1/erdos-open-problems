@@ -1,5 +1,6 @@
 """Tests for the CLI and configuration."""
 
+import argparse
 import json
 import os
 
@@ -385,3 +386,119 @@ def test_cli_verified_fixture_requires_independent_intent_review(tmp_path, capsy
     out = json.loads(capsys.readouterr().out)
     assert out["gate_profile"] is None
     assert out["proof_complete"] is False
+
+
+# --- Retrieval / OEIS wiring (task 4.4) -----------------------------------------
+
+
+def test_cli_run_arbitrary_wires_retrieval_corpus_and_oeis(tmp_path, capsys):
+    cfg = tmp_path / "cfg.json"
+    cfg.write_text(json.dumps({"events_dir": str(tmp_path / "runs"),
+                               "oeis_cache_dir": str(tmp_path / "oeis")}))
+    policy = _signed_policy_file(tmp_path)
+
+    rc = main(["--config", str(cfg), "run", "--provider", "deterministic",
+               "--policy", str(policy), "--statement",
+               "For every n there exist infinitely many twin primes.",
+               "--retrieval", "corpus", "--oeis", "offline"])
+
+    assert rc == 0
+    out = json.loads(capsys.readouterr().out)
+    assert out["event_store"] == "jsonl"
+    assert out["retrieval"]["mode"] == "corpus"
+    assert out["retrieval"]["corpus_records"] > 100
+    assert out["retrieval"]["oeis_mode"] == "offline"
+
+
+def test_cli_run_arbitrary_retrieval_none_is_empty_corpus(tmp_path, capsys):
+    cfg = tmp_path / "cfg.json"
+    cfg.write_text(json.dumps({"events_dir": str(tmp_path / "runs"),
+                               "oeis_cache_dir": str(tmp_path / "oeis")}))
+    policy = _signed_policy_file(tmp_path)
+
+    rc = main(["--config", str(cfg), "run", "--provider", "deterministic",
+               "--policy", str(policy), "--statement", "A test statement.",
+               "--retrieval", "none", "--oeis", "offline"])
+
+    assert rc == 0
+    out = json.loads(capsys.readouterr().out)
+    assert out["retrieval"]["mode"] == "none"
+    assert out["retrieval"]["corpus_records"] == 0
+
+
+def test_build_retrieval_corpus_helper_builds_or_disables():
+    config = EgmraConfig()
+    corpus = cli_module._build_retrieval_corpus(
+        argparse.Namespace(retrieval="corpus", corpus_tex=None, catalog=None), config)
+    assert corpus is not None and len(corpus) > 100
+    assert all(r.is_auditable() for r in corpus[:5])
+    disabled = cli_module._build_retrieval_corpus(
+        argparse.Namespace(retrieval="none", corpus_tex=None, catalog=None), config)
+    assert disabled is None
+
+
+def test_build_oeis_client_helper_modes():
+    live = cli_module._build_oeis_client(argparse.Namespace(oeis="live"), EgmraConfig())
+    assert live.offline is False
+    offline = cli_module._build_oeis_client(argparse.Namespace(oeis="offline"), EgmraConfig())
+    assert offline.offline is True
+    auto = cli_module._build_oeis_client(
+        argparse.Namespace(oeis="auto"), EgmraConfig(oeis_offline=True))
+    assert auto.offline is True
+
+
+# --- Postgres event store wiring (task 4.9) -------------------------------------
+
+
+def test_cli_run_postgres_event_store_requires_dsn(tmp_path, capsys, monkeypatch):
+    monkeypatch.delenv("EGMRA_POSTGRES_DSN", raising=False)
+    cfg = tmp_path / "cfg.json"
+    cfg.write_text(json.dumps({"events_dir": str(tmp_path / "runs")}))
+    policy = _signed_policy_file(tmp_path)
+
+    rc = main(["--config", str(cfg), "run", "--provider", "deterministic",
+               "--policy", str(policy), "--statement", "A statement.",
+               "--event-store", "postgres"])
+
+    assert rc == 2
+    error = json.loads(capsys.readouterr().err)
+    assert error["error"] == "ValueError"
+    assert "DSN" in error["detail"]
+
+
+def test_cli_init_db_and_migrate_db_require_dsn(capsys, monkeypatch):
+    monkeypatch.delenv("EGMRA_POSTGRES_DSN", raising=False)
+    for command in ("init-db", "migrate-db"):
+        assert main([command]) == 2
+        error = json.loads(capsys.readouterr().err)
+        assert error["error"] == "ValueError"
+        assert "DSN" in error["detail"]
+
+
+def test_cli_verify_events_postgres_requires_dsn(capsys, monkeypatch):
+    monkeypatch.delenv("EGMRA_POSTGRES_DSN", raising=False)
+    assert main(["verify-events", "--event-store", "postgres", "--run-id", "r1"]) == 2
+    error = json.loads(capsys.readouterr().err)
+    assert "DSN" in error["detail"]
+
+
+def test_cli_verify_events_jsonl_requires_events_path(capsys):
+    assert main(["verify-events", "--run-id", "r1"]) == 2
+    error = json.loads(capsys.readouterr().err)
+    assert error["error"] == "ValueError"
+    assert "--events" in error["detail"]
+
+
+def test_resolve_postgres_dsn_reads_env_and_cli(monkeypatch):
+    monkeypatch.setenv("EGMRA_POSTGRES_DSN", "postgresql://h:1/db")
+    assert cli_module._resolve_postgres_dsn(
+        argparse.Namespace(dsn=None)) == "postgresql://h:1/db"
+    assert cli_module._resolve_postgres_dsn(
+        argparse.Namespace(dsn="postgresql://other:2/db2")) == "postgresql://other:2/db2"
+
+
+def test_make_event_log_defaults_to_jsonl_backend():
+    # jsonl is the default: research builds its own file log, so the helper
+    # returns None rather than a Postgres connection.
+    assert cli_module._make_event_log(argparse.Namespace(event_store="jsonl"), "r1") is None
+
