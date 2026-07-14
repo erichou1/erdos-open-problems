@@ -74,6 +74,11 @@ from egmra.lean.service import CheckerConfigurationError, LeanEnvironment, LeanS
 from egmra.provenance.hashing import sha256_hex
 from egmra.retrieval.erdos_corpus import build_erdos_corpus
 from egmra.retrieval.records import TheoremRecord
+from egmra.retrieval.scholarly import (
+    SCHOLARLY_SOURCES,
+    UrllibFetcher,
+    build_scholarly_corpus,
+)
 from egmra.truth.events import EventLog, EventLogError
 from egmra.truth.entities import (
     FormalCorrespondenceCertificate,
@@ -249,19 +254,30 @@ def _close_event_log(log) -> None:
             pass
 
 
-def _build_retrieval_corpus(args: argparse.Namespace, config: EgmraConfig):
-    """Construct the literature retrieval corpus (task 4.4).
+def _build_retrieval_corpus(args: argparse.Namespace, config: EgmraConfig, *, query: str = ""):
+    """Construct the literature retrieval corpus (tasks 4.4 + #7).
 
     ``--retrieval corpus`` (default) builds auditable TheoremRecords from the
     packaged Erdős snapshot so the frozen solver packet handed to the worker after
     the blind cold pass carries real source URIs, versions, content hashes, and
-    verbatim statements; ``--retrieval none`` disables it (empty corpus).
+    verbatim statements. ``--retrieval arxiv|crossref|scholarly`` instead performs
+    LIVE, query-specific scholarly retrieval (the problem statement is the query),
+    yielding the same auditable, provenance-bearing records from real sources.
+    ``--retrieval none`` disables it. A retrieved record seeds hypotheses/queries
+    only — it never establishes proof status.
     """
-    if getattr(args, "retrieval", "corpus") != "corpus":
+    mode = getattr(args, "retrieval", "corpus")
+    if mode == "none":
         return None
-    corpus_tex = getattr(args, "corpus_tex", None) or default_corpus_tex_path()
-    catalog = getattr(args, "catalog", None) or default_catalog_path()
-    return build_erdos_corpus(corpus_tex, catalog)
+    if mode == "corpus":
+        corpus_tex = getattr(args, "corpus_tex", None) or default_corpus_tex_path()
+        catalog = getattr(args, "catalog", None) or default_catalog_path()
+        return build_erdos_corpus(corpus_tex, catalog)
+    # Live scholarly retrieval — query-specific, confined to an allowlisted host set.
+    sources = SCHOLARLY_SOURCES if mode == "scholarly" else (mode,)
+    return build_scholarly_corpus(
+        query, fetcher=UrllibFetcher(), sources=sources,
+        limit=int(getattr(args, "retrieval_limit", 5)))
 
 
 def _build_oeis_client(args: argparse.Namespace, config: EgmraConfig) -> OEISClient:
@@ -392,7 +408,7 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
     enforcer = PolicyEnforcer(policy)
     events_path = Path(config.events_dir) / f"{problem.problem_id}.jsonl"
     event_log = _make_event_log(args, problem.problem_id)
-    retrieval_corpus = _build_retrieval_corpus(args, config)
+    retrieval_corpus = _build_retrieval_corpus(args, config, query=problem.display_statement)
     oeis_client = _build_oeis_client(args, config)
     # Durable content-addressed store for model-exchange transcripts (task 4.10).
     artifact_store = ContentAddressedObjectStore(root=Path(config.artifact_store_dir))
@@ -1170,9 +1186,11 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--dsn", default=None,
                      help="Postgres DSN for --event-store postgres (or set EGMRA_POSTGRES_DSN); "
                           "credentials are read from the environment and never logged")
-    run.add_argument("--retrieval", choices=("corpus", "none"), default="corpus",
-                     help="literature retrieval corpus: 'corpus' (packaged Erdős snapshot) "
-                          "or 'none' (empty)")
+    run.add_argument("--retrieval", choices=("corpus", "arxiv", "crossref", "scholarly", "none"),
+                     default="corpus",
+                     help="literature retrieval: 'corpus' (packaged Erdős snapshot), "
+                          "'arxiv'/'crossref'/'scholarly' (LIVE query-specific scholarly "
+                          "retrieval on the problem statement), or 'none' (empty)")
     run.add_argument("--oeis", choices=("auto", "offline", "live"), default="auto",
                      help="OEIS sequence lookups: 'auto' (config), 'offline' (cache only), "
                           "or 'live' (oeis.org)")

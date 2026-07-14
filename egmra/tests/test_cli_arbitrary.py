@@ -614,3 +614,32 @@ def test_campaign_assigns_and_closes_per_worker_formalizers(tmp_path, monkeypatc
     # Each worker used its OWN formalizer, and all are closed afterward.
     assert {id(f) for f in seen} == {id(fzs["w0"]), id(fzs["w1"])}
     assert all(formalizer.closed for formalizer in fzs.values())
+
+
+# ── live scholarly retrieval wired into egmra run (task #7) ─────────────────────
+
+def test_run_retrieval_arxiv_builds_scholarly_corpus(tmp_path, monkeypatch, capsys):
+    import egmra.cli as cli_module
+
+    arxiv_xml = ('<?xml version="1.0"?><feed xmlns="http://www.w3.org/2005/Atom">'
+                 '<entry><id>http://arxiv.org/abs/2401.00001v1</id>'
+                 '<published>2024-01-01T00:00:00Z</published>'
+                 '<title>On prime gaps</title><summary>We study gaps.</summary>'
+                 '<author><name>Ada Lovelace</name></author></entry></feed>')
+
+    class _FakeFetcher:  # stands in for UrllibFetcher (no network)
+        def __init__(self, *a, **k):
+            pass
+
+        def __call__(self, url):
+            return arxiv_xml
+
+    monkeypatch.setattr(cli_module, "UrllibFetcher", _FakeFetcher)
+    cfg = _config_file(tmp_path)
+    policy = _signed_policy_file(tmp_path)
+    rc = main(["--config", str(cfg), "run", "--statement", "gaps between consecutive primes",
+               "--provider", "deterministic", "--policy", str(policy), "--retrieval", "arxiv"])
+    assert rc == 0
+    out = json.loads(capsys.readouterr().out)
+    assert out["retrieval"]["mode"] == "arxiv"
+    assert out["retrieval"]["corpus_records"] >= 1  # a real, auditable scholarly record

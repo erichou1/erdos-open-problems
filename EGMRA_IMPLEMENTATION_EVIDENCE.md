@@ -85,6 +85,14 @@
 > - Tests: +10 (4 in `egmra/tests/test_formalizer.py`, 3 worker-integration in `egmra/tests/test_production_wiring.py`, 3 CLI-wiring in `egmra/tests/test_cli_arbitrary.py`). Full suite: **1016 passed, 3 skipped**, rc=0.
 > - **Campaign wiring (follow-up).** `egmra campaign --formalizer aristotle` now builds ONE `AristotleFormalizer` per worker (each with its own SDK client/event loop — the client is single-loop and not shared across worker threads) via `_build_worker_formalizers`, plus a shared pinned-kernel `LeanService`; each worker's `RunnerWorker` gets its own formalizer + the pinned Lean env, and every formalizer is closed after the run. +4 tests. Full suite: **1020 passed, 3 skipped**, rc=0.
 > - **Still open (honest, verdict INCOMPLETE):** production scholarly/theorem-library retrieval; mid-generation rate-limit detection; DB-backed campaign leases; and a LIVE browser→Lean→`FORMALLY_VERIFIED_CANDIDATE` run.
+>
+> ## Session update (production scholarly / theorem-library retrieval — audit #7)
+> - **Live scholarly retrieval.** New `egmra/retrieval/scholarly.py` adds a `ScholarlyRetriever` seam + live **arXiv** (Atom XML, keyless) and **Crossref** (JSON, keyless) backends behind an injectable `Fetcher`, plus `build_scholarly_corpus()` which merges/dedups auditable `TheoremRecord`s (source URI + stable version + sha256 content hash + verbatim extract). `egmra run --retrieval arxiv|crossref|scholarly` performs LIVE, query-specific retrieval on the problem statement.
+> - **Security.** The packaged `UrllibFetcher` is confined to an allowlisted host set (`export.arxiv.org` / `api.crossref.org`), http(s) only, with a timeout + response-size cap; no user-supplied URL is ever fetched. XML parsing refuses DTDs/entities (blocks billion-laughs / external-entity vectors); Crossref JATS tags are stripped.
+> - **Trust boundary preserved.** Every record is `proof_status="unknown"` + `independent_verification_status="unverified"` and seeds hypotheses/queries only — it can never establish proof status (the `ImportAuditor` enforces this). A per-source outage is skipped (other sources still contribute); an empty query yields an honest empty packet.
+> - **Extensible + honest scope.** The `ScholarlyRetriever` seam makes Semantic Scholar / MathOverflow / a citation graph pluggable follow-ons; campaign-side (per-problem) scholarly retrieval is a follow-up. The live network fetch is verified live (never in CI); parsing/record construction is fully tested with canned payloads.
+> - Tests: +9 (8 in `egmra/tests/test_scholarly.py`, 1 CLI in `egmra/tests/test_cli_arbitrary.py`). Full suite: **1029 passed, 3 skipped**, rc=0.
+> - **Still open (honest, verdict INCOMPLETE):** additional scholarly backends + campaign-side retrieval; mid-generation rate-limit detection; DB-backed campaign leases; and a LIVE browser→Lean→`FORMALLY_VERIFIED_CANDIDATE` run.
 
 
 
