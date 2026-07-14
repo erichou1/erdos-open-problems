@@ -341,6 +341,40 @@ def _build_formalizer(args: argparse.Namespace):
     return AristotleFormalizer(client=client)
 
 
+def _build_worker_formalizers(args: argparse.Namespace, worker_ids: tuple[str, ...]) -> dict:
+    """Build one autonomous Aristotle formalizer per campaign worker (task #5).
+
+    Each worker gets its OWN :class:`AristotleSdkClient` (its own event loop): the
+    SDK client is driven synchronously on a single loop and is not shared across
+    the concurrent worker threads. Returns ``{}`` for the default ``none``. Any
+    partially built clients are closed if construction later fails.
+    """
+    if getattr(args, "formalizer", "none") != "aristotle":
+        return {}
+    lean_project = getattr(args, "lean_project", None)
+    if not lean_project:
+        raise ValueError(
+            "--formalizer aristotle requires --lean-project (the built pinned Lean "
+            "project used to formalize and to re-check with the kernel)")
+    formalizers: dict = {}
+    for worker_id in worker_ids:
+        quarantine_root = Path("egmra_quarantine") / "formalize_campaign" / worker_id
+        try:
+            client = AristotleSdkClient(
+                quarantine_root=quarantine_root, project_dir=Path(lean_project),
+                env=os.environ)
+        except (Exception, SystemExit) as exc:  # noqa: BLE001 - clean CLI error
+            for built in formalizers.values():
+                built.close()
+            raise ValueError(
+                f"aristotle formalizer is not operational ({type(exc).__name__}: {exc}); "
+                "set ARISTOTLE_API_KEY and pass a built --lean-project, or use "
+                "--formalizer none"
+            ) from exc
+        formalizers[worker_id] = AristotleFormalizer(client=client)
+    return formalizers
+
+
 def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
     """Run the real research loop on an arbitrary problem via a reasoning worker.
 
@@ -860,31 +894,46 @@ def cmd_campaign(args: argparse.Namespace) -> int:
     enforcer = PolicyEnforcer(policy)
     corpus_tex = args.corpus_tex or default_corpus_tex_path()
     catalog = args.catalog or default_catalog_path()
+    # Optional formal path (task 4.6 / #5): a shared pinned-kernel LeanService plus
+    # one autonomous Aristotle formalizer per worker (the SDK client owns a single
+    # event loop, so it is never shared across the concurrent worker threads).
+    lean_service, lean_version, mathlib_commit = _build_lean_service(args)
+    formalizers_by_worker = _build_worker_formalizers(args, workers)
     # Genuine multi-worker overlap: the deterministic provider shares one runner
     # across threads, while the browser provider drives ONE authenticated Chromium
     # with N tabs on a dedicated event loop (async multi-tab), one tab per worker.
     browser_engine = None
     runners_by_worker: dict[str, Any] = {}
     runner = None
-    if args.provider == "browser":
-        browser_engine = _build_browser_engine(int(args.workers))
-        pool = build_browser_runner_pool(
-            browser_engine, throttle=_browser_throttle(config, args.provider))
-        runners_by_worker = dict(zip(workers, pool))
-    else:
-        runner = _build_runner(args.provider, throttle=_browser_throttle(config, args.provider))
+    try:
+        if args.provider == "browser":
+            browser_engine = _build_browser_engine(int(args.workers))
+            pool = build_browser_runner_pool(
+                browser_engine, throttle=_browser_throttle(config, args.provider))
+            runners_by_worker = dict(zip(workers, pool))
+        else:
+            runner = _build_runner(
+                args.provider, throttle=_browser_throttle(config, args.provider))
+    except BaseException:
+        for formalizer in formalizers_by_worker.values():
+            formalizer.close()
+        raise
     # Build the immutable literature corpus once; it is shared read-only across
     # worker threads (the retrieval service copies it per packet).
     retrieval_corpus = _build_retrieval_corpus(args, config)
 
     def run_one(problem_id: str, fencing_token: int, worker_id: str) -> str:
-        # Each worker drives its own browser tab (or shares the deterministic runner).
+        # Each worker drives its own browser tab (or shares the deterministic runner)
+        # and its own autonomous formalizer.
         worker_runner = runners_by_worker[worker_id] if browser_engine is not None else runner
         number = int(problem_id.split("-", 1)[1])
         problem = from_erdos_number(number, corpus_tex_path=corpus_tex, catalog_path=catalog)
         worker = RunnerWorker(runner=worker_runner, goal_claim_id="goal",
                               goal_formula=problem.display_statement, role=args.role,
-                              compute_service=ComputeService())
+                              compute_service=ComputeService(),
+                              lean_version=lean_version, mathlib_commit=mathlib_commit,
+                              lean_project=args.lean_project,
+                              formalizer=formalizers_by_worker.get(worker_id))
         # A distinct event log per attempt keeps each try's chain clean on resume.
         events_path = Path(config.events_dir) / f"{problem.problem_id}.{fencing_token}.jsonl"
         event_log = _make_event_log(args, f"{problem.problem_id}.{fencing_token}")
@@ -895,7 +944,8 @@ def cmd_campaign(args: argparse.Namespace) -> int:
                 source_id=problem.source_id, budget=float(args.budget), enforcer=enforcer,
                 worker=worker, goal_claim_id="goal", events_path=events_path,
                 event_log=event_log, retrieval_corpus=retrieval_corpus,
-                oeis_client=oeis_client,
+                oeis_client=oeis_client, lean_service=lean_service,
+                informal_only=lean_service is None,
                 status_claims=list(problem.status_claims),
                 novelty_verdict=problem.novelty_verdict,
                 intent_review=None, runner=worker_runner,
@@ -914,6 +964,8 @@ def cmd_campaign(args: argparse.Namespace) -> int:
             browser_engine.close()  # tears down the browser and every tab
         else:
             _close_runner(runner)
+        for formalizer in formalizers_by_worker.values():
+            formalizer.close()
     print(json.dumps(status, indent=2))
     return 0
 
@@ -1181,6 +1233,15 @@ def build_parser() -> argparse.ArgumentParser:
                           help="literature retrieval corpus source (default: Erdős snapshot)")
     campaign.add_argument("--oeis", choices=("auto", "offline", "live"), default="auto",
                           help="OEIS lookup mode ('auto', 'offline', or 'live')")
+    campaign.add_argument("--lean-project", type=Path, default=None,
+                          help="built pinned Lean project (with .lake); enables the formal "
+                               "path so worker/Aristotle Lean is re-checked by the kernel")
+    campaign.add_argument("--mathlib-commit", default="v4.28.0",
+                          help="Mathlib revision recorded in formal candidates")
+    campaign.add_argument("--formalizer", choices=("none", "aristotle"), default="none",
+                          help="autonomous formalization worker per campaign worker: "
+                               "'aristotle' (requires --lean-project + ARISTOTLE_API_KEY; "
+                               "produced Lean is re-checked by the pinned kernel) or 'none'")
     campaign.add_argument("--status", action="store_true", help="print campaign status and exit")
     campaign.set_defaults(func=cmd_campaign)
 

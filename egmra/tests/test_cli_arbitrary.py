@@ -525,3 +525,92 @@ def test_run_passes_formalizer_to_worker(tmp_path, monkeypatch):
                "--provider", "deterministic", "--policy", str(policy)])
     assert rc == 4
     assert captured["worker"].formalizer is sentinel
+
+
+# ── campaign builds one autonomous formalizer per worker (task #5, campaign) ────
+
+def test_build_worker_formalizers_none_and_requires_project():
+    from types import SimpleNamespace
+    from egmra.cli import _build_worker_formalizers
+
+    assert _build_worker_formalizers(SimpleNamespace(formalizer="none"), ("w0",)) == {}
+    with pytest.raises(ValueError, match="--lean-project"):
+        _build_worker_formalizers(
+            SimpleNamespace(formalizer="aristotle", lean_project=None), ("w0",))
+
+
+def test_build_worker_formalizers_one_client_per_worker(tmp_path, monkeypatch):
+    from types import SimpleNamespace
+    import egmra.cli as cli_module
+
+    built: list = []
+
+    class _FakeClient:
+        def __init__(self, **kwargs):
+            built.append(kwargs)
+            self.closed = False
+
+        def close(self):
+            self.closed = True
+
+    monkeypatch.setattr(cli_module, "AristotleSdkClient", _FakeClient)
+    formalizers = cli_module._build_worker_formalizers(
+        SimpleNamespace(formalizer="aristotle", lean_project=str(tmp_path)), ("w0", "w1"))
+    assert set(formalizers) == {"w0", "w1"}
+    # Distinct clients (own event loops) and distinct per-worker quarantine roots.
+    assert len({id(f.client) for f in formalizers.values()}) == 2
+    assert len({str(kw["quarantine_root"]) for kw in built}) == 2
+
+
+def test_campaign_formalizer_aristotle_requires_lean_project(tmp_path, capsys):
+    cfg = _config_file(tmp_path)
+    policy = _signed_policy_file(tmp_path)
+    rc = main(["--config", str(cfg), "campaign", "--provider", "deterministic",
+               "--workers", "1", "--erdos-range", "5", "--policy", str(policy),
+               "--state", str(tmp_path / "c.json"), "--formalizer", "aristotle"])
+    assert rc == 2
+    err = json.loads(capsys.readouterr().err)
+    assert err["error"] == "ValueError"
+    assert "--lean-project" in err["detail"]
+
+
+def test_campaign_assigns_and_closes_per_worker_formalizers(tmp_path, monkeypatch):
+    import threading
+    from types import SimpleNamespace
+    import egmra.cli as cli_module
+
+    class _FZ:
+        def __init__(self) -> None:
+            self.closed = False
+
+        def close(self) -> None:
+            self.closed = True
+
+    fzs = {"w0": _FZ(), "w1": _FZ()}
+    monkeypatch.setattr(cli_module, "_build_worker_formalizers", lambda args, workers: fzs)
+    monkeypatch.setattr(cli_module, "from_erdos_number",
+                        lambda number, **kw: SimpleNamespace(
+                            problem_id=f"erdos-{number}", source_bytes=b"S", source_id="fx",
+                            display_statement="S", status_claims=[], novelty_verdict="N1"))
+    seen: list = []
+    lock = threading.Lock()
+    barrier = threading.Barrier(2, timeout=5.0)
+
+    def _fake_research(**kwargs):
+        with lock:
+            seen.append(kwargs["worker"].formalizer)
+        barrier.wait()  # force genuine 2-worker overlap
+        return object()
+
+    monkeypatch.setattr(cli_module, "research", _fake_research)
+    monkeypatch.setattr(cli_module, "classify_result",
+                        lambda result, **kw: SimpleNamespace(state="OPEN_NO_PROGRESS"))
+    cfg = _config_file(tmp_path)
+    policy = _signed_policy_file(tmp_path)
+    rc = main(["--config", str(cfg), "campaign", "--provider", "deterministic",
+               "--workers", "2", "--erdos-range", "5-6", "--policy", str(policy),
+               "--state", str(tmp_path / "c.json")])
+    assert rc == 0
+    # Each worker used its OWN formalizer, and all are closed afterward.
+    assert {id(f) for f in seen} == {id(fzs["w0"]), id(fzs["w1"])}
+    assert all(formalizer.closed for formalizer in fzs.values())
