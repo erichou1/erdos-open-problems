@@ -19,6 +19,7 @@ from __future__ import annotations
 
 import asyncio
 import inspect
+import threading
 import tempfile
 from collections.abc import Callable
 from dataclasses import dataclass, field
@@ -93,6 +94,9 @@ class AristotleSdkClient:
     _projects: dict[str, Any] = field(default_factory=dict, init=False, repr=False)
     _tasks: dict[str, Any] = field(default_factory=dict, init=False, repr=False)
     _loop_obj: Any = field(default=None, init=False, repr=False)
+    _bg_loop: Any = field(default=None, init=False, repr=False)
+    _bg_thread: Any = field(default=None, init=False, repr=False)
+    _bg_lock: Any = field(default_factory=threading.Lock, init=False, repr=False)
 
     def __post_init__(self) -> None:
         if self.sdk is None:
@@ -117,22 +121,39 @@ class AristotleSdkClient:
         try:
             asyncio.get_running_loop()
         except RuntimeError:
-            pass
-        else:  # pragma: no cover - the sync CLI/orchestrator never nest a loop
-            raise AristotleClientError(
-                "AristotleSdkClient must be driven from synchronous code, "
-                "not from within a running event loop"
-            )
-        if self._loop_obj is None or self._loop_obj.is_closed():
-            self._loop_obj = asyncio.new_event_loop()
-        return self._loop_obj.run_until_complete(value)
+            if self._loop_obj is None or self._loop_obj.is_closed():
+                self._loop_obj = asyncio.new_event_loop()
+            return self._loop_obj.run_until_complete(value)
+        # A loop is already running on THIS thread — sync Playwright keeps one
+        # active between browser calls, so this is the normal state inside a
+        # browser-provider research run.  Blocking it with run_until_complete
+        # would deadlock; marshal the coroutine to a dedicated client-owned
+        # loop thread instead (the same pattern as AsyncBrowserEngine).
+        with self._bg_lock:
+            if self._bg_loop is None or not (
+                self._bg_thread is not None and self._bg_thread.is_alive()
+            ):
+                self._bg_loop = asyncio.new_event_loop()
+                self._bg_thread = threading.Thread(
+                    target=self._bg_loop.run_forever,
+                    name="aristotle-sdk-loop", daemon=True)
+                self._bg_thread.start()
+        future = asyncio.run_coroutine_threadsafe(value, self._bg_loop)
+        return future.result()
 
     def close(self) -> None:
-        """Close the client-owned event loop (best-effort teardown)."""
+        """Close the client-owned event loops (best-effort teardown)."""
         loop = self._loop_obj
         self._loop_obj = None
         if loop is not None and not loop.is_closed():  # pragma: no cover - teardown
             loop.close()
+        bg_loop, bg_thread = self._bg_loop, self._bg_thread
+        self._bg_loop = self._bg_thread = None
+        if bg_loop is not None and bg_loop.is_running():  # pragma: no cover - teardown
+            bg_loop.call_soon_threadsafe(bg_loop.stop)
+            if bg_thread is not None:
+                bg_thread.join(timeout=5.0)
+            bg_loop.close()
 
     def submit(self, prompt: str) -> AristotleSubmission:
         """Create a project from the pinned Lean dir and start the first task."""

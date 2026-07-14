@@ -210,8 +210,25 @@ def _build_runner(provider: str, *, throttle: "SharedThrottle | None" = None):
                 "authenticate a profile (python3 solve_submit.py --login) or use "
                 "--provider deterministic"
             ) from exc
-        return BrowserChatGPTRunner(backend=backend, throttle=throttle)  # pragma: no cover
+        return BrowserChatGPTRunner(
+            backend=backend, throttle=throttle,
+            response_timeout_s=_browser_response_timeout(),
+        )  # pragma: no cover
     raise ValueError(f"unknown provider: {provider!r}")
+
+
+def _browser_response_timeout() -> float:
+    """Per-exchange browser response timeout (deep reasoning can exceed 5 min).
+
+    Override with ``EGMRA_BROWSER_RESPONSE_TIMEOUT_S``; the default matches the
+    proven legacy think-timeout of 600s. Bounded to a sane operator range.
+    """
+    raw = os.environ.get("EGMRA_BROWSER_RESPONSE_TIMEOUT_S", "").strip()
+    try:
+        value = float(raw) if raw else 600.0
+    except ValueError:
+        return 600.0
+    return min(3600.0, max(60.0, value))
 
 
 def _browser_throttle(config: EgmraConfig, provider: str) -> "SharedThrottle | None":
@@ -1409,7 +1426,8 @@ def cmd_campaign(args: argparse.Namespace) -> int:
         if args.provider == "browser":
             browser_engine = _build_browser_engine(int(args.workers))
             pool = build_browser_runner_pool(
-                browser_engine, throttle=_browser_throttle(config, args.provider))
+                browser_engine, throttle=_browser_throttle(config, args.provider),
+                response_timeout_s=_browser_response_timeout())
             runners_by_worker = dict(zip(workers, pool))
         else:
             runner = _build_runner(

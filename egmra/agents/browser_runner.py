@@ -117,7 +117,7 @@ class BrowserChatGPTRunner:
     model_label: str = "ChatGPT (browser UI)"
     account_class: str = "browser-authenticated"
     provider: str = "openai"
-    response_timeout_s: float = 300.0
+    response_timeout_s: float = 600.0
     base_cooldown_s: float = 5.0
     cooldown_factor: float = 2.0
     max_cooldown_s: float = MAX_COOLDOWN_CEILING_SECONDS
