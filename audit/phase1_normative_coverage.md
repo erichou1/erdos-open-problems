@@ -1,0 +1,692 @@
+# Phase 1 normative coverage checklist
+
+Source of truth: `docs/AUTONOMOUS_MATH_RESEARCH_ARCHITECTURE_2026.md` only. Each checkbox is a distinct normative contract, policy, transition, failure behavior, schema/API obligation, or explicitly prescribed evaluation rule. Source-line references are inclusive. Tags: `NUM` numerical constant/default; `STATE` lifecycle or transition; `FAIL` failure response; `SEC` security/trust rule; `SVC` service/API contract; `AMBIG` milestone/scope ambiguity requiring resolution.
+
+## Section 1 — Executive summary
+
+- [ ] L7 — Optimize first for rigorous, intended, novel, reproducible progress; optimize cost only subject to that objective.
+- [ ] L9–14 — Preserve the four support labels and their meanings; in particular, label new integrations/control rules as original proposals and test them.
+- [ ] L16 — Use “Lean-verified” only for kernel acceptance of the encoded proposition in a specified environment; do not imply intent, novelty, or significance.
+- [ ] L28 — Implement the preferred architecture as hierarchical, event-sourced, and neuro-symbolic rather than a single-model or flat-debate system.
+- [ ] L30 — Gate release independently on statement fidelity.
+- [ ] L31 — Gate release independently on mathematical truth.
+- [ ] L32 — Gate release independently on novelty.
+- [ ] L33 — Gate release independently on significance/responsiveness/non-vacuity.
+- [ ] L34 — Gate release independently on reproducibility/replay.
+- [ ] L38 — Preserve immutable source records and an explicit interpretation lattice rather than silently normalizing one statement.
+- [ ] L39 — Run a short literature-blind falsification pass, then mandatory theorem-level literature/OEIS/formal-library retrieval before expensive proof search.
+- [ ] L40 — Use an append-only epistemic claim graph with typed evidence, dependencies, contradictions, and cascading revocation.
+- [ ] L41 — Provide three nested searches: research programs, AND/OR lemmas, and Lean proof states.
+- [ ] L42 — Allocate branches dynamically by posterior expected utility/value of information while protecting exploration.
+- [ ] L43 — Use early Lean sentinels for target, definitions, boundary cases, and high-centrality/high-risk lemmas.
+- [ ] L44 — Make Python/Sage/CAS/SAT/SMT/ILP experiments executable, immutable, and independently replayable.
+- [ ] L45 — Give the adversarial referee no reward for agreement.
+- [ ] L46 — Persist only verified memory and learn experts from authenticated outcomes.
+- [ ] L67 — `FAIL SEC` Never promote Aristotle vendor `COMPLETE` as formal evidence without local kernel replay and reviewed formal-statement fidelity; do not discard those qualifications when loading evidence.
+- [ ] L68 — `FAIL` Bind cache identity to the actual per-stage runner/adjudicator so resumed artifacts cannot acquire false cross-model provenance.
+- [ ] L70 — Close both urgent provenance paths before formal evidence or cross-model independence can affect promotion.
+- [ ] L74 — `IMMEDIATE SEC` Require local kernel replay and statement-fidelity approval for formal promotion immediately.
+- [ ] L75 — `IMMEDIATE` Disable promotion entry points until every evidence kind has a semantic validator and release flags are enforced.
+- [ ] L76 — `IMMEDIATE` Bind every stage to provider/model/runner, adjudicator/literature policy, formal environment, validator version, prompt, tools, and artifacts; reject incompatible cache replay.
+- [ ] L77 — Preserve and extend source snapshots, queue, compatible cache machinery, and deterministic rejection invariants.
+- [ ] L78 — Replace mutable proof/manifests with typed claim graph plus append-only gate/adjudication/promotion events.
+- [ ] L79 — Replace the fixed loop with hierarchical program and AND/OR search.
+- [ ] L80 — Add executable falsification and high-risk Lean sentinels before increasing agent count.
+- [ ] L81 — Build frozen theorem-level packets including OEIS and formal declarations.
+- [ ] L82 — `NUM` Make literature search mandatory before deep proof work, while reserving 5–10% of initial budget for blind scratch/falsification.
+- [ ] L83 — Treat Aristotle/proprietary provers only as candidate workers, never trust roots.
+- [ ] L84 — Learn only from authenticated replayable outcomes; never treat model consensus as independent evidence.
+- [ ] L85 — Evaluate against an equal-cost raw frontier-model baseline with blind expert review and versioned formal replay.
+
+## Section 2 — State-of-the-art literature map
+
+- [ ] L121 — Make the fact graph survive target-domain mismatches and bad imported definitions through dependency-aware correction/revocation.
+- [ ] L137 — Do not infer an undisclosed Anthropic mathematics architecture from the absence of a public one.
+- [ ] L141 — Do not use scale or successful CI/builds as substitutes for semantic target audits.
+- [ ] L149 — Use the lightweight pipeline as a cheap candidate-generation baseline and verification-cost model, not as the final architecture.
+- [ ] L155 — Treat small author-run research-proof results as motivation for controlled ablation, not an architecture conclusion.
+- [ ] L169 — Require a self-contained proof/significance audit beyond executable-verifier acceptance and account for verifier-friendly selection bias.
+- [ ] L179 — Transfer learned proposals only when paired with hard symbolic closure and shared checked facts; do not assume a geometry DSL generalizes.
+- [ ] L185 — Do not trust external prover completion without local build and semantic target audit.
+- [ ] L187 — Treat formal-artifact leaderboards as proof indexes, not equal-budget efficiency comparisons or informal-correspondence audits.
+- [ ] L193 — Base evolutionary language-model fitness on target-relative verified-debt reduction, not plausibility/elegance or moving difficulty into a helper.
+- [ ] L195 — `SEC` Cleanly replay untrusted generated Lean in a pinned environment and use an independent checker before release.
+- [ ] L208 — `NUM` Rerun high-pass@k formal-prover claims at matched budgets and audit contamination/synthetic-statement validity before comparison.
+- [ ] L210 — Treat theorem retrieval only as a premise proposal source, never as proof.
+- [ ] L212 — `NUM` Attach exact benchmark commit, pass@k, token budget, and Mathlib version to every formal-agent comparison.
+- [ ] L224 — Use multiple candidate translations and independent backtranslation for autoformalization.
+- [ ] L224 — Apply counterexample/vacuity tests, global paraphrase invariance, and local mutation covariance to formal targets.
+- [ ] L224 — Prove candidate formal equivalence when feasible and require independently approved target hash before final proof promotion.
+- [ ] L230 — Do not evolve unrestricted prose proofs under an LLM judge merely because executable evolution succeeds under hard evaluators.
+- [ ] L232–238 — Restrict evolutionary search to constructions/algorithms/decompositions/counterexample generators/formal proof programs with exact or certificate-backed fitness, an independent checker, separate novelty/complexity objectives, mechanism-diverse populations, and replay outside search.
+- [ ] L244 — Route suitable leaves to mature symbolic systems rather than reproducing them in prose.
+- [ ] L251 — Require SAT/SMT proofs, models, or independently replayable certificates where supported.
+- [ ] L253 — Preserve semantics when exporting obligations; reconstruct successful proofs in Lean or attach checked certificates rather than trusting a solver label.
+- [ ] L258 — Prefer corrected ProofNet# ports for Lean 4 evaluation and treat formalization-error rates as evidence for target gates.
+- [ ] L261 — Distinguish original IMO-Bench, later formal statements, and submitted/generated solution artifacts.
+- [ ] L264 — Version benchmark provenance because benchmark statements can be corrected.
+- [ ] L265 — Do not equate verifier acceptance with a complete self-contained proof/significance decision.
+- [ ] L270 — Evaluate statement parsing, retrieval, novelty, proof, and formalization separately rather than via one accuracy number.
+
+## Section 3 — Comparison table of major systems
+
+- [ ] L315 — Treat the EGMRA hybrid as an unmeasured design hypothesis and require Section 12 ablations before claiming performance superiority.
+
+## Section 4 — Critical review of the current pipeline
+
+- [ ] L321–326 — Audit live implementation and target specification as distinct objects; do not credit unimplemented specification features to current capability.
+- [ ] L328 — Do not treat passing software tests, identity-incomplete manifests, unauthenticated resource-exhaustion text, or active workers as theorem-proving performance/results.
+- [ ] L336 — Retain source provenance but replace semantic intake with Statement IR, two independent parses, reconciliation, mutation tests, and explicit interpretations.
+- [ ] L337 — Retain selector queue/provenance but replace pseudo-probabilities with standardized probes, competing-risk posteriors, censored outcomes, value of information, and reuse.
+- [ ] L338 — Retain local related-work recall only as stage zero; merge it into theorem retrieval with frozen, source-spanned, applicability-checked theorem records.
+- [ ] L339 — Replace the fixed four-scout census with conditionally dispatched, tool/information-differentiated workers and attested model identity.
+- [ ] L340 — Extend the synthesis DAG into a typed AND/OR formal blueprint with dynamic leaves, proof debt, and dependency-local repair.
+- [ ] L341 — Demote whole-proof construction to compilation from admitted claims; keep multiple blueprints until bottlenecks close.
+- [ ] L342 — Keep reviewer roles as checks, not evidence; add tool-backed falsification, source audit, formal replay, and a different-family referee.
+- [ ] L343 — Localize regulator repair to the failed dependency cone and use posterior budgets/reopen rules.
+- [ ] L344 — Replace mutable `ResearchState` with an event-sourced epistemic graph; JSON may remain only as a derived view.
+- [ ] L345 — Complete cache identity with actual stage runner/model/provider/context, import/policy closure, exact Lean context, and replay policy.
+- [ ] L346 — Add leases and provider-aware throttling; rate limits pause rather than terminate mathematical branches.
+- [ ] L347 — Add sandboxed immutable exact-computation jobs with coverage, independent replay, and typed certificates.
+- [ ] L348 — `SEC` Use Aristotle/Lean sidecar only as candidate generation; require kernel, target audit, exhaustive source/axiom/import scan, early central lemmas, and typed evidence.
+- [ ] L349 — Preserve deterministic rejection but replace generic evidence acceptance with separate truth/intent/novelty/significance/replay certificates.
+- [ ] L350 — Enforce one signed feature policy centrally in every verifier, promoter, scheduler, and cache.
+- [ ] L351 — Make manifests derived views over immutable gate/adjudication/promotion events with explicit precedence.
+- [ ] L352 — Keep learning quarantine and add verified-only learning plus complete telemetry; separate temporary problem memory from replayable persistent memory.
+- [ ] L353 — Add OEIS as a structured, locally transformed, cached, provenance-bearing service with independently checked claims.
+- [ ] L361 — Consolidate 22 standing roles into seven durable authorities and instantiate specialists only for distinct tool/prior/information needs.
+- [ ] L362 — Replace multiplicative branch priority with posterior expected utility plus value of information under explicit safety constraints.
+- [ ] L363 — Let unresolved but separable interpretations coexist; statement ambiguity blocks publication, not necessarily cheap exploration.
+- [ ] L364 — Use a controlled two-pass information protocol: blind scratch, frozen solver packet, then provenance-bearing targeted re-entry.
+- [ ] L365 — Formalize early only target/definitions/boundaries and high-centrality/high-risk/high-consequence claims; defer low-risk glue.
+- [ ] L366 — Do not let stateless LLM review admit high-centrality facts; evidence type determines admission tier.
+- [ ] L367 — Keep truth, intended correspondence, novelty, and significance orthogonal; neither consensus nor a Lean build collapses them.
+- [ ] L373 — Preserve commit-pinned source snapshots and section hashes.
+- [ ] L374 — Preserve exact parent-statement lock.
+- [ ] L375 — Preserve content-addressed contracts and compatible-only cache reuse after completing per-stage identity.
+- [ ] L376 — Extend append-only ledger machinery to attempt/gate/adjudication/promotion events.
+- [ ] L377 — Preserve deterministic queue construction with protected exploration.
+- [ ] L378 — Extend atomic claims with leases, migration, and stale-artifact handling.
+- [ ] L379 — `NUM` Keep rate-limit waits from consuming proof attempts and cap cooldown at 120 seconds.
+- [ ] L380 — Keep deterministic rejection and explicit reasons while disabling generic evidence acceptance.
+- [ ] L381 — Preserve the regulator distinction between proof failure and plan failure.
+- [ ] L383 — Build the next system on all listed invariants, subject to the stated corrections.
+
+## Section 5 — Proposed architecture
+
+- [ ] L391 — Truth plane owns interpretations, claims, evidence, dependencies, contradictions, revocation, and release gates.
+- [ ] L392 — Search plane owns literature queries, programs, lemma blueprints, experiments, and formal proof states.
+- [ ] L393 — Control plane owns selection, budgets, leases, routing, stagnation, and checkpoint/resume.
+- [ ] L394 — Communication plane reports progress, proofs, uncertainty, novelty/significance, and human steering.
+- [ ] L398 — Top-level search must explore genuinely different mechanisms/reformulations.
+- [ ] L399 — Middle-level search must represent alternative sufficient lemma combinations as AND/OR structure.
+- [ ] L400 — Inner search must close exact Lean goals using premises, tactics, terms, or auxiliary lemmas.
+- [ ] L404–406 — Route frozen sources through intake/interpretation into both acquisition control and a frozen theorem-level solver packet.
+- [ ] L409–413 — Control flow must run governor → program archive → AND/OR blueprint → priority queue/leased branches.
+- [ ] L416–422 — Route leased work to differentiated proof, computation, retrieval, and Lean workers; freeze computational artifacts and check formal artifacts in pinned kernels/certificate checkers.
+- [ ] L425–432 — Write worker/tool outputs to the epistemic graph, pass it to an independent referee, decide five gates, and emit proof/disproof/verified partial/honest no-result.
+- [ ] L433 — `STATE` Revocation cascades must feed affected work back into the branch queue.
+- [ ] L436–439 — Give selected frozen packets to proof/retrieval/formal workers and persist released outcomes only into verified memory/evaluation ledger.
+- [ ] L440–441 — Feed verified memory back into problem acquisition and the program archive.
+- [ ] L444 — Enforce least-privilege graph/packet reads; agents write structured proposals and only the truth plane changes epistemic status.
+- [ ] L448 — Freeze exact source bytes, location/commit, status fields, sections, retrieval date, licenses, and hashes.
+- [ ] L449 — Build Statement IR from two independent parsers covering binders, domains, hypotheses, conclusion, notation, and spans.
+- [ ] L450 — Reconcile equivalent parses and preserve materially different readings as children of the original.
+- [ ] L451 — Run type/dimension, boundary, exact-enumeration, symmetry/metamorphic, and fast-counterexample integrity probes.
+- [ ] L452 — Audit status across exact wording, objects, authors, references/citations, later papers, MathOverflow, Erdős history, OEIS, and formal libraries; emit one provenance-bearing status class.
+- [ ] L453 — `NUM` Spend 5–10% of initial budget on literature-blind scratch/falsification and prohibit publication claims from this pass.
+- [ ] L454 — Freeze theorem records with hypotheses, applicability, formal declarations, negative results, and provenance; give proof workers selected packets while source auditors keep full citations.
+- [ ] L455 — Score with uncertainty-aware outcome values, verification cost, status freshness, library coverage, computation affordance, reuse, and protected exploration.
+- [ ] L456 — Dispatch only mechanism-distinct programs; each declares falsifiers and expected bottlenecks.
+- [ ] L457 — Try direct proof before decomposing into alternative lemma sets with prerequisites, centrality, semantic risk, and formal targets.
+- [ ] L458 — Give parallel workers disjoint branch capsules, tools, budgets, and information boundaries; require typed proposal/artifact output.
+- [ ] L459 — `STATE` Validate by evidence type; refutation revokes dependency closure; weak claims may guide search but cannot silently become premises.
+- [ ] L460 — Freeze Lean target candidates early, prove boundaries and high-risk/high-centrality lemmas, and use compiler feedback to revise the blueprint.
+- [ ] L461 — Allocate by posterior value/information/unlock/reuse/diversity/cost/duplication/semantic risk; rate limits pause and never mark branches mathematically failed.
+- [ ] L462 — Compile informal proof only from admitted claims, formalize the dependency cone when feasible, and perform independent hostile verification.
+- [ ] L463 — Apply truth, correspondence, novelty, significance, and replay separately; use qualified labels rather than “solved” when a gate remains open.
+- [ ] L464 — Distill patterns/outcomes/failures only after authenticated replay under the current toolchain; quarantine speculation.
+- [ ] L470 — Use kernel/certificate validation before promotion in supported formal/executable domains.
+- [ ] L471 — Provide a generator–critic–repair loop as a search mechanism, not a trust substitute.
+- [ ] L472 — Provide formal blueprints and dynamic leaves for formal tasks.
+- [ ] L473 — Provide dependency graph/revocation while strengthening evidence admission beyond LLM judgment.
+- [ ] L474 — Retrieve theorems before proof search.
+- [ ] L475 — Restrict evolutionary promotion to exact/certificate-backed executable fitness.
+- [ ] L476 — Treat cold-pass-then-retrieval as an original protocol requiring evaluation.
+- [ ] L477 — Treat interpretation lattices as an original integration requiring evaluation.
+- [ ] L478 — Treat risk-weighted Lean sentinels as an original policy requiring evaluation.
+- [ ] L479 — Implement evidence-type obligations for every claim (“epistemic compiler”) and test the proposal.
+- [ ] L480 — Treat posterior branch allocation/verified-DAG credit as plausible/original and validate it.
+- [ ] L481 — Maintain a separate novelty firewall and validate the integration.
+
+## Section 6 — Detailed module specifications
+
+- [ ] L489–492 — Intake accepts immutable first-party bytes/metadata, prior versions, contextual definitions/notation, and status labels explicitly marked as claims.
+- [ ] L496–510 — `SVC` Statement IR must carry source IDs/hashes/spans; typed binders; symbol definitions; hypotheses; conclusion; requested outcome; parameter regime; edge cases; ambiguity nodes; and stronger/weaker/equivalent/special-case variants.
+- [ ] L512 — Obtain two genuinely independent parses (different model families or deterministic parser plus separate semantic model); label same-model prompt variants correlated; reconcile only justified matches.
+- [ ] L513 — Backtranslate every formal/intake candidate to ordinary mathematical prose.
+- [ ] L514 — Require semantic invariance under global paraphrase and covariance under meaning-changing local mutation.
+- [ ] L515 — Generate finite/boundary and dimension/type probes.
+- [ ] L516 — Search the smallest meaningful domains for counterexamples.
+- [ ] L517 — `STATE` Preserve unresolved ambiguity as interpretation nodes; allow per-node exploration but block release as the intended problem.
+- [ ] L521–525 — `SVC` Intake outputs exact-hash `ProblemContract`, interpretation lattice, probe artifacts, status-audit request, fidelity-risk score, and unresolved decisions.
+- [ ] L531 — Treat selection as calibrated decision-making, never a difficulty oracle.
+- [ ] L535–543 — Selector features must separately cover status, statement, literature, formal, computational, mathematical, operational/censoring, reuse, and locally measured model/tool fit.
+- [ ] L547–558 — Model competing outcomes separately: novel resolution, rediscovery/identification, disproof, verified partial/finite reduction, reusable infrastructure, status/statement correction, budget-limited no progress, and invalid/false promotion.
+- [ ] L560 — Use hierarchical Bayesian or calibrated ensembles with domain priors, credible intervals, and survival/censoring likelihoods.
+- [ ] L560 — Treat timeout/rate limit as censored operational data, not mathematical failure.
+- [ ] L560 — Until authenticated data is sufficient, publish wide intervals and use weak priors.
+- [ ] L564 — Hard-exclude only malformed, unauthorized, or provably duplicate tasks.
+- [ ] L565 — Allocate a standardized cheap probe before deep search.
+- [ ] L566 — `NUM` Reserve 15–25% of problem-selection allocation for protected exploration across domains, low-attempt items, and high uncertainty.
+- [ ] L567 — Publish separate ranked lists for full solve, useful partial, formalization, finite computation, and reuse.
+- [ ] L568 — Never use prize value, popularity, or mere existence of a formal statement as a solvability proxy.
+- [ ] L574 — `SVC` Implement OEIS as deterministic service plus source auditor, triggered by generated integer sequences, enumerative/recurrence/coefficient/extremal targets, or explicit corpus links/markers.
+- [ ] L582–585 — Retrieval must link bibliographic, mathematical, formal, and experimental indexes.
+- [ ] L589–595 — Each question generates queries for exact/normalized statement, object/type/regime, equivalents/duals/special cases, techniques/obstructions, author/citation neighborhoods, formal signatures/premises, and OEIS records.
+- [ ] L597–616 — `SVC` `TheoremRecord` must carry canonical statement/hypotheses/conclusion/notation; immutable source/version/hash/span/time/verbatim extract; extraction provenance/confidence; authors/date/status/corrections; formal declarations; applicability requirements/checks; citation edges; independent-verification status; and license/access constraints.
+- [ ] L618 — Rank theorem records by semantic/formula match, hypothesis fit, authority/freshness, corroboration, formal linkage, citation proximity, and query diversity; never use citation count as truth.
+- [ ] L620–623 — Separate high-recall retrieval from exact-source/hypothesis/scope/version/consequence import audit.
+- [ ] L625 — Admit only audited imports as usable facts; novelty review uses a separate query log and has no incentive to support the proof.
+- [ ] L633 — `SVC` Governor maximizes verified budgeted progress without changing truth; returns branch/budget/rationale/stop/reopen decisions.
+- [ ] L634 — `SVC` Intake/retrieval establishes target/status/source packet without writing candidate proof into truth; returns contracts, theorem records, uncertainty, and novelty reports.
+- [ ] L635 — `SVC` Program worker pursues one mechanism on least-privilege state and returns capsule updates, claim proposals, falsifiers, and experiments.
+- [ ] L636 — `SVC` Computational falsifier is initially blind to candidate proof and returns immutable witnesses/certificates/coverage.
+- [ ] L637 — `SVC` Formalization authority creates/audits Lean targets and goals without deciding novelty; returns declarations, states, builds, and axiom reports.
+- [ ] L638 — `SVC` Adversarial referee is rewarded for defects/checklist replay/residual uncertainty, never agreement; returns defect graph, recalculation, and verification profile.
+- [ ] L639 — `SVC` Release auditor decides five gates from evidence without generating same-pass repair; returns signed gate certificates.
+- [ ] L643–651 — Require any two purportedly diverse workers to differ in at least two of method/prohibitions, tools, information, objective, model lineage, representation, or counterfactual assumptions.
+- [ ] L653 — Count same-model identical-context “creative” chats as one correlated method.
+- [ ] L659–665 — Governor maximizes verified progress; may open/pause/reopen/merge and allocate/request human input; may not change evidence, turn timeouts into math failures, publish, or use self-confidence as truth.
+- [ ] L669–675 — Program worker stays within declared mechanism/target/assumptions; returns claims, dependencies, proof/experiment, falsifier, bottleneck, and cost; forbids uncited imports/assumption drift/evidence labeling; emits minimal reusable failure certificate on failure.
+- [ ] L679–684 — Computational falsifier searches smallest/boundary/alternate/random/adversarial cases and attaches code, inputs, environment, seed, arithmetic, coverage, output hash, and evidence classification to every result.
+- [ ] L688–694 — Formalization authority audits target first, maintains source↔Lean invariants, uses exact proof states/retrieval/minimal helpers/continuous compilation, reports every axiom/import/placeholder, and never equates vendor/build status with correspondence.
+- [ ] L698–704 — Referee independently reconstructs from locked sources/graph/artifacts, attacks domain/circularity/assumption/import/computation/formal mismatches, and returns the first invalid dependency plus affected conclusions.
+- [ ] L708–712 — Release auditor issues independent fidelity/truth/novelty/significance/reproducibility verdicts; permits `unknown`; forbids substitution between verdicts.
+- [ ] L716–718 — Use append-only epistemic graph/materialized views and preserve evidence tier on every downstream use; model summaries never upgrade evidence.
+- [ ] L724 — Allocate across research programs/tools with contextual Thompson/UCB.
+- [ ] L725 — Preserve top-level mechanism diversity with best-first/MAP-Elites archive.
+- [ ] L726 — Search AND/OR proof blueprints with AO*/best-first.
+- [ ] L727 — Search exact Lean states with PUCT/MCTS plus beam/best-first.
+- [ ] L728 — Use evolutionary islands only for executable candidates.
+- [ ] L729 — Use debate/critique only to propose defects/experiments/revisions, never as truth oracle.
+- [ ] L738–743 — `SVC` Computation service supports immutable submit, poll, artifact retrieval, independent replay, and certificate verification operations.
+- [ ] L745–754 — `SVC SEC` Experiment specs bind claim/branch/purpose, code commit/entry point, exact domain/coverage, tool versions, arithmetic/precision/errors, seed/resources, output/certificate schema, and network/sandbox policy.
+- [ ] L756–763 — Every computational artifact receives exactly one checked class: heuristic, candidate counterexample, exact counterexample, exhaustive finite subcase, certificate-checked lemma, or complete finite-reduction proof.
+- [ ] L765 — Floating point cannot prove exact claims without validated interval/error reasoning; CAS output must replay/certify; SAT/SMT `unsat` needs reconstruction or checked trace where available.
+- [ ] L769 — Begin Lean evidence during intake, not only as final formatting.
+- [ ] L773 — Keep verification organizationally separate with its own models/tools/caches/metric and represent positive results as discharged obligations, not scalar confidence.
+- [ ] L777–784 — Separate problem-local, mechanically verified, audited external-import, procedural, negative, and calibration memory stores with the listed contents.
+- [ ] L786 — Never conflate memory stores or treat audited external imports as locally verified facts.
+- [ ] L786 — Train value/policy only on frozen evaluation periods and exact fingerprints using evaluators different from trained models.
+- [ ] L786 — On toolchain/source correction, revalidate or recheck applicability rather than blindly reuse memory.
+- [ ] L792 — `SVC` Literature takes statement/equivalents/objects/techniques/cutoff and returns versioned source packets with no truth upgrade.
+- [ ] L793 — `SVC` Theorem DB takes natural/formal claim context and returns exact candidate declarations plus dependency provenance.
+- [ ] L794 — `SVC` OEIS takes terms/index/construction/transforms/budget and returns ranked fields/references/transform path/hashes.
+- [ ] L795 — `SVC` Computation takes immutable experiment spec and returns replayable artifact plus class/checker report.
+- [ ] L796 — `SVC` Lean takes environment/goal/context/budget and returns proof/state/diagnostics plus clean replay.
+- [ ] L797 — `SVC` ATP/SMT/SAT takes source hash, supported serialization, premises, translator version, and translation obligations; returns proof/model/certificate plus checked reconstruction status.
+- [ ] L798 — `SVC STATE` Claim graph takes node/edge/evidence event and returns validator-bound admission/rejection plus affected closure.
+- [ ] L799 — `SVC` Controller takes branch/posterior/resources and returns lease, budget, route, and rationale.
+- [ ] L801 — Treat uncertified ATP/SMT/SAT success as testimony; discharge source-to-solver translation obligations before promotion.
+
+## Section 7 — Mathematical search and compute allocation
+
+- [ ] L807 — Use learned value functions only after enough authenticated, pipeline-matched outcomes exist; do not use debate as independent truth or evolution without executable fitness.
+- [ ] L809 — Match search algorithm to search level and connect levels only through the claim graph.
+- [ ] L813–820 — Maintain posterior probabilities for all eight outcome classes and posterior total cost including generation, retrieval, computation, formalization, verification, and expert review.
+- [ ] L822–837 — Define outcome values by project policy and compute acquisition from expected value, protected-lane uncertainty, EIG, reuse, portfolio diversity, freshness, expected-cost exponent, and ambiguity/staleness/library-gap penalties.
+- [ ] L839 — Apply the posterior standard-deviation bonus only in protected exploration.
+- [ ] L840 — Define EIG as information expected from the next standardized probe.
+- [ ] L841 — Credit reuse only for cross-problem lemma/tool/formal infrastructure value.
+- [ ] L842 — Use portfolio diversity to prevent domain collapse.
+- [ ] L843 — Reward resolving stale status, never assuming stale records are open.
+- [ ] L844 — `NUM` Constrain acquisition cost exponent `α` to `[0.7,1]`.
+- [ ] L846 — In exploitation, use posterior sampling rather than permanent posterior-mean optimization.
+- [ ] L846 — `NUM` Reserve 15–25% for protected exploration and report point estimates plus intervals.
+- [ ] L848 — Separately block allocation for unsupported access, malformed statements, incompatible licenses, or unacceptable false-promotion risk; never describe low score as impossibility.
+- [ ] L852–877 — Score branch actions using outcome value, information, unlock, reuse, diversity, falsification value, expected cost, duplication, and semantic risk with the stated meanings.
+- [ ] L879 — Select under global budget/concurrency via posterior sampling/UCB; forbid multiplicative subjective scores.
+- [ ] L881–890 — Score Lean actions by PUCT prior/value/visits, verified-debt reduction, and cost; key transpositions by exact Lean/Mathlib/import/options/context/target/trust state.
+- [ ] L892 — Define verified debt over all target-reachable obligations including helpers, correspondence, and imports.
+- [ ] L892 — Give zero/negative credit to replacing a hard goal with a helper that restates/implies the target or adds debt.
+- [ ] L892 — Freeze debt definition and weights per evaluation run.
+- [ ] L896–908 — Every top-level program declares interpretation, reformulation, method, central lemma, objects/invariants, external theorems, computation signature, falsifiers, and formalization route.
+- [ ] L910 — Bin the archive by method, proof/disproof, mathematical family, finite/infinite, and literature dependence.
+- [ ] L912 — Support direct-attempt branches.
+- [ ] L913 — Support contrapositive/minimal-counterexample branches.
+- [ ] L914 — Support equivalent-representation branches.
+- [ ] L915 — Support explicit stronger/weaker variants.
+- [ ] L916 — Support sufficient-lemma decompositions.
+- [ ] L917 — Create counterexample twins of every conjectural lemma.
+- [ ] L918 — Support audited retrieved-theorem applications.
+- [ ] L919 — Support computationally discovered invariants.
+- [ ] L920 — Support formal proof-state decompositions.
+- [ ] L921 — Permit crossovers only between verified subgraphs.
+- [ ] L925–932 — Detect duplicates in order: exact formal-context hash, normalized/dependency-cone isomorphism, premise/mechanism similarity, plan embeddings, behavior tests, then human/model judgment only at the borderline.
+- [ ] L934 — Merge exact duplicates’ evidence/cost history; penalize but preserve meaningful semantic near-duplicates.
+- [ ] L938–950 — Every failed branch emits a certificate with mechanism, exact failed obligation, first invalid/missing premise, evidence/counterexample, actions/cost, learning, scope, reopen condition, and related branches.
+- [ ] L952 — `FAIL` Do not treat noncompletion/resource exhaustion as mathematical failure; censor resource exhaustion.
+- [ ] L952 — `STATE FAIL` Kill only for valid counterexample, logical impossibility, dominated identical state, or policy constraint; otherwise pause.
+- [ ] L956–961 — `STATE` Pause only after all four conditions hold for `K` controller reviews: marginal value below cost, no debt/information progress, repeated signatures, and no exploration obligation.
+- [ ] L956 — `AMBIG NUM` Define `K`; the pause state transition is non-executable because no default/range or milestone owner is specified.
+- [ ] L963 — `STATE` Terminate only when falsified, strictly subsumed by a verified branch, semantically invalid, or prohibited.
+- [ ] L964–970 — `STATE` Reopen on newly admitted dependency, interpretation-changing counterexample, relevant literature/OEIS, capability change, material posterior change, or human ambiguity resolution.
+- [ ] L974 — `AMBIG` Treat all following percentages/counts/reserves as experimental defaults requiring Section 12 ablation before policy.
+- [ ] L978–985 — `NUM` Implement progressive Bands 0–5 with the stated purposes/actions and evidence-based expansion gates; Band 2 uses 4–8 mechanism-distinct programs.
+- [ ] L987 — Scale compute only when evidence warrants it, not to occupy fixed tabs.
+- [ ] L987 — `NUM` Hold 10–20% reserve for surprise branches, independent verification, and recovery.
+- [ ] L993–997 — Main loop freezes/parses source, builds interpretations, probes integrity, and audits status before program search.
+- [ ] L998–1003 — `NUM` Main loop spends exactly 5% of global budget on cold hypotheses, then builds frozen packet from contract/interpretations/status/hypotheses.
+- [ ] L1005–1006 — `STATE` If acquisition declines, return an honest triage report.
+- [ ] L1008–1012 — Seed graph/archive/verified store, try direct proof before decomposition, and initialize controller with protected fraction `0.20`.
+- [ ] L1014–1019 — While budget remains and release is nonterminal, build/deduplicate/price frontier, select posterior actions, and execute in parallel with leases.
+- [ ] L1021–1025 — Freeze each result, validate through evidence router, and append verdict events.
+- [ ] L1026–1030 — `STATE` On refutation, revoke/propagate and reopen affected work with reason `dependency_revocation`.
+- [ ] L1032–1035 — Update blueprint, record all labeled results, admit only authenticated patterns, and update cost/outcome posteriors.
+- [ ] L1037–1042 — `FAIL` On stagnation, re-retrieve, generate counterfactuals, and formalize central risks.
+- [ ] L1044–1046 — Append event snapshots containing contract, graph, archive, blueprint, and controller.
+- [ ] L1048–1054 — At exit, assemble from admitted graph, run independent attack, run five gates, distill only authenticated learning, and render certificate-bearing result.
+- [ ] L1059 — Reserve verification capacity before opening enough branches to create backlog.
+- [ ] L1060 — Route cheap models to breadth, strong models to bottlenecks, formal/open models to Lean, and deterministic tools to arithmetic/enumeration.
+- [ ] L1061 — Benchmark model routing locally by task/domain and re-estimate after version changes.
+- [ ] L1062 — Cap per-branch budget share unless a governor event justifies verified-debt reduction or information gain.
+- [ ] L1062 — `AMBIG NUM` Define the configured maximum per-branch budget fraction and whether it differs by band/milestone.
+- [ ] L1063 — Include expert time and formalization debt in costs.
+- [ ] L1064 — `NUM FAIL` Use provider-specific rate-limit state, `Retry-After`, jittered exponential backoff capped at 120 seconds per attempt; pause leases and never consume math retry.
+
+## Section 8 — OEIS and external-database integration
+
+- [ ] L1070 — Pin a specific Erdős upstream snapshot rather than a drifting homepage; record that category/count facts are snapshot-relative.
+- [ ] L1074 — Treat database YAML, website, original sources, later papers, and expert commentary as separate evidence records.
+- [ ] L1075 — Represent “open” as a dated/source-bearing status claim, not filename truth.
+- [ ] L1076 — Record status-change date separately from mathematical solution date.
+- [ ] L1077 — Refresh status for every deep run or use a recent signed snapshot.
+- [ ] L1077 — `AMBIG` Define “recent” and the authorities/signature policy that make a status snapshot acceptable for deep runs.
+- [ ] L1078 — `STATE FAIL` Convert source conflict to `status_uncertain` plus literature task, never automatic proof campaign.
+- [ ] L1080 — Treat MathOverflow/papers/pages/libraries as discovery only; novelty auditor searches citations both directions, synonyms, equivalents, and original references.
+- [ ] L1084 — `SVC` Cache OEIS responses with time/hash, honor usage/rate limits, and comply with the AI-submission policy.
+- [ ] L1084 — `SEC` Use OEIS only for research; prohibit generated Pink Box/editorial responses and bulk submissions.
+- [ ] L1084 — `SEC` Any permitted submission requires an identified human who understands, verifies, and accepts responsibility for all content/correspondence.
+- [ ] L1088–1107 — `SVC NUM` OEIS request binds query/problem/claim, exact terms/type/index/offset/construction/generator artifact, typed transform list, and `max_queries: 20`.
+- [ ] L1110 — Generate/deduplicate transforms locally and preserve exact transform path on every match.
+- [ ] L1112 — Type every transform with domains, parameters, preconditions, and inverse where relevant.
+- [ ] L1112 — `FAIL` Reject zero-denominator ratios, invalid Dirichlet inverses, implicit complement universes, undefined/zero normalization scales, and subsequences without index maps; fail visibly.
+- [ ] L1116–1139 — `SVC` OEIS response records ranked matches, exact transform/offset/overlap, content fields/crossrefs/references, version/time/hash, no-match transforms, and retry state.
+- [ ] L1144–1153 — Rank matches by exact-prefix rarity, held-out terms, index/offset, object similarity, formula compatibility, linked sources, transform complexity, and collision risk.
+- [ ] L1157 — `NUM` Compute at least 5–10 exact terms when feasible, more for common prefixes.
+- [ ] L1158 — Query exact and transformed variants.
+- [ ] L1159 — Recompute additional terms withheld from the query.
+- [ ] L1160 — Test formulas/recurrences on held-out terms.
+- [ ] L1161 — Retrieve linked papers and theorem statements.
+- [ ] L1162 — Admit matches initially only as conjectural `NUMERICAL_EVIDENCE` nodes.
+- [ ] L1163 — Independently prove or import-audit every OEIS formula used in reasoning.
+- [ ] L1165 — Never treat an OEIS match as proof or no match as novelty evidence.
+- [ ] L1169–1183 — `SVC` Literature query binds problem/interpretation, statements/formulas/objects/techniques/equivalents, optional authors/seeds/cutoff, and explicit citation/formal-library expansion flags.
+- [ ] L1185–1194 — `SVC` Frozen source packet records packet ID, query log, theorem records, negative-search coverage, conflicts, snapshot, corpus versions, and packet hash.
+- [ ] L1197 — Keep packets immutable; targeted re-entry creates a linked new version stating the exact missing theorem/query.
+- [ ] L1203–1213 — `SVC` Premise retrieval binds natural/formal goal, local context/imports/Mathlib commit/budget, and supports dense, lexical, type-shape, dependency, and sketch-reflect modes.
+- [ ] L1215 — Every premise candidate carries exact declaration/type/import/source/dependencies/scores/current-context compilation.
+- [ ] L1215 — Permit premise use only after elaboration and separately audit against silent strengthening of informal sources.
+- [ ] L1223 — For historical wording, prioritize exact original bytes/version history, corroborate by scholarly transcription, and retain correction caveat.
+- [ ] L1224 — For current truth, prioritize latest corrected/errata-bearing version and independent proof/counterexample.
+- [ ] L1225 — For encoded truth, prioritize pinned declaration/proof/axiom report and independent checker; limit conclusion to encoding.
+- [ ] L1226 — For intended meaning, prioritize original context/definitions/revisions/expert review; compilation cannot decide intent.
+- [ ] L1227 — For open/solved status, require fresh multi-source search plus dated records and preferably expert confirmation; account for lag.
+- [ ] L1228 — For novelty, search original/later literature and equivalent terms with expert review; report “not found,” never proof of novelty.
+- [ ] L1230 — Treat search snippets/model summaries only as leads and curated databases only as versioned claims, not theorem substitutes.
+
+## Section 9 — Lean and Aristotle workflow
+
+- [ ] L1236–1238 — `IMMEDIATE SEC` Before production Lean evidence, make non-overridable `require_kernel=true` the promotion default.
+- [ ] L1239 — Reject `verification_method="aristotle_reported"` as proof evidence.
+- [ ] L1240 — Preserve/validate verification method, intent/correspondence certificate IDs, provider IDs, toolchain/imports/axioms, and replay hashes.
+- [ ] L1241 — Require approved intent and formal-correspondence certificates for formal promotion.
+- [ ] L1242 — Pin Lean/Lake/Mathlib/client/API/dependencies and explicitly mark unattested mutable server models non-reproducible.
+- [ ] L1243 — Gate standalone verification scripts behind the same feature/run contract as the pipeline.
+- [ ] L1244 — Fingerprint complete behavior/import closure including literature, adjudication, Aristotle, Lean, and evidence adapters.
+- [ ] L1245 — Cleanly rebuild offline and scan placeholders/`sorry`/unsafe axioms before promotion.
+- [ ] L1247 — Use Aristotle only for candidate generation, never checking.
+- [ ] L1253–1259 — `NUM` L0 creates 2–3 Lean candidates, explicit/reused definitions, backtranslations, example/anti-example tests, equivalence when feasible, paraphrase/mutation tests, and frozen approved declaration hash.
+- [ ] L1263–1269 — L1 formalizes type/domain, boundary/degenerate cases, invariance assumptions, guiding finite cases, and the highest combined centrality/semantic-risk/false-branch-cost lemma early.
+- [ ] L1275 — `SEC` Permit `sorry` only in quarantined development; represent each hole with exact graph metadata; never import that branch into production evidence.
+- [ ] L1277 — Attempt target directly first; after failure, create only minimal motivated helpers and reject target-restating/difficulty-hiding helpers.
+- [ ] L1281–1290 — L3 portfolio includes code-agent compilation, retrieval/best-first, multi-goal trees, specialized prover/repair, optional Aristotle, standard tactics, reconstructed/certified ATP export, and formal-negation search.
+- [ ] L1292 — Search tactic segments and auxiliary lemmas, and route syntax/premise/false-target/library/decomposition diagnostics to different repair policies.
+- [ ] L1296–1300 — Every logically operative informal sentence points to a Lean declaration, rigorously reviewed claim with debt marker, or audited source theorem.
+- [ ] L1302 — `STATE` Propagate formal counterexamples/hypothesis changes into prose dependency invalidation and informal clarifications into correspondence reapproval for affected formal statements.
+- [ ] L1306 — Eliminate `sorry`, `admit`, placeholders, generated axioms, and unauthorized `unsafe` before release.
+- [ ] L1307 — Minimize imports, compute transitive axiom closure, and enforce explicit whitelist for every released theorem.
+- [ ] L1308 — `SEC` Build from clean pinned checkout with network disabled.
+- [ ] L1309 — `SEC` Require a second checker/trust path for untrusted generated Lean.
+- [ ] L1310 — Archive source, manifest, toolchain, build log, environment/container hash, and theorem hashes.
+- [ ] L1311 — Produce human-readable proof linked to the same graph.
+- [ ] L1315–1345 — `SVC` Lean service supports environment creation, elaboration, goal-state capture, premise search, bounded action attempts, strict declaration verification, and checked statement comparison.
+- [ ] L1336–1340 — `SVC SEC` Declaration verification binds immutable target/type/candidate hashes and requires clean replay, placeholder rejection, axiom policy, and independent checker.
+- [ ] L1347 — Formal certificates record expected/candidate/type/proof/source/import hashes, axiom/placeholder/unsafe/trust decisions, both checker identities, and log hashes.
+- [ ] L1347 — Isolate approved target module from candidate namespaces/options/macros/import redefinition and compare elaborated type, not name.
+- [ ] L1349 — Report formal equivalence only with checked `A ↔ B` or both implications; model/backtranslation yields only plausible correspondence.
+- [ ] L1351 — Define explicit release axiom whitelist (typical classical set exactly `propext`, `Quot.sound`, `Classical.choice`); reject `sorryAx`/unapproved axioms; treat kernel-bypassing native mechanisms as forbidden or separately certified computation.
+- [ ] L1353–1360 — Key GoalCapsules by Lean/Mathlib/project/import/options, elaborated context, exact target, and trust policy; never by pretty text alone.
+- [ ] L1364–1372 — On library gap, verify absence, audit source, create scoped claim-linked namespace, decompose reusable lemmas, prove/test independently, score reuse, and upstream only after human/license review.
+- [ ] L1378–1393 — Prioritize formalization by centrality, semantic risk, dispute probability, downstream loss, reuse, and expected cost; never treat priority as truth.
+- [ ] L1395–1401 — For prohibitively expensive formalization, retain exact assumptions/review tier/reports, verify risk sentinels, seek independent review/second proof, publish debt, and forbid “formally verified.”
+- [ ] L1403 — A novel informal result may use two genuinely independent rigorous reviews but must never overstate its evidence profile.
+- [ ] L1407–1413 — `SVC` External provers receive locked target, exact project/toolchain, bounded goal when possible, provenance packets, and must return full source artifacts rather than status only.
+- [ ] L1415 — `SEC` Enforce licensing, confidentiality, and data residency before hosted transfer.
+- [ ] L1415 — Record provider request/model/build IDs, time, raw I/O, and client; mark unattested server revisions non-reproducible.
+- [ ] L1417 — `SEC` Quarantine returned Lean and execute only in disposable unprivileged, credential-free, networkless, resource-bounded sandboxes with read-only mounts and captured output—never directly on host.
+- [ ] L1417 — Source-scan, axiom/import-audit, correspondence-review, isolated-target-check, and independently check returned Lean before admission.
+
+## Section 10 — Shared state and provenance
+
+- [ ] L1425–1447 — `SVC STATE` Problem/Interpretation schema binds immutable source/IR hashes, status claims, interpretation set/active selection, normalized logic/relations/ambiguities/formal candidates, and pending/approved/rejected intent verdict.
+- [ ] L1451–1488 — `SVC STATE` Claim schema separately records identity/formula/text/quantifiers/assumptions/scope; lifecycle; truth; multidimensional evidence; graph relations; formal/source/branch/attempt links; risk/centrality/cost; version/creator/supersession.
+- [ ] L1461–1470 — `STATE` Preserve exact enums: lifecycle `ACTIVE|SUPERSEDED|RETRACTED`; truth `UNKNOWN|SUPPORTED|REFUTED|CONFLICTED`; numerical `NONE|REPRODUCIBLE`; exact computation `NONE|SCOPED_EXACT|CERTIFICATE_CHECKED`; informal `NONE|SINGLE|DOUBLE_INDEPENDENT`; formal `NONE|KERNEL_CHECKED|INDEPENDENT_CHECKER`; import `NONE|AUDITED_SOURCE|INDEPENDENTLY_CORROBORATED`; intent/correspondence certificate IDs independently nullable.
+- [ ] L1490 — Keep scope, lifecycle, truth, formal, informal-review, external-import, and fidelity dimensions separate.
+- [ ] L1494–1513 — `SVC STATE` Branch schema records goals/interpretation/mechanism/assumptions/cone/lineage; proposed/active/paused/killed/closed state; value/cost/budget/debt/failures/pause/reopen/lease.
+- [ ] L1517–1539 — `SVC` Evidence schema binds claims/kind/scope/artifact hashes/generator/verifiers/diversity/environment/replay/certificates/trust/time and a pass/fail/N-A/pending replay state.
+- [ ] L1541–1567 — `SVC` Intent and formal-correspondence certificates bind source/claim/formal hashes, test methods, reviewer independence/conflicts, version/time, and approved/rejected/unresolved verdict.
+- [ ] L1569 — Treat semantic edges as evidenced, scoped, provenance-bearing, revocable mathematical claims, never bare trusted arrows.
+- [ ] L1573 — `STATE` Initialize proposals as `UNKNOWN` with empty evidence.
+- [ ] L1575 — Route source imports to exact-source/hypothesis audit.
+- [ ] L1576 — Route computation to independent replay/coverage checking.
+- [ ] L1577 — Route informal proofs to two-pass logical review.
+- [ ] L1578 — Route Lean to clean kernel/axiom/fidelity validation.
+- [ ] L1579 — Route counterexamples to exact witness/domain validation.
+- [ ] L1580 — Route expert review to authenticated identity/scope record.
+- [ ] L1582 — Require validator-specific admission obligations; reject generic `passed=true`.
+- [ ] L1584 — `STATE FAIL` On conflicting strong evidence, set `CONFLICTED`, quarantine both, audit scope/encoding/TCB, block all dependent promotion, and never use last-write-wins.
+- [ ] L1586 — Distinguish evidence invalidation from mathematical refutation; invalidation downgrades support rather than asserting falsehood.
+- [ ] L1586 — Propagate both invalidation and refutation transactionally over SCC-condensed dependency graph.
+- [ ] L1589–1602 — `STATE` Invalidation transaction marks evidence invalid, recomputes roots, traverses reverse SCC closure/topological order, recomputes dependents, pauses publication/reopens work, appends events, and commits atomically.
+- [ ] L1604–1616 — `STATE` Refutation requires validated exact counterexample/checked negation; choose `CONFLICTED` if same-scope strong support survives else `REFUTED`; propagate downgrades and commit events.
+- [ ] L1619 — Use invalidation for corrected imports, changed formal statement, or failed replay; reserve refutation for exact counterexample/checked negation; supersede rather than overwrite changed statements.
+- [ ] L1623–1649 — `SVC` Every state change is an append-only event containing sequence/run/time/actor identity and prompt, action/objects/version deltas, input/output/contract hashes, budget, coded/human reason, and signature.
+- [ ] L1652 — Treat event log/artifact store as authoritative and dashboards as disposable projections.
+- [ ] L1656–1667 — Checkpoints contain event sequence/Merkle root, source/interpretation hashes, graph/schema, program/blueprint, controller/budgets/seeds, leases, exact execution/service identities, per-stage runner/adjudicator/retrieval identity, caches/policies, and rate/quota state.
+- [ ] L1671 — Resume only after verifying event-chain integrity.
+- [ ] L1672 — Rebuild from events or verify snapshot hash.
+- [ ] L1673 — Compare current full behavior/import closure with run contract.
+- [ ] L1674 — Invalidate only incompatible caches.
+- [ ] L1675 — Recheck expired leases and transfer ownership atomically.
+- [ ] L1676 — Replay high-trust artifacts after formal/tool environment changes.
+- [ ] L1677 — Mark interrupted calls censored and do not consume math retries.
+- [ ] L1678 — Continue from highest compatible durable stage.
+- [ ] L1680 — Workers heartbeat host/PID/branch/stage; after grace-period crash transfer lease and reuse only compatible immutable artifacts.
+- [ ] L1684 — Every imported claim records immutable bytes/hash, verbatim theorem/hypotheses, source/version/span/status, and extraction provenance.
+- [ ] L1685 — Every generated artifact records hash, producer code/prompt/model/tool, inputs, seed, and environment.
+- [ ] L1686 — Every formal artifact records theorem/source-tree hashes, imports, toolchain, axioms, and replay.
+- [ ] L1687 — Every novelty claim records query log, databases, cutoff, synonyms/equivalents, and access gaps.
+- [ ] L1688 — Every human review records scope and conflicts.
+- [ ] L1689 — Never treat hidden model reasoning as provenance; only durable artifacts/events count.
+- [ ] L1695 — Raw scratch/transcripts may be false, never cross problems, and never promote.
+- [ ] L1696 — Problem-local episodic memory may be false only when labeled, crosses problems only as negative/search hint, and expires or remains quarantined.
+- [ ] L1697 — Mechanically verified semantic memory crosses problems only within recorded trust assumptions after kernel/certificate replay and dependency audit.
+- [ ] L1698 — Audited external imports cross problems only as sourced premises and require exact source plus applicability/correction recheck at every use.
+- [ ] L1699 — Procedural/tactic memory is proposal prior only and must be rechecked on every exact goal.
+- [ ] L1700 — Negative/failure memory requires explicit falsified scope and counterexample/first-error evidence.
+- [ ] L1701 — Calibration ledger admits no unauthenticated labels and requires exact pipeline/outcome provenance.
+
+## Section 11 — Adversarial verification protocol
+
+- [ ] L1709 — Referee must not share generator hidden scratchpad.
+- [ ] L1710 — Use fresh contexts and, for high-value claims, different model family/tool path.
+- [ ] L1711 — Reward valid defect discovery and calibrated abstention, never acceptance.
+- [ ] L1712 — Permit referee to demand sources, rerun computation, mutate examples, and formalize suspicious steps.
+- [ ] L1713 — Forbid repair in the same adjudication pass.
+- [ ] L1714 — Make referee report to release auditor, not governor.
+- [ ] L1716 — Record generator-model, checker/TCB, replay-environment, and human-review independence separately; do not infer independence from fresh conversation or second environment.
+- [ ] L1720 — Required attack 1: diff source bytes, IR, active interpretation, informal theorem, and Lean declaration.
+- [ ] L1721 — Required attack 2: audit quantifier order, domains, constants, asymptotics, regularity, finiteness, and choice.
+- [ ] L1722 — Required attack 3: independently rebuild DAG and bind each nontrivial step to admitted claim/source.
+- [ ] L1723 — Required attack 4: detect direct/equivalent/import-mediated circularity.
+- [ ] L1724 — Required attack 5: open every import and compare exact hypotheses/version/regime/notation.
+- [ ] L1725 — Required attack 6: search exact/boundary/random/adversarial/alternate/formal countermodels.
+- [ ] L1726 — Required attack 7: independently replay/reimplement computation and compare hashes/coverage.
+- [ ] L1727 — Required attack 8: clean formal build with placeholder/axiom/unsafe/import/hash/correspondence audit.
+- [ ] L1728 — Required attack 9: independently reconstruct a concise proof skeleton.
+- [ ] L1729 — Required attack 10: separate novelty/significance audit for prior art and non-vacuous responsiveness.
+- [ ] L1731 — Propagate circular/unreviewed/numerical/semantic-risk taint to every dependent conclusion until discharged.
+- [ ] L1737–1745 — Enforce truth tiers T0–T5 and their exact allowed labels/evidence, including two independent hostile reconstructions at T3 and independent trust path at T5.
+- [ ] L1748–1755 — Report intent I0–I2, formal correspondence F0–F2/N-A, novelty N0–N2, significance S0–S2, reproducibility R0–R2, and intervention-taxonomy autonomy independently.
+- [ ] L1757 — Allow “Lean-verified” at T4 only for exact encoding; require T5 for publication of untrusted generated Lean.
+- [ ] L1757 — Require T3+I2 for intended informal proof or T5+I2+F2 for intended formal proof, plus current status.
+- [ ] L1757 — Require N2+S2+R2 plus explicit autonomy metadata for “novel autonomous resolution”; never collapse dimensions.
+- [ ] L1761 — Do not average reviewers; one valid central defect blocks promotion.
+- [ ] L1763 — Normalize the exact issue when reviews conflict.
+- [ ] L1764 — Collect evidence targeted to the disagreement.
+- [ ] L1765 — Use a new adjudicator blind to reviewer identities/status.
+- [ ] L1766 — Prefer formal/executable conflict resolution.
+- [ ] L1767 — Return `unknown` if conflict remains.
+- [ ] L1769 — Correlated consensus may raise search priority but never truth tier.
+- [ ] L1773–1820 — `SVC` Release certificate binds contract/interpretation/result/formal target/proof hashes; truth/intent/correspondence/novelty/significance/replay profiles; intervention phases/counts/trace; unresolved risks; canonical signature/signer/time.
+- [ ] L1751,L1773–1820 — `AMBIG` Formal correspondence may be N/A for informal-only results, but the release-certificate example makes formal target/type and T5/F2 fields look mandatory; mark optional/variant fields explicitly.
+- [ ] L1823 — Communication renders certificate fields separately and never compresses them to self-reported confidence.
+
+## Section 12 — Evaluation plan
+
+- [ ] L1831 — Level 1 evaluates elementary/false/ambiguous tasks for parsing/edge/formal proof against exact answer and kernel proof.
+- [ ] L1832 — Level 2 evaluates pinned formal benchmark basics for olympiad/autoformalization/retrieval against versioned formal statements/proofs.
+- [ ] L1833 — Level 3 evaluates pinned Putnam/advanced IMO for long plans/formal search against kernel replay plus human statement audit.
+- [ ] L1834 — Level 4 evaluates fresh citation-dependent tasks for retrieval/applicability against hidden packets and expert grading.
+- [ ] L1835 — Level 5 evaluates construction/enumeration/reduction for computation+proof against independent executable verifier and proof.
+- [ ] L1836 — Level 6 evaluates historically cutoff-hidden Erdős tasks for full workflow/status/novelty against dated snapshot/held-out solution.
+- [ ] L1837 — Level 7 evaluates unsolved Erdős deployment without answer key using blind experts, formal artifacts, and later literature.
+- [ ] L1839 — For Levels 2–3 report three separate tracks: audited formal target supplied, autoformalization with independent semantic grading before search, and end-to-end raw-source.
+- [ ] L1839 — Treat supplied Lean theorem as versioned target, not unique semantic ground truth.
+- [ ] L1841 — Do not use training corpora as held-out gold; pin toolchains and audit semantics for rotating sets; provenance benchmark corrections.
+- [ ] L1847 — Freeze problem/status/toolchain/library/models/prompts/tools/budgets/network/rubric for every level.
+- [ ] L1848 — De-duplicate against training/retrieval sources as far as auditable.
+- [ ] L1849–1854 — Run at least four systems: strongest raw model with tools, raw open/local model, current pipeline, and full EGMRA.
+- [ ] L1854 — Equalize total cost or report verified-progress/cost Pareto curve.
+- [ ] L1855 — Preserve all outcomes, operational failures, interventions, and discarded branches.
+- [ ] L1856 — Grade formal artifacts by clean replay and informal artifacts by blinded domain experts.
+- [ ] L1857 — Separate novelty/status graders from proof graders.
+- [ ] L1858 — Run calibration and false-success analysis before aggregate publication.
+- [ ] L1860 — For causal ablations fix model/prompt/tools/retrieval/network/budget/seeds/evaluator and change only the tested component.
+- [ ] L1860 — Separately report best-available deployment comparisons when resources/models/tools differ; do not attribute them causally to orchestration.
+- [ ] L1864 — Level 6 chooses problems known open at cutoff `t` but solved later.
+- [ ] L1865 — Hide all post-`t` sources and solutions.
+- [ ] L1866 — Audit training contamination separately rather than claiming certainty.
+- [ ] L1867 — Score rediscovery, alternate proof, useful lemmas, and status mistakes.
+- [ ] L1868 — Compare generated proof with later literature for leakage.
+- [ ] L1870 — Level 7 never reports accuracy or self-scored results; record only externally verified contributions/progress/artifacts/no-result reports.
+- [ ] L1876–1879 — Final metrics include gated proofs/disproofs, statement/status detection, calibrated abstention by level, and prominent unaveraged false-solved declarations.
+- [ ] L1883–1888 — Intermediate metrics include verified-lemma count/centrality, counterexamples, proof-debt reduction, reusable infrastructure, confirmed status corrections, and subgoal/path unlock.
+- [ ] L1892–1900 — Compute risk-weighted formal coverage with centrality × semantic risk × downstream loss weights.
+- [ ] L1902 — Freeze independently audited blueprint/weights before RFC/subgoal scoring to prevent node/helper gaming.
+- [ ] L1906–1911 — Measure evidence-profile coverage, edge correctness, citation applicability, revocation precision/recall, statement correspondence, and independent replay rate.
+- [ ] L1915–1922 — Measure mechanism/behavior diversity, duplicates, repeated errors, counterexample rate, useful-budget fraction, reopen success, and verification congestion.
+- [ ] L1926–1931 — Measure cost/time/tokens/compute/expert hours per verified progress, debt unit, milestones, compatible cache hit, orchestration gain, and Pareto frontier.
+- [ ] L1937–1942 — Measure Brier/log scores, ECE/reliability, interval coverage, censoring calibration, selective risk, and bounded false-promotion probability.
+- [ ] L1946–1954 — Count progress only when it creates at least one admitted-evidence claim, exact counterexample, verified reduction, preregistered-threshold reproducible experiment, audited status correction, reusable component, or repeat-preventing failure certificate.
+- [ ] L1956 — Assign zero direct progress to verbosity, agent/candidate count, self-rating, consensus, and polish; rank an unverified manuscript below an exact counterexample.
+- [ ] L1960–1974 — Ablate all 13 prescribed comparisons: retrieval, OEIS, memory/revocation, scout/archive, revisions/controller, formalization timing, reviewer independence, computation, exploration fraction, scoring rule, expert iteration, model routing, and equal-cost raw baseline.
+- [ ] L1976 — Pre-register primary metrics and stop conditions.
+- [ ] L1980 — Report exact denominators, intervals, budgets, and censoring.
+- [ ] L1981 — Use paired problems/seeds where possible.
+- [ ] L1982 — Never compare unmatched pass@k or token/tool budgets.
+- [ ] L1983 — Keep development and sealed source packets separate.
+- [ ] L1984 — Version every benchmark and rerun after statement/toolchain correction.
+- [ ] L1985 — Publish failure-complete logs subject to license/privacy.
+- [ ] L1986 — Use blinded review by at least two referees for high-value informal claims and explicitly resolve disagreements.
+- [ ] L1987 — Treat recent preprint claims as hypotheses until independent rerun/artifact replay.
+
+## Section 13 — Minimal viable implementation
+
+- [ ] L1991 — Preserve distinct milestone semantics: M0 safety/provenance, M1 smallest scientific vertical slice, M2 scalable controlled-run MVP.
+- [ ] L1997 — Reuse source snapshot/hash ingestion.
+- [ ] L1998 — Reuse selector cards/ranking only as transparent weak priors.
+- [ ] L1999 — Extend partial run contracts/schema-v3 caches to complete per-stage identity.
+- [ ] L2000 — Extend append-only ledger to every production attempt and terminal outcome.
+- [ ] L2001 — `NUM` Reuse atomic queue claims and 4:1 protected exploration.
+- [ ] L2002 — Reuse normalized terminal dispositions.
+- [ ] L2003 — `NUM` Reuse adaptive shared rate limiting capped at 120 seconds.
+- [ ] L2004 — Reuse deterministic rejection/regulator distinction only as shells, not generic evidence acceptance.
+- [ ] L2008 — M0 changes no mathematical search strategy and makes the existing pipeline honest/replayable.
+- [ ] L2010 — `M0` Enforce one signed feature policy at scheduler/verifier/loader/cache/gate/promotion/script entry points.
+- [ ] L2011 — `M0` Disable promotion until formal/computational/expert/source-import kinds each have closed schemas/validators.
+- [ ] L2012 — `M0` Require local pinned kernel, approved intent, and checked formal correspondence before formal evidence supports release.
+- [ ] L2013 — `M0` Bind cached stages to actual provider/model/surface/account-tools/context/prompt/adjudicator/response and mark caller labels unattested.
+- [ ] L2014 — `M0` Make gate/adjudication/evidence/promotion append-only and derive manifest projection.
+- [ ] L2015 — `M0` Quarantine identity-incomplete legacy manifests/root claims, explicitly including 601/661/724/782/849, until proven migration.
+- [ ] L2016 — `M0` Test precedence: referee may block semantic/release axes but not exact locked kernel truth; same-scope hard conflict becomes `CONFLICTED` and triggers encoding/axiom/TCB audit.
+- [ ] L2017 — `M0` Instrument tokens/calls/wall/rate/compute/reviewer/cache/disposition telemetry.
+- [ ] L2019 — M0 is complete only with stop-ship regression tests and generic `passed=true` unreachable from every production entry.
+- [ ] L2023–2032 — `M1` Implement SQLite + JSONL transactional graph; dual-parser IR/interpretations/probes; frozen literature/Mathlib/OEIS; exact sandboxed Python replay; pinned Lean/sentinels/capsules/worker; 2–3 distinct branches + controller/blueprint/dedup/failures; one independent referee/five-axis certificate; compact mixed evaluation suite.
+- [ ] L2034 — `M1` End-to-end loop must cover intake → falsification/retrieval → branching → computation/formalization → hostile review → replayable release or honest no-result.
+- [ ] L2038 — Begin M2 only after M1 passes safety and baseline tests.
+- [ ] L2040 — `M2` Add PostgreSQL events, leases/heartbeats, object storage, and transactional SCC revocation.
+- [ ] L2041 — `M2` Add containerized Sage plus selected CAS/SAT/SMT/ILP/graph backends with certificates.
+- [ ] L2042 — `M2` Add production OEIS caching, citation retrieval, broader theorem index, frozen solver/referee packets.
+- [ ] L2043 — `M2 NUM` Add 3–5 concurrent distinct programs, posterior allocation, exploration, pause/reopen, and congestion pricing.
+- [ ] L2044 — `M2` Add open-Lean/code-agent portfolio, proof-state cache, and separate family for high-value referee.
+- [ ] L2045 — `M2` Add authenticated calibration/expert-iteration telemetry but no learned value model yet.
+- [ ] L2049–2054 — `NUM` M1 normally uses four concurrent role classes: governor/intake, 1–2 method workers, bottleneck-selected compute/formal worker, adversarial verifier; M2 scales only for independent bottlenecks.
+- [ ] L2056 — Implement retrieval/OEIS/computation/Lean/graph as services, not idle chats.
+- [ ] L2060 — Acceptance 1/18: disabled features remain unreachable via direct scripts and scheduler.
+- [ ] L2061 — Acceptance 2/18: cached adjudication cannot replay under different runner/model identity.
+- [ ] L2062 — Acceptance 3/18: changing packet/adjudicator/feature/Lean-import/evidence-adapter/validator invalidates every affected contract/cache.
+- [ ] L2063 — Acceptance 4/18: caller model labels are attested or explicitly unattested and never independent-model evidence.
+- [ ] L2064 — Acceptance 5/18: gate/adjudication/promotion history is append-only and manifest projection reproducible.
+- [ ] L2065 — Acceptance 6/18: identity-incomplete legacy records remain quarantined, never silently upgraded.
+- [ ] L2066 — Acceptance 7/18: injected ambiguity yields multiple interpretations and blocks intended-target release.
+- [ ] L2067 — Acceptance 8/18: injected false central lemma is detected/revoked and all dependents downgraded.
+- [ ] L2068 — Acceptance 9/18: rate limits resume without consuming proof attempts or killing claims.
+- [ ] L2069 — Acceptance 10/18: recover crashed lease without duplicate non-idempotent action.
+- [ ] L2070 — Acceptance 11/18: every exact computation replays independently in a container.
+- [ ] L2071 — Acceptance 12/18: every Lean certificate builds cleanly pinned and placeholder-free.
+- [ ] L2072 — Acceptance 13/18: reject vendor-only `COMPLETE`.
+- [ ] L2073 — Acceptance 14/18: adjudicator/model change invalidates caches and cannot create false independent-model manifest.
+- [ ] L2074 — Acceptance 15/18: referee dissent versus kernel follows explicit truth/intent/novelty/significance precedence.
+- [ ] L2075 — Acceptance 16/18: OEIS match remains heuristic until independently proved.
+- [ ] L2076 — Acceptance 17/18: known solved Erdős problem is rediscovery, not novel.
+- [ ] L2077 — Acceptance 18/18: make no baseline-superiority claim without paired support.
+- [ ] L2081–2089 — `NUM` Evaluation set is roughly 20 false/ambiguous elementary, a miniF2F/ProofNet# subset, 20 Putnam/IMO formal, 10 retrieval, 10 computation+proof, 20 historical Erdős, and a small unsolved no-solve-rate set.
+- [ ] L2091 — Optimize the MVP for safe measurable verified progress, not immediate open-problem headlines.
+- [ ] L82,L453,L998–1000,L2243 — `AMBIG` Cold-pass policy is 5–10%, pseudocode hard-codes 5%, and the innovation is explicitly experimental with 0/5/10 ablation; M1 does not state whether cold pass is mandatory.
+- [ ] L566,L846,L987,L1012,L1970,L2001,L2043,L2244,L2283 — `AMBIG` Protected exploration appears as 15–25%, fixed 20%, existing 4:1, and 10–20% surprise reserve; distinguish selection fraction from reserve and say which M1/M2 value is binding before ablation.
+- [ ] L982,L2030,L2043,L2049–2054,L2155 — `AMBIG` Program-count defaults differ (Band 2: 4–8; M1: 2–3; M2: 3–5; runtime: 1–2 workers; full scale: no fixed count); define whether counts mean branches, active programs, or concurrent workers.
+- [ ] L74–76,L1236–1245,L1309,L1757,L2012,L2258 — `AMBIG` Immediate/M0/P0 promotion requirements omit the T5 independent-checker requirement that applies to publishing untrusted generated Lean; specify whether M0 promotion is limited to trusted handwritten Lean or must already satisfy T5.
+- [ ] L75,L1582,L2011,L2058–2077 — `AMBIG` “Every evidence kind” conflicts with M0’s four named kinds while schemas also include numerical/counterexample/informal/Lean/ATP/SAT; enumerate which validators are stop-ship at M0 and which acceptance tests gate M1/M2.
+- [ ] L379,L1064,L2003,L2176,L2265 — `AMBIG` The 120-second limit is described as maximum cooldown, shared cap, per-attempt cap, and backoff ceiling; define its scope and cumulative behavior.
+- [ ] L974,L1960–1974,L2043,L2242–2250,L2283 — `AMBIG` M2/P2 mandate posterior allocation, exploration, interpretation lattices, and sentinels while Section 15 calls their benefits experimental; distinguish “implement to test” from “adopt as production policy” and define graduation thresholds.
+- [ ] L1710,L1742,L1986,L2031,L2044 — `AMBIG` M1 has one independent falsifier/referee, but T3/high-value evaluation requires two independent hostile reviews/referees; specify whether one M1 process performs two independent passes or M1 cannot issue T3.
+- [ ] L2025,L2040,L2099–2101 — `AMBIG` M1 SQLite/JSONL must evolve to M2/full-scale PostgreSQL, but no lossless migration/event-signature compatibility contract is specified.
+- [ ] L2038,L2093–2215 — `AMBIG` M2 has an entry condition (M1 safety/baseline pass), but full-scale has no explicit graduation/rollback gate from M2.
+- [ ] L2058–2077 — `AMBIG` The 18 acceptance tests are not mapped to M0, M1, or M2 even though they span all three; assign each criterion to a blocking milestone.
+- [ ] L2008–2019,L2254–2266 — `AMBIG` M0 and P0 substantially overlap, but P0 additionally makes leases/heartbeats immediate while M0 omits them; define whether P0 is identical to M0, a superset, or a parallel priority track.
+- [ ] L2021–2045,L2268–2284 — `AMBIG` M1/M2 and P1/P2 are not explicitly cross-mapped; define which priority items are milestone blockers versus later enhancements.
+
+## Section 14 — Full-scale implementation
+
+- [ ] L2099 — `SVC` Event store uses append-only PostgreSQL, optimistic object versions, and transactional revocation.
+- [ ] L2100 — `SVC` Artifact store is content-addressed for sources, code, proof trees, builds, logs, and containers.
+- [ ] L2101 — `SVC` Graph views start as PostgreSQL adjacency/materialized closure; adopt dedicated engine only after profiling.
+- [ ] L2102 — `SVC` Retrieval combines lexical/vector/formula/type indexes plus citation/theorem dependency graphs.
+- [ ] L2103 — `SVC` Scheduler provides durable priority, idempotency, leases, heartbeats, quotas, and preemption.
+- [ ] L2104 — `SVC SEC` Compute runs Python/Sage/CAS/SAT/SMT/enumeration in isolated OCI/VM environments with network off by default.
+- [ ] L2105 — `SVC` Lean farm supports pinned multi-version builds, live proof state, clean replay, and independent checker.
+- [ ] L2106 — `SVC` Model gateway registers exact versions/prompts/cost/tokens and deterministically validates structured output.
+- [ ] L2107 — `SVC` Observability is event-derived and exposes evidence, debt, branches, costs, rates, and verification backlog.
+- [ ] L2108 — `SVC` Release service builds reproducible bundles, five-gate certificates, and human-review portal.
+- [ ] L2112 — Freeze model choices monthly via local bake-off and pin exact versions for each campaign.
+- [ ] L2116 — Intake reconciliation uses two frontier families plus symbolic parser, selected on semantic faithfulness/mutation accuracy.
+- [ ] L2117 — Broad program generation uses mixed fast/cheap/open models, selected by verified novel-branch yield per cost.
+- [ ] L2118 — Central bottlenecks use strongest long-context model selected on blind historical-Erdős verified progress.
+- [ ] L2119 — Literature uses retrieval/reranking/source audit selected on theorem/hypothesis recall and precision.
+- [ ] L2120 — Code/experiments use sandboxed code agents plus deterministic tools selected on exact artifact validity/repair.
+- [ ] L2121 — Lean search uses specialized open prover plus code agent selected on clean matched-cost/toolchain proof rate.
+- [ ] L2122 — Proprietary formal service is optional and credited only for extra clean locally replayed proofs.
+- [ ] L2123 — Informal referee uses different frontier family plus tools, selected on first-error recall/low false acceptance.
+- [ ] L2124 — Final truth comes only from deterministic kernels/certificate checkers/replay.
+- [ ] L2125 — Novelty/significance requires retrieval plus domain experts; no model-only substitute.
+- [ ] L2127 — Never route by vendor benchmark alone; persist exact model identity rather than provider product name.
+- [ ] L2131–2140 — Parallelize all eight listed independent units: interpretations/status, programs, AND leaves, proof/counterexample twins, retrieval modes, partitioned experiments, immutable Lean branches, and verification/replay.
+- [ ] L2142–2149 — Serialize or transactionally coordinate all six listed shared mutations: target approval/hash, claim promotion/revocation, schema migrations, proof assembly, release certificates, and provider quota/backoff.
+- [ ] L2151 — Work-steal only among compatible workers; bind lease to problem/interpretation/branch/run contract/budget; reserve verification workers.
+- [ ] L2155–2168 — Full-scale archive supports all 12 named program profiles instead of fixed 20-agent organization.
+- [ ] L2170 — Instantiate only domain/bottleneck-compatible profiles; use protected exploration for cross-domain profiles; give every active program falsifier, budget, and kill/pause criterion.
+- [ ] L2176 — `FAIL NUM` Rate quota: honor `Retry-After`, jitter ≤120s, pause lease, reroute only if contract permits; record censored event with no truth effect.
+- [ ] L2177 — `FAIL` Timeout/crash: checkpoint, transfer expired lease, resume compatible stage; no truth effect unless artifact incomplete.
+- [ ] L2178 — `FAIL` Malformed output: bounded schema repair/retry and raw preservation; admit no claim.
+- [ ] L2179 — `FAIL` Unavailable/conflicting source: cache known version, mark gap, seek alternate/human task; keep novelty/import unresolved.
+- [ ] L2180 — `FAIL STATE` Wrong interpretation: create/reselect node and revoke correspondence; downgrade dependents.
+- [ ] L2181 — `FAIL STATE` False lemma: attach counterexample, transactionally revoke closure, reopen alternatives.
+- [ ] L2182 — `FAIL` Lean mismatch: reject intended-target certificate and repair candidates; preserve proof only for old encoded theorem.
+- [ ] L2183 — `FAIL` Formal library gap: create scoped local-library project, estimate cost, pause/redirect branch.
+- [ ] L2184 — `FAIL` Computation mismatch: quarantine/reimplement/revoke dependents; remove relevant evidence.
+- [ ] L2185 — `FAIL` Reward hack: invalidate fitness, strengthen checker, replay population; admit no winner.
+- [ ] L2186 — `FAIL` Provider drift: new contract, invalidate incompatible caches, rebenchmark; preserve old versioned verified artifacts.
+- [ ] L2187 — `FAIL` Verification backlog: congestion-price/throttle/reserve verifiers; no truth downgrade.
+- [ ] L2188 — `FAIL` Repeated stagnation: targeted retrieval, counterfactuals, new method, human escalation; pause rather than kill.
+- [ ] L2201 — Mitigate bottlenecks with direct-first attempts, risk-weighted formalization, exact caches, safe live snapshots, retrieval, branch caps, congestion pricing, and verified-progress/cost routing.
+- [ ] L2199 — Use aggressive content-addressed deduplication for retained proof states, containers, snapshots, and logs.
+- [ ] L2205–2213 — Humans remain required for all seven listed tasks: intent, unavailable literature, novelty/significance, incompletely formalized central claims, public/OEIS authorization, value/risk policy, and major-result response.
+- [ ] L2215 — Record every human intervention and never hide it behind an autonomy label.
+- [ ] L2104,L1415–1417 — `AMBIG SEC` Full-scale compute is “network off by default” while hosted prover/literature services require network; define allowlisted egress, data-flow separation, and which workers may cross the boundary.
+
+## Section 15 — Major unresolved risks
+
+- [ ] L2221 — Mitigate wrong formalization with lattice, multiple translations, mutation tests, and human target review; retain semantic-equivalence uncertainty.
+- [ ] L2222 — Mitigate false LLM-admitted facts with evidence-specific validators, kernel/exact replay, and revocation; retain no-checker uncertainty.
+- [ ] L2223 — Mitigate circular/import dependencies with source/dependency graphs, reconstruction, and taint analysis.
+- [ ] L2224 — Mitigate false novelty with frozen broad retrieval, citation graph, separate audit, and experts; never claim exhaustive absence.
+- [ ] L2225 — Mitigate evolutionary reward hacking with independent checker, multiobjective fitness, and adversarial tests.
+- [ ] L2226 — Mitigate correlated consensus with tool/model/information diversity and no consensus promotion.
+- [ ] L2227 — Mitigate branch explosion with posterior budgets, deduplication, pause rules, and verification congestion.
+- [ ] L2228 — Mitigate selector domain lock-in with protected exploration, hierarchical calibration, and domain quotas.
+- [ ] L2229 — Mitigate contamination with rotating/sealed sets, dated snapshots, and mutation suites.
+- [ ] L2230 — Mitigate erroneous benchmarks with source/statement versioning, semantic audit, and corrections.
+- [ ] L2231 — `SEC` Mitigate unsafe proof trust with clean environment, axiom/unsafe scan, and independent checker.
+- [ ] L2232 — Mitigate proprietary drift/outage with provider abstraction, open baseline, and exact version contracts.
+- [ ] L2233 — Mitigate computational unsoundness with exact arithmetic, containers, seeds, coverage, and certificates.
+- [ ] L2234 — Mitigate literature/license gaps with provenance, human access, and `unknown` novelty.
+- [ ] L2235 — `SEC` Mitigate malicious source/code/Lean with sandboxing, network off, allowlisted imports/tools, and minimal TCB.
+- [ ] L2236 — Mitigate memory contamination with verified-only semantics, quarantine, and revocation.
+- [ ] L2237 — Mitigate overstated communication with machine-generated five-gate certificate and fixed vocabulary.
+- [ ] L2238 — Mitigate human bottleneck by prioritizing central risks, assistants, and reviewer tooling.
+- [ ] L2242 — `EXPERIMENTAL` Measure whether interpretation-lattice false-target savings justify extra search.
+- [ ] L2243 — `EXPERIMENTAL NUM` Ablate cold pass at 0%, 5%, and 10% and account for pretrained anchoring.
+- [ ] L2244 — `EXPERIMENTAL` Compare posterior branch controller against simple best-first under sparse/nonstationary outcomes.
+- [ ] L2245 — `EXPERIMENTAL` Test whether risk-weighted sentinels identify the truly subtle step.
+- [ ] L2246 — `EXPERIMENTAL` Measure verified-DAG downstream unlock, not node count.
+- [ ] L2247 — `EXPERIMENTAL` Test whether reuse reward displaces decisive problem-specific insight.
+- [ ] L2248 — `EXPERIMENTAL` Do not equate provider diversity with proof independence; test shared-corpus correlation.
+- [ ] L2250 — Report all seven innovations as experimental hypotheses, not established advantages.
+
+## Section 16 — Prioritized recommendations
+
+- [ ] L2256 — `P0` Enforce signed feature policy at every entry point and keep promotion disabled pending validators.
+- [ ] L2257 — `P0` Remove generic evidence acceptance and implement closed validators for formal, computation, expert, and source-import evidence.
+- [ ] L2258 — `P0` Require clean local Lean replay, independent intent approval, and checked formal correspondence before promotion.
+- [ ] L2259 — `P0` Preserve Aristotle request/model/build metadata; pin client/protocol and mark mutable unattested host non-reproducible.
+- [ ] L2260 — `P0` Bind cached stage to actual runner/provider/model/surface/context and derive independence from artifacts, not caller label.
+- [ ] L2261 — `P0` Fingerprint full executable/import/service closure, adjudicator, feature/validator, formal environment, and literature policy.
+- [ ] L2262 — `P0` Replace overwrites with append-only gate/adjudication/evidence/promotion events and deterministic view.
+- [ ] L2263 — `P0 STATE` Kernel proves exact encoded theorem only; semantic/release axes can block; incompatible hard evidence creates `CONFLICTED`.
+- [ ] L2264 — `P0` Quarantine identity-incomplete legacy/root records including 601/661/724/782/849.
+- [ ] L2265 — `P0 NUM` Add leases/heartbeats/provider backoff, retain 120-second cap, and never spend math retry on rate limits.
+- [ ] L2266 — `P0` Record complete cost/call/rate/cache/compute/intervention/outcome telemetry for equal-cost baselines.
+- [ ] L2270 — `P1` Implement append-only claim/evidence graph and transactional revocation.
+- [ ] L2271 — `P1` Add Statement IR, interpretation lattice, mutation/boundary probes.
+- [ ] L2272 — `P1` Add sandboxed exact computation and independent replay.
+- [ ] L2273 — `P1` Add pinned Lean target review, capsules, and central sentinels.
+- [ ] L2274 — `P1` Build frozen theorem packets, formal retrieval, and import/applicability audit before deep search.
+- [ ] L2275 — `P1` Add typed OEIS transforms/query/cache/provenance and independent imported-claim verification.
+- [ ] L2276 — `P1` Split release into intent/truth/novelty/significance/reproducibility certificates.
+- [ ] L2280 — `P2` Convert current DAG to typed AND/OR blueprint with dynamic leaves.
+- [ ] L2281 — `P2` Add mechanism fingerprints, semantic deduplication, failure certificates, and pause/reopen.
+- [ ] L2282 — `P2` Parallelize tool-differentiated workers and retire idle standing tabs.
+- [ ] L2283 — `P2` Implement posterior allocation with protected exploration and initially wide priors.
+- [ ] L2284 — `P2` Localize regulator to failed dependency cones.
+- [ ] L2288 — `P3` Run seven-level evaluation with equal-cost raw-model baselines.
+- [ ] L2289 — `P3` Collect authenticated outcomes, costs, censoring, and expert reviews.
+- [ ] L2290 — `P3` Calibrate problem/branch models only after enough comparable data.
+- [ ] L2291 — `P3` Add verified-only expert iteration for tactics, plans, retrieval, and routing.
+- [ ] L2292 — `P3` Use executable evolution only with hard evaluators.
+- [ ] L2293 — `P3` Build cross-problem formal libraries and measure downstream reuse.
+- [ ] L2294 — `P3` Scale workers only after verification throughput and ablations justify it.
+- [ ] L2298–2300 — Preserve the final architecture’s epistemic graph, level-matched search, formal/executable trust, independent semantic review, and close trust holes before scaling dynamic search.
+- [ ] L2302 — Establish any superiority claim only through verified progress per cost, false-success rate, calibration, and blind expert/formal evaluation—not output volume.

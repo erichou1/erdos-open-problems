@@ -24,12 +24,12 @@ import sys
 import tempfile
 import uuid
 from collections import Counter
+from collections.abc import Sequence
 from contextlib import contextmanager
-from dataclasses import dataclass
 from datetime import datetime, timezone
 from functools import lru_cache
 from pathlib import Path
-from typing import Iterable
+from typing import TypedDict
 
 from erdos_ingest import (
     extract_tex_statement,
@@ -141,7 +141,22 @@ PIPELINE_FINGERPRINT_FILES = (
     "requirements.lock",
 )
 
-DEFAULT_BUDGET_CONFIG = {
+class BudgetConfig(TypedDict):
+    max_revisions: int
+    stage_timeout_s: float
+    initial_backoff_s: float
+    max_backoff_s: float
+    request_spacing_s: float
+    max_attempts: int
+    rate_limit_policy: str
+    browser_headless: bool
+    browser_channel: str
+    profile_capability: str
+    scout_contexts: int
+    review_roles_per_attempt: int
+
+
+DEFAULT_BUDGET_CONFIG: BudgetConfig = {
     "max_revisions": 2,
     "stage_timeout_s": 1800.0,
     "initial_backoff_s": 15.0,
@@ -174,7 +189,7 @@ def normalized_budget_config(
 ) -> dict:
     """Return every behavior-changing bounded-search control in canonical form."""
     normalized_max_backoff = max(0.0, min(120.0, float(max_backoff_s)))
-    config = {
+    config: BudgetConfig = {
         "initial_backoff_s": min(max(0.0, float(initial_backoff_s)), normalized_max_backoff),
         "max_backoff_s": normalized_max_backoff,
         "max_revisions": int(max_revisions),
@@ -202,11 +217,38 @@ def normalized_budget_config(
         raise ValueError("unsupported browser channel")
     if config["profile_capability"] != "persistent-authenticated-user-profile-v1":
         raise ValueError("unsupported browser profile capability")
-    return config
+    return dict(config)
 
 
-def research_budget_id(**controls: object) -> str:
-    config = normalized_budget_config(**controls)
+def research_budget_id(
+    *,
+    max_revisions: int,
+    stage_timeout_s: float,
+    initial_backoff_s: float = 15.0,
+    max_backoff_s: float = 120.0,
+    request_spacing_s: float = 12.0,
+    max_attempts: int = 8,
+    rate_limit_policy: str = "shared-host-tempdir-v1",
+    browser_headless: bool = False,
+    browser_channel: str = "playwright-chromium",
+    profile_capability: str = "persistent-authenticated-user-profile-v1",
+    scout_contexts: int = 4,
+    review_roles_per_attempt: int = 8,
+) -> str:
+    config = normalized_budget_config(
+        max_revisions=max_revisions,
+        stage_timeout_s=stage_timeout_s,
+        initial_backoff_s=initial_backoff_s,
+        max_backoff_s=max_backoff_s,
+        request_spacing_s=request_spacing_s,
+        max_attempts=max_attempts,
+        rate_limit_policy=rate_limit_policy,
+        browser_headless=browser_headless,
+        browser_channel=browser_channel,
+        profile_capability=profile_capability,
+        scout_contexts=scout_contexts,
+        review_roles_per_attempt=review_roles_per_attempt,
+    )
     payload = json.dumps(config, sort_keys=True, separators=(",", ":"))
     digest = hashlib.sha256(payload.encode("utf-8")).hexdigest()
     return f"verified_pipeline_v2:{digest[:16]}"
@@ -215,7 +257,7 @@ def research_budget_id(**controls: object) -> str:
 DEFAULT_BUDGET = research_budget_id(**DEFAULT_BUDGET_CONFIG)
 
 
-def split_run_budget(config: dict) -> tuple[dict, dict]:
+def split_run_budget(config: dict | BudgetConfig) -> tuple[dict, dict]:
     normalized = normalized_budget_config(**config)
     budget = {
         key: normalized[key]
@@ -262,9 +304,9 @@ def browser_binary_identity() -> dict:
     """Identify the installed Playwright Chromium bytes without launching it."""
     try:
         manifest = Path(
-            importlib.metadata.distribution("playwright").locate_file(
+            str(importlib.metadata.distribution("playwright").locate_file(
                 "playwright/driver/package/browsers.json"
-            )
+            ))
         )
         data = json.loads(manifest.read_text(encoding="utf-8"))
         chromium = next(
@@ -305,9 +347,9 @@ def toolset_identity(root: Path) -> dict:
     try:
         playwright_version = importlib.metadata.version("playwright")
         browser_manifest = Path(
-            importlib.metadata.distribution("playwright").locate_file(
+            str(importlib.metadata.distribution("playwright").locate_file(
                 "playwright/driver/package/browsers.json"
-            )
+            ))
         )
     except importlib.metadata.PackageNotFoundError:
         playwright_version = "absent"
@@ -341,7 +383,7 @@ def make_allocation_context(
     *, root: Path, snapshot_id: str, source_snapshot_sha256: str,
     source_snapshot_id: str, canonical_open_source_records: int,
     pipeline_version: str, model_portfolio: str, budget: str,
-    budget_config: dict, allocation_top_k: int,
+    budget_config: dict | BudgetConfig, allocation_top_k: int,
 ) -> tuple[dict, str | None]:
     context = {
         "snapshot_id": snapshot_id,
@@ -733,7 +775,7 @@ def forum_probe(path: Path) -> dict:
     }
 
 
-def outcome_probe(records: list[dict | str]) -> dict:
+def outcome_probe(records: Sequence[dict | str]) -> dict:
     """Summarize only schema-valid, exact-context ledger aggregates.
 
     Private proof-run directories are deliberately outside the searcher's
@@ -820,7 +862,10 @@ def beta_summary(alpha: float, beta: float) -> dict:
     }
 
 
-def estimate_posteriors(card: dict, outcome_records: list[dict | str] | None = None) -> dict:
+def estimate_posteriors(
+    card: dict,
+    outcome_records: Sequence[dict | str] | None = None,
+) -> dict:
     outcome_records = outcome_records or []
     statuses = [
         str(record.get("status", "")).strip().lower()
@@ -961,16 +1006,16 @@ def build_card(root: Path, snapshot_id: str, source_commit: str,
                verified_outcomes: list[str] | None = None,
                model_portfolio: str = DEFAULT_MODEL_PORTFOLIO,
                budget: str = DEFAULT_BUDGET,
-               budget_config: dict | None = None,
+               budget_config: dict | BudgetConfig | None = None,
                source_snapshot_id: str | None = None,
                source_snapshot_sha256: str | None = None,
                forum_path: Path | None = None) -> dict:
-    budget_config = normalized_budget_config(**(
+    normalized_budget = normalized_budget_config(**(
         budget_config or DEFAULT_BUDGET_CONFIG
     ))
-    if research_budget_id(**budget_config) != budget:
+    if research_budget_id(**normalized_budget) != budget:
         raise ValueError("budget identifier does not match complete budget_config")
-    tex = tex_path.read_text(encoding="utf-8")
+    tex_path.read_text(encoding="utf-8")
     original = str(canonical_source["statement"]).strip()
     if not original:
         raise ValueError(f"problem {number} canonical statement is empty")
@@ -991,7 +1036,7 @@ def build_card(root: Path, snapshot_id: str, source_commit: str,
         "pipeline_version": source_commit,
         "model_portfolio": model_portfolio,
         "budget": budget,
-        "budget_config": budget_config,
+        "budget_config": normalized_budget,
         "cheap_probe_version": CHEAP_PROBE_VERSION,
         "statement": {
             "original": original,
@@ -1040,15 +1085,23 @@ def build_card(root: Path, snapshot_id: str, source_commit: str,
         },
     }
     card["routes"] = route_problem(card)
-    card["research_directive"] = research_directive_for_card(card)
+    research_directive = research_directive_for_card(card)
+    card["research_directive"] = research_directive
     card["research_directive_sha256"] = research_directive_sha256(
-        card["research_directive"]
+        research_directive
     )
     bind_card_run_contract(root, card)
     bind_subproblem_run_contracts(root, card)
     card["posterior"] = estimate_posteriors(card, verified_outcomes or [])
     card["cost"] = cost_estimate(card)
     return card
+
+
+def _problem_number_from_source_path(path: Path) -> int:
+    match = re.fullmatch(r"problem_(\d+)", path.stem)
+    if match is None:
+        raise ValueError(f"invalid problem source filename: {path.name}")
+    return int(match.group(1))
 
 
 def audit_corpus(
@@ -1063,7 +1116,7 @@ def audit_corpus(
         if str(entry.get("source_state", "")).strip().lower() == "open"
     }
     local_numbers = {
-        int(re.search(r"\d+", path.stem).group())
+        _problem_number_from_source_path(path)
         for path in latex_paths
     }
     missing = sorted(catalog_open - local_numbers)
@@ -1101,7 +1154,7 @@ def snapshot_sources(
     catalog = json.loads(catalog_path.read_text(encoding="utf-8"))
     latex_paths = sorted((root / "open" / "individual").glob("problem_*.tex"))
     local_open_numbers = {
-        int(re.search(r"\d+", path.stem).group()) for path in latex_paths
+        _problem_number_from_source_path(path) for path in latex_paths
     }
     forum_paths = sorted(
         path for path in (root / "forum_threads").glob("*.json")
@@ -1134,7 +1187,7 @@ def snapshot_sources(
         shutil.copy2(catalog_path, raw_dir / "problem_catalog.json")
         for tex_path in latex_paths:
             shutil.copy2(tex_path, raw_dir / "latex" / tex_path.name)
-            number = int(re.search(r"\d+", tex_path.stem).group())
+            number = _problem_number_from_source_path(tex_path)
             forum = root / "forum_threads" / f"{number}.json"
             if forum.exists():
                 shutil.copy2(forum, raw_dir / "forum" / forum.name)
@@ -1831,10 +1884,12 @@ def register_evidence_certificate(
     raw_support = supporting_artifacts or {}
     if not isinstance(raw_support, dict):
         raise ValueError("supporting_artifacts must be an object")
-    for name, value in raw_support.items():
-        if not isinstance(name, str) or not re.fullmatch(r"[a-z_]{3,32}", name):
+    for support_name, support_bytes in raw_support.items():
+        if not isinstance(support_name, str) or not re.fullmatch(
+            r"[a-z_]{3,32}", support_name
+        ):
             raise ValueError("invalid evidence support name")
-        _validate_evidence_support_bytes(name, value)
+        _validate_evidence_support_bytes(support_name, support_bytes)
     _replay_deterministic_evidence(
         kind,
         evidence_payload,
@@ -1855,9 +1910,11 @@ def register_evidence_certificate(
     created_certificate: Path | None = None
     try:
         support_references = {}
-        for name, value in raw_support.items():
-            reference, created = _store_evidence_support(evidence_root, value)
-            support_references[name] = reference
+        for support_name, support_bytes in raw_support.items():
+            reference, created = _store_evidence_support(
+                evidence_root, support_bytes
+            )
+            support_references[support_name] = reference
             if created is not None:
                 created_support.append(created)
         artifact = {
@@ -2281,7 +2338,7 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
                    top_k: int,
                    model_portfolio: str = DEFAULT_MODEL_PORTFOLIO,
                    budget: str = DEFAULT_BUDGET,
-                   budget_config: dict | None = None,
+                   budget_config: dict | BudgetConfig | None = None,
                    canonical_snapshot: Path | None = None) -> dict:
     if canonical_snapshot is None:
         source_roots = [output_root]
@@ -2308,10 +2365,10 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
         snapshot_date,
         canonical_numbers=set(canonical_sources),
     )
-    budget_config = normalized_budget_config(**(
+    normalized_budget = normalized_budget_config(**(
         budget_config or DEFAULT_BUDGET_CONFIG
     ))
-    if research_budget_id(**budget_config) != budget:
+    if research_budget_id(**normalized_budget) != budget:
         raise ValueError("budget identifier does not match complete budget_config")
     source_snapshot_manifest = canonical_snapshot / "manifest.json"
     source_snapshot_sha256 = sha256_file(source_snapshot_manifest)
@@ -2330,7 +2387,7 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
         pipeline_version=source_commit,
         model_portfolio=model_portfolio,
         budget=budget,
-        budget_config=budget_config,
+        budget_config=normalized_budget,
         allocation_top_k=top_k,
     )
     outcome_records = load_outcome_records(output_root)
@@ -2342,11 +2399,11 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
     for tex_path in sorted(
         (
             path for path in (root / "open" / "individual").glob("problem_*.tex")
-            if int(re.search(r"\d+", path.stem).group()) in rankable_numbers
+            if _problem_number_from_source_path(path) in rankable_numbers
         ),
-        key=lambda path: int(re.search(r"\d+", path.stem).group()),
+        key=_problem_number_from_source_path,
     ):
-        number = int(re.search(r"\d+", tex_path.stem).group())
+        number = _problem_number_from_source_path(tex_path)
         entry = entries.get(str(number), {
             "problem": number,
             "source_state": "unknown",
@@ -2365,7 +2422,7 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
             verified_outcomes=[],
             model_portfolio=model_portfolio,
             budget=budget,
-            budget_config=budget_config,
+            budget_config=normalized_budget,
             source_snapshot_id=snapshot_id,
             source_snapshot_sha256=source_snapshot_sha256,
             forum_path=(

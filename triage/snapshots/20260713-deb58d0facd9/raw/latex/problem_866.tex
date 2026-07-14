@@ -1,0 +1,34 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#866}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, additive combinatorics
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $k\geq 3$ and $g_k(N)$ be minimal such that if $A\subseteq \{1,\ldots,2N\}$ has $\lvert A\rvert \geq N+g_k(N)$ then there exist integers $b_1,\ldots,b_k$ such that all $\binom{k}{2}$ pairwise sums are in $A$ (but the $b_i$ themselves need not be in $A$). Estimate $g_k(N)$.
+
+
+
+
+A problem of Choi, Erd\H{o}s, and Szemer\'{e}di. It is clear that, for the set of odd numbers in $\{1,\ldots,2N\}$, no such $b_i$ exist, whence $g_k(N)\geq 0$ always. Choi, Erd\H{o}s, and Szemer\'{e}di proved that $g_3(N)=2$ and $g_4(N) \ll 1$. van Doorn has shown that $g_4(N)\leq 2032$. Choi, Erd\H{o}s, and Szemer\'{e}di also proved that\[g_5(N)\asymp \log N\]and\[g_6(N)\asymp N^{1/2}.\]In general they proved that\[g_k(N) \ll_k N^{1-2^{-k}}\]and for every $\epsilon&gt;0$ if $k$ is sufficiently large then\[g_k(N) &gt; N^{1-\epsilon}.\]As an example, taking $A$ to be the set of all odd integers and the powers of $2$ shows that $g_5(N)\gg \log N$.
+
+\noindent\textbf{Related OEIS sequences:} possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/866}}
+\end{document}

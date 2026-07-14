@@ -79,7 +79,7 @@ def main(argv=None):
     args.delay = clamp_cooldown(args.delay)
     adaptive_cooldown = AdaptiveCooldown(args.backoff)
 
-    canonical_sources = None
+    canonical_sources: dict[int, CandidateSource] = {}
     if not args.login:
         try:
             canonical_sources = load_canonical_candidate_sources(args.triage)

@@ -10,47 +10,39 @@
     ]
   },
   "subgoal_graph": {
-    "summary": "No solution is claimed. Portfolio ranking: (1) DOMAIN is the hard acceptance blocker because the immutable wording does not explicitly quantify n and k as integers; every discrete node is therefore conditional and directly depends on DOMAIN. (2) The highest-fit global branch is the negative t=5 dichotomy: it is sharply falsifiable and would resolve the statement by proving LOW_HIGH_EXCLUSION and HIGH_EXTENSION_BOUND, but the latter needs a new multi-representation compatibility theorem, not slope geometry alone. (3) The first constructive branch is Pell lifting from the adjacent-layer family; it has a concrete recurrence and high information gain, but arbitrary multi-lifts and uniform exactness are completely open. (4) The second constructive branch is displacement-word algebra; it is structurally broad, but no exhaustive claim is permitted until WORD_DECISION_BOUND supplies an effective variable bound or a complete decision procedure. (5) SEARCH_CERT is retained only as reproducible finite-range evidence and candidate discovery. Scout agreement on normalization, t=1,2,3,4, ordering, and the adjacent Pell family is not proof; each is scheduled for fresh derivation. Contradictory slope formulas are retained by resetting SLOPE_AUDIT to open, and differing finite-search claims are quarantined pending one exact certificate. Dependency arrays are conjunctive, so the two genuine OR gates are encoded explicitly in the claims of POSITIVE_SCALING and GOAL rather than by falsely requiring both alternatives. The uploaded artifact is referenced only for provenance, not as mathematical evidence: \n\nPasted text\n\n",
+    "summary": "Status: unresolved. The reports agree on several local discrete lemmas but disagree on the domain, slope orientation, and strength of the finite certificates; agreement is therefore not treated as proof. Ranked portfolio: (1) the negative t=5 compatibility route has the best mathematical fit and highest information gain, because excluding exactly four interior representations would immediately disprove the universal statement; its decisive gaps are LOW_HIGH_EXCLUSION and HIGH_EXTENSION_BOUND. (2) the displacement-word route is highly falsifiable and may construct or exclude four-point collision chains, but it cannot become global without both an effective variable bound and a bound on the displacement complexity of a minimal witness. (3) the Pell multi-lift route has a verified pair-collision seed but presently lacks both scalable independent lifts and uniform exclusion of unintended layers. Arithmetic invariants and bounded computation remain supporting filters only. Every discrete branch is quarantined behind DOMAIN; if the immutable wording does not uniquely determine integer n and k, the process must terminate with a formal ambiguity certificate rather than a conditional answer. Source provenance only: \n\nPasted text\n\n",
     "bottleneck_ids": [
       "DOMAIN",
-      "SLOPE_AUDIT",
       "LOW_HIGH_EXCLUSION",
-      "GLOBAL_COMPATIBILITY",
       "HIGH_EXTENSION_BOUND",
-      "WORD_DECISION_BOUND",
-      "EXACTNESS_FRAMEWORK",
-      "PELL_DOUBLE_LIFT",
-      "PELL_MULTI_LIFT"
+      "WORD_VARIABLE_BOUND",
+      "WORD_WITNESS_BOUND",
+      "WORD_SCALING",
+      "PELL_MULTI_LIFT",
+      "PELL_EXACTNESS",
+      "EXACT_MULTIPLICITY_SCALING",
+      "GOAL"
     ],
     "subgoals": [
       {
         "id": "DOMAIN",
-        "claim": "Resolve the immutable statement's formal domain without adding hypotheses: determine whether the wording itself uniquely requires n and k to be integers in the standard combinatorial binomial coefficient. If it does not, record the ambiguity as a blocking defect; all later discrete claims remain quarantined and cannot discharge GOAL.",
+        "claim": "Determine from the immutable wording whether n and k are uniquely required to be integers in the standard combinatorial domain. If this cannot be established without adding a convention, issue a formal ambiguity certificate and halt all discrete proof branches.",
         "dependencies": [],
         "centrality": 5,
         "falsifiable": true
       },
       {
-        "id": "FIXED_LAYER_MONOTONICITY",
-        "claim": "After DOMAIN is resolved discretely, freshly prove for every integer k>=1 and n>=k that C(n+1,k)/C(n,k)=(n+1)/(n+1-k)>1, so a fixed layer k contains any value at most once.",
+        "id": "DISCRETE_CORE",
+        "claim": "Conditional on DOMAIN establishing the discrete interpretation, define D={(n,k) in Z^2: n>=2 and 1<=k<=floor(n/2)} and verify all basic monotonicity statements using the correctly oriented quotients C(n+1,k)/C(n,k)=(n+1)/(n+1-k)>1 and C(n,k+1)/C(n,k)=(n-k)/(k+1)>1 whenever k+1<=n/2.",
         "dependencies": [
           "DOMAIN"
         ],
-        "centrality": 3,
+        "centrality": 4,
         "falsifiable": true
       },
       {
-        "id": "HALF_ROW_MONOTONICITY",
-        "claim": "After DOMAIN is resolved discretely, freshly prove that C(n,k+1)/C(n,k)=(n-k)/(k+1)>1 whenever k+1<=n/2, with the endpoint cases checked.",
-        "dependencies": [
-          "DOMAIN"
-        ],
-        "centrality": 3,
-        "falsifiable": true
-      },
-      {
-        "id": "CENTRAL_BINOMIAL_GROWTH",
-        "claim": "After DOMAIN is resolved discretely, prove that the row maximum C(n,floor(n/2)) strictly increases with n and that C(2k,k)>=2^k. Use correct forward quotients and check k=1 and parity transitions.",
+        "id": "CENTRAL_ROW_GROWTH",
+        "claim": "Verify explicitly that C(2k,k)>=2^k for every integer k>=1 and that C(2k+2,k+1)/C(2k,k)=2(2k+1)/(k+1)>1 for every integer k>=0, with the initial cases checked separately.",
         "dependencies": [
           "DOMAIN"
         ],
@@ -59,157 +51,155 @@
       },
       {
         "id": "NORMALIZATION",
-        "claim": "Conditionally on the discrete domain, define M(a) as the number of admissible integer pairs. Prove M(a)=0 for a<=1 and, for a>=2, M(a)=1+mu(a), where mu(a) counts layers k>=2; also prove k<=floor(log_2 a), so every proposed witness has a finite exact exclusion certificate.",
+        "claim": "For integer a define M(a)=#{(n,k) in D:C(n,k)=a}. Prove M(a)=0 for a<=1 and, for a>=2, M(a)=1+mu(a), where S_k={C(n,k):n in Z and n>=2k} and mu(a)=#{k>=2:a in S_k}. Also prove each fiber is finite and k<=floor(log_2 a).",
         "dependencies": [
-          "DOMAIN",
-          "FIXED_LAYER_MONOTONICITY",
-          "CENTRAL_BINOMIAL_GROWTH"
+          "DISCRETE_CORE",
+          "CENTRAL_ROW_GROWTH"
         ],
-        "centrality": 4,
-        "falsifiable": true
-      },
-      {
-        "id": "FIBER_ORDERING",
-        "claim": "Prove that equal admissible coefficients with k<ell must have n>m. The proof must cover both n>=2ell and n<2ell, using fixed-layer monotonicity, half-row monotonicity, and strict growth of row maxima.",
-        "dependencies": [
-          "DOMAIN",
-          "FIXED_LAYER_MONOTONICITY",
-          "HALF_ROW_MONOTONICITY",
-          "CENTRAL_BINOMIAL_GROWTH"
-        ],
-        "centrality": 4,
+        "centrality": 5,
         "falsifiable": true
       },
       {
         "id": "LOW_MULTIPLICITIES",
-        "claim": "Independently certify exact multiplicities M(2)=1, M(6)=2, M(120)=3, and M(3003)=4, checking every omitted layer by monotonicity and central lower bounds rather than by scout agreement.",
+        "claim": "Certify with complete exclusion of all omitted layers that M(2)=1, M(6)=2, M(120)=3, and M(3003)=4; hence t=5 is the first possible failure under the discrete interpretation.",
         "dependencies": [
-          "DOMAIN",
-          "NORMALIZATION",
-          "HALF_ROW_MONOTONICITY",
-          "CENTRAL_BINOMIAL_GROWTH"
+          "NORMALIZATION"
         ],
-        "centrality": 2,
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "ORDERED_FIBER",
+        "claim": "Prove that if C(n,k)=C(m,l), k<l, and both vertices are in D, then n>m. Consequently every interior fiber is a chain with strictly increasing lower indices and strictly decreasing row indices.",
+        "dependencies": [
+          "DISCRETE_CORE"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "T5_CASE_SPLIT",
+        "claim": "Let epsilon_j(a)=1 when a is in S_j and 0 otherwise for j=2,3,4, and let h(a)=#{k>=5:a in S_k}. For the exact case mu(a)=4, prove the exhaustive partition: h=1 with all three low layers present; h=2 with exactly two low layers present; h=3 with exactly one low layer present; or h=4 with no low layer present. State separately the weaker inequalities applicable when mu(a)>=4.",
+        "dependencies": [
+          "NORMALIZATION"
+        ],
+        "centrality": 5,
         "falsifiable": true
       },
       {
         "id": "DISPLACEMENT_IDENTITY",
-        "claim": "For two consecutive equal-value points (n,k) and (n-d,k+e), freshly derive and verify the exact identity n^{under d}(k+1)^{over e}=(n-k)^{under(d+e)}, together with d,e>=1, n>=2k, n-d>=2(k+e), positivity, ordering, and distinctness constraints.",
+        "claim": "For admissible vertices (n,k) and (n-d,k+e), with integers d,e>=1 and n-d>=2(k+e), prove that C(n,k)=C(n-d,k+e) is equivalent to n^{under d}(k+1)^{over e}=(n-k)^{under(d+e)}, where all falling and rising factorials and their ranges are explicitly defined.",
         "dependencies": [
-          "DOMAIN",
-          "FIBER_ORDERING"
+          "ORDERED_FIBER"
         ],
         "centrality": 4,
         "falsifiable": true
       },
       {
         "id": "SLOPE_AUDIT",
-        "claim": "Reset the slope theorem to open and either prove or refute: for an ordered collision chain, with d_i=n_i-n_{i+1} and e_i=k_{i+1}-k_i, the ratios d_i/e_i strictly decrease, equivalently e_i/d_i strictly increase. Any proof must use consistently oriented edge ratios and pass the 3003 check d/e=63/3=21 followed by 1/1=1.",
+        "claim": "Resolve the contradictory scout claims about collision slopes by a complete edge-sum proof. With d_i=n_i-n_{i+1} and e_i=k_{i+1}-k_i, determine and prove the correct strict orientation, checking it against the 3003 chain, whose ratios e_i/d_i are 1/21 and 1.",
         "dependencies": [
-          "DOMAIN",
-          "FIBER_ORDERING",
           "DISPLACEMENT_IDENTITY"
-        ],
-        "centrality": 3,
-        "falsifiable": true
-      },
-      {
-        "id": "PELL_ADJACENT_FAMILY",
-        "claim": "Freshly prove the adjacent-layer family C(n,k)=C(n-1,k+1): derive n(k+1)=(n-k)(n-k-1), reduce it to x^2-5y^2=-4 with x=5k+4, verify the recurrence x'=(7x+15y)/2 and y'=(3x+7y)/2, and check integrality, congruence, growth, and both half-row constraints for every generated term.",
-        "dependencies": [
-          "DOMAIN",
-          "DISPLACEMENT_IDENTITY",
-          "CENTRAL_BINOMIAL_GROWTH"
         ],
         "centrality": 4,
         "falsifiable": true
       },
       {
-        "id": "ARITHMETIC_INVARIANTS",
-        "claim": "Re-derive with exact hypotheses the reduced-denominator divisibility n/gcd(n,k) | a, the factorial valuation/carry formula, numerator-block smoothness relative to the smallest row, and any valid upper-prime-shadow statement. Record counterexamples to proposed injectivity or uniqueness claims.",
+        "id": "REDUCED_DENOMINATOR_DIVISIBILITY",
+        "claim": "For every discrete representation C(n,k)=a, prove that n/gcd(n,k) divides a, stating and checking the coprimality hypotheses used in Euclid's lemma.",
         "dependencies": [
-          "DOMAIN",
-          "NORMALIZATION"
+          "DISCRETE_CORE"
         ],
         "centrality": 3,
         "falsifiable": true
       },
       {
-        "id": "SEARCH_CERT",
-        "claim": "Produce a reproducible exact-integer certificate for the strongest claimed bounded exclusion, preferably a<=10^30. Use C(n+1,k)=C(n,k)(n+1)/(n+1-k), enforce n>=2k in every generated or low-layer membership test, publish all bounds and counts, and state only the finite-range conclusion; disagreement among scout counts must be resolved.",
+        "id": "VALUATION_CARRY_IDENTITY",
+        "claim": "For every prime p prove v_p(C(n,k))=sum_{j>=1}(floor(n/p^j)-floor(k/p^j)-floor((n-k)/p^j)), and separately verify the equivalent carry-count interpretation.",
         "dependencies": [
-          "DOMAIN",
-          "NORMALIZATION",
-          "FIXED_LAYER_MONOTONICITY",
-          "CENTRAL_BINOMIAL_GROWTH"
+          "DISCRETE_CORE"
+        ],
+        "centrality": 3,
+        "falsifiable": true
+      },
+      {
+        "id": "NUMERATOR_BLOCK_SMOOTHNESS",
+        "claim": "If equal coefficients are represented at (n_i,k_i) and at the smallest-row vertex (m,l), prove that the numerator block n_i(n_i-1)...(n_i-k_i+1) divides k_i!m!, and hence every prime dividing that block is at most m.",
+        "dependencies": [
+          "ORDERED_FIBER"
+        ],
+        "centrality": 3,
+        "falsifiable": true
+      },
+      {
+        "id": "PRIME_SHADOW",
+        "claim": "For a prime p>n/2 and an admissible vertex (n,k), prove p divides C(n,k) exactly when n-k<p<=n. Determine whether several ordered representations force incompatible upper-prime shadows.",
+        "dependencies": [
+          "DISCRETE_CORE",
+          "VALUATION_CARRY_IDENTITY"
+        ],
+        "centrality": 3,
+        "falsifiable": true
+      },
+      {
+        "id": "DENOMINATOR_INJECTIVITY_TEST",
+        "claim": "Prove or disprove by an explicit counterexample the proposed assertion that two equal binomial coefficients with the same reduced denominator n/gcd(n,k) must arise from the same vertex.",
+        "dependencies": [
+          "REDUCED_DENOMINATOR_DIVISIBILITY",
+          "ORDERED_FIBER"
         ],
         "centrality": 2,
         "falsifiable": true
       },
       {
-        "id": "T5_CASE_SPLIT",
-        "claim": "Let epsilon_j indicate membership in layer j for j=2,3,4 and let h count layers k>=5. Prove mu(a)=epsilon_2+epsilon_3+epsilon_4+h and that mu(a)>=4 implies exactly the disjunction: h=1 with all three low layers present, or h>=2. No finite-search premise may enter this global split.",
+        "id": "SEARCH_CERT",
+        "claim": "Independently reproduce or refute, using exact integer arithmetic and a fully specified exhaustive enumeration, the bounded statement M(a)<=4 for every integer 2<=a<=10^30. Record this only as a bounded certificate and candidate-generation tool; no global node may infer an unbounded conclusion from it.",
         "dependencies": [
-          "DOMAIN",
           "NORMALIZATION",
-          "FIBER_ORDERING"
+          "CENTRAL_ROW_GROWTH"
         ],
-        "centrality": 5,
+        "centrality": 2,
         "falsifiable": true
       },
       {
-        "id": "LOW_LAYER_ALGEBRA",
-        "claim": "Translate simultaneous membership in S_2, S_3, and S_4 into explicit integral equations with all parity, positivity, and half-row admissibility conditions, and determine which consequences are reversible rather than merely necessary.",
+        "id": "LOW_LAYER_SYSTEM",
+        "claim": "Derive the exact admissible integer system for a in S_2 intersect S_3 intersect S_4: 3(X^2-1)=4(Y^3-Y) and 48(X^2-1)=(Z^2-1)(Z^2-9), with X>=7 odd, Y>=5, and Z>=13 odd, and prove the equivalence in both directions.",
         "dependencies": [
-          "DOMAIN",
-          "T5_CASE_SPLIT",
-          "ARITHMETIC_INVARIANTS"
+          "T5_CASE_SPLIT"
         ],
         "centrality": 4,
         "falsifiable": true
       },
       {
         "id": "LOW_HIGH_EXCLUSION",
-        "claim": "Prove or refute the global statement S_2 intersect S_3 intersect S_4 intersect S_k is empty for every k>=5. A proof must close the low-layer Diophantine system and the high-layer compatibility condition, not extrapolate from SEARCH_CERT.",
+        "claim": "As a sufficient obligation for the selected negative strategy, prove that S_2 intersect S_3 intersect S_4 intersect S_k is empty for every integer k>=5, or produce a counterexample.",
         "dependencies": [
-          "DOMAIN",
-          "LOW_LAYER_ALGEBRA",
-          "ARITHMETIC_INVARIANTS"
-        ],
-        "centrality": 5,
-        "falsifiable": true
-      },
-      {
-        "id": "GLOBAL_COMPATIBILITY",
-        "claim": "Find and prove a genuinely global compatibility theorem for multiple representations: from two distinct high layers k,ell>=5 of the same a, deduce that at most one additional interior layer can represent a. The ingredient must compare all candidate representations simultaneously; slope ordering alone is explicitly insufficient.",
-        "dependencies": [
-          "DOMAIN",
-          "FIBER_ORDERING",
-          "DISPLACEMENT_IDENTITY",
-          "SLOPE_AUDIT",
-          "ARITHMETIC_INVARIANTS",
-          "PELL_ADJACENT_FAMILY"
+          "LOW_LAYER_SYSTEM",
+          "REDUCED_DENOMINATOR_DIVISIBILITY",
+          "VALUATION_CARRY_IDENTITY",
+          "PRIME_SHADOW"
         ],
         "centrality": 5,
         "falsifiable": true
       },
       {
         "id": "HIGH_EXTENSION_BOUND",
-        "claim": "Using a proved GLOBAL_COMPATIBILITY theorem, establish h(a)>=2 implies mu(a)<=3 for every integer a. Treat adjacent Pell collisions as mandatory test cases rather than exceptions.",
+        "claim": "As the second sufficient obligation for the selected negative strategy, prove that h(a)>=2 implies mu(a)<=3 for every integer a, or produce a value violating this implication.",
         "dependencies": [
-          "DOMAIN",
           "T5_CASE_SPLIT",
-          "GLOBAL_COMPATIBILITY",
-          "PELL_ADJACENT_FAMILY"
+          "SLOPE_AUDIT",
+          "REDUCED_DENOMINATOR_DIVISIBILITY",
+          "NUMERATOR_BLOCK_SMOOTHNESS",
+          "PRIME_SHADOW",
+          "DENOMINATOR_INJECTIVITY_TEST"
         ],
         "centrality": 5,
         "falsifiable": true
       },
       {
         "id": "NEGATIVE_T5",
-        "claim": "Combine the exact t=5 split with LOW_HIGH_EXCLUSION and HIGH_EXTENSION_BOUND to prove M(a)<=4 for all a, hence no a has exactly five solutions. This would disprove the universal statement at t=5 under the resolved discrete domain.",
+        "claim": "Combine T5_CASE_SPLIT, LOW_HIGH_EXCLUSION, and HIGH_EXTENSION_BOUND to prove that no integer a has mu(a)=4, equivalently no integer a has exactly five discrete solutions. This node remains open unless both sufficient obligations are proved globally.",
         "dependencies": [
-          "DOMAIN",
           "T5_CASE_SPLIT",
           "LOW_HIGH_EXCLUSION",
           "HIGH_EXTENSION_BOUND"
@@ -218,142 +208,112 @@
         "falsifiable": true
       },
       {
-        "id": "NEGATIVE_RESOLUTION",
-        "claim": "Discharge the negative route only if DOMAIN is resolved and NEGATIVE_T5 is fully proved with no finite-range or ambiguity gap.",
-        "dependencies": [
-          "DOMAIN",
-          "NEGATIVE_T5"
-        ],
-        "centrality": 5,
-        "falsifiable": true
-      },
-      {
         "id": "WORD_SYSTEM",
-        "claim": "For each prescribed displacement word W=((d_1,e_1),...,(d_r,e_r)), derive the full polynomial system obtained from DISPLACEMENT_IDENTITY after cumulative shifts, including all integrality, positivity, ordering, distinctness, and half-row constraints.",
+        "claim": "For a displacement word W=((d_1,e_1),...,(d_r,e_r)), define every cumulative vertex n_i=n_1-sum_{j<i}d_j and k_i=k_1+sum_{j<i}e_j. State the full equations n_i^{under d_i}(k_i+1)^{over e_i}=(n_i-k_i)^{under(d_i+e_i)} and impose n_i>=2k_i at every vertex, including the terminal endpoint.",
         "dependencies": [
-          "DOMAIN",
           "DISPLACEMENT_IDENTITY"
         ],
         "centrality": 4,
         "falsifiable": true
       },
       {
-        "id": "WORD_DECISION_BOUND",
-        "claim": "Before any exhaustive word claim, prove an effective bound on the initial n and k for the selected word class, or provide a complete applicable decision procedure for its integer polynomial system. Merely having finitely many words is not enough.",
+        "id": "WORD_VARIABLE_BOUND",
+        "claim": "Before any purported exhaustive word search, prove for each fixed word W either an effective bound on all admissible integer starts (n_1,k_1) or a complete decision procedure applicable to the resulting polynomial system.",
         "dependencies": [
-          "DOMAIN",
-          "WORD_SYSTEM"
+          "WORD_SYSTEM",
+          "SLOPE_AUDIT"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "WORD_WITNESS_BOUND",
+        "claim": "Prove an effective absolute bound on the displacement complexity sum_i(d_i+e_i) of a minimal four-interior-representation witness, or establish another finite reduction that covers every possible such witness.",
+        "dependencies": [
+          "WORD_SYSTEM",
+          "SLOPE_AUDIT",
+          "REDUCED_DENOMINATOR_DIVISIBILITY",
+          "NUMERATOR_BLOCK_SMOOTHNESS"
         ],
         "centrality": 5,
         "falsifiable": true
       },
       {
         "id": "WORD_ENUMERATION",
-        "claim": "Only after WORD_DECISION_BOUND, exhaust the selected word classes and produce a verifiable classification of all admissible collision chains in them.",
+        "claim": "Only after WORD_VARIABLE_BOUND and WORD_WITNESS_BOUND are proved, exhaust all permitted displacement words and starts, obtaining either a certified four-point interior collision or a certified exclusion of all such chains.",
         "dependencies": [
-          "DOMAIN",
-          "WORD_SYSTEM",
-          "WORD_DECISION_BOUND"
-        ],
-        "centrality": 3,
-        "falsifiable": true
-      },
-      {
-        "id": "WORD_COLLISION",
-        "claim": "Use the classified word systems to construct parametric collision chains of arbitrary prescribed interior length, or prove that the selected word architecture cannot scale. Equality, admissibility, and distinctness must all be certified.",
-        "dependencies": [
-          "DOMAIN",
-          "WORD_SYSTEM",
-          "WORD_DECISION_BOUND",
-          "WORD_ENUMERATION"
+          "WORD_VARIABLE_BOUND",
+          "WORD_WITNESS_BOUND"
         ],
         "centrality": 4,
         "falsifiable": true
       },
       {
-        "id": "EXACTNESS_FRAMEWORK",
-        "claim": "Develop a uniform method that excludes every unintended layer for an infinite candidate family. The per-value bound k<=floor(log_2 a) gives finite verification for one a but is not by itself a uniform family proof.",
-        "dependencies": [
-          "DOMAIN",
-          "NORMALIZATION",
-          "CENTRAL_BINOMIAL_GROWTH",
-          "ARITHMETIC_INVARIANTS"
-        ],
-        "centrality": 5,
-        "falsifiable": true
-      },
-      {
         "id": "WORD_EXACTNESS",
-        "claim": "For the WORD_COLLISION family, prove that each candidate has exactly the displayed interior representations and no others, uniformly across the family.",
+        "claim": "For every collision value produced by WORD_ENUMERATION, inspect all layers 2<=k<=floor(log_2 a) and prove its exact interior multiplicity, rather than merely the number of displayed vertices.",
         "dependencies": [
-          "DOMAIN",
-          "WORD_COLLISION",
-          "EXACTNESS_FRAMEWORK"
+          "WORD_ENUMERATION",
+          "NORMALIZATION"
         ],
-        "centrality": 5,
+        "centrality": 4,
         "falsifiable": true
       },
       {
         "id": "WORD_SCALING",
-        "claim": "For every q>=0, construct through the displacement-word branch an integer a_q with exactly q interior representations, not merely at least q or an unbounded subsequence of multiplicities.",
+        "claim": "Construct, for every q>=0, a uniformly solvable family of admissible displacement words yielding exactly q interior representations, together with a uniform proof excluding every unintended layer.",
         "dependencies": [
-          "DOMAIN",
-          "WORD_COLLISION",
+          "WORD_SYSTEM",
           "WORD_EXACTNESS"
         ],
         "centrality": 5,
         "falsifiable": true
       },
       {
-        "id": "POSITIVE_BY_WORD",
-        "claim": "Conclude the affirmative universal statement from WORD_SCALING via t=q+1, including q=0 and every exactness check.",
+        "id": "PELL_PAIR",
+        "claim": "Verify independently that the Pell-type recurrence generates infinitely many admissible adjacent collisions C(n,k)=C(n-1,k+1), while making no assertion about additional representations.",
         "dependencies": [
-          "DOMAIN",
-          "WORD_SCALING",
-          "NORMALIZATION"
+          "DISPLACEMENT_IDENTITY"
         ],
-        "centrality": 5,
+        "centrality": 3,
         "falsifiable": true
       },
       {
         "id": "PELL_DOUBLE_LIFT",
-        "claim": "Starting only from the proved PELL_ADJACENT_FAMILY, solve or rule out a second independent lift such as triangular membership 8A_j+1=Y^2 or membership in another fixed layer, with all recurrence and admissibility details freshly derived.",
+        "claim": "Determine whether some Pell-pair value has two additional independent interior representations, thereby producing four displayed interior layers; the first checkpoint is simultaneous satisfaction of the triangular square condition and one further layer equation.",
         "dependencies": [
-          "DOMAIN",
-          "PELL_ADJACENT_FAMILY",
-          "ARITHMETIC_INVARIANTS"
+          "PELL_PAIR",
+          "LOW_LAYER_SYSTEM"
         ],
         "centrality": 4,
         "falsifiable": true
       },
       {
         "id": "PELL_MULTI_LIFT",
-        "claim": "Extend the Pell-lift mechanism from one extra layer to arbitrarily many mutually compatible layers, or prove this architecture cannot produce unbounded collision-chain length. Pair collisions or one double lift are insufficient.",
+        "claim": "Develop a theorem that, for arbitrarily large q, forces one Pell-derived value to lie on q distinct prescribed interior layers. Pair collisions alone do not satisfy this node.",
         "dependencies": [
-          "DOMAIN",
-          "PELL_ADJACENT_FAMILY",
           "PELL_DOUBLE_LIFT",
-          "ARITHMETIC_INVARIANTS"
+          "VALUATION_CARRY_IDENTITY",
+          "REDUCED_DENOMINATOR_DIVISIBILITY"
         ],
         "centrality": 5,
         "falsifiable": true
       },
       {
         "id": "PELL_EXACTNESS",
-        "claim": "For every Pell-based multi-lift candidate, uniformly exclude all unintended layers; isolated exact checks of early Pell terms do not suffice.",
+        "claim": "For the multi-lift family, prove uniformly that no unprescribed layer S_k contains the constructed value; finite checking of individual terms is insufficient.",
         "dependencies": [
-          "DOMAIN",
           "PELL_MULTI_LIFT",
-          "EXACTNESS_FRAMEWORK"
+          "NORMALIZATION",
+          "PRIME_SHADOW",
+          "VALUATION_CARRY_IDENTITY"
         ],
         "centrality": 5,
         "falsifiable": true
       },
       {
         "id": "PELL_SCALING",
-        "claim": "For every q>=0, construct through the Pell-lift branch an integer a_q with exactly q interior representations, including all skipped multiplicities and boundary cases.",
+        "claim": "Use PELL_MULTI_LIFT and PELL_EXACTNESS to realize every prescribed exact interior multiplicity q>=0, including the boundary case q=0.",
         "dependencies": [
-          "DOMAIN",
           "PELL_MULTI_LIFT",
           "PELL_EXACTNESS"
         ],
@@ -361,40 +321,32 @@
         "falsifiable": true
       },
       {
-        "id": "POSITIVE_BY_PELL",
-        "claim": "Conclude the affirmative universal statement from PELL_SCALING via t=q+1, including q=0 and exact exclusion of every extra representation.",
+        "id": "EXACT_MULTIPLICITY_SCALING",
+        "claim": "Compare the displacement-word and Pell branches and extract at least one genuinely scalable operation that realizes every exact interior multiplicity; failure or bounded success of one branch must not be presented as success of the other.",
         "dependencies": [
-          "DOMAIN",
-          "PELL_SCALING",
-          "NORMALIZATION"
-        ],
-        "centrality": 5,
-        "falsifiable": true
-      },
-      {
-        "id": "POSITIVE_SCALING",
-        "claim": "Disjunctive gate: discharge this node if either POSITIVE_BY_WORD or POSITIVE_BY_PELL is proved. Because dependency arrays are conjunctive, the two alternatives are named here rather than incorrectly listed as jointly required.",
-        "dependencies": [
-          "DOMAIN"
+          "WORD_SCALING",
+          "PELL_SCALING"
         ],
         "centrality": 5,
         "falsifiable": true
       },
       {
         "id": "POSITIVE_RESOLUTION",
-        "claim": "Discharge the positive route only if DOMAIN is resolved and POSITIVE_SCALING supplies exact multiplicity for every positive integer t.",
+        "claim": "Conditional on EXACT_MULTIPLICITY_SCALING, prove that for every integer t>=1 there exists an integer a with exactly t discrete solutions by taking q=t-1 and verifying all boundary and exactness conditions.",
         "dependencies": [
-          "DOMAIN",
-          "POSITIVE_SCALING"
+          "EXACT_MULTIPLICITY_SCALING",
+          "NORMALIZATION"
         ],
         "centrality": 5,
         "falsifiable": true
       },
       {
         "id": "GOAL",
-        "claim": "Final disjunctive gate: resolve the immutable statement only after DOMAIN is settled and either NEGATIVE_RESOLUTION or POSITIVE_RESOLUTION is proved. No current node claims that either branch is complete.",
+        "claim": "Prove or disprove the exact immutable statement without changing its quantifiers or domain. A valid terminal result may come from NEGATIVE_T5 or POSITIVE_RESOLUTION only after DOMAIN is resolved; otherwise return the formal ambiguity certificate. No solution is presently claimed.",
         "dependencies": [
-          "DOMAIN"
+          "DOMAIN",
+          "NEGATIVE_T5",
+          "POSITIVE_RESOLUTION"
         ],
         "centrality": 5,
         "falsifiable": true
@@ -517,6 +469,211 @@
           "Do not reuse the candidate's displayed quotient, slope, or recurrence formulas without fresh derivation and boundary checks."
         ]
       }
+    },
+    {
+      "attempt": 2,
+      "candidate_outcome": "candidate_unclassified",
+      "candidate_sha256": "a92178e06e72c5c7d558e2d13ba88d1745ec20b21aafc9f91e371f0d482e6359",
+      "gate_status": "candidate_rejected",
+      "gate_reasons": [
+        "candidate has no proof or disproof claim",
+        "candidate result contract is incomplete or internally inconsistent",
+        "no trusted external or mechanical verification evidence",
+        "missing independent review roles: adjudicator, counterexample, global_synthesis, logic, mechanical_evidence, statement_integrity, structural_dependency, theorem_hypotheses",
+        "one or more reviews lack context provenance",
+        "review contexts are not unique",
+        "review statement_integrity-2 is not independent",
+        "review statement_integrity-2 did not pass",
+        "review statement_integrity-2 used a claim count inconsistent with the candidate",
+        "review statement_integrity-2 did not attest to the complete claim ledger",
+        "review statement_integrity-2 reports open gaps",
+        "review statement_integrity-2 reports material errors",
+        "review statement_integrity-2 completeness below 98",
+        "review statement_integrity-2 confidence below 95",
+        "review statement_integrity-2 adversarial survival below 95",
+        "review structural_dependency-2 is not independent",
+        "review structural_dependency-2 did not pass",
+        "review structural_dependency-2 did not check every claim",
+        "review structural_dependency-2 used a claim count inconsistent with the candidate",
+        "review structural_dependency-2 reports material errors",
+        "review structural_dependency-2 did not attest to the immutable statement",
+        "review structural_dependency-2 completeness below 98",
+        "review structural_dependency-2 confidence below 95",
+        "review structural_dependency-2 adversarial survival below 95",
+        "review logic-2 is not independent",
+        "review logic-2 did not pass",
+        "review logic-2 did not check every claim",
+        "review logic-2 used a claim count inconsistent with the candidate",
+        "review logic-2 reports material errors",
+        "review logic-2 did not attest to the immutable statement",
+        "review logic-2 completeness below 98",
+        "review logic-2 confidence below 95",
+        "review logic-2 adversarial survival below 95",
+        "review counterexample-2 is not independent",
+        "review counterexample-2 did not pass",
+        "review counterexample-2 did not check every claim",
+        "review counterexample-2 used a claim count inconsistent with the candidate",
+        "review counterexample-2 reports material errors",
+        "review counterexample-2 did not attest to the immutable statement",
+        "review counterexample-2 completeness below 98",
+        "review counterexample-2 confidence below 95",
+        "review counterexample-2 adversarial survival below 95",
+        "review theorem_hypotheses-2 is not independent",
+        "review theorem_hypotheses-2 did not pass",
+        "review theorem_hypotheses-2 did not check every claim",
+        "review theorem_hypotheses-2 used a claim count inconsistent with the candidate",
+        "review theorem_hypotheses-2 reports material errors",
+        "review theorem_hypotheses-2 did not attest to the immutable statement",
+        "review theorem_hypotheses-2 completeness below 98",
+        "review theorem_hypotheses-2 confidence below 95",
+        "review theorem_hypotheses-2 adversarial survival below 95",
+        "review mechanical_evidence-2 is not independent",
+        "review mechanical_evidence-2 did not pass",
+        "review mechanical_evidence-2 did not check every claim",
+        "review mechanical_evidence-2 used a claim count inconsistent with the candidate",
+        "review mechanical_evidence-2 reports material errors",
+        "review mechanical_evidence-2 did not attest to the immutable statement",
+        "review mechanical_evidence-2 completeness below 98",
+        "review mechanical_evidence-2 confidence below 95",
+        "review mechanical_evidence-2 adversarial survival below 95",
+        "review global_synthesis-2 is not independent",
+        "review global_synthesis-2 did not pass",
+        "review global_synthesis-2 did not check every claim",
+        "review global_synthesis-2 used a claim count inconsistent with the candidate",
+        "review global_synthesis-2 reports material errors",
+        "review global_synthesis-2 did not attest to the immutable statement",
+        "review global_synthesis-2 completeness below 98",
+        "review global_synthesis-2 confidence below 95",
+        "review global_synthesis-2 adversarial survival below 95",
+        "review adjudicator-2 is not independent",
+        "review adjudicator-2 did not pass",
+        "review adjudicator-2 used a claim count inconsistent with the candidate",
+        "review adjudicator-2 did not attest to the complete claim ledger",
+        "review adjudicator-2 reports open gaps",
+        "review adjudicator-2 reports unchecked imports",
+        "review adjudicator-2 reports material errors",
+        "review adjudicator-2 completeness below 98",
+        "review adjudicator-2 confidence below 95",
+        "review adjudicator-2 adversarial survival below 95",
+        "review adjudicator-2 outcome does not match the candidate"
+      ],
+      "regulator": {
+        "decision": "REVISE_PLAN",
+        "rationale": "The failure is structural, not merely a collection of local execution defects. Several local claims are repairable, including the displacement identity, slope proof, divisor lemma, and word equations, but repairing them would still leave both terminal routes entirely open. DOMAIN remains a blocking ambiguity; T5_CASE_SPLIT is misstated and confuses sufficient branch-killing conditions with necessary conditions; ARITHMETIC_INVARIANTS is only partially supplied; WORD_SYSTEM omits essential equations and endpoint admissibility; and neither GLOBAL_COMPATIBILITY nor any scalable exact construction exists. The sound monotonicity, normalization, low-multiplicity, Pell-pair, low-layer-algebra, and bounded-computation components should be retained, so a full rewrite is unnecessarily expensive. Input provenance only: \n\nPasted text\n\n",
+        "broken_node_ids": [
+          "DOMAIN",
+          "CENTRAL_BINOMIAL_GROWTH",
+          "DISPLACEMENT_IDENTITY",
+          "SLOPE_AUDIT",
+          "T5_CASE_SPLIT",
+          "ARITHMETIC_INVARIANTS",
+          "LOW_HIGH_EXCLUSION",
+          "GLOBAL_COMPATIBILITY",
+          "HIGH_EXTENSION_BOUND",
+          "NEGATIVE_T5",
+          "WORD_SYSTEM",
+          "WORD_DECISION_BOUND",
+          "WORD_ENUMERATION",
+          "WORD_COLLISION",
+          "EXACTNESS_FRAMEWORK",
+          "WORD_EXACTNESS",
+          "WORD_SCALING",
+          "PELL_DOUBLE_LIFT",
+          "PELL_MULTI_LIFT",
+          "PELL_EXACTNESS",
+          "PELL_SCALING",
+          "POSITIVE_SCALING",
+          "NEGATIVE_RESOLUTION",
+          "POSITIVE_RESOLUTION",
+          "GOAL"
+        ],
+        "new_constraints": [
+          "Keep every discrete claim quarantined until DOMAIN is resolved from the immutable wording; do not substitute the semidiscrete theorem for the original statement.",
+          "If DOMAIN cannot be uniquely resolved, stop the proof search at a formal ambiguity certificate rather than claiming a conditional answer resolves GOAL.",
+          "Retain only locally verified lemmas after rewriting every malformed definition, equation, inequality, summation range, multiplication sign, and boundary condition explicitly.",
+          "Restrict central-row strict growth to the proved range and separately check all initial parity transitions.",
+          "State T5_CASE_SPLIT with well-typed layer sets S_k={C(n,k): n is an integer and n>=2k}; distinguish the exact case mu(a)=4 from the broader case mu(a)>=4.",
+          "Do not describe LOW_HIGH_EXCLUSION and HIGH_EXTENSION_BOUND as logically necessary for every possible t=5 proof; identify them only as sufficient obligations for the selected negative strategy.",
+          "Replace WORD_SYSTEM by the full edge equations n_i^{under d_i}(k_i+1)^{over e_i}=(n_i-k_i)^{under(d_i+e_i)} after cumulative shifts, and impose admissibility at every vertex, including the terminal endpoint.",
+          "Split ARITHMETIC_INVARIANTS into separately checkable nodes for reduced-denominator divisibility, valuation/carry identities, numerator-block smoothness, prime-shadow consequences, and counterexamples to injectivity.",
+          "Do not activate WORD_ENUMERATION until an effective variable bound or a complete applicable decision procedure is proved; finiteness of the word list alone is insufficient.",
+          "Treat the Pell recurrence only as a source of adjacent two-layer collisions until an independent multi-lift theorem and a uniform exactness theorem are proved.",
+          "Treat SEARCH_CERT solely as the bounded statement M(a)<=4 for a<=10^30; no global dependency may use it without a proved finite-to-infinite principle.",
+          "Require a genuinely new global ingredient before continuing the negative route: either close the low-layer/high-layer Diophantine system or prove a simultaneous compatibility theorem for all representations of one value.",
+          "Require a genuinely new scalable operation before continuing the positive route: it must realize every exact interior multiplicity and uniformly exclude unintended layers.",
+          "Do not discharge NEGATIVE_T5, POSITIVE_SCALING, or GOAL by acknowledgment of remaining gaps, finite testing, heuristic scarcity, or repaired local geometry."
+        ]
+      }
+    },
+    {
+      "attempt": 3,
+      "candidate_outcome": "candidate_unclassified",
+      "candidate_sha256": "66494f942c8b4a43a386253efb79c35c826ffe28e62a715efdbe092f81ce68f0",
+      "gate_status": "candidate_rejected",
+      "gate_reasons": [
+        "candidate has no proof or disproof claim",
+        "candidate result contract is incomplete or internally inconsistent",
+        "no trusted external or mechanical verification evidence",
+        "review statement_integrity-3 did not pass",
+        "review statement_integrity-3 did not check every claim",
+        "review statement_integrity-3 used a claim count inconsistent with the candidate",
+        "review statement_integrity-3 reports material errors",
+        "review statement_integrity-3 did not attest to the immutable statement",
+        "review statement_integrity-3 completeness below 98",
+        "review statement_integrity-3 confidence below 95",
+        "review statement_integrity-3 adversarial survival below 95",
+        "review structural_dependency-3 used a claim count inconsistent with the candidate",
+        "review structural_dependency-3 did not attest to the complete claim ledger",
+        "review logic-3 did not pass",
+        "review logic-3 did not check every claim",
+        "review logic-3 used a claim count inconsistent with the candidate",
+        "review logic-3 reports material errors",
+        "review logic-3 did not attest to the immutable statement",
+        "review logic-3 completeness below 98",
+        "review logic-3 confidence below 95",
+        "review logic-3 adversarial survival below 95",
+        "review counterexample-3 did not pass",
+        "review counterexample-3 did not check every claim",
+        "review counterexample-3 used a claim count inconsistent with the candidate",
+        "review counterexample-3 reports material errors",
+        "review counterexample-3 did not attest to the immutable statement",
+        "review counterexample-3 completeness below 98",
+        "review counterexample-3 confidence below 95",
+        "review counterexample-3 adversarial survival below 95",
+        "review theorem_hypotheses-3 did not pass",
+        "review theorem_hypotheses-3 did not check every claim",
+        "review theorem_hypotheses-3 used a claim count inconsistent with the candidate",
+        "review theorem_hypotheses-3 reports material errors",
+        "review theorem_hypotheses-3 did not attest to the immutable statement",
+        "review theorem_hypotheses-3 completeness below 98",
+        "review theorem_hypotheses-3 confidence below 95",
+        "review theorem_hypotheses-3 adversarial survival below 95",
+        "review mechanical_evidence-3 did not pass",
+        "review mechanical_evidence-3 did not check every claim",
+        "review mechanical_evidence-3 used a claim count inconsistent with the candidate",
+        "review mechanical_evidence-3 reports material errors",
+        "review mechanical_evidence-3 did not attest to the immutable statement",
+        "review mechanical_evidence-3 completeness below 98",
+        "review mechanical_evidence-3 confidence below 95",
+        "review mechanical_evidence-3 adversarial survival below 95",
+        "review global_synthesis-3 did not pass",
+        "review global_synthesis-3 did not check every claim",
+        "review global_synthesis-3 used a claim count inconsistent with the candidate",
+        "review global_synthesis-3 reports material errors",
+        "review global_synthesis-3 did not attest to the immutable statement",
+        "review global_synthesis-3 completeness below 98",
+        "review global_synthesis-3 confidence below 95",
+        "review global_synthesis-3 adversarial survival below 95",
+        "review adjudicator-3 did not pass",
+        "review adjudicator-3 used a claim count inconsistent with the candidate",
+        "review adjudicator-3 did not attest to the complete claim ledger",
+        "review adjudicator-3 reports open gaps",
+        "review adjudicator-3 reports unchecked imports",
+        "review adjudicator-3 reports material errors",
+        "review adjudicator-3 completeness below 98",
+        "review adjudicator-3 adversarial survival below 95",
+        "review adjudicator-3 outcome does not match the candidate"
+      ]
     }
   ],
   "verified_lemmas": [],
@@ -548,6 +705,95 @@
         "{'claim_id': 'C3', 'error': 'The displayed binomial-coefficient quotients are reversed: the written ratios are less than 1, not greater than 1. The intended monotonicity conclusions are true, but the stated derivations are false.'}",
         "{'claim_id': 'C5', 'error': 'The displayed quotient used to establish growth of the central binomial coefficients is reversed. The reciprocal is the quantity greater than 1.'}",
         "{'claim_id': 'GOAL', 'error': 'Neither the negative terminal branch nor the universal positive construction is completed. The candidate explicitly terminates with the main assertion unresolved.'}"
+      ],
+      "reusable_lesson": "Do not repeat this proof path without a new ingredient that resolves every listed obstruction."
+    },
+    {
+      "attempt": 2,
+      "candidate_sha256": "a92178e06e72c5c7d558e2d13ba88d1745ec20b21aafc9f91e371f0d482e6359",
+      "obstructions": [
+        "CENTRAL_GROWTH is stated without a sufficient range qualification; R_0=R_1=1 contradicts unqualified strict growth.",
+        "Claim 1 changes or leaves ambiguous the domain and defines D_Z inconsistently with all later uses of the automatic k=1 representation.",
+        "Claim 10 does not correctly define S_j or h(a): its displayed set-builder notation lacks the quantified row variable and treats k as belonging to S_k rather than a as belonging to S_k.",
+        "Claim 11's derivation is missing one side of the coefficient equality in the displayed proof.",
+        "Claim 12 contains missing comparison signs and omits the left side of the logarithmic sum identity. Repairing these omissions is prohibited in an adversarial statement-integrity review.",
+        "Claim 15 contains the malformed equation 'p,a=q...' where multiplication is required.",
+        "Claim 15 uses Euclid's lemma and the least-common-multiple divisibility property without stating their exact hypotheses.",
+        "Claim 17 also omits admissibility of the final endpoint, and the collision (15,5) to (14,8) is an explicit spurious solution admitted by the stated constraints.",
+        "Claim 17 omits the actual polynomial equations it claims to derive.",
+        "Claim 18 relies on unspecified correctness properties of the programming language's exact combinatorial, square-root, integer-arithmetic, and heap primitives.",
+        "Claim 2 implicitly uses the Intermediate Value Theorem and a range theorem for continuous strictly increasing unbounded functions without stating the theorem or fully checking its hypotheses.",
+        "Claim 2 proves a theorem only after introducing a generalized real-variable binomial coefficient absent from the immutable statement.",
+        "Claim 5 refers to the displayed central coefficient as the row maximum without stating and checking binomial symmetry and the required monotonicity on the complementary half-row.",
+        "Claim 9 uses asymptotic facts involving logarithms versus positive powers without stating the required limiting results.",
+        "Consequently, no global exclusion of exactly five solutions is established.",
+        "DIVISOR_INVARIANT contains a malformed central identity where multiplication is required.",
+        "Fatal acceptance failure: the candidate expressly concludes that neither terminal route is completed, so it does not prove or disprove the exact original statement.",
+        "No arbitrary Pell multi-lift or uniform exclusion of unintended layers is supplied.",
+        "No construction realizes every exact interior multiplicity q at least zero.",
+        "No construction realizes every exact interior multiplicity q.",
+        "No effective bound or complete decision procedure is supplied for scalable displacement-word systems.",
+        "No global compatibility theorem proves that two high-layer representations force total interior multiplicity at most three.",
+        "No global compatibility theorem shows that two high-layer representations force total interior multiplicity at most three.",
+        "No global exclusion of simultaneous membership in layers 2, 3, 4 and a layer k at least 5 is proved.",
+        "No uniform exactness framework is established for any infinite candidate family.",
+        "SLOPE_AUDIT omits the left-hand logarithmic sum, summation ranges, comparison signs, and a decisive strict inequality. Its intended proof may be reconstructible, but the submitted proof is incomplete.",
+        "T5_SPLIT proves its dichotomy only under M(a)=5, while the validated node requests the corresponding statement for every mu(a) at least 4.",
+        "T5_SPLIT treats two strong branch-killing statements as necessary conditions, although they are only sufficient for its proposed negative strategy.",
+        "The Pell branch supplies adjacent pairs but no arbitrary compatible multi-lifts and no uniform exclusion of unintended representations.",
+        "The assertion that all 19 claims were checked overstates the status of several syntactically incomplete claims.",
+        "The candidate does not exclude multiplicity five under the discrete interpretation.",
+        "The candidate explicitly reaches no proof or disproof of the immutable universal statement, so it fails the primary acceptance criterion.",
+        "The definitions of S_j and h(a) in T5_SPLIT are ill-typed and omit necessary quantified membership conditions.",
+        "The derivation of DISPLACEMENT_IDENTITY omits the complete starting equality and is not a finished proof as written.",
+        "The displacement-word branch lacks a complete polynomial system, an effective variable bound, and a complete decision procedure.",
+        "The displayed definition of the discrete domain is malformed and can be read as requiring k at least 2, contradicting the candidate's repeated use of the automatic k=1 representation.",
+        "The finite computation covers only a at most 10^30 and has no proved finite-to-infinite extension.",
+        "The finite computation stops at a equal to 10^30 and has no finite-to-infinite extension.",
+        "The global exclusion of simultaneous membership in layers 2, 3, 4, and some layer k at least 5 is unproved.",
+        "The immutable statement does not explicitly quantify the domains of n and k, and the candidate does not establish a unique interpretation. Its discrete and semidiscrete interpretations yield different solution counts.",
+        "The immutable statement's domain for n and k remains unresolved. Consequently, no conditional discrete or semidiscrete result proves or disproves the exact statement.",
+        "The reproducible finite certificate establishes only the bounded conclusion M(a) at most 4 for a at most 10^30 and cannot discharge either global resolution route.",
+        "The semidiscrete positive result changes the problem by introducing a real upper argument and a generalized binomial coefficient not specified in the immutable statement.",
+        "The valid finite certificate and local lemmas cannot substitute for either missing terminal route.",
+        "The validated arithmetic-invariants subgoal is only partially addressed; valuation, carry, smoothness, prime-shadow, and failed-injectivity components are absent.",
+        "Under the intended discrete interpretation, neither a proof nor a disproof of the universal statement is supplied.",
+        "WORD_SYSTEM also omits terminal half-row admissibility; for example, the formally admitted edge from (15,5) to (14,8) satisfies the collision equality but has an inadmissible endpoint.",
+        "WORD_SYSTEM omits the left-hand side and equality of every asserted displacement equation, so the promised polynomial system is not actually stated.",
+        "malformed reviewer output: reviewer role mismatch: expected counterexample, got independent adversarial referee (counterexample)",
+        "malformed reviewer output: reviewer role mismatch: expected global_synthesis, got independent adversarial referee (global_synthesis)",
+        "malformed reviewer output: reviewer role mismatch: expected logic, got independent adversarial referee (logic)",
+        "malformed reviewer output: reviewer role mismatch: expected mechanical_evidence, got independent adversarial referee (mechanical_evidence)",
+        "malformed reviewer output: reviewer role mismatch: expected structural_dependency, got independent adversarial referee (structural_dependency)",
+        "malformed reviewer output: reviewer role mismatch: expected theorem_hypotheses, got independent adversarial referee (theorem_hypotheses)"
+      ],
+      "reusable_lesson": "Do not repeat this proof path without a new ingredient that resolves every listed obstruction."
+    },
+    {
+      "attempt": 3,
+      "candidate_sha256": "66494f942c8b4a43a386253efb79c35c826ffe28e62a715efdbe092f81ce68f0",
+      "obstructions": [
+        "Continuity of real polynomials is invoked without an exact theorem statement and hypothesis check.",
+        "Different multiplicities for a=70 after changing the domain and extending the function do not establish that the original statement has two legitimate meanings.",
+        "Divergence to infinity of the positive-leading-term polynomial is asserted without a direct proof or an exactly stated theorem.",
+        "Neither NEGATIVE_T5 nor POSITIVE_RESOLUTION is completed, so no valid terminal path to GOAL remains once the ambiguity certificate is rejected.",
+        "The Intermediate Value Theorem is invoked without stating its precise hypotheses and conclusion.",
+        "The candidate does not prove that allowing a real upper argument is an admissible interpretation of the immutable statement rather than a newly defined extension of the binomial coefficient.",
+        "The ordinary binomial-coefficient notation, the repeated Pascal-triangle framing, the integer examples, and the cited discussion collectively provide implicit discrete typing that the candidate does not successfully rebut.",
+        "The universal assertion under the ordinary discrete interpretation is neither proved nor disproved.",
+        "malformed reviewer output: reviewer role mismatch: expected counterexample, got independent adversarial referee (counterexample)",
+        "malformed reviewer output: reviewer role mismatch: expected global_synthesis, got independent adversarial referee (global_synthesis)",
+        "malformed reviewer output: reviewer role mismatch: expected logic, got independent adversarial referee (logic)",
+        "malformed reviewer output: reviewer role mismatch: expected mechanical_evidence, got independent adversarial referee (mechanical_evidence)",
+        "malformed reviewer output: reviewer role mismatch: expected statement_integrity, got independent adversarial referee (statement_integrity)",
+        "malformed reviewer output: reviewer role mismatch: expected theorem_hypotheses, got independent adversarial referee (theorem_hypotheses)",
+        "{'claim_id': 'AMBIGUITY_CERTIFICATE', 'error': 'The decisive premise that the discrete and semidiscrete completions are not distinguished by the immutable wording is unproved and contradicted by the explicit Pascal-triangle framing. Consequently the claimed ambiguity certificate does not follow.'}",
+        "{'claim_id': 'COUNT_SEPARATION', 'error': 'The comparison M_int(70)=2 versus M_sd(70)=4 compares two different mathematical structures. It does not establish two equally admissible readings of the locked statement.'}",
+        "{'claim_id': 'DISCRETE_COMPLETION_70', 'error': 'As supplied, the fixed-layer quotient is written in the orientation C(n,k)/C(n+1,k)=(n+1-k)/(n+1)>1, although that ratio is less than 1. The intended monotonicity is true only after reversing the quotient.'}",
+        "{'claim_id': 'DOMAIN_AUDIT', 'error': 'The candidate incorrectly treats the absence of an explicit declaration n,k in Z as sufficient to erase domain information supplied by established notation and the surrounding Pascal-triangle context.'}",
+        "{'claim_id': 'RESULT_METADATA', 'error': \"The terminal label RESOURCE_EXHAUSTED is inconsistent with the candidate's simultaneous assertion of a complete, 100-percent ambiguity certificate.\"}",
+        "{'claim_id': 'SEMIDISCRETE_UNIVERSAL_ASSERTION', 'error': 'As supplied, the central-coefficient quotient is likewise written in the decreasing orientation c_k/c_{k+1}=(k+1)/(2(2k+1))>1, which is false. The intended strict growth requires the reciprocal.'}",
+        "{'claim_id': 'SEMIDISCRETE_UNIVERSAL_ASSERTION', 'error': 'This claim proves a theorem only for a separately introduced real-upper-argument extension. It therefore changes the problem and cannot satisfy the immutable statement.'}"
       ],
       "reusable_lesson": "Do not repeat this proof path without a new ingredient that resolves every listed obstruction."
     }

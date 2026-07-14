@@ -50,6 +50,51 @@ class NoveltyTests(unittest.TestCase):
             self.assertEqual(result["novelty_status"], "no_signal")
             self.assertTrue(result["is_likely_novel"])
 
+    def test_ai_wiki_full_solution_blocks_novelty(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            setup_repo(root, {"5": {
+                "source_state": "open",
+                "ai_wiki": {"primary_full": True, "sections": ["1(a)"]},
+            }})
+            result = probe_novelty(root, 5)
+            self.assertEqual(result["novelty_status"], "ai_reported_solution")
+            self.assertTrue(result["ai_wiki_full_solution"])
+            self.assertFalse(result["is_likely_novel"])
+
+    def test_ai_wiki_literature_hit_blocks_novelty(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            setup_repo(root, {"6": {
+                "source_state": "open",
+                "ai_wiki": {"secondary_full": True, "sections": ["2(a)"]},
+            }})
+            self.assertEqual(
+                probe_novelty(root, 6)["novelty_status"], "ai_reported_solution")
+
+    def test_ai_wiki_partial_is_prior_work_signal(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            setup_repo(root, {"7": {
+                "source_state": "open",
+                "ai_wiki": {"primary_partial": True, "sections": ["1(d)"]},
+            }})
+            result = probe_novelty(root, 7)
+            self.assertEqual(result["novelty_status"], "prior_work_signal")
+            self.assertTrue(result["ai_wiki_partial"])
+            self.assertFalse(result["is_likely_novel"])
+
+    def test_source_resolution_outranks_ai_wiki(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            setup_repo(root, {"8": {
+                "source_state": "proved",
+                "source_reports_resolved": True,
+                "ai_wiki": {"primary_full": True, "sections": ["1(a)"]},
+            }})
+            self.assertEqual(
+                probe_novelty(root, 8)["novelty_status"], "source_resolved")
+
 
 if __name__ == "__main__":
     unittest.main()

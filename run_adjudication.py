@@ -3,10 +3,11 @@
 
 DeepSeek allows only one in-flight message and one browser profile, so the
 distinct adjudicator cannot run inside every parallel ChatGPT worker. This pass
-runs as a SINGLE process: it scans the shared artifact tree for runs the ChatGPT
-fleet left at ``awaiting_external_evidence`` (reviews passed inline, only trusted
-evidence missing) and, one at a time, re-adjudicates each candidate with a
-genuinely different model.
+runs as a SINGLE process. A browser URL or caller-supplied ``deepseek`` label is
+not authenticated model identity, so the default CLI records an advisory result
+only. Gate mutation additionally requires a separately configured review-
+attestation gateway binding the exact model/version, authority, candidate,
+statement, and response to the review trust key.
 
 The distinct verdict replaces the same-model adjudicator in the gate, so a
 correlated blind spot in the ChatGPT self-review is caught *before* expensive
@@ -30,34 +31,152 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import os
+import re
+import stat
+import uuid
 from dataclasses import asdict
 from datetime import datetime, timezone
 from pathlib import Path
 
 from research_state import StatementLock, statement_lock_text
 from solver_prompts import ADJUDICATOR_PROMPT_TEMPLATE, OFFLINE_POLICY
-from proof_pipeline import REVIEW_MANDATES, _failed_review, _json_object, _review
+from proof_pipeline import (
+    REVIEW_MANDATES,
+    _failed_review,
+    _json_object,
+    _require_real_directory,
+    _review,
+)
 from verification import (
     GateDecision,
+    Review,
     VerificationEvidence,
     candidate_contract,
     evaluate_gate,
+    verify_review_attestation,
 )
 from promote_verified_run import load_reviews
-from erdos_searcher import write_json
 from run_status import has_verified_result
 
 AWAITING = "awaiting_external_evidence"
 ADJ_FILE = "deepseek_adjudication.json"
 ADJ_STAGE = "deepseek_adjudication"
 ONLY_EVIDENCE_MISSING = ("no trusted external or mechanical verification evidence",)
+_MAX_ARTIFACT_BYTES = 8 * 1024 * 1024
+
+
+def _read_text_nofollow(path: Path, *, max_bytes: int = _MAX_ARTIFACT_BYTES) -> str:
+    """Read one bounded regular file without following its final symlink."""
+    flags = os.O_RDONLY | getattr(os, "O_NOFOLLOW", 0) | getattr(os, "O_NONBLOCK", 0)
+    descriptor = os.open(path, flags)
+    try:
+        metadata = os.fstat(descriptor)
+        if not stat.S_ISREG(metadata.st_mode):
+            raise ValueError(f"adjudication input is not a regular file: {path}")
+        if metadata.st_size > max_bytes:
+            raise ValueError(f"adjudication input exceeds {max_bytes} bytes: {path}")
+        remaining = max_bytes + 1
+        chunks: list[bytes] = []
+        while remaining:
+            chunk = os.read(descriptor, min(65536, remaining))
+            if not chunk:
+                break
+            chunks.append(chunk)
+            remaining -= len(chunk)
+        payload = b"".join(chunks)
+        if len(payload) > max_bytes:
+            raise ValueError(f"adjudication input exceeds {max_bytes} bytes: {path}")
+        return payload.decode("utf-8")
+    finally:
+        os.close(descriptor)
+
+
+def _require_confined_run_directory(run_dir: Path) -> None:
+    """Validate the artifact/problem/run chain without following symlinks."""
+    run_dir = Path(run_dir)
+    problem_dir = run_dir.parent
+    artifact_root = problem_dir.parent
+    if not re.fullmatch(r"problem_[1-9][0-9]*", problem_dir.name):
+        raise ValueError(f"invalid problem directory: {problem_dir}")
+    _require_real_directory(artifact_root, label="adjudication artifact root")
+    _require_real_directory(problem_dir, label="adjudication problem directory")
+    _require_real_directory(run_dir, label="adjudication execution directory")
+
+
+def _write_json_confined(run_dir: Path, filename: str, value: object) -> None:
+    """Atomically write directly through no-follow root/problem/run dirfds."""
+    if Path(filename).name != filename:
+        raise ValueError("adjudication output filename must be a basename")
+    _require_confined_run_directory(run_dir)
+    directory_flags = (
+        os.O_RDONLY
+        | getattr(os, "O_DIRECTORY", 0)
+        | getattr(os, "O_NOFOLLOW", 0)
+        | getattr(os, "O_NONBLOCK", 0)
+    )
+    artifact_root = run_dir.parent.parent
+    root_fd = os.open(artifact_root, directory_flags)
+    problem_fd = run_fd = None
+    temporary = f".{filename}.{uuid.uuid4().hex}.tmp"
+    try:
+        problem_fd = os.open(run_dir.parent.name, directory_flags, dir_fd=root_fd)
+        run_fd = os.open(run_dir.name, directory_flags, dir_fd=problem_fd)
+        payload = (
+            json.dumps(value, indent=2, ensure_ascii=False, sort_keys=True) + "\n"
+        ).encode("utf-8")
+        output_fd = os.open(
+            temporary,
+            os.O_WRONLY | os.O_CREAT | os.O_EXCL | getattr(os, "O_NOFOLLOW", 0),
+            0o600,
+            dir_fd=run_fd,
+        )
+        try:
+            with os.fdopen(output_fd, "wb", closefd=False) as handle:
+                handle.write(payload)
+                handle.flush()
+                os.fsync(handle.fileno())
+        finally:
+            os.close(output_fd)
+        os.replace(
+            temporary,
+            filename,
+            src_dir_fd=run_fd,
+            dst_dir_fd=run_fd,
+        )
+        os.fsync(run_fd)
+    finally:
+        if run_fd is not None:
+            try:
+                os.unlink(temporary, dir_fd=run_fd)
+            except FileNotFoundError:
+                pass
+            os.close(run_fd)
+        if problem_fd is not None:
+            os.close(problem_fd)
+        os.close(root_fd)
 
 
 def _run_dirs(artifacts: Path):
-    for problem_dir in sorted(Path(artifacts).glob("problem_*")):
-        if not problem_dir.is_dir():
+    artifacts = Path(artifacts)
+    try:
+        _require_real_directory(artifacts, label="adjudication artifact root")
+    except ValueError:
+        if not artifacts.exists() and not artifacts.is_symlink():
+            return
+        raise
+    for problem_dir in sorted(artifacts.iterdir()):
+        if not problem_dir.name.startswith("problem_"):
             continue
-        for run_dir in sorted(p for p in problem_dir.iterdir() if p.is_dir()):
+        try:
+            _require_real_directory(problem_dir, label="adjudication problem directory")
+        except ValueError:
+            continue
+        for run_dir in sorted(problem_dir.iterdir()):
+            try:
+                _require_real_directory(run_dir, label="adjudication execution directory")
+            except ValueError:
+                continue
             yield run_dir
 
 
@@ -66,10 +185,20 @@ def find_adjudicatable_runs(artifacts: Path) -> list[Path]:
     out: list[Path] = []
     artifacts = Path(artifacts)
     for run_dir in _run_dirs(artifacts):
-        if (run_dir / ADJ_FILE).exists():
-            continue
+        marker = run_dir / ADJ_FILE
+        if marker.exists() or marker.is_symlink():
+            try:
+                marker_record = json.loads(_read_text_nofollow(marker))
+            except (OSError, ValueError, json.JSONDecodeError):
+                marker_record = None
+            if (
+                isinstance(marker_record, dict)
+                and marker_record.get("authenticated") is True
+                and marker_record.get("applied") is True
+            ):
+                continue
         try:
-            manifest = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
+            manifest = json.loads(_read_text_nofollow(run_dir / "manifest.json"))
         except (OSError, ValueError):
             continue
         gate_status = str(manifest.get("gate", {}).get("status", ""))
@@ -83,7 +212,15 @@ def find_adjudicatable_runs(artifacts: Path) -> list[Path]:
 # ── prompt reconstruction from persisted artifacts ───────────────────────────
 
 def _latest_attempt_dir(run_dir: Path) -> Path | None:
-    attempts = [d for d in run_dir.glob("attempt_*") if d.is_dir()]
+    attempts = []
+    for directory in run_dir.glob("attempt_*"):
+        try:
+            _require_real_directory(directory, label="adjudication attempt directory")
+        except ValueError:
+            if directory.is_symlink():
+                raise
+            continue
+        attempts.append(directory)
     if not attempts:
         return None
     return max(attempts, key=lambda d: int(d.name.rsplit("_", 1)[-1]))
@@ -96,8 +233,8 @@ def _graph_text(run_dir: Path) -> str:
     )
     source = revisions[-1] if revisions else (run_dir / "subgoal_graph.json")
     try:
-        return source.read_text(encoding="utf-8")
-    except OSError:
+        return _read_text_nofollow(source)
+    except (OSError, ValueError, UnicodeDecodeError):
         return "{}"
 
 
@@ -107,13 +244,13 @@ def _raw_reviews(attempt_dir: Path | None) -> str:
     parts = []
     for role in REVIEW_MANDATES:  # deterministic order matches the inline pass
         review_file = attempt_dir / f"review_{role}.json"
-        if review_file.is_file():
-            parts.append(review_file.read_text(encoding="utf-8"))
+        if review_file.exists() or review_file.is_symlink():
+            parts.append(_read_text_nofollow(review_file))
     return "\n\n".join(parts)
 
 
 def _statement_lock_text(run_dir: Path) -> str:
-    data = json.loads((run_dir / "statement_lock.json").read_text(encoding="utf-8"))
+    data = json.loads(_read_text_nofollow(run_dir / "statement_lock.json"))
     lock = StatementLock(
         original_statement=str(data["original_statement"]),
         sha256=str(data["sha256"]),
@@ -124,7 +261,9 @@ def _statement_lock_text(run_dir: Path) -> str:
 
 def build_adjudicator_prompt(run_dir: Path) -> str:
     """Rebuild the exact adjudicator prompt the inline stage would have used."""
-    candidate = (run_dir / "candidate.md").read_text(encoding="utf-8")
+    run_dir = Path(run_dir)
+    _require_confined_run_directory(run_dir)
+    candidate = _read_text_nofollow(run_dir / "candidate.md")
     return ADJUDICATOR_PROMPT_TEMPLATE.format(
         offline=OFFLINE_POLICY,
         statement_lock=_statement_lock_text(run_dir),
@@ -143,22 +282,52 @@ def _evidence_from_manifest(manifest: dict) -> tuple[VerificationEvidence, ...]:
     )
 
 
-def adjudicate_run(run_dir: Path, runner, *, apply_gate: bool = True) -> dict:
+def adjudicate_run(
+    run_dir: Path,
+    runner,
+    *,
+    apply_gate: bool = True,
+    review_attestor=None,
+    attestation_env: dict[str, str] | None = None,
+) -> dict:
     """Re-adjudicate one run with ``runner`` (a distinct model) and record it."""
     run_dir = Path(run_dir)
+    _require_confined_run_directory(run_dir)
+    if apply_gate and review_attestor is None:
+        # Do not spend provider calls or write a permanent "completed" marker
+        # when this process cannot authenticate the claimed model identity.
+        raise ValueError("gate-mutating adjudication requires an authenticated review gateway")
+
     manifest_path = run_dir / "manifest.json"
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest = json.loads(_read_text_nofollow(manifest_path))
 
     prompt = build_adjudicator_prompt(run_dir)
     raw = runner.run(prompt, stage=ADJ_STAGE, isolated=True)
     context_id = runner.context_id(ADJ_STAGE)
+    candidate = _read_text_nofollow(run_dir / "candidate.md")
+    candidate_sha256 = hashlib.sha256(candidate.encode("utf-8")).hexdigest()
 
     malformed = False
     try:
         review = _review(
             _json_object(raw), reviewer_id="adjudicator-deepseek",
             expected_role="adjudicator", context_id=context_id,
+            candidate_sha256=candidate_sha256,
+            problem_number=int(manifest.get("problem_number", 0)),
+            run_contract_id_value=str(manifest.get("run_contract_id", "")),
+            execution_id=str(manifest.get("execution_id", "")),
+            run_context_id_value=str(manifest.get("run_context_id", "")),
         )
+        if review_attestor is not None:
+            attested = review_attestor(review, ADJ_STAGE)
+            if not isinstance(attested, Review) \
+                    or not verify_review_attestation(attested, env=attestation_env):
+                raise ValueError("distinct-model review attestation is invalid")
+            review = attested
+        elif apply_gate:
+            # The preflight above should make this unreachable, but retain a
+            # local fail-closed check if control flow is changed later.
+            raise ValueError("distinct-model identity is not authenticated")
     except (KeyError, TypeError, ValueError, json.JSONDecodeError) as error:
         review = _failed_review(
             reviewer_id="adjudicator-deepseek", expected_role="adjudicator",
@@ -166,6 +335,8 @@ def adjudicate_run(run_dir: Path, runner, *, apply_gate: bool = True) -> dict:
         )
         malformed = True
 
+    # In advisory mode ``agrees`` describes only the parsed response.  It is
+    # never an authenticated review and cannot mutate the gate.
     agrees = (
         not malformed
         and review.verdict.lower() == "pass"
@@ -184,7 +355,6 @@ def adjudicate_run(run_dir: Path, runner, *, apply_gate: bool = True) -> dict:
             if record.get("reviewer_role") != "adjudicator"
         ]
         swapped.append(asdict(review))
-        candidate = (run_dir / "candidate.md").read_text(encoding="utf-8")
         decision = evaluate_gate(
             manifest["candidate_outcome"],
             load_reviews(swapped),
@@ -194,6 +364,11 @@ def adjudicate_run(run_dir: Path, runner, *, apply_gate: bool = True) -> dict:
             expected_candidate_sha256=hashlib.sha256(
                 candidate.encode("utf-8")
             ).hexdigest(),
+            attestation_env=attestation_env,
+            expected_problem_number=manifest.get("problem_number"),
+            expected_run_contract_id=str(manifest.get("run_contract_id", "")),
+            expected_execution_id=str(manifest.get("execution_id", "")),
+            expected_run_context_id=str(manifest.get("run_context_id", "")),
         )
         # Mirror ProofPipeline.solve: "reviews pass, only evidence missing" is
         # the awaiting state, not a rejection.
@@ -206,6 +381,8 @@ def adjudicate_run(run_dir: Path, runner, *, apply_gate: bool = True) -> dict:
 
     record = {
         "model": "deepseek",
+        "authenticated": review_attestor is not None and not malformed,
+        "applied": bool(apply_gate and not malformed),
         "reviewer_role": "adjudicator",
         "agrees": agrees,
         "malformed": malformed,
@@ -222,6 +399,8 @@ def adjudicate_run(run_dir: Path, runner, *, apply_gate: bool = True) -> dict:
     }
     manifest["distinct_adjudicator"] = {
         "model": "deepseek",
+        "authenticated": review_attestor is not None and not malformed,
+        "applied": bool(apply_gate and not malformed),
         "agrees": agrees,
         "malformed": malformed,
         "verdict": review.verdict,
@@ -230,8 +409,8 @@ def adjudicate_run(run_dir: Path, runner, *, apply_gate: bool = True) -> dict:
         "gate_after": gate_after,
         "adjudicated_at": record["adjudicated_at"],
     }
-    write_json(manifest_path, manifest)
-    write_json(run_dir / ADJ_FILE, record)
+    _write_json_confined(run_dir, manifest_path.name, manifest)
+    _write_json_confined(run_dir, ADJ_FILE, record)
     return record
 
 
@@ -271,7 +450,20 @@ def main() -> None:
         "--advisory-only", action="store_true",
         help="record the distinct verdict without changing the gate",
     )
+    parser.add_argument(
+        "--force-legacy", action="store_true",
+        help="Run the RETIRED legacy adjudication pass anyway. It only adjudicates "
+             "legacy ProofPipeline candidates, which the EGMRA pipeline no longer "
+             "produces.",
+    )
     args = parser.parse_args()
+    if not args.force_legacy:
+        parser.error(
+            "run_adjudication.py is RETIRED: it mutates the legacy gate on legacy "
+            "ProofPipeline candidates. The verified EGMRA pipeline runs its own "
+            "independent referee inside `egmra run`/`egmra campaign`. Pass "
+            "--force-legacy only to adjudicate old legacy candidates deliberately."
+        )
 
     pending = find_adjudicatable_runs(args.artifacts)
     if not pending:

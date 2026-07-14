@@ -160,9 +160,41 @@ def main() -> None:
         "--enable-experimental", action="store_true",
         help="Explicitly override the disabled continuous_scheduler release flag",
     )
+    parser.add_argument(
+        "--force-legacy", action="store_true",
+        help="Run the RETIRED legacy pipeline anyway. The supported production "
+             "path is now `egmra campaign --triage <triage-dir>`, which drains "
+             "the same rankings through the verified EGMRA pipeline (the legacy "
+             "pipeline cannot emit an authenticated release).",
+    )
     args = parser.parse_args()
+    if not args.force_legacy:
+        parser.error(
+            "run_continuous.py is RETIRED as the production drainer: it drives the "
+            "legacy ProofPipeline, which terminates at "
+            "'awaiting_authenticated_release' and can never emit a ReleaseCertificate. "
+            "Use the single verified pipeline instead:\n"
+            "  egmra campaign --triage <triage-dir> [--triage-lane current] "
+            "--provider browser --policy <signed-policy>\n"
+            "which drains the same searcher rankings through the EGMRA loop and "
+            "records outcomes to --outcome-ledger. Pass --force-legacy only to run "
+            "the retired path deliberately (e.g. reproducing an old candidate)."
+        )
     if "unrecorded" in args.model_id.lower() or not args.model_id.strip():
         parser.error("--model-id must be the exact recorded UI model identity")
+    if args.adjudicator == "same":
+        # The deterministic gate requires the final adjudicator's model lineage
+        # to be distinct from every reviewer lineage (verification.py:
+        # "adjudicator model lineage is not independent").  With a single
+        # lineage every candidate terminates candidate_rejected, so a
+        # same-model campaign can only produce rejected candidates.
+        print(
+            "[continuous] WARNING: --adjudicator same cannot satisfy the gate's "
+            "distinct-adjudicator-lineage requirement; every candidate will be "
+            "rejected at the gate. Use --adjudicator deepseek (requires a "
+            "logged-in DeepSeek profile) for a passable run.",
+            flush=True,
+        )
 
     require_feature("continuous_scheduler", override=args.enable_experimental)
 

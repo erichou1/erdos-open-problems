@@ -473,11 +473,33 @@ def _extract_definitions(text: str) -> tuple[Definition, ...]:
 
 
 def _extract_constraints(text: str) -> tuple[str, ...]:
+    """Extract only explicit binder/hypothesis restrictions.
+
+    A comparison in the theorem's *conclusion* is not a domain restriction.  In
+    particular, interpreting ``for all n, n < 3`` as a search domain ``n < 3``
+    would erase exactly the counterexamples intake is supposed to find.  We
+    therefore require a nearby assumption cue (``with``, ``given``, ``such
+    that``, etc.) or a quantifier that directly binds the comparison.
+    """
     constraints: list[str] = []
     for match in re.finditer(
         r"\b([A-Za-z])\s*(>=|<=|>|<|=|≥|≤)\s*(-?\d+)\b", text
     ):
-        constraints.append(match.group(0).strip())
+        prefix = text[max(0, match.start() - 80):match.start()]
+        # Stay within the current clause; a cue in an earlier sentence must not
+        # authorize a later conclusion comparison.
+        clause_prefix = re.split(r"[.;,]", prefix)[-1].strip().lower()
+        assumption_cued = re.search(
+            r"(?:with|such\s+that|where|satisfying|subject\s+to|"
+            r"assume|suppose|given|provided\s+that|whenever|let)\s*$",
+            clause_prefix,
+        )
+        directly_quantified = re.search(
+            r"(?:for\s+(?:all|every|each|some)|there\s+(?:exists?|is))\s*$",
+            clause_prefix,
+        )
+        if assumption_cued or directly_quantified:
+            constraints.append(match.group(0).strip())
     return tuple(dict.fromkeys(constraints))
 
 

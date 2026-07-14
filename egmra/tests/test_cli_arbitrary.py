@@ -55,6 +55,63 @@ def test_run_statement_is_honest_open_state(tmp_path, capsys):
     assert out["provider"] == "deterministic"
 
 
+def test_run_wires_worker_rounds_and_formal_target(tmp_path, capsys, monkeypatch):
+    """R3/R5: --worker-rounds and --formal-target-file reach the RunnerWorker."""
+    from egmra import cli as cli_module
+
+    cfg = _config_file(tmp_path)
+    policy = _signed_policy_file(tmp_path)
+    lean = tmp_path / "target.lean"
+    lean.write_text("theorem erdos_x : True := trivial\n", encoding="utf-8")
+    captured = {}
+    real_research = cli_module.research
+
+    def spy(**kwargs):
+        captured["worker"] = kwargs["worker"]
+        return real_research(**kwargs)
+
+    monkeypatch.setattr(cli_module, "research", spy)
+    rc = main(["--config", str(cfg), "run",
+               "--statement", "Prove that for all natural numbers n, n = n.",
+               "--provider", "deterministic", "--policy", str(policy),
+               "--retrieval", "none", "--oeis", "offline",
+               "--worker-rounds", "3", "--formal-target-file", str(lean)])
+    assert rc == 0
+    worker = captured["worker"]
+    assert worker.max_rounds == 3
+    assert worker.formal_target.startswith("theorem erdos_x")
+
+
+def test_run_rejects_out_of_range_worker_rounds(tmp_path, capsys):
+    cfg = _config_file(tmp_path)
+    policy = _signed_policy_file(tmp_path)
+    rc = main(["--config", str(cfg), "run",
+               "--statement", "s", "--provider", "deterministic",
+               "--policy", str(policy), "--worker-rounds", "9"])
+    assert rc != 0
+    captured = capsys.readouterr()
+    assert "--worker-rounds" in (captured.err + captured.out)
+
+
+def test_repeated_statement_runs_preserve_prior_log_and_start_new_attempt(tmp_path, capsys):
+    cfg = _config_file(tmp_path)
+    policy = _signed_policy_file(tmp_path)
+    argv = ["--config", str(cfg), "run",
+            "--statement", "Prove that for all natural numbers n, n = n.",
+            "--predicate", "n == n", "--provider", "deterministic",
+            "--policy", str(policy), "--retrieval", "none", "--oeis", "offline"]
+
+    assert main(argv) == 0
+    first = json.loads(capsys.readouterr().out)
+    assert main(argv) == 0
+    second = json.loads(capsys.readouterr().out)
+
+    logs = sorted((tmp_path / "runs").glob("*.jsonl"))
+    assert len(logs) == 2
+    assert first["problem_id"] == second["problem_id"]
+    assert logs[0].read_bytes() and logs[1].read_bytes()
+
+
 def test_run_browser_provider_without_profile_fails_cleanly(tmp_path, capsys, monkeypatch):
     # The primary provider must fail explicitly, never silently degrade — and the
     # test must never launch a real browser.
@@ -501,6 +558,38 @@ def test_run_formalizer_aristotle_requires_lean_project(tmp_path, capsys):
     err = json.loads(capsys.readouterr().err)
     assert err["error"] == "ValueError"
     assert "--lean-project" in err["detail"]
+
+
+def test_formalize_vendor_failure_is_structured_not_a_traceback(
+    tmp_path, capsys, monkeypatch,
+):
+    import egmra.cli as cli_module
+    from egmra.lean.aristotle_api import AristotleClientError
+
+    project = tmp_path / "lean-project"
+    (project / ".lake").mkdir(parents=True)
+
+    class FailingClient:
+        def __init__(self, **_kwargs):
+            pass
+
+        def submit(self, _prompt):
+            raise AristotleClientError("vendor rejected credentials")
+
+        def close(self):
+            pass
+
+    monkeypatch.setattr(cli_module, "AristotleSdkClient", FailingClient)
+    rc = main(["formalize", "--formalizer", "aristotle", "--prompt", "prove True",
+               "--declaration", "candidate", "--expected-type", "True",
+               "--lean-project", str(project)])
+
+    assert rc == 2
+    captured = capsys.readouterr()
+    error = json.loads(captured.err)
+    assert error["error"] == "AristotleClientError"
+    assert "vendor rejected credentials" in error["detail"]
+    assert "Traceback" not in captured.err
 
 
 def test_run_passes_formalizer_to_worker(tmp_path, monkeypatch):

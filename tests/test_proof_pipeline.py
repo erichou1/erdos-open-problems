@@ -1,14 +1,49 @@
 import json
 import hashlib
 import re
+import shutil
 import tempfile
 import unittest
+from dataclasses import asdict, replace
 from pathlib import Path
 
 from proof_pipeline import ProofPipeline
 from promote_verified_run import promote
+from run_verified_pipeline import publish_verified_result
 from research_state import make_statement_lock
-from verification import VerificationEvidence
+from verification import (
+    Review,
+    VerificationEvidence,
+    VerificationBinding,
+    sign_review,
+    sign_verification_evidence,
+)
+
+
+REVIEW_ENV = {"EGMRA_LEGACY_REVIEW_KEY": "legacy-pipeline-review-key-at-least-32-bytes"}
+EVIDENCE_ENV = {"EGMRA_LEGACY_EVIDENCE_KEY": "legacy-pipeline-evidence-key-at-least-32-bytes"}
+TRUST_ENV = REVIEW_ENV | EVIDENCE_ENV
+POLICY_ENV = {"EGMRA_POLICY_KEY": "legacy-pipeline-policy-key-at-least-32-bytes"}
+SECURE_RUN_CONTEXT = {
+    "pipeline_version": "test-pipeline-v1",
+    "model_portfolio": "test-model-v1",
+    "execution_config": {"stage_timeout_s": 30},
+    "source_snapshot_id": "test-snapshot-v1",
+    "source_snapshot_sha256": hashlib.sha256(b"test source snapshot").hexdigest(),
+    "toolset": {"runner": "authenticated-test-runner"},
+    "dependencies": {"requirements_lock_sha256": hashlib.sha256(b"test lock").hexdigest()},
+    "runtime": {"python": "test-python", "platform": "test-platform"},
+}
+
+
+def _promotion_enforcer():
+    """A signed policy that enables promotion, for the M0 promotion entry point."""
+    from egmra.policy import PolicyEnforcer, sign_policy
+    return PolicyEnforcer(sign_policy({
+        "promotion": True,
+        "formal_promotion": True,
+        "automated_external_evidence": True,
+    }, env=POLICY_ENV), verification_env=POLICY_ENV)
 
 
 def candidate_result():
@@ -25,16 +60,39 @@ CLAIM_IDS: C1; C2; C3; C4; C5; C6; C7
 </result>"""
 
 
-def evidence_for(problem):
-    return (VerificationEvidence(
+def evidence_provider(binding: VerificationBinding):
+    return (sign_verification_evidence(VerificationEvidence(
         kind="exact_computation",
         verifier="test-checker",
         outcome="candidate_proved",
-        statement_sha256=make_statement_lock(problem).sha256,
-        candidate_sha256=hashlib.sha256(candidate_result().encode("utf-8")).hexdigest(),
+        statement_sha256=binding.statement_sha256,
+        candidate_sha256=binding.candidate_sha256,
         artifact_sha256="c" * 64,
         passed=True,
-    ),)
+        verification_method="independent_exact_replay",
+        validator_id="egmra.compute.exact-replay/v1",
+        certificate_sha256="c" * 64,
+        scope_sha256=binding.statement_sha256,
+        coverage="complete",
+        statement_fidelity="exact_scope_bound",
+        problem_number=binding.problem_number,
+        run_contract_id=binding.run_contract_id,
+        execution_id=binding.execution_id,
+        run_context_id=binding.run_context_id,
+    ), env=EVIDENCE_ENV),)
+
+
+def attest_test_review(review: Review, stage: str) -> Review:
+    """Test gateway standing in for independently authenticated runner adapters."""
+    identified = replace(
+        review,
+        authority_id=f"authority-{review.reviewer_id}",
+        model_provider="test-provider",
+        model_name=f"test-model-{review.reviewer_role}",
+        model_version="immutable-v1",
+        model_lineage=f"lineage-{review.reviewer_role}",
+    )
+    return sign_review(identified, env=REVIEW_ENV)
 
 
 class PassingRunner:
@@ -90,7 +148,7 @@ class PassingRunner:
 
 
 class ProofPipelineTests(unittest.TestCase):
-    def test_stage_cache_restores_context_and_invalidates_changed_prompt(self):
+    def test_stage_cache_is_never_trusted_even_if_response_and_metadata_match(self):
         class ContextRunner:
             def __init__(self):
                 self.calls = []
@@ -147,35 +205,121 @@ class ProofPipelineTests(unittest.TestCase):
             resumed_runner = ContextRunner()
             resumed = configured_pipeline(resumed_runner)
             self.assertEqual(resumed._run("original prompt", "review_logic_1"), "response 1")
-            self.assertEqual(resumed_runner.calls, [])
+            self.assertEqual(len(resumed_runner.calls), 1)
             self.assertEqual(
                 resumed_runner.context_id("review_logic_1"),
                 "https://chat.test/review_logic_1/1",
             )
 
-            self.assertEqual(resumed._run("changed prompt", "review_logic_1"), "response 1")
-            self.assertEqual(len(resumed_runner.calls), 1)
+            # A caller can make the old circular integrity check pass by
+            # replacing both the response and its adjacent digest metadata.
+            forged = "forged reviewer approval"
+            (cache / "review_logic_1.txt").write_text(forged, encoding="utf-8")
+            metadata = json.loads(
+                (cache / "review_logic_1.meta.json").read_text(encoding="utf-8")
+            )
+            metadata["response_sha256"] = hashlib.sha256(
+                forged.encode("utf-8")
+            ).hexdigest()
+            metadata["context_id"] = "https://attacker.invalid/forged"
+            (cache / "review_logic_1.meta.json").write_text(
+                json.dumps(metadata), encoding="utf-8"
+            )
+
+            fresh_runner = ContextRunner()
+            fresh = configured_pipeline(fresh_runner)
+            self.assertEqual(
+                fresh._run("original prompt", "review_logic_1"), "response 1"
+            )
+            self.assertEqual(len(fresh_runner.calls), 1)
+            self.assertNotEqual(
+                fresh_runner.context_id("review_logic_1"),
+                "https://attacker.invalid/forged",
+            )
+
+    def test_stage_path_traversal_and_unbounded_response_fail_closed(self):
+        class OversizedRunner(PassingRunner):
+            def run(self, prompt, *, stage, isolated):
+                return "x" * (16 * 1024 * 1024 + 1)
+
+        with tempfile.TemporaryDirectory() as directory:
+            cache = Path(directory)
+            pipeline = ProofPipeline(
+                PassingRunner(), cache, **SECURE_RUN_CONTEXT,
+            )
+            pipeline._stage_cache = cache
+            pipeline._bind_run_contract(hashlib.sha256(b"statement").hexdigest())
+            with self.assertRaises(ValueError):
+                pipeline._run("prompt", "../../outside")
+            self.assertFalse((cache.parent / "outside.txt").exists())
+
+            pipeline.runner = OversizedRunner()
+            with self.assertRaisesRegex(ValueError, "response exceeds"):
+                pipeline._run("prompt", "scout_1")
+            self.assertFalse((cache / "scout_1.txt").exists())
+
+    def test_uninitialized_stage_cache_fails_before_provider_call(self):
+        runner = PassingRunner()
+        with tempfile.TemporaryDirectory() as directory:
+            pipeline = ProofPipeline(
+                runner, Path(directory), **SECURE_RUN_CONTEXT,
+            )
+            pipeline._bind_run_contract(hashlib.sha256(b"statement").hexdigest())
+
+            with self.assertRaisesRegex(ValueError, "stage cache is not initialized"):
+                pipeline._run("prompt", "scout_1")
+
+            self.assertEqual(runner.calls, [])
+
+    def test_symlinked_artifact_root_and_problem_directory_fail_before_writes(self):
+        problem = "Prove that the artifact boundary is confined."
+        with tempfile.TemporaryDirectory() as directory:
+            base = Path(directory)
+            outside = base / "outside"
+            outside.mkdir()
+            linked_root = base / "linked-artifacts"
+            linked_root.symlink_to(outside, target_is_directory=True)
+            runner = PassingRunner()
+
+            with self.assertRaisesRegex(ValueError, "artifact root"):
+                ProofPipeline(runner, linked_root, **SECURE_RUN_CONTEXT).solve(
+                    91, problem
+                )
+            self.assertEqual(runner.calls, [])
+            self.assertEqual(list(outside.iterdir()), [])
+
+            real_root = base / "real-artifacts"
+            real_root.mkdir()
+            linked_problem = real_root / "problem_92"
+            linked_problem.symlink_to(outside, target_is_directory=True)
+            with self.assertRaisesRegex(ValueError, "problem directory"):
+                ProofPipeline(runner, real_root, **SECURE_RUN_CONTEXT).solve(
+                    92, problem
+                )
+            self.assertEqual(runner.calls, [])
+            self.assertEqual(list(outside.iterdir()), [])
 
     def test_runs_isolated_stages_and_persists_gate_evidence(self):
         runner = PassingRunner()
         with tempfile.TemporaryDirectory() as directory:
             problem = "For every n, prove P(n)."
             result = ProofPipeline(
-                runner, Path(directory), verification_evidence=evidence_for(problem),
-                pipeline_version="test-pipeline-v1",
-                model_portfolio="fake-model-v1",
-                execution_config={"stage_timeout_s": 30},
+                runner, Path(directory),
+                verification_evidence_provider=evidence_provider,
+                review_attestor=attest_test_review,
+                attestation_env=TRUST_ENV,
+                **SECURE_RUN_CONTEXT,
             ).solve(1, problem, research_directive={
                 "schema_version": 1,
                 "parent_statement_sha256": make_statement_lock(problem).sha256,
                 "recommended_attack_modes": ["exact_construction_search"],
                 "subproblem_targets": [],
             })
-            self.assertEqual(result.gate.status, "verified_proved")
+            self.assertEqual(result.gate.status, "awaiting_external_evidence")
             self.assertTrue((result.artifact_dir / "manifest.json").exists())
             manifest = json.loads((result.artifact_dir / "manifest.json").read_text())
             self.assertEqual(manifest["pipeline_version"], "test-pipeline-v1")
-            self.assertEqual(manifest["model_portfolio"], "fake-model-v1")
+            self.assertEqual(manifest["model_portfolio"], "test-model-v1")
             self.assertEqual(manifest["budget"]["max_revisions"], 2)
             self.assertEqual(manifest["budget"]["stage_timeout_s"], 30)
             self.assertEqual(
@@ -215,10 +359,13 @@ class ProofPipelineTests(unittest.TestCase):
             problem = "Prove Q."
             result = ProofPipeline(
                 runner, Path(directory), max_revisions=1,
-                verification_evidence=evidence_for(problem),
+                verification_evidence_provider=evidence_provider,
+                review_attestor=attest_test_review,
+                attestation_env=TRUST_ENV,
+                **SECURE_RUN_CONTEXT,
             ).solve(2, problem)
             state = json.loads((result.artifact_dir / "research_state.json").read_text())
-            self.assertEqual(result.gate.status, "verified_proved")
+            self.assertEqual(result.gate.status, "awaiting_external_evidence")
             self.assertEqual(len(state["attempts"]), 2)
             self.assertIn("assumes the conclusion", state["failed_approaches"][0]["obstructions"][0])
 
@@ -227,7 +374,11 @@ class ProofPipelineTests(unittest.TestCase):
         problem = "Prove R."
         with tempfile.TemporaryDirectory() as directory:
             pipeline = ProofPipeline(
-                runner, Path(directory), verification_evidence=evidence_for(problem)
+                runner, Path(directory),
+                verification_evidence_provider=evidence_provider,
+                review_attestor=attest_test_review,
+                attestation_env=TRUST_ENV,
+                **SECURE_RUN_CONTEXT,
             )
             first = pipeline.solve(3, problem)
             second = pipeline.solve(3, problem)
@@ -247,7 +398,10 @@ class ProofPipelineTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             result = ProofPipeline(
                 MalformedRunner(), Path(directory), max_revisions=0,
-                verification_evidence=evidence_for(problem),
+                verification_evidence_provider=evidence_provider,
+                review_attestor=attest_test_review,
+                attestation_env=TRUST_ENV,
+                **SECURE_RUN_CONTEXT,
             ).solve(4, problem)
             self.assertEqual(result.gate.status, "candidate_rejected")
             self.assertTrue((result.artifact_dir / "manifest.json").exists())
@@ -268,9 +422,41 @@ class ProofPipelineTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             result = ProofPipeline(
                 DescriptiveRoleRunner(), Path(directory),
-                verification_evidence=evidence_for(problem),
+                verification_evidence_provider=evidence_provider,
+                review_attestor=attest_test_review,
+                attestation_env=TRUST_ENV,
+                **SECURE_RUN_CONTEXT,
             ).solve(41, problem)
-            self.assertEqual(result.gate.status, "verified_proved")
+            self.assertEqual(result.gate.status, "awaiting_external_evidence")
+
+    def test_duplicate_review_keys_fail_closed_instead_of_last_wins(self):
+        class DuplicateKeyRunner(PassingRunner):
+            def run(self, prompt, *, stage, isolated):
+                if stage == "review_logic_1":
+                    self.calls.append((stage, isolated, prompt))
+                    sha = re.search(
+                        r"STATEMENT_SHA256: ([0-9a-f]{64})", prompt
+                    ).group(1)
+                    return (
+                        '{"reviewer_role":"logic","verdict":"fail",'
+                        '"verdict":"pass","claims_checked":7,"claims_total":7,'
+                        '"checked_claim_ids":["C1","C2","C3","C4","C5","C6","C7"],'
+                        '"open_gaps":[],"unchecked_imports":[],"material_errors":[],'
+                        f'"statement_sha256":"{sha}","completeness_score":100,'
+                        '"proof_confidence":99,"adversarial_survival_score":99,'
+                        '"outcome":"proved"}'
+                    )
+                return super().run(prompt, stage=stage, isolated=isolated)
+
+        with tempfile.TemporaryDirectory() as directory:
+            result = ProofPipeline(
+                DuplicateKeyRunner(), Path(directory), max_revisions=0,
+                verification_evidence_provider=evidence_provider,
+                review_attestor=attest_test_review,
+                attestation_env=TRUST_ENV,
+                **SECURE_RUN_CONTEXT,
+            ).solve(42, "Prove duplicate keys cannot choose a verdict.")
+            self.assertEqual(result.gate.status, "candidate_rejected")
 
     def test_malformed_replan_continues_with_last_valid_graph(self):
         class MalformedReplanRunner(PassingRunner):
@@ -295,41 +481,82 @@ class ProofPipelineTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             result = ProofPipeline(
                 MalformedReplanRunner(), Path(directory), max_revisions=1,
-                verification_evidence=evidence_for(problem),
+                verification_evidence_provider=evidence_provider,
+                review_attestor=attest_test_review,
+                attestation_env=TRUST_ENV,
+                **SECURE_RUN_CONTEXT,
             ).solve(6, problem)
             self.assertTrue((result.artifact_dir / "manifest.json").exists())
             self.assertTrue((result.artifact_dir / "attempt_1" / "replan_error.txt").exists())
 
-    def test_external_evidence_promotes_existing_run_and_publishes(self):
+    def test_external_evidence_promotes_but_legacy_publication_is_disabled(self):
         runner = PassingRunner()
         problem = "Prove T."
         with tempfile.TemporaryDirectory() as directory:
             base = Path(directory)
             result = ProofPipeline(
-                runner, base / "runs"
+                runner, base / "runs",
+                review_attestor=attest_test_review,
+                attestation_env=TRUST_ENV,
+                **SECURE_RUN_CONTEXT,
             ).solve(5, problem)
             self.assertEqual(result.gate.status, "awaiting_external_evidence")
-            artifact = base / "expert-review.txt"
-            artifact.write_text("independent expert approval", encoding="utf-8")
+            artifact = base / "exact-replay-certificate.txt"
+            artifact.write_text("independent exact replay certificate", encoding="utf-8")
             candidate = (result.artifact_dir / "candidate.md").read_text()
-            evidence_path = base / "evidence.json"
-            evidence_path.write_text(json.dumps([{
-                "kind": "expert_review",
-                "verifier": "test expert",
-                "outcome": "candidate_proved",
-                "statement_sha256": make_statement_lock(problem).sha256,
-                "candidate_sha256": hashlib.sha256(candidate.encode()).hexdigest(),
-                "artifact_path": str(artifact),
-                "passed": True,
-            }]))
-            promoted = promote(
-                result.artifact_dir, evidence_path, publish=True,
-                category="open", base_dir=base,
+            run_manifest = json.loads(
+                (result.artifact_dir / "manifest.json").read_text()
             )
-            self.assertEqual(promoted.gate.status, "verified_proved")
-            output = next((base / "outputs" / "chatgpt" / "open").glob("*.md"))
-            self.assertIn("[verified-proved]", output.name)
-            self.assertTrue(output.exists())
+            evidence_path = base / "evidence.json"
+            item = sign_verification_evidence(VerificationEvidence(
+                kind="exact_computation",
+                verifier="test exact replay",
+                outcome="candidate_proved",
+                statement_sha256=make_statement_lock(problem).sha256,
+                candidate_sha256=hashlib.sha256(candidate.encode()).hexdigest(),
+                artifact_sha256=hashlib.sha256(artifact.read_bytes()).hexdigest(),
+                passed=True,
+                verification_method="independent_exact_replay",
+                validator_id="egmra.compute.exact-replay/v1",
+                certificate_sha256=hashlib.sha256(
+                    b"independent exact replay certificate"
+                ).hexdigest(),
+                scope_sha256=make_statement_lock(problem).sha256,
+                coverage="complete",
+                statement_fidelity="exact_scope_bound",
+                problem_number=run_manifest["problem_number"],
+                run_contract_id=run_manifest["run_contract_id"],
+                execution_id=run_manifest["execution_id"],
+                run_context_id=run_manifest["run_context_id"],
+            ), env=EVIDENCE_ENV)
+            record = asdict(item)
+            record["artifact_path"] = artifact.name
+            evidence_path.write_text(json.dumps([record]))
+
+            tampered_run = result.artifact_dir.parent / "tampered-copy"
+            shutil.copytree(result.artifact_dir, tampered_run)
+            tampered_manifest_path = tampered_run / "manifest.json"
+            tampered_manifest = json.loads(tampered_manifest_path.read_text())
+            tampered_manifest["problem_number"] = 999999
+            tampered_manifest_path.write_text(json.dumps(tampered_manifest))
+            with self.assertRaises(ValueError):
+                promote(
+                    tampered_run, evidence_path, publish=False, category="open",
+                    enforcer=_promotion_enforcer(), attestation_env=TRUST_ENV,
+                )
+
+            promoted = promote(
+                result.artifact_dir, evidence_path, publish=False,
+                category="open", base_dir=base,
+                enforcer=_promotion_enforcer(),
+                attestation_env=TRUST_ENV,
+            )
+            self.assertEqual(
+                promoted.gate.status, "awaiting_authenticated_release"
+            )
+            with self.assertRaises(RuntimeError):
+                publish_verified_result(promoted, "../../outside", base)
+            self.assertFalse((base / "outputs").exists())
 
     def test_distinct_adjudicator_runner_handles_only_adjudication(self):
         primary = PassingRunner()

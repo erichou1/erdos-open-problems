@@ -27,6 +27,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import secrets
 import shutil
 import sys
 import time
@@ -63,6 +64,11 @@ from egmra.orchestrator import (
     classify_result,
     research,
 )
+from egmra.orchestrator.outcome_ledger import (
+    EgmraOutcomeLedger,
+    build_outcome_record,
+)
+from egmra.orchestrator.triage_source import triage_ranked_problem_ids
 from egmra.policy import PolicyEnforcer, PolicyError, default_policy_path, load_policy, sign_policy
 from egmra.m2 import ContentAddressedObjectStore, PostgresEventStore
 from egmra.oeis import OEISClient
@@ -146,6 +152,16 @@ def cmd_run(args: argparse.Namespace) -> int:
 
 
 def _resolve_problem_input(args: argparse.Namespace) -> ProblemInput:
+    fixture_id = getattr(args, "fixture", None)
+    if fixture_id is not None:
+        fx = fixture(fixture_id)
+        return ProblemInput(
+            problem_id=fx.problem_id,
+            source_bytes=fx.statement,
+            source_id=fx.problem_id,
+            display_statement=fx.statement.decode("utf-8"),
+            metadata={"input_kind": "fixture"},
+        )
     if args.erdos is not None:
         return from_erdos_number(
             args.erdos,
@@ -237,17 +253,40 @@ def _resolve_postgres_dsn(args: argparse.Namespace) -> str:
     return dsn
 
 
-def _make_event_log(args: argparse.Namespace, run_id: str):
+def _make_event_log(
+    args: argparse.Namespace, run_id: str, *, events_path: Path | None = None
+):
     """Build the event-log backend for a run (task 4.9).
 
-    Returns ``None`` for the JSONL default (research builds its own file-backed
-    append-only log at ``events_path``), or a connected
+    Returns a file-backed :class:`EventLog` for the JSONL default, or a connected
     :class:`PostgresEventStore` when ``--event-store postgres`` is selected. The
     DSN is read from the environment/CLI and never written to logs.
     """
     if getattr(args, "event_store", "jsonl") == "postgres":
         return PostgresEventStore(_resolve_postgres_dsn(args), run_id=run_id)
+    if events_path is not None:
+        return EventLog(events_path, run_id=run_id)
     return None
+
+
+def _new_attempt_id(problem_id: str) -> str:
+    """Return a collision-resistant run id without conflating it with the problem.
+
+    A problem may be researched repeatedly.  The frozen problem identity remains
+    content-bound and stable, while each attempt gets its own append-only chain.
+    """
+    return f"{problem_id}.{time.time_ns()}-{os.getpid()}-{secrets.token_hex(4)}"
+
+
+def _campaign_attempt_id(campaign_id: str, problem_id: str, fencing_token: int) -> str:
+    """Namespace an attempt across campaigns without trusting an ID as a path.
+
+    PostgreSQL event run IDs are global, and JSONL paths share one directory.
+    Fencing tokens are only monotonic *within* a campaign, so
+    ``problem_id.token`` collides when two campaigns cover the same problem.
+    """
+    campaign_namespace = sha256_hex(campaign_id)[:16]
+    return f"camp-{campaign_namespace}.{problem_id}.{int(fencing_token)}"
 
 
 def _close_event_log(log) -> None:
@@ -407,6 +446,16 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
     """
     if not 1 <= int(args.workers) <= 5:
         raise ValueError("--workers must be between 1 and 5")
+    worker_rounds = int(getattr(args, "worker_rounds", 1) or 1)
+    if not 1 <= worker_rounds <= 8:
+        raise ValueError("--worker-rounds must be between 1 and 8")
+    hostile_review = int(getattr(args, "hostile_review", 0) or 0)
+    if not 0 <= hostile_review <= 4:
+        raise ValueError("--hostile-review must be between 0 and 4")
+    lean_repair_rounds = int(getattr(args, "lean_repair_rounds", 0) or 0)
+    if not 0 <= lean_repair_rounds <= 3:
+        raise ValueError("--lean-repair-rounds must be between 0 and 3")
+    formal_target = _load_formal_target(getattr(args, "formal_target_file", None))
     problem = _resolve_problem_input(args)
     # Optional operator-supplied bounded predicate (a safe expression over ``n``)
     # so the counterexample/boundary probes genuinely enumerate small cases on the
@@ -418,8 +467,9 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
     runner = _build_runner(args.provider, throttle=_browser_throttle(config, args.provider))
     policy = load_policy(Path(args.policy) if args.policy else default_policy_path())
     enforcer = PolicyEnforcer(policy)
-    events_path = Path(config.events_dir) / f"{problem.problem_id}.jsonl"
-    event_log = _make_event_log(args, problem.problem_id)
+    run_id = _new_attempt_id(problem.problem_id)
+    events_path = Path(config.events_dir) / f"{run_id}.jsonl"
+    event_log = _make_event_log(args, run_id, events_path=events_path)
     retrieval_corpus = _build_retrieval_corpus(args, config, query=problem.display_statement)
     oeis_client = _build_oeis_client(args, config)
     # Durable content-addressed store for model-exchange transcripts (task 4.10).
@@ -440,7 +490,15 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
         mathlib_commit=mathlib_commit,
         lean_project=args.lean_project,
         formalizer=formalizer,
+        max_rounds=worker_rounds,
+        formal_target=formal_target,
     )
+    # Hostile reviewers reuse the provider runner: each review is a fresh
+    # isolated conversation, but an unattested model lineage collapses to one
+    # reviewer family, so N>1 here still caps the review dimension at SINGLE.
+    informal_reviewers = [
+        (f"hostile-{i + 1}", runner) for i in range(hostile_review)
+    ]
     try:
         result = research(
             problem_id=problem.problem_id,
@@ -466,6 +524,9 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
             formal_correspondence_reviews=_load_formal_correspondence_reviews(
                 args.formal_correspondence_review
             ),
+            informal_reviewers=informal_reviewers or None,
+            lean_repair_rounds=lean_repair_rounds,
+            checkpoint_dir=getattr(args, "checkpoint_dir", None),
             runner=runner,
         )
     except BrowserProviderUnavailable as exc:
@@ -490,6 +551,8 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
     classification = classify_result(result, goal_claim_id="goal")
     rendered = result.render() | {
         "provider": args.provider,
+        "run_id": run_id,
+        "events_path": str(events_path),
         "event_store": getattr(args, "event_store", "jsonl"),
         "retrieval": {
             "mode": getattr(args, "retrieval", "corpus"),
@@ -525,22 +588,30 @@ def _run_fixture(args: argparse.Namespace, config: EgmraConfig) -> int:
     corpus = [TheoremRecord(theorem_id="t", canonical_statement="x", conclusion="y",
                             source_uri="u", source_version="v", source_content_hash="h",
                             verbatim_theorem_and_hypothesis_extract="x")]
-    events_path = Path(config.events_dir) / f"{fx.problem_id}.jsonl"
+    run_id = _new_attempt_id(fx.problem_id)
+    events_path = Path(config.events_dir) / f"{run_id}.jsonl"
+    event_log = _make_event_log(args, run_id, events_path=events_path)
     intent_review = _load_intent_review(args.intent_review)
-    result = research(
-        problem_id=fx.problem_id, source_bytes=fx.statement, source_id=fx.problem_id,
-        budget=100.0, enforcer=enforcer, worker=_fixture_worker(fx), goal_claim_id="goal",
-        events_path=events_path, retrieval_corpus=corpus, probe_predicate=fx.predicate(),
-        status_claims=[StatusClaim(
-            problem_id=fx.problem_id, status="known", source="local://bundled-fixture-manifest",
-            review_date=time.strftime("%Y-%m-%d", time.gmtime()),
-            source_independence="bundled-regression-fixture",
-        )],
-        novelty_verdict="known",
-        intent_review=intent_review,
-    )
+    try:
+        result = research(
+            problem_id=fx.problem_id, source_bytes=fx.statement, source_id=fx.problem_id,
+            budget=100.0, enforcer=enforcer, worker=_fixture_worker(fx), goal_claim_id="goal",
+            events_path=events_path, event_log=event_log,
+            retrieval_corpus=corpus, probe_predicate=fx.predicate(),
+            status_claims=[StatusClaim(
+                problem_id=fx.problem_id, status="known", source="local://bundled-fixture-manifest",
+                review_date=time.strftime("%Y-%m-%d", time.gmtime()),
+                source_independence="bundled-regression-fixture",
+            )],
+            novelty_verdict="known",
+            intent_review=intent_review,
+        )
+    finally:
+        _close_event_log(event_log)
     expectation_met = _fixture_expectation_met(fx.expected_outcome, result)
     rendered = result.render() | {
+        "run_id": run_id,
+        "events_path": str(events_path),
         "expected_outcome": fx.expected_outcome,
         "expectation_met": expectation_met,
         "result_state": classify_result(result, goal_claim_id="goal").to_dict(),
@@ -570,7 +641,6 @@ def _fixture_expectation_met(expected: str, result) -> bool:
             promotion.promoted
             and compiled.complete
             and result.problem_id == result.contract.problem_id
-            and result.problem_id == result.graph.log.run_id
             and result.problem_id in replayed.problems
             and certificate.problem_contract_hash == result.contract.contract_hash()
             and certificate.result_claim_id == compiled.goal_claim_id
@@ -628,6 +698,25 @@ def _load_intent_review(path: Path | None) -> IntentCertificate | None:
     document = dict(document)
     document["verdict"] = Verdict(document.get("verdict", "UNRESOLVED"))
     return IntentCertificate(**document)
+
+
+def _load_formal_target(path: Path | None) -> str:
+    """Read a community-reviewed Lean statement for the worker prompt (R5).
+
+    Read-only prompt context pinning the intended obligation — never truth
+    authority, never a proof, and never a substitute for the independently
+    signed formal-correspondence review.
+    """
+    if path is None:
+        return ""
+    if path.is_symlink() or not path.is_file():
+        raise ValueError("formal target path must be a regular non-symlink file")
+    if path.stat().st_size > 1_000_000:
+        raise ValueError("formal target file is too large")
+    source = path.read_text(encoding="utf-8").strip()
+    if not source:
+        raise ValueError("formal target file is empty")
+    return source
 
 
 def _load_formal_correspondence_reviews(
@@ -1005,6 +1094,41 @@ def cmd_formalize(args: argparse.Namespace) -> int:
     return 0 if sealed is not None else 3
 
 
+def cmd_formal_target(args: argparse.Namespace) -> int:
+    """Fetch the community-reviewed Lean statement for one Erdős problem (R5).
+
+    The fetched source is a *pinned obligation and prompt context*: pass it to
+    ``egmra run --formal-target-file``.  It is never truth authority and never
+    a substitute for the independently signed formal-correspondence review.  A
+    mutable ref (``main``) is honestly reported as non-reproducible; pin an
+    immutable ``bench-v{N}-lean4.{X}.{Y}`` tag for anything release-adjacent.
+    """
+    from egmra.corpus.formal_conjectures import (
+        DEFAULT_REF,
+        FormalConjectureUnavailable,
+        fetch_formal_conjecture,
+    )
+
+    ref = args.ref or DEFAULT_REF
+    try:
+        target = fetch_formal_conjecture(int(args.erdos), ref=ref)
+    except (FormalConjectureUnavailable, ValueError) as exc:
+        print(json.dumps({"error": str(exc), "problem": args.erdos, "ref": ref}))
+        return 3
+    if args.output is not None:
+        output = Path(args.output)
+        if os.path.lexists(output):
+            raise FileExistsError(f"refusing to overwrite existing path: {output}")
+        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+        if hasattr(os, "O_NOFOLLOW"):
+            flags |= os.O_NOFOLLOW
+        fd = os.open(output, flags, 0o644)
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            handle.write(target.lean_source)
+    print(json.dumps(target.to_dict(), indent=2))
+    return 0
+
+
 def cmd_fixtures(_args: argparse.Namespace) -> int:
     for fx in FIXTURE_PROBLEMS:
         print(f"{fx.problem_id}\t[{fx.expected_outcome}]\tL{fx.level}\t{fx.statement.decode()[:60]}")
@@ -1036,6 +1160,12 @@ def cmd_campaign(args: argparse.Namespace) -> int:
     config = EgmraConfig.load(args.config)
     if not 1 <= int(args.workers) <= 5:
         raise ValueError("--workers must be between 1 and 5")
+    campaign_worker_rounds = int(getattr(args, "worker_rounds", 1) or 1)
+    if not 1 <= campaign_worker_rounds <= 8:
+        raise ValueError("--worker-rounds must be between 1 and 8")
+    campaign_repair_rounds = int(getattr(args, "lean_repair_rounds", 0) or 0)
+    if not 0 <= campaign_repair_rounds <= 3:
+        raise ValueError("--lean-repair-rounds must be between 0 and 3")
     state_path = Path(args.state)
     workers = tuple(f"w{i}" for i in range(int(args.workers)))
     # Durable campaign state: a signed local JSON file by default, or an opt-in
@@ -1054,12 +1184,33 @@ def cmd_campaign(args: argparse.Namespace) -> int:
             campaign.close()
         return 0
 
-    if not args.erdos_range:
-        raise ValueError("provide --erdos-range (e.g. 900-905) or --status")
-    numbers = _parse_erdos_range(args.erdos_range)
-    problem_ids = [f"erdos-{n}" for n in numbers]
-    campaign_id = args.campaign_id or f"camp-erdos-{numbers[0]}-{numbers[-1]}"
+    # Problem source: an explicit --erdos-range, or the searcher's triage
+    # rankings drained in ranked order (the single-pipeline replacement for the
+    # legacy run_continuous.py, which drove ProofPipeline instead of EGMRA).
+    triage_dir = getattr(args, "triage", None)
+    max_problems = int(getattr(args, "max_problems", 0) or 0)
+    if triage_dir is not None and args.erdos_range:
+        raise ValueError("provide either --erdos-range or --triage, not both")
+    if triage_dir is not None:
+        limit = max_problems if max_problems > 0 else None
+        problem_ids = triage_ranked_problem_ids(
+            Path(triage_dir), lane=args.triage_lane, limit=limit)
+        numbers = [int(pid.split("-", 1)[1]) for pid in problem_ids]
+        campaign_id = args.campaign_id or (
+            f"camp-triage-{args.triage_lane}-{numbers[0]}")
+    elif args.erdos_range:
+        numbers = _parse_erdos_range(args.erdos_range)
+        problem_ids = [f"erdos-{n}" for n in numbers]
+        campaign_id = args.campaign_id or f"camp-erdos-{numbers[0]}-{numbers[-1]}"
+    else:
+        raise ValueError(
+            "provide --erdos-range (e.g. 900-905), --triage DIR, or --status")
     campaign.initialize(campaign_id, problem_ids)  # idempotent; safe to resume
+
+    outcome_ledger = (
+        EgmraOutcomeLedger(Path(args.outcome_ledger))
+        if getattr(args, "outcome_ledger", None) else None
+    )
 
     policy = load_policy(Path(args.policy) if args.policy else default_policy_path())
     enforcer = PolicyEnforcer(policy)
@@ -1108,10 +1259,16 @@ def cmd_campaign(args: argparse.Namespace) -> int:
                               compute_service=ComputeService(),
                               lean_version=lean_version, mathlib_commit=mathlib_commit,
                               lean_project=args.lean_project,
-                              formalizer=formalizers_by_worker.get(worker_id))
+                              formalizer=formalizers_by_worker.get(worker_id),
+                              max_rounds=campaign_worker_rounds)
         # A distinct event log per attempt keeps each try's chain clean on resume.
-        events_path = Path(config.events_dir) / f"{problem.problem_id}.{fencing_token}.jsonl"
-        event_log = _make_event_log(args, f"{problem.problem_id}.{fencing_token}")
+        attempt_run_id = _campaign_attempt_id(
+            campaign_id, problem.problem_id, fencing_token,
+        )
+        events_path = Path(config.events_dir) / f"{attempt_run_id}.jsonl"
+        event_log = _make_event_log(
+            args, attempt_run_id, events_path=events_path,
+        )
         oeis_client = _build_oeis_client(args, config)
         try:
             result = research(
@@ -1124,15 +1281,25 @@ def cmd_campaign(args: argparse.Namespace) -> int:
                 status_claims=list(problem.status_claims),
                 novelty_verdict=problem.novelty_verdict,
                 intent_review=None, runner=worker_runner,
+                lean_repair_rounds=campaign_repair_rounds,
+                checkpoint_dir=getattr(args, "checkpoint_dir", None),
             )
         finally:
             _close_event_log(event_log)
-        return str(classify_result(result, goal_claim_id="goal").state)
+        state = str(classify_result(result, goal_claim_id="goal").state)
+        # Honest EGMRA-native outcome telemetry (never the legacy contract-bound
+        # searcher ledger, never a release authority).
+        if outcome_ledger is not None:
+            outcome_ledger.record(build_outcome_record(
+                problem_id=problem.problem_id, result=result,
+                run_id=attempt_run_id, state=state))
+        return state
 
     try:
         status = campaign.run_concurrent(
             run_one, max_workers=int(args.workers), now=time.time,
             provider_unavailable=BrowserProviderUnavailable,
+            permanent_failure=SourceResolutionError,
         )
     finally:
         if browser_engine is not None:
@@ -1386,6 +1553,43 @@ def build_parser() -> argparse.ArgumentParser:
              "CLAIM_ID defaults to 'goal'); required to reach a "
              "FORMALLY_VERIFIED_CANDIDATE",
     )
+    run.add_argument(
+        "--worker-rounds", type=int, default=1,
+        help="model rounds per mechanism branch (1-8): later rounds replay the "
+             "lemma ledger, open subgoals, objections, and failed-approach "
+             "memory so the worker closes/repairs instead of restating "
+             "(default: 1, single-shot)",
+    )
+    run.add_argument(
+        "--hostile-review", type=int, default=0, metavar="N",
+        help="run N (0-4) hostile natural-language reviews of the proposed "
+             "dependency cone before assembly; passing reviews admit "
+             "informal-review evidence (unattested model reviewers collapse "
+             "to one lineage, capping at SINGLE review \u2014 T3 needs two "
+             "attested independent lineages) (default: 0, off)",
+    )
+    run.add_argument(
+        "--lean-repair-rounds", type=int, default=0, metavar="N",
+        help="when a Lean candidate is REJECTED by the pinned kernel, send it "
+             "back to the configured --formalizer with the kernel diagnostics "
+             "for up to N (0-3) bounded repair rounds; every repaired source "
+             "is re-checked by the same pinned kernel and the obligation never "
+             "changes (default: 0, off)",
+    )
+    run.add_argument(
+        "--checkpoint-dir", type=Path, default=None,
+        help="write a signed within-problem checkpoint (event-log prefix + "
+             "graph view hash + remaining budget) after each completed branch "
+             "so long runs leave verifiable durable state (default: off)",
+    )
+    run.add_argument(
+        "--formal-target-file", type=Path, default=None,
+        help="local .lean file with the community-reviewed formal statement "
+             "(fetch one with 'egmra formal-target'); supplied to the worker as "
+             "the pinned intended obligation \u2014 read-only prompt context, never "
+             "truth authority and never a substitute for the "
+             "formal-correspondence review",
+    )
     run.set_defaults(func=cmd_run)
 
     doctor = sub.add_parser("doctor", help="report local readiness (deps, keys, policy, corpus)")
@@ -1402,11 +1606,32 @@ def build_parser() -> argparse.ArgumentParser:
     campaign = sub.add_parser("campaign", help="run/resume a durable bounded-worker campaign")
     campaign.add_argument("--erdos-range", default="",
                           help="Erdős problems as 'N' or 'A-B' (e.g. 900-905)")
+    campaign.add_argument("--triage", type=Path, default=None,
+                          help="drain a triage ranking directory instead of "
+                               "--erdos-range: reads triage/rankings/<lane>.json "
+                               "(the searcher's own order) and researches each "
+                               "problem through the EGMRA loop. This is the "
+                               "single-pipeline replacement for run_continuous.py")
+    campaign.add_argument("--triage-lane", default="current",
+                          help="triage ranking lane to drain (default: 'current' "
+                               "= the interleaved allocation queue; e.g. "
+                               "'t2_closable', 'tractable_frontier', "
+                               "'highest_probability_lean_verification')")
+    campaign.add_argument("--max-problems", type=int, default=0,
+                          help="cap the number of triage problems drained "
+                               "(0 = all ranked problems)")
+    campaign.add_argument("--outcome-ledger", type=Path, default=None,
+                          help="append each EGMRA outcome (public state + gate "
+                               "profile + run id) to this JSONL; honest "
+                               "telemetry only, never a release authority")
     campaign.add_argument("--state", type=Path, default=Path("egmra_campaign.json"),
                           help="durable campaign state file (resume by reusing it)")
     campaign.add_argument("--campaign-id", default=None)
     campaign.add_argument("--provider", choices=("browser", "deterministic"), default="browser")
     campaign.add_argument("--role", default="prover")
+    campaign.add_argument("--worker-rounds", type=int, default=1,
+                          help="model rounds per mechanism branch (1-8); see "
+                               "'egmra run --worker-rounds'")
     campaign.add_argument("--workers", type=int, default=1, help="bounded worker count (1-5)")
     campaign.add_argument("--budget", type=float, default=50.0)
     campaign.add_argument("--policy", type=Path, default=None)
@@ -1437,9 +1662,16 @@ def build_parser() -> argparse.ArgumentParser:
                           help="autonomous formalization worker per campaign worker: "
                                "'aristotle' (requires --lean-project + ARISTOTLE_API_KEY; "
                                "produced Lean is re-checked by the pinned kernel) or 'none'")
+    campaign.add_argument("--lean-repair-rounds", type=int, default=0, metavar="N",
+                          help="bounded kernel-feedback repair rounds per rejected Lean "
+                               "candidate (0-3); same semantics as 'egmra run "
+                               "--lean-repair-rounds'")
+    campaign.add_argument("--checkpoint-dir", type=Path, default=None,
+                          help="write signed within-problem checkpoints after each "
+                               "completed branch; same semantics as 'egmra run "
+                               "--checkpoint-dir'")
     campaign.add_argument("--status", action="store_true", help="print campaign status and exit")
     campaign.set_defaults(func=cmd_campaign)
-
     initdb = sub.add_parser("init-db", help="create/verify the Postgres event schema")
     initdb.add_argument("--dsn", default=None,
                         help="Postgres DSN (or set EGMRA_POSTGRES_DSN); credentials never logged")
@@ -1470,6 +1702,8 @@ def build_parser() -> argparse.ArgumentParser:
                               help="verbatim problem statement to review")
     sri_selector.add_argument("--statement-file", type=Path, default=None,
                               help="path to a file containing the problem statement")
+    sri_selector.add_argument("--fixture", default=None,
+                              help="bundled regression fixture id to review")
     sri.add_argument("--corpus-tex", type=Path, default=None,
                      help="override the corpus TeX snapshot used by --erdos")
     sri.add_argument("--catalog", type=Path, default=None,
@@ -1546,6 +1780,21 @@ def build_parser() -> argparse.ArgumentParser:
                            help="claim id bound into the sealed replay attestation")
     formalize.set_defaults(func=cmd_formalize)
 
+    formal_target = sub.add_parser(
+        "formal-target",
+        help="fetch the community-reviewed Lean statement for an Erdős problem "
+             "(formal-conjectures repository) for use with 'run --formal-target-file'")
+    formal_target.add_argument("--erdos", type=int, required=True,
+                               help="Erdős problem number")
+    formal_target.add_argument("--ref", default=None,
+                               help="git ref to pin (immutable bench tag recommended; "
+                                    "default 'main' is mutable and marked "
+                                    "non-reproducible)")
+    formal_target.add_argument("--output", type=Path, default=None,
+                               help="write the fetched .lean statement to this path "
+                                    "(refuses to overwrite)")
+    formal_target.set_defaults(func=cmd_formal_target)
+
     fixtures = sub.add_parser("fixtures", help="list local evaluation fixtures")
     fixtures.set_defaults(func=cmd_fixtures)
     return parser
@@ -1558,7 +1807,7 @@ def main(argv: list[str] | None = None) -> int:
         return args.func(args)
     except (
         PolicyError, TruthSnapshotError, EventLogError, OSError, ValueError, KeyError,
-        json.JSONDecodeError,
+        json.JSONDecodeError, RuntimeError,
     ) as exc:
         print(json.dumps({"error": type(exc).__name__, "detail": str(exc)}), file=sys.stderr)
         return 2

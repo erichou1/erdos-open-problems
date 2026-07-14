@@ -20,16 +20,24 @@ import json
 from pathlib import Path
 
 from run_status import has_verified_result
+from run_status import _read_bounded_regular
 from aristotle_verifier import verify_run
+from egmra.policy import PolicyEnforcer, load_policy
 
 AWAITING = "awaiting_external_evidence"
 
 
 def _run_dirs(artifacts: Path):
-    for problem_dir in sorted(Path(artifacts).glob("problem_*")):
-        if not problem_dir.is_dir():
+    root = Path(artifacts)
+    if root.is_symlink() or not root.is_dir():
+        return
+    for problem_dir in sorted(root.glob("problem_*")):
+        if problem_dir.is_symlink() or not problem_dir.is_dir():
             continue
-        for run_dir in sorted(p for p in problem_dir.iterdir() if p.is_dir()):
+        for run_dir in sorted(
+            p for p in problem_dir.iterdir()
+            if not p.is_symlink() and p.is_dir()
+        ):
             yield run_dir
 
 
@@ -38,12 +46,15 @@ def find_awaiting_runs(artifacts: Path) -> list[Path]:
     awaiting: list[Path] = []
     for run_dir in _run_dirs(Path(artifacts)):
         try:
-            manifest = json.loads((run_dir / "manifest.json").read_text(encoding="utf-8"))
-        except (OSError, ValueError):
+            manifest = json.loads(_read_bounded_regular(
+                run_dir / "manifest.json", max_bytes=4_000_000,
+            ).decode("utf-8"))
+        except (OSError, UnicodeDecodeError, ValueError):
             continue
         gate_status = str(manifest.get("gate", {}).get("status", ""))
         problem = manifest.get("problem_number")
         if (gate_status == AWAITING and isinstance(problem, int)
+                and run_dir.parent.name == f"problem_{problem}"
                 and not has_verified_result(Path(artifacts), problem)):
             awaiting.append(run_dir)
     return awaiting
@@ -52,7 +63,7 @@ def find_awaiting_runs(artifacts: Path) -> list[Path]:
 def verify_awaiting(
     artifacts: Path, *, triage_dir: Path | None = None, category: str = "open",
     require_kernel: bool = False, publish: bool = False, limit: int = 0,
-    verify=verify_run, client=None,
+    verify=verify_run, client=None, enforcer=None,
 ) -> list[tuple[Path, str]]:
     """Run the verifier on each awaiting run; ``verify`` is injectable for tests."""
     artifacts = Path(artifacts)
@@ -65,6 +76,7 @@ def verify_awaiting(
             result, _evidence, promoted = verify(
                 run_dir, client=client, promote_result=True, publish=publish,
                 triage_dir=triage_dir, category=category, require_kernel=require_kernel,
+                enforcer=enforcer,
             )
             status = promoted.gate.status if promoted is not None else "no_promote"
             print(f"[verify] {run_dir.parent.name}/{run_dir.name}: "
@@ -86,10 +98,16 @@ def main() -> None:
                         help="only promote proofs re-checked by the local Lean kernel")
     parser.add_argument("--publish", action="store_true")
     parser.add_argument("--limit", type=int, default=0, help="0 = all awaiting runs")
+    parser.add_argument(
+        "--policy", type=Path, required=True,
+        help="signed policy enabling external prover routing and evidence generation",
+    )
     args = parser.parse_args()
+    enforcer = PolicyEnforcer(load_policy(args.policy))
     results = verify_awaiting(
         args.artifacts, triage_dir=args.triage, category=args.category,
         require_kernel=args.require_kernel, publish=args.publish, limit=args.limit,
+        enforcer=enforcer,
     )
     promoted = sum(1 for _, status in results if status.startswith("verified_"))
     print(f"[verify] done: {len(results)} runs, {promoted} promoted.", flush=True)

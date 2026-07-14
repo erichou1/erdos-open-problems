@@ -59,6 +59,9 @@ def probe_novelty(root: Path, problem_number: int) -> dict:
     entry = _catalog_entry(Path(root), problem_number)
     source_state = str(entry.get("source_state", "unknown")).strip().lower()
     resolved = bool(entry.get("source_reports_resolved"))
+    ai_wiki = entry.get("ai_wiki") if isinstance(entry.get("ai_wiki"), dict) else {}
+    ai_full = bool(ai_wiki.get("primary_full") or ai_wiki.get("secondary_full"))
+    ai_partial = bool(ai_wiki.get("primary_partial"))
     comments = _forum_comments(Path(root), problem_number)
     text = "\n".join(comments)
     signals = sorted(
@@ -69,7 +72,13 @@ def probe_novelty(root: Path, problem_number: int) -> dict:
 
     if resolved or source_state in _RESOLVED_STATES:
         status = "source_resolved"
-    elif formalized or "solution_claim" in signals or "already_known" in signals:
+    elif ai_full:
+        # A community-reported full AI solution (or a literature-search hit that
+        # found a full solution) is decisive rediscovery risk even while the
+        # canonical DB state is still "open".
+        status = "ai_reported_solution"
+    elif formalized or "solution_claim" in signals or "already_known" in signals \
+            or ai_partial:
         status = "prior_work_signal"
     else:
         status = "no_signal"
@@ -79,6 +88,8 @@ def probe_novelty(root: Path, problem_number: int) -> dict:
         "novelty_status": status,
         "source_state": source_state,
         "source_reports_resolved": resolved,
+        "ai_wiki_full_solution": ai_full,
+        "ai_wiki_partial": ai_partial,
         "formalized": formalized,
         "forum_comment_count": len(comments),
         "forum_claim_signals": signals,

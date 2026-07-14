@@ -20,7 +20,7 @@ from urllib.parse import urlparse
 from erdos_ingest import extract_tex_statement
 from playwright.sync_api import sync_playwright  # noqa: F401  (re-exported)
 from solver_prompts import CANDIDATE_PROMPT_TEMPLATE
-from verification import candidate_status
+from verification import candidate_status  # noqa: F401  (re-exported)
 
 # ── Load .env (no third-party library needed) ────────────────────────────────
 _ENV_FILE = Path(__file__).parent / ".env"

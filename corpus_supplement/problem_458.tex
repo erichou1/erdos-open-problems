@@ -1,0 +1,40 @@
+% corpus_supplement: Erdős problem #458
+% source: https://www.erdosproblems.com/latex/458
+% fetched_at: 2026-07-14T18:48:17Z
+% payload_sha256: 87fce800f175bd309d36f399813126930c1e5deac216b370ff68f4d537bce3a1
+% statement/remarks/references extracted by erdos_ingest.extract_source_page;
+% rendered by erdos_ingest.render_tex — do not edit
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#458}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, primes
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $[1,\ldots,n]$ denote the least common multiple of $\{1,\ldots,n\}$. Is it true that, for all $k\geq 1$,\[[1,\ldots,p_{k+1}-1]< p_k[1,\ldots,p_k]?\]
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Erd\H{o}s and Graham write this is 'almost certainly' true, but the proof is beyond our ability, for (at least) two reasons:
+{UL}
+{LI}Firstly, one has to rule out the possibility of many primes $q$ such that $p_k<q^2<p_{k+1}$. There should be at most one such $q$, which would follow from $p_{k+1}-p_k<p_k^{1/2}$, which is essentially the notorious Legendre's conjecture.{/LI}
+{LI} The small primes also cause trouble.{/LI}
+{/UL}
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/458}}
+\end{document}

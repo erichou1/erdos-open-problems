@@ -1,6 +1,6 @@
 {
-  "allocation_context_id": null,
-  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
   "budget": "verified_pipeline_v2:4fc5421244b900bd",
   "budget_config": {
     "browser_channel": "playwright-chromium",
@@ -42,8 +42,8 @@
       "complete sequences"
     ]
   },
-  "model_portfolio": "chatgpt-ui-unrecorded",
-  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
   "posterior": {
     "calibration_status": "uncalibrated_weak_prior_mvp",
     "matching_outcome_records": 0,
@@ -217,7 +217,7 @@
     "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
     "latex_path": "open/individual/problem_348.tex",
     "latex_sha256": "55842ffb6d40c3e3318db675fcbe0b94de174b57554dc198076174cd965d1b6a",
-    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
     "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
     "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
   },
@@ -237,10 +237,59 @@
     "shared_infrastructure_search",
     "natural_language_research"
   ],
-  "run_contract": null,
-  "run_contract_id": null,
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "365a53b47b7a882e3ae93a6dc94192632e02d40c838787a85b12cfe70c03c975",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "50e3d880ed3298bfae88815f85626500d97125526065e7bfe80d6da8c7c4c621",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "133bbb65dfbd92238a86643c473f0059e20171cf20561aaa0e6afdbf7c34ec3c",
   "schema_version": 2,
-  "snapshot_id": "20260712-00e292c67dca",
+  "snapshot_id": "20260713-deb58d0facd9",
   "statement": {
     "ambiguity_status": "minor",
     "intended": "For what values of $0\\leq m<n$ is there a complete sequence $A=\\{a_1\\leq a_2\\leq \\cdots\\}$ of integers such that\n{UL}\n{LI} $A$ remains complete after removing any $m$ elements, but {/LI}\n{LI} $A$ is not complete after removing any $n$ elements? {/LI}\n{/UL}",

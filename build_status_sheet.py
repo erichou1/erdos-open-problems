@@ -26,6 +26,7 @@ import json
 import re
 from datetime import datetime, timezone
 from pathlib import Path
+from typing import TypedDict
 from urllib.parse import quote
 
 BASE_DIR = Path(__file__).resolve().parent
@@ -43,6 +44,19 @@ BRANCH = "main"
 BLOB_BASE = f"https://github.com/{REPO}/blob/{BRANCH}/"
 
 GREEN_THRESHOLD = 60  # completeness >= this counts as a strong result
+
+
+class StatusRecord(TypedDict):
+    n: int
+    run: bool
+    status: str | None
+    completeness: int | None
+    path: str | None
+    blob: str | None
+    source_state: object
+    source_reports_resolved: bool
+    source_url: object
+
 
 # "Erdős #117 [candidate-proved] 82%.md" -> candidate record fields
 FNAME_RE = re.compile(r"Erdős\s+#(\d+)\s+\[([^\]]+)\]\s+(\d+|\?)\s*%", re.UNICODE)
@@ -69,14 +83,14 @@ def all_problem_numbers() -> list:
     return sorted(set(nums))
 
 
-def scan_outputs() -> dict:
+def scan_outputs() -> dict[int, StatusRecord]:
     """Map problem number -> best record parsed from the output filenames.
 
     A problem can have more than one committed copy (e.g. an old "?%" file next
     to a scored one). Keep the most informative: a numeric completeness beats
     "?", a higher score beats a lower one, and "solved" beats "unsolved".
     """
-    best = {}
+    best: dict[int, StatusRecord] = {}
     catalog = load_catalog()
     if not OUTPUTS_DIR.is_dir():
         return best
@@ -90,7 +104,7 @@ def scan_outputs() -> dict:
         comp_val = int(comp) if comp.isdigit() else -1
         rel = f"outputs/chatgpt/{CATEGORY}/{f.name}"
         source = catalog.get(str(num), {})
-        rec = {
+        rec: StatusRecord = {
             "n": num,
             "run": True,
             "status": status,
@@ -108,8 +122,12 @@ def scan_outputs() -> dict:
         # Prefer the better-scored / solved record.
         prev_score = prev["completeness"] if prev["completeness"] is not None else -1
         new_score = rec["completeness"] if rec["completeness"] is not None else -1
-        status_rank = {"verified-proved": 3, "verified-disproved": 3,
-                       "candidate-proved": 2, "candidate-disproved": 2}
+        status_rank: dict[str | None, int] = {
+            "verified-proved": 3,
+            "verified-disproved": 3,
+            "candidate-proved": 2,
+            "candidate-disproved": 2,
+        }
         better = (status_rank.get(rec["status"], 0), new_score) > (
             status_rank.get(prev["status"], 0), prev_score)
         if better:
@@ -133,7 +151,7 @@ def build():
     # lightweight "not run" record.
     numbers = feed_problem_numbers(all_problem_numbers(), records)
 
-    problems = []
+    problems: list[StatusRecord] = []
     for n in numbers:
         rec = records.get(n)
         if rec:

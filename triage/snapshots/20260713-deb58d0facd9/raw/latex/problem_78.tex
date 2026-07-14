@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#78}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{Prize: \$100}
+
+\noindent\textbf{Tags:} graph theory, ramsey theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $R(k)$ be the Ramsey number for $K_k$, the minimal $n$ such that every $2$-colouring of the edges of $K_n$ contains a monochromatic copy of $K_k$. Give a constructive proof that $R(k)&#62;C^k$ for some constant $C&#62;1$.
+
+
+
+
+Erd\H{o}s gave a simple probabilistic proof that $R(k) \gg k2^{k/2}$. Equivalently, this question asks for an explicit construction of a graph on $n$ vertices which does not contain any clique or independent set of size $\geq c\log n$ for some constant $c&gt;0$. In \cite{Er69b} Erd\H{o}s asks for even a construction whose largest clique or independent set has size $o(n^{1/2})$, which is now known. Cohen \cite{Co15} (see the introduction for further history) constructed a graph on $n$ vertices which does not contain any clique or independent set of size\[\geq 2^{(\log\log n)^{C}}\]for some constant $C&gt;0$. Li \cite{Li23b} has recently improved this to\[\geq (\log n)^{C}\]for some constant $C&gt;0$. This problem is #4 in Ramsey Theory in the graphs problem collection.
+
+
+
+
+References
+
+[Co15] Gil Cohen, Two-Source Dispersers for Polylogarithmic Entropy and Improved Ramsey Graphs . Electronic Colloquium on Computational Complexity (2015).
+
+[Er69b] Erd\H{o}s, P., Problems and results in chromatic graph theory . Proof Techniques in Graph Theory (Proc. Second Ann Arbor Graph Theory Conf., Ann Arbor, Mich., 1968) (1969), 27-35.
+
+[Li23b] Li, X., Two Source Extractors for Asymptotically Optimal Entropy, and (Many) More . arXiv:2303.06802 (2023).
+
+\noindent\textbf{Related OEIS sequences:} A059442
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/78}}
+\end{document}

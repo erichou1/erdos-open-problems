@@ -2,10 +2,16 @@
 
 from __future__ import annotations
 
+import base64
 import json
 
 from egmra.agents.runner import RunnerResponse
-from egmra.orchestrator.runner_worker import RunnerWorker, StructuredDemoRunner
+from egmra.orchestrator.runner_worker import (
+    RunnerWorker,
+    StructuredDemoRunner,
+    branch_prompt,
+    parse_worker_response,
+)
 from egmra.provenance.hashing import sha256_hex
 from egmra.provenance.stage_identity import AttestedModelIdentity
 
@@ -102,6 +108,43 @@ def test_malformed_then_valid_after_repair():
     assert any(f.startswith("malformed_model_output") for f in out.failures)
 
 
+def test_browser_safe_base64_source_fields_survive_rendered_json_transport():
+    python_source = (
+        'def experiment(inputs):\n'
+        '    limit = inputs.get("limit", 10)\n'
+        '    return {"result": True, "coverage": str(limit)}'
+    )
+    lean_source = 'import Mathlib\n\ntheorem quoted : ("a" : String) = "a" := rfl'
+    response = json.dumps({
+        "claims": [], "falsifiers": [], "search_queries": [],
+        "candidate_sequences": [],
+        "experiments": [{
+            "description": "quoted Python", "kind": "finite",
+            "code_b64": base64.b64encode(python_source.encode()).decode(),
+        }],
+        "lean_declaration_candidates": [{
+            "claim_id": "goal", "declaration_name": "quoted",
+            "source_b64": base64.b64encode(lean_source.encode()).decode(),
+            "expected_type": '("a" : String) = "a"',
+        }],
+    })
+
+    parsed = parse_worker_response(f"```json\n{response}\n```")
+
+    assert parsed["experiments"][0]["code"] == python_source
+    assert parsed["lean_declaration_candidates"][0]["source"] == lean_source
+
+
+def test_branch_prompt_uses_fenced_json_and_base64_for_source_payloads():
+    prompt = branch_prompt("T", role="prover", branch_id="direct", packet_summary="")
+
+    assert "```json fenced code block" in prompt
+    assert "code_b64" in prompt and "source_b64" in prompt
+    assert "in an 'code' field" not in prompt
+    assert "Do not use attribute or method access" in prompt
+    assert 'inputs["name"]' in prompt
+
+
 def test_referee_pass_merges_objections_without_approving():
     referee_reply = json.dumps({"falsifiers": ["lemma1 is unproven"],
                                 "bottleneck": "claims need verification"})
@@ -122,3 +165,59 @@ def test_structured_demo_runner_emits_parseable_output():
     assert [p["claim_id"] for p in out.claim_proposals][0] == "goal"
     assert len(out.claim_proposals) >= 2   # goal + at least one demo lemma
     assert out.evidence == []
+
+
+def test_packet_summary_renders_statement_hypotheses_and_source():
+    """R9: the branch prompt gets real theorem content, not 160-char titles."""
+    from types import SimpleNamespace
+
+    worker = RunnerWorker(runner=StructuredDemoRunner(), goal_claim_id="goal",
+                          goal_formula="T")
+    record = SimpleNamespace(
+        canonical_statement="Every basis of order r has an exact order iff "
+                            "consecutive differences are coprime.",
+        hypotheses=["A is a basis of order r", "A is infinite"],
+        conclusion="",
+        source_uri="https://example.org/ErGr80b",
+    )
+    summary = worker._packet_summary(SimpleNamespace(theorem_records=[record]))
+    assert "exact order" in summary
+    assert "hypotheses: A is a basis of order r" in summary
+    assert "source: https://example.org/ErGr80b" in summary
+
+
+def test_packet_summary_respects_record_and_character_budgets():
+    from types import SimpleNamespace
+
+    from egmra.orchestrator.runner_worker import (
+        _PACKET_CHAR_BUDGET,
+        _PACKET_MAX_RECORDS,
+    )
+
+    worker = RunnerWorker(runner=StructuredDemoRunner(), goal_claim_id="goal",
+                          goal_formula="T")
+    records = [
+        SimpleNamespace(canonical_statement=f"statement {i} " + "x" * 500,
+                        hypotheses=[], conclusion="", source_uri="")
+        for i in range(_PACKET_MAX_RECORDS + 10)
+    ]
+    summary = worker._packet_summary(SimpleNamespace(theorem_records=records))
+    assert len(summary) <= _PACKET_CHAR_BUDGET
+    assert summary.count("\n- ") + 1 <= _PACKET_MAX_RECORDS
+    # More than the old 5-title excerpt actually fits under the budget.
+    assert summary.count("statement") > 5
+
+
+def test_packet_summary_skips_empty_statements():
+    from types import SimpleNamespace
+
+    worker = RunnerWorker(runner=StructuredDemoRunner(), goal_claim_id="goal",
+                          goal_formula="T")
+    records = [
+        SimpleNamespace(canonical_statement="", hypotheses=["h"], conclusion="",
+                        source_uri="https://example.org/empty"),
+        SimpleNamespace(canonical_statement="real theorem", hypotheses=[],
+                        conclusion="", source_uri=""),
+    ]
+    summary = worker._packet_summary(SimpleNamespace(theorem_records=records))
+    assert summary == "- real theorem"

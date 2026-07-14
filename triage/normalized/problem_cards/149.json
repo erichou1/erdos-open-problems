@@ -1,6 +1,6 @@
 {
-  "allocation_context_id": null,
-  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
   "budget": "verified_pipeline_v2:4fc5421244b900bd",
   "budget_config": {
     "browser_channel": "playwright-chromium",
@@ -53,8 +53,8 @@
       "graph theory"
     ]
   },
-  "model_portfolio": "chatgpt-ui-unrecorded",
-  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
   "posterior": {
     "calibration_status": "uncalibrated_weak_prior_mvp",
     "matching_outcome_records": 0,
@@ -228,7 +228,7 @@
     "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
     "latex_path": "open/individual/problem_149.tex",
     "latex_sha256": "a8d43ad57f85d4320380798f48210e9eac16d10ac3baa26c8aa2f23f5056aa42",
-    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
     "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
     "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
   },
@@ -246,10 +246,59 @@
     "literature_search",
     "natural_language_research"
   ],
-  "run_contract": null,
-  "run_contract_id": null,
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "4f86335422edfa89ec67aa67ef6f51e305eabc0bf78cee6918bc97f5d6eb2a67",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "0ac6b25363f6089b1e325e0c5508600866cc7eaa706ba7e1a8545486b9fcfd81",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "9da75bd1ea80f7cedf780db9079f0671e683af2b8d18d62116130d9faf28f105",
   "schema_version": 2,
-  "snapshot_id": "20260712-00e292c67dca",
+  "snapshot_id": "20260713-deb58d0facd9",
   "statement": {
     "ambiguity_status": "minor",
     "intended": "The strong chromatic index of a graph $G$, denoted by $\\mathrm{sq}(G)$, is the minimum $k$ such that the edges of $G$ can be partitioned into $k$ sets of 'strongly independent' edges, that is, such that the subgraph of $G$ induced by each set is the union of vertex-disjoint edges.\n\nIs it true that, for any graph $G$ with maximum degree $\\Delta$,\\[\\mathrm{sq}(G)\\leq\\frac{5}{4}\\Delta^2?\\]",

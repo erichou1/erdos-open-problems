@@ -24,6 +24,7 @@ import pytest
 import egmra.cli as cli_module
 from egmra.cli import main
 from egmra.corpus import from_statement
+from egmra.eval.datasets import fixture
 from egmra.intake import build_problem_contract
 from egmra.intake.predicate import PredicateError, compile_bounded_predicate
 from egmra.intake.review import interpretation_review_hash, verify_intent_certificate
@@ -162,6 +163,27 @@ def test_sign_review_intent_binds_the_problem_and_verifies(tmp_path, capsys):
     assert cert.informal_claim_hash == sha256_hex(interp.conclusion)
     assert {"independent_parse", "examples", "anti_examples", "paraphrase",
             "local_mutation"}.issubset(set(cert.methods))
+
+
+def test_sign_review_intent_can_bind_a_regression_fixture(tmp_path, capsys):
+    out = tmp_path / "fixture-intent.json"
+
+    rc = main([
+        "sign-review", "intent", "--fixture", "fx-true-square", "-o", str(out),
+    ])
+
+    assert rc == 0
+    assert json.loads(capsys.readouterr().out)["problem_id"] == "fx-true-square"
+    cert = cli_module._load_intent_review(out)
+    fx = fixture("fx-true-square")
+    contract = build_problem_contract(
+        problem_id=fx.problem_id, source_bytes=fx.statement, source_id=fx.problem_id,
+        predicate=fx.predicate(),
+    )
+    assert cert.interpretation_hash == interpretation_review_hash(
+        contract.lattice.nodes[0]
+    )
+    assert verify_intent_certificate(cert)
 
 
 def test_sign_review_intent_refuses_to_overwrite(tmp_path):

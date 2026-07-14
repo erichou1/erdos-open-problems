@@ -46,6 +46,10 @@ class _NoConfiguredProviderOutage(Exception):
     """
 
 
+class _NoConfiguredPermanentFailure(Exception):
+    """Sentinel used when the caller has no typed permanent failure class."""
+
+
 def _campaign_key(env: dict[str, str] | None = None) -> bytes:
     source = os.environ if env is None else env
     raw = source.get("EGMRA_CHECKPOINT_KEY", "")
@@ -393,9 +397,12 @@ class Campaign:
             a.attempts = max(0, a.attempts - 1)  # a retained problem is not a spent attempt
         return self._update(problem_id, worker_id, fencing_token, _m)
 
-    def fail(self, problem_id: str, worker_id: str, fencing_token: int, *, reason: str) -> bool:
+    def fail(self, problem_id: str, worker_id: str, fencing_token: int, *,
+             reason: str, permanent: bool = False) -> bool:
         def _m(a: Assignment) -> None:
-            a.status = "retained" if a.attempts < self.max_attempts else "failed"
+            a.status = (
+                "failed" if permanent or a.attempts >= self.max_attempts else "retained"
+            )
             a.result_state = reason
             a.lease_expires_at = 0.0
         return self._update(problem_id, worker_id, fencing_token, _m)
@@ -479,6 +486,7 @@ class Campaign:
         max_workers: int,
         now: Callable[[], float],
         provider_unavailable: type[BaseException] = _NoConfiguredProviderOutage,
+        permanent_failure: type[BaseException] = _NoConfiguredPermanentFailure,
         poll_interval: float = 0.01,
     ) -> dict[str, Any]:
         """Drive the campaign with genuine bounded concurrency across worker threads.
@@ -512,6 +520,11 @@ class Campaign:
                                           worker_id)
                 except provider_unavailable:
                     self.retain(assignment.problem_id, worker_id, assignment.fencing_token)
+                except permanent_failure as exc:
+                    self.fail(
+                        assignment.problem_id, worker_id, assignment.fencing_token,
+                        reason=f"{type(exc).__name__}: {exc}", permanent=True,
+                    )
                 except Exception as exc:  # noqa: BLE001 - recoverable per-problem failure
                     self.fail(assignment.problem_id, worker_id, assignment.fencing_token,
                               reason=f"{type(exc).__name__}: {exc}")

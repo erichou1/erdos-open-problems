@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#82}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $F(n)$ be maximal such that every graph on $n$ vertices contains a regular induced subgraph on at least $F(n)$ vertices. Prove that $F(n)/\log n\to \infty$.
+
+
+
+
+Conjectured by Erd\H{o}s, Fajtlowicz, and Stanton. It is known that $F(5)=3$ and $F(7)=4$. Ramsey's theorem implies that $F(n)\gg \log n$. Bollob\'{a}s observed that $F(n)\ll n^{1/2+o(1)}$. Alon, Krivelevich, and Sudakov \cite{AKS07} have improved this to $n^{1/2}(\log n)^{O(1)}$. Dyson and McKay \cite{DyMc26} have improved this further to $F(n) \ll n^{1/2}$. In \cite{Er93} Erd\H{o}s asks whether, if $t(n)$ is the largest trivial (either empty or complete) subgraph which a graph on $n$ vertices must contain (so that $t(n) \gg \log n$ by Ramsey's theorem), then is it true that\[F(n)-t(n)\to \infty?\]Equivalently, and in analogue with the definition of Ramsey numbers, one can define $G(n)$ to be the minimal $m$ such that every graph on $m$ vertices contains a regular induced subgraph on at least $n$ vertices. This problem can be rephrased as asking whether $G(n) \leq 2^{o(n)}$. Fajtlowicz, McColgan, Reid, and Staton \cite{FMRS95} showed that $G(1)=1$, $G(2)=2$, $G(3)=5$, $G(4)=7$, and $G(5)\geq 12$. Boris Alexeev and Brendan McKay (see the comments and this site ) have computed $G(5)=17$, $G(6)\geq 21$, and $G(7)\geq 29$. Dyson and McKay \cite{DyMc26} have proved $G(7)\geq 30$, and $G(k)\geq \frac{9}{163}k^2$ for all large $k$. See also [1031] for another question regarding induced regular subgraphs.
+
+
+
+
+References
+
+[AKS07] Alon, N. and Krivelevich, M. and Sudakov, B., Large nearly regular induced subgraphs . arXiv:0710.2106 (2007).
+
+[DyMc26] P. Dyson and B. McKay, Ramsey numbers for regular induced subgraphs . arXiv:2604.08215 (2026).
+
+[Er93] Erd\H{o}s, Paul, Some of my favorite solved and unsolved problems in graph theory . Quaestiones Math. (1993), 333-350.
+
+[FMRS95] Fajtlowicz, Siemion and McColgan, Tamara and Reid, Talmage and Staton, William, Ramsey numbers for induced regular subgraphs . Ars Combin. (1995), 149--154.
+
+\noindent\textbf{Related OEIS sequences:} A120414, A390256, A390257, A390919, A392636, A394400, A394462, A394539, A394563, A394564, A394573, A394574, A394930, A394933
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/82}}
+\end{document}

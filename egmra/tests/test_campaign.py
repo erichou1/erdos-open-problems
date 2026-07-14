@@ -237,6 +237,30 @@ def test_run_concurrent_recovers_from_worker_crash(tmp_path):
     assert status["workers"]["p3"]["status"] == "done"
 
 
+def test_run_concurrent_does_not_retry_declared_permanent_failure(tmp_path):
+    class PermanentInputError(Exception):
+        pass
+
+    clock = _Clock()
+    c = _campaign(tmp_path, workers=("w0",), max_attempts=5)
+    c.initialize("permanent", ["missing-source"])
+    calls = 0
+
+    def runner(_problem_id, _fencing_token, _worker_id):
+        nonlocal calls
+        calls += 1
+        raise PermanentInputError("source is absent")
+
+    status = c.run_concurrent(
+        runner, max_workers=1, now=clock.now,
+        permanent_failure=PermanentInputError,
+    )
+    assert calls == 1
+    assert status["workers"]["missing-source"]["status"] == "failed"
+    assert status["workers"]["missing-source"]["attempts"] == 1
+    assert "PermanentInputError" in status["workers"]["missing-source"]["result_state"]
+
+
 def test_heartbeat_extends_lease_and_rejects_stale_token(tmp_path):
     clock = _Clock()
     c = _campaign(tmp_path, lease_seconds=100.0)

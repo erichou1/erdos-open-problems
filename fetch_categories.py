@@ -7,10 +7,8 @@ import os
 import re
 import time
 import yaml
-import requests
 
-import warnings
-warnings.filterwarnings('ignore')
+from erdos_ingest import NetworkBoundaryError, fetch_url
 
 BASE_URL = "https://www.erdosproblems.com"
 YAML_URL = "https://raw.githubusercontent.com/teorth/erdosproblems/main/data/problems.yaml"
@@ -19,6 +17,8 @@ REPO_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "erdos_probl
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (research bot; collecting Erdos problems for personal study)"
 }
+MAX_YAML_BYTES = 16 * 1024 * 1024
+MAX_LATEX_BYTES = 4 * 1024 * 1024
 
 CATEGORIES = {
     "open":        {"states": ["open"],        "label": "Open (Unsolved)"},
@@ -29,9 +29,13 @@ CATEGORIES = {
 
 def download_yaml():
     print("Downloading problems.yaml...")
-    r = requests.get(YAML_URL, headers=HEADERS, timeout=30, verify=False)
-    r.raise_for_status()
-    return yaml.safe_load(r.text)
+    payload = fetch_url(
+        YAML_URL,
+        timeout=30,
+        max_bytes=MAX_YAML_BYTES,
+        user_agent=HEADERS["User-Agent"],
+    )
+    return yaml.safe_load(payload.decode("utf-8"))
 
 
 def filter_problems(problems, states):
@@ -41,9 +45,14 @@ def filter_problems(problems, states):
 def fetch_latex_source(number):
     url = f"{BASE_URL}/latex/{number}"
     try:
-        r = requests.get(url, headers=HEADERS, timeout=20, verify=False)
-        r.raise_for_status()
-        return r.text
+        return fetch_url(
+            url,
+            timeout=20,
+            max_bytes=MAX_LATEX_BYTES,
+            user_agent=HEADERS["User-Agent"],
+        ).decode("utf-8")
+    except NetworkBoundaryError:
+        raise
     except Exception as e:
         print(f"  WARNING: failed to fetch problem {number}: {e}")
         return None

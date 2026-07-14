@@ -26,11 +26,23 @@ class FindAwaitingTests(unittest.TestCase):
             make_run(art, 3, "verified_proved")
             self.assertEqual(find_awaiting_runs(art), [awaiting])
 
-    def test_awaiting_but_already_verified_elsewhere_is_skipped(self):
+    def test_forged_verified_label_elsewhere_does_not_suppress_work(self):
         with tempfile.TemporaryDirectory() as directory:
             art = Path(directory)
-            make_run(art, 5, "awaiting_external_evidence", "runA")
+            awaiting = make_run(art, 5, "awaiting_external_evidence", "runA")
             make_run(art, 5, "verified_proved", "runB")
+            self.assertEqual(find_awaiting_runs(art), [awaiting])
+
+    def test_symlinked_problem_directory_is_not_scanned(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            art = root / "artifacts"
+            art.mkdir()
+            outside = root / "outside"
+            make_run(outside, 8, "awaiting_external_evidence")
+            (art / "problem_8").symlink_to(
+                outside / "problem_8", target_is_directory=True,
+            )
             self.assertEqual(find_awaiting_runs(art), [])
 
 

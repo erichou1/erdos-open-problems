@@ -24,6 +24,14 @@ pip install -r requirements.txt
 playwright install chromium
 ```
 
+Run both the legacy regression suite and the EGMRA security/integration suite:
+
+```bash
+python -m unittest discover -s tests -v
+python -m pytest -q egmra/tests
+python check_corpus_integrity.py
+```
+
 ## 3. Configure your ChatGPT Project URL
 
 The pipeline opens new chats inside a ChatGPT Project. The URL is read from a
@@ -41,6 +49,27 @@ CHATGPT_PROJECT_URL=https://chatgpt.com/g/g-p-<your-project-id>/project
 
 To find it: open your project in ChatGPT and copy the URL from the address bar.
 If you leave it unset, chats are created at plain `https://chatgpt.com`.
+
+### EGMRA trust keys
+
+The EGMRA subsystem intentionally has no development or production fallback
+keys. `.env.example` lists blank placeholders for the policy, event, evidence,
+release, gate, promotion, authority, truth-snapshot, checkpoint,
+model-attestation, intent review, Lean checker, and formal-correspondence trust
+domains. Provision a different random value of at least 32 bytes for each required
+domain using your secret manager; never commit populated values or put them in
+JSON configuration.
+
+The legacy proof-pipeline bridge additionally requires distinct
+`EGMRA_LEGACY_REVIEW_KEY` and `EGMRA_LEGACY_EVIDENCE_KEY` values. Without an
+authenticated runner gateway and a kind-specific mechanical validator, legacy
+reviews remain advisory and legacy evidence cannot promote a result.
+
+`EGMRA_INTENT_REVIEW_KEY` and `EGMRA_FORMAL_CORRESPONDENCE_KEY` must be held by
+review services independent of the research generator. The EGMRA CLI accepts an
+already signed intent certificate with `--intent-review <review.json>`; it does
+not self-sign semantic approval. Lean/formal release additionally requires the
+separately signed correspondence certificate and a production checker envelope.
 
 ## 4. Log in (one time)
 
@@ -97,10 +126,12 @@ folder, named by verdict and completeness score:
 - `outputs/deepseek/<category>/Erdős #N [resource-exhausted] 0%.md`
 
 These labels are not verified solutions. The multi-context workflow in
-`proof_pipeline.py` must pass `verification.evaluate_gate` before a result can
-be recorded as `verified_proved` or `verified_disproved`. The gate requires a
-hashed formal-proof, exact-computation, or expert-review artifact in addition to
-unanimous independent model review:
+`proof_pipeline.py` produces advisory candidates. The legacy gate can validate
+authenticated, scope-bound exact-computation or hardened formal evidence, but
+its in-process symmetric signing domain is not an independent release authority;
+it therefore stops at `awaiting_authenticated_release`. Expert or model approval
+alone is never mathematical truth evidence. The shipped browser runner has no
+attested provider/model gateway, so it cannot promote by itself:
 
 ```bash
 python3 run_verified_pipeline.py --problem 137 --print-statement-sha \
@@ -108,10 +139,18 @@ python3 run_verified_pipeline.py --problem 137 --print-statement-sha \
 cp verification-evidence.example.json verification-evidence.json
 python3 run_verified_pipeline.py --problem 137 --model-id <exact-model-id>
 # Review the saved candidate, then fill in its hashes, verifier, outcome,
-# and local artifact path.
+# canonical run identities, and confined local artifact path. This validates a
+# quarantine record only and never publishes.
 python3 promote_verified_run.py \
   --run-dir proof_runs/problem_137/<run-id> \
-  --evidence-json verification-evidence.json --publish
+  --evidence-json verification-evidence.json \
+  --policy config/signed-egmra-policy.json
+
+# An authoritative result must traverse the EGMRA event, gate, authorization,
+# certificate, and renderer chain:
+python3 -m egmra.cli run --fixture finite_true \
+  --policy config/signed-egmra-policy.json \
+  --intent-review intent-review.json
 ```
 
 The legacy collectors use canonical theorem text only and label their private

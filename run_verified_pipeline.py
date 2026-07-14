@@ -5,8 +5,11 @@ import argparse
 import fcntl
 import hashlib
 import json
+import os
+import stat
 import tempfile
 import time
+from dataclasses import dataclass
 from pathlib import Path
 
 import erdos_common as C
@@ -20,53 +23,343 @@ from proof_pipeline import ProofPipeline
 from literature_research import research_literature
 from outcome_ledger import record_outcome
 from research_state import make_statement_lock
-from verification import candidate_contract, VerificationEvidence
+from verification import (
+    VerificationEvidence,
+    MaterializedVerificationEvidence,
+    verify_verification_evidence,
+)
+from egmra.policy import (
+    PolicyEnforcer,
+    default_policy_path,
+    load_policy,
+)
 
 
-def load_evidence(path: Path | None) -> tuple[VerificationEvidence, ...]:
+_MAX_EVIDENCE_DOCUMENT_BYTES = 1_000_000
+_MAX_EVIDENCE_ARTIFACT_BYTES = 64 * 1024 * 1024
+_MAX_EVIDENCE_RECORDS = 32
+_MAX_EVIDENCE_ARTIFACT_TOTAL_BYTES = 128 * 1024 * 1024
+_EVIDENCE_RECORD_FIELDS = frozenset({
+    "schema_version", "kind", "verifier", "outcome", "statement_sha256",
+    "candidate_sha256", "artifact_path", "artifact_sha256", "passed",
+    "verification_method", "validator_id", "certificate_sha256",
+    "scope_sha256", "coverage", "statement_fidelity", "attestor_key_id",
+    "attestation", "problem_number", "run_contract_id", "execution_id",
+    "run_context_id",
+})
+
+
+def _strict_json_object(pairs):
+    result = {}
+    for key, value in pairs:
+        if key in result:
+            raise ValueError(f"duplicate evidence key: {key}")
+        result[key] = value
+    return result
+
+
+def _read_regular_file(path: Path, *, max_bytes: int, label: str) -> bytes:
+    """Read a bounded regular file without following the final symlink."""
+    flags = (
+        os.O_RDONLY
+        | getattr(os, "O_NOFOLLOW", 0)
+        | getattr(os, "O_NONBLOCK", 0)
+    )
+    try:
+        descriptor = os.open(path, flags)
+    except OSError as exc:
+        raise ValueError(f"{label} is unreadable or not a safe regular file: {exc}") from exc
+    try:
+        metadata = os.fstat(descriptor)
+        if not stat.S_ISREG(metadata.st_mode):
+            raise ValueError(f"{label} must be a regular file")
+        if metadata.st_size > max_bytes:
+            raise ValueError(f"{label} exceeds the {max_bytes}-byte limit")
+        chunks = []
+        remaining = max_bytes + 1
+        while remaining:
+            chunk = os.read(descriptor, min(1024 * 1024, remaining))
+            if not chunk:
+                break
+            chunks.append(chunk)
+            remaining -= len(chunk)
+        payload = b"".join(chunks)
+        if len(payload) > max_bytes:
+            raise ValueError(f"{label} exceeds the {max_bytes}-byte limit")
+        return payload
+    finally:
+        os.close(descriptor)
+
+
+def _open_directory(path: Path, *, label: str) -> int:
+    flags = (
+        os.O_RDONLY
+        | getattr(os, "O_DIRECTORY", 0)
+        | getattr(os, "O_NOFOLLOW", 0)
+        | getattr(os, "O_NONBLOCK", 0)
+    )
+    try:
+        descriptor = os.open(path, flags)
+    except OSError as exc:
+        raise ValueError(f"{label} is not a safe directory: {exc}") from exc
+    if not stat.S_ISDIR(os.fstat(descriptor).st_mode):
+        os.close(descriptor)
+        raise ValueError(f"{label} must be a directory")
+    return descriptor
+
+
+def _read_regular_at(
+    directory_fd: int,
+    relative: Path,
+    *,
+    max_bytes: int,
+    label: str,
+) -> bytes:
+    """Open a relative file under a pinned directory without symlink traversal."""
+    parts = relative.parts
+    if not parts or any(part in {"", ".", ".."} for part in parts):
+        raise ValueError(f"{label} has an invalid confined path")
+    current = os.dup(directory_fd)
+    try:
+        directory_flags = (
+            os.O_RDONLY
+            | getattr(os, "O_DIRECTORY", 0)
+            | getattr(os, "O_NOFOLLOW", 0)
+            | getattr(os, "O_NONBLOCK", 0)
+        )
+        for component in parts[:-1]:
+            try:
+                child = os.open(component, directory_flags, dir_fd=current)
+            except OSError as exc:
+                raise ValueError(
+                    f"{label} contains an unsafe directory component: {exc}"
+                ) from exc
+            if not stat.S_ISDIR(os.fstat(child).st_mode):
+                os.close(child)
+                raise ValueError(f"{label} contains a non-directory component")
+            os.close(current)
+            current = child
+        file_flags = (
+            os.O_RDONLY
+            | getattr(os, "O_NOFOLLOW", 0)
+            | getattr(os, "O_NONBLOCK", 0)
+        )
+        try:
+            descriptor = os.open(parts[-1], file_flags, dir_fd=current)
+        except OSError as exc:
+            raise ValueError(
+                f"{label} is unreadable or not a safe regular file: {exc}"
+            ) from exc
+        try:
+            metadata = os.fstat(descriptor)
+            if not stat.S_ISREG(metadata.st_mode):
+                raise ValueError(f"{label} must be a regular file")
+            if metadata.st_size > max_bytes:
+                raise ValueError(f"{label} exceeds the {max_bytes}-byte limit")
+            chunks = []
+            remaining = max_bytes + 1
+            while remaining:
+                chunk = os.read(descriptor, min(1024 * 1024, remaining))
+                if not chunk:
+                    break
+                chunks.append(chunk)
+                remaining -= len(chunk)
+            payload = b"".join(chunks)
+            if len(payload) > max_bytes:
+                raise ValueError(f"{label} exceeds the {max_bytes}-byte limit")
+            return payload
+        finally:
+            os.close(descriptor)
+    finally:
+        os.close(current)
+
+
+@dataclass(frozen=True)
+class EvidenceInspection:
+    kinds: frozenset[str]
+    document_sha256: str
+
+
+def _open_evidence_document(path: Path) -> tuple[list[dict], int, str]:
+    evidence_path = Path(path).expanduser()
+    if not evidence_path.name or evidence_path.name in {".", ".."}:
+        raise ValueError("evidence document path is invalid")
+    try:
+        base = evidence_path.parent.resolve(strict=True)
+    except OSError as exc:
+        raise ValueError(f"evidence directory is unavailable: {exc}") from exc
+    directory_fd = _open_directory(base, label="evidence directory")
+    try:
+        raw = _read_regular_at(
+            directory_fd, Path(evidence_path.name),
+            max_bytes=_MAX_EVIDENCE_DOCUMENT_BYTES,
+            label="evidence document",
+        )
+        try:
+            records = json.loads(
+                raw.decode("utf-8"), object_pairs_hook=_strict_json_object,
+            )
+        except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+            raise ValueError(
+                f"evidence document is not strict UTF-8 JSON: {exc}"
+            ) from exc
+        if not isinstance(records, list):
+            raise ValueError("evidence JSON must be a list")
+        if not records:
+            raise ValueError("evidence JSON must contain at least one record")
+        if len(records) > _MAX_EVIDENCE_RECORDS:
+            raise ValueError(
+                f"evidence JSON exceeds the {_MAX_EVIDENCE_RECORDS}-record limit"
+            )
+        for index, record in enumerate(records):
+            if not isinstance(record, dict) or set(record) != _EVIDENCE_RECORD_FIELDS:
+                raise ValueError(
+                    f"evidence record {index} does not match the closed schema"
+                )
+        return records, directory_fd, hashlib.sha256(raw).hexdigest()
+    except Exception:
+        os.close(directory_fd)
+        raise
+
+
+def _evidence_enforcer(enforcer):
+    if enforcer is not None:
+        if type(enforcer) is not PolicyEnforcer:
+            raise TypeError("evidence policy must be an authenticated PolicyEnforcer")
+        return enforcer
+    return PolicyEnforcer(load_policy(default_policy_path()))
+
+
+def inspect_evidence(path: Path, *, enforcer=None) -> EvidenceInspection:
+    """Authenticate policy and inspect bounded metadata without opening artifacts."""
+    policy = _evidence_enforcer(enforcer)
+    policy.require(
+        "automated_external_evidence",
+        entry_point="run_verified_pipeline.inspect_evidence",
+    )
+    records, descriptor, document_sha256 = _open_evidence_document(path)
+    try:
+        return EvidenceInspection(
+            kinds=frozenset(str(record["kind"]) for record in records),
+            document_sha256=document_sha256,
+        )
+    finally:
+        os.close(descriptor)
+
+
+def load_evidence(
+    path: Path | None, *, enforcer=None,
+    attestation_env: dict[str, str] | None = None,
+    expected_document_sha256: str | None = None,
+) -> MaterializedVerificationEvidence:
+    """Load closed, authenticated mechanical evidence from a confined directory.
+
+    The evidence document and every referenced artifact must be bounded regular
+    files.  Artifact references are relative to the document directory so a
+    supplied JSON file cannot hash arbitrary host files or follow symlink escapes.
+    A signed feature policy is checked before any attacker-controlled path is read.
+    """
     if path is None:
-        return ()
-    records = json.loads(path.read_text(encoding="utf-8"))
-    if not isinstance(records, list):
-        raise ValueError("evidence JSON must be a list")
+        return MaterializedVerificationEvidence(
+            (), {},
+        )
+    policy = _evidence_enforcer(enforcer)
+    policy.require(
+        "automated_external_evidence",
+        entry_point="run_verified_pipeline.load_evidence",
+    )
+    records, directory_fd, document_sha256 = _open_evidence_document(Path(path))
+    if expected_document_sha256 is not None \
+            and document_sha256 != expected_document_sha256:
+        os.close(directory_fd)
+        raise ValueError("evidence document changed after policy inspection")
     evidence = []
-    for record in records:
-        artifact = Path(record["artifact_path"]).expanduser().resolve()
-        artifact_sha = hashlib.sha256(artifact.read_bytes()).hexdigest()
-        evidence.append(VerificationEvidence(
+    artifact_payloads: dict[str, bytes] = {}
+    artifact_names: set[str] = set()
+    total_artifact_bytes = 0
+    try:
+      for index, record in enumerate(records):
+        artifact_name = record["artifact_path"]
+        if not isinstance(artifact_name, str) or not artifact_name.strip() \
+                or "\x00" in artifact_name:
+            raise ValueError(f"evidence record {index} has an invalid artifact path")
+        relative = Path(artifact_name)
+        if relative.is_absolute() or ".." in relative.parts:
+            raise ValueError(
+                f"evidence record {index} artifact must be relative and confined"
+            )
+        normalized_name = relative.as_posix()
+        if normalized_name in artifact_names:
+            raise ValueError(f"evidence record {index} duplicates an artifact path")
+        artifact_names.add(normalized_name)
+        artifact_bytes = _read_regular_at(
+            directory_fd, relative, max_bytes=_MAX_EVIDENCE_ARTIFACT_BYTES,
+            label=f"evidence artifact {index}",
+        )
+        total_artifact_bytes += len(artifact_bytes)
+        if total_artifact_bytes > _MAX_EVIDENCE_ARTIFACT_TOTAL_BYTES:
+            raise ValueError(
+                "evidence artifacts exceed the aggregate byte limit"
+            )
+        artifact_sha = hashlib.sha256(artifact_bytes).hexdigest()
+        if artifact_sha in artifact_payloads:
+            raise ValueError(f"evidence record {index} duplicates an artifact digest")
+        if record["artifact_sha256"] != artifact_sha:
+            raise ValueError(f"evidence record {index} artifact hash mismatch")
+        item = VerificationEvidence(
             kind=str(record["kind"]),
             verifier=str(record["verifier"]),
             outcome=str(record["outcome"]),
             statement_sha256=str(record["statement_sha256"]),
             candidate_sha256=str(record["candidate_sha256"]),
             artifact_sha256=artifact_sha,
-            passed=record.get("passed") is True,
-        ))
-    return tuple(evidence)
+            passed=record["passed"] if type(record["passed"]) is bool else False,
+            verification_method=str(record["verification_method"]),
+            validator_id=str(record["validator_id"]),
+            certificate_sha256=str(record["certificate_sha256"]),
+            scope_sha256=str(record["scope_sha256"]),
+            coverage=str(record["coverage"]),
+            statement_fidelity=str(record["statement_fidelity"]),
+            schema_version=(record["schema_version"]
+                            if type(record["schema_version"]) is int else -1),
+            attestor_key_id=str(record["attestor_key_id"]),
+            attestation=str(record["attestation"]),
+            problem_number=(record["problem_number"]
+                            if type(record["problem_number"]) is int else 0),
+            run_contract_id=str(record["run_contract_id"]),
+            execution_id=str(record["execution_id"]),
+            run_context_id=str(record["run_context_id"]),
+        )
+        if type(record["passed"]) is not bool:
+            raise ValueError(f"evidence record {index} passed must be a boolean")
+        if item.passed and not verify_verification_evidence(
+            item, env=attestation_env,
+        ):
+            raise ValueError(
+                f"evidence record {index} claims success without a valid semantic attestation"
+            )
+        evidence.append(item)
+        artifact_payloads[artifact_sha] = artifact_bytes
+    finally:
+        os.close(directory_fd)
+    return MaterializedVerificationEvidence(
+        evidence, artifact_payloads,
+    )
 
 
 def publish_verified_result(result, category: str, base_dir: Path) -> Path:
-    if result.gate.status not in {"verified_proved", "verified_disproved"}:
-        raise ValueError("only a gate-approved result can be published")
-    status = result.gate.status.replace("_", "-")
-    candidate = (result.artifact_dir / "candidate.md").read_text(encoding="utf-8")
-    completeness = candidate_contract(candidate).completeness_score
-    body = (
-        f"# Erdős Problem #{result.problem_number} [{status}] {completeness}%\n\n"
-        f"Verification manifest SHA-256: "
-        f"{hashlib.sha256((result.artifact_dir / 'manifest.json').read_bytes()).hexdigest()}\n\n"
-        f"## Verified candidate\n\n{candidate}\n"
+    """Legacy publisher is intentionally disabled.
+
+    A mutable ``GateDecision``/manifest is not an authoritative release
+    certificate, and a same-process signer would merely turn it into a signing
+    oracle. Publication must go through the EGMRA event-derived, independently
+    signed ``ReleaseCertificate`` renderer. Keeping this entry point fail-closed
+    also eliminates category/path traversal from legacy callers.
+    """
+    raise RuntimeError(
+        "legacy publication is disabled; use an authenticated EGMRA "
+        "ReleaseCertificate and communication renderer"
     )
-    output_dir = base_dir / "outputs" / "chatgpt" / category
-    output_dir.mkdir(parents=True, exist_ok=True)
-    for stale in output_dir.glob(f"Erdős #{result.problem_number} *.md"):
-        if "[verified-" in stale.name:
-            stale.unlink()
-    output = output_dir / (
-        f"Erdős #{result.problem_number} [{status}] {completeness}%.md"
-    )
-    output.write_text(body, encoding="utf-8")
-    return output
 
 
 class ChatGPTBrowserRunner:
@@ -87,7 +380,7 @@ class ChatGPTBrowserRunner:
             request_spacing_s=request_spacing_s,
         )
         self.max_attempts = max_attempts
-        self.contexts = {}
+        self.contexts: dict[str, str] = {}
 
     def context_id(self, stage: str) -> str:
         return self.contexts.get(stage, "")
@@ -310,6 +603,12 @@ def main() -> None:
         help="Ground the search stages in related problems and known results "
              "retrieved offline from the local corpus (rediscovery-eligible).",
     )
+    parser.add_argument(
+        "--force-legacy", action="store_true",
+        help="Run the RETIRED legacy per-problem pipeline anyway. The supported "
+             "path is `egmra run --erdos N` (verified EGMRA loop). The read-only "
+             "--print-statement-sha utility remains available without this flag.",
+    )
     args = parser.parse_args()
 
     triage_dir = args.triage if args.triage.is_absolute() else C.REPO_DIR / args.triage
@@ -320,6 +619,15 @@ def main() -> None:
             raise SystemExit(f"problem {args.problem} is not source-open")
         print(make_statement_lock(sources[args.problem]["statement"]).sha256)
         return
+    if not args.force_legacy:
+        parser.error(
+            "run_verified_pipeline.py is RETIRED as a production runner: it drives "
+            "the legacy ProofPipeline, which terminates at "
+            "'awaiting_authenticated_release' and can never emit a ReleaseCertificate. "
+            "Use the single verified pipeline instead:\n"
+            "  egmra run --erdos N --provider browser --policy <signed-policy>\n"
+            "Pass --force-legacy only to run the retired path deliberately."
+        )
     if "unrecorded" in args.model_id.lower() or not args.model_id.strip():
         parser.error("--model-id must be the exact recorded UI model identity")
     budget_config = normalized_budget_config(

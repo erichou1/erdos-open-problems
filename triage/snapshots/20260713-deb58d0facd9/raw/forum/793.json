@@ -1,0 +1,20 @@
+{
+  "problem_number": 793,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/793",
+  "retrieved_at": "2026-07-10T23:18:51.056545+00:00",
+  "page_title": "793 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "6ee794a291463bdca62f69fffeeeb90eccd65cb29116178cd807aced5a70c433",
+  "comment_count": 2,
+  "comments": [
+    {
+      "post_id": "4493",
+      "text": "There seems to be some missing details in the argument proving $F(n)\\leq \\pi(n)+n^{2/3}$ given in the description. The statement \"It is easy to see that every $m\\leq n$ can be written as $uv$ where $u\\leq n^{2/3}$ and $v$ is either prime or $\\leq n^{2/3}$,\" only holds for $n^{2/3} < p^2 \\leq n$ if we can take $u=v$. However that would imply that we can take self-loops in the graph. Then the graph being a tree does not immediately imply that the number of edges is less than the number of vertices. EDIT: I realise that if a vertex has a self loop, then it cannot have an edge with any other vertex. If $u$ has a loop and $uv$ is an edge in the graph then $u^2$ and $uv$ are in $A$, in which case $u^2|(uv)^2$. So the graph is a forest, where there may be isolated vertices with loops. Therefore the number of edges is less than the number of vertices.",
+      "meta": "Adenwalla — 08:31 on 26 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1925",
+      "text": "For a sufficiently large integer $n$, let $F_k(n)$ be the size of the largest set $A \\subset \\{1, 2, \\ldots, n\\}$ with the property that no $a \\in A$ divides the product of $k$ others. Consider the bounds $$\\pi(n) + \\frac{c_k n^{2/(k+1)}}{\\log^2 n} \\le F_k(n) \\le \\pi(n) + \\frac{C_k n^{2/(k+1)}}{\\log^2 n}. \\hspace{20pt} (1)$$Then Erdős stated in [Er69, p. 78] that even though he only had proved $(1)$ in [Er38] for $k = 2$, his method does extend to prove both inequalities for all fixed $k \\ge 2$. No further details were given though. These general bounds were repeated in Problem E4 of Guy's collection [Gu04]. Skipping ahead to 2010, Chan, Győri and Sárközy (see here) did not seem aware of Erdős' claim that his proof also works for larger $k$, and prove themselves that for all large enough $n$ and all $k$ with $2 \\le k \\le \\frac{\\log n}{6 \\log \\log n}$ the lower bound in $(1)$ holds with $c_k = \\frac{1}{8k^2}$. They moreover show that the upper bound holds when $k = 3$, for some unspecified constant $C_3$. But they could not show the upper bound in $(1)$ in full generality. A year later still, Chan (see here) did prove that the upper bound in $(1)$ holds more generally, for all large enough $n$ and all $k$ with $2 \\le k \\le \\frac{\\log n}{6 \\log \\log n}$ where $C_k = ck^2$ for some absolute $c$. Tsz Ho Chan, Ervin Győri, András Sárközy, On a problem of Erdős on integers, none of which divides the product of $k$ others. European J. Combin. 31 (1) (2010), 260-269. Tsz Ho Chan, On sets of integers, none of which divides the product of $k$ others. European J. Combin. 32 (3) (2011), 443-447. Both of the latter two references were found with the help of ChatGPT's Deep Research tool. PS. Page numbers are [Er69, p. 77] and [Er70b, p. 136]. (The site has been updated to address this comment.)",
+      "meta": "Woett — 22:59 on 30 Nov 2025 👍 0 📝 1 🤖 0"
+    }
+  ]
+}

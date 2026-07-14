@@ -12,13 +12,14 @@ import re
 import stat
 import tempfile
 import time
-import urllib.request
 from dataclasses import dataclass
 from datetime import datetime, timezone
 from html.parser import HTMLParser
 from pathlib import Path
 from typing import Callable, Iterable
+from urllib.parse import urljoin, urlsplit
 
+import requests
 import yaml
 
 
@@ -31,6 +32,9 @@ COMMIT_CATALOG_URL = (
 PROBLEM_URL = "https://www.erdosproblems.com/latex/{number}"
 USER_AGENT = "erdos-research-ingester/1.0 (+https://www.erdosproblems.com/)"
 EXTRACTOR_VERSION = "canonical-sections-v2"
+MAX_REMOTE_RESPONSE_BYTES = 16 * 1024 * 1024
+MAX_REMOTE_REDIRECTS = 5
+_REDIRECT_STATUS_CODES = frozenset({301, 302, 303, 307, 308})
 
 
 class SourceExtractionError(ValueError):
@@ -41,6 +45,10 @@ class ProvenanceError(RuntimeError):
     """Raised when canonical source evidence is absent or fails validation."""
 
 
+class NetworkBoundaryError(ValueError):
+    """Raised when a remote fetch would cross an unsafe network boundary."""
+
+
 class UnsafeDestinationError(RuntimeError):
     """Raised before apply when either mirrored destination is unsafe."""
 
@@ -49,14 +57,100 @@ class ApplyTransactionError(RuntimeError):
     """Raised when an atomic mirrored apply fails (after rollback is attempted)."""
 
 
+_ReplaceFile = Callable[[Path, Path], object]
+
+
 def sha256(data: bytes) -> str:
     return hashlib.sha256(data).hexdigest()
 
 
-def fetch_url(url: str) -> bytes:
-    request = urllib.request.Request(url, headers={"User-Agent": USER_AGENT})
-    with urllib.request.urlopen(request, timeout=30) as response:
-        return response.read()
+def _require_https_url(url: str) -> None:
+    try:
+        parsed = urlsplit(url)
+    except (TypeError, ValueError) as error:
+        raise NetworkBoundaryError("remote URL is malformed") from error
+    if (
+        parsed.scheme.lower() != "https"
+        or not parsed.hostname
+        or parsed.username is not None
+        or parsed.password is not None
+    ):
+        raise NetworkBoundaryError(
+            "remote URL must use HTTPS without embedded credentials"
+        )
+
+
+def fetch_url(
+    url: str,
+    *,
+    timeout: float = 30.0,
+    max_bytes: int = MAX_REMOTE_RESPONSE_BYTES,
+    user_agent: str = USER_AGENT,
+) -> bytes:
+    """Fetch one bounded HTTPS resource with normal certificate validation."""
+    _require_https_url(url)
+    if isinstance(max_bytes, bool) or not isinstance(max_bytes, int) or max_bytes < 1:
+        raise ValueError("remote response size limit must be a positive integer")
+
+    current_url = url
+    for redirect_count in range(MAX_REMOTE_REDIRECTS + 1):
+        response = requests.get(
+            current_url,
+            headers={"User-Agent": user_agent},
+            timeout=timeout,
+            stream=True,
+            allow_redirects=False,
+        )
+        try:
+            final_url = getattr(response, "url", None)
+            if not isinstance(final_url, str):
+                raise NetworkBoundaryError("final response URL is unavailable")
+            _require_https_url(final_url)
+
+            if response.status_code in _REDIRECT_STATUS_CODES:
+                if redirect_count >= MAX_REMOTE_REDIRECTS:
+                    raise NetworkBoundaryError("remote redirect limit exceeded")
+                location = response.headers.get("Location")
+                if not isinstance(location, str) or not location.strip():
+                    raise NetworkBoundaryError("remote redirect target is unavailable")
+                next_url = urljoin(current_url, location)
+                _require_https_url(next_url)
+                current_url = next_url
+                continue
+
+            response.raise_for_status()
+            content_length = response.headers.get("Content-Length")
+            if content_length is not None:
+                try:
+                    announced_size = int(content_length)
+                except (TypeError, ValueError):
+                    announced_size = None
+                if announced_size is not None and (
+                    announced_size < 0 or announced_size > max_bytes
+                ):
+                    raise NetworkBoundaryError(
+                        "remote response exceeds size limit"
+                    )
+
+            payload = bytearray()
+            for chunk in response.iter_content(
+                chunk_size=min(64 * 1024, max_bytes + 1)
+            ):
+                if not chunk:
+                    continue
+                if not isinstance(chunk, (bytes, bytearray)):
+                    raise NetworkBoundaryError(
+                        "remote response yielded non-byte content"
+                    )
+                payload.extend(chunk)
+                if len(payload) > max_bytes:
+                    raise NetworkBoundaryError(
+                        "remote response exceeds size limit"
+                    )
+            return bytes(payload)
+        finally:
+            response.close()
+    raise NetworkBoundaryError("remote redirect limit exceeded")
 
 
 def resolve_upstream_commit(
@@ -498,7 +592,7 @@ def safe_apply_tex_batch(
     root: Path,
     items: Iterable[tuple[int, str, bytes]],
     *,
-    replace_file: Callable[[object, object], object] | None = None,
+    replace_file: _ReplaceFile | None = None,
 ) -> dict[int, list[dict]]:
     """Transactionally apply generated TeX to both mirrored corpus paths.
 
@@ -508,7 +602,9 @@ def safe_apply_tex_batch(
     post-write verification failure triggers a best-effort full rollback.
     """
     root = Path(root)
-    replace_file = replace_file or os.replace
+    replace_operation: _ReplaceFile = (
+        os.replace if replace_file is None else replace_file
+    )
     material = list(items)
     filenames = [filename for _, filename, _ in material]
     if len(filenames) != len(set(filenames)):
@@ -575,7 +671,7 @@ def safe_apply_tex_batch(
         for state in states:
             if state.staged_path is None:
                 continue
-            replace_file(state.staged_path, state.path)
+            replace_operation(state.staged_path, state.path)
             state.staged_path = None
         for parent in {state.path.parent for state in states}:
             _fsync_directory(parent)
@@ -617,7 +713,7 @@ def safe_apply_tex_pair(
     filename: str,
     payload: bytes,
     *,
-    replace_file: Callable[[object, object], object] | None = None,
+    replace_file: _ReplaceFile | None = None,
 ) -> list[dict]:
     """Apply one generated file to the mirrored corpus paths safely."""
     return safe_apply_tex_batch(
@@ -821,7 +917,12 @@ def ingest_corpus(
                     "destination_count": sum(map(len, destination_results.values())),
                 })
                 for record in records:
-                    destinations = destination_results[int(record["problem_number"])]
+                    problem_number = record.get("problem_number")
+                    if type(problem_number) is not int:
+                        raise ApplyTransactionError(
+                            "generated record problem number must be an integer"
+                        )
+                    destinations = destination_results[problem_number]
                     record["applied_destinations"] = destinations
                     record["applied_paths"] = [item["path"] for item in destinations]
                     record["status"] = "applied"

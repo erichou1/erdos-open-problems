@@ -1,6 +1,6 @@
 {
-  "allocation_context_id": null,
-  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
   "budget": "verified_pipeline_v2:4fc5421244b900bd",
   "budget_config": {
     "browser_channel": "playwright-chromium",
@@ -44,8 +44,8 @@
       "primes"
     ]
   },
-  "model_portfolio": "chatgpt-ui-unrecorded",
-  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
   "posterior": {
     "calibration_status": "uncalibrated_weak_prior_mvp",
     "matching_outcome_records": 0,
@@ -219,7 +219,7 @@
     "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
     "latex_path": "open/individual/problem_890.tex",
     "latex_sha256": "42195b0cf32c72f2c26caea8bd3ea8a9519fe364c2b8bf3e93c3d33a303c3cb3",
-    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
     "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
     "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
   },
@@ -262,10 +262,59 @@
     "shared_infrastructure_search",
     "literature_search"
   ],
-  "run_contract": null,
-  "run_contract_id": null,
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "a213c4a8f536be004c020a656d845ec40f3a6647ba5819a5767050f7a07b5a1d",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "4b41f4477c9ed47a5bed403759d0bbc70be69f98b638245343b8ec2e749ecb67",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "9e547d625a802d628f9255ff9060fdc5652f8b420fd4ededc01fcd8e970ed7b4",
   "schema_version": 2,
-  "snapshot_id": "20260712-00e292c67dca",
+  "snapshot_id": "20260713-deb58d0facd9",
   "statement": {
     "ambiguity_status": "material",
     "intended": "If $\\omega_k(n)$ counts the number of distinct prime factors of $n$ which are $>k$, then is it true that, for every $k\\geq 1$,\\[\\liminf_{n\\to \\infty}\\sum_{0\\leq i<k}\\omega_k(n+i)\\leq k?\\]Is it true that\\[\\limsup_{n\\to \\infty}\\left(\\sum_{0\\leq i<k}\\omega(n+i)\\right) \\frac{\\log\\log n}{\\log n}=1,\\]where $\\omega$ counts the number of distinct prime factors without restriction?",
@@ -279,7 +328,7 @@
     {
       "parent_problem_id": "erdos-890",
       "part_index": 1,
-      "run_contract_id": null,
+      "run_contract_id": "014e2cdcee45e17d93d2707af7dcab0721e4f55d7e4c8faa5af7b3094585da35",
       "schema_version": 2,
       "statement": {
         "focus_question": "If $\\omega_k(n)$ counts the number of distinct prime factors of $n$ which are $>k$, then is it true that, for every $k\\geq 1$,\\[\\liminf_{n\\to \\infty}\\sum_{0\\leq i<k}\\omega_k(n+i)\\leq k?",
@@ -294,7 +343,7 @@
     {
       "parent_problem_id": "erdos-890",
       "part_index": 2,
-      "run_contract_id": null,
+      "run_contract_id": "344d3eb2bd8249384d77797f407d6ee273086f9da2389b723ad954ef40325931",
       "schema_version": 2,
       "statement": {
         "focus_question": "\\]Is it true that\\[\\limsup_{n\\to \\infty}\\left(\\sum_{0\\leq i<k}\\omega(n+i)\\right) \\frac{\\log\\log n}{\\log n}=1,\\]where $\\omega$ counts the number of distinct prime factors without restriction?",

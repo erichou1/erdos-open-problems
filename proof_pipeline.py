@@ -3,11 +3,12 @@
 import json
 import hashlib
 import re
+import stat
 from datetime import datetime, timezone
 import uuid
 from dataclasses import asdict, dataclass
 from pathlib import Path
-from typing import Any, Protocol
+from typing import Any, Callable, Protocol
 
 from solver_prompts import (
     ADJUDICATOR_PROMPT_TEMPLATE,
@@ -29,6 +30,8 @@ from verification import (
     candidate_status,
     evaluate_gate,
     VerificationEvidence,
+    VerificationBinding,
+    verify_review_attestation,
 )
 from research_state import (
     ResearchState,
@@ -39,7 +42,6 @@ from research_state import (
 )
 from run_contract import (
     STAGE_CACHE_SCHEMA_VERSION,
-    RunContractError,
     canonical_json,
     make_run_contract,
     run_contract_id,
@@ -126,7 +128,6 @@ def normalize_research_directive(
 class IsolatedRunner(Protocol):
     def run(self, prompt: str, *, stage: str, isolated: bool) -> str: ...
     def context_id(self, stage: str) -> str: ...
-    def restore_context(self, stage: str, context_id: str) -> None: ...
 
 
 @dataclass(frozen=True)
@@ -135,6 +136,40 @@ class PipelineResult:
     candidate_outcome: str
     gate: GateDecision
     artifact_dir: Path
+
+
+@dataclass(frozen=True)
+class _RunContractContext:
+    source_snapshot_id: str
+    source_snapshot_sha256: str
+    toolset: dict[str, Any]
+    dependencies: dict[str, Any]
+    runtime: dict[str, Any]
+
+
+def _require_real_directory(path: Path, *, label: str) -> None:
+    """Reject symlinks and non-directories at a filesystem trust boundary.
+
+    ``Path.is_dir()`` follows symlinks, which is specifically unsafe for the
+    caller-selected artifact root and its problem directory.  Callers create a
+    directory first (where appropriate), then use this lstat-based check before
+    any provider call or artifact write.
+    """
+    try:
+        mode = path.lstat().st_mode
+    except FileNotFoundError as error:
+        raise ValueError(f"{label} does not exist: {path}") from error
+    if stat.S_ISLNK(mode) or not stat.S_ISDIR(mode):
+        raise ValueError(f"{label} must be a real directory, not a symlink: {path}")
+
+
+def _create_or_validate_real_directory(path: Path, *, label: str) -> None:
+    """Create ``path`` if absent, then enforce the no-follow directory rule."""
+    try:
+        path.mkdir(parents=True, exist_ok=False)
+    except FileExistsError:
+        pass
+    _require_real_directory(path, label=label)
 
 
 def _failure_classification(
@@ -189,6 +224,8 @@ REVIEW_MANDATES = {
     "mechanical_evidence": "Identify claims suitable for exact computation, CAS, SAT/SMT, or formal checking; verify available evidence and reject unsupported computational claims.",
     "global_synthesis": "Ignore persuasive local detail and independently check that the verified pieces jointly imply the exact final theorem.",
 }
+_MAX_STAGE_TEXT_BYTES = 16 * 1024 * 1024
+_STAGE_NAME_RE = re.compile(r"[A-Za-z0-9_-]{1,128}")
 
 
 def _json_object(text: str) -> dict:
@@ -202,9 +239,23 @@ def _json_object(text: str) -> dict:
     start, end = stripped.find("{"), stripped.rfind("}")
     if start < 0 or end < start:
         raise ValueError("review response did not contain a JSON object")
+    def reject_duplicate_keys(pairs):
+        result = {}
+        for key, value in pairs:
+            if key in result:
+                raise ValueError(f"duplicate JSON key: {key}")
+            result[key] = value
+        return result
+
     # strict=False allows raw control characters (e.g. unescaped newlines) that
     # ChatGPT often emits inside JSON string values, which strict parsing rejects.
-    return json.loads(stripped[start:end + 1], strict=False)
+    value = json.loads(
+        stripped[start:end + 1], strict=False,
+        object_pairs_hook=reject_duplicate_keys,
+    )
+    if not isinstance(value, dict):
+        raise ValueError("review response must contain one JSON object")
+    return value
 
 
 def _strings(value) -> tuple[str, ...]:
@@ -216,7 +267,12 @@ def _strings(value) -> tuple[str, ...]:
 
 
 def _review(
-    data: dict, *, reviewer_id: str, expected_role: str, context_id: str
+    data: dict, *, reviewer_id: str, expected_role: str, context_id: str,
+    candidate_sha256: str,
+    problem_number: int,
+    run_contract_id_value: str,
+    execution_id: str,
+    run_context_id_value: str,
 ) -> Review:
     reported_role = str(data.get("reviewer_role", expected_role)).strip()
     accepted_roles = {
@@ -242,6 +298,11 @@ def _review(
         adversarial_survival_score=int(data.get("adversarial_survival_score", 0)),
         adjudicated_outcome=str(data.get("outcome", "")),
         context_id=context_id,
+        candidate_sha256=candidate_sha256,
+        problem_number=problem_number,
+        run_contract_id=run_contract_id_value,
+        execution_id=execution_id,
+        run_context_id=run_context_id_value,
     )
 
 
@@ -268,6 +329,9 @@ class ProofPipeline:
         *,
         max_revisions: int = 2,
         verification_evidence: tuple[VerificationEvidence, ...] = (),
+        verification_evidence_provider: (
+            Callable[[VerificationBinding], tuple[VerificationEvidence, ...]] | None
+        ) = None,
         pipeline_version: str = "unrecorded",
         model_portfolio: str = "unrecorded",
         execution_config: dict | None = None,
@@ -277,6 +341,8 @@ class ProofPipeline:
         dependencies: dict[str, Any] | None = None,
         runtime: dict[str, Any] | None = None,
         adjudicator_runner: IsolatedRunner | None = None,
+        review_attestor: Callable[[Review, str], Review] | None = None,
+        attestation_env: dict[str, str] | None = None,
         literature_context: str = "",
         literature_grounding: dict | None = None,
     ):
@@ -284,6 +350,11 @@ class ProofPipeline:
         # A distinct model for the final adjudicator breaks the correlated blind
         # spots of a model reviewing its own work. Defaults to the same runner.
         self.adjudicator_runner = adjudicator_runner or runner
+        # Runner identity and separation of duties must be established by a
+        # boundary outside model output. Without such a gateway reviews remain
+        # useful blockers, but cannot authorize promotion.
+        self.review_attestor = review_attestor
+        self.attestation_env = dict(attestation_env) if attestation_env is not None else None
         # Optional offline related-work grounding, injected into the SEARCH
         # stages only (scouts + construction); reviews/adjudication stay blind
         # so the adversarial check is never softened by "known result" framing.
@@ -292,27 +363,44 @@ class ProofPipeline:
         self.artifact_root = Path(artifact_root)
         self.max_revisions = max(0, max_revisions)
         self.verification_evidence = verification_evidence
+        self.verification_evidence_provider = verification_evidence_provider
         self.pipeline_version = pipeline_version
         self.model_portfolio = model_portfolio
         self.execution_config = dict(execution_config or {})
-        self._stage_cache = None
-        contract_context = {
-            "source_snapshot_id": source_snapshot_id,
-            "source_snapshot_sha256": source_snapshot_sha256,
-            "toolset": toolset,
-            "dependencies": dependencies,
-            "runtime": runtime,
-        }
-        supplied = [value is not None for value in contract_context.values()]
-        if any(supplied) and not all(supplied):
+        self._stage_cache: Path | None = None
+        context_fields = (
+            ("source_snapshot_id", source_snapshot_id),
+            ("source_snapshot_sha256", source_snapshot_sha256),
+            ("toolset", toolset),
+            ("dependencies", dependencies),
+            ("runtime", runtime),
+        )
+        if all(value is None for _, value in context_fields):
+            self._run_contract_context: _RunContractContext | None = None
+        elif (
+            source_snapshot_id is None
+            or source_snapshot_sha256 is None
+            or toolset is None
+            or dependencies is None
+            or runtime is None
+        ):
             missing = sorted(
-                key for key, value in contract_context.items() if value is None
+                key for key, value in context_fields if value is None
             )
             raise ValueError(
                 "run-contract context is incomplete; missing " + ", ".join(missing)
             )
-        self._run_contract_context = contract_context if all(supplied) else None
-        self._active_run_contract = None
+        else:
+            self._run_contract_context = _RunContractContext(
+                source_snapshot_id=source_snapshot_id,
+                source_snapshot_sha256=source_snapshot_sha256,
+                toolset=toolset,
+                dependencies=dependencies,
+                runtime=runtime,
+            )
+        self._active_run_contract: dict[str, Any] | None = None
+        self._active_problem_number = 0
+        self._active_execution_id = ""
 
     def _budget(self) -> dict[str, Any]:
         return {
@@ -324,7 +412,7 @@ class ProofPipeline:
     def _bind_run_contract(
         self, statement_sha256: str,
         research_directive_sha256: str | None = None,
-    ) -> dict | None:
+    ) -> dict[str, Any] | None:
         """Bind the exact statement to this pipeline's reusable identity."""
         if self._run_contract_context is None:
             self._active_run_contract = None
@@ -332,19 +420,19 @@ class ProofPipeline:
         context = self._run_contract_context
         self._active_run_contract = make_run_contract(
             statement_sha256=statement_sha256,
-            source_snapshot_id=context["source_snapshot_id"],
-            source_snapshot_sha256=context["source_snapshot_sha256"],
+            source_snapshot_id=context.source_snapshot_id,
+            source_snapshot_sha256=context.source_snapshot_sha256,
             pipeline_fingerprint=self.pipeline_version,
             research_directive_sha256=(
                 research_directive_sha256
                 or hashlib.sha256(b"synthetic-test-research-directive").hexdigest()
             ),
             model_portfolio=self.model_portfolio,
-            toolset=context["toolset"],
+            toolset=context.toolset,
             budget=self._budget(),
             execution_config=self.execution_config,
-            dependencies=context["dependencies"],
-            runtime=context["runtime"],
+            dependencies=context.dependencies,
+            runtime=context.runtime,
         )
         return self._active_run_contract
 
@@ -364,60 +452,6 @@ class ProofPipeline:
             "run_contract": contract,
         }
 
-    def _incomplete_run_is_compatible(
-        self, directory: Path, problem: str, research_directive_sha256: str,
-    ) -> bool:
-        expected = self._run_contract_record(directory.name)
-        if expected is None:
-            return False
-        try:
-            recorded = json.loads(
-                (directory / "run_contract.json").read_text(encoding="utf-8")
-            )
-            if not isinstance(recorded, dict) or set(recorded) != {
-                "run_contract_record_schema_version",
-                "execution_id",
-                "run_contract_id",
-                "run_context_id",
-                "run_contract",
-            }:
-                return False
-            embedded_contract = validate_run_contract(recorded["run_contract"])
-            if (
-                recorded != expected
-                or run_contract_id(embedded_contract) != recorded["run_contract_id"]
-            ):
-                return False
-            problem_file = directory / "problem.txt"
-            if problem_file.exists() and problem_file.read_text(
-                encoding="utf-8"
-            ) != problem:
-                return False
-            statement_lock_file = directory / "statement_lock.json"
-            if statement_lock_file.exists():
-                statement_lock = json.loads(
-                    statement_lock_file.read_text(encoding="utf-8")
-                )
-                if statement_lock.get("sha256") != embedded_contract["statement_sha256"]:
-                    return False
-            directive_file = directory / "research_directive.json"
-            if not directive_file.exists():
-                return False
-            directive_record = json.loads(directive_file.read_text(encoding="utf-8"))
-            if directive_record.get("research_directive_sha256") \
-                    != research_directive_sha256:
-                return False
-        except (
-            KeyError,
-            OSError,
-            TypeError,
-            ValueError,
-            json.JSONDecodeError,
-            RunContractError,
-        ):
-            return False
-        return True
-
     @staticmethod
     def _write_json_atomic(path: Path, value: object) -> None:
         temporary = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")
@@ -431,65 +465,49 @@ class ProofPipeline:
             temporary.unlink(missing_ok=True)
 
     @staticmethod
-    def _cache_metadata_is_compatible(
-        metadata: object,
-        *,
-        stage: str,
-        prompt_sha256: str,
-        response_sha256: str,
-        expected_contract: dict,
-        expected_contract_id: str,
-        expected_cache_context_id: str,
-    ) -> bool:
-        required = {
-            "cache_schema_version",
-            "stage",
-            "prompt_sha256",
-            "response_sha256",
-            "run_contract",
-            "run_contract_id",
-            "cache_context_id",
-            "context_id",
-            "recorded_at",
-        }
-        if not isinstance(metadata, dict) or set(metadata) != required:
-            return False
+    def _write_text_atomic(path: Path, value: str) -> None:
+        temporary = path.with_name(f".{path.name}.{uuid.uuid4().hex}.tmp")
         try:
-            embedded_contract = validate_run_contract(metadata["run_contract"])
-            embedded_contract_id = run_contract_id(embedded_contract)
-            recorded_at = datetime.fromisoformat(metadata["recorded_at"])
-        except (KeyError, TypeError, ValueError, RunContractError):
-            return False
-        return (
-            metadata["cache_schema_version"] == STAGE_CACHE_SCHEMA_VERSION
-            and metadata["stage"] == stage
-            and metadata["prompt_sha256"] == prompt_sha256
-            and metadata["response_sha256"] == response_sha256
-            and embedded_contract == expected_contract
-            and embedded_contract_id == expected_contract_id
-            and metadata["run_contract_id"] == expected_contract_id
-            and metadata["cache_context_id"] == expected_cache_context_id
-            and isinstance(metadata["context_id"], str)
-            and recorded_at.tzinfo is not None
-        )
+            temporary.write_text(value, encoding="utf-8")
+            temporary.replace(path)
+        finally:
+            temporary.unlink(missing_ok=True)
 
-    def _run(self, prompt: str, stage: str, runner=None) -> str:
-        """Call the isolated runner, caching each stage's raw response to disk so
-        an interrupted run resumes from the last finished stage instead of
-        regenerating it. Isolation is preserved: a cache hit replays the exact
-        response that stage already produced in its own fresh conversation.
+    def _run(
+        self, prompt: str, stage: str, runner: IsolatedRunner | None = None,
+    ) -> str:
+        """Call the isolated runner and persist a diagnostic stage transcript.
+
+        Stage files are deliberately *not* replayed.  They live in a
+        caller-writable artifact tree, and a digest stored next to a response is
+        circular authentication: an attacker can replace both.  Until a
+        provider-authenticated replay receipt exists, every model stage must be
+        obtained freshly from its configured runner.
 
         ``runner`` overrides the model for a single stage (e.g. a distinct
         adjudicator model); it defaults to this pipeline's primary runner."""
+        if not isinstance(stage, str) or not _STAGE_NAME_RE.fullmatch(stage):
+            raise ValueError("stage name must use the closed basename grammar")
+        if not isinstance(prompt, str) \
+                or len(prompt.encode("utf-8")) > _MAX_STAGE_TEXT_BYTES:
+            raise ValueError("model-stage prompt exceeds the bounded byte limit")
         runner = runner or self.runner
-        cache_file = self._stage_cache / f"{stage}.txt"
-        metadata_file = self._stage_cache / f"{stage}.meta.json"
+        stage_cache = self._stage_cache
+        if stage_cache is None:
+            raise ValueError("stage cache is not initialized")
+        _require_real_directory(stage_cache, label="stage-cache directory")
+        cache_file = stage_cache / f"{stage}.txt"
+        metadata_file = stage_cache / f"{stage}.meta.json"
         prompt_sha256 = hashlib.sha256(prompt.encode("utf-8")).hexdigest()
         if self._active_run_contract is None:
             # Without an exact statement/source/model/tool/runtime contract there
             # is no defensible cache key. The solver may continue, but no stage
             # response is persisted or replayed under an ambiguous identity.
-            return runner.run(prompt, stage=stage, isolated=True)
+            response = runner.run(prompt, stage=stage, isolated=True)
+            if not isinstance(response, str) \
+                    or len(response.encode("utf-8")) > _MAX_STAGE_TEXT_BYTES:
+                raise ValueError("model-stage response exceeds the bounded byte limit")
+            return response
 
         active_contract = validate_run_contract(self._active_run_contract)
         active_contract_id = run_contract_id(active_contract)
@@ -498,40 +516,10 @@ class ProofPipeline:
             stage=stage,
             prompt_sha256=prompt_sha256,
         )
-        if cache_file.exists() and metadata_file.exists():
-            try:
-                cached = cache_file.read_text(encoding="utf-8")
-                metadata = json.loads(metadata_file.read_text(encoding="utf-8"))
-            except (UnicodeDecodeError, json.JSONDecodeError, OSError, ValueError):
-                cached, metadata = "", {}
-            cached_response_sha256 = hashlib.sha256(
-                cached.encode("utf-8")
-            ).hexdigest()
-            if cached.strip() and self._cache_metadata_is_compatible(
-                metadata,
-                stage=stage,
-                prompt_sha256=prompt_sha256,
-                response_sha256=cached_response_sha256,
-                expected_contract=active_contract,
-                expected_contract_id=active_contract_id,
-                expected_cache_context_id=cache_context_id,
-            ):
-                context_id = str(metadata.get("context_id", ""))
-                restore_context = getattr(runner, "restore_context", None)
-                if context_id and callable(restore_context):
-                    try:
-                        restore_context(stage, context_id)
-                    except Exception:
-                        # A response whose isolated provenance cannot be restored
-                        # is regenerated instead of being returned ambiguously.
-                        pass
-                    else:
-                        print(f"{stage}: reusing validated cached response", flush=True)
-                        return cached
-                else:
-                    print(f"{stage}: reusing validated cached response", flush=True)
-                    return cached
         response = runner.run(prompt, stage=stage, isolated=True)
+        if not isinstance(response, str) \
+                or len(response.encode("utf-8")) > _MAX_STAGE_TEXT_BYTES:
+            raise ValueError("model-stage response exceeds the bounded byte limit")
         context_id = runner.context_id(stage)
         metadata = {
             "cache_schema_version": STAGE_CACHE_SCHEMA_VERSION,
@@ -544,12 +532,8 @@ class ProofPipeline:
             "context_id": context_id,
             "recorded_at": datetime.now(timezone.utc).isoformat(),
         }
-        cache_tmp = cache_file.with_suffix(cache_file.suffix + ".tmp")
-        metadata_tmp = metadata_file.with_suffix(metadata_file.suffix + ".tmp")
-        cache_tmp.write_text(response, encoding="utf-8")
-        cache_tmp.replace(cache_file)
-        metadata_tmp.write_text(json.dumps(metadata, indent=2) + "\n", encoding="utf-8")
-        metadata_tmp.replace(metadata_file)
+        self._write_text_atomic(cache_file, response)
+        self._write_json_atomic(metadata_file, metadata)
         return response
 
     def solve(
@@ -557,44 +541,48 @@ class ProofPipeline:
         research_directive: dict | None = None,
     ) -> PipelineResult:
         """Run all isolated stages, persist evidence, and apply the hard gate."""
+        if type(problem_number) is not int or problem_number < 1:
+            raise ValueError("problem_number must be a positive integer")
         lock = make_statement_lock(problem)
         directive, directive_sha256 = normalize_research_directive(
             research_directive, parent_statement_sha256=lock.sha256,
         )
         self._bind_run_contract(lock.sha256, directive_sha256)
+        _create_or_validate_real_directory(
+            self.artifact_root, label="artifact root"
+        )
         prob_dir = self.artifact_root / f"problem_{problem_number}"
-        # Resume the newest incomplete run (no manifest.json) so a stop mid-problem
-        # continues from the last finished stage; otherwise start a fresh run.
-        incomplete = sorted(
-            (d for d in prob_dir.glob("*")
-             if d.is_dir()
-             and not (d / "manifest.json").exists()
-             and self._incomplete_run_is_compatible(
-                 d, lock.original_statement, directive_sha256,
-             )),
-            key=lambda d: d.name,
-        ) if prob_dir.exists() else []
-        if incomplete:
-            out = incomplete[-1]
-            new_execution = False
-        else:
+        _create_or_validate_real_directory(prob_dir, label="problem directory")
+        # Incomplete executions contain caller-writable model transcripts and
+        # therefore are not safe checkpoints.  Start a fresh execution rather
+        # than mixing unauthenticated cached output into a new run.
+        for _ in range(32):
             run_id = (
                 datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
                 + "-" + uuid.uuid4().hex[:8]
             )
             out = prob_dir / run_id
-            new_execution = True
-        out.mkdir(parents=True, exist_ok=True)
-        if new_execution:
-            self._write_json_atomic(out / "research_directive.json", {
-                **directive,
-                "research_directive_sha256": directive_sha256,
-            })
-            contract_record = self._run_contract_record(out.name)
-            if contract_record is not None:
-                self._write_json_atomic(out / "run_contract.json", contract_record)
-        self._stage_cache = out / "_stage_cache"
-        self._stage_cache.mkdir(exist_ok=True)
+            try:
+                out.mkdir(mode=0o700, exist_ok=False)
+            except FileExistsError:
+                continue
+            break
+        else:  # pragma: no cover - 32 UUID collisions cannot be induced normally
+            raise RuntimeError("could not allocate a unique execution directory")
+        _require_real_directory(out, label="execution directory")
+        self._active_problem_number = problem_number
+        self._active_execution_id = out.name
+        self._write_json_atomic(out / "research_directive.json", {
+            **directive,
+            "research_directive_sha256": directive_sha256,
+        })
+        contract_record = self._run_contract_record(out.name)
+        if contract_record is not None:
+            self._write_json_atomic(out / "run_contract.json", contract_record)
+        stage_cache = out / "_stage_cache"
+        stage_cache.mkdir(mode=0o700, exist_ok=False)
+        _require_real_directory(stage_cache, label="stage-cache directory")
+        self._stage_cache = stage_cache
         lock_text = statement_lock_text(lock)
         research_context = (
             f"{lock_text}\n\nRESEARCH ROUTING DIRECTIVE (search guidance only; "
@@ -682,13 +670,36 @@ class ProofPipeline:
         )
         decision = GateDecision("candidate_rejected", ("no review completed",))
         outcome = candidate_status(candidate)
-        reviews = []
+        reviews: list[Review] = []
+        active_evidence = self.verification_evidence
         for attempt in range(1, self.max_revisions + 2):
             attempt_dir = out / f"attempt_{attempt}"
-            attempt_dir.mkdir(exist_ok=True)
+            attempt_dir.mkdir(mode=0o700, exist_ok=False)
+            _require_real_directory(attempt_dir, label="attempt directory")
             (attempt_dir / "candidate.md").write_text(candidate, encoding="utf-8")
             outcome = candidate_status(candidate)
             contract = candidate_contract(candidate)
+            candidate_sha256 = hashlib.sha256(candidate.encode("utf-8")).hexdigest()
+            active_contract_id = (
+                run_contract_id(self._active_run_contract)
+                if self._active_run_contract is not None else ""
+            )
+            active_context_id = (
+                run_context_id(
+                    run_contract_id_value=active_contract_id,
+                    execution_id=out.name,
+                ) if active_contract_id else ""
+            )
+            binding = VerificationBinding(
+                problem_number=problem_number,
+                statement_sha256=lock.sha256,
+                candidate_sha256=candidate_sha256,
+                run_contract_id=active_contract_id,
+                execution_id=out.name,
+                run_context_id=active_context_id,
+            )
+            if self.verification_evidence_provider is not None:
+                active_evidence = tuple(self.verification_evidence_provider(binding))
             reviews, raw_reviews = self._run_reviews(
                 candidate, research_context, graph_text, attempt, attempt_dir
             )
@@ -697,10 +708,13 @@ class ProofPipeline:
                 reviews,
                 expected_statement_sha256=lock.sha256,
                 candidate_contract=contract,
-                verification_evidence=self.verification_evidence,
-                expected_candidate_sha256=hashlib.sha256(
-                    candidate.encode("utf-8")
-                ).hexdigest(),
+                verification_evidence=active_evidence,
+                expected_candidate_sha256=candidate_sha256,
+                attestation_env=self.attestation_env,
+                expected_problem_number=problem_number,
+                expected_run_contract_id=active_contract_id,
+                expected_execution_id=out.name,
+                expected_run_context_id=active_context_id,
             )
             rejection_evidence = sorted({
                 item
@@ -821,7 +835,7 @@ class ProofPipeline:
             )
 
         (out / "candidate.md").write_text(candidate, encoding="utf-8")
-        active_contract_id = (
+        manifest_contract_id = (
             run_contract_id(self._active_run_contract)
             if self._active_run_contract is not None else None
         )
@@ -839,13 +853,13 @@ class ProofPipeline:
                 **self.execution_config,
                 **self._budget(),
             },
-            "run_contract_id": active_contract_id,
+            "run_contract_id": manifest_contract_id,
             "run_context_id": (
                 run_context_id(
-                    run_contract_id_value=active_contract_id,
+                    run_contract_id_value=manifest_contract_id,
                     execution_id=out.name,
                 )
-                if active_contract_id is not None else None
+                if manifest_contract_id is not None else None
             ),
             "run_contract": self._active_run_contract,
             "statement_sha256": lock.sha256,
@@ -859,7 +873,7 @@ class ProofPipeline:
             "failure_evidence": failure_evidence,
             "reviews": [asdict(review) for review in reviews],
             "verification_evidence": [
-                asdict(evidence) for evidence in self.verification_evidence
+                asdict(evidence) for evidence in active_evidence
             ],
             "gate": asdict(decision),
         }
@@ -895,10 +909,28 @@ class ProofPipeline:
             raw_reviews.append(raw)
             context_id = self.runner.context_id(stage)
             try:
-                reviews.append(_review(
+                active_contract_id = (
+                    run_contract_id(self._active_run_contract)
+                    if self._active_run_contract is not None else ""
+                )
+                active_context_id = (
+                    run_context_id(
+                        run_contract_id_value=active_contract_id,
+                        execution_id=self._active_execution_id,
+                    ) if active_contract_id else ""
+                )
+                review = _review(
                     _json_object(raw), reviewer_id=f"{role}-{attempt}",
                     expected_role=role, context_id=context_id,
-                ))
+                    candidate_sha256=hashlib.sha256(
+                        candidate.encode("utf-8")
+                    ).hexdigest(),
+                    problem_number=self._active_problem_number,
+                    run_contract_id_value=active_contract_id,
+                    execution_id=self._active_execution_id,
+                    run_context_id_value=active_context_id,
+                )
+                reviews.append(self._attest_review(review, stage))
             except (KeyError, TypeError, ValueError, json.JSONDecodeError) as error:
                 reviews.append(_failed_review(
                     reviewer_id=f"{role}-{attempt}", expected_role=role,
@@ -925,12 +957,30 @@ class ProofPipeline:
         # it — which is a distinct model when an adjudicator_runner is supplied.
         adjudication_context = self.adjudicator_runner.context_id(adjudication_stage)
         try:
-            reviews.append(_review(
+            active_contract_id = (
+                run_contract_id(self._active_run_contract)
+                if self._active_run_contract is not None else ""
+            )
+            active_context_id = (
+                run_context_id(
+                    run_contract_id_value=active_contract_id,
+                    execution_id=self._active_execution_id,
+                ) if active_contract_id else ""
+            )
+            review = _review(
                 _json_object(raw_adjudication),
                 reviewer_id=f"adjudicator-{attempt}",
                 expected_role="adjudicator",
                 context_id=adjudication_context,
-            ))
+                candidate_sha256=hashlib.sha256(
+                    candidate.encode("utf-8")
+                ).hexdigest(),
+                problem_number=self._active_problem_number,
+                run_contract_id_value=active_contract_id,
+                execution_id=self._active_execution_id,
+                run_context_id_value=active_context_id,
+            )
+            reviews.append(self._attest_review(review, adjudication_stage))
         except (KeyError, TypeError, ValueError, json.JSONDecodeError) as error:
             reviews.append(_failed_review(
                 reviewer_id=f"adjudicator-{attempt}",
@@ -939,3 +989,24 @@ class ProofPipeline:
                 error=error,
             ))
         return reviews, raw_reviews
+
+    def _attest_review(self, review: Review, stage: str) -> Review:
+        """Apply a trusted identity gateway without letting it rewrite findings."""
+        if self.review_attestor is None:
+            return review
+        attested = self.review_attestor(review, stage)
+        if not isinstance(attested, Review):
+            raise ValueError("review attestor did not return a Review")
+        mutable_identity_fields = {
+            "authority_id", "model_provider", "model_name", "model_version",
+            "model_lineage", "schema_version", "attestor_key_id", "attestation",
+        }
+        for field_name in review.__dataclass_fields__:
+            if field_name not in mutable_identity_fields \
+                    and getattr(attested, field_name) != getattr(review, field_name):
+                raise ValueError(
+                    f"review attestor attempted to rewrite {field_name}"
+                )
+        if not verify_review_attestation(attested, env=self.attestation_env):
+            raise ValueError("review attestor returned an invalid attestation")
+        return attested

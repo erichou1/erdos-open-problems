@@ -1,0 +1,20 @@
+{
+  "problem_number": 912,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/912",
+  "retrieved_at": "2026-07-10T23:19:24.129944+00:00",
+  "page_title": "912 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "320b1565b9af9037e2dd85e25ad3866ec850f09fcfa4d444dcf8ead7b3a1e72d",
+  "comment_count": 2,
+  "comments": [
+    {
+      "post_id": "7191",
+      "text": "If we consider\\[u_r(n)=\\#\\Big\\{k:\\#\\{p\\leq n:\\nu_p(n!)=k\\}=r\\Big\\},\\]which is the number of exponents in the factorization of $n!$ such that each exponent $k$ has $r$ representatives, then\\[h(n) = \\sum_{1\\leq r}u_r(n)\\]and we have\\[u_r(n)\\sim c_r\\sqrt{\\frac{n}{\\log n}}, \\qquad c_r=\\sqrt{2\\pi}\\left(-1\\right)^{r+1}\\binom{2-\\sqrt2}{r},\\]by the same Cramer model as Tao (the other comment). We also get that\\[\\pi(n) =\\sum_{1\\leq r}r\\,u_r(n),\\]which is interesting. Finally, a computation up to $10^8$ shows that $h(n+1)-h(n)\\in \\{-1,0,1\\}$, which seems true always, though a proof seems intractable to me.",
+      "meta": "Owmire09 — 14:28 on 24 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "266",
+      "text": "One can predict the value of $c$ using the Cramer random model for the primes. Firstly some reductions. Legendre's formula states that $$k_i = \\lfloor n/p_i \\rfloor + \\lfloor n/p_i^2 \\rfloor + \\dots.$$ Both the main term $\\lfloor n/p_i \\rfloor$ and the tail $\\lfloor n/p_i^2 \\rfloor + \\dots$ are non-increasing in $i$; but the latter only changes value $O(n^{1/3})$ times (consider the cases $p_i \\leq n^{1/3}$ and $p_i \\geq n^{1/3}$ separately). Thus, deleting this term only modifies $h$ by a lower order error, and the problem is equivalent to that of counting the number of distinct values of $\\lfloor n/p_i \\rfloor$. For any $\\varepsilon$, the primes less than $\\varepsilon \\sqrt{n \\log n}$ are only $O(\\varepsilon (n/\\log n)^{1/2})$ in number, and for the primes $p_i$ larger than $\\varepsilon^{-1} \\sqrt{n \\log n}$ the value of $\\lfloor n/p_i\\rfloor$ is $O(\\varepsilon (n/\\log n)^{1/2})$. So up to lower order error we can restrict attention to the primes $p_i \\asymp \\sqrt{n \\log n}$, for which $k_i \\asymp (n/\\log n)^{1/2}$. A given $k \\asymp (n/\\log n)^{1/2}$ will be of the form $\\lfloor n/p_i \\rfloor$ iff there is a prime in the interval $(n/(k+1),n/k]$. If $k = t (n/\\log n)^{1/2}$, this is an interval of length approximately $t^{-2} \\log n$ of numbers of size $\\asymp \\sqrt{n \\log n}$ - so the prime density here is approximately $2/\\log n$. The Cramer random model then predicts a prime to be present with probability approximately $1-e^{-2t^{-2}}$. So this leads to the prediction $$ c = \\int_0^\\infty 1 - e^{-2t^{-2}}\\ dt = \\sqrt{2\\pi} = 2.50663\\dots$$ (the value here was provided by an LLM and verified by Wolfram alpha; it can be derived from the usual gaussian integral identities by a routine substitution and the Feynman trick of replacing $2$ by a parameter that one then differentiates in.) A quick AI request to plot the ratio between $h(n)$ and $\\sqrt{2\\pi} (n/\\log n)^{1/2}$ seems to back up this prediction. Proving this claim unconditionally, even on average in $n$, would likely require information about the distribution of prime gaps that currently is only available under strong hypotheses such as the prime tuples conjecture. EDIT: By plugging in the AI-provided values of $h$ into the OEIS, I discovered that the function $h(n)$ is OEIS A071626. As observed in the paper linked there, the deletion of the tail in fact does not affect $h$ at all (basically because the tail only jumps when the main term does). (The site has been updated to address this comment.)",
+      "meta": "TerenceTao — 15:12 on 31 Aug 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

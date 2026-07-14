@@ -44,6 +44,26 @@ def test_definition_and_constraint_text_are_semantically_bound():
     assert "constraints" in ir.semantic_key()
 
 
+def test_conclusion_inequality_is_not_reinterpreted_as_a_domain_constraint():
+    source = b"Prove that for all natural numbers n, n < 3."
+    contract = build_problem_contract(
+        problem_id="false-bound",
+        source_bytes=source,
+        source_id="false-bound",
+        predicate=lambda n: n < 3,
+        boundary_points=(0, 1, 2),
+        search_space=range(0, 8),
+    )
+
+    assert "n < 3" not in contract.primary_ir.constraints
+    counterexample = next(
+        probe for probe in contract.probes if probe.name == "counterexample_search"
+    )
+    assert counterexample.executed is True
+    assert counterexample.passed is False
+    assert counterexample.artifacts["counterexample"] == 3
+
+
 def test_unexecuted_probes_are_unknown_and_block_release():
     source = b"Prove that for all integers n, n = n."
     contract = build_problem_contract(

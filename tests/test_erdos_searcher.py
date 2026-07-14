@@ -7,8 +7,8 @@ from pathlib import Path
 from erdos_ingest import CATALOG_URL, ingest_corpus
 from erdos_searcher import (
     DEFAULT_BUDGET,
-    DEFAULT_BUDGET_CONFIG,
     append_ledger,
+    audit_corpus,
     build_searcher,
     canonical_problem_run_inputs,
     formal_probe,
@@ -184,6 +184,16 @@ class ErdosSearcherTests(unittest.TestCase):
             research_budget_id(max_revisions=3, stage_timeout_s=1800),
             DEFAULT_BUDGET,
         )
+
+    def test_corpus_audit_rejects_malformed_problem_source_filename(self):
+        with self.assertRaisesRegex(
+            ValueError,
+            "invalid problem source filename: problem_not-a-number.tex",
+        ):
+            audit_corpus(
+                {"problems": {}},
+                [Path("problem_not-a-number.tex")],
+            )
 
     def test_pipeline_fingerprint_changes_with_pipeline_source(self):
         with tempfile.TemporaryDirectory() as directory:

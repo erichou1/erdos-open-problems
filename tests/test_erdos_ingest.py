@@ -448,6 +448,37 @@ class ErdosIngestTests(unittest.TestCase):
             self.assertEqual(open_path.stat().st_mode & 0o777, 0o644)
             self.assertEqual(mirror_path.stat().st_mode & 0o777, 0o644)
 
+    def test_safe_apply_honors_a_falsey_replacement_callable(self):
+        class FalseyReplace:
+            def __init__(self):
+                self.calls = []
+
+            def __bool__(self):
+                return False
+
+            def __call__(self, source, destination):
+                self.calls.append((source, destination))
+                os.replace(source, destination)
+
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "open" / "individual").mkdir(parents=True)
+            (root / "individual").mkdir()
+            replace = FalseyReplace()
+
+            erdos_ingest.safe_apply_tex_pair(
+                root, "problem_1.tex", b"new", replace_file=replace,
+            )
+
+            self.assertEqual(len(replace.calls), 2)
+            self.assertEqual(
+                (root / "open" / "individual" / "problem_1.tex").read_bytes(),
+                b"new",
+            )
+            self.assertEqual(
+                (root / "individual" / "problem_1.tex").read_bytes(), b"new",
+            )
+
 
 class LegacyStatementExtractionTests(unittest.TestCase):
     ROOT = Path(__file__).resolve().parents[1]

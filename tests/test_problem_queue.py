@@ -21,7 +21,6 @@ from erdos_searcher import (
 )
 from run_contract import canonical_json, run_contract_id, run_context_id
 import hashlib
-import outcome_ledger
 from outcome_ledger import record_outcome
 from run_continuous import maybe_rerank
 
@@ -39,6 +38,7 @@ def make_card(triage: Path, number: int, probability: float,
 
 def make_ranking(
     triage: Path, *, overlap: bool = False, reorder: bool = False,
+    first_problem_number: int = 2,
 ) -> tuple[AllocationPlan, dict]:
     context = {
         "snapshot_id": "20260712-test",
@@ -76,11 +76,14 @@ def make_ranking(
             "run_contract_id": f"{number:x}".rjust(64, "0"),
         }
 
-    exploit = [row(2, "exploitation", 1), row(1, "exploitation", 2)]
-    explore_number = 2 if overlap else 3
+    exploit = [
+        row(first_problem_number, "exploitation", 1),
+        row(1, "exploitation", 2),
+    ]
+    explore_number = first_problem_number if overlap else 3
     explore = [row(explore_number, "protected_exploration", 1)]
     allocation = [
-        row(2, "exploitation", 1),
+        row(first_problem_number, "exploitation", 1),
         row(1, "exploitation", 2),
         row(explore_number, "protected_exploration", 3),
     ]
@@ -296,31 +299,21 @@ class ProblemQueueTests(unittest.TestCase):
                 "<result>OUTCOME: candidate_proved; CLAIMS_TOTAL: 1; "
                 "OPEN_GAPS: none</result>"
             )
-            snapshot = triage / "ingestion" / contract["source_snapshot"]["id"]
-            (snapshot / "source_records").mkdir(parents=True)
-            (snapshot / "manifest.json").write_text("{}")
-            (snapshot / "source_records" / "problem_601.json").write_text("{}")
-            real_register = outcome_ledger.register_evidence_certificate
-            registration_count = 0
-
-            def fail_second_registration(*args, **kwargs):
-                nonlocal registration_count
-                registration_count += 1
-                if registration_count == 2:
-                    raise ValueError("synthetic intent validation failure")
-                return real_register(*args, **kwargs)
-
-            with mock.patch(
-                "outcome_ledger.register_evidence_certificate",
-                side_effect=fail_second_registration,
-            ):
-                with self.assertRaises(ValueError):
-                    record_outcome(triage, 601, verified_manifest)
+            # A mutable legacy verified_* label is not an authenticated release
+            # certificate and must be quarantined as operational, without
+            # creating gate/intent truth evidence.
+            self.assertTrue(record_outcome(triage, 601, verified_manifest))
             final_evidence = {
                 path.relative_to(evidence_root)
                 for path in evidence_root.rglob("*") if path.is_file()
             }
             self.assertEqual(final_evidence, before)
+            latest = json.loads(
+                (triage / "labels" / "outcomes.jsonl").read_text().splitlines()[-1]
+            )
+            self.assertEqual(latest["status"], "operational_failure")
+            self.assertFalse(latest["learning_eligible"])
+            self.assertNotIn("evidence_certificate_ids", latest)
 
     def test_ranked_queue_orders_by_probability_and_skips_resolved(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -354,6 +347,12 @@ class ProblemQueueTests(unittest.TestCase):
             with self.assertRaises(ValueError):
                 make_ranking(triage, reorder=True)
 
+    def test_ranked_queue_rejects_zero_problem_number(self):
+        with tempfile.TemporaryDirectory() as directory:
+            triage = Path(directory)
+            with self.assertRaisesRegex(ValueError, "invalid record"):
+                make_ranking(triage, first_problem_number=0)
+
     def test_claim_is_atomic_single_winner(self):
         with tempfile.TemporaryDirectory() as directory:
             artifacts = Path(directory)
@@ -372,16 +371,17 @@ class ProblemQueueTests(unittest.TestCase):
                 run_contract_id=contract,
             ))
 
-    def test_claim_next_skips_verified_and_already_claimed(self):
+    def test_claim_next_does_not_trust_mutable_verified_manifest_labels(self):
         with tempfile.TemporaryDirectory() as directory:
             artifacts = Path(directory)
             triage = artifacts / "triage"
             plan, _ = make_ranking(triage)
             contract = plan.records[0]["run_contract_id"]
             make_manifest(artifacts, 2, "verified_proved", contract)
-            self.assertEqual(claim_next(artifacts, plan, "w1"), 1)
-            self.assertEqual(claim_next(artifacts, plan, "w2"), 3)
-            self.assertIsNone(claim_next(artifacts, plan, "w3"))
+            self.assertEqual(claim_next(artifacts, plan, "w1"), 2)
+            self.assertEqual(claim_next(artifacts, plan, "w2"), 1)
+            self.assertEqual(claim_next(artifacts, plan, "w3"), 3)
+            self.assertIsNone(claim_next(artifacts, plan, "w4"))
 
     def test_release_incomplete_keeps_verified_and_completed(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -415,9 +415,9 @@ class ProblemQueueTests(unittest.TestCase):
             claim(artifacts, 3, "old", allocation_id=allocation,
                   run_contract_id=contracts[3])
 
-            self.assertEqual(release_unverified_claims(artifacts), 1)
+            self.assertEqual(release_unverified_claims(artifacts), 2)
             claims = artifacts / ".claims" / allocation
-            self.assertTrue((claims / "problem_2").exists())
+            self.assertFalse((claims / "problem_2").exists())
             self.assertFalse((claims / "problem_3").exists())
 
 

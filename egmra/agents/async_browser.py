@@ -296,10 +296,25 @@ class PlaywrightAsyncPageDriver:  # pragma: no cover - requires an authenticated
 
     async def open_conversation(self, page: Any) -> None:
         await page.goto(self._cb.PROJECT_URL, wait_until="domcontentloaded")
-        for sel in ('#prompt-textarea', '[data-testid="prompt-textarea"]',
-                    'div[contenteditable="true"]'):
-            if await page.query_selector(sel):
-                break
+        selectors = (
+            '#prompt-textarea', '[data-testid="prompt-textarea"]',
+            'div[contenteditable="true"]', 'textarea[placeholder]',
+        )
+        # ``domcontentloaded`` fires well before the React composer is mounted.
+        # Returning immediately made all N tabs race into ``send`` and burn the
+        # campaign retry budget on a normal page-load delay.  Wait for a visible
+        # composer just as the synchronous backend does, but with an explicit
+        # bounded failure when the project/login page never becomes usable.
+        try:
+            await page.wait_for_selector(
+                ", ".join(selectors), state="visible", timeout=30_000,
+            )
+        except Exception:  # noqa: BLE001 - normalize Playwright timeout variants
+            pass
+        if not any([await page.query_selector(sel) for sel in selectors]):
+            raise RuntimeError(
+                "Could not find ChatGPT input box after waiting for the page composer"
+            )
         self._start_urls[id(page)] = await self._current_url(page)
 
     async def send(self, page: Any, prompt: str) -> None:

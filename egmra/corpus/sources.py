@@ -25,10 +25,18 @@ from typing import Any
 
 import egmra
 from egmra.corpus.status import STATUS_VALUES, StatusClaim
+from egmra.provenance.hashing import sha256_hex
 
 # Upstream ``source_state`` values are mapped onto the reconciler's vocabulary.
+# The three machine-status states are upstream-defined as "appear to be open,
+# but ..." (reduced to / provable by / disprovable by a finite computation), so
+# they honestly map to ``open`` — the finite reduction is metadata for the
+# T2-closable lane, not a resolution claim.
 _STATUS_MAP = {
     "open": "open",
+    "decidable": "open",
+    "falsifiable": "open",
+    "verifiable": "open",
     "solved": "known",
     "known": "known",
     "false": "false",
@@ -84,6 +92,17 @@ def default_catalog_path() -> Path:
     return packaged if packaged.is_file() else _repo_root() / "problem_catalog.json"
 
 
+def default_supplement_dir() -> Path:
+    """Per-problem supplemental TeX statements (problems outside the open-only
+    corpus snapshot, e.g. the T2-closable decidable/falsifiable/verifiable lane).
+
+    Populate with ``fetch_corpus_supplement.py`` — files are fetched verbatim
+    from erdosproblems.com/latex/N with a provenance header, never fabricated.
+    """
+    packaged = _packaged_data_dir() / "corpus_supplement"
+    return packaged if packaged.is_dir() else _repo_root() / "corpus_supplement"
+
+
 def _read_text_file(path: Path, *, max_bytes: int, label: str) -> str:
     if path.is_symlink() or not path.is_file():
         raise SourceResolutionError(f"{label} path must be a regular non-symlink file: {path}")
@@ -103,9 +122,13 @@ def _normalize_statement(text: str) -> str:
     return statement
 
 
-def from_statement(text: str, *, problem_id: str = "adhoc-problem", source_id: str = "") -> ProblemInput:
+def from_statement(
+    text: str, *, problem_id: str | None = None, source_id: str = ""
+) -> ProblemInput:
     """Build a run-ready input from a verbatim statement string."""
     statement = _normalize_statement(text)
+    statement_hash = sha256_hex(statement)
+    problem_id = problem_id or f"adhoc-{statement_hash[:16]}"
     return ProblemInput(
         problem_id=problem_id,
         source_bytes=statement.encode("utf-8"),
@@ -122,7 +145,7 @@ def from_statement_file(path: str | Path, *, problem_id: str | None = None) -> P
     source_path = Path(path)
     text = _read_text_file(source_path, max_bytes=_MAX_STATEMENT_BYTES, label="statement")
     statement = _normalize_statement(text)
-    pid = problem_id or f"file-{source_path.stem}"
+    pid = problem_id or f"file-{source_path.stem}-{sha256_hex(statement)[:16]}"
     return ProblemInput(
         problem_id=pid,
         source_bytes=statement.encode("utf-8"),
@@ -185,12 +208,16 @@ def from_erdos_number(
     *,
     corpus_tex_path: str | Path | None = None,
     catalog_path: str | Path | None = None,
+    supplement_dir: str | Path | None = None,
 ) -> ProblemInput:
     """Resolve an Erdős problem number to a run-ready input from local corpus data.
 
     The exact theorem statement is extracted from the corpus TeX; the dated
     status claim (open/known/…) comes from the problem catalog. Neither is
-    fabricated — a missing number or an unparseable section raises.
+    fabricated — a missing number or an unparseable section raises. Problems
+    outside the open-only snapshot (e.g. the T2-closable machine-status lane)
+    resolve from a per-problem supplemental TeX file fetched verbatim from the
+    upstream site (see :func:`default_supplement_dir`).
     """
     if isinstance(number, bool) or not isinstance(number, int) or number <= 0:
         raise SourceResolutionError("Erdős problem number must be a positive integer")
@@ -199,7 +226,12 @@ def from_erdos_number(
 
     tex_path = Path(corpus_tex_path) if corpus_tex_path else default_corpus_tex_path()
     corpus_tex = _read_text_file(tex_path, max_bytes=_MAX_CORPUS_BYTES, label="corpus TeX")
-    section = _slice_problem_section(corpus_tex, number)
+    statement_source = "corpus_snapshot"
+    try:
+        section = _slice_problem_section(corpus_tex, number)
+    except SourceResolutionError:
+        section = _read_supplement_section(number, supplement_dir=supplement_dir)
+        statement_source = "corpus_supplement"
     try:
         statement = _normalize_statement(extract_tex_statement(section))
     except SourceExtractionError as exc:
@@ -221,6 +253,7 @@ def from_erdos_number(
         "source_state": entry.get("source_state", ""),
         "source_last_update": entry.get("source_last_update", ""),
         "formalized": entry.get("formalized", {}),
+        "statement_source": statement_source,
     }
     return ProblemInput(
         problem_id=f"erdos-{number}",
@@ -231,3 +264,17 @@ def from_erdos_number(
         novelty_verdict="N1",
         metadata=metadata,
     )
+
+
+def _read_supplement_section(
+    number: int, *, supplement_dir: str | Path | None = None,
+) -> str:
+    directory = Path(supplement_dir) if supplement_dir else default_supplement_dir()
+    path = directory / f"problem_{number}.tex"
+    if not path.is_file() or path.is_symlink():
+        raise SourceResolutionError(
+            f"Erdős problem #{number} has no section in the local corpus snapshot "
+            f"and no supplemental statement at {path} "
+            "(fetch one with fetch_corpus_supplement.py)"
+        )
+    return _read_text_file(path, max_bytes=_MAX_STATEMENT_BYTES, label="supplement TeX")

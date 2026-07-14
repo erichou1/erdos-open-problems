@@ -19,11 +19,15 @@ from collections.abc import Mapping
 from contextlib import contextmanager
 from dataclasses import dataclass, field, replace
 from pathlib import Path
+import inspect
+import re
 import sys
 import threading
 from typing import Any, Callable, Protocol
+from urllib.parse import urlparse
 
 from egmra.agents import AuthorityTokenIssuer
+from egmra.agents.browser_runner import BrowserRunnerError
 from egmra.agents.runner import DeterministicRunner, ModelRunner
 from egmra.compute.artifact import ReplayReport, validator_classification
 from egmra.compute.service import ComputeService
@@ -36,6 +40,7 @@ from egmra.intake.review import interpretation_review_hash, verify_intent_certif
 from egmra.learning import LongTermMemory
 from egmra.lean import LeanService, verify_formal_correspondence_certificate
 from egmra.oeis import OEISClient, OEISUnavailable
+from egmra.orchestrator.checkpoint import CheckpointError, take_checkpoint
 from egmra.policy import PolicyEnforcer
 from egmra.provenance.hashing import canonical_json, content_id, is_sha256, sha256_hex
 from egmra.release.certificate import ReleaseCertificate
@@ -67,18 +72,24 @@ from egmra.truth.entities import (
     Problem,
     Verdict,
 )
-from egmra.truth.blackboard import Blackboard, ReadSlice
+from egmra.truth.blackboard import Blackboard, BlackboardError, ReadSlice
 from egmra.truth.events import EventLog
 from egmra.truth.graph import EpistemicGraph
 from egmra.truth.router import EvidenceRouter
 from egmra.truth.validators import attest_evidence
 from egmra.verification.attacks import AttackResult, REQUIRED_ATTACKS
+from egmra.verification.informal_review import (
+    build_informal_review_evidence,
+    run_hostile_reviews,
+)
 from egmra.verification.referee import AdversarialReferee, DiversityProfile, RefereeResult
 
 
 # Branch leases are heartbeated while a (possibly slow) worker reasons, so that
 # legitimately long browser/model generation is never rejected as a stale lease.
 _BRANCH_LEASE_GRACE_SECONDS = 60.0
+_MAX_LITERATURE_IMPORTS = 8
+_RESEARCH_LOOP_CLOSURE = "egmra-research-loop-v1"
 _BRANCH_LEASE_HEARTBEAT_SECONDS = 20.0
 
 
@@ -143,6 +154,7 @@ class WorkerOutput:
     proof_steps: list[str] = field(default_factory=list)
     assumptions: list[str] = field(default_factory=list)
     formalization_requests: list[str] = field(default_factory=list)
+    literature_imports: list[dict] = field(default_factory=list)
 
 
 class Worker(Protocol):
@@ -166,6 +178,23 @@ class MechanicalAttackEvaluator:
     Missing executable/formal evidence produces a failed obligation.  This is
     intentionally pessimistic: an unavailable attack is never synthesized as a
     successful referee verdict.
+
+    Discharge routes for the two computation-flavoured attacks
+    (``independent_computation`` and ``proof_reconstruction``):
+
+    * finite route — every recorded finite-computation replay matched in an
+      independent environment; and
+    * formal route — only for a formal run (``informal_only=False``) with **no**
+      finite experiments: an admitted, kernel-replayed Lean/ATP proof bound to
+      an approved formal-correspondence certificate and an attested verifier.
+      The pinned kernel replay *is* the independent mechanical computation for
+      a purely formal result; requiring a side finite experiment for such runs
+      made the attacks unsatisfiable for honest general theorems.
+
+    Fail-closed properties preserved: an informal-only run has no formal route;
+    a run whose finite replays exist but do not all match never falls back to
+    the formal route; a formal run without admitted kernel evidence fails both
+    attacks exactly as before.
     """
 
     def evaluate(self, **context) -> list[AttackResult]:
@@ -178,7 +207,8 @@ class MechanicalAttackEvaluator:
         informal_only: bool = context["informal_only"]
         intent_cert: IntentCertificate | None = context["intent_cert"]
 
-        replay_ok = bool(replay_reports) and all(
+        finite_replays_present = bool(replay_reports)
+        replay_ok = finite_replays_present and all(
             report.replayed and report.output_hash_matches and report.independent_environment
             for report in replay_reports
         )
@@ -202,6 +232,46 @@ class MechanicalAttackEvaluator:
             evidence.valid
             and evidence.kind in {EvidenceKind.LEAN_PROOF, EvidenceKind.ATP_PROOF}
             and bool(evidence.formal_correspondence_certificate_id)
+            for evidence in graph.evidence.values()
+        )
+        # The formal discharge route additionally requires a passed kernel replay
+        # and at least one attested verifier identity on the admitted evidence.
+        formal_kernel_replay_ok = any(
+            evidence.valid
+            and evidence.kind in {EvidenceKind.LEAN_PROOF, EvidenceKind.ATP_PROOF}
+            and bool(evidence.formal_correspondence_certificate_id)
+            and evidence.replay_result == "pass"
+            and any(
+                bool(identity.get("attested"))
+                for identity in evidence.verifier_identities
+                if isinstance(identity, dict)
+            )
+            for evidence in graph.evidence.values()
+        )
+        formal_discharge = (
+            not informal_only
+            and formal_kernel_replay_ok
+            and not finite_replays_present
+        )
+        # A hostile informal review with an independent reconstruction artifact
+        # IS the §11.2 proof-reconstruction attack executed (a referee wrote a
+        # skeleton without copying the argument); it discharges that one attack
+        # only — never the computation replay obligation.
+        hostile_reconstruction_ok = any(
+            evidence.valid
+            and evidence.kind == EvidenceKind.INFORMAL_REVIEW
+            and bool(evidence.artifact_hashes)
+            for evidence in graph.evidence.values()
+        )
+        # ``independent_computation`` is vacuously satisfied only when NOTHING
+        # computational exists to replay: no finite replays ran and no
+        # numerical/exact/SAT evidence was admitted.  A bad replay still fails;
+        # used computations still require matching independent replays.
+        computational_evidence_present = finite_replays_present or any(
+            evidence.kind in {
+                EvidenceKind.NUMERICAL, EvidenceKind.EXACT_COMPUTATION,
+                EvidenceKind.SAT_CERTIFICATE,
+            }
             for evidence in graph.evidence.values()
         )
         checks = {
@@ -232,16 +302,19 @@ class MechanicalAttackEvaluator:
                 "no passing executable countermodel search for the selected interpretation",
             ),
             "independent_computation": (
-                replay_ok,
-                "no matching computation replay report reached the referee",
+                replay_ok or formal_discharge or not computational_evidence_present,
+                "a computational result was used without a matching independent "
+                "replay and no kernel-replayed formal proof can discharge it",
             ),
             "formal_audit": (
                 informal_only or formal_artifact_ok,
                 "formal result has no local kernel/formal audit artifact",
             ),
             "proof_reconstruction": (
-                bool(compiled and compiled.complete and replay_ok),
-                "candidate could not be reconstructed from admitted claims and replay",
+                bool(compiled and compiled.complete
+                     and (replay_ok or formal_discharge or hostile_reconstruction_ok)),
+                "candidate could not be independently reconstructed (no matching "
+                "replay, kernel proof, or hostile-review reconstruction)",
             ),
             "novelty_significance_firewall": (
                 novelty_verdict in {"N0", "N1", "known"},
@@ -304,7 +377,17 @@ def _execute_finite_experiment(
     job = compute_service.submit_experiment(
         spec, code, claimed_classification="exhaustive_finite_subcase")
     if compute_service.poll(job) != "done":
-        failures.append(f"computation job {job} failed")
+        # ``artifact`` is deliberately the public fail-closed boundary for a
+        # failed job and includes the executor's bounded diagnostic.  Preserve
+        # that detail in the run result: otherwise a generated syntax error,
+        # timeout, policy rejection, and infrastructure failure are all
+        # indistinguishable and cannot be repaired or audited.
+        try:
+            compute_service.artifact(job)
+        except RuntimeError as exc:
+            failures.append(f"computation job {job} failed: {exc}")
+        else:  # defensive: a non-done job must never expose an artifact
+            failures.append(f"computation job {job} failed without diagnostic")
         return evidence, replays, failures
     artifact = compute_service.artifact(job)
     replay = compute_service.replay(artifact.artifact_id, sandbox=replay_sandbox)
@@ -425,10 +508,21 @@ class ResearchResult:
                 "remaining": self.budget.remaining,
             },
             "gate_profile": self.gates.profile() if self.gates else None,
-            # Candidate assembly is not a released proof.  The public boolean is
-            # true only when a release certificate exists for that candidate.
+            # Candidate assembly and even a promoted scoped T2 result are not a
+            # proof of the original theorem.  The public boolean is reserved for
+            # a rigorous informal result (T3) or a hardened formal result whose
+            # intended-statement correspondence is approved (T5/F2).
             "proof_complete": bool(
-                self.certificate and self.compiled_proof and self.compiled_proof.complete
+                self.certificate
+                and self.compiled_proof
+                and self.compiled_proof.complete
+                and self.gates
+                and (
+                    (self.gates.truth == "T3"
+                     and self.gates.formal_correspondence == "N/A")
+                    or (self.gates.truth == "T5"
+                        and self.gates.formal_correspondence == "F2")
+                )
             ),
             "candidate_assembly_complete": bool(
                 self.compiled_proof and self.compiled_proof.complete
@@ -499,6 +593,213 @@ def _record_model_exchanges(log, artifact_store, problem_id: str, *, runners) ->
     return recorded
 
 
+def _admit_literature_imports(
+    imports: list[dict], *, packet: SourcePacket, graph: EpistemicGraph,
+    router: EvidenceRouter, branch_id: str, failures: list[str],
+) -> int:
+    """Admit model-cited frozen-packet records as ``source_import`` evidence.
+
+    The model only SELECTS records; every provenance field (verbatim extract,
+    source URI/version, content hash) comes from the frozen retrieval packet.
+    A citation is rejected unless the record exists in the packet, the claim
+    exists in the graph, and the claim's formula genuinely overlaps the record
+    text (a mechanical non-sequitur gate, not a truth assertion).  One passing
+    record yields ``AUDITED_SOURCE`` \u2014 provenance only, never support; \u22652
+    passing records from distinct source hosts yield
+    ``INDEPENDENTLY_CORROBORATED`` for that claim.  Fail-closed and capped.
+    """
+    records = {
+        record.theorem_id: record
+        for record in getattr(packet, "theorem_records", ())
+    }
+    cited: dict[str, list[Any]] = {}
+    seen: set[tuple[str, str]] = set()
+    for item in imports[:_MAX_LITERATURE_IMPORTS]:
+        if not isinstance(item, dict):
+            failures.append(f"literature_import_malformed:{branch_id}")
+            continue
+        claim_id = str(item.get("claim_id") or "").strip()
+        theorem_id = str(item.get("theorem_id") or "").strip()
+        if not claim_id or not theorem_id or (claim_id, theorem_id) in seen:
+            continue
+        seen.add((claim_id, theorem_id))
+        record = records.get(theorem_id)
+        if record is None:
+            failures.append(
+                f"literature_import_unknown_record:{branch_id}:{theorem_id}")
+            continue
+        claim = graph.claims.get(claim_id)
+        if claim is None:
+            failures.append(
+                f"literature_import_unknown_claim:{branch_id}:{claim_id}")
+            continue
+        if not _import_applicable(claim.canonical_formula, record):
+            failures.append(
+                f"literature_import_inapplicable:{branch_id}:{claim_id}:{theorem_id}")
+            continue
+        cited.setdefault(claim_id, []).append(record)
+    admitted = 0
+    for claim_id, claim_records in cited.items():
+        hosts = {
+            urlparse(str(record.source_uri or "")).netloc or record.source_uri
+            for record in claim_records
+        }
+        corroborated = len(claim_records) >= 2 and len(hosts) >= 2
+        claim = graph.claims[claim_id]
+        for record in claim_records:
+            evidence = Evidence(
+                evidence_id="import_" + content_id({
+                    "claim": claim.canonical_hash, "theorem": record.theorem_id,
+                    "content": record.source_content_hash,
+                })[:20],
+                claim_ids=[claim_id],
+                kind=EvidenceKind.SOURCE_IMPORT,
+                assertion_scope=claim.scope,
+                claim_bindings={claim_id: claim.canonical_hash},
+                artifact_hashes=[sha256_hex(
+                    record.verbatim_theorem_and_hypothesis_extract or "")],
+                generator_identity={
+                    "id": "frozen-packet-literature-import-v1",
+                    "findings": {
+                        "theorem_id": record.theorem_id,
+                        "verbatim_extract":
+                            record.verbatim_theorem_and_hypothesis_extract,
+                        "source_uri": record.source_uri,
+                        "source_version": record.source_version,
+                        "source_content_hash": record.source_content_hash,
+                        "applicability_check_passed": True,
+                        "independently_corroborated": corroborated,
+                        "distinct_source_hosts": sorted(hosts),
+                    },
+                },
+                verifier_identities=[{
+                    "id": "mechanical-applicability-check-v1", "attested": False,
+                }],
+                environment_hash="",
+                replay_command="",
+                replay_result="not_applicable",
+                trust_assumptions=[
+                    "imported statement trusted to its published source; "
+                    "applicability gate is a mechanical token-overlap check, "
+                    "not a proof of applicability",
+                ],
+            )
+            if evidence.evidence_id in graph.evidence:
+                continue
+            router.admit(attest_evidence(evidence), actor=ACTOR)
+            admitted += 1
+    return admitted
+
+
+def _import_applicable(claim_formula: str, record: Any) -> bool:
+    """Mechanical non-sequitur gate: the claim must share substantial content
+    words with the record's statement/conclusion/extract."""
+    def tokens(text: str) -> set[str]:
+        return {
+            token for token in re.findall(r"[a-z0-9]+", str(text).lower())
+            if len(token) >= 3
+        }
+
+    claim_tokens = tokens(claim_formula)
+    if not claim_tokens:
+        return False
+    record_tokens = tokens(" ".join((
+        str(getattr(record, "canonical_statement", "") or ""),
+        str(getattr(record, "conclusion", "") or ""),
+        str(getattr(record, "verbatim_theorem_and_hypothesis_extract", "") or ""),
+    )))
+    if not record_tokens:
+        return False
+    overlap = len(claim_tokens & record_tokens) / len(claim_tokens)
+    return overlap >= 0.5
+
+
+def _supports_repair(formalizer: Any) -> bool:
+    """True when the formalizer's ``formalize`` accepts repair feedback.
+
+    Third-party :class:`Formalizer` implementations predating the repair
+    protocol simply never repair — fail-closed, not an error.
+    """
+    try:
+        parameters = inspect.signature(formalizer.formalize).parameters
+    except (TypeError, ValueError):
+        return False
+    return "kernel_feedback" in parameters
+
+
+def _write_branch_checkpoint(
+    checkpoint_dir: Path | str, *, problem_id: str, branch_id: str,
+    log: EventLog, contract: ProblemContract, interp: Any,
+    graph: EpistemicGraph, budget_ledger: "BudgetLedger", failures: list[str],
+) -> Path | None:
+    """Seal and persist one signed within-problem checkpoint (ops aid).
+
+    The checkpoint commits to the exact event-log prefix (merkle root), the
+    graph view hash, and the remaining budget; ``resume()`` can later verify
+    it against a stored event log.  Any failure here is recorded as an
+    operational failure string — never a mathematical verdict.
+    """
+    try:
+        checkpoint = take_checkpoint(
+            log=log,
+            problem_contract_hash=contract.source_bytes_hash,
+            interpretation_hashes=(interpretation_review_hash(interp),),
+            graph_view_hash=graph.view_hash(),
+            controller_posteriors={},
+            budgets={"remaining": float(budget_ledger.remaining),
+                     "total": float(budget_ledger.total)},
+            seeds={},
+            active_leases=(),
+            behavior_closure_fingerprint=sha256_hex(_RESEARCH_LOOP_CLOSURE),
+        )
+        directory = Path(checkpoint_dir) / problem_id
+        directory.mkdir(parents=True, exist_ok=True)
+        record = {
+            **checkpoint._content_record(),
+            "sealed_hash": checkpoint.checkpoint_hash(),
+            "signature": checkpoint._signature,
+            "branch_id": branch_id,
+        }
+        path = directory / f"checkpoint_{checkpoint.last_sequence:06d}.json"
+        tmp_path = path.with_suffix(".tmp")
+        tmp_path.write_text(canonical_json(record), encoding="utf-8")
+        tmp_path.replace(path)
+        return path
+    except (CheckpointError, OSError, TypeError, ValueError) as exc:
+        failures.append(
+            f"checkpoint_write_failed:{branch_id}:{type(exc).__name__}")
+        return None
+
+
+def _proposed_dependency_cone(graph: EpistemicGraph, goal_claim_id: str) -> list[str]:
+    """The goal's transitive dependency cone in dependency order (deps first).
+
+    Includes *proposed* claims regardless of truth status — this is the ledger
+    a hostile reviewer must attack, not the already-admitted subset.  Cycles
+    and unknown dependencies are skipped defensively (admission already rejects
+    them), never followed.
+    """
+    ordered: list[str] = []
+    visiting: set[str] = set()
+    done: set[str] = set()
+
+    def visit(cid: str) -> None:
+        if cid in done or cid in visiting:
+            return
+        claim = graph.claims.get(cid)
+        if claim is None:
+            return
+        visiting.add(cid)
+        for dep in claim.dependencies:
+            visit(dep)
+        visiting.discard(cid)
+        done.add(cid)
+        ordered.append(cid)
+
+    visit(goal_claim_id)
+    return ordered
+
+
 def research(
     *,
     problem_id: str,
@@ -527,6 +828,9 @@ def research(
     formal_correspondence_reviews: Mapping[
         str, FormalCorrespondenceCertificate
     ] | None = None,
+    informal_reviewers: list[tuple[str, ModelRunner]] | None = None,
+    lean_repair_rounds: int = 0,
+    checkpoint_dir: Path | str | None = None,
     max_iterations: int = 4,
 ) -> ResearchResult:
     """Run the full research loop for one problem."""
@@ -543,6 +847,7 @@ def research(
     failures: list[str] = []
     oeis_results: list[dict] = []
     formal_reports: list[dict] = []
+    collected_proof_steps: list[str] = []
     release_correspondence_cert: FormalCorrespondenceCertificate | None = None
     memory = memory or LongTermMemory()
 
@@ -841,6 +1146,17 @@ def research(
             failures.append(f"stale_worker_rejected:{branch_id}:{exc}")
             controller.update_posterior(branch_id, success=False, debt_reduction=0.0)
             continue
+        except BrowserRunnerError:
+            # Provider throttling/unusable browser output is handled by the
+            # caller's durable retain/resume policy, never converted into a
+            # mathematical branch failure.
+            raise
+        except Exception as exc:  # noqa: BLE001 - isolate one failed worker branch
+            failures.append(
+                f"worker_crashed:{branch_id}:{type(exc).__name__}:{exc}"
+            )
+            controller.update_posterior(branch_id, success=False, debt_reduction=0.0)
+            continue
         finally:
             try:
                 leases.release(
@@ -852,6 +1168,10 @@ def research(
                 pass
         replay_reports.extend(output.replay_reports)
         failures.extend(output.failures)
+        collected_proof_steps.extend(
+            step for step in output.proof_steps
+            if step not in collected_proof_steps
+        )
         memory.problem_local.admit({
             "problem_id": problem_id,
             "stage": "branch",
@@ -887,46 +1207,116 @@ def research(
                 "from_cache": response.from_cache,
                 "entry_count": len(response.entries()),
             })
+        # Validate the whole proposal batch before materializing dependencies.
+        # Model output is not guaranteed to be topologically ordered; unknown or
+        # circular dependencies are rejected as branch failures rather than
+        # crashing the research run or entering a cyclic proof graph.
+        pending_claims: dict[str, dict[str, Any]] = {}
         for prop in output.claim_proposals:
-            accepted = blackboard.write_proposal({
-                **prop, "kind": "claim_proposal", "branch_id": branch_id,
-            }, token=worker_token)
-            if accepted["claim_id"] not in graph.claims:
+            try:
+                accepted = blackboard.write_proposal({
+                    **prop, "kind": "claim_proposal", "branch_id": branch_id,
+                }, token=worker_token)
+                claim_id = accepted.get("claim_id")
+                formula = accepted.get("canonical_formula")
+                dependencies = accepted.get("dependencies", [])
+                if not isinstance(claim_id, str) or not claim_id.strip() \
+                        or not isinstance(formula, str) or not formula.strip() \
+                        or not isinstance(dependencies, list) \
+                        or any(not isinstance(dep, str) or not dep.strip()
+                               for dep in dependencies):
+                    raise BlackboardError("claim proposal has an invalid claim/formula/dependency")
+            except (BlackboardError, KeyError, TypeError, ValueError) as exc:
+                failures.append(f"claim_proposal_malformed:{branch_id}:{exc}")
+                continue
+            if claim_id in graph.claims:
+                continue
+            if claim_id in pending_claims:
+                failures.append(f"duplicate_claim_proposal:{branch_id}:{claim_id}")
+                continue
+            pending_claims[claim_id] = accepted
+
+        while pending_claims:
+            progressed = False
+            for claim_id, accepted in list(pending_claims.items()):
+                dependencies = accepted.get("dependencies", [])
+                unresolved_external = [
+                    dep for dep in dependencies
+                    if dep not in graph.claims and dep not in pending_claims
+                ]
+                if unresolved_external:
+                    failures.append(
+                        f"claim_dependency_cycle_or_unknown:{branch_id}:{claim_id}:"
+                        + ",".join(unresolved_external)
+                    )
+                    del pending_claims[claim_id]
+                    progressed = True
+                    continue
+                if any(dep not in graph.claims for dep in dependencies):
+                    continue
                 # The locked target text, not worker-selected prose, is the
-                # canonical goal formula.  Workers may propose subsidiary
-                # claims, but cannot silently substitute the research target.
+                # canonical goal formula. Workers may propose subsidiary claims,
+                # but cannot silently substitute the research target.
                 canonical_formula = (
-                    interp.conclusion
-                    if accepted["claim_id"] == goal_claim_id
+                    interp.conclusion if claim_id == goal_claim_id
                     else accepted["canonical_formula"]
                 )
                 graph.propose_claim(
-                    claim_id=accepted["claim_id"], interpretation_id=interp.interpretation_id,
+                    claim_id=claim_id, interpretation_id=interp.interpretation_id,
                     canonical_formula=canonical_formula,
-                    informal_text=(interp.conclusion if accepted["claim_id"] == goal_claim_id
+                    informal_text=(interp.conclusion if claim_id == goal_claim_id
                                    else accepted.get("informal_text", "")),
-                    dependencies=accepted.get("dependencies", []),
+                    dependencies=dependencies,
                     scope=accepted.get("scope", "general"), actor=ACTOR)
-                if accepted["claim_id"] == goal_claim_id and intent_cert is not None:
+                if claim_id == goal_claim_id and intent_cert is not None:
                     graph.bind_intent_certificate(
                         goal_claim_id, intent_cert.certificate_id, actor=ACTOR,
                     )
+                del pending_claims[claim_id]
+                progressed = True
+            if not progressed:
+                for claim_id, accepted in pending_claims.items():
+                    failures.append(
+                        f"claim_dependency_cycle_or_unknown:{branch_id}:{claim_id}:"
+                        + ",".join(accepted.get("dependencies", []))
+                    )
+                break
         for ev in output.evidence:
-            accepted = blackboard.write_proposal({
-                **ev, "evidence_kind": ev.get("kind", ""),
-                "kind": "evidence_proposal", "branch_id": branch_id,
-            }, token=worker_token)
-            if accepted["evidence_id"] in graph.evidence:
+            try:
+                if not isinstance(ev, dict):
+                    raise TypeError("evidence proposal must be an object")
+                accepted = blackboard.write_proposal({
+                    **ev, "evidence_kind": ev.get("kind", ""),
+                    "kind": "evidence_proposal", "branch_id": branch_id,
+                }, token=worker_token)
+                evidence_id = accepted.get("evidence_id")
+                if not isinstance(evidence_id, str) or not evidence_id.strip():
+                    raise BlackboardError("evidence proposal has no evidence_id")
+                if evidence_id in graph.evidence:
+                    continue
+                evidence = _authenticate_computation_proposal(
+                    accepted, graph=graph, compute_service=trusted_compute_service,
+                    replay_reports=output.replay_reports, intent_cert=intent_cert,
+                )
+            except (BlackboardError, KeyError, TypeError, ValueError) as exc:
+                failures.append(f"evidence_proposal_malformed:{branch_id}:{exc}")
                 continue
-            evidence = _authenticate_computation_proposal(
-                accepted, graph=graph, compute_service=trusted_compute_service,
-                replay_reports=output.replay_reports, intent_cert=intent_cert,
-            )
             if evidence is None:
-                failures.append(f"untrusted_evidence_proposal:{accepted['evidence_id']}")
+                failures.append(f"untrusted_evidence_proposal:{evidence_id}")
                 continue
             enforcer.require("computation_service", entry_point="orchestrator.compute")
             router.admit(evidence, actor=ACTOR)
+        # Audited literature→lemma imports: the model may CITE a frozen-packet
+        # record as support for a claim, but never authors provenance — every
+        # field of the evidence comes from the packet record itself, and the
+        # citation is rejected unless the claim's formula genuinely overlaps
+        # the record text.  A single audited import records provenance only
+        # (ExternalImport.AUDITED_SOURCE never supports); corroboration — and
+        # hence support — requires ≥2 passing records from distinct hosts.
+        _admit_literature_imports(
+            output.literature_imports, packet=packet, graph=graph,
+            router=router, branch_id=branch_id, failures=failures,
+        )
         for candidate in output.formal_candidates:
             formal_token = authority_issuer.issue(
                 authority_name="formalization_authority",
@@ -934,9 +1324,15 @@ def research(
                 resources=(f"branch:{branch_id}", f"packet:{board_packet_hash}"),
                 lineage="lean-service",
             )
-            accepted = blackboard.write_proposal({
-                **candidate, "kind": "formal_artifact", "branch_id": branch_id,
-            }, token=formal_token)
+            try:
+                if not isinstance(candidate, dict):
+                    raise TypeError("formal candidate must be an object")
+                accepted = blackboard.write_proposal({
+                    **candidate, "kind": "formal_artifact", "branch_id": branch_id,
+                }, token=formal_token)
+            except (BlackboardError, KeyError, TypeError, ValueError) as exc:
+                failures.append(f"formal_candidate_malformed:{branch_id}:{exc}")
+                continue
             required_strings = (
                 "claim_id", "source", "declaration_name", "lean_version",
                 "mathlib_commit", "project_hash", "expected_type_hash",
@@ -955,36 +1351,113 @@ def research(
             if lean_service is None:
                 failures.append(f"formal_verification_unavailable:{branch_id}")
                 continue
-            environment = lean_service.create_environment(
-                lean_version=accepted["lean_version"],
-                mathlib_commit=accepted["mathlib_commit"],
-                project_hash=accepted["project_hash"],
-                trust_policy=accepted.get("trust_policy", "classical-whitelist"),
-                imports=tuple(accepted.get("imports", ())),
-                options=dict(accepted.get("options", {})),
-            )
-            formal_certificate = lean_service.verify_declaration(
-                environment=environment,
-                source=accepted["source"],
-                declaration_name=accepted["declaration_name"],
-                expected_type_hash=accepted["expected_type_hash"],
-                immutable_target_module_hash=accepted["immutable_target_module_hash"],
-                expected_type_source=accepted.get("expected_type_source", ""),
-                claim_bindings={
-                    accepted["claim_id"]: graph.claims[
-                        accepted["claim_id"]
-                    ].canonical_hash,
-                },
-                artifact_hashes=(
-                    accepted["project_hash"],
-                    accepted["immutable_target_module_hash"],
-                ),
-            )
+            try:
+                environment = lean_service.create_environment(
+                    lean_version=accepted["lean_version"],
+                    mathlib_commit=accepted["mathlib_commit"],
+                    project_hash=accepted["project_hash"],
+                    trust_policy=accepted.get("trust_policy", "classical-whitelist"),
+                    imports=tuple(accepted.get("imports", ())),
+                    options=dict(accepted.get("options", {})),
+                )
+                formal_certificate = lean_service.verify_declaration(
+                    environment=environment,
+                    source=accepted["source"],
+                    declaration_name=accepted["declaration_name"],
+                    expected_type_hash=accepted["expected_type_hash"],
+                    immutable_target_module_hash=accepted["immutable_target_module_hash"],
+                    expected_type_source=accepted.get("expected_type_source", ""),
+                    claim_bindings={
+                        accepted["claim_id"]: graph.claims[
+                            accepted["claim_id"]
+                        ].canonical_hash,
+                    },
+                    artifact_hashes=(
+                        accepted["project_hash"],
+                        accepted["immutable_target_module_hash"],
+                    ),
+                )
+            except Exception as exc:  # noqa: BLE001 - external verifier isolation
+                failures.append(
+                    f"formal_verification_error:{branch_id}:"
+                    f"{type(exc).__name__}:{exc}"
+                )
+                continue
             formal_reports.append({
                 "branch_id": branch_id,
                 "claim_id": accepted["claim_id"],
                 **formal_certificate.to_dict(),
             })
+            # Autonomous bounded Lean repair: a kernel-REJECTED candidate goes
+            # back to the configured formalizer together with the pinned
+            # checker's diagnostics; the obligation (declaration name +
+            # expected type + hashes) never changes, and every repaired source
+            # is re-checked by the same pinned kernel.  Exhausted repairs leave
+            # the candidate rejected exactly as before \u2014 never masked.
+            formalizer = getattr(worker, "formalizer", None)
+            if not formal_certificate.passed and formalizer is not None \
+                    and lean_repair_rounds > 0 and _supports_repair(formalizer):
+                current_source = accepted["source"]
+                for repair_round in range(1, int(lean_repair_rounds) + 1):
+                    feedback = "; ".join((
+                        *formal_certificate.placeholder_findings,
+                        *formal_certificate.unsafe_findings,
+                    ))[:1200]
+                    try:
+                        repaired = formalizer.formalize(
+                            declaration_name=accepted["declaration_name"],
+                            expected_type=accepted.get(
+                                "expected_type_source", ""),
+                            informal_statement=interp.conclusion,
+                            previous_source=current_source,
+                            kernel_feedback=feedback,
+                        )
+                    except Exception as exc:  # noqa: BLE001 - vendor outage isolation
+                        failures.append(
+                            f"formal_repair_error:{branch_id}:"
+                            f"{type(exc).__name__}")
+                        break
+                    repaired = (repaired or "").strip()
+                    if not repaired or repaired == current_source:
+                        failures.append(
+                            f"formal_repair_unavailable:{branch_id}:"
+                            f"round{repair_round}")
+                        break
+                    current_source = repaired
+                    try:
+                        formal_certificate = lean_service.verify_declaration(
+                            environment=environment,
+                            source=repaired,
+                            declaration_name=accepted["declaration_name"],
+                            expected_type_hash=accepted["expected_type_hash"],
+                            immutable_target_module_hash=accepted[
+                                "immutable_target_module_hash"],
+                            expected_type_source=accepted.get(
+                                "expected_type_source", ""),
+                            claim_bindings={
+                                accepted["claim_id"]: graph.claims[
+                                    accepted["claim_id"]
+                                ].canonical_hash,
+                            },
+                            artifact_hashes=(
+                                accepted["project_hash"],
+                                accepted["immutable_target_module_hash"],
+                            ),
+                        )
+                    except Exception as exc:  # noqa: BLE001 - verifier isolation
+                        failures.append(
+                            f"formal_verification_error:{branch_id}:"
+                            f"{type(exc).__name__}:{exc}")
+                        break
+                    formal_reports.append({
+                        "branch_id": branch_id,
+                        "claim_id": accepted["claim_id"],
+                        "repair_round": repair_round,
+                        **formal_certificate.to_dict(),
+                    })
+                    if formal_certificate.passed:
+                        accepted = {**accepted, "source": repaired}
+                        break
             if formal_certificate.passed:
                 correspondence = (formal_correspondence_reviews or {}).get(
                     accepted["claim_id"]
@@ -1085,6 +1558,18 @@ def research(
             leaf.closed = supported
         if branch_id == "direct_structural":
             blueprint.direct_attempted = True
+        # Durable within-problem checkpoint: after each completed branch, seal
+        # a signed snapshot of the event-log prefix + graph view so a crashed
+        # long run leaves verifiable state behind.  Checkpointing is an ops
+        # aid: a write failure is recorded and never becomes a math verdict.
+        if checkpoint_dir is not None:
+            _write_branch_checkpoint(
+                checkpoint_dir, problem_id=problem_id, branch_id=branch_id,
+                log=log, contract=contract, interp=interp, graph=graph,
+                budget_ledger=budget_ledger, failures=failures,
+            )
+            if "checkpoint" not in phases:
+                phases.append("checkpoint")
         if supported:
             break
 
@@ -1094,11 +1579,70 @@ def research(
                                 runners=(runner, getattr(worker, "runner", None)))
         phases.append("record_exchanges")
 
+    # 15a. Hostile natural-language review of the PROPOSED dependency cone
+    # (the T3 informal-evidence producer). Runs before assembly because the
+    # compiler admits only SUPPORTED claims; the review is what can support
+    # them. Fail-closed: no reviewers, no passing reviews, or no covered
+    # claims -> no evidence; unattested reviewer lineages collapse so
+    # DOUBLE_INDEPENDENT requires genuinely attested distinct families.
+    review_evidence = None
+    if informal_reviewers and goal_claim_id in graph.claims:
+        cone_order = _proposed_dependency_cone(graph, goal_claim_id)
+        ledger_rows = [
+            {
+                "claim_id": cid,
+                "dependencies": list(graph.claims[cid].dependencies),
+                "canonical_formula": graph.claims[cid].canonical_formula,
+            }
+            for cid in cone_order
+        ]
+        reports, review_failures = run_hostile_reviews(
+            informal_reviewers, statement=interp.conclusion,
+            ledger=ledger_rows, proof_steps=collected_proof_steps,
+        )
+        failures.extend(review_failures)
+        for report in reports:
+            memory.problem_local.admit({
+                "problem_id": problem_id,
+                "stage": "hostile_review",
+                "reviewer_id": report.reviewer_id,
+                "verdict": report.verdict,
+                "material_errors": list(report.material_errors),
+                "open_gaps": list(report.open_gaps),
+                "cross_problem_usable": False,
+            })
+            if not report.passing:
+                for objection in (*report.material_errors, *report.open_gaps):
+                    failures.append(
+                        f"hostile_review_objection:{report.reviewer_id}:"
+                        f"{objection[:160]}")
+        review_evidence = build_informal_review_evidence(
+            reports=reports,
+            claim_hashes={
+                cid: graph.claims[cid].canonical_hash for cid in cone_order
+            },
+            dependency_order=cone_order,
+            intent_certificate_id=(
+                intent_cert.certificate_id if intent_cert is not None else None
+            ),
+        )
+        if review_evidence is not None:
+            router.admit(attest_evidence(review_evidence), actor=ACTOR)
+        phases.append("hostile_review")
+
     # 15. compile from admitted graph
     compiled = None
     if goal_claim_id in graph.claims:
         compiled = assemble_from_admitted_graph(graph, goal_claim_id)
     phases.append("assemble")
+    # A complete dependency audit (the T3 gate input) is mechanical here: the
+    # assembled cone closed AND every used claim carries the hostile-review
+    # evidence. Never caller-asserted.
+    dependency_audit_complete = bool(
+        compiled is not None and compiled.complete
+        and review_evidence is not None
+        and set(compiled.used_claim_ids) <= set(review_evidence.claim_ids)
+    )
 
     # 16. Independent referee + five gates.  The evaluator returns observed
     # attack results; the orchestrator never manufactures all-pass outcomes.
@@ -1154,6 +1698,7 @@ def research(
             novelty_verdict=novelty_verdict, informal_only=informal_only,
             responsive=bool(compiled and compiled.complete),
             non_vacuous=_non_vacuous_supported_result(goal),
+            dependency_audit_complete=dependency_audit_complete,
             replay_reports=replay_reports,
             source_bytes_hash=contract.source_bytes_hash,
             interpretation_hash=interpretation_hash,

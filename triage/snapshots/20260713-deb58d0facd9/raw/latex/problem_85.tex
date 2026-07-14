@@ -1,0 +1,34 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#85}
+\date{Last updated: 2026-03-14}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $n\geq 4$ and $f(n)$ be minimal such that every graph on $n$ vertices with minimal degree $\geq f(n)$ contains a $C_4$. Is it true that, for all large $n$, $f(n+1)\geq f(n)$?
+
+
+
+
+The function $f(n)$ is a reformulation of the Ramsey number $R(C_4,K_{1,n})$, in that\[R(C_4,K_{1,n})=\min\{ m : f(m)\leq m-n\}\]and\[f(n)=\min\{ m : m\geq R(C_4, K_{1,n-m})\}.\]The behaviour of this Ramsey number more generally is [552] . A weaker version of the conjecture asks for some constant $c$ such that $f(m)&gt;f(n)-c$ for all $m&gt;n$. This question can be asked for other graphs than $C_4$. The bounds in [552] imply in particular that $f(n)&lt;\sqrt{n}+1$ and\[f(n)=(1+o(1))\sqrt{n}.\]It is easy to check that $f(4)=2$.
+
+\noindent\textbf{Related OEIS sequences:} A006672, possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/85}}
+\end{document}

@@ -18,7 +18,7 @@ from erdos_searcher import (
     write_json,
 )
 from run_contract import run_contract_id, run_context_id, validate_run_contract
-from run_status import disposition_for_manifest
+from run_status import disposition_for_manifest, _read_bounded_regular
 
 
 def record_outcome(
@@ -37,7 +37,7 @@ def record_outcome(
         or disposition.get("candidate_outcome")
         or "unknown"
     )
-    manifest_bytes = manifest_path.read_bytes()
+    manifest_bytes = _read_bounded_regular(manifest_path, max_bytes=4_000_000)
     manifest = json.loads(manifest_bytes)
     if manifest.get("problem_number") != problem_number:
         raise ValueError("outcome manifest problem number mismatch")
@@ -58,9 +58,15 @@ def record_outcome(
         "runtime": contract["runtime"],
     }
     candidate_path = manifest_path.parent / "candidate.md"
-    candidate_sha256 = None
-    if candidate_path.is_file():
-        candidate_sha256 = hashlib.sha256(candidate_path.read_bytes()).hexdigest()
+    candidate_sha256: str | None = None
+    candidate_bytes: bytes | None = None
+    try:
+        candidate_bytes = _read_bounded_regular(
+            candidate_path, max_bytes=16_000_000,
+        )
+        candidate_sha256 = hashlib.sha256(candidate_bytes).hexdigest()
+    except OSError:
+        pass
     recorded_candidate_sha = manifest.get("candidate_sha256")
     if recorded_candidate_sha is not None and recorded_candidate_sha != candidate_sha256:
         raise ValueError("outcome candidate artifact hash mismatch")
@@ -95,9 +101,9 @@ def record_outcome(
         else None
     )
     gate = {"status": raw_gate_status}
-    safe_manifest_bytes = None
-    common_support = None
-    if candidate_sha256 is not None:
+    safe_manifest_bytes: bytes | None = None
+    common_support: dict[str, bytes] | None = None
+    if candidate_bytes is not None and candidate_sha256 is not None:
         safe_manifest = {
             "schema_version": 1,
             "projection_type": "ledger-disposition-input-v1",
@@ -118,11 +124,15 @@ def record_outcome(
         ).encode("utf-8")
         common_support = {
             "manifest": safe_manifest_bytes,
-            "candidate": candidate_path.read_bytes(),
+            "candidate": candidate_bytes,
         }
     with evidence_transaction(triage_dir) as created_evidence_paths:
         if status.startswith("verified_"):
-            if candidate_sha256 is None:
+            if (
+                candidate_sha256 is None
+                or safe_manifest_bytes is None
+                or common_support is None
+            ):
                 raise ValueError("verified outcome has no candidate artifact")
             snapshot_dir = (
                 Path(triage_dir) / "ingestion" / contract["source_snapshot"]["id"]
@@ -174,7 +184,12 @@ def record_outcome(
                 _transaction_created_paths=created_evidence_paths,
             )
             record["evidence_certificate_ids"] = [gate_id, intent_id]
-        elif status in AUTONOMOUS_LEARNING_STATUSES and common_support is not None:
+        elif (
+            status in AUTONOMOUS_LEARNING_STATUSES
+            and candidate_sha256 is not None
+            and safe_manifest_bytes is not None
+            and common_support is not None
+        ):
             disposition_object = {
                 "status": status,
                 "gate_status": record["gate_status"],

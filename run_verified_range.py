@@ -59,7 +59,21 @@ def main() -> None:
                         help="This worker's index (0-based) when splitting the range")
     parser.add_argument("--shard-count", type=int, default=1,
                         help="Total number of workers splitting the range")
+    parser.add_argument(
+        "--force-legacy", action="store_true",
+        help="Run the RETIRED legacy range anyway. The supported path is "
+             "`egmra campaign --triage <triage-dir>` (verified EGMRA pipeline).",
+    )
     args = parser.parse_args()
+    if not args.force_legacy:
+        parser.error(
+            "run_verified_range.py is RETIRED: it drives the legacy ProofPipeline "
+            "over a range, which can never emit a ReleaseCertificate. Use the "
+            "single verified pipeline instead:\n"
+            "  egmra campaign --triage <triage-dir> --provider browser "
+            "--policy <signed-policy>\n"
+            "Pass --force-legacy only to run the retired path deliberately."
+        )
     if "unrecorded" in args.model_id.lower() or not args.model_id.strip():
         parser.error("--model-id must be the exact recorded UI model identity")
     triage_dir = args.triage if args.triage.is_absolute() else C.REPO_DIR / args.triage

@@ -49,12 +49,16 @@ new solutions appear on the site automatically — no manual rebuild step.
 
 For verified research runs, `run_verified_pipeline.py` creates isolated scout,
 planner, constructor, reviewer, regulator, revision, and adjudicator contexts.
-Only the deterministic gate can emit `verified_proved` or
-`verified_disproved`; a model cannot promote its own candidate. Promotion also
-requires a statement-bound formal-proof, exact-computation, or expert-review
-artifact applied to the exact saved candidate by `promote_verified_run.py`.
-Use [`verification-evidence.example.json`](verification-evidence.example.json)
-as the schema. The harness hashes the referenced artifact itself.
+The legacy deterministic gate can validate and quarantine candidate evidence,
+but it cannot emit an authoritative release. Its in-process symmetric signing
+domain is not independent enough to establish truth or publication. The legacy
+bridge therefore retires at `awaiting_authenticated_release`; actual release
+must use the event-derived EGMRA `ReleaseCertificate` chain. Expert/model
+approval is not truth evidence, vendor `COMPLETE` is not a kernel certificate,
+and relative artifacts are confined beneath the evidence document. The shipped
+browser runner lacks an attested model gateway and remains advisory.
+[`verification-evidence.example.json`](verification-evidence.example.json)
+documents the closed quarantine/import schema.
 
 The completeness score is **how much of the argument the model rigorously
 established**, deliberately distinct from how confident the prose sounds.
@@ -119,11 +123,25 @@ python3 run_verified_pipeline.py --problem 137 --print-statement-sha \
   --model-id <exact-model-id>
 python3 run_verified_pipeline.py --problem 137 --max-revisions 2 \
   --model-id <exact-model-id>
-# Review proof_runs/problem_137/<run-id>/candidate.md, fill the evidence JSON,
-# then promote that exact saved run:
+# Review proof_runs/problem_137/<run-id>/candidate.md and fill the evidence JSON.
+# This command validates/imports into legacy quarantine only; it never publishes.
 python3 promote_verified_run.py --run-dir proof_runs/problem_137/<run-id> \
-  --evidence-json verification-evidence.json --publish
+  --evidence-json verification-evidence.json \
+  --policy config/signed-egmra-policy.json
+
+# Authoritative rendering is available only from an authenticated EGMRA run:
+python3 -m egmra.cli run --fixture finite_true \
+  --policy config/signed-egmra-policy.json \
+  --intent-review intent-review.json
 ```
+
+The EGMRA trust paths have no built-in signing keys. Before running EGMRA,
+provision every blank `EGMRA_*_KEY` entry in `.env.example` with a distinct
+secret of at least 32 bytes, preferably through a secret manager rather than a
+file. Intent and formal-correspondence review keys belong to independent review
+services; the research process must not possess them. A CLI fixture can only be
+reported as verified when an externally signed, exact-binding intent review is
+provided with `--intent-review <review.json>`.
 
 Provider rate limits do not consume verified proof attempts. Both verified and
 legacy collectors wait and retry with adaptive exponential backoff; every
@@ -150,10 +168,10 @@ full walkthrough, including DeepSeek and resume behavior.
 | `erdos_searcher.py` | Problem cards, cheap probes, weak-prior rankings, exploration, and ledgers. |
 | `run_status.py` | Normalized verified/partial/budget-exhausted/censored/operational outcomes. |
 | `problem_queue.py` / `run_continuous.py` | Experimental ranked atomic work queue and continuous worker. |
-| `promote_verified_run.py` | Bind external evidence to an exact saved candidate and publish only after the gate passes. |
+| `promote_verified_run.py` | Validate and quarantine legacy evidence; authoritative release is intentionally disabled. |
 | `research_state.py` | Immutable statement lock and persistent DAG/lemma/failure memory. |
 | `solver_prompts.py` | Offline, role-separated search and verification prompts. |
-| `verification.py` | Deterministic proof-promotion gate. |
+| `verification.py` | Retired legacy verification gate; never an authoritative release path. |
 | `schemas/` / `config/pipeline_features.json` | Artifact contracts and release-state feature flags. |
 | `docs/` | Audit, SOTA evidence, architecture, searcher/Lean specs, migration, evaluation, and risks. |
 | `problem_catalog.json` | Online source status/provenance, isolated from solver prompts. |

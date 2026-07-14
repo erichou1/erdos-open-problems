@@ -57,15 +57,15 @@ class RunStatusTests(unittest.TestCase):
             self.assertEqual(disposition["candidate_outcome"], "resource_exhausted")
             self.assertEqual(disposition["outcome_class"], "no_progress_within_budget")
 
-    def test_only_verified_gate_is_a_completed_solution(self):
+    def test_forged_verified_manifest_is_quarantined_not_completed(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             self.write_manifest(
                 root, 1, "20260712T000000Z-test",
                 "candidate_proved", "verified_proved",
             )
-            self.assertTrue(has_verified_result(root, 1))
-            self.assertTrue(has_verified_result(
+            self.assertFalse(has_verified_result(root, 1))
+            self.assertFalse(has_verified_result(
                 root, 1, expected_run_contract_id="a" * 64,
             ))
             self.assertFalse(has_verified_result(
@@ -74,21 +74,23 @@ class RunStatusTests(unittest.TestCase):
             marker = root / ".done" / "problem_1"
             marker.parent.mkdir()
             marker.write_text("verified\n")
-            self.assertTrue(should_skip_problem(
+            self.assertFalse(should_skip_problem(
                 root, 1, marker, expected_run_contract_id="a" * 64,
             ))
             self.assertFalse(should_skip_problem(
                 root, 1, marker, expected_run_contract_id="b" * 64,
             ))
-            self.assertTrue(already_verified(
+            self.assertFalse(already_verified(
                 root, 1, expected_run_contract_id="a" * 64,
             ))
             self.assertFalse(already_verified(
                 root, 1, expected_run_contract_id="b" * 64,
             ))
             self.assertFalse(problem_disposition(root, 1)["is_negative_training_example"])
-            self.assertEqual(problem_disposition(root, 1)["outcome_class"],
-                             "verified_novelty_pending")
+            disposition = problem_disposition(root, 1)
+            self.assertFalse(disposition["is_verified"])
+            self.assertFalse(disposition["is_labeled_outcome"])
+            self.assertEqual(disposition["outcome_class"], "operational_failure")
 
     def test_incomplete_run_is_censored_not_negative(self):
         with tempfile.TemporaryDirectory() as directory:
@@ -131,6 +133,37 @@ class RunStatusTests(unittest.TestCase):
                 disposition["outcome_class"], "fundamentally_flawed_candidate"
             )
             self.assertTrue(disposition["is_negative_training_example"])
+
+    def test_symlinked_problem_and_candidate_are_not_followed(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            artifacts = root / "artifacts"
+            artifacts.mkdir()
+            outside = root / "outside"
+            run = outside / "run1"
+            run.mkdir(parents=True)
+            (run / "manifest.json").write_text(json.dumps({
+                "problem_number": 9,
+                "candidate_outcome": "resource_exhausted",
+                "gate": {"status": "candidate_rejected"},
+            }))
+            (artifacts / "problem_9").symlink_to(outside, target_is_directory=True)
+            self.assertEqual(problem_disposition(artifacts, 9)["outcome_class"],
+                             "unattempted")
+
+            safe_run = self.write_manifest(
+                artifacts, 10, "run1", "candidate_unclassified",
+                "candidate_rejected",
+            )
+            outside_candidate = root / "secret.txt"
+            outside_candidate.write_text(
+                "<result>OUTCOME: RESOURCE_EXHAUSTED</result>"
+            )
+            (safe_run / "candidate.md").symlink_to(outside_candidate)
+            self.assertEqual(
+                problem_disposition(artifacts, 10)["candidate_outcome"],
+                "candidate_unclassified",
+            )
 
 
 if __name__ == "__main__":

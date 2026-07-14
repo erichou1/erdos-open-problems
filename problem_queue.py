@@ -86,7 +86,8 @@ def load_allocation_plan(
     ).hexdigest()
     recorded_context_id = ranking.get("allocation_context_id")
     if (
-        recorded_context_id != calculated_context_id
+        not isinstance(recorded_context_id, str)
+        or recorded_context_id != calculated_context_id
         or recorded_context_id != expected_allocation_context_id
     ):
         raise ValueError("allocation context mismatch")
@@ -97,22 +98,45 @@ def load_allocation_plan(
     if ranking.get("allocation_id") != allocation_id:
         raise ValueError("allocation identity mismatch")
 
-    exploitation = ranking.get("diversified_attack_queue")
-    exploration = ranking.get("protected_exploration")
-    allocation = ranking.get("allocation_queue")
-    if not all(isinstance(value, list) for value in (exploitation, exploration, allocation)):
-        raise ValueError("allocation lanes are absent")
+    def validated_problem_number(record: dict, label: str) -> int:
+        number = record.get("problem_number")
+        if (
+            not isinstance(number, int)
+            or isinstance(number, bool)
+            or number < 1
+        ):
+            raise ValueError(f"{label} has an invalid record")
+        return number
 
-    def numbers(records: list[dict], label: str) -> list[int]:
-        result = []
-        for record in records:
-            if not isinstance(record, dict) or not isinstance(record.get("problem_number"), int):
+    def records(value: object, label: str) -> list[dict]:
+        if not isinstance(value, list):
+            raise ValueError(f"{label} lane is absent or invalid")
+        result: list[dict] = []
+        for record in value:
+            if not isinstance(record, dict):
                 raise ValueError(f"{label} has an invalid record")
+            validated_problem_number(record, label)
             if record.get("allocation_context_id") != recorded_context_id:
                 raise ValueError(f"{label} record context mismatch")
-            if not re.fullmatch(r"[0-9a-f]{64}", str(record.get("run_contract_id", ""))):
+            run_contract_id = record.get("run_contract_id")
+            if (
+                not isinstance(run_contract_id, str)
+                or not re.fullmatch(r"[0-9a-f]{64}", run_contract_id)
+            ):
                 raise ValueError(f"{label} record has no exact run contract")
-            result.append(record["problem_number"])
+            result.append(record)
+        return result
+
+    exploitation = records(
+        ranking.get("diversified_attack_queue"), "exploitation"
+    )
+    exploration = records(
+        ranking.get("protected_exploration"), "protected exploration"
+    )
+    allocation = records(ranking.get("allocation_queue"), "allocation")
+
+    def numbers(records: list[dict], label: str) -> list[int]:
+        result = [validated_problem_number(record, label) for record in records]
         if len(result) != len(set(result)):
             raise ValueError(f"{label} contains duplicate problems")
         return result
@@ -125,13 +149,20 @@ def load_allocation_plan(
     if set(allocation_numbers) != set(exploit_numbers) | set(explore_numbers):
         raise ValueError("allocation queue omits or adds lane members")
     for rank, record in enumerate(allocation, 1):
-        if record.get("allocation_rank") != rank:
+        allocation_rank = record.get("allocation_rank")
+        if (
+            not isinstance(allocation_rank, int)
+            or isinstance(allocation_rank, bool)
+            or allocation_rank != rank
+        ):
             raise ValueError("allocation ranks are not contiguous")
+        problem_number = record["problem_number"]
         expected_lane = (
-            "exploitation" if record["problem_number"] in set(exploit_numbers)
+            "exploitation" if problem_number in set(exploit_numbers)
             else "protected_exploration"
         )
-        if record.get("allocation_lane") != expected_lane:
+        allocation_lane = record.get("allocation_lane")
+        if not isinstance(allocation_lane, str) or allocation_lane != expected_lane:
             raise ValueError("allocation lane label mismatch")
     expected_interleave: list[tuple[int, str]] = []
     exploit_index = 0

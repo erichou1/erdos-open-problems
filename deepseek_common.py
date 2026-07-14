@@ -10,7 +10,6 @@ root. Conversation URLs look like https://chat.deepseek.com/a/chat/s/<id>.
 """
 
 import json
-import re
 import time
 from pathlib import Path
 

@@ -6,7 +6,12 @@ import unittest
 from pathlib import Path
 
 from proof_pipeline import ProofPipeline
-from tests.test_proof_pipeline import PassingRunner, evidence_for
+from tests.test_proof_pipeline import (
+    PassingRunner,
+    TRUST_ENV,
+    evidence_provider,
+    attest_test_review,
+)
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -93,8 +98,8 @@ def pipeline(cache: Path, runner: ContextRunner, run_contract: dict) -> ProofPip
         execution_config=run_contract["execution_config"],
     )
     result._stage_cache = cache
-    # A stage cache is reusable only after solve() binds the exact statement and
-    # immutable source/runtime context. These focused tests isolate that boundary.
+    # The contract is persisted for audit, but the adjacent files are not an
+    # authentication boundary and therefore are never replayed as model output.
     result._active_run_contract = run_contract
     return result
 
@@ -109,7 +114,9 @@ def solver_pipeline(
     return ProofPipeline(
         runner,
         artifact_root,
-        verification_evidence=evidence_for(problem),
+        verification_evidence_provider=evidence_provider,
+        review_attestor=attest_test_review,
+        attestation_env=TRUST_ENV,
         pipeline_version="commit-a+pipeline-a",
         model_portfolio=model_portfolio,
         execution_config={
@@ -145,7 +152,7 @@ class StageCacheContractTests(unittest.TestCase):
             }.issubset(schema["required"])
         )
 
-    def test_exact_contract_reuses_response_and_restores_compatible_context(self):
+    def test_exact_contract_is_recorded_but_never_replays_model_output(self):
         with tempfile.TemporaryDirectory() as directory:
             cache = Path(directory)
             original_runner = ContextRunner()
@@ -161,11 +168,8 @@ class StageCacheContractTests(unittest.TestCase):
                 resumed._run("identical prompt", "review_logic_1"),
                 "fresh response 1",
             )
-            self.assertEqual(resumed_runner.calls, [])
-            self.assertEqual(
-                resumed_runner.restored,
-                [("review_logic_1", "https://chat.test/review_logic_1/1")],
-            )
+            self.assertEqual(len(resumed_runner.calls), 1)
+            self.assertEqual(resumed_runner.restored, [])
             metadata = json.loads(
                 (cache / "review_logic_1.meta.json").read_text(encoding="utf-8")
             )
@@ -382,7 +386,7 @@ class StageCacheContractTests(unittest.TestCase):
                 old_record["run_contract_id"], new_record["run_contract_id"]
             )
 
-    def test_copied_incomplete_execution_directory_is_not_resumed(self):
+    def test_no_caller_writable_incomplete_execution_directory_is_resumed(self):
         problem = "Prove copied execution metadata is not authoritative."
         with tempfile.TemporaryDirectory() as directory:
             artifact_root = Path(directory)
@@ -396,7 +400,8 @@ class StageCacheContractTests(unittest.TestCase):
             resumed = solver_pipeline(
                 artifact_root, PassingRunner(), problem
             ).solve(79, problem)
-            self.assertEqual(resumed.artifact_dir, first.artifact_dir)
+            self.assertNotEqual(resumed.artifact_dir, first.artifact_dir)
+            self.assertNotEqual(resumed.artifact_dir, copied)
             self.assertFalse((copied / "manifest.json").exists())
 
 

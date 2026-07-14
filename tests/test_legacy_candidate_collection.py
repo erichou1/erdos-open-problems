@@ -86,7 +86,9 @@ class LegacyCandidateCollectionTests(unittest.TestCase):
             prompt_template=self.prompt_template,
         )
         exact = chat_metadata(contract, "https://chat.deepseek.com/a/chat/s/abc")
-        valid_url = lambda value: "/a/chat/s/" in value
+
+        def valid_url(value):
+            return "/a/chat/s/" in value
 
         self.assertTrue(reusable_chat_entry(exact, contract, valid_url=valid_url))
         self.assertFalse(
@@ -190,6 +192,33 @@ class LegacyCandidateCollectionTests(unittest.TestCase):
 
         self.assertIn("complete canonical", str(raised.exception))
         playwright.assert_not_called()
+
+    def test_deepseek_submission_refuses_problem_missing_from_canonical_sources(self):
+        import deepseek_submit
+
+        with (
+            tempfile.TemporaryDirectory() as directory,
+            patch.object(
+                deepseek_submit,
+                "load_canonical_candidate_sources",
+                return_value={},
+            ),
+            patch.object(
+                deepseek_submit.D,
+                "DS_PROFILE_DIR",
+                Path(directory) / "profile",
+            ),
+            patch.object(deepseek_submit, "sync_playwright") as playwright,
+            patch.object(deepseek_submit.D, "launch_browser") as launch_browser,
+            patch.object(deepseek_submit.D, "ensure_logged_in") as ensure_logged_in,
+        ):
+            with self.assertRaises(SystemExit) as raised:
+                deepseek_submit.main(["--problem", "601"])
+
+        self.assertIn("not present", str(raised.exception))
+        playwright.assert_called_once_with()
+        launch_browser.assert_called_once()
+        ensure_logged_in.assert_not_called()
 
     def test_range_wrapper_delegates_without_replacing_the_global_source_loader(self):
         import erdos_common

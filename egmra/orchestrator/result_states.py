@@ -206,8 +206,14 @@ def classify_result(
         for cid, claim in result.graph.claims.items()
         if cid != goal_id and claim.truth_status == TruthStatus.SUPPORTED
     ]
+    # An incomplete compiler object is created even when the only admitted node
+    # is the still-UNKNOWN goal.  Counting that bookkeeping artifact as
+    # mathematical progress overstates an empty run.  Partial assembly requires
+    # at least one admitted dependency that actually contributes to the proof.
     partial_assembly = bool(
-        result.compiled_proof is not None and not result.compiled_proof.complete
+        result.compiled_proof is not None
+        and not result.compiled_proof.complete
+        and getattr(result.compiled_proof, "used_claim_ids", ())
     )
 
     signals: dict[str, Any] = {

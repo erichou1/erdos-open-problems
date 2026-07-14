@@ -1,10 +1,17 @@
 """Normalize persisted proof-run states without conflating exit status and proof status."""
 
 import json
+import os
+import stat
 from pathlib import Path
 
 
-VERIFIED_GATES = frozenset({"verified_proved", "verified_disproved"})
+# Historical manifests stored a mutable gate-status label without an
+# authenticated release certificate.  Keep the labels so they can be
+# quarantined explicitly, but never treat them as proof of verification.
+UNAUTHENTICATED_VERIFIED_GATES = frozenset(
+    {"verified_proved", "verified_disproved"}
+)
 
 
 def classify_disposition_inputs(
@@ -23,8 +30,12 @@ def classify_disposition_inputs(
         recovered = candidate_status(candidate_text)
         if recovered != "candidate_unclassified":
             candidate_outcome = recovered
-    if gate_status in VERIFIED_GATES:
-        outcome_class = "verified_novelty_pending"
+    if gate_status in UNAUTHENTICATED_VERIFIED_GATES:
+        # A caller can edit manifest.json directly.  Until this legacy reader is
+        # wired to the EGMRA ReleaseCertificate verifier, a success-looking
+        # label is an operationally untrusted input, not a learning or release
+        # outcome.
+        outcome_class = "operational_failure"
     elif gate_status == "awaiting_external_evidence":
         outcome_class = "awaiting_external_evidence"
     elif candidate_outcome == "resource_exhausted":
@@ -40,7 +51,7 @@ def classify_disposition_inputs(
         "outcome_class": outcome_class,
         "gate_status": gate_status,
         "candidate_outcome": candidate_outcome,
-        "is_verified": gate_status in VERIFIED_GATES,
+        "is_verified": False,
         "is_labeled_outcome": outcome_class not in {
             "unattempted", "censored_attempt", "operational_failure",
             "awaiting_external_evidence",
@@ -54,15 +65,49 @@ def classify_disposition_inputs(
 
 def _run_directories(artifact_root: Path, problem_number: int) -> list[Path]:
     problem_dir = Path(artifact_root) / f"problem_{problem_number}"
-    if not problem_dir.exists():
+    if problem_dir.is_symlink() or not problem_dir.is_dir():
         return []
-    return sorted(path for path in problem_dir.iterdir() if path.is_dir())
+    return sorted(
+        path for path in problem_dir.iterdir()
+        if not path.is_symlink() and path.is_dir()
+    )
+
+
+def _read_bounded_regular(path: Path, *, max_bytes: int) -> bytes:
+    flags = (
+        os.O_RDONLY
+        | getattr(os, "O_NOFOLLOW", 0)
+        | getattr(os, "O_NONBLOCK", 0)
+    )
+    descriptor = os.open(path, flags)
+    try:
+        metadata = os.fstat(descriptor)
+        if not stat.S_ISREG(metadata.st_mode):
+            raise OSError("path is not a regular file")
+        if metadata.st_size > max_bytes:
+            raise OSError("file exceeds bounded status-reader limit")
+        chunks: list[bytes] = []
+        remaining = max_bytes + 1
+        while remaining:
+            chunk = os.read(descriptor, min(1024 * 1024, remaining))
+            if not chunk:
+                break
+            chunks.append(chunk)
+            remaining -= len(chunk)
+        payload = b"".join(chunks)
+        if len(payload) > max_bytes:
+            raise OSError("file exceeds bounded status-reader limit")
+        return payload
+    finally:
+        os.close(descriptor)
 
 
 def _read_manifest(path: Path) -> dict | None:
     try:
-        value = json.loads(path.read_text(encoding="utf-8"))
-    except (OSError, ValueError, json.JSONDecodeError):
+        value = json.loads(
+            _read_bounded_regular(path, max_bytes=4_000_000).decode("utf-8")
+        )
+    except (OSError, UnicodeDecodeError, ValueError, json.JSONDecodeError):
         return None
     return value if isinstance(value, dict) else None
 
@@ -73,19 +118,14 @@ def has_verified_result(
     *,
     expected_run_contract_id: str | None = None,
 ) -> bool:
-    """Return true only for a matching persisted deterministic verification."""
-    for run_dir in _run_directories(artifact_root, problem_number):
-        manifest = _read_manifest(run_dir / "manifest.json")
-        exact_context = (
-            expected_run_contract_id is None
-            or manifest and manifest.get("run_contract_id") == expected_run_contract_id
-        )
-        if (
-            manifest
-            and exact_context
-            and str(manifest.get("gate", {}).get("status", "")) in VERIFIED_GATES
-        ):
-            return True
+    """Return whether an authoritative release exists for this legacy store.
+
+    Legacy proof-run directories contain no independently authenticated EGMRA
+    release certificate, only caller-writable manifest labels.  They therefore
+    cannot establish a verified result.  Parameters are retained for API
+    compatibility while callers migrate to the release-certificate store.
+    """
+    del artifact_root, problem_number, expected_run_contract_id
     return False
 
 
@@ -93,7 +133,10 @@ def disposition_for_manifest(manifest_path: Path) -> dict:
     """Classify exactly one manifest; never join identity across run dirs."""
     manifest_path = Path(manifest_path)
     run_dir = manifest_path.parent
-    manifest = _read_manifest(manifest_path)
+    if run_dir.is_symlink() or not run_dir.is_dir():
+        manifest = None
+    else:
+        manifest = _read_manifest(manifest_path)
     if manifest is None:
         return {
             "run_dir": str(run_dir),
@@ -106,10 +149,12 @@ def disposition_for_manifest(manifest_path: Path) -> dict:
         }
     problem_number = int(manifest.get("problem_number", 0))
     candidate_path = run_dir / "candidate.md"
-    candidate_text = (
-        candidate_path.read_text(encoding="utf-8", errors="ignore")
-        if candidate_path.is_file() else None
-    )
+    try:
+        candidate_text = _read_bounded_regular(
+            candidate_path, max_bytes=16_000_000,
+        ).decode("utf-8", errors="ignore")
+    except OSError:
+        candidate_text = None
     result = classify_disposition_inputs(
         problem_number=problem_number,
         gate_status=str(manifest.get("gate", {}).get("status", "unknown")),

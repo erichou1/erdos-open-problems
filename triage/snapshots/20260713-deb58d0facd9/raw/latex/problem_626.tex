@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#626}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory, chromatic number, cycles
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $k\geq 4$ and $g_k(n)$ denote the largest $m$ such that there is a graph on $n$ vertices with chromatic number $k$ and girth $&#62;m$ (i.e. contains no cycle of length $\leq m$). Does\[\lim_{n\to \infty}\frac{g_k(n)}{\log n}\]exist? Conversely, if $h^{(m)}(n)$ is the maximal chromatic number of a graph on $n$ vertices with girth $&#62;m$ then does\[\lim_{n\to \infty}\frac{\log h^{(m)}(n)}{\log n}\]exist, and what is its value?
+
+
+
+
+It is known that\[\frac{1}{4\log k}\log n\leq g_k(n) \leq \frac{2}{\log(k-2)}\log n+1,\]the lower bound due to Kostochka \cite{Ko88} and the upper bound to Erd\H{o}s \cite{Er59b}. Erd\H{o}s \cite{Er59b} proved that\[\lim_{n\to \infty}\frac{\log h^{(m)}(n)}{\log n}\gg \frac{1}{m}\]and, for odd $m$,\[\lim_{n\to \infty}\frac{\log h^{(m)}(n)}{\log n}\leq \frac{2}{m+1},\]and conjectured this is sharp. He had no good guess for the value of the limit for even $m$, other that it should lie in $[\frac{2}{m+2},\frac{2}{m}]$, but could not prove this even for $m=4$. See also the entry in the graphs problem collection .
+
+
+
+
+References
+
+[Er59b] Erd\H{o}s, P., Graph theory and probability . Canadian J. Math. (1959), 34-38.
+
+[Ko88] Kostochka, A. V., Upper bounds on the chromatic number of graphs . Trudy Inst. Mat. (Novosibirsk) (1988), 204-226, 265.
+
+\noindent\textbf{Related OEIS sequences:} possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/626}}
+\end{document}

@@ -176,6 +176,102 @@ def test_runner_cold_pass_and_budget_are_consumed_by_production_flow(tmp_path):
     assert result.budget.spent <= result.budget.total
 
 
+@dataclass
+class CyclicProposalWorker:
+    def cold_pass(self, contract, *, budget: float) -> WorkerOutput:
+        return WorkerOutput(bottleneck="dependency validation")
+
+    def work_branch(self, contract, packet, *, branch_id: str, budget: float,
+                    fencing_token: int, branch_slice) -> WorkerOutput:
+        return WorkerOutput(claim_proposals=[
+            {"claim_id": "goal", "canonical_formula": contract.primary_ir.conclusion,
+             "informal_text": contract.primary_ir.conclusion, "dependencies": []},
+            {"claim_id": "lemma-a", "canonical_formula": "A", "informal_text": "A",
+             "dependencies": ["lemma-b"]},
+            {"claim_id": "lemma-b", "canonical_formula": "B", "informal_text": "B",
+             "dependencies": ["lemma-a"]},
+        ])
+
+
+def test_circular_claim_proposal_batch_is_rejected_without_crashing_run(tmp_path):
+    source = b"Prove that for all natural numbers n, n squared is at least 0."
+    result = research(
+        problem_id="cyclic-proposals", source_bytes=source, source_id="fixture",
+        budget=20.0, enforcer=_enforcer(), worker=CyclicProposalWorker(),
+        goal_claim_id="goal", events_path=tmp_path / "events.jsonl",
+        retrieval_corpus=_corpus(), probe_predicate=lambda n: n * n >= 0,
+        status_claims=_current_status("cyclic-proposals"), max_iterations=1,
+    )
+
+    assert "goal" in result.graph.claims
+    assert "lemma-a" not in result.graph.claims
+    assert "lemma-b" not in result.graph.claims
+    assert any(failure.startswith("claim_dependency_cycle_or_unknown:")
+               for failure in result.failures)
+    assert result.certificate is None
+
+
+@dataclass
+class CrashingWorker:
+    def cold_pass(self, contract, *, budget: float) -> WorkerOutput:
+        return WorkerOutput(bottleneck="crash recovery")
+
+    def work_branch(self, contract, packet, *, branch_id: str, budget: float,
+                    fencing_token: int, branch_slice) -> WorkerOutput:
+        raise RuntimeError("simulated worker process died")
+
+
+def test_worker_crash_is_recorded_and_other_branches_remain_schedulable(tmp_path):
+    result = research(
+        problem_id="worker-crash",
+        source_bytes=b"Prove that for all natural numbers n, n squared is at least 0.",
+        source_id="fixture", budget=20.0, enforcer=_enforcer(), worker=CrashingWorker(),
+        goal_claim_id="goal", events_path=tmp_path / "events.jsonl",
+        retrieval_corpus=_corpus(), probe_predicate=lambda n: n * n >= 0,
+        status_claims=_current_status("worker-crash"), max_iterations=3,
+    )
+
+    crashes = [failure for failure in result.failures if failure.startswith("worker_crashed:")]
+    assert len(crashes) >= 2
+    assert any("direct_structural" in failure for failure in crashes)
+    assert result.certificate is None
+    assert result.outcome in {"no_result", "honest_triage_report"}
+
+
+@dataclass
+class MalformedArtifactWorker:
+    def cold_pass(self, contract, *, budget: float) -> WorkerOutput:
+        return WorkerOutput(bottleneck="artifact validation")
+
+    def work_branch(self, contract, packet, *, branch_id: str, budget: float,
+                    fencing_token: int, branch_slice) -> WorkerOutput:
+        return WorkerOutput(
+            claim_proposals=[{
+                "claim_id": "goal", "canonical_formula": contract.primary_ir.conclusion,
+                "informal_text": contract.primary_ir.conclusion, "dependencies": [],
+            }],
+            evidence=[{"kind": "exact_computation"}, "not-an-object"],
+            formal_candidates=[{"claim_id": "goal"}, "not-an-object"],
+        )
+
+
+def test_malformed_evidence_and_formal_artifacts_are_quarantined(tmp_path):
+    result = research(
+        problem_id="malformed-artifacts",
+        source_bytes=b"Prove that for all natural numbers n, n squared is at least 0.",
+        source_id="fixture", budget=20.0, enforcer=_enforcer(),
+        worker=MalformedArtifactWorker(), goal_claim_id="goal",
+        events_path=tmp_path / "events.jsonl", retrieval_corpus=_corpus(),
+        probe_predicate=lambda n: n * n >= 0,
+        status_claims=_current_status("malformed-artifacts"), max_iterations=1,
+    )
+
+    assert not result.graph.evidence
+    assert result.certificate is None
+    assert any(f.startswith("evidence_proposal_malformed:") for f in result.failures)
+    assert any(f.startswith("formal_candidate_malformed:") for f in result.failures)
+
+
 def test_non_positive_budget_is_rejected_before_worker_execution(tmp_path):
     worker = RecordingWorker()
 
@@ -442,6 +538,28 @@ def test_formal_candidate_reaches_lean_but_static_or_mock_result_cannot_promote(
     assert any("formal_verification_failed" in failure for failure in result.failures)
 
 
+class FailingLeanService:
+    def create_environment(self, **_kwargs):
+        raise RuntimeError("simulated unavailable Lean worker")
+
+
+def test_formal_verifier_failure_is_recorded_without_aborting_research(tmp_path):
+    result = research(
+        problem_id="formal-service-failure",
+        source_bytes=b"Prove that for all natural numbers n, n squared is at least 0.",
+        source_id="fixture", budget=20.0, enforcer=_enforcer(),
+        worker=FormalCandidateWorker(), goal_claim_id="goal",
+        events_path=tmp_path / "events.jsonl", retrieval_corpus=_corpus(),
+        probe_predicate=lambda n: n * n >= 0,
+        status_claims=_current_status("formal-service-failure"), max_iterations=1,
+        lean_service=FailingLeanService(), informal_only=False,
+    )
+
+    assert result.certificate is None
+    assert not result.formal_reports
+    assert any(f.startswith("formal_verification_error:") for f in result.failures)
+
+
 def test_authenticated_formal_envelope_is_carried_into_truth_evidence(
     tmp_path, monkeypatch,
 ):
@@ -646,7 +764,9 @@ def test_promoted_scoped_result_has_current_verifiable_release_certificate(tmp_p
     assert len(result.memory.verified_semantic.records) == 1
     assert result.memory.verified_semantic.records[0]["authenticated"] is True
     assert result.outcome == "verified_finite_or_conditional_result"
-    assert result.render()["proof_complete"] is True
+    # A promoted T2 finite/scoped result is reproducible evidence, not a proof
+    # of the universal informal theorem.
+    assert result.render()["proof_complete"] is False
 
     branch_id = next(iter(result.graph.branches))
     result.graph.set_branch_status(

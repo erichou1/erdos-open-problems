@@ -31,6 +31,15 @@ from egmra.orchestrator.runner_worker import (
     WorkerResponseSchemaError,
     parse_worker_response,
 )
+from egmra.orchestrator.triage_source import (
+    TriageSourceError,
+    available_lanes,
+    triage_ranked_problem_ids,
+)
+from egmra.orchestrator.outcome_ledger import (
+    EgmraOutcomeLedger,
+    build_outcome_record,
+)
 
 __all__ = [
     "Checkpoint", "ResumeReport", "resume", "take_checkpoint",
@@ -42,4 +51,6 @@ __all__ = [
     "ResultClassification", "ResultState", "classify_result",
     "RunnerWorker", "StructuredDemoRunner", "WorkerResponseSchemaError",
     "parse_worker_response",
+    "TriageSourceError", "available_lanes", "triage_ranked_problem_ids",
+    "EgmraOutcomeLedger", "build_outcome_record",
 ]

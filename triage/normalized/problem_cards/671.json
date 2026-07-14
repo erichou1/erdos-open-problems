@@ -1,6 +1,6 @@
 {
-  "allocation_context_id": null,
-  "allocation_status": "withheld: model_portfolio must record an exact identity",
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
   "budget": "verified_pipeline_v2:4fc5421244b900bd",
   "budget_config": {
     "browser_channel": "playwright-chromium",
@@ -44,8 +44,8 @@
       "analysis"
     ]
   },
-  "model_portfolio": "chatgpt-ui-unrecorded",
-  "pipeline_version": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
   "posterior": {
     "calibration_status": "uncalibrated_weak_prior_mvp",
     "matching_outcome_records": 0,
@@ -220,7 +220,7 @@
     "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
     "latex_path": "open/individual/problem_671.tex",
     "latex_sha256": "b1427012a214481f9fd51e804f62237928b4e7ef64eb0b0a7a64ea916d122c83",
-    "source_commit": "pipeline-content-sha256:c47624a865d6293e2bc197d23e5c254726607fc551b5044240a65ea44240e6f7",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
     "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
     "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
   },
@@ -261,10 +261,59 @@
     "shared_infrastructure_search",
     "literature_search"
   ],
-  "run_contract": null,
-  "run_contract_id": null,
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "9119d17b1b7a5d563c5f853b046dd5dca058ec44d83f2eb78c180ba290b7a645",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "7f1e0feafaac3c2499a70a873e93f423c7ab2b3f5e900e6c3e0f988b969fd212",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "d9f4a68b640c4bfa1ec60e99eec7ddaf2f49f1a69edda4254352ff76deef1a16",
   "schema_version": 2,
-  "snapshot_id": "20260712-00e292c67dca",
+  "snapshot_id": "20260713-deb58d0facd9",
   "statement": {
     "ambiguity_status": "material",
     "intended": "Given $a_{i}^n\\in [-1,1]$ for all $1\\leq i\\leq n<\\infty$ we define $p_{i}^n$ as the unique polynomial of degree $n-1$ such that $p_{i}^n(a_{i}^n)=1$ and $p_{i}^n(a_{i'}^n)=0$ if $1\\leq i'\\leq n$ with $i\\neq i'$. We similarly define\\[\\mathcal{L}^nf(x) = \\sum_{1\\leq i\\leq n}f(a_i^n)p_i^n(x),\\]the unique polynomial of degree $n-1$ which agrees with $f$ on $a_i^n$ for $1\\leq i\\leq n$ (that is, the sequence of Lagrange interpolation polynomials).\n\nIs there such a sequence of $a_i^n$ such that for every continuous $f:[-1,1]\\to \\mathbb{R}$ there exists some $x\\in [-1,1]$ where\\[\\limsup_{n\\to \\infty} \\sum_{1\\leq i\\leq n}\\lvert p_{i}^n(x)\\rvert=\\infty\\]and yet\\[\\mathcal{L}^nf(x) \\to f(x)?\\]Is there such a sequence such that\\[\\limsup_{n\\to \\infty} \\sum_{1\\leq i\\leq n}\\lvert p_{i}^n(x)\\rvert=\\infty\\]for every $x\\in [-1,1]$ and yet for every continuous $f:[-1,1]\\to \\mathbb{R}$ there exists $x\\in [-1,1]$ with\\[\\mathcal{L}^nf(x) \\to f(x)?\\]",
@@ -278,7 +327,7 @@
     {
       "parent_problem_id": "erdos-671",
       "part_index": 1,
-      "run_contract_id": null,
+      "run_contract_id": "2d223dc486eb1c1d635b0651ccf1a195fb9c2a8f33666970ec0382034cbc3796",
       "schema_version": 2,
       "statement": {
         "focus_question": "Given $a_{i}^n\\in [-1,1]$ for all $1\\leq i\\leq n<\\infty$ we define $p_{i}^n$ as the unique polynomial of degree $n-1$ such that $p_{i}^n(a_{i}^n)=1$ and $p_{i}^n(a_{i'}^n)=0$ if $1\\leq i'\\leq n$ with $i\\neq i'$. We similarly define\\[\\mathcal{L}^nf(x) = \\sum_{1\\leq i\\leq n}f(a_i^n)p_i^n(x),\\]the unique polynomial of degree $n-1$ which agrees with $f$ on $a_i^n$ for $1\\leq i\\leq n$ (that is, the sequence of Lagrange interpolation polynomials). Is there such a sequence of $a_i^n$ such that for every continuous $f:[-1,1]\\to \\mathbb{R}$ there exists some $x\\in [-1,1]$ where\\[\\limsup_{n\\to \\infty} \\sum_{1\\leq i\\leq n}\\lvert p_{i}^n(x)\\rvert=\\infty\\]and yet\\[\\mathcal{L}^nf(x) \\to f(x)?",
@@ -293,7 +342,7 @@
     {
       "parent_problem_id": "erdos-671",
       "part_index": 2,
-      "run_contract_id": null,
+      "run_contract_id": "d3399af9d76f65fdb53e9d926e34ca4e932ceac283ac694b6a748c4026c73912",
       "schema_version": 2,
       "statement": {
         "focus_question": "\\]Is there such a sequence such that\\[\\limsup_{n\\to \\infty} \\sum_{1\\leq i\\leq n}\\lvert p_{i}^n(x)\\rvert=\\infty\\]for every $x\\in [-1,1]$ and yet for every continuous $f:[-1,1]\\to \\mathbb{R}$ there exists $x\\in [-1,1]$ with\\[\\mathcal{L}^nf(x) \\to f(x)?",

@@ -2,8 +2,29 @@ import unittest
 
 from verification import (
     candidate_contract, Review, candidate_status, evaluate_gate,
-    VerificationEvidence,
+    VerificationEvidence, sign_review, sign_verification_evidence,
 )
+
+REVIEW_ENV = {"EGMRA_LEGACY_REVIEW_KEY": "legacy-review-test-key-that-is-at-least-32-bytes"}
+EVIDENCE_ENV = {"EGMRA_LEGACY_EVIDENCE_KEY": "legacy-evidence-test-key-that-is-at-least-32-bytes"}
+TRUST_ENV = REVIEW_ENV | EVIDENCE_ENV
+RUN_ID = "20260713T000000Z-verif01"
+RUN_CONTRACT_ID = "f" * 64
+RUN_CONTEXT_ID = "9" * 64
+
+
+def passing_contract():
+    return candidate_contract("""<result>
+OUTCOME: CANDIDATE_PROVED
+COMPLETENESS_SCORE: 100
+PROOF_CONFIDENCE: 100
+ADVERSARIAL_SURVIVAL_SCORE: 100
+OPEN_GAPS: NONE
+UNCHECKED_IMPORTS: NONE
+CLAIMS_CHECKED: 12
+CLAIMS_TOTAL: 12
+CLAIM_IDS: C1;C2;C3;C4;C5;C6;C7;C8;C9;C10;C11;C12
+</result>""")
 
 REQUIRED_TEST_ROLES = (
     "statement_integrity", "structural_dependency", "logic",
@@ -13,7 +34,7 @@ REQUIRED_TEST_ROLES = (
 
 
 def passing_review(role: str) -> Review:
-    return Review(
+    return sign_review(Review(
         reviewer_id=f"reviewer-{role}",
         reviewer_role=role,
         independent_context=True,
@@ -26,24 +47,73 @@ def passing_review(role: str) -> Review:
         adversarial_survival_score=98,
         adjudicated_outcome=("proved" if role == "adjudicator" else ""),
         context_id=f"context-{role}",
-    )
+        statement_sha256="a" * 64,
+        candidate_sha256="c" * 64,
+        authority_id=f"authority-{role}",
+        model_provider="test-provider",
+        model_name=f"model-{role}",
+        model_version="immutable-v1",
+        model_lineage=f"lineage-{role}",
+        problem_number=1,
+        run_contract_id=RUN_CONTRACT_ID,
+        execution_id=RUN_ID,
+        run_context_id=RUN_CONTEXT_ID,
+    ), env=REVIEW_ENV)
 
 
 def passing_evidence(statement_sha="a" * 64):
-    return VerificationEvidence(
-        kind="expert_review", verifier="expert", statement_sha256=statement_sha,
+    return sign_verification_evidence(VerificationEvidence(
+        kind="exact_computation", verifier="exact-replay", statement_sha256=statement_sha,
         outcome="candidate_proved", artifact_sha256="b" * 64, passed=True,
         candidate_sha256="c" * 64,
-    )
+        verification_method="independent_exact_replay",
+        validator_id="egmra.compute.exact-replay/v1",
+        certificate_sha256="b" * 64,
+        scope_sha256=statement_sha,
+        coverage="complete",
+        statement_fidelity="exact_scope_bound",
+        problem_number=1,
+        run_contract_id=RUN_CONTRACT_ID,
+        execution_id=RUN_ID,
+        run_context_id=RUN_CONTEXT_ID,
+    ), env=EVIDENCE_ENV)
 
 
 class VerificationGateTests(unittest.TestCase):
-    def test_promotes_only_after_all_review_roles_pass(self):
+    def test_signed_metadata_without_materialized_artifact_cannot_promote(self):
         reviews = [passing_review(role) for role in REQUIRED_TEST_ROLES]
         decision = evaluate_gate(
-            "candidate_proved", reviews, verification_evidence=[passing_evidence()]
+            "candidate_proved", reviews, verification_evidence=[passing_evidence()],
+            expected_statement_sha256="a" * 64,
+            expected_candidate_sha256="c" * 64,
+            candidate_contract=passing_contract(),
+            expected_problem_number=1,
+            expected_run_contract_id=RUN_CONTRACT_ID,
+            expected_execution_id=RUN_ID,
+            expected_run_context_id=RUN_CONTEXT_ID,
+            attestation_env=TRUST_ENV,
         )
-        self.assertEqual(decision.status, "verified_proved")
+        self.assertEqual(decision.status, "candidate_rejected")
+        self.assertIn(
+            "no trusted external or mechanical verification evidence",
+            decision.reasons,
+        )
+
+    def test_oversized_numeric_candidate_field_fails_closed_without_raising(self):
+        response = """<result>
+OUTCOME: CANDIDATE_PROVED
+COMPLETENESS_SCORE: %s
+PROOF_CONFIDENCE: 100
+ADVERSARIAL_SURVIVAL_SCORE: 100
+OPEN_GAPS: NONE
+UNCHECKED_IMPORTS: NONE
+CLAIMS_CHECKED: 1
+CLAIMS_TOTAL: 1
+CLAIM_IDS: C1
+</result>""" % ("9" * 5000)
+        contract = candidate_contract(response)
+        self.assertEqual(contract.completeness_score, -1)
+        self.assertFalse(contract.valid_for_promotion)
 
     def test_rejects_a_single_open_gap(self):
         reviews = [
@@ -61,7 +131,7 @@ class VerificationGateTests(unittest.TestCase):
             passing_review("global_synthesis"),
             passing_review("adjudicator"),
         ]
-        decision = evaluate_gate("candidate_proved", reviews)
+        decision = evaluate_gate("candidate_proved", reviews, attestation_env=TRUST_ENV)
         self.assertEqual(decision.status, "candidate_rejected")
         self.assertTrue(any("open gaps" in reason for reason in decision.reasons))
 
@@ -69,14 +139,15 @@ class VerificationGateTests(unittest.TestCase):
         review = Review(
             **{**passing_review("logic").__dict__, "independent_context": False}
         )
-        decision = evaluate_gate("candidate_disproved", [review])
+        decision = evaluate_gate("candidate_disproved", [review], attestation_env=TRUST_ENV)
         self.assertEqual(decision.status, "candidate_rejected")
         self.assertTrue(any("not independent" in reason for reason in decision.reasons))
 
     def test_rejects_wrong_statement_attestation(self):
         reviews = [passing_review(role) for role in REQUIRED_TEST_ROLES]
         decision = evaluate_gate(
-            "candidate_proved", reviews, expected_statement_sha256="expected"
+            "candidate_proved", reviews, expected_statement_sha256="expected",
+            attestation_env=TRUST_ENV,
         )
         self.assertEqual(decision.status, "candidate_rejected")
         self.assertTrue(any("immutable statement" in reason for reason in decision.reasons))
@@ -126,7 +197,7 @@ CLAIM_IDS: C1
 </result>"""
         self.assertFalse(candidate_contract(response).valid_for_promotion)
         reviews = [passing_review(role) for role in REQUIRED_TEST_ROLES]
-        decision = evaluate_gate("candidate_proved", reviews)
+        decision = evaluate_gate("candidate_proved", reviews, attestation_env=TRUST_ENV)
         self.assertIn(
             "no trusted external or mechanical verification evidence",
             decision.reasons,
@@ -138,7 +209,8 @@ CLAIM_IDS: C1
             **{**reviews[-1].__dict__, "adjudicated_outcome": "disproved"}
         )
         decision = evaluate_gate(
-            "candidate_proved", reviews, verification_evidence=[passing_evidence()]
+            "candidate_proved", reviews, verification_evidence=[passing_evidence()],
+            attestation_env=TRUST_ENV,
         )
         self.assertTrue(any("outcome does not match" in r for r in decision.reasons))
 

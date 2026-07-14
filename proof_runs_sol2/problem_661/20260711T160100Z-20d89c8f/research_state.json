@@ -10,26 +10,38 @@
     ]
   },
   "subgoal_graph": {
-    "summary": "{'source': '\\n\\nPasted text\\n\\n', 'status': 'No solution of the pairwise-distinct planar problem is claimed. The literal repetition-allowed syntax has a one-distance witness, but the immutable wording does not determine whether repetitions or overlap are permitted; under the acceptance criteria this semantic fork is a blocking defect.', 'cross_scout_assessment': ['The explicit repeated-point witness, the three-dimensional grid construction, the two-anchor bound, and the fixed-radius incidence lower bound can be checked directly from the supplied arguments; their repetition across reports is not being used as proof.', 'The strongest self-contained planar information supplied is K = \u03a9(n^(2/3)) for pairwise-distinct sets, while the three-dimensional numerical analogue has K = O(n^(2/3)) for every n.', 'Low-degree curves, bounded unions of lines or circles, parallel-line constructions, cyclic symmetry, and naive orthogonal-axis products are rigorously incompatible with the target scale.', 'The square-lattice benchmark depends on a quantitative count of integers represented by a binary positive-definite quadratic form. That arithmetic theorem is asserted but not fully derived in the reports, so it must be proved or introduced with exact hypotheses before being used.', 'Several reports systematically replace sqrt(log n) by log n in necessary-condition calculations. For the locked target K = o(n/sqrt(log n)), the corrected requirements are: average distance multiplicity \u03c9(n sqrt(log n)), a shell of size \u03c9(sqrt(log n)) around every center, isosceles-triple count \u03c9(n^2 sqrt(log n)), and equal-distance energy \u03c9(n^3 sqrt(log n)).', 'The reports disagree in emphasis rather than in proved conclusions: lattice searches favor arithmetic norm forms; the algebraic-module report proposes a genuinely new high-rank norm mechanism; the matrix reports emphasize low centered rank and Euclidean realizability; and the bisector reports emphasize partial reflection symmetries. These branches should remain separate until one produces a certified lemma.'], 'branch_ranking': [{'rank': 1, 'branch': 'Variable binary quadratic forms and translated lattice cosets', 'assessment': 'Best mathematical fit and easiest to falsify computationally. It directly targets the known norm-collision mechanism, but all finite evidence currently points to only constant-factor changes.'}, {'rank': 2, 'branch': 'Weighted perpendicular-bisector and radial-support lower bounds', 'assessment': 'Highest centrality for a negative result. It exploits interactions among all distance classes, which single-radius incidence bounds discard, but the required improvement from O(n^(7/3)) to O(n^2 sqrt(log n)) is substantial.'}, {'rank': 3, 'branch': 'High-rank algebraic modules and relative norm maps', 'assessment': 'Most novel construction branch and substantively different from planar lattices. Its decisive obligations are uniform norm-value estimates, field-dependent constants, injectivity, and all-n interpolation.'}, {'rank': 4, 'branch': 'Few-symbol Euclidean distance matrices', 'assessment': 'Highly falsifiable at small parameters and capable of discovering nonlattice configurations. Centered rank at most two is only a filter; positive-definite Euclidean compatibility is the main unresolved obstruction.'}, {'rank': 5, 'branch': 'Energy-only lower bounds', 'assessment': 'A clean universal bound E = O(n^3 sqrt(log n)) would settle the distinct planar question negatively, but radial distributions may be too uneven for a second-moment estimate alone. It should be coupled to a multiscale support theorem.'}]}",
+    "summary": "Revised portfolio plan for STATEMENT_SHA256 1a1d20a3dee71f7bdc92834c48238b40d7d273fd322f3d71771e35966a2596cc. The terminal status is necessarily BLOCKED because the immutable wording does not determine whether repetitions, cross-overlap, or pairwise distinctness are intended. The literal repetition-allowed tuple version is affirmative, while the internally-distinct overlapping and pairwise-disjoint planar versions remain unresolved. The same numerical question in R^3 has a direct all-n lattice construction. The prior energy and perpendicular-bisector universal upper-bound proposals are removed from the negative portfolio and replaced by explicit checkerboard-lattice falsification tasks. The two selected construction branches are variable positive-definite binary quadratic forms and explicit multiquadratic CM norm boxes; the principal independent negative branch is a Euclidean-realizable matrix-alphabet theorem. Exact semialgebraic computation is retained only for finite falsification. No solution of the substantive planar problem or of F=o(f) is claimed. Source artifact: \n\nPasted text\n\n",
     "bottleneck_ids": [
       "SEMANTIC_FORK",
-      "QUADRATIC_FORM_BRANCH",
-      "ALGEBRAIC_NORM_BRANCH",
-      "EUCLIDEAN_MATRIX_BRANCH",
-      "RADIAL_SUPPORT_BRANCH",
-      "F_VS_f_BRANCH"
+      "FAL_ENERGY_GRID",
+      "FAL_BISECTOR_GRID",
+      "QF_COMPRESSION",
+      "CM_NORM_COMPRESSION",
+      "MATRIX_ALPHABET_BOUND",
+      "RADIAL_SUPPORT_DICHOTOMY",
+      "F_OVER_f",
+      "GOAL"
     ],
     "subgoals": [
       {
-        "id": "SEMANTIC_FORK",
-        "claim": "Separate and adjudicate the three inequivalent conventions permitted by the wording: repetitions allowed; each list internally distinct but possibly overlapping; and all 2n points pairwise distinct. Do not transfer a conclusion between conventions without proof.",
+        "id": "STATEMENT_LOCK",
+        "claim": "Preserve verbatim the immutable statement and SHA-256 1a1d20a3dee71f7bdc92834c48238b40d7d273fd322f3d71771e35966a2596cc; no later node may insert a distinctness convention into the locked text.",
         "dependencies": [],
+        "centrality": 5,
+        "falsifiable": false
+      },
+      {
+        "id": "SEMANTIC_FORK",
+        "claim": "Formally separate three inequivalent planar quantities: T_2(n) for labelled tuples with repetitions allowed, O_2(n) for two internally distinct n-point sets that may overlap, and D_2(n) for two disjoint n-point sets; define D_2(0)=0. Record that the immutable wording does not select among them.",
+        "dependencies": [
+          "STATEMENT_LOCK"
+        ],
         "centrality": 5,
         "falsifiable": true
       },
       {
-        "id": "THRESHOLD_LEDGER",
-        "claim": "Formalize the locked asymptotic as F_2(n) = o(n/sqrt(log n)) and verify every derived threshold against this denominator, correcting all occurrences where the scouts used log n instead of sqrt(log n).",
+        "id": "TUPLE_LITERAL_EVALUATION",
+        "claim": "For every n, prove T_2(n)=1 by taking all x_i equal to one point and all y_j equal to a second point; verify directly that 1=o(n/sqrt(log n)). This resolves only the literal repetition-allowed branch.",
         "dependencies": [
           "SEMANTIC_FORK"
         ],
@@ -37,133 +49,767 @@
         "falsifiable": true
       },
       {
-        "id": "PLANAR_BASELINES",
-        "claim": "Under each distinctness convention, certify the two-anchor bound and the fixed-radius incidence argument, including treatment of distance zero, to obtain the strongest currently justified universal planar lower bound K = \u03a9(n^(2/3)).",
+        "id": "O2_MODEL",
+        "claim": "Define O_2(n) using internally distinct X and Y with |X|=|Y|=n but permitting X\u2229Y\u2260\u2205, including zero among the possible cross-distances exactly when the sets overlap.",
         "dependencies": [
-          "THRESHOLD_LEDGER"
+          "SEMANTIC_FORK"
         ],
         "centrality": 4,
         "falsifiable": true
       },
       {
-        "id": "THREEDIMENSIONAL_BRANCH",
-        "claim": "For the interpretation asking for the same numerical bound in R^3, give an all-n construction with 2n pairwise-distinct points and O(n^(2/3)) cross-distances, and separately record that this does not by itself resolve an F_3 = o(f_3) comparison.",
+        "id": "D2_MODEL",
+        "claim": "Define D_2(n) using disjoint n-point sets X,Y\u2282R^2, so all 2n points are pairwise distinct, and formulate the substantive target as D_2(n)=o(n/sqrt(log n)).",
         "dependencies": [
-          "SEMANTIC_FORK",
-          "THRESHOLD_LEDGER"
-        ],
-        "centrality": 3,
-        "falsifiable": true
-      },
-      {
-        "id": "ARITHMETIC_BENCHMARK",
-        "claim": "Prove, with exact hypotheses, the required upper and lower estimates for norm values in balanced square or checkerboard lattice boxes, so that the asserted \u0398(n/sqrt(log n)) benchmark is available as a proved lemma rather than an imported heuristic.",
-        "dependencies": [
-          "THRESHOLD_LEDGER",
-          "PLANAR_BASELINES"
-        ],
-        "centrality": 4,
-        "falsifiable": true
-      },
-      {
-        "id": "COMPUTATIONAL_HARNESS",
-        "claim": "Build exact finite tests that use integer or algebraic coefficient representations, quotient by row, column, color, and Euclidean symmetries, and reject candidates using two-anchor multiplicities, centered-rank constraints, and exact Euclidean realization equations.",
-        "dependencies": [
-          "PLANAR_BASELINES"
-        ],
-        "centrality": 3,
-        "falsifiable": true
-      },
-      {
-        "id": "QUADRATIC_FORM_BRANCH",
-        "claim": "Establish or refute the existence of positive-definite binary quadratic forms Q_m, possibly with rational translations or congruence-restricted difference boxes, for which a balanced m by m parameter box produces o(m^2/sqrt(log m)) distinct values while retaining \u0398(m^2) distinct planar points.",
-        "dependencies": [
-          "ARITHMETIC_BENCHMARK",
-          "COMPUTATIONAL_HARNESS"
+          "SEMANTIC_FORK"
         ],
         "centrality": 5,
         "falsifiable": true
       },
       {
-        "id": "ALGEBRAIC_NORM_BRANCH",
-        "claim": "Establish or refute a family of conjugation-stable number fields K_d and injective coefficient boxes B_L subset K_d for which the relative norm set {z conjugate(z): z in B_L-B_L-tau} has size o(L^(2d)/sqrt(2d log L)); in a bound C_d L^(2d)/sqrt(log L), this requires C_d sqrt(d) tending to zero together with uniform onset control.",
+        "id": "RATIO_OBLIGATIONS",
+        "claim": "State the little-o obligations separately for T_2, O_2, and D_2. A disjoint affirmative construction transfers to O_2, but a lower bound for D_2 does not imply the same lower bound for O_2. No comparison with f_2 is permitted without independent estimates for f_2.",
         "dependencies": [
-          "THRESHOLD_LEDGER",
-          "COMPUTATIONAL_HARNESS"
-        ],
-        "centrality": 4,
-        "falsifiable": true
-      },
-      {
-        "id": "EUCLIDEAN_MATRIX_BRANCH",
-        "claim": "Establish or refute the existence of k-symbol n by n matrices with k = o(n/sqrt(log n)) whose doubly centered matrix has rank at most two and which satisfy all positive-definite Euclidean compatibility and point-distinctness equations.",
-        "dependencies": [
-          "PLANAR_BASELINES",
-          "COMPUTATIONAL_HARNESS"
-        ],
-        "centrality": 4,
-        "falsifiable": true
-      },
-      {
-        "id": "BISECTOR_STRUCTURE_BRANCH",
-        "claim": "Using the exact identity between isosceles triples and weighted incidences on perpendicular bisectors, prove a structural dichotomy for configurations with K much smaller than n: either obtain T(X,Y) = O(n^2 sqrt(log n)), or force quantitatively organized partial reflection axes stronger than the mere existence of lines containing \u03a9(n/K) points.",
-        "dependencies": [
-          "THRESHOLD_LEDGER",
-          "PLANAR_BASELINES"
+          "TUPLE_LITERAL_EVALUATION",
+          "O2_MODEL",
+          "D2_MODEL"
         ],
         "centrality": 5,
         "falsifiable": true
       },
       {
-        "id": "RADIAL_SUPPORT_BRANCH",
-        "claim": "Establish or refute a multiscale radial-support theorem strong enough to imply K = \u03a9(n/sqrt(log n)); a sufficient but potentially overstrong target is the universal equal-distance energy bound E(X,Y) = O(n^3 sqrt(log n)).",
+        "id": "OVERLAP_DECOMPOSITION",
+        "claim": "For internally distinct X,Y with t=|X\u2229Y|, delete X\u2229Y to obtain disjoint sets of size n-t whose distance alphabet is contained in, but need not equal, the original alphabet. Treat t=n using D_2(0)=0 and do not infer a negative transfer from D_2 to O_2.",
         "dependencies": [
-          "BISECTOR_STRUCTURE_BRANCH",
-          "ARITHMETIC_BENCHMARK"
-        ],
-        "centrality": 5,
-        "falsifiable": true
-      },
-      {
-        "id": "ALL_N_INTERPOLATION",
-        "claim": "Prove the exact monotonicity and interpolation lemma needed to convert constructions on a subsequence N_t into constructions for every sufficiently large n, explicitly quantifying the permitted growth of N_(t+1)/N_t and preserving the little-o estimate.",
-        "dependencies": [
-          "SEMANTIC_FORK",
-          "THRESHOLD_LEDGER"
+          "O2_MODEL",
+          "D2_MODEL"
         ],
         "centrality": 3,
         "falsifiable": true
       },
       {
-        "id": "F_VS_f_BRANCH",
-        "claim": "Treat F = o(f) as a separate subproblem: define F and f under matching distinctness conventions, prove the unconditional comparison F(2n) <= f(2n), and determine which proved upper or lower bounds on f are necessary for either asymptotic implication.",
+        "id": "DENSE_SUBSEQUENCE_LEMMA",
+        "claim": "Let constructions exist at increasing sizes N_t. For each n choose the least N_t\u2265n and delete points down to n. Prove K(n)/(n/sqrt(log n))\u2264K(N_t)/(N_t/sqrt(log N_t))\nsqrt(log n/log N_t). Conclude all-large-n interpolation when the construction ratios tend to zero and the successive-size ratios are uniformly bounded.",
         "dependencies": [
-          "SEMANTIC_FORK",
-          "THRESHOLD_LEDGER",
-          "ARITHMETIC_BENCHMARK"
+          "D2_MODEL"
         ],
         "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "R3_GRID_CONSTRUCTION",
+        "claim": "For every n choose 2n distinct points from an integer cube of side ceil((2n)^(1/3)) in R^3 and split them into two n-point sets. Prove that all squared cross-distances are integers at most 3(ceil((2n)^(1/3))-1)^2, giving O(n^(2/3))=o(n/sqrt(log n)) distinct distances.",
+        "dependencies": [
+          "D2_MODEL"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "ARC_PERTURBATION_LEMMA",
+        "claim": "For the cyclic-arc multigraph obtained from incidences between points and equal-radius circles, prove a local perturbation lemma handling tangencies, adjacent arcs, incidence vertices, coincident local arc segments, and multiple nonvertex concurrences. The perturbation must preserve the abstract incidence graph, produce a good drawing, and create only O(1) crossings for each pair of source circles.",
+        "dependencies": [],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "CROSSING_LEMMA_PACKAGE",
+        "claim": "Derive the simple-graph crossing lemma from Euler's planar edge bound, explicitly treating graphs with fewer than three vertices. Start with a fixed crossing-minimal good drawing, sample vertices independently, let Z count crossings surviving in the inherited drawing, use Z\u2265cr(G_p)\u2265e(G_p)-3v(G_p), and use E[Z]=p^4 cr(G); never assert E[cr(G_p)]=p^4 cr(G).",
+        "dependencies": [],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "FIXED_RADIUS_INCIDENCE",
+        "claim": "Using ARC_PERTURBATION_LEMMA and CROSSING_LEMMA_PACKAGE, prove from first principles that incidences between n points and n distinct equal-radius circles are O(n^(4/3)), with all edge-multiplicity and low-incidence-circle cases checked.",
+        "dependencies": [
+          "D2_MODEL",
+          "ARC_PERTURBATION_LEMMA",
+          "CROSSING_LEMMA_PACKAGE"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "PLANAR_LOWER_2_3",
+        "claim": "Sum FIXED_RADIUS_INCIDENCE over the K used positive radii to prove D_2(n)=Omega(n^(2/3)); adapt separately to O_2(n) after removing at most n zero-distance pairs. Do not present this as a threshold-level obstruction.",
+        "dependencies": [
+          "FIXED_RADIUS_INCIDENCE"
+        ],
+        "centrality": 3,
+        "falsifiable": true
+      },
+      {
+        "id": "CHECKERBOARD_MODEL",
+        "claim": "For even q, define X and Y as the two parity classes of the q\u00d7q integer grid, each of size n=q^2/2. Prove exactly that the squared cross-distance alphabet is {a^2+b^2: |a|,|b|\u2264q-1 and a+b odd}, including realization of every listed difference vector.",
+        "dependencies": [
+          "D2_MODEL"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "FAL_ENERGY_GRID",
+        "claim": "Using CHECKERBOARD_MODEL, give a complete first-principles count proving E_dist(X,Y)=sum_s R_s^2\u2265c n^3 log n along an infinite sequence of even q. This refutes the proposed universal estimate E_dist=O(n^3 sqrt(log n)); until this lower bound is proved, quarantine rather than reuse the energy proposal.",
+        "dependencies": [
+          "CHECKERBOARD_MODEL"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "FAL_BISECTOR_GRID",
+        "claim": "Using the same parity-split grids, give a complete first-principles count proving that the isosceles or perpendicular-bisector triple count T(X,Y) is at least c n^2 log n along an infinite sequence. This refutes the proposed universal estimate T=O(n^2 sqrt(log n)); until proved, quarantine rather than reuse the bisector proposal.",
+        "dependencies": [
+          "CHECKERBOARD_MODEL"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "QUARANTINE_FALSE_NEGATIVE_ROUTES",
+        "claim": "After FAL_ENERGY_GRID and FAL_BISECTOR_GRID are established, remove the corresponding universal energy and bisector upper bounds from every negative sufficiency chain. Preserve them only as falsified candidate mechanisms and as evidence that second-moment bounds alone are too coarse.",
+        "dependencies": [
+          "FAL_ENERGY_GRID",
+          "FAL_BISECTOR_GRID"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "QF_COMPRESSION",
+        "claim": "First-ranked construction branch: construct a sequence of positive-definite binary quadratic forms Q_t and balanced lattice or coset difference boxes supporting n_t points per side such that the number of values Q_t(u,v) is o(n_t/sqrt(log n_t)). Check positivity, injective point realization, disjointness, exact value counting, coefficient dependence on t, and all-n transfer through DENSE_SUBSEQUENCE_LEMMA.",
+        "dependencies": [
+          "CHECKERBOARD_MODEL",
+          "DENSE_SUBSEQUENCE_LEMMA"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "CM_FIELD_MODEL",
+        "claim": "Restore the algebraic construction exactly with K_r=Q(i,sqrt(p_1),...,sqrt(p_r)) for distinct positive primes. Use the rational basis e_(epsilon,S)=i^epsilon product_(j in S)sqrt(p_j). Verify e_(epsilon,S)e_(eta,T)=(-1)^(epsilon eta)(product_(j in S\u2229T)p_j)e_(epsilon xor eta,S triangle T). Define coefficient boxes B_L and choose tau in K_r outside B_L-B_L so B_L and B_L+tau are disjoint.",
+        "dependencies": [
+          "D2_MODEL"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "CM_NORM_COMPRESSION",
+        "claim": "Second-ranked, substantively different construction branch: for the explicit fields and bases in CM_FIELD_MODEL, seek uniform bounds on |{z conjugate(z): z in (B_L-B_L)-tau}| that give o(|B_L|/sqrt(log |B_L|)). Control dependence on r, the primes, basis coefficients, denominators, discriminant, translation, onset L_0(r), and interpolation to every large n. Retain rank-at-most-twice-field-degree only as a dimension lemma, with no unsupported inference about fiber sizes.",
+        "dependencies": [
+          "CM_FIELD_MODEL",
+          "DENSE_SUBSEQUENCE_LEMMA"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "EUCLIDEAN_MATRIX_MODEL",
+        "claim": "Give a checkable semialgebraic criterion for a K-symbol matrix M to be a planar cross-squared-distance matrix. Set p_1=q_1=0; introduce vectors z,p_2,...,p_n,q_2,...,q_n through a symmetric positive-semidefinite Gram matrix of rank at most two; express M_ij as the squared norm of z+p_i-q_j; impose distinct symbol values, internal distinctness via nonzero squared norms, and for D_2 impose every cross squared norm nonzero.",
+        "dependencies": [
+          "O2_MODEL",
+          "D2_MODEL"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "MATRIX_ALPHABET_BOUND",
+        "claim": "Principal surviving negative branch: prove a universal theorem for Euclidean-realizable matrices from EUCLIDEAN_MATRIX_MODEL implying K\u2265c n/sqrt(log n), equivalently an estimate such as n\u2264C K sqrt(log n) in the range secured by PLANAR_LOWER_2_3. The proof must use the positive-semidefinite Euclidean compatibility, not rank at most four alone.",
+        "dependencies": [
+          "EUCLIDEAN_MATRIX_MODEL",
+          "PLANAR_LOWER_2_3"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "RATIO_NEGATIVE_SUFFICIENCY",
+        "claim": "For each of T_2, O_2, and D_2 separately, state that a proved universal lower bound c n/sqrt(log n) negates the corresponding little-o assertion. For D_2, MATRIX_ALPHABET_BOUND is the retained conditional route. No conclusion in this node may depend on the falsified energy or bisector proposals, and a D_2 lower bound must not be transferred negatively to O_2.",
+        "dependencies": [
+          "RATIO_OBLIGATIONS",
+          "MATRIX_ALPHABET_BOUND",
+          "QUARANTINE_FALSE_NEGATIVE_ROUTES"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "RADIAL_SUPPORT_DICHOTOMY",
+        "claim": "Develop an independent structural branch that bounds the number of occupied norm shells of X-Y rather than only its second moment. Seek a proved dichotomy isolating lattice or generalized-progressive behavior and cyclic or cocircular behavior, with a quantitative conclusion at the n/sqrt(log n) threshold. It must accommodate CHECKERBOARD_MODEL and may not invoke the falsified universal energy or bisector bounds.",
+        "dependencies": [
+          "PLANAR_LOWER_2_3",
+          "CHECKERBOARD_MODEL",
+          "QUARANTINE_FALSE_NEGATIVE_ROUTES"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "FINITE_FALSIFICATION_ONLY",
+        "claim": "For fixed n and K, enumerate K-symbol patterns modulo row, column, and symbol permutations; introduce ordered nonnegative symbol variables; impose the full Gram system from EUCLIDEAN_MATRIX_MODEL, rank-at-most-two polynomial conditions, and all strict distinctness constraints; decide feasibility by exact real quantifier elimination or certified algebraic methods. Use results only to reject named finite candidates, never to infer an all-large-n conclusion.",
+        "dependencies": [
+          "EUCLIDEAN_MATRIX_MODEL"
+        ],
+        "centrality": 3,
+        "falsifiable": true
+      },
+      {
+        "id": "F_OVER_f",
+        "claim": "Treat F=o(f) as a separate problem under each distinctness convention. Establish only the elementary containment D_2(n)\u2264f_2(2n) after balanced partitioning. Require independent asymptotic upper and lower bounds for f_2 before deriving either direction of comparison; do not infer F=o(f) from a solution of the numerical cross-distance question alone.",
+        "dependencies": [
+          "RATIO_OBLIGATIONS",
+          "OVERLAP_DECOMPOSITION"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "BRANCH_PORTFOLIO",
+        "claim": "Rank the active branches as follows: (1) QF_COMPRESSION, highest geometric fit and easiest exact falsification; (2) CM_NORM_COMPRESSION, highest structural novelty and information gain but largest uniformity burden; (3) MATRIX_ALPHABET_BOUND, strongest independent negative route; (4) RADIAL_SUPPORT_DICHOTOMY, broader but less immediately falsifiable. Use FINITE_FALSIFICATION_ONLY to prune all branches. Preserve contradictory checkerboard evidence rather than averaging scout agreement.",
+        "dependencies": [
+          "QF_COMPRESSION",
+          "CM_NORM_COMPRESSION",
+          "MATRIX_ALPHABET_BOUND",
+          "RADIAL_SUPPORT_DICHOTOMY",
+          "FINITE_FALSIFICATION_ONLY",
+          "QUARANTINE_FALSE_NEGATIVE_ROUTES"
+        ],
+        "centrality": 5,
         "falsifiable": true
       },
       {
         "id": "GOAL",
-        "claim": "Produce a final adjudication of every locked component without changing quantifiers: record the outcome under each distinctness convention, resolve the planar pairwise-distinct question by either a certified construction or a uniform lower bound, include the R^3 outcome, and separately resolve or explicitly isolate the F = o(f) question.",
+        "claim": "Terminal adjudication: BLOCKED. The immutable statement has an unresolved semantic fork. The literal tuple version is affirmative; the pairwise-disjoint and internally-distinct overlapping planar versions are not proved or disproved; the same-bound R^3 version is affirmative; F=o(f) remains separate and unresolved. The genuine threshold bottlenecks are QF_COMPRESSION, CM_NORM_COMPRESSION, MATRIX_ALPHABET_BOUND, and RADIAL_SUPPORT_DICHOTOMY, while the energy and bisector proposals are retained only as falsification targets. No solution is claimed.",
         "dependencies": [
           "SEMANTIC_FORK",
-          "THREEDIMENSIONAL_BRANCH",
-          "QUADRATIC_FORM_BRANCH",
-          "ALGEBRAIC_NORM_BRANCH",
-          "EUCLIDEAN_MATRIX_BRANCH",
-          "RADIAL_SUPPORT_BRANCH",
-          "ALL_N_INTERPOLATION",
-          "F_VS_f_BRANCH"
+          "TUPLE_LITERAL_EVALUATION",
+          "O2_MODEL",
+          "D2_MODEL",
+          "R3_GRID_CONSTRUCTION",
+          "RATIO_NEGATIVE_SUFFICIENCY",
+          "F_OVER_f",
+          "BRANCH_PORTFOLIO"
         ],
         "centrality": 5,
         "falsifiable": false
       }
     ]
   },
-  "attempts": [],
+  "attempts": [
+    {
+      "attempt": 1,
+      "candidate_outcome": "candidate_unclassified",
+      "candidate_sha256": "0d55f97595cd8d74b629d84e13aeda178c03a25c4c75b0f2908837e800360dd6",
+      "gate_status": "candidate_rejected",
+      "gate_reasons": [
+        "candidate has no proof or disproof claim",
+        "candidate result contract is incomplete or internally inconsistent",
+        "no trusted external or mechanical verification evidence",
+        "missing independent review roles: counterexample, logic, mechanical_evidence, statement_integrity, structural_dependency, theorem_hypotheses",
+        "one or more reviews lack context provenance",
+        "review contexts are not unique",
+        "review statement_integrity-1 is not independent",
+        "review statement_integrity-1 did not pass",
+        "review statement_integrity-1 did not check every claim",
+        "review statement_integrity-1 used a claim count inconsistent with the candidate",
+        "review statement_integrity-1 reports material errors",
+        "review statement_integrity-1 did not attest to the immutable statement",
+        "review statement_integrity-1 completeness below 98",
+        "review statement_integrity-1 confidence below 95",
+        "review statement_integrity-1 adversarial survival below 95",
+        "review structural_dependency-1 is not independent",
+        "review structural_dependency-1 did not pass",
+        "review structural_dependency-1 did not check every claim",
+        "review structural_dependency-1 used a claim count inconsistent with the candidate",
+        "review structural_dependency-1 reports material errors",
+        "review structural_dependency-1 did not attest to the immutable statement",
+        "review structural_dependency-1 completeness below 98",
+        "review structural_dependency-1 confidence below 95",
+        "review structural_dependency-1 adversarial survival below 95",
+        "review logic-1 is not independent",
+        "review logic-1 did not pass",
+        "review logic-1 did not check every claim",
+        "review logic-1 used a claim count inconsistent with the candidate",
+        "review logic-1 reports material errors",
+        "review logic-1 did not attest to the immutable statement",
+        "review logic-1 completeness below 98",
+        "review logic-1 confidence below 95",
+        "review logic-1 adversarial survival below 95",
+        "review counterexample-1 is not independent",
+        "review counterexample-1 did not pass",
+        "review counterexample-1 did not check every claim",
+        "review counterexample-1 used a claim count inconsistent with the candidate",
+        "review counterexample-1 reports material errors",
+        "review counterexample-1 did not attest to the immutable statement",
+        "review counterexample-1 completeness below 98",
+        "review counterexample-1 confidence below 95",
+        "review counterexample-1 adversarial survival below 95",
+        "review theorem_hypotheses-1 is not independent",
+        "review theorem_hypotheses-1 did not pass",
+        "review theorem_hypotheses-1 did not check every claim",
+        "review theorem_hypotheses-1 used a claim count inconsistent with the candidate",
+        "review theorem_hypotheses-1 reports material errors",
+        "review theorem_hypotheses-1 did not attest to the immutable statement",
+        "review theorem_hypotheses-1 completeness below 98",
+        "review theorem_hypotheses-1 confidence below 95",
+        "review theorem_hypotheses-1 adversarial survival below 95",
+        "review mechanical_evidence-1 is not independent",
+        "review mechanical_evidence-1 did not pass",
+        "review mechanical_evidence-1 did not check every claim",
+        "review mechanical_evidence-1 used a claim count inconsistent with the candidate",
+        "review mechanical_evidence-1 reports material errors",
+        "review mechanical_evidence-1 did not attest to the immutable statement",
+        "review mechanical_evidence-1 completeness below 98",
+        "review mechanical_evidence-1 confidence below 95",
+        "review mechanical_evidence-1 adversarial survival below 95",
+        "review global_synthesis-1 did not pass",
+        "review global_synthesis-1 did not check every claim",
+        "review global_synthesis-1 used a claim count inconsistent with the candidate",
+        "review global_synthesis-1 reports material errors",
+        "review global_synthesis-1 did not attest to the immutable statement",
+        "review global_synthesis-1 completeness below 98",
+        "review global_synthesis-1 confidence below 95",
+        "review global_synthesis-1 adversarial survival below 95",
+        "review adjudicator-1 did not pass",
+        "review adjudicator-1 used a claim count inconsistent with the candidate",
+        "review adjudicator-1 did not attest to the complete claim ledger",
+        "review adjudicator-1 reports open gaps",
+        "review adjudicator-1 reports unchecked imports",
+        "review adjudicator-1 reports material errors",
+        "review adjudicator-1 completeness below 98",
+        "review adjudicator-1 confidence below 95",
+        "review adjudicator-1 adversarial survival below 95",
+        "review adjudicator-1 outcome does not match the candidate"
+      ],
+      "regulator": {
+        "decision": "REVISE_PLAN",
+        "rationale": "The rejection is not caused mainly by repairable local execution errors. The current DAG does not provide a valid route to the locked GOAL. SEMANTIC_FORK cannot be adjudicated from the immutable wording under the rule that ambiguity is blocking, yet the GOAL assumes that every convention can be resolved. Several central nodes merely restate the unresolved existence question as 'establish or refute' a broad construction family, rather than supplying dependencies whose discharge would imply the conclusion. COMPUTATIONAL_HARNESS is also too weak to decide an all-large-n asymptotic statement without an accompanying uniform theorem. F_VS_f_BRANCH proves only an elementary comparison and conditional implications, not the requested ratio. The tuple-versus-set inconsistency and the C9/C10 defects are locally repairable, but repairing them would still leave the plan unable to meet the acceptance criteria.",
+        "broken_node_ids": [
+          "SEMANTIC_FORK",
+          "COMPUTATIONAL_HARNESS",
+          "QUADRATIC_FORM_BRANCH",
+          "ALGEBRAIC_NORM_BRANCH",
+          "EUCLIDEAN_MATRIX_BRANCH",
+          "BISECTOR_STRUCTURE_BRANCH",
+          "RADIAL_SUPPORT_BRANCH",
+          "F_VS_f_BRANCH",
+          "GOAL"
+        ],
+        "new_constraints": [
+          "Treat the distinctness ambiguity as a terminal statement-integrity obstruction. Do not claim that proof search can resolve which convention the immutable wording intends.",
+          "Define three different extremal quantities with correct domains: indexed tuples for repetitions, internally distinct sets with possible overlap, and disjoint n-point sets. Do not use one set-based definition for all conventions.",
+          "Do not preserve a GOAL requiring simultaneous resolution of ambiguous conventions. The revised plan must first certify that the locked acceptance criteria are formally unattainable without clarification, or receive an externally fixed convention.",
+          "If a distinct-point convention is externally fixed, replace each broad 'establish or refute existence' node by a concrete sufficient lemma with explicit hypotheses, conclusion, and a checked implication to either K=o(n/sqrt(log n)) or K=Omega(n/sqrt(log n)).",
+          "Do not treat finite computation as evidence for an all-large-n conclusion unless it is paired with a proved reduction, finite-obstruction theorem, recurrence, or compactness argument giving uniform control.",
+          "Treat F=o(f) as an independent target. The inequality F(n)<=f(2n) and conditional growth comparisons are not sufficient; a revised branch must directly control the ratio or prove hypotheses that force it.",
+          "Before reusing the planar baseline, repair all local hypotheses: state the two-anchor claim separately for n=1 and n>=2; use a correct crossing-lemma sampling probability; handle induced graphs with fewer than three vertices; state the good-drawing assumptions; and justify perturbation of multiple circle intersections.",
+          "Do not report completeness or absence of unchecked imports while any central dependency remains aspirational, unresolved, or supported only by a proposed search."
+        ]
+      }
+    },
+    {
+      "attempt": 2,
+      "candidate_outcome": "candidate_unclassified",
+      "candidate_sha256": "ce86be2967f20bac4ec2d3b112b0333446c9d52a42bee14db27e7135d332d483",
+      "gate_status": "candidate_rejected",
+      "gate_reasons": [
+        "candidate has no proof or disproof claim",
+        "candidate result contract is incomplete or internally inconsistent",
+        "no trusted external or mechanical verification evidence",
+        "review statement_integrity-2 did not pass",
+        "review statement_integrity-2 did not check every claim",
+        "review statement_integrity-2 used a claim count inconsistent with the candidate",
+        "review statement_integrity-2 reports material errors",
+        "review statement_integrity-2 did not attest to the immutable statement",
+        "review statement_integrity-2 completeness below 98",
+        "review statement_integrity-2 confidence below 95",
+        "review statement_integrity-2 adversarial survival below 95",
+        "review structural_dependency-2 did not pass",
+        "review structural_dependency-2 did not check every claim",
+        "review structural_dependency-2 used a claim count inconsistent with the candidate",
+        "review structural_dependency-2 reports material errors",
+        "review structural_dependency-2 did not attest to the immutable statement",
+        "review structural_dependency-2 completeness below 98",
+        "review structural_dependency-2 confidence below 95",
+        "review structural_dependency-2 adversarial survival below 95",
+        "review logic-2 did not pass",
+        "review logic-2 did not check every claim",
+        "review logic-2 used a claim count inconsistent with the candidate",
+        "review logic-2 reports material errors",
+        "review logic-2 did not attest to the immutable statement",
+        "review logic-2 completeness below 98",
+        "review logic-2 confidence below 95",
+        "review logic-2 adversarial survival below 95",
+        "review counterexample-2 did not pass",
+        "review counterexample-2 did not check every claim",
+        "review counterexample-2 used a claim count inconsistent with the candidate",
+        "review counterexample-2 reports material errors",
+        "review counterexample-2 did not attest to the immutable statement",
+        "review counterexample-2 completeness below 98",
+        "review counterexample-2 confidence below 95",
+        "review counterexample-2 adversarial survival below 95",
+        "review theorem_hypotheses-2 did not pass",
+        "review theorem_hypotheses-2 did not check every claim",
+        "review theorem_hypotheses-2 used a claim count inconsistent with the candidate",
+        "review theorem_hypotheses-2 reports material errors",
+        "review theorem_hypotheses-2 did not attest to the immutable statement",
+        "review theorem_hypotheses-2 completeness below 98",
+        "review theorem_hypotheses-2 confidence below 95",
+        "review theorem_hypotheses-2 adversarial survival below 95",
+        "review mechanical_evidence-2 did not pass",
+        "review mechanical_evidence-2 did not check every claim",
+        "review mechanical_evidence-2 used a claim count inconsistent with the candidate",
+        "review mechanical_evidence-2 reports material errors",
+        "review mechanical_evidence-2 did not attest to the immutable statement",
+        "review mechanical_evidence-2 completeness below 98",
+        "review mechanical_evidence-2 confidence below 95",
+        "review mechanical_evidence-2 adversarial survival below 95",
+        "review global_synthesis-2 did not pass",
+        "review global_synthesis-2 did not check every claim",
+        "review global_synthesis-2 used a claim count inconsistent with the candidate",
+        "review global_synthesis-2 reports material errors",
+        "review global_synthesis-2 did not attest to the immutable statement",
+        "review global_synthesis-2 completeness below 98",
+        "review global_synthesis-2 confidence below 95",
+        "review global_synthesis-2 adversarial survival below 95",
+        "review adjudicator-2 did not pass",
+        "review adjudicator-2 used a claim count inconsistent with the candidate",
+        "review adjudicator-2 did not attest to the complete claim ledger",
+        "review adjudicator-2 reports open gaps",
+        "review adjudicator-2 reports unchecked imports",
+        "review adjudicator-2 reports material errors",
+        "review adjudicator-2 completeness below 98",
+        "review adjudicator-2 adversarial survival below 95",
+        "review adjudicator-2 outcome does not match the candidate"
+      ],
+      "regulator": {
+        "decision": "REVISE_PLAN",
+        "rationale": "The rejection evidence identifies plan-level defects, not merely local proof gaps. In particular, ENERGY_BOUND and BISECTOR_BOUND are reported to be false for parity-split planar grids, so they cannot remain advertised as unresolved universal-obstruction branches. Consequently, the current dependency structure of RATIO_NEGATIVE_SUFFICIENCY and the GOAL requirement to preserve three viable negative branches must be changed. The remaining defects\u2014incorrect interpolation indexing, conflation of crossing number with inherited crossing count, an unstated circle-arc perturbation lemma, the undefined D_2(0) boundary, incomplete Gram compatibility conditions, the weakened algebraic model, and the missing sign from i^2=-1\u2014are repairable, but several require restoring omitted subgoals rather than patching prose. REWRITE is unnecessarily expensive because the semantic fork, literal tuple evaluation, three-dimensional construction, quadratic-form model, matrix-rank identities, and the principal conditional sufficiency implications remain usable. The revised graph must terminate with BLOCKED under the immutable ambiguity rule unless an external convention is supplied. \n\nPasted text\n\n",
+        "broken_node_ids": [
+          "ENERGY_BOUND",
+          "BISECTOR_BOUND",
+          "RATIO_NEGATIVE_SUFFICIENCY",
+          "GOAL"
+        ],
+        "new_constraints": [
+          "Keep the immutable statement and SHA-256 unchanged. Do not infer an internally-distinct or disjoint convention from context.",
+          "The terminal status must be BLOCKED. RESOURCE_EXHAUSTED, UNKNOWN, or a branch-specific verdict may not replace BLOCKED while SEMANTIC_FORK remains unresolved.",
+          "Replace ENERGY_BOUND and BISECTOR_BOUND by explicit falsification nodes. Give a complete first-principles parity-split lattice construction and prove the claimed lower bounds for E_dist and T before treating those universal estimates as refuted. Until that proof is complete, quarantine the branches; never use them as negative sufficiency routes.",
+          "Revise RATIO_NEGATIVE_SUFFICIENCY so that no conclusion depends on ENERGY_BOUND or BISECTOR_BOUND. The matrix-alphabet route may remain conditional, and any new negative route must have its own proved universal estimate.",
+          "Revise GOAL to preserve the falsification of the energy and bisector proposals, not to preserve them as viable negative branches. The remaining genuine threshold bottlenecks must be listed accurately.",
+          "Repair DENSE_SUBSEQUENCE_LEMMA by choosing, for each n, the least construction size N_t with N_t at least n, deleting down to n, and proving K(n)/(n/sqrt(log n)) is bounded by the corresponding ratio at N_t times (N_t/n)sqrt(log n/log N_t). Do not substitute the candidate's unsupported smaller-index calculation.",
+          "Repair CROSSING_LEMMA_PACKAGE using a fixed crossing-minimal good drawing of G and a random variable Z counting crossings surviving in the inherited sampled drawing. Use Z at least cr(G_p) at least e(G_p)-3v(G_p), and E[Z]=p^4 cr(G). Do not assert E[cr(G_p)]=p^4 cr(G).",
+          "Before using FIXED_RADIUS_INCIDENCE, state and prove a separate local-perturbation lemma covering tangencies, adjacent arcs, incidence vertices, and multiple nonvertex concurrences. It must preserve the abstract incidence graph, produce a good drawing, and bound crossings by a constant per pair of source circles.",
+          "Repair the overlap decomposition either by explicitly defining the auxiliary value D_2(0)=0 or by splitting off t=n. State only that deleting X intersection Y produces a distance alphabet contained in the original alphabet, never the same alphabet.",
+          "Complete EUCLIDEAN_MATRIX_MODEL with a checkable semialgebraic Gram criterion: set p_1=q_1=0; introduce a symmetric positive-semidefinite Gram matrix of rank at most two for z,p_2,...,p_n,q_2,...,q_n; express every M_ij as the squared norm of z+p_i-q_j; and encode internal distinctness and, for D_2, cross-disjointness as nonzero squared-norm constraints.",
+          "Restore ALGEBRAIC_MODULE_MODEL exactly to the explicit fields Q(i,sqrt(p_1),...,sqrt(p_r)), with a specified rational basis and tau in the field but outside B-B. Do not replace it by an arbitrary conjugation-stable vector space.",
+          "Correct the multiquadratic basis multiplication rule: intersections involving the i-generator contribute the sign from i^2=-1, while intersections involving sqrt(p_j) contribute factors p_j.",
+          "Retain the inequality r<=2q only as a dimension lemma. Delete the unsupported inference that it alone forbids coefficient-range power savings or forces unusually large exact fibers.",
+          "Complete FINITE_FALSIFICATION_ONLY with an explicit exact semialgebraic feasibility formulation for small K-symbol Euclidean matrices. Finite computations may reject named candidates but may not support an all-large-n conclusion.",
+          "State ratio obligations separately for T_2, O_2, and D_2. A disjoint construction transfers affirmatively to O_2, but a negative result for D_2 does not transfer to O_2. No F=o(f) conclusion is permitted without the corresponding independent bound on f_2.",
+          "Do not report all central claims as checked merely because the candidate's locally numbered claims were reviewed. Coverage must be measured against the validated subgoal graph after the graph surgery above."
+        ]
+      }
+    },
+    {
+      "attempt": 3,
+      "candidate_outcome": "candidate_unclassified",
+      "candidate_sha256": "809292cea74fb570bd90bca48662f645c69362870470f66cb74223a3323fafa0",
+      "gate_status": "candidate_rejected",
+      "gate_reasons": [
+        "candidate has no proof or disproof claim",
+        "candidate result contract is incomplete or internally inconsistent",
+        "no trusted external or mechanical verification evidence",
+        "review statement_integrity-3 did not pass",
+        "review statement_integrity-3 used a claim count inconsistent with the candidate",
+        "review statement_integrity-3 did not attest to the complete claim ledger",
+        "review statement_integrity-3 reports open gaps",
+        "review statement_integrity-3 reports material errors",
+        "review statement_integrity-3 completeness below 98",
+        "review statement_integrity-3 confidence below 95",
+        "review statement_integrity-3 adversarial survival below 95",
+        "review structural_dependency-3 did not pass",
+        "review structural_dependency-3 used a claim count inconsistent with the candidate",
+        "review structural_dependency-3 did not attest to the complete claim ledger",
+        "review structural_dependency-3 reports open gaps",
+        "review structural_dependency-3 reports unchecked imports",
+        "review structural_dependency-3 reports material errors",
+        "review structural_dependency-3 completeness below 98",
+        "review structural_dependency-3 confidence below 95",
+        "review structural_dependency-3 adversarial survival below 95",
+        "review logic-3 did not pass",
+        "review logic-3 did not check every claim",
+        "review logic-3 used a claim count inconsistent with the candidate",
+        "review logic-3 reports material errors",
+        "review logic-3 did not attest to the immutable statement",
+        "review logic-3 completeness below 98",
+        "review logic-3 confidence below 95",
+        "review logic-3 adversarial survival below 95",
+        "review counterexample-3 did not pass",
+        "review counterexample-3 did not check every claim",
+        "review counterexample-3 used a claim count inconsistent with the candidate",
+        "review counterexample-3 reports material errors",
+        "review counterexample-3 did not attest to the immutable statement",
+        "review counterexample-3 completeness below 98",
+        "review counterexample-3 confidence below 95",
+        "review counterexample-3 adversarial survival below 95",
+        "review theorem_hypotheses-3 did not pass",
+        "review theorem_hypotheses-3 used a claim count inconsistent with the candidate",
+        "review theorem_hypotheses-3 did not attest to the complete claim ledger",
+        "review theorem_hypotheses-3 reports open gaps",
+        "review theorem_hypotheses-3 reports unchecked imports",
+        "review theorem_hypotheses-3 reports material errors",
+        "review theorem_hypotheses-3 completeness below 98",
+        "review theorem_hypotheses-3 confidence below 95",
+        "review theorem_hypotheses-3 adversarial survival below 95",
+        "review mechanical_evidence-3 did not pass",
+        "review mechanical_evidence-3 used a claim count inconsistent with the candidate",
+        "review mechanical_evidence-3 did not attest to the complete claim ledger",
+        "review mechanical_evidence-3 reports open gaps",
+        "review mechanical_evidence-3 reports unchecked imports",
+        "review mechanical_evidence-3 reports material errors",
+        "review mechanical_evidence-3 completeness below 98",
+        "review mechanical_evidence-3 confidence below 95",
+        "review mechanical_evidence-3 adversarial survival below 95",
+        "review global_synthesis-3 did not pass",
+        "review global_synthesis-3 used a claim count inconsistent with the candidate",
+        "review global_synthesis-3 did not attest to the complete claim ledger",
+        "review global_synthesis-3 reports open gaps",
+        "review global_synthesis-3 reports unchecked imports",
+        "review global_synthesis-3 reports material errors",
+        "review global_synthesis-3 completeness below 98",
+        "review global_synthesis-3 confidence below 95",
+        "review global_synthesis-3 adversarial survival below 95",
+        "review adjudicator-3 did not pass",
+        "review adjudicator-3 used a claim count inconsistent with the candidate",
+        "review adjudicator-3 did not attest to the complete claim ledger",
+        "review adjudicator-3 reports open gaps",
+        "review adjudicator-3 reports unchecked imports",
+        "review adjudicator-3 reports material errors",
+        "review adjudicator-3 completeness below 98",
+        "review adjudicator-3 confidence below 95",
+        "review adjudicator-3 adversarial survival below 95",
+        "review adjudicator-3 outcome does not match the candidate"
+      ]
+    }
+  ],
   "verified_lemmas": [],
-  "failed_approaches": []
+  "failed_approaches": [
+    {
+      "attempt": 1,
+      "candidate_sha256": "0d55f97595cd8d74b629d84e13aeda178c03a25c4c75b0f2908837e800360dd6",
+      "obstructions": [
+        "C10 applies its random-induced-subgraph crossing argument without explicitly treating induced graphs with fewer than three vertices under the stated v>=3 planar-edge hypothesis.",
+        "C10 assumes a suitable good drawing and a harmless local perturbation of multiple circle intersections without stating and checking the precise conditions needed for the vertex-sampling and crossing-count arguments.",
+        "C10 invokes the planar simple-graph edge estimate associated with Euler's formula while claiming a derivation that is not actually supplied.",
+        "C10 is not fully certified under the required theorem-hypothesis standard, so C11's claimed self-contained Omega(n^(2/3)) lower bound inherits a proof gap.",
+        "C9 is stated without an n>=2 hypothesis although its proof selects two distinct anchors; the n=1 case is true but not proved by that argument.",
+        "The arithmetic benchmark is not discharged: the checkerboard reduction is exact, but no required asymptotic count of represented quadratic-form values is proved.",
+        "The assertion that no attack invalidated C1-C21 and that there were no unchecked imports is therefore false.",
+        "The candidate does not meet the primary acceptance criterion because it explicitly leaves the substantive planar statement unresolved.",
+        "The candidate does not resolve the separate F=o(f) question contained in the immutable statement.",
+        "The common definition of F_C(n) is written as a minimum over sets X,Y of cardinality n, which cannot represent the repetition-allowed tuple convention used in C3. Thus C2 and C3 are formally inconsistent as written.",
+        "The explicitly posed comparison F(n)=o(f(2n)) is unresolved.",
+        "The final GOAL node of the validated subgoal graph is not discharged.",
+        "The internally-distinct but overlap-permitted planar convention is unresolved.",
+        "The pairwise-distinct planar assertion is neither proved nor disproved: no construction with o(n/sqrt(log n)) cross-distances and no matching Omega(n/sqrt(log n)) obstruction is established.",
+        "The proposed exact computational harness is not constructed or executed.",
+        "The reported completeness score of 86 is incompatible with the unresolved central GOAL and numerous unresolved prerequisite branches.",
+        "The variable quadratic-form, algebraic-norm, Euclidean-matrix, bisector-structure, and radial-support branches are neither established nor refuted.",
+        "The wording does not specify which distinctness convention is intended, and the acceptance criteria require this ambiguity to remain blocking.",
+        "malformed reviewer output: reviewer role mismatch: expected counterexample, got independent adversarial referee (counterexample)",
+        "malformed reviewer output: reviewer role mismatch: expected global_synthesis, got independent adversarial referee (global_synthesis)",
+        "malformed reviewer output: reviewer role mismatch: expected logic, got independent adversarial referee (logic)",
+        "malformed reviewer output: reviewer role mismatch: expected mechanical_evidence, got independent adversarial referee (mechanical_evidence)",
+        "malformed reviewer output: reviewer role mismatch: expected statement_integrity, got independent adversarial referee (statement_integrity)",
+        "malformed reviewer output: reviewer role mismatch: expected structural_dependency, got independent adversarial referee (structural_dependency)",
+        "malformed reviewer output: reviewer role mismatch: expected theorem_hypotheses, got independent adversarial referee (theorem_hypotheses)"
+      ],
+      "reusable_lesson": "Do not repeat this proof path without a new ingredient that resolves every listed obstruction."
+    },
+    {
+      "attempt": 2,
+      "candidate_sha256": "ce86be2967f20bac4ec2d3b112b0333446c9d52a42bee14db27e7135d332d483",
+      "obstructions": [
+        "No Euclidean-realizable distance-alphabet theorem of the required strength is established.",
+        "No explicit multiquadratic CM norm-box family with controlled norm-image compression, translations, constants, and interpolation thresholds is constructed.",
+        "No positive-definite binary quadratic-form family with the required uniform little-o value compression is constructed.",
+        "No valid threshold-level universal obstruction reaching K=Omega(n/sqrt(log n)) is established.",
+        "R10 relies on an unstated local perturbation theorem asserting that the circle-arc incidence graph can be converted into a suitable graph drawing while preserving incidences and retaining the claimed crossing bound for every pair of source circles.",
+        "R9 relies on good-drawing normalization, including removing self-crossings and adjacent-edge crossings and separating multiple concurrence points without increasing the relevant crossing count, but no precise topological lemma is proved.",
+        "The disjoint-set assertion D_2(n)=o(n/sqrt(log n)) is neither proved nor disproved.",
+        "The finite exhaustive-search assertions in R20 are not accompanied by an internal certificate or executable transcript, although several reported counts were independently reproduced in the reviews.",
+        "The immutable statement does not specify whether repetitions are allowed, whether each indexed family must be internally distinct, or whether the two families must be disjoint. Under the locked rule that ambiguity is blocking, no unique substantive planar proposition has been selected.",
+        "The internally distinct overlapping-set assertion O_2(n)=o(n/sqrt(log n)) is neither proved nor disproved.",
+        "The overlapping-set and disjoint-set versions of F=o(f) remain unresolved.",
+        "The proposed energy and bisector bounds are not proved, and the counterexample review presents lattice-based challenges that the candidate does not address. Those branches therefore cannot support any conclusion.",
+        "The required ordinary-distance lower and upper estimates needed for the overlapping-set or disjoint-set F=o(f) questions are not supplied.",
+        "malformed reviewer output: reviewer role mismatch: expected counterexample, got independent adversarial referee (counterexample)",
+        "malformed reviewer output: reviewer role mismatch: expected global_synthesis, got independent adversarial referee (global_synthesis)",
+        "malformed reviewer output: reviewer role mismatch: expected logic, got independent adversarial referee (logic)",
+        "malformed reviewer output: reviewer role mismatch: expected mechanical_evidence, got independent adversarial referee (mechanical_evidence)",
+        "malformed reviewer output: reviewer role mismatch: expected statement_integrity, got independent adversarial referee (statement_integrity)",
+        "malformed reviewer output: reviewer role mismatch: expected structural_dependency, got independent adversarial referee (structural_dependency)",
+        "malformed reviewer output: reviewer role mismatch: expected theorem_hypotheses, got independent adversarial referee (theorem_hypotheses)",
+        "{'claim_id': 'GOAL/terminal_adjudication', 'error': \"The validated terminal node requires status BLOCKED, but the candidate's machine-readable result reports RESOURCE_EXHAUSTED. This directly contradicts the prescribed terminal conclusion.\"}",
+        "{'claim_id': 'R10', 'error': 'The local rerouting argument is only asserted. It does not rigorously establish a good drawing that simultaneously preserves the incidence graph and keeps the total crossings bounded by a constant times the number of intersecting source-circle pairs.'}",
+        "{'claim_id': 'R14', 'error': 'The candidate does not state the promised checkable positive-semidefinite or Gram compatibility conditions. Saying that suitable vectors p_i, q_j, and z exist merely restates Euclidean realizability.'}",
+        "{'claim_id': 'R16', 'error': 'The inequality r<=2q alone does not imply that coefficient-range counting cannot yield a power-saving norm alphabet, nor that any successful construction must arise from unusually large exact fibers. Those conclusions require additional quantitative arguments.'}",
+        "{'claim_id': 'R17', 'error': 'The validated algebraic node requires an explicit multiquadratic CM family, a controlled basis, and a certified translation within the arithmetic model. R17 replaces it with an arbitrary conjugation-stable rational vector space and does not discharge the required uniform arithmetic obligations.'}",
+        "{'claim_id': 'R18', 'error': 'For the admissible case X=Y, one has t=n, and the displayed inequality invokes D_2(0), which was never defined. This is an unresolved boundary case.'}",
+        "{'claim_id': 'R18', 'error': 'The subsequent statement that deleting the intersection gives a disjoint configuration with the same distance alphabet is false. Deletion guarantees only that the new alphabet is a subset of the original one.'}",
+        "{'claim_id': 'R20', 'error': 'The displayed bitmask multiplication rule for Q(i,sqrt(p_1),...) omits the sign contributed by i^2=-1 and is false as written.'}",
+        "{'claim_id': 'R5', 'error': 'The interpolation calculation uses a configuration of size N_t when n may be larger than N_t. Deletion can only transfer from the next configuration of size at least n. The displayed proof therefore does not establish the stated all-large-n result, even though a corrected bounded-ratio lemma is possible.'}",
+        "{'claim_id': 'R9', 'error': 'The proof writes E[cr(G_p)]=p^4 cr(G), conflating the graph crossing number of the sampled graph with the number of crossings surviving in the inherited sampled drawing. Equality is valid only for the latter random variable; the required comparison is not stated.'}",
+        "{'claim_id': 'overall', 'error': 'The candidate supplies a research-status audit and several conditional reductions, but it does not prove or disprove the exact locked statement under the required blocking treatment of ambiguity.'}"
+      ],
+      "reusable_lesson": "Do not repeat this proof path without a new ingredient that resolves every listed obstruction."
+    },
+    {
+      "attempt": 3,
+      "candidate_sha256": "809292cea74fb570bd90bca48662f645c69362870470f66cb74223a3323fafa0",
+      "obstructions": [
+        "C17 invokes second-moment and convexity inequalities without fully deriving their hypotheses and zero-distance treatment.",
+        "C19 invokes the classification of simultaneous eigenspaces for the multiquadratic sign-flip automorphisms without a complete proof.",
+        "C19 invokes the full sign-flip automorphism structure and the classification of simultaneous eigenspaces in a multiquadratic extension without supplying a complete construction and proof.",
+        "C23 invokes exact real quantifier elimination or certified algebraic decision procedures without stating a precise theorem, its input hypotheses, or the form of the promised certificates.",
+        "C23 invokes exact real quantifier elimination or certified algebraic decision procedures without stating the relevant decidability theorem and its hypotheses.",
+        "C23 invokes quantifier elimination or real-closed-field decidability without stating the exact theorem, coefficient domain, and termination hypotheses.",
+        "C9 assumes that the crossing number is attained by a good drawing with the required normalization properties.",
+        "C9 assumes without proof that the crossing number is attained by a crossing-minimal good drawing having the required four-distinct-endpoint property.",
+        "C9 invokes Euler's formula and the face-boundary inequality without completely stating and checking the embedding hypotheses, including bridges and face-boundary walks.",
+        "Euler's formula and the face-boundary inequality 3f<=2e are invoked without an exact theorem statement covering the embedding hypotheses, bridges, and face-boundary walks.",
+        "Neither O_2(n)=o(n/sqrt(log n)) nor D_2(n)=o(n/sqrt(log n)) is proved or disproved.",
+        "No CM norm-image compression estimate reaches the required little-o bound.",
+        "No Euclidean matrix-alphabet lower-bound theorem reaches the required threshold.",
+        "No Euclidean-realizable matrix-alphabet lower bound at the n/sqrt(log n) threshold is proved.",
+        "No Euclidean-realizable matrix-alphabet lower bound reaches Omega(n/sqrt(log n)).",
+        "No Euclidean-realizable matrix-alphabet theorem at the n/sqrt(log n) threshold is proved.",
+        "No Euclidean-realizable matrix-alphabet theorem yielding K=Omega(n/sqrt(log n)) is proved.",
+        "No exact quantifier-elimination, SAT/SMT, CAS, or certified algebraic feasibility certificate is supplied for any nontrivial instance of C20 or C23.",
+        "No multiquadratic CM norm-image bound reaches o(n/sqrt(log n)).",
+        "No multiquadratic CM norm-image estimate of the required asymptotic strength is proved.",
+        "No multiquadratic CM norm-image estimate with the required uniform compression is proved.",
+        "No positive-definite binary quadratic-form construction with the required value compression is produced.",
+        "No quadratic-form compression construction reaches o(n/sqrt(log n)).",
+        "No quadratic-form compression construction reaches the required little-o bound.",
+        "No quadratic-form family attaining the required value compression is constructed.",
+        "No quadratic-form family satisfying the required value-compression estimate is constructed.",
+        "No radial-support dichotomy reaching the required threshold is proved.",
+        "No radial-support structural dichotomy reaches the required threshold.",
+        "No radial-support structural dichotomy reaching the required threshold is proved.",
+        "No radial-support structural theorem reaches the required threshold.",
+        "No radial-support structural theorem reaching the threshold is proved.",
+        "No sequence of positive-definite binary quadratic forms with the required value-set compression is constructed.",
+        "No uniform multiquadratic norm-image estimate attaining the required compression is proved.",
+        "No uniform multiquadratic norm-image estimate is proved.",
+        "The asymptotic counting step in C14 is incomplete, so the stated proofs of C15 and C16 are not fully discharged.",
+        "The candidate does not cleanly define F(2n) under all three conventions or explicitly complete the literal-tuple F=o(f) argument.",
+        "The candidate does not prove or disprove the exact immutable planar statement. It explicitly leaves the internally-distinct overlapping and pairwise-disjoint interpretations unresolved.",
+        "The candidate does not prove or disprove the internally-distinct overlapping planar assertion O_2(n)=o(n/sqrt(log n)).",
+        "The candidate does not prove or disprove the internally-distinct overlapping planar interpretation.",
+        "The candidate does not prove or disprove the pairwise-disjoint planar assertion D_2(n)=o(n/sqrt(log n)).",
+        "The candidate does not prove or disprove the pairwise-disjoint planar interpretation.",
+        "The candidate does not resolve either substantive version of F=o(f).",
+        "The checkerboard counting node C14 is not proved at the demanded first-principles level, so the dependency chains C14 -> C15 -> C17 and C14 -> C16 -> C17 are unsupported.",
+        "The checkerboard equal-length displacement count and the ensuing energy and bisector lower bounds are incomplete as written.",
+        "The checkerboard equal-length displacement count in C14 is incomplete, so the stated energy and bisector falsifications are not established by the supplied proof.",
+        "The checkerboard equal-length displacement count is incomplete, so the claimed energy and bisector falsifications are not established as written.",
+        "The circle-arc perturbation argument does not rigorously cover all configurations required by its stated lemma, so the fixed-radius incidence bound and the derived Omega(n^(2/3)) baseline are not fully discharged.",
+        "The circle-arc perturbation claim is not established under hypotheses sufficient for its incidence-graph application.",
+        "The circle-arc perturbation lemma is not established at the level needed to support the incidence theorem.",
+        "The circle-arc perturbation node C10 is not discharged, so the dependency chain C10 -> C11 -> C12 is unsupported.",
+        "The circle-arc perturbation package contains asserted local topological operations whose simultaneous validity and preservation of the claimed source-circle crossing bound are not fully proved.",
+        "The exact F=o(f) question is not resolved under the overlapping or disjoint conventions.",
+        "The exact planar assertion under internally distinct overlapping sets is neither proved nor disproved.",
+        "The exact planar assertion under pairwise-disjoint sets is neither proved nor disproved.",
+        "The immutable statement does not specify whether repetitions, overlap, or pairwise distinctness are intended. Under the supplied acceptance rule, this remains a blocking semantic fork.",
+        "The immutable wording does not determine whether repetitions are allowed, whether each family must be internally distinct, or whether the two families must be disjoint. The acceptance criteria require this ambiguity to be treated as blocking.",
+        "The immutable wording does not explicitly settle repetitions, internal distinctness, or cross-family disjointness, and the acceptance criteria require this ambiguity to be treated as blocking.",
+        "The immutable wording remains split among repetition-allowed tuples, overlapping sets, and disjoint sets; the candidate terminates with BLOCKED rather than satisfying the requested proof-or-disproof criterion.",
+        "The internally-distinct overlapping planar assertion O_2(n)=o(n/sqrt(log n)) is neither proved nor disproved.",
+        "The literal repetition-allowed version of F=o(f) is only suggested by an isolated formula and is not explicitly defined and proved.",
+        "The overlap and disjoint interpretations of F=o(f) remain unresolved.",
+        "The overlap and disjoint versions of F=o(f) remain unresolved and are not fully formalized as separate extremal functions.",
+        "The overlap and disjoint versions of F=o(f) remain unresolved, and the literal-tuple version is not cleanly formalized in the locked F(2n) notation.",
+        "The overlap and disjoint versions of F=o(f) remain unresolved.",
+        "The pairwise-disjoint planar assertion D_2(n)=o(n/sqrt(log n)) is neither proved nor disproved.",
+        "The perturbation argument needed for C11 and C12 is not established with the full hypotheses required by the validated subgoal graph.",
+        "malformed reviewer output: reviewer role mismatch: expected counterexample, got independent adversarial referee (counterexample)",
+        "malformed reviewer output: reviewer role mismatch: expected logic, got independent_adversarial_referee_logic",
+        "{'claim_id': 'C10', 'error': 'The perturbation proof is incomplete at a load-bearing topological step. The statement that an adjacent-edge crossing can be removed by a local detour that only decreases crossings is false for a disk with alternating boundary endpoints. No global replacement argument is supplied, and preservation of the per-source-circle crossing bound is unverified.'}",
+        "{'claim_id': 'C11', 'error': 'The fixed-radius incidence bound depends essentially on C10. Since C10 is not proved, the claimed good drawing and O(n^2) crossing upper bound for the graph layers are unavailable.'}",
+        "{'claim_id': 'C12', 'error': 'The Omega(n^(2/3)) baseline is structurally dependent on the unsupported C11 incidence theorem and therefore is not established by this candidate.'}",
+        "{'claim_id': 'C14', 'error': 'The set A_R is not well-defined as displayed, and the claimed Omega(R^2) count is not proved. The unexplained reciprocal-square estimate does not specify the universe, the bad sets, the floor errors, or the deduction of the stated constant-density result.'}",
+        "{'claim_id': 'C15', 'error': 'The claim is textually and logically incomplete: the multiplicities R_rho and E_dist are not properly defined in the claim, and the central identity converting equal-length displacement pairs into sum_rho R_rho^2 is missing.'}",
+        "{'claim_id': 'C16', 'error': 'The lower-bound calculation is omitted. In particular, ordered pairs from C14 are not explicitly converted to unordered pairs in the binomial triple count, and the required factor-of-two and nonduplication checks are absent.'}",
+        "{'claim_id': 'C17', 'error': 'The quarantine conclusion is asserted as proved but depends on the incomplete C14-C16 chain.'}",
+        "{'claim_id': 'C18', 'error': 'The final compression implication is syntactically missing its antecedent and quantified sequence. As written, the displayed little-o expression is not a complete proposition.'}",
+        "{'claim_id': 'C19', 'error': 'The field and basis definitions are partially missing from the displayed candidate, and the simultaneous-eigenspace argument is asserted rather than fully derived. The elementary box-disjointness part is valid, but the claim as presented is not a complete formal proof.'}",
+        "{'claim_id': 'C19', 'issue': 'The simultaneous-eigenvector classification for the sign-flip automorphism group is only sketched and not proved from the displayed basis construction.'}",
+        "{'claim_id': 'C20', 'error': 'The displayed definition of L_ij is truncated: the Gram expression appears without its left-hand side. The intended semialgebraic criterion is recoverable, but the exact candidate is formally incomplete.'}",
+        "{'claim_id': 'C23', 'issue': 'Decidability by exact real quantifier elimination or certified algebraic methods is asserted without stating the decision theorem, its coefficient-domain hypotheses, or an actual certificate.'}",
+        "{'claim_id': 'C9', 'issue': \"Euler's planar formula and the face-degree argument are invoked without a fully stated embedding theorem covering the modified graph and all low-vertex or multicomponent cases.\"}",
+        "{'claim_id': 'C9', 'issue': 'The existence and normalization of a crossing-minimal good drawing, including removal of adjacent crossings, triple crossings, and crossings sharing endpoints, is used without an exact theorem statement and hypothesis verification.'}",
+        "{'claim_id': 'F_OVER_f section', 'error': 'The isolated assertion 1/f_2(2n)->0 lacks an identified numerator extremal, and the three distinctness conventions are not separately defined for F. Thus the required convention-by-convention dependency analysis is incomplete.'}",
+        "{'claim_id': 'terminal adjudication', 'error': 'The terminal summary states that the incidence argument, checkerboard falsifications, and several reductions are proved. At least the incidence and checkerboard chains contain unresolved load-bearing gaps, so this summary overstates proof coverage.'}",
+        "{'claim_ids': ['C1', 'C13', 'C15', 'C16', 'C18', 'C19', 'C20'], 'error': 'The submitted artifact has numerous malformed or omitted mathematical expressions. Several claims cannot be checked as complete formal arguments from the text actually supplied.'}",
+        "{'claim_ids': ['C1', 'C2', 'C3', 'C21'], 'error': 'Although C2 correctly proves the literal repetition-allowed tuple reading, the candidate deliberately leaves the convention selected by the full problem context unresolved. It therefore cannot be accepted as a proof or disproof of the exact locked problem under the supplied ambiguity rule.'}",
+        "{'claim_ids': ['C1', 'C2', 'C3', 'C21'], 'error': 'The valid repetition-allowed construction proves only one interpretation. Under the mandated ambiguity rule, it does not prove the exact locked planar statement.'}",
+        "{'claim_ids': ['C1', 'C2'], 'error': 'The literal tuple construction resolves only one interpretation. It cannot be promoted to a proof of the exact locked problem under the mandated rule that the unresolved distinctness convention is a blocking ambiguity.'}",
+        "{'claim_ids': ['C1', 'C23'], 'error': 'The terminal result reports RESOURCE_EXHAUSTED and high confidence rather than a proved or disproved conclusion. This is incompatible with the acceptance criteria and is unsupported by mechanical verification.'}",
+        "{'claim_ids': ['C10', 'C11', 'C12'], 'error': 'C10 does not handle coincident local arc segments or clearly allow multiple arcs from one source circle. Its proof begins by asserting finiteness of all intersections using only the fact that distinct circles meet finitely, which does not address same-circle arcs. Consequently the application to the cyclic-arc multigraph in C11 is not formally justified, and the incidence and Omega(n^(2/3)) conclusions remain dependency-incomplete.'}",
+        "{'claim_ids': ['C10', 'C11', 'C12'], 'error': 'The incidence lower bound depends on a perturbation theorem whose precise hypotheses are not matched to the constructed arc system. C10 can be read as allowing only one arc from each distinct source circle, while C11 uses many arcs from a single circle. The local removal of adjacent crossings is also not proved to preserve all claimed global charging properties.'}",
+        "{'claim_ids': ['C10', 'C11', 'C12'], 'error': 'The local arc-replacement proof is not a complete perturbation theorem. It does not establish all required cases involving same-source coincident segments, preservation of the abstract drawing under successive detours, and the global crossing charge. Consequently C11 and C12 depend on an undischarged load-bearing lemma.'}",
+        "{'claim_ids': ['C10', 'C11'], 'error': \"The perturbation lemma does not fully prove its strongest assertion. It merely states that a general-position perturbation preserves at most one local crossing per source-circle pair and that adjacent crossings can be removed without adverse effects. Moreover, its phrase 'arcs taken from distinct circles' is incompatible on its face with the incidence layers, which generally contain many arcs from the same source circle.\"}",
+        "{'claim_ids': ['C10'], 'error': 'The asserted local removal of adjacent-edge crossings is not valid in general when the four boundary endpoints alternate. The lemma also fails to rigorously handle multiple or coincident arcs from the same source circle while preserving the claimed crossing charge.'}",
+        "{'claim_ids': ['C11', 'C12'], 'error': 'The fixed-radius incidence bound and the claimed Omega(n^(2/3)) planar baseline depend on the undischarged perturbation lemma C10 and therefore are not established by the submitted proof.'}",
+        "{'claim_ids': ['C13', 'C14'], 'error': \"The checkerboard parity classes and the set A_R are not validly written. In particular, A_R contains the malformed condition '(p,s)<=s<p<2R'; the essential lower bound R<=s is absent. The subsequent cardinality and cross-scale disjointness arguments depend on that missing condition.\"}",
+        "{'claim_ids': ['C13', 'C15', 'C16', 'C18', 'C19', 'C20'], 'error': 'Several load-bearing formulas are textually incomplete or malformed: the parity-class definitions omit terms, C15 begins with an unattached cardinality expression, the main energy inequality is absent, C16 omits the ordered-to-unordered multiplicity step, C19 omits the explicit field and basis definition at the start, and C20 omits the displayed definition label for L_ij. A referee may not silently reconstruct these missing statements.'}",
+        "{'claim_ids': ['C13', 'C18', 'C19', 'C20'], 'error': 'Several definitions and conditional asymptotic statements are syntactically truncated or malformed. Under the blocking-ambiguity instruction, the missing expressions cannot be silently reconstructed.'}",
+        "{'claim_ids': ['C13'], 'error': 'The definitions of the parity classes are malformed: the condition is printed without a complete i+j expression, and the common cardinality ends with an undefined equality. The intended correction cannot be silently substituted under strict statement-integrity review.'}",
+        "{'claim_ids': ['C14', 'C15', 'C16'], 'error': 'The definition of A_R is malformed, and the proof of |A_R|=Omega(R^2) omits the complete base count, divisor-union estimate, floor-error bounds, and a fixed valid onset R_0. C15 and C16 then omit essential displayed identities connecting equal-length displacement pairs to energy and bisector counts. The intended arguments appear plausible and receive finite support, but the candidate has not supplied the demanded complete first-principles proof.'}",
+        "{'claim_ids': ['C14'], 'error': \"The central count of primitive opposite-parity pairs is not proved. The displayed definition of A_R is syntactically incomplete, the total candidate count is omitted, and the unexplained 'quadratic part of the bad count' estimate does not establish |A_R|=Omega(R^2).\"}",
+        "{'claim_ids': ['C14'], 'error': \"The first-principles lower bound for |A_R| is not supplied. The text refers to a 'quadratic part of the bad count' and O(R log R) terms without defining the bad sets, deriving their counts, or first establishing the size of the opposite-parity ambient set.\"}",
+        "{'claim_ids': ['C14'], 'error': 'The definition of A_R is malformed, the essential dyadic range condition is absent from the displayed text, and the claimed Omega(R^2) primitive opposite-parity count is not derived from a complete first-principles calculation.'}",
+        "{'claim_ids': ['C14'], 'error': 'The definition of A_R is syntactically incomplete, and the asserted Omega(R^2) count of primitive opposite-parity pairs is not derived. The displayed reciprocal-square estimate alone does not constitute the promised complete count.'}",
+        "{'claim_ids': ['C15', 'C16', 'C17'], 'error': 'C15 and C16 contain missing definitions and missing load-bearing summations. Their conclusions rely on C14 and cannot be accepted. Therefore C17 cannot claim that the proposed universal bounds have been proved false within this candidate.'}",
+        "{'claim_ids': ['C15', 'C16'], 'error': 'Both proofs are textually incomplete. C15 omits the definition of the shell multiplicity and the summation converting C14 into an energy lower bound. C16 omits the ordered-to-unordered conversion and the complete summation over central points. These are load-bearing gaps, not cosmetic omissions.'}",
+        "{'claim_ids': ['C15'], 'error': \"The claimed energy falsification is not proved as written. The claim begins with an isolated cardinality expression, never defines the representation counts or E_dist inside the claim, and omits the load-bearing expansion E_dist=sum_rho(sum_{|d|^2=rho}w_d)^2 and the deduction from Claim C14. The jump from w_d>=q^2/4 to c' q^6 log q is unsupported.\"}",
+        "{'claim_ids': ['C15'], 'error': 'The distance multiplicities and energy are not properly defined, and the load-bearing identity converting equal-norm displacement pairs into the energy lower bound is omitted.'}",
+        "{'claim_ids': ['C16'], 'error': 'The claimed bisector falsification omits the load-bearing counting step. It does not show how ordered displacement pairs are converted to distinct unordered pairs in the binomial triple count, account for the factor-two duplication, or explicitly derive c q^4 log q from the number of central points and Claim C14.'}",
+        "{'claim_ids': ['C16'], 'error': 'The proof omits the summation converting ordered equal-length displacement pairs into the unordered pairs counted by the binomial triple count, including the reversal multiplicity.'}",
+        "{'claim_ids': ['C17'], 'error': 'C17 treats C15 and C16 as established falsifications, but those prerequisite proofs contain missing central derivations. Therefore the quarantine conclusion is not discharged by the candidate itself.'}",
+        "{'claim_ids': ['C17'], 'error': 'The candidate declares the energy and bisector routes falsified, but that conclusion depends entirely on the incomplete C14-C16 chain. It also imports second-moment inequalities without proof.'}",
+        "{'claim_ids': ['C17'], 'error': 'The quarantine conclusion treats C14-C16 as proved even though their essential counting arguments are incomplete.'}",
+        "{'claim_ids': ['C18', 'C19'], 'error': 'Several displayed conditional statements are truncated. More importantly, these sections provide only reformulations and explicitly supply none of the compression estimates needed for an affirmative planar result.'}",
+        "{'claim_ids': ['C18', 'C19'], 'error': 'The final compression obligations are printed as unattached little-o expressions with their left-hand sides missing. Consequently the purported reductions are not fully stated mathematical implications.'}",
+        "{'claim_ids': ['C19'], 'error': 'The proof that the multiquadratic monomials form a rational basis relies on unproved existence and one-dimensionality of simultaneous sign-flip eigenspaces.'}",
+        "{'claim_ids': ['C23'], 'error': 'C23 describes a possible finite decision procedure but supplies no certified computation, and finite feasibility results alone would not settle the all-large-n assertion.'}",
+        "{'claim_ids': ['C23'], 'error': 'C23 is only a proposed mechanical procedure. No computation was performed and no certificate was produced, so it verifies no finite obstruction and contributes no proved all-large-n conclusion.'}",
+        "{'claim_ids': ['C23'], 'error': 'Finite semialgebraic feasibility, even if decidable, cannot establish the all-large-n quantifier. The candidate correctly notes this, leaving the global theorem untouched.'}",
+        "{'claim_ids': ['C9'], 'error': \"The candidate reports no unchecked imports despite relying on Euler's formula, the face-degree inequality, and the good-drawing reduction without complete theorem statements and hypothesis checks.\"}",
+        "{'claim_ids': ['GOAL', 'C21'], 'error': 'The candidate never derives either an affirmative construction or a threshold lower bound for the substantive planar interpretations. Its own terminal section declares the principal assertions unresolved. Thus the verified pieces do not jointly imply the exact final theorem.'}",
+        "{'claim_ids': [], 'error': \"The candidate's declaration UNCHECKED_IMPORTS: NONE is false.\"}",
+        "{'claim_ids': [], 'error': 'Coverage of the explicit F=o(f) question is incomplete. The text contains the dangling formula 1/f_2(2n)->0 without identifying its numerator as the literal F(2n), while the overlap and disjoint variants are left open. Thus the candidate does not provide a complete convention-by-convention adjudication of this subproblem.'}",
+        "{'claim_ids': [], 'error': 'Several displayed definitions and formulas are syntactically incomplete or corrupted, including the parity-class definitions, the value n=q^2/2 line, the energy and bisector claims, and portions of the quadratic-form and CM conclusions. Under the instruction that ambiguity is blocking, these cannot be silently reconstructed into a proof.'}",
+        "{'claim_ids': [], 'error': 'The F=o(f) portion contains an isolated formula 1/f_2(2n) tending to zero with no defined numerator or accompanying argument. It does not clearly resolve the literal tuple convention and explicitly leaves the substantive conventions unresolved.'}",
+        "{'claim_ids': [], 'error': 'The acceptance criterion requires proving or disproving the exact original statement and all explicit subquestions. The candidate instead terminates with BLOCKED/RESOURCE_EXHAUSTED and leaves the substantive planar and F=o(f) questions open.'}",
+        "{'claim_ids': [], 'error': 'The candidate fails the principal acceptance criterion: it does not prove or disprove the internally-distinct planar interpretations and explicitly reports them unresolved. Labeling the result RESOURCE_EXHAUSTED is not a mathematical resolution of the immutable question.'}",
+        "{'claim_ids': [], 'error': 'The declaration UNCHECKED_IMPORTS: NONE is false.'}",
+        "{'claim_ids': [], 'error': 'The explicit F=o(f) subproblem is not resolved convention by convention. The candidate contains a dangling ratio formula and leaves both substantive interpretations open.'}",
+        "{'claim_ids': [], 'error': 'The terminal BLOCKED or RESOURCE_EXHAUSTED declaration is not a proof or disproof and is not an allowed outcome under the required adjudication schema.'}",
+        "{'theorem': 'Cauchy-Schwarz or the second-moment inequality', 'required_statement': 'For nonnegative multiplicities r_1,...,r_K with sum n^2, one has sum r_i^2 at least n^4/K.', 'defect': 'C17 asserts the energy inequality without stating or deriving the theorem and its hypotheses.'}",
+        "{'theorem': 'Convexity estimate for the isosceles-triple identity', 'required_statement': 'For each fixed x, if the shell multiplicities sum to n over at most K shells, then their squared sum is at least n^2/K.', 'defect': 'C17 states the resulting lower bound for T without proving this step or clarifying the treatment of empty shells and the zero shell.'}",
+        "{'theorem': 'Decidability by quantifier elimination over real closed fields', 'required_statement': 'Every first-order formula over the ordered real field with polynomial equalities and inequalities has an algorithmically decidable truth value.', 'defect': 'C23 proposes exact real quantifier elimination without stating the theorem or checking that the entire feasibility system is a finite first-order formula over the reals.'}",
+        "{'theorem': 'Euler formula and the planar simple-graph edge bound', 'required_statement': 'For a connected finite plane graph, v-e+f=2. For a simple plane graph with v at least 3, every face-boundary walk has length at least 3, hence 3f at most 2e and e at most 3v-6.', 'defect': \"C9 invokes Euler's formula and 3f at most 2e without stating and checking the face-boundary hypothesis, particularly in the presence of bridges.\"}",
+        "{'theorem': 'Existence of a crossing-minimal good drawing', 'required_statement': 'Every finite graph drawing can be placed in good position without increasing its number of crossings, and the crossing number is attained by such a drawing.', 'defect': 'C9 fixes a crossing-minimal good drawing without defining crossing number through good drawings or proving the reduction.'}",
+        "{'theorem': 'Simultaneous eigenspace decomposition for sign-flip automorphisms', 'required_statement': 'For the commuting involutions that independently change the signs of the adjoined square roots, the joint eigenspaces are precisely the one-dimensional spans of the square-root monomials.', 'defect': 'C19 uses this conclusion to prove basis independence but does not establish it.'}"
+      ],
+      "reusable_lesson": "Do not repeat this proof path without a new ingredient that resolves every listed obstruction."
+    }
+  ]
 }

@@ -75,7 +75,21 @@ def main() -> None:
                     help="Run the browser without a visible window")
     ap.add_argument("--wait-pid", type=int, default=0,
                     help="Wait for this pid to exit before starting")
+    ap.add_argument(
+        "--force-legacy", action="store_true",
+        help="Run the RETIRED legacy batch anyway. The supported production path "
+             "is `egmra campaign --triage <triage-dir>` (verified EGMRA pipeline).",
+    )
     args = ap.parse_args()
+    if not args.force_legacy:
+        ap.error(
+            "run_sol2_batch.py is RETIRED: it batch-drives the legacy "
+            "run_verified_pipeline/ProofPipeline, which can never emit a "
+            "ReleaseCertificate. Use the single verified pipeline instead:\n"
+            "  egmra campaign --triage <triage-dir> --workers N --provider browser "
+            "--policy <signed-policy> --outcome-ledger <path>\n"
+            "Pass --force-legacy only to run the retired batch deliberately."
+        )
     if "unrecorded" in args.model_id.lower() or not args.model_id.strip():
         ap.error("--model-id must be the exact recorded UI model identity")
 
@@ -159,6 +173,7 @@ def main() -> None:
             "--max-backoff", str(args.max_backoff),
             "--request-spacing", str(args.request_spacing),
             "--model-id", args.model_id,
+            "--force-legacy",
         ]
         if args.headless:
             cmd.append("--headless")

@@ -219,6 +219,17 @@ def test_execute_finite_experiment_false_yields_no_evidence():
     assert any("returned false" in f for f in failures)
 
 
+def test_execute_finite_experiment_reports_sandbox_failure_detail():
+    spec = ExperimentSpec(purpose="p", claim_ids=("goal",), inputs={"n": 20},
+                          coverage="0..n", arithmetic_mode="exact")
+    evidence, replays, failures = _execute_finite_experiment(
+        ComputeService(), None, spec, "def experiment(inputs):\n    return (", "goal")
+    assert evidence == [] and replays == []
+    assert len(failures) == 1
+    assert "computation job" in failures[0]
+    assert "invalid syntax" in failures[0] or "was never closed" in failures[0]
+
+
 def test_runner_worker_executes_model_experiment_as_computational_evidence(tmp_path):
     # A model that proposes a true finite check gets it EXECUTED in the trusted
     # sandbox and admitted as authenticated exact_computation evidence (task 4.5)
@@ -730,4 +741,3 @@ def test_full_verification_reaches_formally_verified_candidate(tmp_path):
     assert goal.evidence_profile.to_dict()["formal_verification"] == "KERNEL_CHECKED"
     assert classify_result(second, goal_claim_id="goal").state \
         is ResultState.FORMALLY_VERIFIED_CANDIDATE
-

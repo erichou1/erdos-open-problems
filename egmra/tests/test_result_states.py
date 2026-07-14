@@ -98,6 +98,19 @@ def test_open_no_progress_when_attempted_without_evidence():
     assert classify_result(result).state is ResultState.OPEN_NO_PROGRESS
 
 
+def test_incomplete_goal_only_assembly_is_not_claimed_as_partial_progress():
+    """Merely compiling an unsupported goal is activity, not mathematical progress."""
+    result = _result(
+        claims={"goal": _claim(TruthStatus.UNKNOWN)},
+        compiled_proof=SimpleNamespace(complete=False, used_claim_ids=()),
+    )
+
+    classification = classify_result(result)
+
+    assert classification.state is ResultState.OPEN_NO_PROGRESS
+    assert classification.signals["partial_assembly"] is False
+
+
 def test_blocked_by_interpretation_on_parser_disagreement():
     result = _result(claims={"goal": _claim()}, lattice_blocked=True)
     classification = classify_result(result)

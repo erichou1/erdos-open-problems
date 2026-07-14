@@ -32,6 +32,14 @@ def _signed_policy_file(tmp_path, *, promotion: bool = False):
     return path
 
 
+def test_campaign_attempt_ids_are_namespaced_and_path_safe():
+    first = cli_module._campaign_attempt_id("campaign/a", "erdos-601", 1)
+    second = cli_module._campaign_attempt_id("campaign/b", "erdos-601", 1)
+    assert first != second
+    assert "/" not in first and ".." not in first
+    assert first.endswith(".erdos-601.1")
+
+
 def _signed_intent_review_file(tmp_path, fixture_id: str):
     fx = fixture(fixture_id)
     contract = build_problem_contract(
@@ -118,9 +126,33 @@ def test_cli_run_fixture(tmp_path, capsys):
     assert out["problem_id"] == "fx-true-square"
     assert out["expectation_met"]
     assert out["candidate_assembly_complete"]
-    assert out["proof_complete"]
+    assert out["proof_complete"] is False
+    assert out["result_state"]["state"] == "COMPUTATIONAL_EVIDENCE"
     assert out["release"] is not None
     assert out["outcome"] == "verified_finite_or_conditional_result"
+
+
+def test_cli_fixture_closes_its_event_store(tmp_path, capsys, monkeypatch):
+    cfg = tmp_path / "cfg.json"
+    cfg.write_text(json.dumps({"events_dir": str(tmp_path / "runs")}))
+    policy = _signed_policy_file(tmp_path, promotion=True)
+    review = _signed_intent_review_file(tmp_path, "fx-true-square")
+    closed = []
+    original_close = cli_module._close_event_log
+
+    def record_close(log):
+        closed.append(log)
+        original_close(log)
+
+    monkeypatch.setattr(cli_module, "_close_event_log", record_close)
+
+    rc = main(["--config", str(cfg), "run", "--fixture", "fx-true-square",
+               "--policy", str(policy), "--intent-review", str(review)])
+
+    assert rc == 0
+    assert len(closed) == 1
+    assert closed[0] is not None
+    json.loads(capsys.readouterr().out)
 
 
 def test_cli_verified_expectation_requires_actual_release_not_candidate_only(
@@ -388,6 +420,76 @@ def test_cli_verified_fixture_requires_independent_intent_review(tmp_path, capsy
     assert out["proof_complete"] is False
 
 
+# --- Single-pipeline: campaign --triage drainer + legacy retirement -------------
+
+
+def _write_triage(tmp_path):
+    rankings = tmp_path / "triage" / "rankings"
+    rankings.mkdir(parents=True)
+    (rankings / "current.json").write_text(json.dumps({
+        "allocation_status": "ready",
+        "allocation_queue": [
+            {"problem_number": 312, "allocation_rank": 1},
+            {"problem_number": 1104, "allocation_rank": 2},
+        ],
+        "attempt_exclusions": [],
+    }))
+    return tmp_path / "triage"
+
+
+def test_campaign_triage_drains_ranked_problems_and_records_outcomes(
+    tmp_path, capsys, monkeypatch,
+):
+    cfg = tmp_path / "cfg.json"
+    cfg.write_text(json.dumps({"events_dir": str(tmp_path / "runs")}))
+    policy = _signed_policy_file(tmp_path)
+    triage = _write_triage(tmp_path)
+    ledger = tmp_path / "outcomes.jsonl"
+
+    drained: list[str] = []
+    real_from_erdos = cli_module.from_erdos_number
+
+    def fake_from_erdos(number, **kwargs):
+        drained.append(f"erdos-{number}")
+        return real_from_erdos(number, **kwargs)
+
+    monkeypatch.setattr(cli_module, "from_erdos_number", fake_from_erdos)
+
+    rc = main(["--config", str(cfg), "campaign",
+               "--triage", str(triage), "--triage-lane", "current",
+               "--provider", "deterministic", "--policy", str(policy),
+               "--retrieval", "none", "--oeis", "offline",
+               "--state", str(tmp_path / "camp.json"),
+               "--outcome-ledger", str(ledger)])
+
+    assert rc == 0
+    status = json.loads(capsys.readouterr().out)
+    assert status["total"] == 2
+    # Drained in the ranking's own order.
+    assert drained == ["erdos-312", "erdos-1104"]
+    # Honest outcomes recorded, one JSON record per line.
+    from egmra.orchestrator.outcome_ledger import EgmraOutcomeLedger
+    recorded = EgmraOutcomeLedger(ledger).latest_by_problem()
+    assert set(recorded) == {"erdos-312", "erdos-1104"}
+    assert all(not r["released"] for r in recorded.values())
+
+
+def test_campaign_rejects_both_triage_and_range(tmp_path, capsys):
+    cfg = tmp_path / "cfg.json"
+    cfg.write_text(json.dumps({"events_dir": str(tmp_path / "runs")}))
+    policy = _signed_policy_file(tmp_path)
+    triage = _write_triage(tmp_path)
+
+    rc = main(["--config", str(cfg), "campaign",
+               "--triage", str(triage), "--erdos-range", "900-905",
+               "--provider", "deterministic", "--policy", str(policy),
+               "--state", str(tmp_path / "camp.json")])
+
+    assert rc == 2
+    error = json.loads(capsys.readouterr().err)
+    assert error["error"] == "ValueError"
+
+
 # --- Retrieval / OEIS wiring (task 4.4) -----------------------------------------
 
 
@@ -501,4 +603,3 @@ def test_make_event_log_defaults_to_jsonl_backend():
     # jsonl is the default: research builds its own file log, so the helper
     # returns None rather than a Postgres connection.
     assert cli_module._make_event_log(argparse.Namespace(event_store="jsonl"), "r1") is None
-

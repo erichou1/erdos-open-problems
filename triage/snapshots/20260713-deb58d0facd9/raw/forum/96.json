@@ -1,0 +1,40 @@
+{
+  "problem_number": 96,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/96",
+  "retrieved_at": "2026-07-10T23:15:31.144577+00:00",
+  "page_title": "96 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "39211ee9bda563696bcac56d8f84d75e7a0751a7c0c5a269e2a43c9babcea614",
+  "comment_count": 6,
+  "comments": [
+    {
+      "post_id": "3073",
+      "text": "I think the problem is already solved at https://arxiv.org/pdf/1605.08066.",
+      "meta": "Allan_Zhao — 04:53 on 13 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3074",
+      "text": "I asked Gemini Deepthink about this paper, and it pointed out that this 2016 paper has not appeared in any journal (it appears to be part of a PhD thesis), and that the proof was rather intricate, though it did not actually go through it. (The author also appears to have ceased publication activity altogether around this time.) So I would say that the status of this solution is \"unconfirmed\". A separate ChatGPT Deep research query also declared the problem to remain open. Perhaps the proof can be verified (or, if it has gaps, have the gaps repaired) with some attention from either a human or an AI, but this may require some non-trivial effort (the paper seems to contain some visual and/or algorithmic arguments, which AIs are still somewhat weak at currently). EDIT: Page 38 of this 2025 paper of Alon, Bucić and Sauermann declares the 2015 Aggarwal result to still be the best result on this problem, suggesting that the 2016 preprint has not gained community acceptance. (The Alon et al. paper, by the way, does solve the conjecture if the Euclidean norm is replaced by a \"typical\" norm on the plane.) SECOND EDIT: ChatGPT Pro is also skeptical, pointing out specific portions of the 2016 paper that deserve additional scrutiny, and noted that these 2025 slides label the main result of this 2016 paper as a \"claim\" rather than a theorem (see slide 35).",
+      "meta": "TerenceTao — 05:38 on 13 Jan 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3076",
+      "text": "Seeing that later papers still use a \"weaker\" bound instead of this one, some skepticism is warranted. One point of concern is that the author states Theorem 4, claiming that a unit distance graph on $n$ points in convex position has $\\mathcal{O}(n)$ edges. However the proof is a bit elliptic, in Lemma 10 it chooses $u_2'$ via the constraint $u_2' > u_2$ and then claims, via a brief appeal to the left tree structure, that one may assume the relevant core path passes through $u_2'$, without explicitly choosing $u_2'$ to lie on that core path and then verifying that the ordering constraint $u_2' > u_2$ holds. The remainder of Lemma 10 is a nonlocal case analysis, with key cases handled by appeal to Lemma 7 and the final contradiction relying on geometric inequalities stated without a local derivation. Possibly if the author expands to make it more explicit, it could be more easily refereed and plausibly accepted.",
+      "meta": "uona — 06:56 on 13 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3090",
+      "text": "I have been looking at the paper for a while but have trouble \"parsing\" it. The core definition is a \"module\", and the core mechanism revolves around decomposing graphs into modules. However, a \"module\" is not easy to visualize nor does it feel intuitive. ChatGPT argues that a \"module\" is defined to be easy to count, but the trouble may lie in showing the desired decomposition. I myself am not sure because I must admit I haven't fully parsed why you need this definition. Unfortunately that's all I have to say regarding the mathematical content.",
+      "meta": "Nat Sothanaphan — 16:16 on 13 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7042",
+      "text": "It looks like an unfinished paper to me. Theorem 4 simply says \"A UDG on a convex point set with n vertices has O(n) edges.\", but the paper doesn't appear to contain the proof of that statement.",
+      "meta": "mysticflounder — 23:14 on 17 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3082",
+      "text": "This is interesting. I skimmed through these Gemini DeepThink, ChatGPT DeepResearch, and ChatGPT Pro conversations. It seems a large part of their reasoning is that THIS website declares it open. I think this makes it kind of circular (and it seems ChatGPT/Gemini is relying too much on \"authority\" without explicit prompting steering otherwise). I'll try to see what I can do in regards to the mathematical content of that paper itself.",
+      "meta": "Nat Sothanaphan — 12:03 on 13 Jan 2026 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

@@ -15,6 +15,7 @@ import pytest
 
 from egmra.agents.async_browser import (
     AsyncBrowserEngine,
+    PlaywrightAsyncPageDriver,
     TabBackend,
     build_browser_runner_pool,
 )
@@ -167,3 +168,45 @@ def test_build_browser_runner_pool_binds_one_runner_per_tab():
         assert len({runner.runner_id for runner in pool}) == 3
     finally:
         engine.close()
+
+
+class _DelayedComposerPage:
+    def __init__(self, *, appears: bool = True) -> None:
+        self.appears = appears
+        self.ready = False
+        self.waited = False
+
+    async def goto(self, _url, **_kwargs):
+        return None
+
+    async def wait_for_selector(self, _selector, **_kwargs):
+        self.waited = True
+        if not self.appears:
+            raise TimeoutError("composer stayed unavailable")
+        self.ready = True
+        return object()
+
+    async def query_selector(self, _selector):
+        return object() if self.ready else None
+
+    async def evaluate(self, _script):
+        return "https://chatgpt.com/g/project"
+
+
+def test_live_async_driver_waits_for_delayed_composer_before_returning():
+    driver = PlaywrightAsyncPageDriver()
+    driver._cb = type("CB", (), {"PROJECT_URL": "https://chatgpt.com/g/project"})
+    page = _DelayedComposerPage()
+
+    asyncio.run(driver.open_conversation(page))
+
+    assert page.waited and page.ready
+
+
+def test_live_async_driver_fails_explicitly_when_composer_never_appears():
+    driver = PlaywrightAsyncPageDriver()
+    driver._cb = type("CB", (), {"PROJECT_URL": "https://chatgpt.com/g/project"})
+    page = _DelayedComposerPage(appears=False)
+
+    with pytest.raises(RuntimeError, match="input box"):
+        asyncio.run(driver.open_conversation(page))
