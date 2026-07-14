@@ -46,6 +46,7 @@ from egmra.corpus import (
     from_statement_file,
 )
 from egmra.agents.browser_runner import BrowserProviderUnavailable
+from egmra.agents.async_browser import build_browser_runner_pool
 from egmra.agents.throttle import SharedThrottle
 from egmra.corpus.status import StatusClaim
 from egmra.eval.datasets import FIXTURE_PROBLEMS, fixture
@@ -185,6 +186,33 @@ def _browser_throttle(config: EgmraConfig, provider: str) -> "SharedThrottle | N
         return None
     state = Path(config.events_dir) / "browser_throttle.json"
     return SharedThrottle(state, max_cooldown_s=config.max_backoff_seconds)
+
+
+def _build_browser_engine(workers: int):
+    """Start an async multi-tab browser engine with ``workers`` tabs.
+
+    Playwright's sync API is single-threaded, so genuine multi-worker overlap on
+    one authenticated account uses the async API: ONE Chromium, N pages, driven on
+    a dedicated event loop, one tab per campaign worker. Reachable only with an
+    authenticated profile; failures surface as a clean CLI error (never a silent
+    single-worker degrade).
+    """
+    from egmra.agents.async_browser import AsyncBrowserEngine, PlaywrightAsyncPageDriver
+    try:
+        import playwright  # noqa: F401
+    except ImportError as exc:  # pragma: no cover - needs the browser extra
+        raise ValueError(
+            "browser provider requires the 'browser' extra (pip install -e .[browser] "
+            "&& playwright install chromium); or use --provider deterministic"
+        ) from exc
+    try:  # pragma: no cover - needs an authenticated profile + display
+        return AsyncBrowserEngine(PlaywrightAsyncPageDriver(), tab_count=int(workers)).start()
+    except (Exception, SystemExit) as exc:  # noqa: BLE001 - surface as a clean CLI error
+        raise ValueError(
+            f"browser provider is not operational ({type(exc).__name__}: {exc}); "
+            "authenticate a profile (python3 solve_submit.py --login) or use "
+            "--provider deterministic"
+        ) from exc
 
 
 def _resolve_postgres_dsn(args: argparse.Namespace) -> str:
@@ -793,23 +821,29 @@ def cmd_campaign(args: argparse.Namespace) -> int:
     enforcer = PolicyEnforcer(policy)
     corpus_tex = args.corpus_tex or default_corpus_tex_path()
     catalog = args.catalog or default_catalog_path()
-    # Playwright's sync API is single-threaded, so real multi-worker overlap is
-    # only safe for the credential-free provider; the browser provider drives one
-    # authenticated page and runs one worker (multi-tab async is future work).
-    if args.provider == "browser" and int(args.workers) > 1:
-        raise ValueError(
-            "browser provider supports --workers 1 (Playwright sync is single-threaded); "
-            "use --provider deterministic for real multi-worker concurrency"
-        )
-    runner = _build_runner(args.provider, throttle=_browser_throttle(config, args.provider))
+    # Genuine multi-worker overlap: the deterministic provider shares one runner
+    # across threads, while the browser provider drives ONE authenticated Chromium
+    # with N tabs on a dedicated event loop (async multi-tab), one tab per worker.
+    browser_engine = None
+    runners_by_worker: dict[str, Any] = {}
+    runner = None
+    if args.provider == "browser":
+        browser_engine = _build_browser_engine(int(args.workers))
+        pool = build_browser_runner_pool(
+            browser_engine, throttle=_browser_throttle(config, args.provider))
+        runners_by_worker = dict(zip(workers, pool))
+    else:
+        runner = _build_runner(args.provider, throttle=_browser_throttle(config, args.provider))
     # Build the immutable literature corpus once; it is shared read-only across
     # worker threads (the retrieval service copies it per packet).
     retrieval_corpus = _build_retrieval_corpus(args, config)
 
     def run_one(problem_id: str, fencing_token: int, worker_id: str) -> str:
+        # Each worker drives its own browser tab (or shares the deterministic runner).
+        worker_runner = runners_by_worker[worker_id] if browser_engine is not None else runner
         number = int(problem_id.split("-", 1)[1])
         problem = from_erdos_number(number, corpus_tex_path=corpus_tex, catalog_path=catalog)
-        worker = RunnerWorker(runner=runner, goal_claim_id="goal",
+        worker = RunnerWorker(runner=worker_runner, goal_claim_id="goal",
                               goal_formula=problem.display_statement, role=args.role,
                               compute_service=ComputeService())
         # A distinct event log per attempt keeps each try's chain clean on resume.
@@ -825,7 +859,7 @@ def cmd_campaign(args: argparse.Namespace) -> int:
                 oeis_client=oeis_client,
                 status_claims=list(problem.status_claims),
                 novelty_verdict=problem.novelty_verdict,
-                intent_review=None, runner=runner,
+                intent_review=None, runner=worker_runner,
             )
         finally:
             _close_event_log(event_log)
@@ -837,7 +871,10 @@ def cmd_campaign(args: argparse.Namespace) -> int:
             provider_unavailable=BrowserProviderUnavailable,
         )
     finally:
-        _close_runner(runner)
+        if browser_engine is not None:
+            browser_engine.close()  # tears down the browser and every tab
+        else:
+            _close_runner(runner)
     print(json.dumps(status, indent=2))
     return 0
 
@@ -1027,7 +1064,9 @@ def build_parser() -> argparse.ArgumentParser:
     run.add_argument("--role", default="prover",
                      help="worker role that shapes the reasoning prompt")
     run.add_argument("--workers", type=int, default=1,
-                     help="bounded worker concurrency for the run (1-5)")
+                     help="bounded worker concurrency for the run (1-5); a single problem "
+                          "is researched sequentially, so genuine multi-worker/multi-tab "
+                          "overlap is a campaign feature (see 'egmra campaign --workers')")
     run.add_argument("--corpus-tex", type=Path, default=None,
                      help="override the corpus TeX snapshot used by --erdos")
     run.add_argument("--catalog", type=Path, default=None,

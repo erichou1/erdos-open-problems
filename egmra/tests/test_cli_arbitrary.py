@@ -404,3 +404,79 @@ def test_run_informal_only_true_without_lean(tmp_path, monkeypatch):
     assert rc == 4
     assert captured["lean_service"] is None
     assert captured["informal_only"] is True
+
+
+# ── campaign browser provider drives genuine multi-tab workers (task #3) ────────
+
+class _FakeEngine:
+    def __init__(self, workers: int) -> None:
+        self.pages = [f"tab{i}" for i in range(workers)]
+        self.closed = False
+
+    def close(self) -> None:
+        self.closed = True
+
+
+def test_campaign_browser_multiworker_assigns_distinct_tabs(tmp_path, monkeypatch):
+    # The browser campaign no longer rejects --workers > 1: it builds an async
+    # multi-tab engine and hands each worker its OWN tab-runner. A 2-worker,
+    # 2-problem campaign is forced (via a barrier in the stubbed research) to have
+    # both workers active at once, so two DISTINCT tab-runners must be used.
+    import threading
+    from types import SimpleNamespace
+    import egmra.cli as cli_module
+
+    engines: list = []
+    monkeypatch.setattr(cli_module, "_build_browser_engine",
+                        lambda workers: engines.append(_FakeEngine(workers)) or engines[-1])
+    monkeypatch.setattr(cli_module, "from_erdos_number",
+                        lambda number, **kw: SimpleNamespace(
+                            problem_id=f"erdos-{number}", source_bytes=b"S", source_id="fx",
+                            display_statement="S", status_claims=[], novelty_verdict="N1"))
+
+    captured_runners: list = []
+    lock = threading.Lock()
+    barrier = threading.Barrier(2, timeout=5.0)
+
+    def _fake_research(**kwargs):
+        with lock:
+            captured_runners.append(kwargs["runner"])
+        barrier.wait()  # force genuine 2-worker overlap
+        return object()
+
+    monkeypatch.setattr(cli_module, "research", _fake_research)
+    monkeypatch.setattr(cli_module, "classify_result",
+                        lambda result, **kw: SimpleNamespace(state="OPEN_NO_PROGRESS"))
+
+    cfg = _config_file(tmp_path)
+    policy = _signed_policy_file(tmp_path)
+    rc = main(["--config", str(cfg), "campaign", "--provider", "browser", "--workers", "2",
+               "--erdos-range", "5-6", "--policy", str(policy),
+               "--state", str(tmp_path / "camp.json")])
+    assert rc == 0
+    # Two distinct tab-runners were used (genuine multi-tab), and the shared
+    # browser engine was torn down afterward.
+    assert len({id(runner) for runner in captured_runners}) == 2
+    assert engines and engines[0].closed is True
+
+
+def test_campaign_browser_workers_no_longer_capped_to_one(tmp_path, monkeypatch):
+    # Regression: the browser provider previously raised "supports --workers 1".
+    from types import SimpleNamespace
+    import egmra.cli as cli_module
+
+    monkeypatch.setattr(cli_module, "_build_browser_engine",
+                        lambda workers: _FakeEngine(workers))
+    monkeypatch.setattr(cli_module, "from_erdos_number",
+                        lambda number, **kw: SimpleNamespace(
+                            problem_id=f"erdos-{number}", source_bytes=b"S", source_id="fx",
+                            display_statement="S", status_claims=[], novelty_verdict="N1"))
+    monkeypatch.setattr(cli_module, "research", lambda **kw: object())
+    monkeypatch.setattr(cli_module, "classify_result",
+                        lambda result, **kw: SimpleNamespace(state="OPEN_NO_PROGRESS"))
+    cfg = _config_file(tmp_path)
+    policy = _signed_policy_file(tmp_path)
+    rc = main(["--config", str(cfg), "campaign", "--provider", "browser", "--workers", "3",
+               "--erdos-range", "5-7", "--policy", str(policy),
+               "--state", str(tmp_path / "camp.json")])
+    assert rc == 0  # was rc 2 (ValueError: browser supports --workers 1)
