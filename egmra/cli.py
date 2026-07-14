@@ -54,6 +54,7 @@ from egmra.intake.review import interpretation_review_hash
 from egmra.orchestrator import (
     Campaign,
     DeterministicWorker,
+    PostgresCampaignStore,
     RunnerWorker,
     StructuredDemoRunner,
     classify_result,
@@ -893,10 +894,20 @@ def cmd_campaign(args: argparse.Namespace) -> int:
         raise ValueError("--workers must be between 1 and 5")
     state_path = Path(args.state)
     workers = tuple(f"w{i}" for i in range(int(args.workers)))
-    campaign = Campaign(state_path, worker_ids=workers)
+    # Durable campaign state: a signed local JSON file by default, or an opt-in
+    # DB-backed store (--state-store postgres) so leases/checkpoints are durable
+    # and coordinated across processes/hosts sharing the database.
+    campaign_store = None
+    if getattr(args, "state_store", "file") == "postgres":
+        campaign_store = PostgresCampaignStore(
+            _resolve_postgres_dsn(args), name=(args.campaign_id or state_path.stem))
+    campaign = Campaign(state_path, worker_ids=workers, store=campaign_store)
 
     if args.status:
-        print(json.dumps(campaign.status(), indent=2))
+        try:
+            print(json.dumps(campaign.status(), indent=2))
+        finally:
+            campaign.close()
         return 0
 
     if not args.erdos_range:
@@ -982,6 +993,7 @@ def cmd_campaign(args: argparse.Namespace) -> int:
             _close_runner(runner)
         for formalizer in formalizers_by_worker.values():
             formalizer.close()
+        campaign.close()
     print(json.dumps(status, indent=2))
     return 0
 
@@ -1245,6 +1257,10 @@ def build_parser() -> argparse.ArgumentParser:
     campaign.add_argument("--catalog", type=Path, default=None)
     campaign.add_argument("--event-store", choices=("jsonl", "postgres"), default="jsonl",
                           help="event-log backend for each attempt ('jsonl' or 'postgres')")
+    campaign.add_argument("--state-store", choices=("file", "postgres"), default="file",
+                          help="campaign lease/checkpoint store: 'file' (signed local JSON) "
+                               "or 'postgres' (DB-backed, coordinated across processes; "
+                               "uses --dsn or EGMRA_POSTGRES_DSN)")
     campaign.add_argument("--dsn", default=None,
                           help="Postgres DSN for --event-store postgres (or EGMRA_POSTGRES_DSN)")
     campaign.add_argument("--retrieval", choices=("corpus", "none"), default="corpus",

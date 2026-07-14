@@ -25,7 +25,7 @@ import time
 from contextlib import contextmanager
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any, Callable
+from typing import Any, Callable, Protocol
 
 from egmra.provenance.hashing import canonical_json, content_id
 
@@ -69,6 +69,180 @@ class Assignment:
         return dict(self.__dict__)
 
 
+# ── pluggable durable state stores (signed; file default, Postgres opt-in) ────
+
+def _hmac_hex(key: bytes, message: str) -> str:
+    return hmac.new(key, message.encode("utf-8"), hashlib.sha256).hexdigest()
+
+
+def _sign_body(key: bytes, body: dict[str, Any]) -> str:
+    return _hmac_hex(key, canonical_json(body))
+
+
+class CampaignStore(Protocol):
+    """Durable, mutually-exclusive storage for one campaign's signed state."""
+
+    def read(self) -> dict[str, Any] | None: ...
+    def write(self, body: dict[str, Any]) -> None: ...
+    def locked(self): ...  # cross-process mutual-exclusion context manager
+    def close(self) -> None: ...
+
+
+class FileCampaignStore:
+    """Signed-JSON file store (default): atomic write + an OS advisory file lock."""
+
+    def __init__(self, state_path: str | Path, *, env: dict[str, str] | None = None) -> None:
+        self.state_path = Path(state_path)
+        self._key = _campaign_key(env)
+        self.state_path.parent.mkdir(parents=True, exist_ok=True)
+
+    def read(self) -> dict[str, Any] | None:
+        if not self.state_path.exists():
+            return None
+        try:
+            state = json.loads(self.state_path.read_text(encoding="utf-8"))
+        except (OSError, ValueError) as exc:
+            raise CampaignError(f"cannot read campaign state: {exc}") from exc
+        if not isinstance(state, dict) or "signature" not in state:
+            raise CampaignError("campaign state is malformed")
+        body = {k: v for k, v in state.items() if k != "signature"}
+        if not hmac.compare_digest(_sign_body(self._key, body), state["signature"]):
+            raise CampaignError("campaign state signature is invalid (tampered or wrong key)")
+        return body
+
+    def write(self, body: dict[str, Any]) -> None:
+        state = dict(body) | {"signature": _sign_body(self._key, body)}
+        tmp = self.state_path.with_suffix(self.state_path.suffix + ".tmp")
+        tmp.write_text(json.dumps(state), encoding="utf-8")
+        os.chmod(tmp, 0o600)
+        os.replace(tmp, self.state_path)
+
+    @contextmanager
+    def locked(self):
+        lock_path = self.state_path.with_suffix(self.state_path.suffix + ".lock")
+        handle = open(lock_path, "a+")
+        try:
+            try:
+                import fcntl
+
+                fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
+            except (ImportError, OSError):
+                pass
+            yield
+        finally:
+            handle.close()
+
+    def close(self) -> None:
+        return None
+
+
+class PostgresCampaignStore:
+    """DB-backed campaign store: signed state in one row + a cross-process advisory
+    lock (``pg_advisory_lock``), so leases/checkpoints are durable and coordinated
+    across processes/hosts sharing the database (not just a local JSON file).
+
+    Requires a Postgres server + the optional psycopg dependency. The signed body
+    is stored as canonical JSON *text* (never JSONB) so the tamper-evident
+    signature is verified against the exact stored bytes. Same signing key and
+    ``CampaignError`` fail-closed contract as the file store.
+    """
+
+    schema_ddl = (
+        "CREATE TABLE IF NOT EXISTS campaign_state ("
+        " name TEXT PRIMARY KEY, body TEXT NOT NULL, signature TEXT NOT NULL,"
+        " updated_at TIMESTAMPTZ NOT NULL DEFAULT now());"
+    )
+
+    def __init__(self, dsn: str, *, name: str, env: dict[str, str] | None = None) -> None:
+        from urllib.parse import urlsplit, urlunsplit
+
+        if not isinstance(dsn, str):
+            raise ValueError("Postgres DSN must be a string")
+        parsed = urlsplit(dsn)
+        if parsed.scheme not in {"postgres", "postgresql"} or not parsed.hostname \
+                or not parsed.path or parsed.path == "/":
+            raise ValueError("Postgres DSN must identify a postgres host and database")
+        if not isinstance(name, str) or not name.strip():
+            raise CampaignError("campaign store name must be a non-empty string")
+        self._dsn = dsn
+        self.name = name
+        self._key = _campaign_key(env)
+        self._conn = None
+        self._lock = threading.RLock()
+        # A stable 64-bit advisory-lock key derived from the campaign name.
+        self._lock_key = int.from_bytes(
+            hashlib.sha256(name.encode("utf-8")).digest()[:8], "big", signed=True)
+        host = parsed.hostname + (f":{parsed.port}" if parsed.port else "")
+        self.dsn = urlunsplit((parsed.scheme, host, parsed.path, parsed.query, ""))
+
+    def connect(self):  # pragma: no cover - requires a database server
+        try:
+            import psycopg  # type: ignore[import-not-found]
+        except ImportError as exc:
+            raise RuntimeError(
+                "Postgres adapter unavailable: install the optional psycopg dependency"
+            ) from exc
+        try:
+            connection = psycopg.connect(self._dsn, connect_timeout=5)
+            with connection.cursor() as cursor:
+                cursor.execute(self.schema_ddl)
+            connection.commit()
+            connection.autocommit = True
+            return connection
+        except Exception as exc:
+            raise RuntimeError(
+                f"Postgres connection/schema initialization failed for {self.dsn}") from exc
+
+    def migrate(self) -> None:  # pragma: no cover - requires a database server
+        self.connect().close()
+
+    def _connection(self):  # pragma: no cover - requires a database server
+        if self._conn is None or getattr(self._conn, "closed", False):
+            self._conn = self.connect()
+        return self._conn
+
+    def read(self) -> dict[str, Any] | None:  # pragma: no cover - requires a server
+        with self._connection().cursor() as cursor:
+            cursor.execute(
+                "SELECT body, signature FROM campaign_state WHERE name = %s", (self.name,))
+            row = cursor.fetchone()
+        if row is None:
+            return None
+        body_text, signature = str(row[0]), str(row[1])
+        if not hmac.compare_digest(_hmac_hex(self._key, body_text), signature):
+            raise CampaignError("campaign state signature is invalid (tampered or wrong key)")
+        return json.loads(body_text)
+
+    def write(self, body: dict[str, Any]) -> None:  # pragma: no cover - requires a server
+        body_text = canonical_json(body)
+        signature = _hmac_hex(self._key, body_text)
+        with self._connection().cursor() as cursor:
+            cursor.execute(
+                "INSERT INTO campaign_state (name, body, signature, updated_at) "
+                "VALUES (%s, %s, %s, now()) ON CONFLICT (name) DO UPDATE SET "
+                "body = EXCLUDED.body, signature = EXCLUDED.signature, updated_at = now()",
+                (self.name, body_text, signature))
+
+    @contextmanager
+    def locked(self):  # pragma: no cover - requires a database server
+        connection = self._connection()
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT pg_advisory_lock(%s)", (self._lock_key,))
+        try:
+            yield
+        finally:
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT pg_advisory_unlock(%s)", (self._lock_key,))
+
+    def close(self) -> None:  # pragma: no cover - requires a database server
+        with self._lock:
+            if self._conn is not None:
+                try:
+                    self._conn.close()
+                finally:
+                    self._conn = None
+
+
 class Campaign:
     """A durable, resumable campaign over an ordered list of problems."""
 
@@ -80,6 +254,7 @@ class Campaign:
         lease_seconds: float = 900.0,
         max_attempts: int = 5,
         env: dict[str, str] | None = None,
+        store: CampaignStore | None = None,
     ) -> None:
         if not 1 <= len(worker_ids) <= 5:
             raise CampaignError("a campaign runs between 1 and 5 workers")
@@ -89,52 +264,30 @@ class Campaign:
         self.worker_ids = tuple(worker_ids)
         self.lease_seconds = float(lease_seconds)
         self.max_attempts = int(max_attempts)
-        self._key = _campaign_key(env)
-        self.state_path.parent.mkdir(parents=True, exist_ok=True)
         self._thread_lock = threading.RLock()
+        # Durable state lives behind a pluggable store: a signed local JSON file by
+        # default, or an opt-in DB-backed store so leases/checkpoints are coordinated
+        # across processes/hosts sharing a database.
+        self._store: CampaignStore = store if store is not None \
+            else FileCampaignStore(state_path, env=env)
 
-    # ── durable state ────────────────────────────────────────────────────────
-    def _sign(self, body: dict[str, Any]) -> str:
-        return hmac.new(self._key, canonical_json(body).encode("utf-8"), hashlib.sha256).hexdigest()
+    def close(self) -> None:
+        """Release any store resources (a no-op for the file store)."""
+        self._store.close()
 
+    # ── durable state (delegated to the pluggable store) ─────────────────────
     def _write(self, state: dict[str, Any]) -> None:
-        body = {k: v for k, v in state.items() if k != "signature"}
-        state = body | {"signature": self._sign(body)}
-        tmp = self.state_path.with_suffix(self.state_path.suffix + ".tmp")
-        tmp.write_text(json.dumps(state), encoding="utf-8")
-        os.chmod(tmp, 0o600)
-        os.replace(tmp, self.state_path)
+        self._store.write(state)
 
     def _read(self) -> dict[str, Any] | None:
-        if not self.state_path.exists():
-            return None
-        try:
-            state = json.loads(self.state_path.read_text(encoding="utf-8"))
-        except (OSError, ValueError) as exc:
-            raise CampaignError(f"cannot read campaign state: {exc}") from exc
-        if not isinstance(state, dict) or "signature" not in state:
-            raise CampaignError("campaign state is malformed")
-        body = {k: v for k, v in state.items() if k != "signature"}
-        if not hmac.compare_digest(self._sign(body), state["signature"]):
-            raise CampaignError("campaign state signature is invalid (tampered or wrong key)")
-        return state
+        return self._store.read()
 
     @contextmanager
     def _locked(self):
-        lock_path = self.state_path.with_suffix(self.state_path.suffix + ".lock")
-        # In-process mutual exclusion (threads) plus a cross-process advisory lock.
+        # In-process mutual exclusion (threads) plus the store's cross-process lock.
         with self._thread_lock:
-            handle = open(lock_path, "a+")
-            try:
-                try:
-                    import fcntl
-
-                    fcntl.flock(handle.fileno(), fcntl.LOCK_EX)
-                except (ImportError, OSError):
-                    pass
+            with self._store.locked():
                 yield
-            finally:
-                handle.close()
 
     def _decode(self, state: dict[str, Any]) -> dict[str, Assignment]:
         return {pid: Assignment(**a) for pid, a in state["assignments"].items()}
