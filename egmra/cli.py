@@ -566,6 +566,16 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
         if getattr(args, "predicate", None) else None
     )
     runner = _build_runner(args.provider, throttle=_browser_throttle(config, args.provider))
+    # Exchange-level durability (finer than branch checkpoints): with a
+    # checkpoint dir configured, every model exchange is cached keyed by its
+    # exact prompt hash, so a retried attempt replays identical exchanges
+    # instantly and goes live at the first divergence. Fail-open to live.
+    checkpoint_dir = getattr(args, "checkpoint_dir", None)
+    if checkpoint_dir is not None:
+        from egmra.agents.exchange_cache import CachedRunner
+
+        runner = CachedRunner(
+            runner, Path(checkpoint_dir) / problem.problem_id / "exchanges")
     policy = load_policy(Path(args.policy) if args.policy else default_policy_path())
     enforcer = PolicyEnforcer(policy)
     run_id = _new_attempt_id(problem.problem_id)
@@ -1496,6 +1506,12 @@ def cmd_campaign(args: argparse.Namespace) -> int:
         worker_runner = runners_by_worker[worker_id] if browser_engine is not None else runner
         number = int(problem_id.split("-", 1)[1])
         problem = from_erdos_number(number, corpus_tex_path=corpus_tex, catalog_path=catalog)
+        if getattr(args, "checkpoint_dir", None) is not None:
+            from egmra.agents.exchange_cache import CachedRunner
+
+            worker_runner = CachedRunner(
+                worker_runner,
+                Path(args.checkpoint_dir) / problem.problem_id / "exchanges")
         retrieval_corpus = (
             _build_retrieval_corpus(args, config, query=problem.display_statement)
             if scholarly_mode else shared_corpus)

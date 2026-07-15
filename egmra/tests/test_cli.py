@@ -685,3 +685,19 @@ def test_campaign_reviews_dir_binds_intent_per_problem(tmp_path, capsys):
     assert "INTENT_CERTIFICATE_ISSUED" in actions_for("erdos-312")
     # ...while erdos-1104, with no artifact, ran exactly as before.
     assert "INTENT_CERTIFICATE_ISSUED" not in actions_for("erdos-1104")
+
+
+def test_checkpoint_dir_enables_exchange_cache(tmp_path, capsys):
+    """--checkpoint-dir now also persists per-exchange replay entries."""
+    cfg = tmp_path / "cfg.json"
+    cfg.write_text(json.dumps({"events_dir": str(tmp_path / "runs")}))
+    policy = _signed_policy_file(tmp_path)
+
+    rc = main(["--config", str(cfg), "run", "--provider", "deterministic",
+               "--policy", str(policy), "--statement",
+               "Prove that for all natural numbers n, n squared is at least 0.",
+               "--retrieval", "none", "--oeis", "offline",
+               "--checkpoint-dir", str(tmp_path / "ckpts")])
+    assert rc == 0
+    exchange_dirs = list((tmp_path / "ckpts").glob("*/exchanges/*.json"))
+    assert exchange_dirs                      # exchanges persisted durably
