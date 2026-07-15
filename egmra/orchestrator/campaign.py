@@ -361,6 +361,30 @@ class Campaign:
                 return Assignment(**a.to_dict())
             return None
 
+    def reorder_pending(self, new_order: list[str]) -> bool:
+        """Atomically adopt a new problem order (continuous rerank support).
+
+        Fail-closed: the new order must be a permutation of the EXACT existing
+        problem set — nothing may be added or dropped by a reorder.  Order only
+        affects which available problem ``lease`` picks next; leased and
+        completed problems are untouched (lease skips them regardless of
+        position).  The rewritten state is re-signed like every other write.
+        """
+        with self._locked():
+            state = self._read()
+            if state is None:
+                raise CampaignError("campaign is not initialized")
+            if sorted(new_order) != sorted(state["order"]) \
+                    or len(set(new_order)) != len(new_order):
+                raise CampaignError(
+                    "reorder must be a permutation of the existing problem set")
+            if list(new_order) == list(state["order"]):
+                return False
+            self._write(self._encode(
+                state["campaign_id"], list(new_order), self._decode(state),
+                int(state["fencing_counter"])))
+            return True
+
     def _update(self, problem_id: str, worker_id: str, fencing_token: int,
                 mutate: Callable[[Assignment], None]) -> bool:
         with self._locked():

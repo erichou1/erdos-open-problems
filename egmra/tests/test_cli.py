@@ -701,3 +701,29 @@ def test_checkpoint_dir_enables_exchange_cache(tmp_path, capsys):
     assert rc == 0
     exchange_dirs = list((tmp_path / "ckpts").glob("*/exchanges/*.json"))
     assert exchange_dirs                      # exchanges persisted durably
+
+
+def test_campaign_auto_rerank_adjusts_pending_order_from_outcomes(tmp_path, capsys):
+    """--auto-rerank: observed outcomes rewrite the pending order mid-campaign."""
+    cfg = tmp_path / "cfg.json"
+    cfg.write_text(json.dumps({"events_dir": str(tmp_path / "runs")}))
+    policy = _signed_policy_file(tmp_path)
+    triage = _write_triage(tmp_path)          # searcher order: 312, 1104
+    ledger = tmp_path / "outcomes.jsonl"
+    # Prior campaigns observed 312 repeatedly interpretation-blocked.
+    ledger.write_text("\n".join(json.dumps({
+        "problem_id": "erdos-312", "public_state": "BLOCKED_BY_INTERPRETATION",
+        "released": False}) for _ in range(2)) + "\n")
+
+    rc = main(["--config", str(cfg), "campaign",
+               "--triage", str(triage), "--triage-lane", "current",
+               "--provider", "deterministic", "--policy", str(policy),
+               "--retrieval", "none", "--oeis", "offline", "--auto-rerank",
+               "--state", str(tmp_path / "camp.json"),
+               "--outcome-ledger", str(ledger)])
+    assert rc == 0
+    state = json.loads((tmp_path / "camp.json").read_text())
+    # after the first completion the dead-end history demoted 312 behind 1104
+    assert state["order"] == ["erdos-1104", "erdos-312"]
+    # and both problems still completed (rerank never drops work)
+    assert {a["status"] for a in state["assignments"].values()} == {"done"}

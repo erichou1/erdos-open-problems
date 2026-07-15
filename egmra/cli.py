@@ -64,6 +64,7 @@ from egmra.orchestrator import (
     classify_result,
     research,
 )
+from egmra.orchestrator.campaign import CampaignError
 from egmra.orchestrator.outcome_ledger import (
     EgmraOutcomeLedger,
     build_outcome_record,
@@ -1568,6 +1569,24 @@ def cmd_campaign(args: argparse.Namespace) -> int:
             outcome_ledger.record(build_outcome_record(
                 problem_id=problem.problem_id, result=result,
                 run_id=attempt_run_id, state=state))
+            if getattr(args, "auto_rerank", False):
+                # Continuous rerank: observed outcomes mechanically adjust the
+                # PENDING order (search preference only — never truth, never
+                # release). The searcher prior is the tie-break; leased and
+                # completed problems are untouched. Fail-open: a rerank
+                # problem never affects the recorded mathematical outcome.
+                try:
+                    from egmra.orchestrator.rerank import rerank_pending
+
+                    new_order, reasons = rerank_pending(
+                        list(problem_ids), outcome_ledger.records())
+                    if campaign.reorder_pending(new_order) and reasons:
+                        print(json.dumps({
+                            "auto_rerank": {"order": new_order,
+                                            "reasons": reasons},
+                        }), file=sys.stderr, flush=True)
+                except (CampaignError, OSError, ValueError):
+                    pass
         return state
 
     try:
@@ -2018,6 +2037,12 @@ def build_parser() -> argparse.ArgumentParser:
                                "a problem with a valid signed intent can RELEASE from a "
                                "campaign exactly like 'egmra run' \u2014 problems without "
                                "artifacts stay evidence-grade as before")
+    campaign.add_argument("--auto-rerank", action="store_true",
+                          help="continuously rerank the PENDING queue from observed "
+                               "outcomes after each completed problem (progress promotes, "
+                               "repeated dead-ends demote; searcher order is the "
+                               "tie-break) \u2014 a search-order preference only, never a "
+                               "truth or release signal")
     campaign.add_argument("--status", action="store_true", help="print campaign status and exit")
     campaign.set_defaults(func=cmd_campaign)
     initdb = sub.add_parser("init-db", help="create/verify the Postgres event schema")
