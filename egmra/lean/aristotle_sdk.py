@@ -118,17 +118,15 @@ class AristotleSdkClient:
     def _await(self, value: Any) -> Any:
         if not inspect.isawaitable(value):
             return value
-        try:
-            asyncio.get_running_loop()
-        except RuntimeError:
-            if self._loop_obj is None or self._loop_obj.is_closed():
-                self._loop_obj = asyncio.new_event_loop()
-            return self._loop_obj.run_until_complete(value)
-        # A loop is already running on THIS thread — sync Playwright keeps one
-        # active between browser calls, so this is the normal state inside a
-        # browser-provider research run.  Blocking it with run_until_complete
-        # would deadlock; marshal the coroutine to a dedicated client-owned
-        # loop thread instead (the same pattern as AsyncBrowserEngine).
+        # Marshal EVERY awaitable to a single client-owned loop thread. This one
+        # path covers both hazards at once: (1) the calling thread may already
+        # have a running loop (sync Playwright keeps one active between browser
+        # calls — the normal state inside a browser-provider research run),
+        # where run_until_complete would deadlock; (2) CONCURRENT formalization
+        # calls (parallel Aristotle proofs) would race a shared
+        # run_until_complete loop — run_coroutine_threadsafe is safe for
+        # concurrent submitters, and the coroutines make genuinely concurrent
+        # progress on the one loop.
         with self._bg_lock:
             if self._bg_loop is None or not (
                 self._bg_thread is not None and self._bg_thread.is_alive()

@@ -26,6 +26,7 @@ import base64
 import binascii
 import json
 import re
+from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any
@@ -52,6 +53,11 @@ _MAX_SEQ_TERMS = 64
 # never crowd out the target statement.
 _PACKET_MAX_RECORDS = 12
 _PACKET_CHAR_BUDGET = 4000
+# Width of the per-branch formalization dispatch pool. Matches the Aristotle
+# account's concurrent-proof limit; the ACTUAL account-wide cap is enforced by
+# the shared slot semaphore inside AristotleFormalizer (this is just how many
+# candidates one branch dispatches at once instead of serially).
+_MAX_PARALLEL_FORMALIZATIONS = 5
 
 WORKER_RESPONSE_SCHEMA = {
     "goal_restatement": "str",
@@ -726,7 +732,10 @@ class RunnerWorker:
         ``formalizer`` (e.g. Aristotle) is configured, the vendor produces the
         PROOF while the obligation (``declaration_name`` + ``expected_type``) stays
         pinned here; the produced Lean is untrusted and re-checked by the pinned
-        kernel downstream. A vendor status never promotes on its own.
+        kernel downstream. A vendor status never promotes on its own. Multiple
+        source-less candidates are dispatched to the formalizer concurrently
+        (bounded by the vendor's account-wide slot budget); parallelism changes
+        wall-clock time only, never the emitted artifacts or their order.
         """
         if not (self.lean_version and self.mathlib_commit):
             return []
@@ -734,26 +743,62 @@ class RunnerWorker:
             project_hash = sha256_hex(str(Path(self.lean_project).resolve()))
         else:
             project_hash = sha256_hex(f"{self.lean_version}\n{self.mathlib_commit}")
+        candidates = list(candidates)
+        # Resolve candidate sources first — dispatching source-less candidates to
+        # the formalizer IN PARALLEL (each Aristotle proof runs for many minutes;
+        # serial dispatch left the vendor's 5-concurrent-task account budget
+        # idle). The account-wide cap is enforced by the formalizer's shared
+        # slot semaphore; this pool only widens one branch's dispatch. Output
+        # assembly below stays in candidate order, so results, emitted formal
+        # candidates, and failure strings are byte-identical to the serial path.
+        sources: dict[int, str] = {}
+        errors: dict[int, str] = {}
+        pending: list[int] = []
+        for idx, cand in enumerate(candidates):
+            source = (cand.get("source") or "").strip()
+            if source:
+                sources[idx] = source
+            elif self.formalizer is not None:
+                pending.append(idx)
+
+        def _produce(idx: int) -> str:
+            cand = candidates[idx]
+            produced = self.formalizer.formalize(
+                declaration_name=cand["declaration_name"],
+                expected_type=cand["expected_type"],
+                informal_statement=self.goal_formula or cand["expected_type"],
+            )
+            return (produced or "").strip()
+
+        if len(pending) == 1:
+            # Single candidate: stay on the caller thread (no pool overhead).
+            try:
+                sources[pending[0]] = _produce(pending[0])
+            except Exception as exc:  # noqa: BLE001 - vendor outage is not a math failure
+                errors[pending[0]] = type(exc).__name__
+        elif pending:
+            width = min(len(pending), _MAX_PARALLEL_FORMALIZATIONS)
+            with ThreadPoolExecutor(max_workers=width,
+                                    thread_name_prefix="formalize") as pool:
+                futures = {idx: pool.submit(_produce, idx) for idx in pending}
+                for idx, future in futures.items():
+                    try:
+                        sources[idx] = future.result()
+                    except Exception as exc:  # noqa: BLE001 - vendor outage is not a math failure
+                        errors[idx] = type(exc).__name__
+
+        pending_set = set(pending)
         out: list[dict] = []
-        for cand in candidates:
+        for idx, cand in enumerate(candidates):
             requested = cand.get("claim_id") or ""
             target = requested if requested in seen else self.goal_claim_id
             expected_type = cand["expected_type"]
-            source = (cand.get("source") or "").strip()
-            if not source and self.formalizer is not None:
-                try:
-                    produced = self.formalizer.formalize(
-                        declaration_name=cand["declaration_name"],
-                        expected_type=expected_type,
-                        informal_statement=self.goal_formula or expected_type,
-                    )
-                    source = (produced or "").strip()
-                except Exception as exc:  # noqa: BLE001 - vendor outage is not a math failure
-                    source = ""
-                    if failures is not None:
-                        failures.append(
-                            f"formalizer_error:{branch_id}:{type(exc).__name__}")
-                if not source and failures is not None:
+            source = sources.get(idx, "")
+            if idx in pending_set and failures is not None:
+                if idx in errors:
+                    failures.append(
+                        f"formalizer_error:{branch_id}:{errors[idx]}")
+                if not source:
                     failures.append(
                         f"formalization_unavailable:{branch_id}:{cand['declaration_name']}")
             if not source:

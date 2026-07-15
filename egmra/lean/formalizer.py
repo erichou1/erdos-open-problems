@@ -16,6 +16,8 @@ promotes on its own.
 
 from __future__ import annotations
 
+import os
+import threading
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol
@@ -23,6 +25,33 @@ from typing import Any, Protocol
 # Defensive ceiling on how much candidate Lean text we read back from a vendor
 # quarantine (the archive extractor already enforces per-entry / total limits).
 _MAX_SOURCE_BYTES = 2_000_000
+
+# The Aristotle service allows at most this many proof tasks in flight per
+# ACCOUNT. The budget is shared process-wide across every AristotleFormalizer
+# instance (campaign workers each hold their own client, but they share the one
+# account), so parallel formalization can never exceed the vendor limit.
+_ARISTOTLE_ACCOUNT_LIMIT = 5
+_shared_slots: threading.BoundedSemaphore | None = None
+_shared_slots_lock = threading.Lock()
+
+
+def _aristotle_max_concurrent(env: Any = None) -> int:
+    """Concurrent-proof budget: EGMRA_ARISTOTLE_MAX_CONCURRENT clamped to 1..5."""
+    source = os.environ if env is None else env
+    raw = source.get("EGMRA_ARISTOTLE_MAX_CONCURRENT", "")
+    try:
+        value = int(raw)
+    except (TypeError, ValueError):
+        return _ARISTOTLE_ACCOUNT_LIMIT
+    return max(1, min(_ARISTOTLE_ACCOUNT_LIMIT, value))
+
+
+def _shared_aristotle_slots() -> threading.BoundedSemaphore:
+    global _shared_slots
+    with _shared_slots_lock:
+        if _shared_slots is None:
+            _shared_slots = threading.BoundedSemaphore(_aristotle_max_concurrent())
+        return _shared_slots
 
 
 class Formalizer(Protocol):
@@ -116,6 +145,9 @@ class AristotleFormalizer:
 
     client: Any
     formalizer_id: str = "aristotle"
+    # Vendor-task slot budget. None = the process-wide shared semaphore (the
+    # account allows at most 5 concurrent proofs); injectable for tests.
+    slots: Any = None
 
     def formalize(self, *, declaration_name: str, expected_type: str,
                   informal_statement: str, previous_source: str = "",
@@ -124,8 +156,13 @@ class AristotleFormalizer:
             declaration_name=declaration_name, expected_type=expected_type,
             informal_statement=informal_statement,
             previous_source=previous_source, kernel_feedback=kernel_feedback)
-        submission = self.client.submit(prompt)
-        artifact = self.client.fetch(submission, wait=True)
+        slots = self.slots if self.slots is not None else _shared_aristotle_slots()
+        # Hold one account slot for the task's full submit→completion window so
+        # concurrent callers (parallel candidates × campaign workers) can never
+        # exceed the vendor's concurrent-proof limit; excess callers just wait.
+        with slots:
+            submission = self.client.submit(prompt)
+            artifact = self.client.fetch(submission, wait=True)
         # The vendor archive is already extracted into a hardened quarantine and
         # is NEVER promotable on arrival; we only read the source to re-check it.
         return read_lean_source(Path(artifact.quarantine_dir))
