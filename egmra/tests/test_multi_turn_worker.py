@@ -181,3 +181,44 @@ def test_formal_target_appears_in_both_prompt_kinds():
         assert "untrusted for" in prompt  # never truth authority
     bare = branch_prompt("S", role="prover", branch_id="b1", packet_summary="")
     assert "COMMUNITY-REVIEWED FORMAL TARGET" not in bare
+
+
+class _OutageAfterRunner(PromptRecordingRunner):
+    """Serves N good replies, then raises a browser outage."""
+
+    def __init__(self, replies, *, fail_from_call):
+        super().__init__(replies)
+        self._fail_from_call = fail_from_call
+
+    def run(self, prompt, *, stage):
+        if len(self.calls) + 1 >= self._fail_from_call:
+            self.calls.append((stage, prompt))
+            from egmra.agents.browser_runner import BrowserResponseError
+            raise BrowserResponseError("unusable response (test outage)")
+        return super().run(prompt, stage=stage)
+
+
+def test_later_round_provider_outage_salvages_completed_rounds():
+    """2.5 hours of rounds 1-3 must survive a round-4 provider outage."""
+    runner = _OutageAfterRunner([
+        _round_reply(claims=[("lem1", "L1")], open_subgoals=["more"]),
+        _round_reply(claims=[("lem2", "L2")], open_subgoals=["more"]),
+    ], fail_from_call=3)
+    worker = RunnerWorker(runner=runner, goal_claim_id="goal", goal_formula="T",
+                          max_rounds=4)
+    out = worker.work_branch(None, None, branch_id="b1", budget=5.0, fencing_token=1)
+    salvaged = {p["claim_id"] for p in out.claim_proposals}
+    assert {"lem1", "lem2"} <= salvaged
+    assert any(f.startswith("provider_outage:b1:round3") for f in out.failures)
+
+
+def test_round_one_provider_outage_still_propagates():
+    """Nothing to salvage on round 1: the durable retain/resume policy owns it."""
+    import pytest
+    from egmra.agents.browser_runner import BrowserResponseError
+
+    runner = _OutageAfterRunner([], fail_from_call=1)
+    worker = RunnerWorker(runner=runner, goal_claim_id="goal", goal_formula="T",
+                          max_rounds=4)
+    with pytest.raises(BrowserResponseError):
+        worker.work_branch(None, None, branch_id="b1", budget=5.0, fencing_token=1)

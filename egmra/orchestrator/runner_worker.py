@@ -30,6 +30,7 @@ from dataclasses import dataclass, field, replace
 from pathlib import Path
 from typing import Any
 
+from egmra.agents.browser_runner import BrowserRunnerError
 from egmra.agents.runner import DeterministicRunner, ModelRunner, RunnerResponse
 from egmra.compute.artifact import ReplayReport
 from egmra.compute.service import ComputeService
@@ -584,10 +585,24 @@ class RunnerWorker:
                     failed_approaches=self.failed_approach_memory,
                     formal_target=self.formal_target,
                 )
-            parsed, round_failures = self._ask_structured(
-                prompt, stage=f"branch:{branch_id}:round{round_index}"
-                if round_index > 1 else f"branch:{branch_id}",
-            )
+            try:
+                parsed, round_failures = self._ask_structured(
+                    prompt, stage=f"branch:{branch_id}:round{round_index}"
+                    if round_index > 1 else f"branch:{branch_id}",
+                )
+            except BrowserRunnerError as exc:
+                # A provider outage DURING a later round must not discard the
+                # completed rounds' real work: record it and salvage.  Round 1
+                # has nothing to salvage, so the outage propagates to the
+                # caller's durable retain/resume policy exactly as before.
+                if round_index == 1:
+                    raise
+                failures.append(
+                    f"provider_outage:{branch_id}:round{round_index}:"
+                    f"{type(exc).__name__}")
+                self._remember_failure(
+                    f"{branch_id}: provider outage at round {round_index}")
+                break
             failures.extend(round_failures)
             if parsed is None:
                 if round_index == 1:
