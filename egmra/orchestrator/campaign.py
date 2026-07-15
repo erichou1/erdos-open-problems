@@ -570,6 +570,7 @@ class Campaign:
         provider_unavailable: type[BaseException] = _NoConfiguredProviderOutage,
         permanent_failure: type[BaseException] = _NoConfiguredPermanentFailure,
         poll_interval: float = 0.01,
+        heartbeat_interval: float | None = None,
     ) -> dict[str, Any]:
         """Drive the campaign with genuine bounded concurrency across worker threads.
 
@@ -597,6 +598,28 @@ class Campaign:
                 with state_lock:
                     active["n"] += 1
                 started = time.monotonic()
+                # Keep the assignment lease alive WHILE the (long) runner works:
+                # a browser problem takes far longer than lease_seconds, so
+                # without renewal its lease would expire, another worker would
+                # re-lease it (burning an attempt), and after max_attempts it
+                # would be marked failed despite genuine progress. The heartbeat
+                # is fencing-guarded, so a superseded worker's renewal no-ops.
+                stop_heartbeat = threading.Event()
+                interval = (
+                    heartbeat_interval if heartbeat_interval is not None
+                    else max(5.0, self.lease_seconds / 3.0))
+
+                def _heartbeat(pid=assignment.problem_id,
+                               token=assignment.fencing_token) -> None:
+                    while not stop_heartbeat.wait(interval):
+                        try:
+                            if not self.heartbeat(pid, worker_id, token, now=now()):
+                                return  # lost the lease (superseded) — stop renewing
+                        except Exception:  # noqa: BLE001 - renewal is best-effort
+                            return
+                heart = threading.Thread(
+                    target=_heartbeat, name=f"egmra-hb-{worker_id}", daemon=True)
+                heart.start()
                 try:
                     result_state = runner(assignment.problem_id, assignment.fencing_token,
                                           worker_id)
@@ -614,6 +637,8 @@ class Campaign:
                     self.complete(assignment.problem_id, worker_id, assignment.fencing_token,
                                   result_state=result_state)
                 finally:
+                    stop_heartbeat.set()
+                    heart.join(timeout=1.0)
                     with state_lock:
                         active["n"] -= 1
                         timeline.append((worker_id, assignment.problem_id, started,

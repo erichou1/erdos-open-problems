@@ -173,6 +173,49 @@ def test_run_concurrent_has_real_overlap_across_five_workers(tmp_path):
     assert report["distinct_workers"] == 5           # every worker id did work
 
 
+# ── lease heartbeat: a long-running problem must not expire mid-work ─────────
+
+def test_heartbeat_extends_lease_only_for_current_holder(tmp_path):
+    clock = _Clock()
+    c = _campaign(tmp_path, lease_seconds=100.0)
+    c.initialize("camp", ["p1"])
+    a = c.lease("w0", now=clock.now())
+    assert c.heartbeat("p1", "w0", a.fencing_token, now=clock.now() + 50) is True
+    # A stale/superseded token can never renew (prevents zombie extension).
+    assert c.heartbeat("p1", "w0", a.fencing_token - 1, now=clock.now() + 60) is False
+
+
+def test_run_concurrent_heartbeats_lease_during_a_long_runner(tmp_path):
+    """A runner longer than lease_seconds keeps its problem (renewed), never re-leased.
+
+    This is THE fix for 'every browser problem fails at attempt 5': a real
+    problem takes far longer than the lease, so without renewal it would expire
+    mid-work, get re-leased (attempt++), and eventually be marked failed despite
+    progress. The heartbeat renews it while the worker is genuinely running.
+    """
+    import time
+    c = _campaign(tmp_path, workers=("w0",), lease_seconds=10.0)
+    c.initialize("camp", ["p1"])
+    beats = {"n": 0}
+    real_hb = c.heartbeat
+
+    def counting_hb(*a, **k):
+        beats["n"] += 1
+        return real_hb(*a, **k)
+    c.heartbeat = counting_hb
+
+    def runner(problem_id, token, worker_id):
+        time.sleep(0.3)                      # several heartbeat intervals long
+        return "OPEN_NO_PROGRESS"
+
+    status = c.run_concurrent(runner, max_workers=1, now=time.time,
+                              heartbeat_interval=0.05)
+    assert status["by_status"].get("done") == 1     # completed, not failed
+    assert status["workers"]["p1"]["attempts"] == 1  # never re-leased
+    assert beats["n"] >= 3                            # lease renewed repeatedly
+
+
+
 def test_run_concurrent_no_duplicate_or_skipped_problems(tmp_path):
     clock = _Clock()
     c = _campaign(tmp_path, workers=tuple(f"w{i}" for i in range(3)))
