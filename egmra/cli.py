@@ -1336,6 +1336,50 @@ def _parse_erdos_range(spec: str) -> list[int]:
     return list(range(lo, hi + 1))
 
 
+def _load_campaign_reviews(reviews_dir) -> dict:
+    """Load per-problem signed review artifacts for a campaign (release parity).
+
+    Directory convention (one file per problem, produced by ``egmra
+    sign-review``):
+
+    * ``intent-<problem_id>.json``          — signed intent review (I2)
+    * ``correspondence-<problem_id>.json``  — formal correspondence for 'goal'
+    * ``expert-<problem_id>.json``          — expert significance review (S2)
+
+    Everything is loaded and validated up front so a malformed artifact fails
+    the campaign LAUNCH, never a worker mid-run.  Problems without artifacts
+    run exactly as before (no intent → evidence-grade only); the orchestrator
+    still re-verifies every signature and hash binding per run — this loader
+    grants nothing by itself.
+    """
+    if reviews_dir is None:
+        return {}
+    directory = Path(reviews_dir)
+    if not directory.is_dir():
+        raise ValueError(f"--reviews-dir is not a directory: {directory}")
+    reviews: dict[str, dict] = {}
+    for path in sorted(directory.glob("*.json")):
+        name = path.name[:-len(".json")]
+        for prefix, key in (("intent-", "intent"),
+                            ("correspondence-", "correspondence"),
+                            ("expert-", "expert")):
+            if not name.startswith(prefix):
+                continue
+            problem_id = name[len(prefix):]
+            if not problem_id:
+                raise ValueError(f"review artifact has no problem id: {path.name}")
+            entry = reviews.setdefault(problem_id, {})
+            if key == "intent":
+                entry["intent"] = _load_intent_review(path)
+            elif key == "correspondence":
+                entry["correspondence"] = _load_formal_correspondence_reviews(
+                    [f"goal={path}"])
+            else:
+                entry["expert"] = _load_expert_review(path)
+            break
+    return reviews
+
+
 def cmd_campaign(args: argparse.Namespace) -> int:
     """Run (or resume) a durable, bounded-worker campaign over Erdős problems.
 
@@ -1440,6 +1484,11 @@ def cmd_campaign(args: argparse.Namespace) -> int:
     # or rebuilt per-problem for the query-specific LIVE scholarly modes.
     scholarly_mode = args.retrieval not in {"corpus", "none"}
     shared_corpus = None if scholarly_mode else _build_retrieval_corpus(args, config)
+    # Per-problem signed review artifacts (release parity with `egmra run`):
+    # a campaign problem with a valid signed intent — and, for the formal
+    # route, a correspondence certificate — can reach a release exactly like
+    # a single-problem run. Loaded and validated once, up front.
+    campaign_reviews = _load_campaign_reviews(getattr(args, "reviews_dir", None))
 
     def run_one(problem_id: str, fencing_token: int, worker_id: str) -> str:
         # Each worker drives its own browser tab (or shares the deterministic runner)
@@ -1466,6 +1515,7 @@ def cmd_campaign(args: argparse.Namespace) -> int:
             args, attempt_run_id, events_path=events_path,
         )
         oeis_client = _build_oeis_client(args, config)
+        problem_reviews = campaign_reviews.get(problem.problem_id, {})
         try:
             result = research(
                 problem_id=problem.problem_id, source_bytes=problem.source_bytes,
@@ -1476,7 +1526,10 @@ def cmd_campaign(args: argparse.Namespace) -> int:
                 informal_only=lean_service is None,
                 status_claims=list(problem.status_claims),
                 novelty_verdict=problem.novelty_verdict,
-                intent_review=None, runner=worker_runner,
+                intent_review=problem_reviews.get("intent"),
+                formal_correspondence_reviews=problem_reviews.get("correspondence"),
+                expert_review=problem_reviews.get("expert"),
+                runner=worker_runner,
                 lean_repair_rounds=campaign_repair_rounds,
                 checkpoint_dir=getattr(args, "checkpoint_dir", None),
                 # A campaign retry warm-starts from its own checkpoint dir: the
@@ -1942,6 +1995,13 @@ def build_parser() -> argparse.ArgumentParser:
                           help="explore interpretation-blocked problems anyway (release "
                                "stays blocked); same semantics as 'egmra run "
                                "--explore-blocked'")
+    campaign.add_argument("--reviews-dir", type=Path, default=None,
+                          help="directory of per-problem signed review artifacts "
+                               "(intent-<problem_id>.json / correspondence-<problem_id>.json "
+                               "/ expert-<problem_id>.json, from 'egmra sign-review'); "
+                               "a problem with a valid signed intent can RELEASE from a "
+                               "campaign exactly like 'egmra run' \u2014 problems without "
+                               "artifacts stay evidence-grade as before")
     campaign.add_argument("--status", action="store_true", help="print campaign status and exit")
     campaign.set_defaults(func=cmd_campaign)
     initdb = sub.add_parser("init-db", help="create/verify the Postgres event schema")

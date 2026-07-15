@@ -603,3 +603,85 @@ def test_make_event_log_defaults_to_jsonl_backend():
     # jsonl is the default: research builds its own file log, so the helper
     # returns None rather than a Postgres connection.
     assert cli_module._make_event_log(argparse.Namespace(event_store="jsonl"), "r1") is None
+
+
+# --- Campaign signed-review parity (release capability, not just egmra run) -----
+
+
+def _signed_intent_for_erdos(number: int) -> dict:
+    problem = cli_module.from_erdos_number(number)
+    contract = build_problem_contract(
+        problem_id=problem.problem_id, source_bytes=problem.source_bytes,
+        source_id=problem.source_id)
+    interp = contract.lattice.nodes[0]
+    certificate = sign_intent_certificate(IntentCertificate(
+        certificate_id=f"intent-{problem.problem_id}",
+        source_bytes_hash=contract.source_bytes_hash,
+        interpretation_hash=interpretation_review_hash(interp),
+        informal_claim_hash=sha256_hex(interp.conclusion),
+        methods=["independent_parse", "examples", "anti_examples",
+                 "paraphrase", "local_mutation"],
+        reviewer_ids=["semantic-reviewer"],
+        reviewer_independence_and_conflicts=[{
+            "reviewer_id": "semantic-reviewer",
+            "independent_from": ["governor", "intake_retrieval"],
+            "conflicts": [],
+        }],
+        verdict=Verdict.APPROVED,
+    ))
+    return certificate.to_dict()
+
+
+def test_load_campaign_reviews_directory_convention(tmp_path):
+    assert cli_module._load_campaign_reviews(None) == {}
+    with pytest.raises(ValueError):
+        cli_module._load_campaign_reviews(tmp_path / "missing")
+
+    reviews = tmp_path / "reviews"
+    reviews.mkdir()
+    (reviews / "intent-erdos-312.json").write_text(
+        json.dumps(_signed_intent_for_erdos(312)))
+    (reviews / "unrelated-notes.json").write_text("{}")
+
+    loaded = cli_module._load_campaign_reviews(reviews)
+    assert set(loaded) == {"erdos-312"}
+    assert loaded["erdos-312"]["intent"].certificate_id == "intent-erdos-312"
+    assert "expert" not in loaded["erdos-312"]
+
+    # malformed artifacts fail the LAUNCH, never a worker mid-run
+    (reviews / "intent-erdos-1104.json").write_text("not json")
+    with pytest.raises(Exception):
+        cli_module._load_campaign_reviews(reviews)
+
+
+def test_campaign_reviews_dir_binds_intent_per_problem(tmp_path, capsys):
+    """A campaign problem with a signed intent binds it; others stay unchanged."""
+    cfg = tmp_path / "cfg.json"
+    cfg.write_text(json.dumps({"events_dir": str(tmp_path / "runs")}))
+    policy = _signed_policy_file(tmp_path)
+    triage = _write_triage(tmp_path)
+    reviews = tmp_path / "reviews"
+    reviews.mkdir()
+    (reviews / "intent-erdos-312.json").write_text(
+        json.dumps(_signed_intent_for_erdos(312)))
+
+    rc = main(["--config", str(cfg), "campaign",
+               "--triage", str(triage), "--triage-lane", "current",
+               "--provider", "deterministic", "--policy", str(policy),
+               "--retrieval", "none", "--oeis", "offline",
+               "--reviews-dir", str(reviews),
+               "--state", str(tmp_path / "camp.json"),
+               "--outcome-ledger", str(tmp_path / "outcomes.jsonl")])
+    assert rc == 0
+
+    def actions_for(problem: str) -> set[str]:
+        out = set()
+        for events_file in (tmp_path / "runs").glob(f"*{problem}*.jsonl"):
+            for line in events_file.read_text().splitlines():
+                out.add(json.loads(line).get("action"))
+        return out
+
+    # the signed intent bound on erdos-312 (and resolved its disputed parse)...
+    assert "INTENT_CERTIFICATE_ISSUED" in actions_for("erdos-312")
+    # ...while erdos-1104, with no artifact, ran exactly as before.
+    assert "INTENT_CERTIFICATE_ISSUED" not in actions_for("erdos-1104")
