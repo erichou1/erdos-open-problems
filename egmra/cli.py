@@ -2083,7 +2083,9 @@ def build_parser() -> argparse.ArgumentParser:
     campaign.add_argument("--worker-rounds", type=int, default=1,
                           help="model rounds per mechanism branch (1-8); see "
                                "'egmra run --worker-rounds'")
-    campaign.add_argument("--workers", type=int, default=1, help="bounded worker count (1-5)")
+    campaign.add_argument("--workers", type=int, default=5,
+                          help="bounded worker count (1-5; default 5 — one browser "
+                               "tab + one Aristotle formalizer per worker)")
     campaign.add_argument("--budget", type=float, default=50.0)
     campaign.add_argument("--policy", type=Path, default=None)
     campaign.add_argument("--corpus-tex", type=Path, default=None)
