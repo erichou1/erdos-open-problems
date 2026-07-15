@@ -308,11 +308,22 @@ class Campaign:
 
     # ── lifecycle ────────────────────────────────────────────────────────────
     def initialize(self, campaign_id: str, problem_ids: list[str]) -> None:
-        """Create campaign state (idempotent: refuses to clobber a different campaign)."""
+        """Create campaign state (idempotent: refuses to clobber a different campaign).
+
+        Joining an EXISTING campaign tolerates a permutation of the same
+        problem set: continuous rerank legitimately reorders the shared state,
+        so a second machine launching with the original triage order must
+        resume, not refuse.  A different campaign id or a different problem
+        SET still fails closed.
+        """
         with self._locked():
             existing = self._read()
             if existing is not None:
-                if existing["campaign_id"] != campaign_id or existing["order"] != list(problem_ids):
+                same_set = (
+                    len(problem_ids) == len(existing["order"])
+                    and set(existing["order"]) == set(problem_ids)
+                )
+                if existing["campaign_id"] != campaign_id or not same_set:
                     raise CampaignError(
                         "campaign state already exists for a different campaign; "
                         "use resume or a fresh state path"

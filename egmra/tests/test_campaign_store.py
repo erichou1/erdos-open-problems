@@ -107,6 +107,32 @@ def test_campaign_over_pluggable_store_detects_tamper():
         campaign.status()
 
 
+def test_second_machine_joins_despite_reranked_order():
+    """A rerank must not lock a second machine out of the shared campaign.
+
+    Continuous rerank legitimately permutes the shared order; a machine
+    launching later with the ORIGINAL triage order joins as a resume. A
+    different problem SET (or id) still fails closed, and joining never
+    resets the reranked order or any in-flight status.
+    """
+    store = _MemoryCampaignStore()
+    machine_a = Campaign("unused.json", worker_ids=("A-w0",), store=store)
+    machine_a.initialize("camp", ["p1", "p2", "p3"])
+    lease_a = machine_a.lease("A-w0", now=0.0)
+    assert machine_a.reorder_pending(["p3", "p2", "p1"])  # rerank permutes the order
+
+    machine_b = Campaign("unused.json", worker_ids=("B-w0",), store=store)
+    machine_b.initialize("camp", ["p1", "p2", "p3"])   # original order: joins
+    lease_b = machine_b.lease("B-w0", now=0.0)
+    assert lease_b.problem_id == "p3"                  # reranked order preserved
+    assert lease_b.problem_id != lease_a.problem_id    # and no double-lease
+
+    with pytest.raises(CampaignError):                 # different SET still refused
+        machine_b.initialize("camp", ["p1", "p2", "p9"])
+    with pytest.raises(CampaignError):                 # different id still refused
+        machine_b.initialize("other-camp", ["p1", "p2", "p3"])
+
+
 # ── live Postgres round-trip (gated) ─────────────────────────────────────────
 
 @live_postgres
