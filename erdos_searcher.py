@@ -865,6 +865,7 @@ def beta_summary(alpha: float, beta: float) -> dict:
 def estimate_posteriors(
     card: dict,
     outcome_records: Sequence[dict | str] | None = None,
+    egmra_calibration: dict | None = None,
 ) -> dict:
     outcome_records = outcome_records or []
     statuses = [
@@ -937,6 +938,53 @@ def estimate_posteriors(
 
     clarity_bonus = 0.8 if statement["ambiguity_status"] == "clear" else 0.2
     quantifier_signal = min(1.0, statement.get("quantifier_signal_count", 0) / 3)
+    # EGMRA outcome-frequency adjustment (observed, unattested pipeline
+    # telemetry from `egmra calibrate`). Deliberately WEAK and CAPPED: these
+    # are search-preference signals, never verified outcomes — a verified
+    # ledger record moves a posterior by 3.0; the entire EGMRA history of a
+    # problem is capped well below that. Applied adjustments are recorded.
+    egmra_note: dict | None = None
+    if isinstance(egmra_calibration, dict) and egmra_calibration.get("attempts"):
+        states = egmra_calibration.get("states") or {}
+        attempts = int(egmra_calibration.get("attempts", 0))
+        blocked = int(states.get("BLOCKED_BY_INTERPRETATION", 0))
+        progress_states = (
+            "COMPUTATIONAL_EVIDENCE", "CANDIDATE_SOLUTION",
+            "CANDIDATE_DISPROOF", "VERIFIED_CANDIDATE",
+            "FORMALLY_VERIFIED_CANDIDATE",
+        )
+        progressed = sum(int(states.get(s, 0)) for s in progress_states)
+        salvaged = int(egmra_calibration.get("salvaged_supported_claims", 0))
+        stalled = max(0, attempts - progressed - blocked)
+        adjustments: dict[str, float] = {}
+        if blocked >= 2:
+            delta = min(2.0, 0.5 * blocked)
+            failure_a += delta
+            rb += min(1.0, 0.25 * blocked)
+            adjustments["interpretation_failure_evidence"] = round(delta, 3)
+        if stalled >= 3:
+            delta = min(1.5, 0.25 * stalled)
+            rb += delta
+            pb += min(1.0, 0.2 * stalled)
+            adjustments["no_progress_evidence"] = round(delta, 3)
+        if progressed:
+            delta = min(2.0, 1.0 * progressed)
+            pa += delta
+            adjustments["observed_progress_evidence"] = round(delta, 3)
+        if salvaged:
+            delta = min(1.0, 0.2 * salvaged)
+            pa += delta
+            adjustments["salvaged_claims_evidence"] = round(delta, 3)
+        egmra_note = {
+            "applied": bool(adjustments),
+            "attempts_observed": attempts,
+            "adjustments": adjustments,
+            "note": (
+                "observed EGMRA outcome frequencies (unattested pipeline "
+                "telemetry); capped weak-evidence adjustment — never a "
+                "verified outcome, never a release signal"
+            ),
+        }
     lean_a = (
         0.5 + 2.5 * formal["lean_route_available"] + clarity_bonus
         + 0.5 * quantifier_signal + 0.3 * (structure["goal"] in {"prove", "classify"})
@@ -965,7 +1013,11 @@ def estimate_posteriors(
     mathematical_value_b = 9.0 + 0.5 * (structure["primary_domain"] == "unclassified")
     return {
         "model_version": MODEL_VERSION,
-        "calibration_status": "uncalibrated_weak_prior_mvp",
+        "calibration_status": (
+            "egmra_outcome_adjusted" if egmra_note and egmra_note["applied"]
+            else "uncalibrated_weak_prior_mvp"
+        ),
+        "egmra_calibration": egmra_note,
         "matching_outcome_records": len(statuses),
         "matching_verified_outcome_records": sum(
             status.startswith("verified_") for status in statuses
@@ -2334,12 +2386,54 @@ def load_attempt_exclusions(root: Path) -> set[int]:
     return excluded
 
 
+def load_egmra_calibration(path: Path | None) -> tuple[dict[str, dict], dict]:
+    """Load an `egmra calibrate` report as per-problem observed frequencies.
+
+    Returns ``(by_problem, provenance)``.  The report is honest COUNTS from
+    the EGMRA outcome ledger — unattested pipeline telemetry, distinct from
+    the contract-bound verified ledger — so consumers apply it only as capped
+    weak evidence.  Fail-closed: a missing path yields empty; a malformed or
+    symlinked report raises.
+    """
+    if path is None:
+        return {}, {"enabled": False}
+    report_path = Path(path)
+    if report_path.is_symlink() or not report_path.is_file():
+        raise RuntimeError(f"egmra calibration report is not a regular file: {report_path}")
+    payload = report_path.read_text(encoding="utf-8")
+    report = json.loads(payload)
+    if not isinstance(report, dict) or not isinstance(report.get("by_problem"), dict):
+        raise RuntimeError("egmra calibration report is malformed (no by_problem)")
+    by_problem: dict[str, dict] = {}
+    for problem_id, entry in report["by_problem"].items():
+        if not isinstance(entry, dict):
+            continue
+        by_problem[str(problem_id)] = {
+            "attempts": int(entry.get("attempts", 0)),
+            "states": dict(entry.get("states", {})),
+            "salvaged_supported_claims": int(
+                entry.get("salvaged_supported_claims", 0)),
+        }
+    provenance = {
+        "enabled": True,
+        "report_sha256": hashlib.sha256(payload.encode("utf-8")).hexdigest(),
+        "generated_at": report.get("generated_at"),
+        "total_runs": report.get("total_runs"),
+        "note": (
+            "observed EGMRA outcome frequencies; capped weak-evidence "
+            "posterior adjustment only"
+        ),
+    }
+    return by_problem, provenance
+
+
 def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
                    top_k: int,
                    model_portfolio: str = DEFAULT_MODEL_PORTFOLIO,
                    budget: str = DEFAULT_BUDGET,
                    budget_config: dict | BudgetConfig | None = None,
-                   canonical_snapshot: Path | None = None) -> dict:
+                   canonical_snapshot: Path | None = None,
+                   egmra_calibration_path: Path | None = None) -> dict:
     if canonical_snapshot is None:
         source_roots = [output_root]
         default_source_root = root / "triage"
@@ -2391,6 +2485,7 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
         allocation_top_k=top_k,
     )
     outcome_records = load_outcome_records(output_root)
+    egmra_by_problem, egmra_provenance = load_egmra_calibration(egmra_calibration_path)
     rankable_numbers = {
         int(number)
         for number, entry in entries.items()
@@ -2434,7 +2529,10 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
             card, outcome_records.get(f"erdos-{number}", [])
         )
         card["probe_summary"]["early_research"] = outcome_probe(matching_records)
-        card["posterior"] = estimate_posteriors(card, matching_records)
+        card["posterior"] = estimate_posteriors(
+            card, matching_records,
+            egmra_calibration=egmra_by_problem.get(f"erdos-{number}"),
+        )
         card["cost"] = cost_estimate(card)
         card["allocation_context_id"] = allocation_context_id
         card["provenance"]["catalog_fetched_at"] = catalog.get("fetched_at")
@@ -2516,6 +2614,7 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "eligible_problems": len(eligible),
         "attempt_exclusions": sorted(attempt_exclusions),
+        "egmra_calibration": egmra_provenance,
         "corpus_integrity": integrity,
         "unranked_missing_source_records": integrity["missing_open_problem_numbers"],
         "direct_solve_probability": direct_records,
@@ -2951,6 +3050,11 @@ def main() -> None:
     parser.add_argument("--model-portfolio",
                         default=os.environ.get("CHATGPT_MODEL_PORTFOLIO", DEFAULT_MODEL_PORTFOLIO))
     parser.add_argument("--budget", default=DEFAULT_BUDGET)
+    parser.add_argument("--egmra-calibration", type=Path, default=None,
+                        help="egmra calibrate report (JSON); observed outcome "
+                             "frequencies apply a capped weak-evidence posterior "
+                             "adjustment with recorded provenance \u2014 never a "
+                             "verified outcome")
     parser.add_argument("--record", type=Path)
     args = parser.parse_args()
     root = args.root.resolve()
@@ -2959,7 +3063,8 @@ def main() -> None:
         rankings = build_searcher(root, output, snapshot_date=args.snapshot_date,
                                   top_k=args.top_k,
                                   model_portfolio=args.model_portfolio,
-                                  budget=args.budget)
+                                  budget=args.budget,
+                                  egmra_calibration_path=args.egmra_calibration)
         print(f"Built {rankings['eligible_problems']} eligible problem cards; "
               f"ranking snapshot {rankings['snapshot_id']}")
         return

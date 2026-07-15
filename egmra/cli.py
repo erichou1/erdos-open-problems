@@ -31,6 +31,7 @@ import secrets
 import shutil
 import sys
 import time
+from datetime import datetime, timezone
 from pathlib import Path
 
 from egmra import __version__
@@ -1008,6 +1009,65 @@ def cmd_sign_review_intent(args: argparse.Namespace) -> int:
     return 0
 
 
+def _build_searcher_for_refresh(searcher_root: Path, output_root: Path, *,
+                                snapshot_date: str, top_k: int,
+                                calibration_path: Path) -> dict:
+    """Import the repo-root searcher and rebuild the corpus ranking.
+
+    Isolated as a seam so tests can exercise the refresh plumbing without a
+    full corpus snapshot rebuild.
+    """
+    root = Path(searcher_root).resolve()
+    if str(root) not in sys.path:
+        sys.path.insert(0, str(root))
+    import erdos_searcher
+
+    return erdos_searcher.build_searcher(
+        root, Path(output_root), snapshot_date=snapshot_date, top_k=top_k,
+        egmra_calibration_path=calibration_path)
+
+
+def _refresh_ranking(outcome_paths: list[Path], *, searcher_root: Path,
+                     output_root: Path, snapshot_date: str, top_k: int) -> dict:
+    """Corpus-wide ranking refresh from EGMRA outcomes (closes the R11 loop).
+
+    Aggregates the outcome ledgers into an `egmra calibrate` report, writes it
+    as a DERIVED artifact under the searcher's labels dir (refresh-in-place is
+    deliberate — it is a projection of the append-only ledgers, carrying the
+    generation timestamp), then rebuilds the ranking with the report as a
+    capped weak-evidence posterior input whose provenance the searcher records.
+    """
+    from egmra.orchestrator.calibration import build_calibration_report
+
+    report = build_calibration_report([Path(p) for p in outcome_paths])
+    labels_dir = Path(output_root) / "labels"
+    labels_dir.mkdir(parents=True, exist_ok=True)
+    report_path = labels_dir / "egmra_calibration.json"
+    tmp_path = report_path.with_suffix(".tmp")
+    tmp_path.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    tmp_path.replace(report_path)
+    rankings = _build_searcher_for_refresh(
+        Path(searcher_root), Path(output_root), snapshot_date=snapshot_date,
+        top_k=top_k, calibration_path=report_path)
+    return {
+        "calibration_report": str(report_path),
+        "calibration_runs": report["total_runs"],
+        "eligible_problems": rankings.get("eligible_problems"),
+        "snapshot_id": rankings.get("snapshot_id"),
+        "egmra_calibration": rankings.get("egmra_calibration"),
+    }
+
+
+def cmd_refresh_ranking(args: argparse.Namespace) -> int:
+    """Rebuild the corpus-wide searcher ranking from EGMRA outcome ledgers."""
+    summary = _refresh_ranking(
+        list(args.outcomes), searcher_root=args.searcher_root,
+        output_root=args.searcher_output, snapshot_date=args.snapshot_date,
+        top_k=int(args.top_k))
+    print(json.dumps(summary, indent=2))
+    return 0
+
+
 def cmd_calibrate(args: argparse.Namespace) -> int:
     """Aggregate outcome ledgers into an honest calibration report (R11)."""
     from egmra.orchestrator.calibration import build_calibration_report
@@ -1595,6 +1655,22 @@ def cmd_campaign(args: argparse.Namespace) -> int:
             provider_unavailable=BrowserProviderUnavailable,
             permanent_failure=SourceResolutionError,
         )
+        # Corpus-wide refresh AFTER the campaign: outcomes feed the searcher's
+        # posterior scoring as capped weak evidence and the whole ranking is
+        # rebuilt. Fail-open with a recorded note — a ranking refresh problem
+        # is operational, never a mathematical outcome.
+        if getattr(args, "refresh_ranking_after", False) \
+                and getattr(args, "outcome_ledger", None) is not None:
+            try:
+                status["ranking_refresh"] = _refresh_ranking(
+                    [Path(args.outcome_ledger)],
+                    searcher_root=Path.cwd(),
+                    output_root=Path(args.triage) if args.triage else Path("triage"),
+                    snapshot_date=datetime.now(timezone.utc).date().isoformat(),
+                    top_k=25)
+            except Exception as exc:  # noqa: BLE001 - ops aid, never a verdict
+                status["ranking_refresh"] = {
+                    "error": f"{type(exc).__name__}: {exc}"}
     finally:
         if browser_engine is not None:
             browser_engine.close()  # tears down the browser and every tab
@@ -2043,6 +2119,12 @@ def build_parser() -> argparse.ArgumentParser:
                                "repeated dead-ends demote; searcher order is the "
                                "tie-break) \u2014 a search-order preference only, never a "
                                "truth or release signal")
+    campaign.add_argument("--refresh-ranking-after", action="store_true",
+                          help="after the campaign completes, aggregate its outcome "
+                               "ledger into a calibration report and rebuild the "
+                               "corpus-wide searcher ranking with it (capped "
+                               "weak-evidence posterior input, provenance recorded); "
+                               "fail-open \u2014 a refresh error never affects outcomes")
     campaign.add_argument("--status", action="store_true", help="print campaign status and exit")
     campaign.set_defaults(func=cmd_campaign)
     initdb = sub.add_parser("init-db", help="create/verify the Postgres event schema")
@@ -2159,6 +2241,22 @@ def build_parser() -> argparse.ArgumentParser:
                            help="write the report JSON here (refuses overwrite); "
                                 "prints to stdout when omitted")
     calibrate.set_defaults(func=cmd_calibrate)
+
+    refresh = sub.add_parser(
+        "refresh-ranking",
+        help="rebuild the corpus-wide searcher ranking with EGMRA outcome "
+             "frequencies as a capped weak-evidence posterior input "
+             "(provenance recorded in the ranking)")
+    refresh.add_argument("--outcomes", type=Path, action="append", required=True,
+                         help="outcome-ledger JSONL path (repeatable)")
+    refresh.add_argument("--searcher-root", type=Path, default=Path.cwd(),
+                         help="repo root containing erdos_searcher.py and the corpus")
+    refresh.add_argument("--searcher-output", type=Path, default=Path("triage"),
+                         help="searcher output root (triage/) whose rankings are rebuilt")
+    refresh.add_argument("--snapshot-date",
+                         default=datetime.now(timezone.utc).date().isoformat())
+    refresh.add_argument("--top-k", type=int, default=25)
+    refresh.set_defaults(func=cmd_refresh_ranking)
 
     verify = sub.add_parser("verify-events", help="verify an event log's integrity")
     verify.add_argument("--events", type=Path, default=None,
