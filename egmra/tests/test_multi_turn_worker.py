@@ -88,19 +88,39 @@ def test_rounds_accumulate_claims_and_merge_deduped_lists():
     assert out.bottleneck == "assemble"
 
 
-def test_stagnant_round_stops_early():
+def test_stagnant_round_triggers_one_reframe_then_stops():
     runner = PromptRecordingRunner([
         _round_reply(claims=[("lem1", "L1")], open_subgoals=["close L2"]),
         # Round 2 repeats the same claim (deduped -> nothing new) and reports
-        # no open subgoals: the branch must stop instead of burning round 3.
+        # no open subgoals: instead of stopping, the branch spends ONE reframe
+        # round demanding a materially different formulation.
+        _round_reply(claims=[("lem1", "L1")]),
+        # The reframed round ALSO stalls -> now the branch stops for real.
         _round_reply(claims=[("lem1", "L1")]),
         _round_reply(claims=[("lem9", "never reached")]),
     ])
     worker = RunnerWorker(runner=runner, goal_claim_id="goal", goal_formula="T",
-                          max_rounds=3)
+                          max_rounds=4)
     out = worker.work_branch(None, None, branch_id="b1", budget=5.0, fencing_token=1)
-    assert len(runner.calls) == 2
+    assert len(runner.calls) == 3
+    assert "STAGNATION DETECTED" in runner.calls[2][1]  # the reframe round
+    assert "materially different viewpoint" in runner.calls[2][1]
     assert "lem9" not in {p["claim_id"] for p in out.claim_proposals}
+
+
+def test_reframe_round_that_produces_new_claims_continues():
+    runner = PromptRecordingRunner([
+        _round_reply(claims=[("lem1", "L1")], open_subgoals=["close L2"]),
+        _round_reply(claims=[("lem1", "L1")]),               # stall -> reframe
+        _round_reply(claims=[("lem2", "a genuinely new dual formulation")],
+                     open_subgoals=["close L3"]),            # reframe pays off
+        _round_reply(claims=[("lem3", "L3")]),
+    ])
+    worker = RunnerWorker(runner=runner, goal_claim_id="goal", goal_formula="T",
+                          max_rounds=4)
+    out = worker.work_branch(None, None, branch_id="b1", budget=5.0, fencing_token=1)
+    assert len(runner.calls) == 4
+    assert {"lem2", "lem3"} <= {p["claim_id"] for p in out.claim_proposals}
 
 
 def test_continuation_prompt_carries_ledger_subgoals_objections_and_memory():

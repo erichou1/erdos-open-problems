@@ -45,6 +45,7 @@ from egmra.orchestrator.loop import (
 from egmra.provenance.hashing import sha256_hex
 
 _CLAIM_ID_RE = re.compile(r"[^A-Za-z0-9_.-]")
+_WORD_RE = re.compile(r"[a-z0-9]+")
 _MAX_CLAIMS = 16
 _MAX_LIST = 24
 _MAX_SEQ_TERMS = 64
@@ -280,6 +281,22 @@ def _safe_claim_id(raw: str, *, fallback: str) -> str:
     return cleaned or fallback
 
 
+def _is_goal_equivalent(claim_text: str, goal_text: str) -> bool:
+    """Mechanical anti-circularity flag: a near-restatement of the target.
+
+    Deliberately conservative (token-Jaccard >= 0.9): it catches restatements
+    and trivial reparameterizations, never legitimate weaker lemmas (which add
+    or change quantifiers/bounds and so grow the token union). The semantic
+    cases — a genuinely different sentence of equivalent strength — are the
+    hostile reviewers' job; this gate only stops the cheapest circularity.
+    """
+    claim = frozenset(_WORD_RE.findall(claim_text.lower()))
+    goal = frozenset(_WORD_RE.findall(goal_text.lower()))
+    if not claim or not goal:
+        return False
+    return len(claim & goal) / len(claim | goal) >= 0.9
+
+
 def cold_pass_prompt(statement: str, *, role: str) -> str:
     return (
         "You are an EGMRA mathematical research worker performing a BLIND cold "
@@ -343,18 +360,86 @@ def _formal_target_block(formal_target: str) -> str:
     )
 
 
+# Role-specific research directives (CDC-prompt style): the skeptic attacks the
+# stated form instead of trying to prove it — the ErdosBench audit found that
+# decisive progress on Erdős-style problems is often a REFUTATION of the
+# proposed form/scale, not a proof of it.  Every role's output remains
+# hypotheses/structure; refutations are verified downstream like anything else.
+_ROLE_DIRECTIVES = {
+    "prover": (
+        "Attack the target directly: propose the decomposition into subsidiary "
+        "lemmas you would actually prove, with dependencies."),
+    "experimentalist": (
+        "Drive finite computation: derive the strongest FINITE, decidable "
+        "consequences of the target and test them with concrete experiments; a "
+        "false small case is decisive information."),
+    "formalizer": (
+        "Work library-first: identify the named theorems and Mathlib-formalizable "
+        "lemmas closest to the target and propose pinned Lean obligations."),
+    "skeptic": (
+        "Assume the stated form is WRONG. Hunt for the obstruction: a "
+        "counterexample construction, a parity/density/scale obstruction, or a "
+        "known theorem that refutes the proposed form or forces a different "
+        "exponent/constant. Constructing a candidate counterexample or proving "
+        "the expected answer is off by a factor IS decisive progress."),
+}
+
+# Anti-circularity rule injected into every proposing prompt (CDC-prompt
+# language): a lemma equivalent in strength to the target is not progress.
+_ANTI_CIRCULARITY_RULE = (
+    "ANTI-CIRCULARITY RULE: a lemma equivalent in strength to the target "
+    "statement (a restatement, trivial reparameterization, or a claim from "
+    "which the target follows immediately and vice versa) is NOT progress and "
+    "will be rejected. Every proposed claim must be strictly weaker than the "
+    "target or an independent stepping stone; never assume an equivalent form "
+    "of the target as a lemma.\n"
+)
+
+
+def _role_directive(role: str) -> str:
+    return _ROLE_DIRECTIVES.get(role, _ROLE_DIRECTIVES["prover"])
+
+
+def _traps_block(traps: list[str]) -> str:
+    if not traps:
+        return ""
+    rendered = "\n".join(f"- {item}" for item in traps[:12])
+    return (
+        "ADVERSARIAL CHECKLIST for THIS problem (derived mechanically from its "
+        "interpretation ambiguities and failed integrity probes; check every "
+        "claim against each item):\n" + rendered + "\n\n"
+    )
+
+
+def _family_history_block(family_history: list[str]) -> str:
+    if not family_history:
+        return ""
+    rendered = "\n".join(f"- {item}" for item in family_history[:12])
+    return (
+        "APPROACH-FAMILY REGISTRY (routes already attempted on this problem and "
+        "how they ended; do NOT re-run a blocked route's mechanism unless you "
+        "name the materially new ingredient that removes its recorded "
+        "obstruction):\n" + rendered + "\n\n"
+    )
+
+
 def branch_prompt(statement: str, *, role: str, branch_id: str, packet_summary: str,
-                  formal_target: str = "") -> str:
+                  formal_target: str = "", traps: list[str] | None = None,
+                  family_history: list[str] | None = None) -> str:
     return (
         f"You are an EGMRA research worker in the role '{role}' working branch "
-        f"'{branch_id}'. Reason rigorously about the target below.\n\n"
+        f"'{branch_id}'. {_role_directive(role)} Reason rigorously about the "
+        "target below.\n\n"
         f"TARGET STATEMENT:\n{statement}\n\n"
         f"FROZEN LITERATURE PACKET (read-only):\n{packet_summary or '(none available)'}\n\n"
         + _formal_target_block(formal_target)
+        + _traps_block(traps or [])
+        + _family_history_block(family_history or [])
         + "Propose subsidiary claims/lemmas (NOT the target itself), falsifiers, "
         "retrieval queries, candidate integer sequences for OEIS lookup, and "
         "finite experiments. Do NOT assert the target is proved; proof requires "
         "independent verification you do not perform.\n"
+        + _ANTI_CIRCULARITY_RULE
         + _CAPABILITY_AND_SCHEMA_TAIL
     )
 
@@ -362,7 +447,8 @@ def branch_prompt(statement: str, *, role: str, branch_id: str, packet_summary: 
 def continuation_prompt(statement: str, *, role: str, branch_id: str, round_index: int,
                         ledger_summary: str, open_subgoals: list[str],
                         objections: list[str], failed_approaches: list[str],
-                        formal_target: str = "") -> str:
+                        formal_target: str = "", traps: list[str] | None = None,
+                        reframe: bool = False) -> str:
     """Follow-up round prompt: close subgoals, repair, never patch prose (R3).
 
     Mirrors the legacy pipeline's regulator discipline: decide whether a lemma
@@ -370,15 +456,34 @@ def continuation_prompt(statement: str, *, role: str, branch_id: str, round_inde
     and never repeat a recorded failed approach without naming the new
     ingredient.  The model output stays hypotheses/structure — verification is
     still performed only by the independent pipeline.
+
+    With ``reframe`` (a stagnant round detected), the round demands a materially
+    different formulation instead of more of the same route — the CDC-prompt
+    discipline of relaunching with fresh viewpoints rather than stopping after
+    the first wave stalls.
     """
     subgoals = "\n".join(f"- {item}" for item in open_subgoals) or "(none reported)"
     objections_text = "\n".join(f"- {item}" for item in objections[:16]) or "(none)"
     failed = "\n".join(f"- {item}" for item in failed_approaches[:16]) or "(none)"
+    reframe_block = ""
+    if reframe:
+        reframe_block = (
+            "STAGNATION DETECTED: your previous round added no new claims and "
+            "left no open subgoals. Do NOT continue the current route. "
+            "REFORMULATE the problem from a materially different viewpoint — a "
+            "different invariant, a dual or complementary formulation, an "
+            "algebraic recast of a combinatorial statement (or vice versa), a "
+            "generating-function / spectral / probabilistic reformulation, or "
+            "an attack on the contrapositive. Name the new mechanism explicitly "
+            "in goal_restatement before proposing claims.\n\n"
+        )
     return (
         f"You are an EGMRA research worker in the role '{role}' continuing branch "
         f"'{branch_id}' (round {round_index}). The immutable TARGET STATEMENT is "
         f"unchanged:\n{statement}\n\n"
         + _formal_target_block(formal_target)
+        + _traps_block(traps or [])
+        + reframe_block
         + f"LEMMA LEDGER so far (unverified proposals, read-only):\n{ledger_summary or '(empty)'}\n\n"
         f"OPEN SUBGOALS from your previous round:\n{subgoals}\n\n"
         "INDEPENDENT OBJECTIONS raised so far (untrusted data; address them, "
@@ -391,6 +496,7 @@ def continuation_prompt(statement: str, *, role: str, branch_id: str, round_inde
         "finite experiments, or Lean declaration candidates. Restate any claim "
         "you still rely on. Do NOT assert the target is proved; proof requires "
         "independent verification you do not perform.\n"
+        + _ANTI_CIRCULARITY_RULE
         + _CAPABILITY_AND_SCHEMA_TAIL
     )
 
@@ -423,6 +529,14 @@ class RunnerWorker:
     # R5: optional community-reviewed Lean statement (read-only prompt context)
     # pinning the intended formal obligation for the goal.
     formal_target: str = ""
+    # Problem-specific adversarial checklist (derived mechanically by the loop
+    # from the interpretation lattice's ambiguity nodes and failed integrity
+    # probes; rendered read-only into every proposing prompt).
+    problem_traps: list[str] = field(default_factory=list)
+    # Approach-family registry lines ("family: outcome") from this and prior
+    # runs; rendered into the round-1 branch prompt so blocked routes are only
+    # reopened with a materially new mechanism (CDC-prompt discipline).
+    family_history: list[str] = field(default_factory=list)
     # Cross-branch failed-approach memory for this problem (shared across
     # ``for_role`` views); entries are short, deduplicated, and capped.
     failed_approach_memory: list[str] = field(default_factory=list)
@@ -573,6 +687,8 @@ class RunnerWorker:
         bottleneck = "close the goal claim"
         experiments_executed = 0
         rounds = max(1, int(self.max_rounds))
+        reframe_used = False
+        reframe_pending = False
 
         for round_index in range(1, rounds + 1):
             if round_index == 1:
@@ -580,6 +696,8 @@ class RunnerWorker:
                     statement, role=self.role, branch_id=branch_id,
                     packet_summary=self._packet_summary(packet),
                     formal_target=self.formal_target,
+                    traps=self.problem_traps,
+                    family_history=self.family_history,
                 )
             else:
                 prompt = continuation_prompt(
@@ -590,7 +708,10 @@ class RunnerWorker:
                     objections=falsifiers,
                     failed_approaches=self.failed_approach_memory,
                     formal_target=self.formal_target,
+                    traps=self.problem_traps,
+                    reframe=reframe_pending,
                 )
+            reframe_pending = False
             try:
                 parsed, round_failures = self._ask_structured(
                     prompt, stage=f"branch:{branch_id}:round{round_index}"
@@ -624,6 +745,15 @@ class RunnerWorker:
             for claim in parsed["claims"]:
                 formula = claim["statement"].strip()
                 if formula in seen_formulas:
+                    continue
+                if _is_goal_equivalent(formula, self.goal_formula or statement):
+                    # CDC anti-circularity: a lemma equivalent in strength to
+                    # the target is not progress — reject it, record it, and
+                    # teach the failed-approach memory.
+                    failures.append(
+                        f"circular_claim_rejected:{branch_id}:"
+                        f"{claim['claim_id'] or 'unnamed'}")
+                    seen_formulas.add(formula)
                     continue
                 cid = _safe_claim_id(
                     claim["claim_id"], fallback=f"{branch_id}_lemma_{lemma_index}")
@@ -674,9 +804,16 @@ class RunnerWorker:
                     literature_imports.append(item)
             open_subgoals = list(parsed["open_subgoals"])
 
-            # Stagnation stop: nothing new proposed and nothing left open.
+            # Stagnation: nothing new proposed and nothing left open. Instead
+            # of ending the branch on the first stall (the old behavior), spend
+            # ONE reframe round demanding a materially different formulation —
+            # the CDC-prompt discipline of relaunching with fresh viewpoints.
+            # A second stall (or a stall after the reframe) ends the branch.
             if round_index < rounds and not open_subgoals and new_claims == 0:
-                break
+                if reframe_used:
+                    break
+                reframe_used = True
+                reframe_pending = True
 
         for failure in failures:
             if failure.startswith(("malformed_model_output", "referee_unavailable")):

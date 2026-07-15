@@ -1570,9 +1570,22 @@ def cmd_campaign(args: argparse.Namespace) -> int:
         if getattr(args, "checkpoint_dir", None) is not None:
             from egmra.agents.exchange_cache import CachedRunner
 
+            # pass@k retry independence: after a COMPLETED attempt recorded an
+            # outcome, the next attempt salts the cache so it draws fresh,
+            # independent samples instead of replaying the failed trajectory.
+            # Crash retries (no recorded outcome) keep salt "" and replay free.
+            prior_outcomes = 0
+            if outcome_ledger is not None:
+                try:
+                    prior_outcomes = sum(
+                        1 for row in outcome_ledger.records()
+                        if row.get("problem_id") == problem.problem_id)
+                except (OSError, ValueError):
+                    prior_outcomes = 0
             worker_runner = CachedRunner(
                 worker_runner,
-                Path(args.checkpoint_dir) / problem.problem_id / "exchanges")
+                Path(args.checkpoint_dir) / problem.problem_id / "exchanges",
+                salt=f"retry-sample-{prior_outcomes}" if prior_outcomes else "")
         retrieval_corpus = (
             _build_retrieval_corpus(args, config, query=problem.display_statement)
             if scholarly_mode else shared_corpus)

@@ -44,10 +44,18 @@ _STAGE_SAFE = re.compile(r"[^A-Za-z0-9_.-]+")
 
 @dataclass
 class CachedRunner:
-    """Wrap any ``ModelRunner`` with a durable per-prompt exchange cache."""
+    """Wrap any ``ModelRunner`` with a durable per-prompt exchange cache.
+
+    ``salt`` partitions the cache: an empty salt (default) keys purely on the
+    prompt — crash retries replay byte-identical exchanges free. A non-empty
+    salt (e.g. the count of previously RECORDED outcomes for the problem)
+    yields fresh, independent samples on retries after a completed-but-failed
+    attempt — pass@k semantics — while never invalidating existing entries.
+    """
 
     runner: Any
     cache_dir: Path
+    salt: str = ""
     hits: int = field(default=0, init=False)
     misses: int = field(default=0, init=False)
 
@@ -64,7 +72,7 @@ class CachedRunner:
         safe_stage = _STAGE_SAFE.sub("_", stage)[:80] or "stage"
         return Path(self.cache_dir) / f"{safe_stage}.{prompt_hash}.json"
 
-    def _load(self, path: Path, prompt_hash: str) -> RunnerResponse | None:
+    def _load(self, path: Path, cache_key: str) -> RunnerResponse | None:
         try:
             if path.is_symlink() or not path.is_file():
                 return None
@@ -74,7 +82,9 @@ class CachedRunner:
             if (
                 not isinstance(record, dict)
                 or record.get("schema_version") != _SCHEMA_VERSION
-                or record.get("prompt_hash") != prompt_hash
+                # Pre-salt entries carry no cache_key; their key IS the prompt
+                # hash, so the fallback keeps existing caches replayable.
+                or record.get("cache_key", record.get("prompt_hash")) != cache_key
                 or not isinstance(record.get("text"), str)
                 or not record["text"].strip()
             ):
@@ -86,12 +96,12 @@ class CachedRunner:
                 text=record["text"],
                 model=AttestedModelIdentity(**identity),
                 context_id=str(record.get("context_id", "")),
-                prompt_hash=prompt_hash,
+                prompt_hash=str(record.get("prompt_hash", cache_key)),
             )
         except (OSError, ValueError, TypeError, json.JSONDecodeError):
             return None
 
-    def _store(self, stage: str, response: RunnerResponse) -> None:
+    def _store(self, stage: str, response: RunnerResponse, cache_key: str) -> None:
         try:
             if not response.text.strip():
                 return                      # never cache an empty exchange
@@ -99,6 +109,7 @@ class CachedRunner:
             record = {
                 "schema_version": _SCHEMA_VERSION,
                 "stage": stage,
+                "cache_key": cache_key,
                 "prompt_hash": response.prompt_hash,
                 "response_hash": sha256_hex(response.text),
                 "text": response.text,
@@ -123,7 +134,7 @@ class CachedRunner:
                 with os.fdopen(fd, "w", encoding="utf-8") as handle:
                     handle.write(payload)
                 os.chmod(tmp_name, 0o600)
-                os.replace(tmp_name, self._entry_path(stage, response.prompt_hash))
+                os.replace(tmp_name, self._entry_path(stage, cache_key))
             except BaseException:
                 try:
                     os.unlink(tmp_name)
@@ -136,12 +147,14 @@ class CachedRunner:
             return
 
     def run(self, prompt: str, *, stage: str) -> RunnerResponse:
-        prompt_hash = sha256_hex(prompt)
-        cached = self._load(self._entry_path(stage, prompt_hash), prompt_hash)
+        cache_key = (
+            sha256_hex(f"{self.salt}\n{prompt}") if self.salt else sha256_hex(prompt)
+        )
+        cached = self._load(self._entry_path(stage, cache_key), cache_key)
         if cached is not None:
             self.hits += 1
             return cached
         self.misses += 1
         response = self.runner.run(prompt, stage=stage)
-        self._store(stage, response)
+        self._store(stage, response, cache_key)
         return response

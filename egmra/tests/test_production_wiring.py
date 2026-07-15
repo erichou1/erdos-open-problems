@@ -145,7 +145,14 @@ def test_branch_role_mapping_is_distinct():
     assert _branch_role("direct_structural", worker) == "prover"
     assert _branch_role("computational_finite_reduction", worker) == "experimentalist"
     assert _branch_role("formal_library_first", worker) == "formalizer"
-    assert len(set(WORKER_ROLE_BY_FAMILY.values())) == len(WORKER_ROLE_BY_FAMILY)
+    # The three core mechanism families keep pairwise-distinct roles; BOTH
+    # counterexample families deliberately share the refutation-first skeptic.
+    core = {family: WORKER_ROLE_BY_FAMILY[family] for family in (
+        "direct_structural", "computational_finite_reduction",
+        "formal_library_first")}
+    assert len(set(core.values())) == 3
+    assert _branch_role("counterexample_model_construction", worker) == "skeptic"
+    assert _branch_role("contradiction_minimal_counterexample", worker) == "skeptic"
 
 
 def test_research_records_distinct_branch_roles(tmp_path):

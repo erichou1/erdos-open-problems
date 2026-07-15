@@ -546,13 +546,16 @@ class ResearchResult:
 
 
 # Distinct worker roles per mechanism branch (task 4.11): the prover attacks the
-# target directly, the experimentalist drives finite computation, and the
-# formalizer works library/lemma-first. The role shapes the model prompt and is
-# recorded in each branch's mechanism fingerprint, so allocation is role-aware.
+# target directly, the experimentalist drives finite computation, the formalizer
+# works library/lemma-first, and the skeptic assumes the stated form is wrong
+# and hunts the obstruction (refutation-first — the ErdosBench audit found
+# decisive progress is often a refutation of the proposed form, not a proof).
 WORKER_ROLE_BY_FAMILY = {
     "direct_structural": "prover",
     "computational_finite_reduction": "experimentalist",
     "formal_library_first": "formalizer",
+    "counterexample_model_construction": "skeptic",
+    "contradiction_minimal_counterexample": "skeptic",
 }
 
 
@@ -738,6 +741,69 @@ def _seed_controller_from_memory(controller: Controller, memory: LongTermMemory,
         except (KeyError, ValueError):
             continue
         replayed += 1
+
+
+def _derive_problem_traps(contract) -> list[str]:
+    """Mechanical, problem-specific adversarial checklist for worker prompts.
+
+    The CDC prompt hand-encoded the traps of its problem (parallel edges,
+    bridges introduced by reductions, ...). We derive the analogue from what
+    intake already computed: the interpretation lattice's ambiguity nodes and
+    every failed integrity probe. Read-only prompt guidance — it never changes
+    what the referee attacks or what the gates require.
+    """
+    traps: list[str] = []
+    seen: set[str] = set()
+    ambiguities = list(getattr(getattr(contract, "reconciliation", None),
+                               "ambiguity_nodes", ()) or ())
+    for node in ambiguities[:8]:
+        text = str(node).strip()
+        if text and text not in seen:
+            seen.add(text)
+            traps.append(f"ambiguous reading — check your claims under BOTH "
+                         f"resolutions of: {text[:160]}")
+    for probe in list(getattr(contract, "probes", ()) or ()):
+        if getattr(probe, "passed", True):
+            continue
+        name = str(getattr(probe, "name", "")).strip()
+        detail = str(getattr(probe, "detail", "") or
+                     getattr(probe, "reason", "")).strip()
+        text = f"integrity probe '{name}' failed" + (f": {detail[:140]}" if detail else "")
+        if name and text not in seen:
+            seen.add(text)
+            traps.append(text + " — verify boundary/small/degenerate cases "
+                         "explicitly before relying on them")
+    return traps[:12]
+
+
+def _family_history_lines(memory: LongTermMemory, problem_id: str) -> list[str]:
+    """Render this problem's prior branch-family outcomes for the worker prompt.
+
+    The controller already replays these records as posterior updates (search
+    allocation); this surfaces the SAME registry to the model — the CDC-prompt
+    rule that a blocked route is only reopened with a materially new mechanism
+    needs the model to know which routes are blocked. Guidance only.
+    """
+    outcomes: dict[str, list[bool]] = {}
+    for record in memory.procedural.records:
+        if not isinstance(record, dict) \
+                or record.get("kind") != "branch_family_outcome" \
+                or record.get("problem_id") != problem_id:
+            continue
+        family = str(record.get("branch_family", "")).strip()
+        if family:
+            outcomes.setdefault(family, []).append(bool(record.get("supported")))
+    lines = []
+    for family, results in sorted(outcomes.items()):
+        attempts = len(results)
+        if any(results):
+            lines.append(f"{family}: produced supported claims "
+                         f"({attempts} attempt{'s' if attempts != 1 else ''})")
+        else:
+            lines.append(f"{family}: BLOCKED — {attempts} "
+                         f"attempt{'s' if attempts != 1 else ''}, no supported "
+                         "claims; reopen only with a materially new mechanism")
+    return lines[:12]
 
 
 def _supports_repair(formalizer: Any) -> bool:
@@ -1136,6 +1202,19 @@ def research(
             distinct_programs.append(program)
             program_fingerprints[program.family] = fingerprint
     programs = distinct_programs
+    # Problem-specific adversarial checklist + approach-family registry, both
+    # rendered read-only into worker prompts (search guidance, never truth):
+    # traps come from the lattice's ambiguity nodes and failed probes; the
+    # family registry surfaces prior blocked routes so they are only reopened
+    # with a materially new mechanism (CDC-prompt discipline).
+    if hasattr(worker, "problem_traps"):
+        traps = _derive_problem_traps(contract)
+        if traps:
+            worker.problem_traps[:] = traps
+    if hasattr(worker, "family_history"):
+        history = _family_history_lines(memory, problem_id)
+        if history:
+            worker.family_history[:] = history
     debt_policy = DebtPolicy()
     debt_obligations = {
         program.family: Obligation(

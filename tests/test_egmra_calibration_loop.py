@@ -161,7 +161,14 @@ def test_refresh_ranking_command_writes_report_and_rebuilds(tmp_path, capsys,
 
 def test_campaign_refresh_ranking_after_runs_the_full_loop(tmp_path, capsys,
                                                            monkeypatch):
+    from egmra.tests.conftest import TEST_KEYS
     from egmra.tests.test_cli import _signed_policy_file, _write_triage
+
+    # This file lives outside egmra/tests, so the autouse key fixture does not
+    # apply; provide the process-local test keys explicitly (never rely on the
+    # invoking shell having sourced real keys).
+    for name, value in TEST_KEYS.items():
+        monkeypatch.setenv(name, value)
 
     cfg = tmp_path / "cfg.json"
     cfg.write_text(json.dumps({"events_dir": str(tmp_path / "runs")}))
