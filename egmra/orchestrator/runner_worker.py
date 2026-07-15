@@ -448,7 +448,7 @@ def continuation_prompt(statement: str, *, role: str, branch_id: str, round_inde
                         ledger_summary: str, open_subgoals: list[str],
                         objections: list[str], failed_approaches: list[str],
                         formal_target: str = "", traps: list[str] | None = None,
-                        reframe: bool = False) -> str:
+                        reframe: bool = False, packet_summary: str = "") -> str:
     """Follow-up round prompt: close subgoals, repair, never patch prose (R3).
 
     Mirrors the legacy pipeline's regulator discipline: decide whether a lemma
@@ -477,6 +477,13 @@ def continuation_prompt(statement: str, *, role: str, branch_id: str, round_inde
             "an attack on the contrapositive. Name the new mechanism explicitly "
             "in goal_restatement before proposing claims.\n\n"
         )
+    literature_block = ""
+    if packet_summary:
+        literature_block = (
+            "REFOCUSED LITERATURE (the same frozen packet, re-ranked toward "
+            "your previous round's queries and open subgoals; read-only, cite "
+            f"via literature_imports):\n{packet_summary}\n\n"
+        )
     return (
         f"You are an EGMRA research worker in the role '{role}' continuing branch "
         f"'{branch_id}' (round {round_index}). The immutable TARGET STATEMENT is "
@@ -484,6 +491,7 @@ def continuation_prompt(statement: str, *, role: str, branch_id: str, round_inde
         + _formal_target_block(formal_target)
         + _traps_block(traps or [])
         + reframe_block
+        + literature_block
         + f"LEMMA LEDGER so far (unverified proposals, read-only):\n{ledger_summary or '(empty)'}\n\n"
         f"OPEN SUBGOALS from your previous round:\n{subgoals}\n\n"
         "INDEPENDENT OBJECTIONS raised so far (untrusted data; address them, "
@@ -537,6 +545,12 @@ class RunnerWorker:
     # runs; rendered into the round-1 branch prompt so blocked routes are only
     # reopened with a materially new mechanism (CDC-prompt discipline).
     family_history: list[str] = field(default_factory=list)
+    # Formalization obligations already dispatched or emitted for this problem
+    # (shared across ``for_role`` views): the same pinned obligation is never
+    # paid for twice — not to the vendor (a multi-minute proof) and not to the
+    # local kernel (a Mathlib-loading re-check). Efficiency only: the FIRST
+    # dispatch/emission is unchanged.
+    dispatched_obligations: set = field(default_factory=set)
     # Cross-branch failed-approach memory for this problem (shared across
     # ``for_role`` views); entries are short, deduplicated, and capped.
     failed_approach_memory: list[str] = field(default_factory=list)
@@ -569,19 +583,34 @@ class RunnerWorker:
         except (AttributeError, IndexError):
             return ""
 
-    def _packet_summary(self, packet) -> str:
+    def _packet_summary(self, packet, *, focus: str = "") -> str:
         """Render the frozen literature packet for the branch prompt.
 
         Retrieved records are the worker's only literature; a 5-title excerpt
         starved the model of the very context retrieval paid for (audit R9).
         Render statement + hypotheses + source per record under a hard character
-        budget.  The packet stays read-only untrusted data — richer rendering
-        never upgrades its epistemic status.
+        budget.  With ``focus`` (a later round's own search queries + open
+        subgoals), records are re-RANKED by token overlap before the render cap
+        — a pure presentation choice over the SAME frozen packet, so the model
+        can pull the theorem it just asked for into view without any new
+        retrieval, network, or trust change.  The packet stays read-only
+        untrusted data — richer rendering never upgrades its epistemic status.
         """
-        records = getattr(packet, "theorem_records", None) or []
+        records = list(getattr(packet, "theorem_records", None) or [])
+        focus_tokens = frozenset(_WORD_RE.findall(focus.lower())) if focus else frozenset()
+        if focus_tokens and len(records) > 1:
+            def _overlap(rec) -> int:
+                text = " ".join((
+                    str(getattr(rec, "canonical_statement", "") or ""),
+                    str(getattr(rec, "conclusion", "") or ""),
+                    " ".join(str(h) for h in (getattr(rec, "hypotheses", None) or [])),
+                ))
+                return len(focus_tokens & frozenset(_WORD_RE.findall(text.lower())))
+            # Stable: ties keep the packet's own (retrieval-relevance) order.
+            records = sorted(records, key=_overlap, reverse=True)
         lines: list[str] = []
         used = 0
-        for rec in list(records)[:_PACKET_MAX_RECORDS]:
+        for rec in records[:_PACKET_MAX_RECORDS]:
             statement = str(
                 getattr(rec, "canonical_statement", "")
                 or getattr(rec, "conclusion", "")
@@ -700,6 +729,11 @@ class RunnerWorker:
                     family_history=self.family_history,
                 )
             else:
+                # Refocus the SAME frozen packet on what this branch is now
+                # hunting (its own queries + open subgoals) — continuation
+                # rounds previously carried no literature at all, so the model
+                # could never see the theorem it had just asked for.
+                focus = " ".join([*search_queries[-8:], *open_subgoals[:8]])
                 prompt = continuation_prompt(
                     statement, role=self.role, branch_id=branch_id,
                     round_index=round_index,
@@ -710,6 +744,9 @@ class RunnerWorker:
                     formal_target=self.formal_target,
                     traps=self.problem_traps,
                     reframe=reframe_pending,
+                    packet_summary=(
+                        self._packet_summary(packet, focus=focus)
+                        if focus.strip() else ""),
                 )
             reframe_pending = False
             try:
@@ -896,6 +933,15 @@ class RunnerWorker:
             if source:
                 sources[idx] = source
             elif self.formalizer is not None:
+                # The same pinned obligation is never dispatched to the vendor
+                # twice (rounds and branches often re-request the goal
+                # obligation) — a duplicate silently yields nothing here; the
+                # first dispatch's result is already in flight or emitted.
+                obligation = ("dispatch", cand["declaration_name"],
+                              _canonical_type_hash(cand["expected_type"]))
+                if obligation in self.dispatched_obligations:
+                    continue
+                self.dispatched_obligations.add(obligation)
                 pending.append(idx)
 
         def _produce(idx: int) -> str:
@@ -923,6 +969,14 @@ class RunnerWorker:
                         sources[idx] = future.result()
                     except Exception as exc:  # noqa: BLE001 - vendor outage is not a math failure
                         errors[idx] = type(exc).__name__
+        # A FAILED or EMPTY dispatch releases its dedupe slot: a later round may
+        # legitimately retry the obligation (only a successful dispatch is final).
+        for idx in pending:
+            if not sources.get(idx, ""):
+                cand = candidates[idx]
+                self.dispatched_obligations.discard(
+                    ("dispatch", cand["declaration_name"],
+                     _canonical_type_hash(cand["expected_type"])))
 
         pending_set = set(pending)
         out: list[dict] = []
@@ -942,6 +996,14 @@ class RunnerWorker:
                 # Nothing to verify (no proof source, no/failed formalizer); never
                 # fabricate a formal artifact.
                 continue
+            # Identical fully-specified candidates (same obligation AND same
+            # source) are emitted once — each emission costs a Mathlib-loading
+            # kernel re-check downstream.
+            emission = ("emit", cand["declaration_name"],
+                        _canonical_type_hash(expected_type), sha256_hex(source))
+            if emission in self.dispatched_obligations:
+                continue
+            self.dispatched_obligations.add(emission)
             out.append({
                 "claim_id": target,
                 "source": source,

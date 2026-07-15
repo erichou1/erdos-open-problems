@@ -1124,7 +1124,10 @@ def research(
     })
     phases.append("cold_pass")
 
-    # 7. frozen solver packet (literature) — mandatory before deep proof work
+    # 7. frozen solver packet (literature) — mandatory before deep proof work.
+    # The cold pass's individual search queries run as their OWN targeted
+    # searches (a mashed query dilutes every term); the union freezes into the
+    # one auditable packet, so continuation rounds can refocus over it.
     enforcer.require("literature_retrieval", entry_point="orchestrator.packet")
     svc = RetrievalService(retrieval_corpus or [])
     packet = svc.build_packet(LiteratureQuery(
@@ -1137,7 +1140,7 @@ def research(
             *cold_output.falsifiers,
             runner_cold.text,
         ])),
-    ))
+    ), limit=8, extra_queries=tuple(cold_output.search_queries[:8]))
     phases.append("freeze_solver_packet")
 
     # 8. score/acquire.  Selection is a real production call, not an unconditional

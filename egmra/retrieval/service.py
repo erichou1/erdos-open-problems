@@ -51,23 +51,49 @@ class RetrievalService:
     def build_packet(
         self, query: LiteratureQuery, *, packet_id: str = "", limit: int = 5,
         snapshot_time: str = "", corpus_versions: dict | None = None,
+        extra_queries: tuple[str, ...] = (), extra_limit: int = 3,
+        max_records: int = 24,
     ) -> SourcePacket:
+        """Freeze a packet from the main query plus targeted extra queries.
+
+        One mashed query dilutes every term under TF-IDF; the cold pass's
+        individual search queries each get their own top-``extra_limit`` search
+        and the union (deduplicated, capped at ``max_records``) is frozen into
+        the ONE packet. Each query is logged as its own auditable
+        :class:`QueryEvent`. Recall changes; trust does not — the packet is
+        still frozen before deep work and imports are still audited against it.
+        """
         text = query.query_text()
         hits = self.index.search(text, limit=limit)
         records = [r for r, _ in hits]
-        event = QueryEvent(
+        seen_ids = {r.theorem_id for r in records}
+        events = [QueryEvent(
             query_hash=content_id(query.to_dict()),
             query_text=text,
             result_ids=tuple(r.theorem_id for r in records),
             coverage="local_corpus",
-        )
+        )]
+        for extra in list(dict.fromkeys(
+                q.strip() for q in extra_queries if isinstance(q, str) and q.strip()))[:8]:
+            extra_hits = self.index.search(extra, limit=extra_limit)
+            extra_records = [r for r, _ in extra_hits]
+            events.append(QueryEvent(
+                query_hash=content_id({"extra_query": extra}),
+                query_text=extra,
+                result_ids=tuple(r.theorem_id for r in extra_records),
+                coverage="local_corpus",
+            ))
+            for record in extra_records:
+                if record.theorem_id not in seen_ids and len(records) < max_records:
+                    seen_ids.add(record.theorem_id)
+                    records.append(record)
         negatives: list[SearchCoverage] = []
         if not records:
             negatives.append(SearchCoverage(query=text, databases=("local_corpus",), found=0,
                                             gaps=("no local match; external search required",)))
         return SourcePacket(
             packet_id=packet_id or ("pkt_" + content_id(query.to_dict())[:16]),
-            query_log=(event,),
+            query_log=tuple(events),
             theorem_records=tuple(records),
             negative_search_results=tuple(negatives),
             snapshot_time=snapshot_time,

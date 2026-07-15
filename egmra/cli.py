@@ -1596,6 +1596,18 @@ def cmd_campaign(args: argparse.Namespace) -> int:
                               lean_project=args.lean_project,
                               formalizer=formalizers_by_worker.get(worker_id),
                               max_rounds=campaign_worker_rounds)
+        # Durable per-problem dossier (search guidance only, never truth): a
+        # NEW campaign process seeds this problem's approach-family outcomes
+        # and failed approaches from the previous processes' learning instead
+        # of re-deriving them. Fail-open end to end.
+        dossier_path = None
+        if getattr(args, "checkpoint_dir", None) is not None:
+            from egmra.orchestrator.dossier import load_dossier, seed_from_dossier
+
+            dossier_path = (Path(args.checkpoint_dir) / problem.problem_id
+                            / "dossier.json")
+            seed_from_dossier(load_dossier(dossier_path), memory=campaign_memory,
+                              worker=worker, problem_id=problem.problem_id)
         # A distinct event log per attempt keeps each try's chain clean on resume.
         attempt_run_id = _campaign_attempt_id(
             campaign_id, problem.problem_id, fencing_token,
@@ -1636,6 +1648,16 @@ def cmd_campaign(args: argparse.Namespace) -> int:
         finally:
             _close_event_log(event_log)
         state = str(classify_result(result, goal_claim_id="goal").state)
+        if dossier_path is not None:
+            from egmra.orchestrator.dossier import harvest_for_dossier, update_dossier
+
+            try:
+                update_dossier(dossier_path, problem_id=problem.problem_id,
+                               public_state=state,
+                               harvest=harvest_for_dossier(
+                                   campaign_memory, worker, problem.problem_id))
+            except OSError:
+                pass    # persistence is an ops aid, never a verdict
         # Honest EGMRA-native outcome telemetry (never the legacy contract-bound
         # searcher ledger, never a release authority).
         if outcome_ledger is not None:
