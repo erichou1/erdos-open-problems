@@ -205,11 +205,47 @@ class PostgresCampaignStore:
             self._conn = self.connect()
         return self._conn
 
+    @staticmethod
+    def _is_disconnect(exc: BaseException) -> bool:
+        """True for a dropped/stale connection (reconnect + retry is safe).
+
+        Neon (serverless Postgres) closes idle connections, and a campaign
+        holds one idle across each multi-minute browser generation, so a
+        server-side drop is the common case — the client only discovers it on
+        the NEXT statement (``closed`` stays False until then).
+        """
+        try:
+            import psycopg  # type: ignore[import-not-found]
+        except ImportError:  # pragma: no cover
+            return False
+        return isinstance(exc, (psycopg.OperationalError, psycopg.InterfaceError))
+
+    def _reset(self) -> None:  # pragma: no cover - requires a database server
+        conn, self._conn = self._conn, None
+        if conn is not None:
+            try:
+                conn.close()
+            except Exception:  # noqa: BLE001 - discarding a dead connection
+                pass
+
+    def _with_connection(self, operation, *, _retries: int = 1):  # pragma: no cover
+        """Run ``operation(connection)``, reconnecting ONCE on a dropped connection."""
+        try:
+            return operation(self._connection())
+        except Exception as exc:  # noqa: BLE001 - reconnect only on disconnects
+            if _retries > 0 and self._is_disconnect(exc):
+                self._reset()
+                return self._with_connection(operation, _retries=_retries - 1)
+            raise
+
     def read(self) -> dict[str, Any] | None:  # pragma: no cover - requires a server
-        with self._connection().cursor() as cursor:
-            cursor.execute(
-                "SELECT body, signature FROM campaign_state WHERE name = %s", (self.name,))
-            row = cursor.fetchone()
+        def _op(connection):
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "SELECT body, signature FROM campaign_state WHERE name = %s",
+                    (self.name,))
+                return cursor.fetchone()
+        row = self._with_connection(_op)
         if row is None:
             return None
         body_text, signature = str(row[0]), str(row[1])
@@ -220,23 +256,34 @@ class PostgresCampaignStore:
     def write(self, body: dict[str, Any]) -> None:  # pragma: no cover - requires a server
         body_text = canonical_json(body)
         signature = _hmac_hex(self._key, body_text)
-        with self._connection().cursor() as cursor:
-            cursor.execute(
-                "INSERT INTO campaign_state (name, body, signature, updated_at) "
-                "VALUES (%s, %s, %s, now()) ON CONFLICT (name) DO UPDATE SET "
-                "body = EXCLUDED.body, signature = EXCLUDED.signature, updated_at = now()",
-                (self.name, body_text, signature))
+
+        def _op(connection):
+            with connection.cursor() as cursor:
+                cursor.execute(
+                    "INSERT INTO campaign_state (name, body, signature, updated_at) "
+                    "VALUES (%s, %s, %s, now()) ON CONFLICT (name) DO UPDATE SET "
+                    "body = EXCLUDED.body, signature = EXCLUDED.signature, updated_at = now()",
+                    (self.name, body_text, signature))
+        self._with_connection(_op)
 
     @contextmanager
     def locked(self):  # pragma: no cover - requires a database server
-        connection = self._connection()
-        with connection.cursor() as cursor:
-            cursor.execute("SELECT pg_advisory_lock(%s)", (self._lock_key,))
+        # Reconnect at ACQUIRE time if the idle connection was dropped; the
+        # advisory lock is session-scoped, so a dropped connection has already
+        # released any prior lock server-side (unlock below is best-effort).
+        def _acquire(connection):
+            with connection.cursor() as cursor:
+                cursor.execute("SELECT pg_advisory_lock(%s)", (self._lock_key,))
+            return connection
+        connection = self._with_connection(_acquire)
         try:
             yield
         finally:
-            with connection.cursor() as cursor:
-                cursor.execute("SELECT pg_advisory_unlock(%s)", (self._lock_key,))
+            try:
+                with connection.cursor() as cursor:
+                    cursor.execute("SELECT pg_advisory_unlock(%s)", (self._lock_key,))
+            except Exception:  # noqa: BLE001 - a dropped connection freed the lock already
+                pass
 
     def close(self) -> None:  # pragma: no cover - requires a database server
         with self._lock:

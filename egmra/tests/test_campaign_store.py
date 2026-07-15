@@ -79,6 +79,77 @@ def test_postgres_campaign_store_requires_name_and_key():
         PostgresCampaignStore("postgresql://db.example.com:5432/egmra", name="c", env={})
 
 
+# ── stale-connection resilience (Neon drops idle connections) ────────────────
+
+class _FakeCursor:
+    def __init__(self, conn):
+        self._conn = conn
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        return False
+
+    def execute(self, sql, params=None):
+        if self._conn.dead:
+            # A server-side drop surfaces only on the NEXT statement.
+            import psycopg
+            raise psycopg.OperationalError(
+                "consuming input failed: SSL connection has been closed unexpectedly")
+        self._conn.executed.append(sql.split()[0])
+
+    def fetchone(self):
+        return (self._conn.store_body, self._conn.store_sig)
+
+
+class _FakeConn:
+    def __init__(self):
+        self.dead = False
+        self.closed = False
+        self.executed: list[str] = []
+        self.store_body = None
+        self.store_sig = None
+
+    def cursor(self):
+        return _FakeCursor(self)
+
+    def close(self):
+        self.closed = True
+
+
+def _pg_store_with_fake_conns(conns):
+    """A PostgresCampaignStore whose connect() hands out fake conns in order."""
+    store = PostgresCampaignStore(
+        "postgresql://db.example.com:5432/egmra", name="camp")
+    it = iter(conns)
+    store.connect = lambda: next(it)  # type: ignore[method-assign]
+    return store
+
+
+def test_postgres_store_reconnects_when_neon_drops_the_idle_connection():
+    dead_conn, fresh_conn = _FakeConn(), _FakeConn()
+    dead_conn.dead = True                      # Neon closed it while idle
+    store = _pg_store_with_fake_conns([dead_conn, fresh_conn])
+
+    # First use establishes dead_conn; acquiring the advisory lock fails with a
+    # disconnect error, so the store must reset and retry on a fresh connection.
+    with store.locked():
+        pass
+    assert dead_conn.closed and not fresh_conn.closed
+    assert "SELECT" in fresh_conn.executed        # lock acquired on the retry conn
+
+
+def test_postgres_store_reraises_non_disconnect_errors():
+    class _BoomConn(_FakeConn):
+        def cursor(self):
+            raise RuntimeError("not a disconnect")
+    store = _pg_store_with_fake_conns([_BoomConn(), _FakeConn()])
+    with pytest.raises(RuntimeError, match="not a disconnect"):
+        store.read()
+
+
+
 # ── the store seam drives the full Campaign lifecycle + fail-closed tamper ────
 
 def test_campaign_over_pluggable_store_full_lifecycle_and_resume():
