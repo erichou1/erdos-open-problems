@@ -1,41 +1,114 @@
 {
-  "generated_at": "2026-07-16T06:10:44.064078+00:00",
+  "generated_at": "2026-07-16T07:07:21.298597+00:00",
   "campaign": "shared-current-v1",
   "summary": {
     "total": 25,
     "by_status": {
-      "leased": 3,
-      "pending": 22
+      "leased": 9,
+      "pending": 16
     },
     "by_latest_state": {
       "BLOCKED_BY_INTERPRETATION": 4,
       "OPEN_NO_PROGRESS": 1
     },
-    "total_runs": 229,
-    "problems_with_chatgpt_exchanges": 10,
+    "total_runs": 236,
+    "problems_with_chatgpt_exchanges": 12,
     "chatgpt_links_recorded": 0,
-    "aristotle_artifacts": 109,
-    "aristotle_linked": 4,
-    "aristotle_unlinked": 105
+    "aristotle_artifacts": 116,
+    "aristotle_linked": 5,
+    "aristotle_unlinked": 111,
+    "computers_active": 1,
+    "computers_known": 1
   },
+  "machines": [
+    {
+      "machine_id": "Erics-MacBook-Pro-8e6d155a",
+      "hostname": "Erics-MacBook-Pro",
+      "activity": "active",
+      "heartbeat_age_seconds": 6,
+      "heartbeat_at": "2026-07-16T07:07:15.044171+00:00",
+      "started_at": "2026-07-16T07:02:42.759975+00:00",
+      "process_id": 96866,
+      "branch": "audit/egmra-independent-remediation-20260713",
+      "code_commit": "fbe7fbf641e23be7f041f752e8fbf322a16cd82b",
+      "latest_commit": "fbe7fbf641e23be7f041f752e8fbf322a16cd82b",
+      "version_status": "current",
+      "worker_slots": 3,
+      "worker_ids": [
+        "Erics-MacBook-Pro-8e6d155a:w0",
+        "Erics-MacBook-Pro-8e6d155a:w1",
+        "Erics-MacBook-Pro-8e6d155a:w2"
+      ],
+      "current_problems": [
+        "erdos-324",
+        "erdos-602",
+        "erdos-849"
+      ]
+    }
+  ],
   "workers": [
+    {
+      "worker": "w1",
+      "problem_id": "erdos-77",
+      "number": 77,
+      "status": "leased",
+      "active": false
+    },
     {
       "worker": "w2",
       "problem_id": "erdos-153",
       "number": 153,
-      "status": "leased"
+      "status": "leased",
+      "active": false
+    },
+    {
+      "worker": "w0",
+      "problem_id": "erdos-197",
+      "number": 197,
+      "status": "leased",
+      "active": false
+    },
+    {
+      "worker": "w2",
+      "problem_id": "erdos-203",
+      "number": 203,
+      "status": "leased",
+      "active": false
     },
     {
       "worker": "w0",
       "problem_id": "erdos-312",
       "number": 312,
-      "status": "leased"
+      "status": "leased",
+      "active": false
+    },
+    {
+      "worker": "Erics-MacBook-Pro-8e6d155a:w0",
+      "problem_id": "erdos-324",
+      "number": 324,
+      "status": "leased",
+      "active": true
+    },
+    {
+      "worker": "Erics-MacBook-Pro-8e6d155a:w2",
+      "problem_id": "erdos-602",
+      "number": 602,
+      "status": "leased",
+      "active": true
+    },
+    {
+      "worker": "Erics-MacBook-Pro-8e6d155a:w1",
+      "problem_id": "erdos-849",
+      "number": 849,
+      "status": "leased",
+      "active": true
     },
     {
       "worker": "w1",
       "problem_id": "erdos-1104",
       "number": 1104,
-      "status": "leased"
+      "status": "leased",
+      "active": false
     }
   ],
   "problems": [
@@ -48,7 +121,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": null,
       "run_count": 0,
       "chatgpt_run_count": 0,
@@ -132,22 +205,97 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "not_applicable"
     },
     {
       "problem_id": "erdos-77",
       "number": 77,
       "statement": "If $R(k)$ is the Ramsey number for $K_k$, the minimal $n$ such that every $2$-colouring of the edges of $K_n$ contains a monochromatic copy of $K_k$, then find the value of\\[\\lim_{k\\to \\infty}R(k)^{1/k}.\\]",
-      "status": "pending",
-      "attempts": 0,
-      "worker": null,
+      "status": "leased",
+      "attempts": 1,
+      "worker": "w1",
       "result_state": null,
-      "lease_expires_at": null,
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "lease_expires_at": "2026-07-16T07:13:00.931703+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": "BLOCKED_BY_INTERPRETATION",
-      "run_count": 31,
-      "chatgpt_run_count": 22,
+      "run_count": 32,
+      "chatgpt_run_count": 24,
       "runs": [
+        {
+          "run_id": "camp-c2b90ad344141fb2.erdos-77.5.1784184180-7a95c1",
+          "problem_id": "erdos-77",
+          "started_at": "2026-07-16T06:43:00Z",
+          "updated_at": "2026-07-16T06:43:00Z",
+          "event_count": 6,
+          "families": [
+            "direct_structural",
+            "contradiction_minimal_counterexample",
+            "computational_finite_reduction"
+          ],
+          "claims_proposed": 0,
+          "evidence_attached": 0,
+          "claims_promoted": 0,
+          "packet_reentries": 0,
+          "formal_correspondences": 0,
+          "chatgpt": [],
+          "events": [
+            {
+              "sequence": 0,
+              "action": "PROBLEM_FROZEN",
+              "timestamp": "2026-07-16T06:43:00Z",
+              "description": "SOURCE_FROZEN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 1,
+              "action": "INTERPRETATION_ADDED",
+              "timestamp": "2026-07-16T06:43:00Z",
+              "description": "RELATION_PLAUSIBLE",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 2,
+              "action": "INTENT_CERTIFICATE_ISSUED",
+              "timestamp": "2026-07-16T06:43:00Z",
+              "description": "INTENT_APPROVED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 3,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T06:43:00Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 4,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T06:43:00Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 5,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T06:43:00Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            }
+          ],
+          "actions": {
+            "BRANCH_OPENED": 3,
+            "INTENT_CERTIFICATE_ISSUED": 1,
+            "INTERPRETATION_ADDED": 1,
+            "PROBLEM_FROZEN": 1
+          }
+        },
         {
           "run_id": "camp-c2b90ad344141fb2.erdos-77.32",
           "problem_id": "erdos-77",
@@ -1938,6 +2086,22 @@
       ],
       "exchanges": [
         {
+          "stage": "branch:direct_structural:round2",
+          "model": "ChatGPT (browser UI)",
+          "provider": "openai",
+          "prompt_hash": "bdcd548a3ed06b55",
+          "response_hash": "ee1bd1398a222a6e",
+          "conversation_url": "https://chatgpt.com/c/6a587f09-5a68-83e8-a663-6d0b201fef16"
+        },
+        {
+          "stage": "branch:direct_structural",
+          "model": "ChatGPT (browser UI)",
+          "provider": "openai",
+          "prompt_hash": "3732b84eb206c740",
+          "response_hash": "caf6ce3427c51816",
+          "conversation_url": "https://chatgpt.com/c/6a587da7-16d0-83e8-939b-a0c4a3ecfea9"
+        },
+        {
           "stage": "branch:computational_finite_reduction:round4",
           "model": "ChatGPT (browser UI)",
           "provider": "openai",
@@ -2144,7 +2308,7 @@
           {
             "percent": 15,
             "label": "Worker assigned",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 20,
@@ -2192,7 +2356,8 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "stale"
     },
     {
       "problem_id": "erdos-153",
@@ -2202,8 +2367,8 @@
       "attempts": 1,
       "worker": "w2",
       "result_state": null,
-      "lease_expires_at": "2026-07-16T06:25:42.773431+00:00",
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "lease_expires_at": "2026-07-16T06:55:43.740897+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": "BLOCKED_BY_INTERPRETATION",
       "run_count": 36,
       "chatgpt_run_count": 22,
@@ -2212,8 +2377,8 @@
           "run_id": "camp-c2b90ad344141fb2.erdos-153.3.1784178040-7315f9",
           "problem_id": "erdos-153",
           "started_at": "2026-07-16T05:00:40Z",
-          "updated_at": "2026-07-16T06:02:21Z",
-          "event_count": 18,
+          "updated_at": "2026-07-16T06:37:48Z",
+          "event_count": 19,
           "families": [
             "direct_structural",
             "contradiction_minimal_counterexample",
@@ -2222,7 +2387,7 @@
           "claims_proposed": 11,
           "evidence_attached": 0,
           "claims_promoted": 0,
-          "packet_reentries": 0,
+          "packet_reentries": 1,
           "formal_correspondences": 0,
           "chatgpt": [],
           "events": [
@@ -2369,6 +2534,14 @@
               "description": "PROPOSED_UNKNOWN",
               "stage": null,
               "conversation_url": null
+            },
+            {
+              "sequence": 18,
+              "action": "PACKET_REENTRY",
+              "timestamp": "2026-07-16T06:37:48Z",
+              "description": "packet re-entry after formal_library_first: 4 new records",
+              "stage": null,
+              "conversation_url": null
             }
           ],
           "actions": {
@@ -2377,6 +2550,7 @@
             "CLAIM_PROPOSED": 11,
             "INTENT_CERTIFICATE_ISSUED": 1,
             "INTERPRETATION_ADDED": 1,
+            "PACKET_REENTRY": 1,
             "PROBLEM_FROZEN": 1
           }
         },
@@ -4250,7 +4424,24 @@
           "conversation_url": null
         }
       ],
-      "aristotle": [],
+      "aristotle": [
+        {
+          "artifact_id": "b70a9e5b-d3f8-447d-abaa-4ef29ffec083",
+          "worker": "w2",
+          "session": "b70a9e5b-d3f8-447d-abaa-4ef29ffec083",
+          "bytes": 1375,
+          "declarations": [
+            "IsSidon",
+            "erdos153_index_nonempty"
+          ],
+          "problem_numbers": [
+            153
+          ],
+          "linked_by": "Lean declaration names problem",
+          "status": "proof draft \u2014 not yet verified",
+          "source_preview": "import Mathlib\n\n/-- A set is Sidon if equality of two pairwise sums determines the summands up to order. -/\ndef IsSidon (A : Set \u2115) : Prop :=\n  \u2200 \u2983a b c d : \u2115\u2984, a \u2208 A \u2192 b \u2208 A \u2192 c \u2208 A \u2192 d \u2208 A \u2192\n    a + b = c + d \u2192 (a = c \u2227 b = d) \u2228 (a = d \u2227 b = c)\n\nnamespace Erdos153\n\n/-\nThere are finite Sidon sets of every prescribed finite cardinality.\n-/\ntheorem erdos153_index_nonempty : \u2200 n : \u2115, Nonempty {A : Finset \u2115 // A.card = n \u2227 IsSidon (A : Set \u2115)} := by\n  intro n;\n  -- For each $n$, we can construct a Sidon set by choosing elements from the set $\\{3^k \\mid k \\in \\mathbb{N}\\}$.\n  obtain \u27e8A, hA\u27e9 : \u2203 A : Finset \u2115, A.card = n \u2227 \u2200 a \u2208 A, \u2200 b \u2208 A, \u2200 c \u2208 A, \u2200 d \u2208 A, a + b = c + d \u2192 (a = c \u2227 b = d) \u2228 (a = d \u2227 b = c) := by\n    induction' n with n ih;\n    \u00b7 exact \u27e8 \u2205, rfl, by intros; contradiction \u27e9;\n    \u00b7 obtain \u27e8 A, hA\u2081, hA\u2082 \u27e9 := ih;\n      -- Let $M$ be a number greater than all elements in $A$.\n      obtain \u27e8M, hM\u27e9 : \u2203 M : \u2115, \u2200 a \u2208 A, a < M := by\n        exact \u27e8 A.sup id + 1, fun a ha => Nat.lt_succ_of_le ( Finset.le_sup ( f := id ) ha ) \u27e9;\n      use A \u222a { 4 * M };\n      grind;\n  exact \u27e8 \u27e8 A, hA.1, fun a b c d ha hb hc hd hab => hA.2 a ( by simpa using ha ) b ( by simpa using hb ) c ( by simpa using hc ) d ( by simpa using hd ) hab \u27e9 \u27e9\n\nend Erdos153"
+        }
+      ],
       "solvability": {
         "available": true,
         "score": 0.367312,
@@ -4267,9 +4458,9 @@
       },
       "erdos_page": "https://www.erdosproblems.com/153",
       "progress": {
-        "percent": 50,
-        "stage": "Candidate statement found",
-        "explanation": "The run produced a concrete lemma or intermediate claim.",
+        "percent": 75,
+        "stage": "Formal proof draft linked",
+        "explanation": "An Aristotle Lean draft is reliably associated with this problem.",
         "disclaimer": "Research milestone, not the probability of solving the problem and not mathematical distance to a proof.",
         "milestones": [
           {
@@ -4310,7 +4501,7 @@
           {
             "percent": 75,
             "label": "Formal proof draft linked",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 88,
@@ -4328,7 +4519,8 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "stale"
     },
     {
       "problem_id": "erdos-155",
@@ -4339,7 +4531,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": null,
       "run_count": 0,
       "chatgpt_run_count": 0,
@@ -4423,7 +4615,8 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "not_applicable"
     },
     {
       "problem_id": "erdos-158",
@@ -4434,7 +4627,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": null,
       "run_count": 0,
       "chatgpt_run_count": 0,
@@ -4518,7 +4711,8 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "not_applicable"
     },
     {
       "problem_id": "erdos-165",
@@ -4529,11 +4723,136 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": null,
-      "run_count": 5,
+      "run_count": 6,
       "chatgpt_run_count": 5,
       "runs": [
+        {
+          "run_id": "erdos-165.1784182797242928000-65768-747355e2",
+          "problem_id": "erdos-165",
+          "started_at": "2026-07-16T06:19:57Z",
+          "updated_at": "2026-07-16T06:19:57Z",
+          "event_count": 12,
+          "families": [
+            "direct_structural",
+            "contradiction_minimal_counterexample",
+            "computational_finite_reduction"
+          ],
+          "claims_proposed": 4,
+          "evidence_attached": 0,
+          "claims_promoted": 0,
+          "packet_reentries": 1,
+          "formal_correspondences": 0,
+          "chatgpt": [],
+          "events": [
+            {
+              "sequence": 0,
+              "action": "PROBLEM_FROZEN",
+              "timestamp": "2026-07-16T06:19:57Z",
+              "description": "SOURCE_FROZEN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 1,
+              "action": "INTERPRETATION_ADDED",
+              "timestamp": "2026-07-16T06:19:57Z",
+              "description": "RELATION_EXACT",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 2,
+              "action": "INTENT_CERTIFICATE_ISSUED",
+              "timestamp": "2026-07-16T06:19:57Z",
+              "description": "INTENT_APPROVED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 3,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T06:19:57Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 4,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T06:19:57Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 5,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T06:19:57Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 6,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:19:57Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 7,
+              "action": "CLAIM_INTENT_BOUND",
+              "timestamp": "2026-07-16T06:19:57Z",
+              "description": "APPROVED_INTENT_BOUND",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 8,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:19:57Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 9,
+              "action": "PACKET_REENTRY",
+              "timestamp": "2026-07-16T06:19:57Z",
+              "description": "packet re-entry after direct_structural: 2 new records",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 10,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:19:57Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 11,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:19:57Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            }
+          ],
+          "actions": {
+            "BRANCH_OPENED": 3,
+            "CLAIM_INTENT_BOUND": 1,
+            "CLAIM_PROPOSED": 4,
+            "INTENT_CERTIFICATE_ISSUED": 1,
+            "INTERPRETATION_ADDED": 1,
+            "PACKET_REENTRY": 1,
+            "PROBLEM_FROZEN": 1
+          }
+        },
         {
           "run_id": "camp-c2b90ad344141fb2.erdos-165.38",
           "problem_id": "erdos-165",
@@ -4890,9 +5209,9 @@
       },
       "erdos_page": "https://www.erdosproblems.com/165",
       "progress": {
-        "percent": 40,
-        "stage": "Approaches explored",
-        "explanation": "At least one proof or counterexample approach was attempted.",
+        "percent": 50,
+        "stage": "Candidate statement found",
+        "explanation": "The run produced a concrete lemma or intermediate claim.",
         "disclaimer": "Research milestone, not the probability of solving the problem and not mathematical distance to a proof.",
         "milestones": [
           {
@@ -4913,7 +5232,7 @@
           {
             "percent": 30,
             "label": "Meaning approved",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 40,
@@ -4923,7 +5242,7 @@
           {
             "percent": 50,
             "label": "Candidate statement found",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 65,
@@ -4951,7 +5270,8 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "not_applicable"
     },
     {
       "problem_id": "erdos-169",
@@ -4962,7 +5282,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": null,
       "run_count": 0,
       "chatgpt_run_count": 0,
@@ -5046,7 +5366,8 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "not_applicable"
     },
     {
       "problem_id": "erdos-174",
@@ -5057,7 +5378,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": null,
       "run_count": 0,
       "chatgpt_run_count": 0,
@@ -5141,7 +5462,8 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "not_applicable"
     },
     {
       "problem_id": "erdos-183",
@@ -5152,7 +5474,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": null,
       "run_count": 0,
       "chatgpt_run_count": 0,
@@ -5236,22 +5558,97 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "not_applicable"
     },
     {
       "problem_id": "erdos-197",
       "number": 197,
       "statement": "Can $\\mathbb{N}$ be partitioned into two sets, each of which can be permuted to avoid monotone 3-term arithmetic progressions?",
-      "status": "pending",
-      "attempts": 0,
-      "worker": null,
+      "status": "leased",
+      "attempts": 1,
+      "worker": "w0",
       "result_state": null,
-      "lease_expires_at": null,
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "lease_expires_at": "2026-07-16T07:13:00.688299+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": "OPEN_NO_PROGRESS",
-      "run_count": 39,
-      "chatgpt_run_count": 16,
+      "run_count": 40,
+      "chatgpt_run_count": 17,
       "runs": [
+        {
+          "run_id": "camp-c2b90ad344141fb2.erdos-197.4.1784184180-0b4fca",
+          "problem_id": "erdos-197",
+          "started_at": "2026-07-16T06:43:00Z",
+          "updated_at": "2026-07-16T06:43:00Z",
+          "event_count": 6,
+          "families": [
+            "direct_structural",
+            "contradiction_minimal_counterexample",
+            "formal_library_first"
+          ],
+          "claims_proposed": 0,
+          "evidence_attached": 0,
+          "claims_promoted": 0,
+          "packet_reentries": 0,
+          "formal_correspondences": 0,
+          "chatgpt": [],
+          "events": [
+            {
+              "sequence": 0,
+              "action": "PROBLEM_FROZEN",
+              "timestamp": "2026-07-16T06:43:00Z",
+              "description": "SOURCE_FROZEN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 1,
+              "action": "INTERPRETATION_ADDED",
+              "timestamp": "2026-07-16T06:43:00Z",
+              "description": "RELATION_EXACT",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 2,
+              "action": "INTENT_CERTIFICATE_ISSUED",
+              "timestamp": "2026-07-16T06:43:00Z",
+              "description": "INTENT_APPROVED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 3,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T06:43:00Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 4,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T06:43:00Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 5,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T06:43:00Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            }
+          ],
+          "actions": {
+            "BRANCH_OPENED": 3,
+            "INTENT_CERTIFICATE_ISSUED": 1,
+            "INTERPRETATION_ADDED": 1,
+            "PROBLEM_FROZEN": 1
+          }
+        },
         {
           "run_id": "camp-c2b90ad344141fb2.erdos-197.31",
           "problem_id": "erdos-197",
@@ -7277,6 +7674,14 @@
       ],
       "exchanges": [
         {
+          "stage": "branch:formal_library_first",
+          "model": "ChatGPT (browser UI)",
+          "provider": "openai",
+          "prompt_hash": "0b0874721e2723c8",
+          "response_hash": "a077184a74caaaf8",
+          "conversation_url": "https://chatgpt.com/c/6a587da7-8fac-83e8-915c-cbb94dc90b02"
+        },
+        {
           "stage": "branch:computational_finite_reduction",
           "model": "ChatGPT (browser UI)",
           "provider": "openai",
@@ -7435,7 +7840,7 @@
           {
             "percent": 15,
             "label": "Worker assigned",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 20,
@@ -7483,7 +7888,8 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "stale"
     },
     {
       "problem_id": "erdos-200",
@@ -7494,7 +7900,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": null,
       "run_count": 0,
       "chatgpt_run_count": 0,
@@ -7578,22 +7984,97 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "not_applicable"
     },
     {
       "problem_id": "erdos-203",
       "number": 203,
       "statement": "Is there an integer $m\\geq 1$ with $(m,6)=1$ such that none of $2^k3^\\ell m+1$ are prime, for any $k,\\ell\\geq 0$?",
-      "status": "pending",
-      "attempts": 0,
-      "worker": null,
+      "status": "leased",
+      "attempts": 1,
+      "worker": "w2",
       "result_state": null,
-      "lease_expires_at": null,
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "lease_expires_at": "2026-07-16T07:13:01.110998+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": null,
-      "run_count": 12,
-      "chatgpt_run_count": 31,
+      "run_count": 13,
+      "chatgpt_run_count": 33,
       "runs": [
+        {
+          "run_id": "camp-c2b90ad344141fb2.erdos-203.6.1784184180-035e42",
+          "problem_id": "erdos-203",
+          "started_at": "2026-07-16T06:43:00Z",
+          "updated_at": "2026-07-16T06:43:01Z",
+          "event_count": 6,
+          "families": [
+            "direct_structural",
+            "contradiction_minimal_counterexample",
+            "formal_library_first"
+          ],
+          "claims_proposed": 0,
+          "evidence_attached": 0,
+          "claims_promoted": 0,
+          "packet_reentries": 0,
+          "formal_correspondences": 0,
+          "chatgpt": [],
+          "events": [
+            {
+              "sequence": 0,
+              "action": "PROBLEM_FROZEN",
+              "timestamp": "2026-07-16T06:43:00Z",
+              "description": "SOURCE_FROZEN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 1,
+              "action": "INTERPRETATION_ADDED",
+              "timestamp": "2026-07-16T06:43:00Z",
+              "description": "RELATION_PLAUSIBLE",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 2,
+              "action": "INTENT_CERTIFICATE_ISSUED",
+              "timestamp": "2026-07-16T06:43:00Z",
+              "description": "INTENT_APPROVED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 3,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T06:43:00Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 4,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T06:43:00Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 5,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T06:43:01Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            }
+          ],
+          "actions": {
+            "BRANCH_OPENED": 3,
+            "INTENT_CERTIFICATE_ISSUED": 1,
+            "INTERPRETATION_ADDED": 1,
+            "PROBLEM_FROZEN": 1
+          }
+        },
         {
           "run_id": "camp-c2b90ad344141fb2.erdos-203.17",
           "problem_id": "erdos-203",
@@ -8764,6 +9245,22 @@
       ],
       "exchanges": [
         {
+          "stage": "branch:formal_library_first:round2",
+          "model": "ChatGPT (browser UI)",
+          "provider": "openai",
+          "prompt_hash": "1e6689e0d4ae97a0",
+          "response_hash": "60c64b9a18b3664c",
+          "conversation_url": "https://chatgpt.com/c/6a587f60-e404-83e8-acfc-a143d7fbaccc"
+        },
+        {
+          "stage": "branch:formal_library_first",
+          "model": "ChatGPT (browser UI)",
+          "provider": "openai",
+          "prompt_hash": "d5dd1ee02ff89f9f",
+          "response_hash": "b5c892b85b515a0e",
+          "conversation_url": "https://chatgpt.com/c/6a587d7b-6334-83e8-9671-91cdb215340f"
+        },
+        {
           "stage": "branch:computational_finite_reduction",
           "model": "ChatGPT (browser UI)",
           "provider": "openai",
@@ -9042,7 +9539,7 @@
           {
             "percent": 15,
             "label": "Worker assigned",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 20,
@@ -9090,7 +9587,8 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "stale"
     },
     {
       "problem_id": "erdos-312",
@@ -9100,24 +9598,24 @@
       "attempts": 1,
       "worker": "w0",
       "result_state": null,
-      "lease_expires_at": "2026-07-16T06:25:42.472434+00:00",
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "lease_expires_at": "2026-07-16T06:55:43.454368+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": "BLOCKED_BY_INTERPRETATION",
       "run_count": 42,
-      "chatgpt_run_count": 22,
+      "chatgpt_run_count": 24,
       "runs": [
         {
           "run_id": "camp-c2b90ad344141fb2.erdos-312.1.1784178039-6ffe6a",
           "problem_id": "erdos-312",
           "started_at": "2026-07-16T05:00:39Z",
-          "updated_at": "2026-07-16T05:00:40Z",
-          "event_count": 6,
+          "updated_at": "2026-07-16T06:22:38Z",
+          "event_count": 16,
           "families": [
             "direct_structural",
             "contradiction_minimal_counterexample",
             "formal_library_first"
           ],
-          "claims_proposed": 0,
+          "claims_proposed": 9,
           "evidence_attached": 0,
           "claims_promoted": 0,
           "packet_reentries": 0,
@@ -9171,10 +9669,92 @@
               "description": "BRANCH_PROPOSED",
               "stage": null,
               "conversation_url": null
+            },
+            {
+              "sequence": 6,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:22:38Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 7,
+              "action": "CLAIM_INTENT_BOUND",
+              "timestamp": "2026-07-16T06:22:38Z",
+              "description": "APPROVED_INTENT_BOUND",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 8,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:22:38Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 9,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:22:38Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 10,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:22:38Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 11,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:22:38Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 12,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:22:38Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 13,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:22:38Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 14,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:22:38Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 15,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:22:38Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
             }
           ],
           "actions": {
             "BRANCH_OPENED": 3,
+            "CLAIM_INTENT_BOUND": 1,
+            "CLAIM_PROPOSED": 9,
             "INTENT_CERTIFICATE_ISSUED": 1,
             "INTERPRETATION_ADDED": 1,
             "PROBLEM_FROZEN": 1
@@ -11586,6 +12166,22 @@
       ],
       "exchanges": [
         {
+          "stage": "sketch:formal_library_first",
+          "model": "ChatGPT (browser UI)",
+          "provider": "openai",
+          "prompt_hash": "958ffd3844fd5109",
+          "response_hash": "3b5c0f3624a15218",
+          "conversation_url": null
+        },
+        {
+          "stage": "branch:formal_library_first:round2",
+          "model": "ChatGPT (browser UI)",
+          "provider": "openai",
+          "prompt_hash": "9598d13ad6fd0751",
+          "response_hash": "1427a918b4135822",
+          "conversation_url": null
+        },
+        {
           "stage": "branch:formal_library_first:round2",
           "model": "ChatGPT (browser UI)",
           "provider": "openai",
@@ -11871,23 +12467,108 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "stale"
     },
     {
       "problem_id": "erdos-324",
       "number": 324,
       "statement": "Does there exist a polynomial $f(x)\\in\\mathbb{Z}[x]$ such that all the sums $f(a)+f(b)$ with $a<b$ nonnegative integers are distinct?",
-      "status": "pending",
-      "attempts": 0,
-      "worker": null,
+      "status": "leased",
+      "attempts": 1,
+      "worker": "Erics-MacBook-Pro-8e6d155a:w0",
       "result_state": null,
-      "lease_expires_at": null,
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "lease_expires_at": "2026-07-16T07:17:46.323141+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": null,
-      "run_count": 0,
-      "chatgpt_run_count": 0,
-      "runs": [],
-      "exchanges": [],
+      "run_count": 1,
+      "chatgpt_run_count": 1,
+      "runs": [
+        {
+          "run_id": "camp-c2b90ad344141fb2.erdos-324.7.1784185366-6921ca",
+          "problem_id": "erdos-324",
+          "started_at": "2026-07-16T07:02:46Z",
+          "updated_at": "2026-07-16T07:03:54Z",
+          "event_count": 6,
+          "families": [
+            "direct_structural",
+            "contradiction_minimal_counterexample",
+            "formal_library_first"
+          ],
+          "claims_proposed": 0,
+          "evidence_attached": 0,
+          "claims_promoted": 0,
+          "packet_reentries": 0,
+          "formal_correspondences": 0,
+          "chatgpt": [],
+          "events": [
+            {
+              "sequence": 0,
+              "action": "PROBLEM_FROZEN",
+              "timestamp": "2026-07-16T07:02:46Z",
+              "description": "SOURCE_FROZEN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 1,
+              "action": "INTERPRETATION_ADDED",
+              "timestamp": "2026-07-16T07:02:46Z",
+              "description": "RELATION_EXACT",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 2,
+              "action": "INTENT_CERTIFICATE_ISSUED",
+              "timestamp": "2026-07-16T07:02:46Z",
+              "description": "INTENT_APPROVED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 3,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:03:54Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 4,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:03:54Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 5,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:03:54Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            }
+          ],
+          "actions": {
+            "BRANCH_OPENED": 3,
+            "INTENT_CERTIFICATE_ISSUED": 1,
+            "INTERPRETATION_ADDED": 1,
+            "PROBLEM_FROZEN": 1
+          }
+        }
+      ],
+      "exchanges": [
+        {
+          "stage": "cold_pass",
+          "model": "ChatGPT (browser UI)",
+          "provider": "openai",
+          "prompt_hash": "a67e3cd5068365cb",
+          "response_hash": "625c250959208d6b",
+          "conversation_url": "https://chatgpt.com/c/6a58821a-5e04-83e8-a4d3-d74bfb9240fd"
+        }
+      ],
       "aristotle": [],
       "solvability": {
         "available": true,
@@ -11905,9 +12586,9 @@
       },
       "erdos_page": "https://www.erdosproblems.com/324",
       "progress": {
-        "percent": 5,
-        "stage": "Queued",
-        "explanation": "The problem is in the campaign.",
+        "percent": 40,
+        "stage": "Approaches explored",
+        "explanation": "At least one proof or counterexample approach was attempted.",
         "disclaimer": "Research milestone, not the probability of solving the problem and not mathematical distance to a proof.",
         "milestones": [
           {
@@ -11918,22 +12599,22 @@
           {
             "percent": 15,
             "label": "Worker assigned",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 20,
             "label": "Meaning recorded",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 30,
             "label": "Meaning approved",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 40,
             "label": "Approaches explored",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 50,
@@ -11966,7 +12647,8 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "active"
     },
     {
       "problem_id": "erdos-400",
@@ -11977,7 +12659,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": null,
       "run_count": 0,
       "chatgpt_run_count": 0,
@@ -12061,7 +12743,8 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "not_applicable"
     },
     {
       "problem_id": "erdos-495",
@@ -12072,7 +12755,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": null,
       "run_count": 10,
       "chatgpt_run_count": 20,
@@ -13385,23 +14068,108 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "not_applicable"
     },
     {
       "problem_id": "erdos-602",
       "number": 602,
       "statement": "Let $(A_i)$ be a family of sets with $\\lvert A_i\\rvert=\\aleph_0$ for all $i$, such that for any $i\\neq j$ we have $\\lvert A_i\\cap A_j\\rvert$ finite and $\\neq 1$. Is there a $2$-colouring of $\\cup A_i$ such that no $A_i$ is monochromatic?",
-      "status": "pending",
-      "attempts": 0,
-      "worker": null,
+      "status": "leased",
+      "attempts": 1,
+      "worker": "Erics-MacBook-Pro-8e6d155a:w2",
       "result_state": null,
-      "lease_expires_at": null,
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "lease_expires_at": "2026-07-16T07:17:46.323274+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": null,
-      "run_count": 0,
-      "chatgpt_run_count": 0,
-      "runs": [],
-      "exchanges": [],
+      "run_count": 1,
+      "chatgpt_run_count": 1,
+      "runs": [
+        {
+          "run_id": "camp-c2b90ad344141fb2.erdos-602.9.1784185367-7ad6ff",
+          "problem_id": "erdos-602",
+          "started_at": "2026-07-16T07:02:47Z",
+          "updated_at": "2026-07-16T07:04:17Z",
+          "event_count": 6,
+          "families": [
+            "direct_structural",
+            "contradiction_minimal_counterexample",
+            "formal_library_first"
+          ],
+          "claims_proposed": 0,
+          "evidence_attached": 0,
+          "claims_promoted": 0,
+          "packet_reentries": 0,
+          "formal_correspondences": 0,
+          "chatgpt": [],
+          "events": [
+            {
+              "sequence": 0,
+              "action": "PROBLEM_FROZEN",
+              "timestamp": "2026-07-16T07:02:47Z",
+              "description": "SOURCE_FROZEN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 1,
+              "action": "INTERPRETATION_ADDED",
+              "timestamp": "2026-07-16T07:02:47Z",
+              "description": "RELATION_PLAUSIBLE",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 2,
+              "action": "INTENT_CERTIFICATE_ISSUED",
+              "timestamp": "2026-07-16T07:02:47Z",
+              "description": "INTENT_APPROVED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 3,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:04:17Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 4,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:04:17Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 5,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:04:17Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            }
+          ],
+          "actions": {
+            "BRANCH_OPENED": 3,
+            "INTENT_CERTIFICATE_ISSUED": 1,
+            "INTERPRETATION_ADDED": 1,
+            "PROBLEM_FROZEN": 1
+          }
+        }
+      ],
+      "exchanges": [
+        {
+          "stage": "cold_pass",
+          "model": "ChatGPT (browser UI)",
+          "provider": "openai",
+          "prompt_hash": "c09723b8750f417b",
+          "response_hash": "a8f73de44eb648f0",
+          "conversation_url": "https://chatgpt.com/c/6a58821d-c6d8-83e8-b2cf-422115213e2c"
+        }
+      ],
       "aristotle": [],
       "solvability": {
         "available": true,
@@ -13419,9 +14187,9 @@
       },
       "erdos_page": "https://www.erdosproblems.com/602",
       "progress": {
-        "percent": 5,
-        "stage": "Queued",
-        "explanation": "The problem is in the campaign.",
+        "percent": 40,
+        "stage": "Approaches explored",
+        "explanation": "At least one proof or counterexample approach was attempted.",
         "disclaimer": "Research milestone, not the probability of solving the problem and not mathematical distance to a proof.",
         "milestones": [
           {
@@ -13432,22 +14200,22 @@
           {
             "percent": 15,
             "label": "Worker assigned",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 20,
             "label": "Meaning recorded",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 30,
             "label": "Meaning approved",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 40,
             "label": "Approaches explored",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 50,
@@ -13480,7 +14248,8 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "active"
     },
     {
       "problem_id": "erdos-655",
@@ -13491,7 +14260,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": null,
       "run_count": 0,
       "chatgpt_run_count": 0,
@@ -13575,22 +14344,97 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "not_applicable"
     },
     {
       "problem_id": "erdos-849",
       "number": 849,
       "statement": "Is it true that, for every integer $t\\geq 1$, there is some integer $a$ such that\\[\\binom{n}{k}=a\\](with $1\\leq k\\leq n/2$) has exactly $t$ solutions?",
-      "status": "pending",
-      "attempts": 0,
-      "worker": null,
+      "status": "leased",
+      "attempts": 1,
+      "worker": "Erics-MacBook-Pro-8e6d155a:w1",
       "result_state": null,
-      "lease_expires_at": null,
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "lease_expires_at": "2026-07-16T07:17:46.323244+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": null,
-      "run_count": 9,
+      "run_count": 10,
       "chatgpt_run_count": 7,
       "runs": [
+        {
+          "run_id": "camp-c2b90ad344141fb2.erdos-849.8.1784185366-a9cdaa",
+          "problem_id": "erdos-849",
+          "started_at": "2026-07-16T07:02:46Z",
+          "updated_at": "2026-07-16T07:02:46Z",
+          "event_count": 6,
+          "families": [
+            "direct_structural",
+            "contradiction_minimal_counterexample",
+            "formal_library_first"
+          ],
+          "claims_proposed": 0,
+          "evidence_attached": 0,
+          "claims_promoted": 0,
+          "packet_reentries": 0,
+          "formal_correspondences": 0,
+          "chatgpt": [],
+          "events": [
+            {
+              "sequence": 0,
+              "action": "PROBLEM_FROZEN",
+              "timestamp": "2026-07-16T07:02:46Z",
+              "description": "SOURCE_FROZEN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 1,
+              "action": "INTERPRETATION_ADDED",
+              "timestamp": "2026-07-16T07:02:46Z",
+              "description": "RELATION_PLAUSIBLE",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 2,
+              "action": "INTENT_CERTIFICATE_ISSUED",
+              "timestamp": "2026-07-16T07:02:46Z",
+              "description": "INTENT_APPROVED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 3,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:02:46Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 4,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:02:46Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 5,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:02:46Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            }
+          ],
+          "actions": {
+            "BRANCH_OPENED": 3,
+            "INTENT_CERTIFICATE_ISSUED": 1,
+            "INTERPRETATION_ADDED": 1,
+            "PROBLEM_FROZEN": 1
+          }
+        },
         {
           "run_id": "camp-c2b90ad344141fb2.erdos-849.37",
           "problem_id": "erdos-849",
@@ -14236,7 +15080,7 @@
           {
             "percent": 15,
             "label": "Worker assigned",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 20,
@@ -14246,7 +15090,7 @@
           {
             "percent": 30,
             "label": "Meaning approved",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 40,
@@ -14284,7 +15128,8 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "active"
     },
     {
       "problem_id": "erdos-949",
@@ -14295,7 +15140,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": null,
       "run_count": 11,
       "chatgpt_run_count": 3,
@@ -15091,7 +15936,8 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "not_applicable"
     },
     {
       "problem_id": "erdos-1049",
@@ -15102,7 +15948,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": null,
       "run_count": 0,
       "chatgpt_run_count": 0,
@@ -15186,7 +16032,8 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "not_applicable"
     },
     {
       "problem_id": "erdos-1104",
@@ -15196,24 +16043,24 @@
       "attempts": 1,
       "worker": "w1",
       "result_state": null,
-      "lease_expires_at": "2026-07-16T06:25:42.626786+00:00",
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "lease_expires_at": "2026-07-16T06:55:43.596849+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": "BLOCKED_BY_INTERPRETATION",
       "run_count": 34,
-      "chatgpt_run_count": 27,
+      "chatgpt_run_count": 29,
       "runs": [
         {
           "run_id": "camp-c2b90ad344141fb2.erdos-1104.2.1784178040-471ab3",
           "problem_id": "erdos-1104",
           "started_at": "2026-07-16T05:00:40Z",
-          "updated_at": "2026-07-16T05:00:40Z",
-          "event_count": 6,
+          "updated_at": "2026-07-16T06:12:08Z",
+          "event_count": 33,
           "families": [
             "direct_structural",
             "contradiction_minimal_counterexample",
             "formal_library_first"
           ],
-          "claims_proposed": 0,
+          "claims_proposed": 26,
           "evidence_attached": 0,
           "claims_promoted": 0,
           "packet_reentries": 0,
@@ -15267,10 +16114,228 @@
               "description": "BRANCH_PROPOSED",
               "stage": null,
               "conversation_url": null
+            },
+            {
+              "sequence": 6,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 7,
+              "action": "CLAIM_INTENT_BOUND",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "APPROVED_INTENT_BOUND",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 8,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 9,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 10,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 11,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 12,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 13,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 14,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 15,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 16,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 17,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 18,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 19,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 20,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 21,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 22,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 23,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 24,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 25,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 26,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 27,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 28,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 29,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 30,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 31,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 32,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T06:12:08Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
             }
           ],
           "actions": {
             "BRANCH_OPENED": 3,
+            "CLAIM_INTENT_BOUND": 1,
+            "CLAIM_PROPOSED": 26,
             "INTENT_CERTIFICATE_ISSUED": 1,
             "INTERPRETATION_ADDED": 1,
             "PROBLEM_FROZEN": 1
@@ -17460,6 +18525,22 @@
       ],
       "exchanges": [
         {
+          "stage": "sketch:formal_library_first",
+          "model": "ChatGPT (browser UI)",
+          "provider": "openai",
+          "prompt_hash": "414f4d917a37e167",
+          "response_hash": "8ea80d6cb817c115",
+          "conversation_url": null
+        },
+        {
+          "stage": "branch:formal_library_first:round4",
+          "model": "ChatGPT (browser UI)",
+          "provider": "openai",
+          "prompt_hash": "8139d54596766b0b",
+          "response_hash": "27974fb2f4c2f913",
+          "conversation_url": null
+        },
+        {
           "stage": "branch:formal_library_first:round3",
           "model": "ChatGPT (browser UI)",
           "provider": "openai",
@@ -17785,7 +18866,8 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "stale"
     },
     {
       "problem_id": "erdos-1150",
@@ -17796,7 +18878,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": null,
       "run_count": 0,
       "chatgpt_run_count": 0,
@@ -17880,7 +18962,8 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "not_applicable"
     },
     {
       "problem_id": "erdos-1167",
@@ -17891,7 +18974,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": null,
       "run_count": 0,
       "chatgpt_run_count": 0,
@@ -17975,7 +19058,8 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "not_applicable"
     },
     {
       "problem_id": "erdos-1175",
@@ -17986,7 +19070,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T06:10:42.904391+00:00",
+      "updated_at": "2026-07-16T07:07:15.154512+00:00",
       "latest_state": null,
       "run_count": 0,
       "chatgpt_run_count": 0,
@@ -18070,7 +19154,8 @@
             "achieved": false
           }
         ]
-      }
+      },
+      "worker_liveness": "not_applicable"
     }
   ],
   "aristotle_artifacts": [
@@ -18151,6 +19236,19 @@
       "linked_by": null,
       "status": "proof draft \u2014 not yet verified",
       "source_preview": "import Mathlib\n\n/-!\nPinned Lean/Mathlib environment for Aristotle (Lean v4.28.0, Mathlib v4.28.0).\n\nAristotle writes candidate proofs into this project; EGMRA then re-checks them\nlocally with its pinned kernel (`egmra.lean.replay.LeanReplayVerifier`) before\nanything is trusted. A vendor \"COMPLETE\" is never a proof on its own.\n\nA trivial theorem so `lake build` succeeds on a fresh checkout.\n-/\n\ntheorem egmra_project_builds : True := trivial\n"
+    },
+    {
+      "artifact_id": "6222090e-55f8-4857-bfbc-77c9bc67fee6",
+      "worker": "w0",
+      "session": "6222090e-55f8-4857-bfbc-77c9bc67fee6",
+      "bytes": 374,
+      "declarations": [
+        "reciprocal_sum_append_zeros"
+      ],
+      "problem_numbers": [],
+      "linked_by": null,
+      "status": "proof draft \u2014 not yet verified",
+      "source_preview": "import Mathlib\n\ntheorem reciprocal_sum_append_zeros : \u2200 (a : List \u2115) (m : \u2115), ((a ++ List.replicate m 0).map (fun n => ((n : \u211d)\u207b\u00b9))).sum = (a.map (fun n => ((n : \u211d)\u207b\u00b9))).sum := by\n  intro a m\n  induction a with\n  | nil =>\n      induction m with\n      | zero => rfl\n      | succ m ih => simpa [List.replicate_succ] using ih\n  | cons x xs ih => simpa using ih\n"
     },
     {
       "artifact_id": "646d2332-ecb0-4329-bb6a-1b3887b8ecbe",
@@ -18566,6 +19664,19 @@
       "source_preview": "import Mathlib\n\n/-!\nPinned Lean/Mathlib environment for Aristotle (Lean v4.28.0, Mathlib v4.28.0).\n\nAristotle writes candidate proofs into this project; EGMRA then re-checks them\nlocally with its pinned kernel (`egmra.lean.replay.LeanReplayVerifier`) before\nanything is trusted. A vendor \"COMPLETE\" is never a proof on its own.\n\nA trivial theorem so `lake build` succeeds on a fresh checkout.\n-/\n\ntheorem egmra_project_builds : True := trivial\n"
     },
     {
+      "artifact_id": "49d61888-7a49-47ae-83af-42645a499785",
+      "worker": "w1",
+      "session": "49d61888-7a49-47ae-83af-42645a499785",
+      "bytes": 271,
+      "declarations": [
+        "chromaticValue_le_fin_card"
+      ],
+      "problem_numbers": [],
+      "linked_by": null,
+      "status": "proof draft \u2014 not yet verified",
+      "source_preview": "import Mathlib\n\ntheorem chromaticValue_le_fin_card {n \u03c7 : \u2115} (G : SimpleGraph (Fin n))\n    (h\u03c7 : G.chromaticNumber = \u03c7) : \u03c7 \u2264 n := by\n  have h : G.chromaticNumber \u2264 (n : \u2115\u221e) := by\n    simpa using G.chromaticNumber_le_card\n  rw [h\u03c7] at h\n  exact_mod_cast h\n"
+    },
+    {
       "artifact_id": "4a377b20-4101-47e6-a125-66f9e5dc9832",
       "worker": "w1",
       "session": "4a377b20-4101-47e6-a125-66f9e5dc9832",
@@ -18895,6 +20006,19 @@
       "source_preview": "import Mathlib\n\ntheorem two_pow_le_central_choose : \u2200 k : \u2115, 1 \u2264 k \u2192 2 ^ k \u2264 Nat.choose (2 * k) k := by\n  intro k hk\n  induction hk <;> simp_all +decide [pow_succ']\n  grind +suggestions"
     },
     {
+      "artifact_id": "bb738817-4c60-479d-ac1b-530a2dd2417d",
+      "worker": "w1",
+      "session": "bb738817-4c60-479d-ac1b-530a2dd2417d",
+      "bytes": 444,
+      "declarations": [
+        "egmra_project_builds"
+      ],
+      "problem_numbers": [],
+      "linked_by": null,
+      "status": "proof draft \u2014 not yet verified",
+      "source_preview": "import Mathlib\n\n/-!\nPinned Lean/Mathlib environment for Aristotle (Lean v4.28.0, Mathlib v4.28.0).\n\nAristotle writes candidate proofs into this project; EGMRA then re-checks them\nlocally with its pinned kernel (`egmra.lean.replay.LeanReplayVerifier`) before\nanything is trusted. A vendor \"COMPLETE\" is never a proof on its own.\n\nA trivial theorem so `lake build` succeeds on a fresh checkout.\n-/\n\ntheorem egmra_project_builds : True := trivial\n"
+    },
+    {
       "artifact_id": "bd5f19eb-199b-4534-a418-1f4cec6e2fc7",
       "worker": "w1",
       "session": "bd5f19eb-199b-4534-a418-1f4cec6e2fc7",
@@ -19109,6 +20233,19 @@
       "source_preview": "import Mathlib\n\n/-!\nPinned Lean/Mathlib environment for Aristotle (Lean v4.28.0, Mathlib v4.28.0).\n\nAristotle writes candidate proofs into this project; EGMRA then re-checks them\nlocally with its pinned kernel (`egmra.lean.replay.LeanReplayVerifier`) before\nanything is trusted. A vendor \"COMPLETE\" is never a proof on its own.\n\nA trivial theorem so `lake build` succeeds on a fresh checkout.\n-/\n\ntheorem egmra_project_builds : True := trivial\n"
     },
     {
+      "artifact_id": "02c51991-4028-4a29-87cc-d39cb9ad3d54",
+      "worker": "w2",
+      "session": "02c51991-4028-4a29-87cc-d39cb9ad3d54",
+      "bytes": 444,
+      "declarations": [
+        "egmra_project_builds"
+      ],
+      "problem_numbers": [],
+      "linked_by": null,
+      "status": "proof draft \u2014 not yet verified",
+      "source_preview": "import Mathlib\n\n/-!\nPinned Lean/Mathlib environment for Aristotle (Lean v4.28.0, Mathlib v4.28.0).\n\nAristotle writes candidate proofs into this project; EGMRA then re-checks them\nlocally with its pinned kernel (`egmra.lean.replay.LeanReplayVerifier`) before\nanything is trusted. A vendor \"COMPLETE\" is never a proof on its own.\n\nA trivial theorem so `lake build` succeeds on a fresh checkout.\n-/\n\ntheorem egmra_project_builds : True := trivial\n"
+    },
+    {
       "artifact_id": "03745b12-d371-4989-869a-3ea261e1d91c",
       "worker": "w2",
       "session": "03745b12-d371-4989-869a-3ea261e1d91c",
@@ -19146,6 +20283,19 @@
       "linked_by": null,
       "status": "proof draft \u2014 not yet verified",
       "source_preview": "import Mathlib\n\ntheorem bounded_step_prefix : \u2200 (xs : List \u211a) (\u03b7 : \u211a), 0 < \u03b7 \u2192 (\u2200 x \u2208 xs, 0 \u2264 x \u2227 x \u2264 \u03b7) \u2192 1 < xs.sum \u2192 \u2203 k : \u2115, k \u2264 xs.length \u2227 1 - \u03b7 < (xs.take k).sum \u2227 (xs.take k).sum \u2264 1 := by\n  intro xs \u03b7 h\u03b7_pos h_bound h_sum\n  have h_exists_k : \u2203 k \u2264 xs.length, (List.take k xs).sum > 1 := by\n    exact \u27e8 xs.length, le_rfl, by simpa using h_sum \u27e9;\n  obtain \u27e8k, hk_le, hk_sum\u27e9 : \u2203 k \u2264 xs.length, (List.take k xs).sum > 1 \u2227 \u2200 j < k, (List.take j xs).sum \u2264 1 := by\n    exact \u27e8 Nat.find h_exists_k, Nat.find_spec h_exists_k |>.1, Nat.find_spec h_exists_k |>.2, fun j hj => not_lt.1 fun contra => Nat.find_min h_exists_k hj \u27e8 Nat.le_trans ( Nat.le_of_lt hj ) ( Nat.find_spec h_exists_k |>.1 ), contra \u27e9 \u27e9;\n  rcases k <;> simp_all +decide [ List.take ];\n  exact \u27e8 _, Nat.le_of_succ_le \u2039_\u203a, by linarith [ h_bound _ <| show xs[\u2039\u2115\u203a] \u2208 xs from by simp, hk_sum.2 _ le_rfl ], hk_sum.2 _ le_rfl \u27e9\n"
+    },
+    {
+      "artifact_id": "0d2b07a0-2745-4591-92a0-c5600da8d6df",
+      "worker": "w2",
+      "session": "0d2b07a0-2745-4591-92a0-c5600da8d6df",
+      "bytes": 444,
+      "declarations": [
+        "egmra_project_builds"
+      ],
+      "problem_numbers": [],
+      "linked_by": null,
+      "status": "proof draft \u2014 not yet verified",
+      "source_preview": "import Mathlib\n\n/-!\nPinned Lean/Mathlib environment for Aristotle (Lean v4.28.0, Mathlib v4.28.0).\n\nAristotle writes candidate proofs into this project; EGMRA then re-checks them\nlocally with its pinned kernel (`egmra.lean.replay.LeanReplayVerifier`) before\nanything is trusted. A vendor \"COMPLETE\" is never a proof on its own.\n\nA trivial theorem so `lake build` succeeds on a fresh checkout.\n-/\n\ntheorem egmra_project_builds : True := trivial\n"
     },
     {
       "artifact_id": "1239b4bd-a619-4cf3-9c7a-e3c3850de2fe",
@@ -19387,6 +20537,19 @@
       "source_preview": "import Mathlib\n\ntheorem log_quadratic_over_log_scale : Filter.Tendsto (fun x : \u211d => Real.log (x ^ 2 / Real.log x) / Real.log x) Filter.atTop (nhds 2) := by\n  suffices h_simp :\n      Filter.Tendsto\n        (fun x : \u211d => (2 * Real.log x - Real.log (Real.log x)) / Real.log x)\n        Filter.atTop (nhds 2) by\n    refine h_simp.congr' ?_\n    filter_upwards [Filter.eventually_gt_atTop 1] with x hx\n    rw [Real.log_div (by positivity) (ne_of_gt <| Real.log_pos hx), Real.log_pow]\n    ring\n  have h_log_log :\n      Filter.Tendsto (fun x : \u211d => Real.log (Real.log x) / Real.log x)\n        Filter.atTop (nhds 0) := by\n    convert Real.isLittleO_log_id_atTop.tendsto_div_nhds_zero.comp\n      Real.tendsto_log_atTop using 1\n  simpa [sub_div] using\n    Filter.Tendsto.sub\n      (tendsto_const_nhds.congr' (by\n        filter_upwards [Filter.eventually_gt_atTop 1] with x hx\n        rw [mul_div_cancel_right\u2080 _ (ne_of_gt (Real.log_pos hx))]))\n      h_log_log\n"
     },
     {
+      "artifact_id": "96228caf-0d18-4e5e-a16f-1e6cdd38d876",
+      "worker": "w2",
+      "session": "96228caf-0d18-4e5e-a16f-1e6cdd38d876",
+      "bytes": 444,
+      "declarations": [
+        "egmra_project_builds"
+      ],
+      "problem_numbers": [],
+      "linked_by": null,
+      "status": "proof draft \u2014 not yet verified",
+      "source_preview": "import Mathlib\n\n/-!\nPinned Lean/Mathlib environment for Aristotle (Lean v4.28.0, Mathlib v4.28.0).\n\nAristotle writes candidate proofs into this project; EGMRA then re-checks them\nlocally with its pinned kernel (`egmra.lean.replay.LeanReplayVerifier`) before\nanything is trusted. A vendor \"COMPLETE\" is never a proof on its own.\n\nA trivial theorem so `lake build` succeeds on a fresh checkout.\n-/\n\ntheorem egmra_project_builds : True := trivial\n"
+    },
+    {
       "artifact_id": "a0a91724-f944-4a05-9b5c-9436cabc2817",
       "worker": "w2",
       "session": "a0a91724-f944-4a05-9b5c-9436cabc2817",
@@ -19438,6 +20601,22 @@
       "linked_by": null,
       "status": "proof draft \u2014 not yet verified",
       "source_preview": "import Mathlib\n\n/-- The standard binomial two-colour Ramsey bound. -/\ndef ramsey2 (s t : \u2115) : \u2115 := (s + t - 2).choose (s - 1)\n\ntheorem ramsey_twoColor_le_add : \u2200 s t : \u2115, 2 \u2264 s \u2192 2 \u2264 t \u2192 ramsey2 s t \u2264 ramsey2 (s - 1) t + ramsey2 s (t - 1) := by\n  unfold ramsey2;\n  rintro ( _ | _ | s ) ( _ | _ | t ) <;> simp +arith +decide [ Nat.choose ] at *"
+    },
+    {
+      "artifact_id": "b70a9e5b-d3f8-447d-abaa-4ef29ffec083",
+      "worker": "w2",
+      "session": "b70a9e5b-d3f8-447d-abaa-4ef29ffec083",
+      "bytes": 1375,
+      "declarations": [
+        "IsSidon",
+        "erdos153_index_nonempty"
+      ],
+      "problem_numbers": [
+        153
+      ],
+      "linked_by": "Lean declaration names problem",
+      "status": "proof draft \u2014 not yet verified",
+      "source_preview": "import Mathlib\n\n/-- A set is Sidon if equality of two pairwise sums determines the summands up to order. -/\ndef IsSidon (A : Set \u2115) : Prop :=\n  \u2200 \u2983a b c d : \u2115\u2984, a \u2208 A \u2192 b \u2208 A \u2192 c \u2208 A \u2192 d \u2208 A \u2192\n    a + b = c + d \u2192 (a = c \u2227 b = d) \u2228 (a = d \u2227 b = c)\n\nnamespace Erdos153\n\n/-\nThere are finite Sidon sets of every prescribed finite cardinality.\n-/\ntheorem erdos153_index_nonempty : \u2200 n : \u2115, Nonempty {A : Finset \u2115 // A.card = n \u2227 IsSidon (A : Set \u2115)} := by\n  intro n;\n  -- For each $n$, we can construct a Sidon set by choosing elements from the set $\\{3^k \\mid k \\in \\mathbb{N}\\}$.\n  obtain \u27e8A, hA\u27e9 : \u2203 A : Finset \u2115, A.card = n \u2227 \u2200 a \u2208 A, \u2200 b \u2208 A, \u2200 c \u2208 A, \u2200 d \u2208 A, a + b = c + d \u2192 (a = c \u2227 b = d) \u2228 (a = d \u2227 b = c) := by\n    induction' n with n ih;\n    \u00b7 exact \u27e8 \u2205, rfl, by intros; contradiction \u27e9;\n    \u00b7 obtain \u27e8 A, hA\u2081, hA\u2082 \u27e9 := ih;\n      -- Let $M$ be a number greater than all elements in $A$.\n      obtain \u27e8M, hM\u27e9 : \u2203 M : \u2115, \u2200 a \u2208 A, a < M := by\n        exact \u27e8 A.sup id + 1, fun a ha => Nat.lt_succ_of_le ( Finset.le_sup ( f := id ) ha ) \u27e9;\n      use A \u222a { 4 * M };\n      grind;\n  exact \u27e8 \u27e8 A, hA.1, fun a b c d ha hb hc hd hab => hA.2 a ( by simpa using ha ) b ( by simpa using hb ) c ( by simpa using hc ) d ( by simpa using hd ) hab \u27e9 \u27e9\n\nend Erdos153"
     },
     {
       "artifact_id": "c123043d-d387-43cb-9d18-ec74e08d9344",
@@ -19524,8 +20703,8 @@
       "problem_id": "erdos-324",
       "number": 324,
       "statement": "Does there exist a polynomial $f(x)\\in\\mathbb{Z}[x]$ such that all the sums $f(a)+f(b)$ with $a<b$ nonnegative integers are distinct?",
-      "status": "pending",
-      "worker": null,
+      "status": "leased",
+      "worker": "Erics-MacBook-Pro-8e6d155a:w0",
       "solvability": {
         "available": true,
         "score": 0.429739,
@@ -19541,9 +20720,9 @@
         "rank": 1
       },
       "progress": {
-        "percent": 5,
-        "stage": "Queued",
-        "explanation": "The problem is in the campaign.",
+        "percent": 40,
+        "stage": "Approaches explored",
+        "explanation": "At least one proof or counterexample approach was attempted.",
         "disclaimer": "Research milestone, not the probability of solving the problem and not mathematical distance to a proof.",
         "milestones": [
           {
@@ -19554,22 +20733,22 @@
           {
             "percent": 15,
             "label": "Worker assigned",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 20,
             "label": "Meaning recorded",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 30,
             "label": "Meaning approved",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 40,
             "label": "Approaches explored",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 50,
@@ -19608,8 +20787,8 @@
       "problem_id": "erdos-849",
       "number": 849,
       "statement": "Is it true that, for every integer $t\\geq 1$, there is some integer $a$ such that\\[\\binom{n}{k}=a\\](with $1\\leq k\\leq n/2$) has exactly $t$ solutions?",
-      "status": "pending",
-      "worker": null,
+      "status": "leased",
+      "worker": "Erics-MacBook-Pro-8e6d155a:w1",
       "solvability": {
         "available": true,
         "score": 0.420407,
@@ -19638,7 +20817,7 @@
           {
             "percent": 15,
             "label": "Worker assigned",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 20,
@@ -19648,7 +20827,7 @@
           {
             "percent": 30,
             "label": "Meaning approved",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 40,
@@ -19692,8 +20871,8 @@
       "problem_id": "erdos-602",
       "number": 602,
       "statement": "Let $(A_i)$ be a family of sets with $\\lvert A_i\\rvert=\\aleph_0$ for all $i$, such that for any $i\\neq j$ we have $\\lvert A_i\\cap A_j\\rvert$ finite and $\\neq 1$. Is there a $2$-colouring of $\\cup A_i$ such that no $A_i$ is monochromatic?",
-      "status": "pending",
-      "worker": null,
+      "status": "leased",
+      "worker": "Erics-MacBook-Pro-8e6d155a:w2",
       "solvability": {
         "available": true,
         "score": 0.381947,
@@ -19709,9 +20888,9 @@
         "rank": 3
       },
       "progress": {
-        "percent": 5,
-        "stage": "Queued",
-        "explanation": "The problem is in the campaign.",
+        "percent": 40,
+        "stage": "Approaches explored",
+        "explanation": "At least one proof or counterexample approach was attempted.",
         "disclaimer": "Research milestone, not the probability of solving the problem and not mathematical distance to a proof.",
         "milestones": [
           {
@@ -19722,22 +20901,22 @@
           {
             "percent": 15,
             "label": "Worker assigned",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 20,
             "label": "Meaning recorded",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 30,
             "label": "Meaning approved",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 40,
             "label": "Approaches explored",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 50,
@@ -19860,8 +21039,8 @@
       "problem_id": "erdos-203",
       "number": 203,
       "statement": "Is there an integer $m\\geq 1$ with $(m,6)=1$ such that none of $2^k3^\\ell m+1$ are prime, for any $k,\\ell\\geq 0$?",
-      "status": "pending",
-      "worker": null,
+      "status": "leased",
+      "worker": "w2",
       "solvability": {
         "available": true,
         "score": 0.378206,
@@ -19890,7 +21069,7 @@
           {
             "percent": 15,
             "label": "Worker assigned",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 20,
@@ -20045,9 +21224,9 @@
         "rank": 7
       },
       "progress": {
-        "percent": 50,
-        "stage": "Candidate statement found",
-        "explanation": "The run produced a concrete lemma or intermediate claim.",
+        "percent": 75,
+        "stage": "Formal proof draft linked",
+        "explanation": "An Aristotle Lean draft is reliably associated with this problem.",
         "disclaimer": "Research milestone, not the probability of solving the problem and not mathematical distance to a proof.",
         "milestones": [
           {
@@ -20088,7 +21267,7 @@
           {
             "percent": 75,
             "label": "Formal proof draft linked",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 88,
@@ -20280,8 +21459,8 @@
       "problem_id": "erdos-197",
       "number": 197,
       "statement": "Can $\\mathbb{N}$ be partitioned into two sets, each of which can be permuted to avoid monotone 3-term arithmetic progressions?",
-      "status": "pending",
-      "worker": null,
+      "status": "leased",
+      "worker": "w0",
       "solvability": {
         "available": true,
         "score": 0.352329,
@@ -20310,7 +21489,7 @@
           {
             "percent": 15,
             "label": "Worker assigned",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 20,
@@ -21372,8 +22551,8 @@
       "problem_id": "erdos-77",
       "number": 77,
       "statement": "If $R(k)$ is the Ramsey number for $K_k$, the minimal $n$ such that every $2$-colouring of the edges of $K_n$ contains a monochromatic copy of $K_k$, then find the value of\\[\\lim_{k\\to \\infty}R(k)^{1/k}.\\]",
-      "status": "pending",
-      "worker": null,
+      "status": "leased",
+      "worker": "w1",
       "solvability": {
         "available": true,
         "score": 0.143316,
@@ -21402,7 +22581,7 @@
           {
             "percent": 15,
             "label": "Worker assigned",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 20,
@@ -21473,9 +22652,9 @@
         "rank": 24
       },
       "progress": {
-        "percent": 40,
-        "stage": "Approaches explored",
-        "explanation": "At least one proof or counterexample approach was attempted.",
+        "percent": 50,
+        "stage": "Candidate statement found",
+        "explanation": "The run produced a concrete lemma or intermediate claim.",
         "disclaimer": "Research milestone, not the probability of solving the problem and not mathematical distance to a proof.",
         "milestones": [
           {
@@ -21496,7 +22675,7 @@
           {
             "percent": 30,
             "label": "Meaning approved",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 40,
@@ -21506,7 +22685,7 @@
           {
             "percent": 50,
             "label": "Candidate statement found",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 65,

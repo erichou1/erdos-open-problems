@@ -16,6 +16,10 @@ const workerLabel=value=>{
   const slot=String(value).split(":").pop();
   return machine?`${machine.hostname} · ${slot}`:String(value);
 };
+const problemStatusLabel=problem=>problem.status==="leased"
+  && problem.worker_liveness==="stale"
+  ? "Lease stale — waiting to reassign"
+  : statusLabel(problem.status);
 const progressHtml=progress=>{
   const value=Math.max(0,Math.min(100,Number(progress?.percent||0)));
   return `<div class="progress-block" title="${esc(progress?.disclaimer||"")}"><div class="progress-heading"><span>${esc(progress?.stage||"Queued")}</span><b>${value}</b></div><div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${value}" aria-label="Research milestone ${value} of 100"><i style="width:${value}%"></i></div></div>`;
@@ -59,8 +63,9 @@ function render(){
   const leased=summary.by_status.leased||0,pending=summary.by_status.pending||0;
   const metrics=[[summary.total,"problems being tracked"],[leased,"being worked on now"],[summary.computers_active||0,"computers active"],[summary.total_runs,"research attempts logged"],[summary.aristotle_artifacts||aristotle_artifacts.length,"formal proof drafts"]];
   $("#metricStrip").innerHTML=metrics.map(([n,label])=>`<div class="metric"><strong>${esc(n)}</strong><span>${esc(label)}</span></div>`).join("");
-  $("#workerCount").textContent=`${workers.length} active`;
-  $("#workerBoard").innerHTML=workers.length?workers.map(w=>`<div class="worker-slot"><div><strong>${esc(workerLabel(w.worker))}</strong><a href="#problem=${w.number}">#${esc(w.number)}</a><small>${esc(statusLabel(w.status))}</small></div><i class="pulse"></i></div>`).join(""):`<div class="worker-slot"><small>No one is assigned in this snapshot.</small></div>`;
+  const activeWorkers=workers.filter(worker=>worker.active).length;
+  $("#workerCount").textContent=`${activeWorkers} active · ${workers.length-activeWorkers} stale`;
+  $("#workerBoard").innerHTML=workers.length?workers.map(w=>`<div class="worker-slot ${w.active?"":"stale-worker"}"><div><strong>${esc(workerLabel(w.worker))}</strong><a href="#problem=${w.number}">#${esc(w.number)}</a><small>${esc(w.active?"Working now":"Old lease — waiting to reassign")}</small></div><i class="${w.active?"pulse":"stale-dot"}"></i></div>`).join(""):`<div class="worker-slot"><small>No one is assigned in this snapshot.</small></div>`;
   renderMachines(machines);renderBars(summary.by_status,summary.total);renderFilters(summary.by_status);renderRows();renderArtifacts(aristotle_artifacts);$("#artifactCount").textContent=aristotle_artifacts.length;$("#artifactLinkNote").textContent=`${summary.aristotle_linked||0} safely linked to a specific problem · ${summary.aristotle_unlinked||0} older drafts cannot be linked reliably`;
 }
 
@@ -90,7 +95,7 @@ function filteredProblems(){
 }
 function renderRows(){
   const rows=filteredProblems();
-  $("#problemRows").innerHTML=rows.length?rows.map(p=>`<tr class="problem-row" data-row="${p.number}" tabindex="0" aria-label="Open Erdős problem ${p.number}"><td><div class="problem-name"><strong class="problem-number">#${esc(p.number)}</strong><span class="problem-statement" title="${esc(p.statement)}">${esc(p.statement)}</span></div></td><td><span class="status-chip ${statusClass(p.status)}">${esc(statusLabel(p.status))}</span></td><td><span class="worker-tag">${esc(workerLabel(p.worker))}</span></td><td>${esc(p.attempts)}</td><td>${progressHtml(p.progress)}</td><td>${esc(resultLabel(p.latest_state||p.result_state))}</td><td>${p.run_count} / ${p.chatgpt_run_count}</td><td><button class="open-row" data-open="${p.number}" aria-label="Open problem ${p.number}">→</button></td></tr>`).join(""):`<tr><td colspan="8" class="empty-row">No problems match this view.</td></tr>`;
+  $("#problemRows").innerHTML=rows.length?rows.map(p=>`<tr class="problem-row" data-row="${p.number}" tabindex="0" aria-label="Open Erdős problem ${p.number}"><td><div class="problem-name"><strong class="problem-number">#${esc(p.number)}</strong><span class="problem-statement" title="${esc(p.statement)}">${esc(p.statement)}</span></div></td><td><span class="status-chip ${p.worker_liveness==="stale"?"retained":statusClass(p.status)}">${esc(problemStatusLabel(p))}</span></td><td><span class="worker-tag">${esc(p.worker_liveness==="stale"?"No active computer":workerLabel(p.worker))}</span></td><td>${esc(p.attempts)}</td><td>${progressHtml(p.progress)}</td><td>${esc(resultLabel(p.latest_state||p.result_state))}</td><td>${p.run_count} / ${p.chatgpt_run_count}</td><td><button class="open-row" data-open="${p.number}" aria-label="Open problem ${p.number}">→</button></td></tr>`).join(""):`<tr><td colspan="8" class="empty-row">No problems match this view.</td></tr>`;
   $("#resultCount").textContent=`Showing ${rows.length} of ${state.data.problems.length} problems · research attempts / saved ChatGPT exchanges`;
   document.querySelectorAll("[data-open]").forEach(button=>button.onclick=()=>openProblem(Number(button.dataset.open)));
   document.querySelectorAll("[data-row]").forEach(row=>{
@@ -106,7 +111,7 @@ function renderArtifacts(artifacts){
 function openProblem(number,runId=null){
   const p=state.data.problems.find(item=>item.number===number);if(!p)return;
   if(!runId)location.hash=`problem=${number}`;$("#detailTitle").textContent=`Erdős #${number}`;$("#erdosLink").href=p.erdos_page||"#";
-  const meta=[[statusLabel(p.status),"work status"],[workerLabel(p.worker),"worker"],[p.attempts,"times tried"],[resultLabel(p.latest_state||p.result_state),"latest result"]];
+  const meta=[[problemStatusLabel(p),"work status"],[p.worker_liveness==="stale"?"No active computer":workerLabel(p.worker),"worker"],[p.attempts,"times tried"],[resultLabel(p.latest_state||p.result_state),"latest result"]];
   const runs=p.runs.length?p.runs.map(run=>runHtml(run,p)).join(""):`<p class="missing-link">No completed run records yet.</p>`;
   const exchanges=p.exchanges?.length?`<table class="exchange-table"><thead><tr><th>Step</th><th>Model</th><th>Chat</th></tr></thead><tbody>${p.exchanges.slice(0,40).map(x=>`<tr><td>${esc(x.stage)}</td><td>${esc(x.model)}</td><td>${x.conversation_url?`<a href="${esc(x.conversation_url)}" target="_blank" rel="noopener">Open exact ChatGPT chat ↗</a>`:`Older exchange: chat link was not saved · ${esc(x.response_hash)}`}</td></tr>`).join("")}</tbody></table>`:`<p class="missing-link">No saved ChatGPT exchanges for this problem yet.</p>`;
   const aristotle=p.aristotle?.length?p.aristotle.map((a,i)=>`<details class="run-row"><summary><div><strong>${esc(a.declarations?.join(", ")||a.artifact_id)}</strong><span class="run-time">${esc(a.worker||"worker unknown")} · ${a.bytes.toLocaleString()} bytes</span></div><span class="run-state">not yet verified</span></summary><div class="run-body"><pre class="source-preview">${esc(a.source_preview)}</pre></div></details>`).join(""):`<p class="explanation-note"><strong>0 linked drafts does not mean Aristotle was not used.</strong> It means no saved Aristotle file safely names this problem. Most older drafts lack a problem number, so the dashboard keeps them in the global list instead of guessing.</p>`;

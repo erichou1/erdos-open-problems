@@ -460,6 +460,21 @@ def build() -> dict[str, Any]:
             "worker_ids": worker_ids,
             "current_problems": current_problems,
         })
+    active_worker_ids = {
+        worker_id
+        for machine in machines if machine["activity"] == "active"
+        for worker_id in machine["worker_ids"]
+    }
+    for problem in problems:
+        if problem["status"] == "leased":
+            problem["worker_liveness"] = (
+                "active" if problem.get("worker") in active_worker_ids
+                else "stale"
+            )
+        else:
+            problem["worker_liveness"] = "not_applicable"
+    for worker in workers:
+        worker["active"] = worker.get("worker") in active_worker_ids
     linked_artifacts = sum(bool(artifact["problem_numbers"]) for artifact in artifacts)
     recorded_chatgpt_links = sum(
         len(run.get("chatgpt", ()))
