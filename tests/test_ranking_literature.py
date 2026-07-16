@@ -141,10 +141,16 @@ def test_cache_reuse_requires_exact_statement_source_query_and_policy(tmp_path):
         {1: changed}, local, shortlist_problem_numbers=(1,), cache_root=cache,
         source_snapshot_id="snapshot-a", refresh=False, offline=True,
     )[1]
+    ignored_on_refresh = enrich_live_shortlist(
+        {1: changed}, local, shortlist_problem_numbers=(1,), cache_root=cache,
+        source_snapshot_id="snapshot-a", refresh=True, offline=False,
+        fetcher=empty_fetcher,
+    )[1]
     assert first.live_artifact_hashes
     assert len(first.live_artifact_hashes) == len(build_queries(card, index.research(1))) == 2
     assert second.live_artifact_hashes == first.live_artifact_hashes
     assert invalidated.live_artifact_hashes == ()
+    assert ignored_on_refresh.live_artifact_hashes == ()
     for path in cache.rglob("*.json"):
         payload = json.loads(path.read_text())
         assert payload["artifact_content_sha256"] == artifact_content_sha256(payload)

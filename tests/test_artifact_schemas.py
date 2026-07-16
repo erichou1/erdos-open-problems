@@ -63,6 +63,19 @@ class ArtifactSchemaTests(unittest.TestCase):
             "literature_ranking",
             problem["properties"]["probe_summary"]["required"],
         )
+        literature = json.loads(
+            (ROOT / "schemas" / "literature-ranking-artifact.schema.json")
+            .read_text()
+        )
+        self.assertEqual(
+            literature["properties"]["records"]["items"]["$ref"],
+            "#/$defs/record",
+        )
+        self.assertTrue({
+            "theorem_id", "source_uri", "source_version", "source_content_hash",
+            "verbatim_theorem_and_hypothesis_extract", "retrieved_at",
+            "proof_status", "independent_verification_status",
+        } <= set(literature["$defs"]["record"]["required"]))
 
 
 if __name__ == "__main__":

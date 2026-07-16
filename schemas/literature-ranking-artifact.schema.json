@@ -32,7 +32,7 @@
         "mathoverflow": {"$ref": "#/$defs/coverage"}
       }
     },
-    "records": {"type": "array", "items": {"type": "object"}},
+    "records": {"type": "array", "items": {"$ref": "#/$defs/record"}},
     "deduplication_identities": {"type": "array", "items": {"type": "string"}},
     "features": {"$ref": "#/$defs/features"},
     "supporting_snippets": {"type": "array", "items": {"type": "object"}},
@@ -41,6 +41,33 @@
   "$defs": {
     "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "coverage": {"enum": ["complete", "unavailable", "unsupported", "not_queried"]},
+    "record": {
+      "type": "object",
+      "required": [
+        "theorem_id", "canonical_statement", "conclusion", "source_uri",
+        "source_version", "source_content_hash",
+        "verbatim_theorem_and_hypothesis_extract", "extraction_method",
+        "extraction_confidence", "retrieved_at", "authors", "date",
+        "proof_status", "independent_verification_status", "license"
+      ],
+      "properties": {
+        "theorem_id": {"type": "string", "minLength": 1},
+        "canonical_statement": {"type": "string"},
+        "conclusion": {"type": "string"},
+        "source_uri": {"type": "string", "minLength": 1},
+        "source_version": {"type": "string", "minLength": 1},
+        "source_content_hash": {"$ref": "#/$defs/hash"},
+        "verbatim_theorem_and_hypothesis_extract": {"type": "string", "minLength": 1},
+        "extraction_method": {"type": "string"},
+        "extraction_confidence": {"type": "number", "minimum": 0, "maximum": 1},
+        "retrieved_at": {"type": "string"},
+        "authors": {"type": "array", "items": {"type": "string"}},
+        "date": {"type": "string"},
+        "proof_status": {"type": "string"},
+        "independent_verification_status": {"type": "string"},
+        "license": {"type": "string"}
+      }
+    },
     "features": {
       "type": "object",
       "required": ["foothold", "reuse", "machinery_risk", "status_risk", "components"],

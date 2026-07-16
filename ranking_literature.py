@@ -331,6 +331,10 @@ def _artifact_for_query(
     cached = _load_artifact(path, **compatibility)
     if cached is not None:
         return cached, True, 0
+    if path.exists():
+        # The content-addressed slot is immutable. An unreadable or
+        # incompatible packet is ignored, never partially reused or replaced.
+        return None, False, 0
     if offline or not refresh:
         return None, False, 0
     result = search_scholarly_sources(
