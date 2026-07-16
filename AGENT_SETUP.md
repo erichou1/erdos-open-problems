@@ -14,6 +14,34 @@ ledger, continuous rerank, and durable checkpoints. Campaigns on DIFFERENT
 computers coordinate through a shared Neon Postgres database so no two machines
 ever work the same problem.
 
+## Recommended daily operation — local control console
+
+After completing setup once, operators should not need to edit launch commands.
+On macOS, double-click `run_operator_console.command`; on macOS/Linux terminal:
+
+```bash
+.venv/bin/python operator_console.py
+```
+
+It opens a localhost-only page with:
+
+- **Check for update** — fetches the configured Git branch and reports status;
+- **Safe update** — fast-forward only; backs up tracked/untracked local edits in
+  a retained Git stash, updates dependencies when manifests changed, then
+  reapplies local edits;
+- **Update + restart** — cleanly stops this checkout's campaign, updates, then
+  resumes the same shared campaign/checkpoints;
+- **Run / resume pipeline** and **Stop cleanly**;
+- per-machine settings and prerequisite/version status.
+
+The console never displays secrets and binds only `127.0.0.1`. These paths are
+gitignored or outside the checkout, so a repository update does **not** replace
+them: `egmra.keys.sh`, `.chatgpt_profile*`, `operator.local.json`,
+`.egmra_operator/`, `egmra_runs/`, `egmra_campaigns/`, `egmra_outcomes/`,
+`egmra_quarantine/`, `reviews/`, `targets/`, and Lean `.lake/` caches. If a
+tracked local edit conflicts with upstream, the updater stops and retains the
+stash backup rather than choosing a side or discarding work.
+
 ---
 
 ## Phase 0 — ASK THE USER (do this first, in one message)
@@ -155,13 +183,13 @@ mkdir -p egmra_outcomes
 nohup .venv/bin/python -m egmra.cli campaign \
   --campaign-id shared-current-v1 \
   --state-store postgres \
-  --triage triage --triage-lane current --max-problems 25 \
+  --triage triage --triage-lane current --prefer-solvable --max-problems 25 \
   --provider browser --workers 5 --worker-rounds 4 --budget 100 \
   --policy egmra_campaigns/policy-local.json \
   --formalizer aristotle --lean-project aristotle_lean_project --lean-repair-rounds 2 \
   --hostile-review 2 --retrieval corpus --oeis offline --explore-blocked \
   --checkpoint-dir egmra_campaigns/ckpts-shared \
-  --auto-rerank --refresh-ranking-after \
+  --auto-rerank \
   --outcome-ledger "egmra_outcomes/shared-${HOST}.jsonl" \
   > "/tmp/egmra_campaign_${HOST}.log" 2>&1 &
 echo "campaign PID $!"

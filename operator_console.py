@@ -1,0 +1,573 @@
+"""Local-only EGMRA update/launch console.
+
+Why a localhost web console instead of Electron/native packaging:
+
+* zero new runtime/framework dependencies;
+* it launches the exact checked-in Python CLI, so there is no second pipeline;
+* secrets stay in gitignored ``egmra.keys.sh`` and are never returned by HTTP;
+* browser cookies stay in a gitignored/out-of-repo Playwright profile;
+* safe update is fetch + fast-forward only, with a retained stash backup for
+  tracked/untracked local edits; ignored keys/runs/profiles are never stashed;
+* binds 127.0.0.1 only and requires a random per-process action token.
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import os
+import re
+import shlex
+import signal
+import stat
+import subprocess
+import sys
+import threading
+import time
+import webbrowser
+from dataclasses import dataclass, field
+from http import HTTPStatus
+from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+from pathlib import Path
+from typing import Any
+
+ROOT = Path(__file__).resolve().parent
+STATE_DIR = ROOT / ".egmra_operator"
+CONFIG_PATH = ROOT / "operator.local.json"
+STATE_PATH = STATE_DIR / "state.json"
+HOST = "127.0.0.1"
+DEFAULT_PORT = 8765
+
+
+class OperatorError(RuntimeError):
+    pass
+
+
+def _run(args: list[str], *, root: Path = ROOT, timeout: float | None = None,
+         check: bool = False, env: dict[str, str] | None = None) -> subprocess.CompletedProcess:
+    try:
+        result = subprocess.run(
+            args, cwd=root, text=True, stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT, timeout=timeout, check=False, env=env,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise OperatorError(f"cannot run {args[0]}: {exc}") from exc
+    if check and result.returncode != 0:
+        raise OperatorError(
+            f"command failed ({result.returncode}): {' '.join(args)}\n"
+            f"{result.stdout[-4000:]}")
+    return result
+
+
+def _load_shell_exports(path: Path) -> dict[str, str]:
+    """Parse the simple `export KEY="value"` format used by egmra.keys.sh."""
+    result: dict[str, str] = {}
+    try:
+        lines = path.read_text(encoding="utf-8").splitlines()
+    except OSError:
+        return result
+    for raw in lines:
+        line = raw.strip()
+        if not line or line.startswith("#"):
+            continue
+        if line.startswith("export "):
+            line = line[7:].strip()
+        try:
+            parts = shlex.split(line, comments=True, posix=True)
+        except ValueError:
+            continue
+        if len(parts) != 1 or "=" not in parts[0]:
+            continue
+        name, value = parts[0].split("=", 1)
+        if re.fullmatch(r"[A-Za-z_][A-Za-z0-9_]*", name):
+            result[name] = value
+    return result
+
+
+def _atomic_private_json(path: Path, value: dict[str, Any]) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    temp = path.with_suffix(path.suffix + ".tmp")
+    fd = os.open(temp, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+    with os.fdopen(fd, "w", encoding="utf-8") as handle:
+        json.dump(value, handle, indent=2, sort_keys=True)
+        handle.write("\n")
+    os.replace(temp, path)
+
+
+def _default_config(root: Path = ROOT) -> dict[str, Any]:
+    profile_candidates = [root / ".chatgpt_profile", root.parent / ".chatgpt_profile"]
+    profile = next((path for path in profile_candidates if path.is_dir()), profile_candidates[0])
+    policy_candidates = [
+        root / "egmra_campaigns" / "policy-promotion-v3-local.json",
+        root / "egmra_campaigns" / "policy-local.json",
+    ]
+    policy = next((path for path in policy_candidates if path.is_file()), policy_candidates[0])
+    repl = root.parent / "repl" / ".lake" / "build" / "bin" / "repl"
+    return {
+        "schema_version": 1,
+        "branch": "audit/egmra-independent-remediation-20260713",
+        "campaign_id": "shared-current-v1",
+        "workers": 3,
+        "prefer_solvable": True,
+        "keys_file": "egmra.keys.sh",
+        "chatgpt_profile": str(profile),
+        "triage_dir": "triage",
+        "triage_lane": "current",
+        "max_problems": 25,
+        "policy": str(policy.relative_to(root)) if policy.is_relative_to(root) else str(policy),
+        "reviews_dir": "reviews",
+        "targets_dir": "targets",
+        "lean_project": "aristotle_lean_project",
+        "lean_dev_repl": f"lake env {repl}",
+        "checkpoint_dir": "egmra_campaigns/ckpts-shared",
+        "lemma_library": "egmra_lemma_library.jsonl",
+        "state_store": "postgres",
+        "worker_rounds": 4,
+        "lean_repair_rounds": 2,
+        "hostile_review": 2,
+        "budget": 100,
+        "log_file": f"/tmp/egmra_campaign_{os.uname().nodename.split('.')[0]}.log",
+    }
+
+
+def _load_config(root: Path = ROOT) -> dict[str, Any]:
+    defaults = _default_config(root)
+    path = root / "operator.local.json"
+    if not path.is_file():
+        _atomic_private_json(path, defaults)
+        return defaults
+    try:
+        value = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise OperatorError(f"invalid {path.name}: {exc}") from exc
+    if not isinstance(value, dict):
+        raise OperatorError(f"{path.name} must be a JSON object")
+    return defaults | value
+
+
+def _save_config(config: dict[str, Any], root: Path = ROOT) -> None:
+    allowed = set(_default_config(root))
+    clean = {key: value for key, value in config.items() if key in allowed}
+    clean["schema_version"] = 1
+    workers = int(clean.get("workers", 3))
+    if not 1 <= workers <= 5:
+        raise OperatorError("workers must be between 1 and 5")
+    clean["workers"] = workers
+    _atomic_private_json(root / "operator.local.json", clean)
+
+
+def _resolve(root: Path, value: str) -> Path:
+    path = Path(value).expanduser()
+    return path if path.is_absolute() else root / path
+
+
+def _git(root: Path, *args: str, timeout: float = 30.0,
+         check: bool = False) -> subprocess.CompletedProcess:
+    return _run(["git", *args], root=root, timeout=timeout, check=check)
+
+
+def _sha256_file(path: Path) -> str | None:
+    try:
+        return hashlib.sha256(path.read_bytes()).hexdigest()
+    except OSError:
+        return None
+
+
+def _pid_alive(pid: int) -> bool:
+    if pid <= 0:
+        return False
+    try:
+        os.kill(pid, 0)
+        return True
+    except OSError:
+        return False
+
+
+def _pid_cwd(pid: int) -> Path | None:
+    proc = Path(f"/proc/{pid}/cwd")
+    try:
+        return proc.resolve(strict=True)
+    except OSError:
+        pass
+    result = _run(["lsof", "-a", "-p", str(pid), "-d", "cwd", "-Fn"], timeout=3)
+    for line in result.stdout.splitlines():
+        if line.startswith("n/"):
+            return Path(line[1:]).resolve()
+    return None
+
+
+def _campaign_processes(root: Path = ROOT) -> list[dict[str, Any]]:
+    result = _run(["ps", "-axo", "pid=,command="], timeout=5)
+    rows = []
+    for line in result.stdout.splitlines():
+        match = re.match(r"\s*(\d+)\s+(.*)", line)
+        if not match:
+            continue
+        pid, command = int(match.group(1)), match.group(2)
+        if "-m egmra.cli campaign" not in command:
+            continue
+        cwd = _pid_cwd(pid)
+        if cwd == root.resolve():
+            rows.append({"pid": pid, "command": command, "managed": True})
+    return rows
+
+
+def build_campaign_command(config: dict[str, Any], root: Path = ROOT) -> list[str]:
+    python = root / ".venv" / "bin" / "python"
+    command = [
+        str(python), "-u", "-m", "egmra.cli", "campaign",
+        "--campaign-id", str(config["campaign_id"]),
+        "--triage", str(config["triage_dir"]),
+        "--triage-lane", str(config["triage_lane"]),
+        "--max-problems", str(int(config["max_problems"])),
+        "--provider", "browser", "--workers", str(int(config["workers"])),
+        "--worker-rounds", str(int(config["worker_rounds"])),
+        "--budget", str(float(config["budget"])),
+        "--reviews-dir", str(config["reviews_dir"]),
+        "--targets-dir", str(config["targets_dir"]),
+        "--lemma-library", str(config["lemma_library"]),
+        "--formalizer", "aristotle",
+        "--lean-project", str(config["lean_project"]),
+        "--lean-repair-rounds", str(int(config["lean_repair_rounds"])),
+        "--lean-dev-repl", str(config["lean_dev_repl"]),
+        "--hostile-review", str(int(config["hostile_review"])),
+        "--retrieval", "corpus", "--oeis", "offline", "--explore-blocked",
+        "--checkpoint-dir", str(config["checkpoint_dir"]),
+        "--auto-rerank",
+        "--outcome-ledger", f"egmra_outcomes/shared-{os.uname().nodename.split('.')[0]}.jsonl",
+        "--state-store", str(config["state_store"]),
+        "--policy", str(config["policy"]),
+    ]
+    if config.get("prefer_solvable", True):
+        command.append("--prefer-solvable")
+    return command
+
+
+@dataclass
+class Operator:
+    root: Path = ROOT
+    lock: threading.RLock = field(default_factory=threading.RLock)
+    job: dict[str, Any] = field(default_factory=lambda: {
+        "running": False, "name": "", "message": "", "ok": None,
+        "started_at": None, "finished_at": None,
+    })
+    lines: list[str] = field(default_factory=list)
+
+    def log(self, message: str) -> None:
+        stamp = time.strftime("%H:%M:%S")
+        with self.lock:
+            self.lines.append(f"{stamp} {message}")
+            del self.lines[:-200]
+
+    def config(self) -> dict[str, Any]:
+        return _load_config(self.root)
+
+    def _git_state(self, config: dict[str, Any], *, fetch: bool = False) -> dict[str, Any]:
+        branch = str(config["branch"])
+        if fetch:
+            _git(self.root, "fetch", "--quiet", "origin", branch, timeout=30, check=True)
+        local = _git(self.root, "rev-parse", "HEAD", check=True).stdout.strip()
+        remote_result = _git(self.root, "rev-parse", f"origin/{branch}")
+        remote = remote_result.stdout.strip() if remote_result.returncode == 0 else ""
+        dirty = _git(self.root, "status", "--porcelain").stdout.splitlines()
+        if not remote:
+            relation = "remote unavailable"
+        elif local == remote:
+            relation = "current"
+        elif _git(self.root, "merge-base", "--is-ancestor", local, remote).returncode == 0:
+            relation = "update available"
+        elif _git(self.root, "merge-base", "--is-ancestor", remote, local).returncode == 0:
+            relation = "local commits ahead"
+        else:
+            relation = "diverged — manual Git help required"
+        return {"local": local, "remote": remote, "relation": relation,
+                "dirty_count": len(dirty), "dirty_preview": dirty[:12]}
+
+    def _prerequisites(self, config: dict[str, Any]) -> dict[str, Any]:
+        keys = _resolve(self.root, str(config["keys_file"]))
+        profile = _resolve(self.root, str(config["chatgpt_profile"]))
+        policy = _resolve(self.root, str(config["policy"]))
+        lean = _resolve(self.root, str(config["lean_project"]))
+        python = self.root / ".venv" / "bin" / "python"
+        env = _load_shell_exports(keys)
+        env.update(_load_shell_exports(self.root / ".env"))
+        return {
+            "venv": python.is_file(),
+            "keys_file": keys.is_file() and stat.S_IMODE(keys.stat().st_mode) & 0o077 == 0,
+            "aristotle_key": bool(env.get("ARISTOTLE_API_KEY")),
+            "chatgpt_workspace": bool(env.get("CHATGPT_PROJECT_URL")),
+            "postgres_dsn": bool(env.get("EGMRA_POSTGRES_DSN"))
+                if config.get("state_store") == "postgres" else True,
+            "chatgpt_profile": profile.is_dir(),
+            "policy": policy.is_file(),
+            "lean_project": (lean / ".lake").is_dir(),
+            "reviews": _resolve(self.root, str(config["reviews_dir"])).is_dir(),
+            "targets": _resolve(self.root, str(config["targets_dir"])).is_dir(),
+        }
+
+    def status(self, *, fetch: bool = False) -> dict[str, Any]:
+        config = self.config()
+        processes = _campaign_processes(self.root)
+        state = {}
+        try:
+            state = json.loads(STATE_PATH.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            pass
+        managed_pid = int(state.get("campaign_pid", 0) or 0)
+        with self.lock:
+            job = dict(self.job)
+            logs = list(self.lines[-80:])
+        return {
+            "config": config,
+            "git": self._git_state(config, fetch=fetch),
+            "prerequisites": self._prerequisites(config),
+            "campaign": {
+                "running": bool(processes), "processes": processes,
+                "managed_pid": managed_pid,
+                "managed_pid_alive": _pid_alive(managed_pid),
+            },
+            "job": job, "log": logs,
+        }
+
+    def _safe_update(self) -> str:
+        config = self.config()
+        branch = str(config["branch"])
+        keys_path = _resolve(self.root, str(config["keys_file"]))
+        keys_before = _sha256_file(keys_path)
+        for protected in (str(config["keys_file"]), ".env",
+                  str(config["chatgpt_profile"]),
+                  "operator.local.json", ".egmra_operator",
+                          "egmra_runs", "egmra_campaigns", "egmra_outcomes"):
+            result = _git(self.root, "check-ignore", "-q", protected)
+            # An out-of-repo absolute profile cannot be checked and is safe by location.
+            if Path(protected).is_absolute():
+                continue
+            if result.returncode != 0 and _resolve(self.root, protected).exists():
+                raise OperatorError(f"refusing update: local path is not gitignored: {protected}")
+        self.log(f"Fetching origin/{branch}")
+        before = self._git_state(config, fetch=True)
+        if before["relation"] == "current":
+            return "Already current; local files unchanged."
+        if before["relation"] != "update available":
+            raise OperatorError(before["relation"])
+        old_head = before["local"]
+        stash_hash = ""
+        if before["dirty_count"]:
+            self.log(f"Backing up {before['dirty_count']} local changes in Git stash")
+            result = _git(
+                self.root, "stash", "push", "--include-untracked",
+                "-m", f"egmra-operator-backup-{int(time.time())}", check=True)
+            if "No local changes" not in result.stdout:
+                stash_hash = _git(self.root, "rev-parse", "refs/stash", check=True).stdout.strip()
+                self.log(f"Backup retained as stash {stash_hash[:12]}")
+        _git(self.root, "merge", "--ff-only", f"origin/{branch}", check=True)
+        new_head = _git(self.root, "rev-parse", "HEAD", check=True).stdout.strip()
+        changed = _git(self.root, "diff", "--name-only", old_head, new_head).stdout.splitlines()
+        if any(path in changed for path in ("requirements.txt", "pyproject.toml")):
+            self.log("Dependencies changed; updating virtual environment")
+            python = str(self.root / ".venv" / "bin" / "python")
+            _run([python, "-m", "pip", "install", "-r", "requirements.txt"],
+                 root=self.root, timeout=1800, check=True)
+            _run([python, "-m", "pip", "install", "-e", ".[aristotle]"],
+                 root=self.root, timeout=1800, check=True)
+        if stash_hash:
+            self.log("Reapplying local tracked/untracked changes")
+            applied = _git(self.root, "stash", "apply", "--index", stash_hash)
+            if applied.returncode != 0:
+                raise OperatorError(
+                    "code updated, but local changes conflict. Nothing was lost: "
+                    f"backup stash {stash_hash[:12]} is retained. Resolve Git conflicts "
+                    "before starting the pipeline.\n" + applied.stdout[-2000:])
+        if _sha256_file(keys_path) != keys_before:
+            raise OperatorError("safety violation: keys file changed during update")
+        return (
+            f"Updated {old_head[:8]} → {new_head[:8]}. "
+            + (f"Local backup retained as stash {stash_hash[:12]}." if stash_hash else "No local changes needed backup."))
+
+    def _start(self) -> str:
+        config = self.config()
+        prereqs = self._prerequisites(config)
+        missing = [name for name, ok in prereqs.items() if not ok]
+        if missing:
+            raise OperatorError("cannot start; fix prerequisites: " + ", ".join(missing))
+        existing = _campaign_processes(self.root)
+        if existing:
+            raise OperatorError(
+                "campaign already running: " + ", ".join(str(row["pid"]) for row in existing))
+        keys_path = _resolve(self.root, str(config["keys_file"]))
+        private_env = _load_shell_exports(keys_path)
+        private_env.update(_load_shell_exports(self.root / ".env"))
+        env = os.environ.copy() | private_env
+        env["CHATGPT_PROFILE_DIR"] = str(
+            _resolve(self.root, str(config["chatgpt_profile"])))
+        command = build_campaign_command(config, self.root)
+        log_path = Path(str(config["log_file"])).expanduser()
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        log_handle = open(log_path, "ab", buffering=0)
+        process = subprocess.Popen(
+            command, cwd=self.root, env=env, stdin=subprocess.DEVNULL,
+            stdout=log_handle, stderr=subprocess.STDOUT, start_new_session=True,
+        )
+        _atomic_private_json(STATE_PATH, {
+            "campaign_pid": process.pid, "started_at": time.time(),
+            "log_file": str(log_path), "command": command,
+        })
+        return f"Pipeline started as PID {process.pid}; log: {log_path}"
+
+    def _stop(self) -> str:
+        processes = _campaign_processes(self.root)
+        if not processes:
+            return "No campaign process is running."
+        pids = [row["pid"] for row in processes]
+        for pid in pids:
+            os.kill(pid, signal.SIGTERM)
+        deadline = time.time() + 12
+        while time.time() < deadline and any(_pid_alive(pid) for pid in pids):
+            time.sleep(.25)
+        remaining = [pid for pid in pids if _pid_alive(pid)]
+        if remaining:
+            raise OperatorError(
+                f"SIGTERM sent, but still stopping: {remaining}. Wait and refresh; "
+                "the console never force-kills because that could cut a checkpoint write.")
+        return "Pipeline stopped cleanly: " + ", ".join(map(str, pids))
+
+    def perform(self, action: str, payload: dict[str, Any]) -> str:
+        if action == "save_config":
+            _save_config(dict(payload.get("config") or {}), self.root)
+            return "Local machine configuration saved (mode 600, gitignored)."
+        if action == "check_update":
+            status = self._git_state(self.config(), fetch=True)
+            return f"{status['relation']}: local {status['local'][:8]}, remote {status['remote'][:8]}"
+        if action == "update":
+            return self._safe_update()
+        if action == "start":
+            return self._start()
+        if action == "stop":
+            return self._stop()
+        if action == "update_restart":
+            stop_message = self._stop()
+            update_message = self._safe_update()
+            start_message = self._start()
+            return f"{stop_message} {update_message} {start_message}"
+        raise OperatorError(f"unknown action: {action}")
+
+    def launch_job(self, action: str, payload: dict[str, Any]) -> None:
+        with self.lock:
+            if self.job["running"]:
+                raise OperatorError(f"another action is running: {self.job['name']}")
+            self.job = {"running": True, "name": action, "message": "",
+                        "ok": None, "started_at": time.time(), "finished_at": None}
+        self.log(f"Starting action: {action}")
+
+        def run() -> None:
+            try:
+                message = self.perform(action, payload)
+            except Exception as exc:  # action boundary: report, never crash server
+                ok, message = False, f"{type(exc).__name__}: {exc}"
+            else:
+                ok = True
+            self.log(message)
+            with self.lock:
+                self.job.update({"running": False, "ok": ok, "message": message,
+                                 "finished_at": time.time()})
+
+        threading.Thread(target=run, name=f"egmra-operator-{action}", daemon=True).start()
+
+
+HTML = r'''<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EGMRA Operator</title><style>
+:root{--bg:#eeece3;--ink:#1e2220;--line:#c4c5bd;--paper:#faf9f3;--green:#29775e;--red:#bd4736;--amber:#ae781f;--blue:#35677f}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:13px ui-monospace,SFMono-Regular,Menlo,monospace}header{height:74px;border-bottom:1px solid var(--ink);display:flex;align-items:center;justify-content:space-between;padding:0 4vw;position:sticky;top:0;background:rgba(238,236,227,.96);z-index:3}h1{font:600 24px Georgia,serif;margin:0}header span{font-size:10px;color:#656a66}main{max-width:1200px;margin:auto;padding:30px 4vw 60px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.panel{border-top:1px solid var(--ink);padding-top:13px}.panel h2{font:600 18px Georgia,serif;margin:0 0 14px}.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}.card{background:var(--paper);padding:13px}.card small,.card strong{display:block}.card small{font-size:8px;color:#676b68;text-transform:uppercase;margin-bottom:7px}.card strong{font-size:11px;overflow-wrap:anywhere}.ok{color:var(--green)}.bad{color:var(--red)}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions button{min-height:42px;border:1px solid var(--ink);background:transparent;font:600 10px inherit;cursor:pointer}.actions button:hover{background:var(--ink);color:var(--bg)}.actions .primary{background:var(--green);border-color:var(--green);color:white}.actions .danger{color:var(--red);border-color:var(--red)}.job{margin:12px 0;padding:12px;border-left:3px solid var(--amber);background:var(--paper);font-size:10px;line-height:1.5}.job.good{border-color:var(--green)}.job.fail{border-color:var(--red)}pre{background:var(--ink);color:#d9ded9;padding:14px;height:230px;overflow:auto;font-size:9px;line-height:1.5;white-space:pre-wrap}.config{display:grid;grid-template-columns:1fr 1fr;gap:9px}.field label{font-size:8px;text-transform:uppercase;color:#676b68;display:block;margin-bottom:4px}.field input{width:100%;height:34px;border:1px solid var(--line);background:var(--paper);padding:0 8px;font:10px inherit}.field.check{display:flex;align-items:end;gap:8px;padding-bottom:8px}.field.check label{margin:0}.footer-note{font-size:9px;line-height:1.6;color:#676b68;margin-top:13px}@media(max-width:750px){.grid{grid-template-columns:1fr}.config{grid-template-columns:1fr}.actions{grid-template-columns:1fr}header{padding:0 14px}main{padding:22px 14px}}</style></head><body><header><div><span>LOCALHOST ONLY / MACHINE CONTROL</span><h1>EGMRA Operator</h1></div><span id="clock">Loading…</span></header><main><div class="grid"><section class="panel"><h2>This computer</h2><div id="cards" class="cards"></div><div id="job" class="job">Ready.</div><div class="actions"><button data-action="check_update">Check for update</button><button data-action="update">Safe update</button><button class="primary" data-action="start">Run / resume pipeline</button><button data-action="update_restart">Update + restart</button><button class="danger" data-action="stop">Stop cleanly</button><button id="refresh">Refresh</button></div><p class="footer-note">Safe update is fast-forward only. Tracked and untracked local edits are backed up in a retained Git stash and reapplied. Ignored keys, browser cookies, runs, checkpoints, outcomes, reviews, targets, local config, and Lean caches are never touched.</p></section><section class="panel"><h2>Activity log</h2><pre id="log">No activity yet.</pre></section></div><section class="panel" style="margin-top:26px"><h2>Per-machine settings</h2><div id="config" class="config"></div><div class="actions" style="margin-top:12px"><button class="primary" id="save">Save local settings</button></div><p class="footer-note">Saved to operator.local.json (mode 600, gitignored). Secret values are never displayed here; edit egmra.keys.sh directly if credentials change.</p></section></main><script>
+const TOKEN='__TOKEN__';let last={};const $=s=>document.querySelector(s);const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const labels={branch:'Git branch',campaign_id:'Campaign ID',workers:'Browser workers (1–5)',chatgpt_profile:'ChatGPT profile directory',policy:'Signed policy path',lean_project:'Lean project',lean_dev_repl:'Warm Lean REPL command',keys_file:'Keys file',triage_dir:'Triage directory',triage_lane:'Triage lane',max_problems:'Maximum problems',reviews_dir:'Reviews directory',targets_dir:'Targets directory',checkpoint_dir:'Checkpoint directory',log_file:'Log file'};
+async function api(path,options={}){options.headers={...(options.headers||{}),'Content-Type':'application/json','X-EGMRA-Token':TOKEN};const r=await fetch(path,options);const d=await r.json();if(!r.ok)throw new Error(d.error||r.statusText);return d}
+function render(d){last=d;$('#clock').textContent=new Date().toLocaleTimeString();const p=d.prerequisites,g=d.git,c=d.campaign;const chatReady=p.chatgpt_profile&&p.chatgpt_workspace;const rows=[['Pipeline',c.running?`Running · ${c.processes.map(x=>x.pid).join(', ')}`:'Stopped',c.running],['Version',`${g.relation} · ${g.local.slice(0,8)}`,g.relation==='current'],['Local edits',`${g.dirty_count} files`,true],['Keys',p.keys_file&&p.aristotle_key?'Configured':'Missing / unsafe',p.keys_file&&p.aristotle_key],['ChatGPT',chatReady?'Login + workspace ready':p.chatgpt_profile?'Workspace URL missing':'Profile missing',chatReady],['Lean + policy',p.lean_project&&p.policy?'Ready':'Not ready',p.lean_project&&p.policy]];$('#cards').innerHTML=rows.map(x=>`<div class="card"><small>${x[0]}</small><strong class="${x[2]?'ok':'bad'}">${esc(x[1])}</strong></div>`).join('');const j=d.job;$('#job').className='job '+(j.ok===true?'good':j.ok===false?'fail':'');$('#job').textContent=j.running?`Running: ${j.name}…`:j.message||'Ready.';$('#log').textContent=(d.log||[]).join('\n')||'No activity yet.';$('#log').scrollTop=$('#log').scrollHeight;if(!$('#config').children.length){$('#config').innerHTML=Object.entries(labels).map(([k,l])=>`<div class="field"><label>${l}</label><input data-key="${k}" value="${esc(d.config[k])}"></div>`).join('')+`<div class="field check"><input id="prefer" type="checkbox" ${d.config.prefer_solvable?'checked':''}><label for="prefer">Prefer most solvable pending problems</label></div>`}}
+async function refresh(fetch=false){try{render(await api('/api/status'+(fetch?'?fetch=1':'')))}catch(e){$('#job').textContent=e.message;$('#job').className='job fail'}}
+document.querySelectorAll('[data-action]').forEach(b=>b.onclick=async()=>{try{await api('/api/action',{method:'POST',body:JSON.stringify({action:b.dataset.action})});refresh()}catch(e){alert(e.message)}});$('#refresh').onclick=()=>refresh();$('#save').onclick=async()=>{const config={...last.config};document.querySelectorAll('[data-key]').forEach(i=>config[i.dataset.key]=i.type==='number'?Number(i.value):i.value);config.workers=Number(config.workers);config.max_problems=Number(config.max_problems);config.prefer_solvable=$('#prefer').checked;await api('/api/action',{method:'POST',body:JSON.stringify({action:'save_config',config})});refresh()};refresh();setInterval(refresh,2000);
+</script></body></html>'''
+
+
+class Handler(BaseHTTPRequestHandler):
+    operator: Operator
+    token: str
+
+    def log_message(self, _format: str, *_args: object) -> None:
+        return
+
+    def _json(self, value: Any, status: int = 200) -> None:
+        payload = json.dumps(value).encode("utf-8")
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Cache-Control", "no-store")
+        self.send_header("Content-Length", str(len(payload)))
+        self.end_headers()
+        self.wfile.write(payload)
+
+    def do_GET(self) -> None:
+        if self.path == "/" or self.path.startswith("/?"):
+            payload = HTML.replace("__TOKEN__", self.token).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "text/html; charset=utf-8")
+            self.send_header("Cache-Control", "no-store")
+            self.send_header("Content-Length", str(len(payload)))
+            self.end_headers()
+            self.wfile.write(payload)
+            return
+        if self.path.startswith("/api/status"):
+            try:
+                value = self.operator.status(fetch="fetch=1" in self.path)
+            except Exception as exc:
+                self._json({"error": f"{type(exc).__name__}: {exc}"}, 500)
+            else:
+                self._json(value)
+            return
+        self.send_error(HTTPStatus.NOT_FOUND)
+
+    def do_POST(self) -> None:
+        if self.path != "/api/action":
+            self.send_error(HTTPStatus.NOT_FOUND)
+            return
+        origin = self.headers.get("Origin", "")
+        expected_origins = {f"http://{HOST}:{self.server.server_port}",
+                            f"http://localhost:{self.server.server_port}"}
+        if self.headers.get("X-EGMRA-Token") != self.token \
+                or (origin and origin not in expected_origins) \
+                or not self.headers.get("Content-Type", "").startswith("application/json"):
+            self._json({"error": "invalid local action token/origin"}, 403)
+            return
+        try:
+            length = min(int(self.headers.get("Content-Length", "0")), 1_000_000)
+            body = json.loads(self.rfile.read(length))
+            self.operator.launch_job(str(body.get("action", "")), body)
+        except (ValueError, json.JSONDecodeError, OperatorError) as exc:
+            self._json({"error": str(exc)}, 400)
+        else:
+            self._json({"accepted": True}, 202)
+
+
+def main() -> int:
+    parser = argparse.ArgumentParser(description="local-only EGMRA update/launch console")
+    parser.add_argument("--port", type=int, default=DEFAULT_PORT)
+    parser.add_argument("--no-browser", action="store_true")
+    args = parser.parse_args()
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    _load_config(ROOT)  # create private local defaults on first launch
+    operator = Operator(ROOT)
+    token = os.urandom(24).hex()
+    handler = type("OperatorHandler", (Handler,), {"operator": operator, "token": token})
+    server = ThreadingHTTPServer((HOST, args.port), handler)
+    url = f"http://{HOST}:{server.server_port}/"
+    print(f"EGMRA Operator: {url}")
+    print("Localhost only. Press Ctrl-C to stop the console (campaign continues).")
+    if not args.no_browser:
+        threading.Timer(.4, lambda: webbrowser.open(url)).start()
+    try:
+        server.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    finally:
+        server.server_close()
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

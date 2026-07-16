@@ -64,8 +64,14 @@ function render(){
   const metrics=[[summary.total,"problems being tracked"],[leased,"being worked on now"],[summary.computers_active||0,"computers active"],[summary.total_runs,"research attempts logged"],[summary.aristotle_artifacts||aristotle_artifacts.length,"formal proof drafts"]];
   $("#metricStrip").innerHTML=metrics.map(([n,label])=>`<div class="metric"><strong>${esc(n)}</strong><span>${esc(label)}</span></div>`).join("");
   const activeWorkers=workers.filter(worker=>worker.active).length;
-  $("#workerCount").textContent=`${activeWorkers} active · ${workers.length-activeWorkers} stale`;
-  $("#workerBoard").innerHTML=workers.length?workers.map(w=>`<div class="worker-slot ${w.active?"":"stale-worker"}"><div><strong>${esc(workerLabel(w.worker))}</strong><a href="#problem=${w.number}">#${esc(w.number)}</a><small>${esc(w.active?"Working now":"Old lease — waiting to reassign")}</small></div><i class="${w.active?"pulse":"stale-dot"}"></i></div>`).join(""):`<div class="worker-slot"><small>No one is assigned in this snapshot.</small></div>`;
+  const liveWorkers=workers.filter(worker=>worker.active);
+  const staleWorkers=workers.filter(worker=>!worker.active);
+  document.querySelector(".stale-leases")?.remove();
+  $("#workerCount").textContent=`${activeWorkers} active`;
+  const liveCards=liveWorkers.map(w=>`<div class="worker-slot"><div><strong>${esc(workerLabel(w.worker))}</strong><a href="#problem=${w.number}">#${esc(w.number)}</a><small>Working now</small></div><i class="pulse"></i></div>`).join("");
+  const staleDetails=staleWorkers.length?`<details class="stale-leases"><summary>${staleWorkers.length} old leases waiting to expire — not active work</summary><div>${staleWorkers.map(w=>`<a href="#problem=${w.number}">#${esc(w.number)}</a>`).join("")}</div></details>`:"";
+  $("#workerBoard").innerHTML=liveCards||`<div class="worker-slot"><small>No computer is actively working in this snapshot.</small></div>`;
+  $("#workerBoard").insertAdjacentHTML("afterend",staleDetails);
   renderMachines(machines);renderBars(summary.by_status,summary.total);renderFilters(summary.by_status);renderRows();renderArtifacts(aristotle_artifacts);$("#artifactCount").textContent=aristotle_artifacts.length;$("#artifactLinkNote").textContent=`${summary.aristotle_linked||0} safely linked to a specific problem · ${summary.aristotle_unlinked||0} older drafts cannot be linked reliably`;
 }
 
