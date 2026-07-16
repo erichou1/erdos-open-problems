@@ -27,6 +27,7 @@ from pathlib import Path
 # exploration); the others are the searcher's single-objective lanes, including
 # the T2-closable finite-computation lane (see ``build_t2_lane.py``).
 _ALLOCATION_LANE = "current"
+_MAX_RANKING_BYTES = 64_000_000
 _RANKING_LANES = (
     "current",
     "highest_probability_verified_novel_solution",
@@ -52,7 +53,7 @@ def available_lanes() -> tuple[str, ...]:
 def _read_json(path: Path) -> object:
     if path.is_symlink() or not path.is_file():
         raise TriageSourceError(f"triage ranking is not a regular file: {path}")
-    if path.stat().st_size > 32_000_000:
+    if path.stat().st_size > _MAX_RANKING_BYTES:
         raise TriageSourceError(f"triage ranking is implausibly large: {path}")
     try:
         return json.loads(path.read_text(encoding="utf-8"))

@@ -14,6 +14,7 @@ import pytest
 
 from egmra.orchestrator.triage_source import (
     TriageSourceError,
+    _read_json,
     available_lanes,
     solvability_order,
     triage_ranked_problem_ids,
@@ -116,6 +117,36 @@ def test_symlink_ranking_refused(tmp_path):
     (rankings / "current.json").symlink_to(real)
     with pytest.raises(TriageSourceError):
         triage_ranked_problem_ids(tmp_path, lane="current")
+
+
+class _SizedRankingPath:
+    def __init__(self, size: int) -> None:
+        self.size = size
+
+    def is_symlink(self) -> bool:
+        return False
+
+    def is_file(self) -> bool:
+        return True
+
+    def stat(self):
+        return type("Stat", (), {"st_size": self.size})()
+
+    def read_text(self, *, encoding: str) -> str:
+        return json.dumps(_alloc([{"problem_number": 5}]))
+
+    def __str__(self) -> str:
+        return "sized-ranking.json"
+
+
+def test_reader_accepts_current_auditable_ranking_size():
+    document = _read_json(_SizedRankingPath(44_000_000))
+    assert document["allocation_status"] == "ready"
+
+
+def test_reader_still_rejects_excessive_ranking_size():
+    with pytest.raises(TriageSourceError, match="implausibly large"):
+        _read_json(_SizedRankingPath(65_000_000))
 
 
 def test_available_lanes_includes_t2_and_current():
