@@ -147,6 +147,43 @@ def _as_str_list(value: Any, *, field_name: str) -> list[str]:
     return out
 
 
+def _as_falsifier_list(value: Any) -> list[str]:
+    """Falsifiers with lenient coercion: models naturally emit structured objects.
+
+    Live data (2026-07): 14 of 219 cached branch rounds died ONLY because the
+    model returned falsifiers as ``{claim_id, target, test}`` objects — a richer
+    shape than the schema, discarded whole by strict parsing at the cost of a
+    full browser round.  Coercing an object to a compact string keeps the strict
+    boundary for everything mathematical (claims, experiments, Lean sources)
+    while not burning a round over formatting of an advisory field.
+    """
+    if value is None:
+        return []
+    if not isinstance(value, list):
+        raise WorkerResponseSchemaError("falsifiers must be a list")
+    out: list[str] = []
+    for item in value[:_MAX_LIST]:
+        if isinstance(item, str):
+            cleaned = item.strip()
+        elif isinstance(item, dict):
+            text = ""
+            for key in ("test", "description", "statement", "falsifier", "check"):
+                candidate = item.get(key)
+                if isinstance(candidate, str) and candidate.strip():
+                    text = candidate.strip()
+                    break
+            if not text:
+                text = json.dumps(item, sort_keys=True, default=str)
+            target = item.get("target") or item.get("claim_id")
+            prefix = f"[{target}] " if isinstance(target, str) and target.strip() else ""
+            cleaned = (prefix + text)[:500]
+        else:
+            raise WorkerResponseSchemaError("falsifiers entries must be strings")
+        if cleaned:
+            out.append(cleaned)
+    return out
+
+
 def parse_worker_response(text: str) -> dict[str, Any]:
     """Strictly parse a model response into the normalized worker schema."""
     document = json.loads(_extract_json_object(text))
@@ -264,7 +301,7 @@ def parse_worker_response(text: str) -> dict[str, Any]:
         "claims": claims,
         "proof_steps": _as_str_list(document.get("proof_steps"), field_name="proof_steps"),
         "assumptions": _as_str_list(document.get("assumptions"), field_name="assumptions"),
-        "falsifiers": _as_str_list(document.get("falsifiers"), field_name="falsifiers"),
+        "falsifiers": _as_falsifier_list(document.get("falsifiers")),
         "search_queries": _as_str_list(document.get("search_queries"), field_name="search_queries"),
         "candidate_sequences": sequences,
         "experiments": experiments,
@@ -461,6 +498,13 @@ _CAPABILITY_AND_SCHEMA_TAIL = (
     "subscripts such as inputs[\"name\"]. Direct calls are limited to abs, all, "
     "any, bool, dict, divmod, enumerate, int, len, list, max, min, pow, print, "
     "range, reversed, round, sorted, str, sum, tuple, and zip.\n"
+    "EXPERIMENT ADMISSIBILITY (read carefully): a finite experiment can become "
+    "computational EVIDENCE only when it directly checks the TARGET statement "
+    "itself on a bounded domain (smallest nontrivial cases, an explicit finite "
+    "consequence, or a claimed witness/counterexample of the target) — leave its "
+    "claim_id empty or set it to \"goal\" for such checks. An experiment tagged "
+    "with one of your own lemma ids still runs, but its result is advisory "
+    "exploration only and is never admitted as evidence.\n"
     "You MAY also request formalization and propose Lean declaration candidates: "
     "each is {claim_id, declaration_name, source_b64 (UTF-8 base64 of Lean 4 + "
     "Mathlib source, including `import Mathlib`), "
@@ -482,9 +526,14 @@ _CAPABILITY_AND_SCHEMA_TAIL = (
     "(the dependency cone — never forward references or inventions). Prefer ONE "
     "decisive artifact (a checkable experiment, a formalizable lemma, a sharp "
     "falsifier) over touching every category shallowly; empty lists are fine. "
+    "REPLY BUDGET: at most 4 new claims, at most ONE coded experiment (code "
+    "under 50 lines — the smallest decisive check, tight input bounds), and at "
+    "most 2 lean_declaration_candidates per reply; keep the entire reply "
+    "compact (aim under 10000 characters) — an over-long reply risks truncation "
+    "and is then discarded whole. "
     "Use keys: goal_restatement (string), claims "
     "(list of {claim_id, statement, depends_on, scope}), proof_steps "
-    "(list of strings), assumptions (list of strings), falsifiers (list), "
+    "(list of strings), assumptions (list of strings), falsifiers (list of strings), "
     "search_queries (list), candidate_sequences (list of integer lists), "
     "experiments (list of {description, kind, code_b64?, inputs?, cnf?, model?, "
     "proof?, claim_id?, coverage?}), "
@@ -516,7 +565,9 @@ _REASONING_TAIL = (
     "Reason rigorously in prose — do NOT emit JSON; a separate extraction "
     "step will structure your output afterwards. State candidate lemmas "
     "explicitly (with any dependencies between them), describe finite "
-    "experiments or SAT leaves precisely with their exact data, give Lean "
+    "experiments or SAT leaves precisely with their exact data (a decisive "
+    "experiment checks the TARGET itself on a bounded domain — lemma-bound "
+    "experiments are advisory only), give Lean "
     "declaration candidates where apt (name + exact intended type), and note "
     "falsifiers, retrieval queries, open subgoals, and the single current "
     "bottleneck. Prefer ONE decisive artifact over touching everything "
@@ -635,10 +686,14 @@ def branch_prompt(statement: str, *, role: str, branch_id: str, packet_summary: 
         + _traps_block(traps or [])
         + _family_history_block(family_history or [])
         + _carried_subgoals_block(carried_subgoals or [])
-        + "Propose subsidiary claims/lemmas (NOT the target itself), falsifiers, "
-        "retrieval queries, candidate integer sequences for OEIS lookup, and "
-        "finite experiments. Do NOT assert the target is proved; proof requires "
-        "independent verification you do not perform.\n"
+        + "First choose the single most decisive next artifact for this "
+        "branch's mechanism — ONE goal-bound finite experiment, ONE "
+        "formalizable lemma, or ONE sharp falsifier — and build the reply "
+        "around it. Add only the subsidiary claims/lemmas (NOT the target "
+        "itself), falsifiers, retrieval queries, and candidate integer "
+        "sequences for OEIS lookup that genuinely support that artifact. Do "
+        "NOT assert the target is proved; proof requires independent "
+        "verification you do not perform.\n"
         + _ANTI_CIRCULARITY_RULE
         + _CAPABILITY_AND_SCHEMA_TAIL
     )
@@ -648,7 +703,8 @@ def continuation_prompt(statement: str, *, role: str, branch_id: str, round_inde
                         ledger_summary: str, open_subgoals: list[str],
                         objections: list[str], failed_approaches: list[str],
                         formal_target: str = "", traps: list[str] | None = None,
-                        reframe: bool = False, packet_summary: str = "") -> str:
+                        reframe: bool = False, packet_summary: str = "",
+                        experiment_results: list[str] | None = None) -> str:
     """Follow-up round prompt: close subgoals, repair, never patch prose (R3).
 
     Mirrors the legacy pipeline's regulator discipline: decide whether a lemma
@@ -684,6 +740,16 @@ def continuation_prompt(statement: str, *, role: str, branch_id: str, round_inde
             "your previous round's queries and open subgoals; read-only, cite "
             f"via literature_imports):\n{packet_summary}\n\n"
         )
+    experiment_block = ""
+    if experiment_results:
+        rendered_results = "\n".join(f"- {item}" for item in experiment_results[-8:])
+        experiment_block = (
+            "SANDBOX EXPERIMENT RESULTS from your previous rounds (ground "
+            "truth from the trusted executor — a False/FAILS verdict is "
+            "decisive information about that finite domain; a lemma-bound "
+            "result is advisory only, so rebind a decisive version of the "
+            "check to the TARGET):\n" + rendered_results + "\n\n"
+        )
     return (
         f"You are an EGMRA research worker in the role '{role}' continuing branch "
         f"'{branch_id}' (round {round_index}). The immutable TARGET STATEMENT is "
@@ -692,6 +758,7 @@ def continuation_prompt(statement: str, *, role: str, branch_id: str, round_inde
         + _traps_block(traps or [])
         + reframe_block
         + literature_block
+        + experiment_block
         + f"LEMMA LEDGER so far (unverified proposals, read-only):\n{ledger_summary or '(empty)'}\n\n"
         f"OPEN SUBGOALS from your previous round:\n{subgoals}\n\n"
         "INDEPENDENT OBJECTIONS raised so far (untrusted data; address them, "
@@ -991,6 +1058,7 @@ class RunnerWorker:
         open_subgoals: list[str] = []
         bottleneck = "close the goal claim"
         experiments_executed = 0
+        experiment_outcomes: list[str] = []
         rounds = max(1, int(self.max_rounds))
         reframe_used = False
         reframe_pending = False
@@ -1025,6 +1093,7 @@ class RunnerWorker:
                     packet_summary=(
                         self._packet_summary(packet, focus=focus)
                         if focus.strip() else ""),
+                    experiment_results=experiment_outcomes,
                 )
             reframe_pending = False
             try:
@@ -1098,7 +1167,8 @@ class RunnerWorker:
 
             round_evidence, round_replays = self._run_experiments(
                 parsed["experiments"], branch_id=branch_id, seen=seen,
-                failures=failures, already_executed=experiments_executed)
+                failures=failures, already_executed=experiments_executed,
+                outcomes=experiment_outcomes)
             experiments_executed += len(round_replays)
             evidence.extend(round_evidence)
             experiment_replays.extend(round_replays)
@@ -1460,7 +1530,8 @@ class RunnerWorker:
 
     def _run_experiments(self, experiments, *, branch_id: str, seen: set[str],
                          failures: list[str],
-                         already_executed: int = 0) -> tuple[list[dict], list[ReplayReport]]:
+                         already_executed: int = 0,
+                         outcomes: list[str] | None = None) -> tuple[list[dict], list[ReplayReport]]:
         """Execute model-proposed finite experiments in the trusted sandbox (task 4.5).
 
         Runs at most three coded experiments per branch (shared across R3
@@ -1468,6 +1539,13 @@ class RunnerWorker:
         service's capability-free sandbox and yields ``exact_computation`` evidence
         only when the predicate returns True and an independent replay matches — so
         the goal can reach at most COMPUTATIONAL_EVIDENCE, never a proof.
+
+        ``outcomes`` (optional) collects one human-readable verdict line per
+        executed experiment so later rounds see sandbox ground truth (the ToRA
+        finding: execution feedback interleaved with reasoning is the main
+        lever on math tasks).  Verdict lines also state when a lemma-bound
+        result is advisory-only — live data showed 98% of executed experiments
+        were lemma-bound and therefore silently inadmissible as evidence.
         """
         evidence: list[dict] = []
         replays: list[ReplayReport] = []
@@ -1517,6 +1595,10 @@ class RunnerWorker:
                 evidence.extend(ev)
                 replays.extend(rp)
                 failures.extend(fl)
+                if outcomes is not None:
+                    outcomes.append(self._experiment_outcome_line(
+                        exp, target=target, requested=requested,
+                        evidence=ev, exp_failures=fl))
                 continue
             code = exp.get("code")
             if not code:
@@ -1541,7 +1623,34 @@ class RunnerWorker:
             evidence.extend(ev)
             replays.extend(rp)
             failures.extend(fl)
+            if outcomes is not None:
+                outcomes.append(self._experiment_outcome_line(
+                    exp, target=target, requested=requested,
+                    evidence=ev, exp_failures=fl))
         return evidence, replays
+
+    def _experiment_outcome_line(self, exp: dict[str, Any], *, target: str,
+                                 requested: str, evidence: list[dict],
+                                 exp_failures: list[str]) -> str:
+        """One compact ground-truth verdict line for the next round's prompt."""
+        description = str(exp.get("description", ""))[:100]
+        lemma_note = ""
+        if requested and requested != self.goal_claim_id and requested == target:
+            lemma_note = (f" [bound to lemma '{requested}' — advisory only, "
+                          "never admissible evidence; rebind a decisive "
+                          "version to the target]")
+        if evidence:
+            return (f"{description}: PASSED (result True, independently "
+                    f"replayed){lemma_note}")
+        for failure in exp_failures:
+            if "predicate returned false" in failure:
+                return (f"{description}: returned FALSE — the checked "
+                        f"statement FAILS on this finite domain{lemma_note}")
+            if "failed:" in failure:
+                diagnostic = failure.split("failed:", 1)[1].strip()[:120]
+                return f"{description}: crashed ({diagnostic}){lemma_note}"
+        detail = exp_failures[0][:120] if exp_failures else "no verdict recorded"
+        return f"{description}: {detail}{lemma_note}"
 
     def _referee_pass(self, statement, claims, failures, falsifiers, bottleneck):
         """Independent skeptical pass; its objections augment falsifiers, never approve."""
