@@ -2042,7 +2042,12 @@ def _machine_runtime_metadata(worker_count: int) -> dict:
         version_status = "ahead"
     else:
         version_status = "diverged"
-    workers = tuple(f"{machine_id}:w{i}" for i in range(int(worker_count)))
+    # Include the process generation as well as the stable physical-machine
+    # id. After a restart, leases from the old process are immediately
+    # distinguishable as stale instead of appearing active merely because
+    # the same computer reused slot `w0`.
+    workers = tuple(
+        f"{machine_id}:p{os.getpid()}:w{i}" for i in range(int(worker_count)))
     return {
         "machine_id": machine_id,
         "hostname": hostname,
