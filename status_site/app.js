@@ -1,4 +1,4 @@
-const state={data:null,filter:"all",query:"",ascending:true};
+const state={data:null,filter:"all",query:"",ascending:true,loading:false,lastLoadError:null};
 const $=s=>document.querySelector(s);
 const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
 const dt=value=>{if(!value)return "—";const date=new Date(value);return Number.isNaN(date.valueOf())?String(value):date.toLocaleString([], {dateStyle:"medium",timeStyle:"short"})};
@@ -43,34 +43,60 @@ const typeset=root=>{
 const LIVE_REPO="erichou1/erdos-open-problems";
 const DATA_URL="/data.json";
 // GitHub's raw branch URL can lag the actual force-updated ref by minutes.
-// Resolve the ref first, then fetch the immutable SHA URL. Two-minute polling
-// stays within GitHub's unauthenticated 60 requests/hour limit per viewer.
-const AUTO_REFRESH_MS=120_000;
-async function dataUrl(){
+// Resolve the ref first, then fetch the immutable SHA URL. Pages check every
+// minute but share a short ref cache, keeping GitHub API traffic below limits.
+const AUTO_REFRESH_MS=60_000;
+const REF_CACHE_MS=75_000;
+const SNAPSHOT_STALE_MS=240_000;
+const REF_CACHE_KEY="egmra-status-live-ref-v1";
+const immutableDataUrl=sha=>`https://raw.githubusercontent.com/${LIVE_REPO}/${sha}/status_site/data.json`;
+const cachedLiveRef=()=>{try{const value=JSON.parse(localStorage.getItem(REF_CACHE_KEY)||"null");return value?.sha?value:null}catch(_error){return null}};
+const rememberLiveRef=sha=>{try{localStorage.setItem(REF_CACHE_KEY,JSON.stringify({sha,checkedAt:Date.now()}))}catch(_error){}};
+async function dataUrl({force=false}={}){
   if(!location.hostname.endsWith("vercel.app"))return DATA_URL;
+  const cached=cachedLiveRef();
+  if(!force&&cached&&Date.now()-cached.checkedAt<REF_CACHE_MS)return immutableDataUrl(cached.sha);
   try{
     const ref=await fetch(`https://api.github.com/repos/${LIVE_REPO}/git/ref/heads/status-live?t=${Date.now()}`,{cache:"no-store"});
-    if(ref.ok){const body=await ref.json();const sha=body?.object?.sha;if(sha)return `https://raw.githubusercontent.com/${LIVE_REPO}/${sha}/status_site/data.json`}
+    if(ref.ok){const body=await ref.json();const sha=body?.object?.sha;if(sha){rememberLiveRef(sha);return immutableDataUrl(sha)}}
   }catch(_error){}
+  if(cached?.sha)return immutableDataUrl(cached.sha);
   return `https://raw.githubusercontent.com/${LIVE_REPO}/status-live/status_site/data.json`;
 }
 
-async function load(){
+const ageLabel=milliseconds=>milliseconds<60_000?"less than a minute ago":milliseconds<3_600_000?`${Math.floor(milliseconds/60_000)}m ago`:`${Math.floor(milliseconds/3_600_000)}h ago`;
+function updateSnapshotStatus(error=null){
+  if(!state.data)return;
+  const generated=new Date(state.data.generated_at);
+  const age=Math.max(0,Date.now()-generated.valueOf());
+  const delayed=Number.isNaN(age)||age>SNAPSHOT_STALE_MS;
+  const dot=$("#healthDot");
+  dot.classList.toggle("ok",!error&&!delayed);
+  dot.classList.toggle("stale",Boolean(error)||delayed);
+  const status=error?"Update check failed":delayed?"Updates delayed":"Live";
+  $("#snapshotTime").textContent=`${status} · snapshot ${ageLabel(age)}`;
+  $("#snapshotTime").title=`Generated ${dt(state.data.generated_at)}${error?` · ${error}`:""}`;
+}
+
+async function load(options={}){
+  if(state.loading)return;
+  state.loading=true;
   $("#reloadButton").classList.add("loading");
   try{
-    const url=await dataUrl();
+    const url=await dataUrl(options);
     const separator=url.includes("?")?"&":"?";
     const response=await fetch(`${url}${separator}t=${Date.now()}`,{cache:"no-store"});
     if(!response.ok)throw new Error(`Snapshot request failed (${response.status})`);
-    state.data=await response.json();render();route();
+    state.data=await response.json();state.lastLoadError=null;render();route();
   }catch(error){
-    $("#problemRows").innerHTML=`<tr><td colspan="7"><div class="error-state">${esc(error.message)}</div></td></tr>`;
-  }finally{$("#reloadButton").classList.remove("loading")}
+    state.lastLoadError=error.message;updateSnapshotStatus(error.message);
+    if(!state.data)$("#problemRows").innerHTML=`<tr><td colspan="8"><div class="error-state">${esc(error.message)}</div></td></tr>`;
+  }finally{state.loading=false;$("#reloadButton").classList.remove("loading")}
 }
 
 function render(){
   const {campaign,generated_at,summary,workers,problems,aristotle_artifacts,machines=[]}=state.data;
-  $("#campaignName").textContent=campaign;$("#snapshotTime").textContent=`Auto-updates · snapshot ${dt(generated_at)}`;$("#healthDot").classList.add("ok");
+  $("#campaignName").textContent=campaign;updateSnapshotStatus();
   const leased=summary.by_status.leased||0,pending=summary.by_status.pending||0;
   const metrics=[[summary.total,"problems being tracked"],[leased,"being worked on now"],[summary.computers_active||0,"computers active"],[summary.total_runs,"research attempts logged"],[summary.aristotle_artifacts||aristotle_artifacts.length,"formal proof drafts"]];
   $("#metricStrip").innerHTML=metrics.map(([n,label])=>`<div class="metric"><strong>${esc(n)}</strong><span>${esc(label)}</span></div>`).join("");
@@ -162,6 +188,7 @@ function route(){
 }
 $("#searchInput").addEventListener("input",event=>{state.query=event.target.value;renderRows()});
 $("#sortButton").onclick=event=>{state.ascending=!state.ascending;event.target.textContent=`Sort: number ${state.ascending?"↑":"↓"}`;renderRows()};
-$("#reloadButton").onclick=load;$("#closeDetail").onclick=closePanel;$("#scrim").onclick=closePanel;window.addEventListener("hashchange",route);document.addEventListener("keydown",event=>{if(event.key==="Escape")closePanel();if(event.key==="/"&&!event.metaKey&&!event.ctrlKey&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName||"")){event.preventDefault();$("#searchInput").focus()}});
+$("#reloadButton").onclick=()=>load({force:true});$("#closeDetail").onclick=closePanel;$("#scrim").onclick=closePanel;window.addEventListener("hashchange",route);window.addEventListener("online",()=>load({force:true}));document.addEventListener("visibilitychange",()=>{if(!document.hidden)load()});document.addEventListener("keydown",event=>{if(event.key==="Escape")closePanel();if(event.key==="/"&&!event.metaKey&&!event.ctrlKey&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName||"")){event.preventDefault();$("#searchInput").focus()}});
 load();
 window.setInterval(()=>{if(!document.hidden)load()},AUTO_REFRESH_MS);
+window.setInterval(()=>updateSnapshotStatus(state.lastLoadError),30_000);
