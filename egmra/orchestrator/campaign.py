@@ -734,6 +734,7 @@ class Campaign:
         permanent_failure: type[BaseException] = _NoConfiguredPermanentFailure,
         poll_interval: float = 0.01,
         heartbeat_interval: float | None = None,
+        stop_requested: Callable[[], bool] | None = None,
     ) -> dict[str, Any]:
         """Drive the campaign with genuine bounded concurrency across worker threads.
 
@@ -747,9 +748,12 @@ class Campaign:
         state_lock = threading.Lock()
         active = {"n": 0}
         timeline: list[tuple[str, str, float, float]] = []
+        should_stop = stop_requested or (lambda: False)
 
         def worker_loop(worker_id: str) -> None:
             while True:
+                if should_stop():
+                    return
                 assignment = self.lease(worker_id, now=now())
                 if assignment is None:
                     with state_lock:
@@ -816,6 +820,7 @@ class Campaign:
 
         status = self.status()
         status["concurrency"] = _concurrency_report(timeline)
+        status["stop_requested"] = bool(should_stop())
         return status
 
 

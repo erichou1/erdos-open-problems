@@ -10,11 +10,16 @@ import subprocess
 from types import SimpleNamespace
 from pathlib import Path
 
+import pytest
+
 import operator_console as console_module
+from egmra.policy import sign_policy
 from operator_console import (
     Operator,
+    REQUIRED_CAMPAIGN_KEYS,
     _load_config,
     _load_shell_exports,
+    _save_config,
     build_campaign_command,
 )
 
@@ -51,6 +56,7 @@ def test_local_config_is_private_and_gitignored(tmp_path):
 
 def test_campaign_command_contains_preferences_but_no_secrets(tmp_path):
     config = _load_config(tmp_path)
+    assert config["aristotle_max_concurrent"] == 3
     command = build_campaign_command(config, tmp_path)
     joined = " ".join(command)
     assert "--prefer-solvable" in command
@@ -58,6 +64,49 @@ def test_campaign_command_contains_preferences_but_no_secrets(tmp_path):
     assert "ARISTOTLE_API_KEY" not in joined
     assert "CHATGPT_PROJECT_URL" not in joined
     assert "egmra.keys.sh" not in joined
+
+
+def test_local_config_validates_aristotle_account_slots(tmp_path):
+    config = _load_config(tmp_path)
+    config["aristotle_max_concurrent"] = 0
+    with pytest.raises(console_module.OperatorError, match="Aristotle concurrency"):
+        _save_config(config, tmp_path)
+
+
+def test_prerequisites_verify_shared_keys_policy_and_warm_repl(tmp_path):
+    root = tmp_path / "repo"
+    root.mkdir()
+    environment = {name: name.lower().ljust(40, "x") for name in REQUIRED_CAMPAIGN_KEYS}
+    keys = root / "egmra.keys.sh"
+    keys.write_text("".join(
+        f"export {name}='{value}'\n" for name, value in environment.items()))
+    keys.chmod(0o600)
+    (root / ".env").write_text(
+        "export ARISTOTLE_API_KEY='local-test-provider-key'\n"
+        "export CHATGPT_PROJECT_URL='https://chatgpt.com/g/project'\n")
+    (root / ".chatgpt_profile").mkdir()
+    (root / ".venv" / "bin").mkdir(parents=True)
+    (root / ".venv" / "bin" / "python").touch()
+    (root / "aristotle_lean_project" / ".lake").mkdir(parents=True)
+    (root / "reviews").mkdir()
+    (root / "targets").mkdir()
+    repl = tmp_path / "repl" / ".lake" / "build" / "bin" / "repl"
+    repl.parent.mkdir(parents=True)
+    repl.touch()
+    policy = sign_policy({"claim_graph": True}, env=environment)
+    policy_path = root / "egmra_campaigns" / "policy-promotion-v3-local.json"
+    policy_path.parent.mkdir()
+    policy_path.write_text(json.dumps(policy.to_document()))
+
+    config = _load_config(root)
+    config["state_store"] = "file"
+    prerequisites = Operator(root=root)._prerequisites(config)
+    assert all(prerequisites.values())
+
+    keys.write_text(keys.read_text().replace("EGMRA_EVENT_KEY", "MISSING_EVENT_KEY"))
+    prerequisites = Operator(root=root)._prerequisites(config)
+    assert prerequisites["keys_file"] is False
+    assert prerequisites["policy"] is False
 
 
 def test_safe_update_preserves_ignored_secrets_and_local_tracked_edits(tmp_path):
@@ -107,6 +156,47 @@ def test_safe_update_preserves_ignored_secrets_and_local_tracked_edits(tmp_path)
     assert hashlib.sha256(secret.read_bytes()).hexdigest() == before_hash
     # The safety backup remains even after a clean reapplication.
     assert _git(root, "rev-parse", "refs/stash")
+
+
+def test_safe_update_refuses_running_campaign(tmp_path, monkeypatch):
+    root = tmp_path / "repo"
+    root.mkdir()
+    _load_config(root)
+    process = {
+        "pid": 789, "command": "campaign --stop-file stop.json", "managed": True}
+    monkeypatch.setattr(console_module, "_campaign_processes", lambda _root: [process])
+    with pytest.raises(console_module.OperatorError, match="refusing to update"):
+        Operator(root=root)._safe_update()
+
+
+def test_stop_writes_cooperative_marker_without_signaling(tmp_path, monkeypatch):
+    root = tmp_path / "repo"
+    root.mkdir()
+    config = _load_config(root)
+    process = {
+        "pid": 123, "command": "campaign --stop-file stop.json", "managed": True}
+    monkeypatch.setattr(console_module, "_campaign_processes", lambda _root: [process])
+
+    def reject_signal(*_args, **_kwargs):
+        raise AssertionError("cooperative stop must not send a process signal")
+
+    monkeypatch.setattr(console_module.os, "kill", reject_signal)
+    message = Operator(root=root)._stop(wait_seconds=0)
+    marker = root / config["stop_file"]
+    assert marker.is_file()
+    assert json.loads(marker.read_text())["process_ids"] == [123]
+    assert "finishing their current problems" in message
+
+
+def test_stop_refuses_to_force_legacy_campaign(tmp_path, monkeypatch):
+    root = tmp_path / "repo"
+    root.mkdir()
+    _load_config(root)
+    process = {"pid": 456, "command": "campaign", "managed": True}
+    monkeypatch.setattr(console_module, "_campaign_processes", lambda _root: [process])
+    with pytest.raises(console_module.OperatorError, match="predate cooperative stop"):
+        Operator(root=root)._stop(wait_seconds=0)
+    assert not (root / ".egmra_operator" / "stop-request.json").exists()
 
 
 def _fake_app_sources(root: Path) -> None:

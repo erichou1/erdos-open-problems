@@ -300,6 +300,25 @@ def test_run_concurrent_no_duplicate_or_skipped_problems(tmp_path):
     assert status["concurrency"]["distinct_workers"] <= 3
 
 
+def test_run_concurrent_cooperative_stop_finishes_current_problem(tmp_path):
+    clock = _Clock()
+    c = _campaign(tmp_path, workers=("w0",))
+    c.initialize("camp", ["p1", "p2"])
+    stop = threading.Event()
+
+    def runner(problem_id, token, worker_id):
+        stop.set()
+        return "OPEN_NO_PROGRESS"
+
+    status = c.run_concurrent(
+        runner, max_workers=1, now=clock.now, stop_requested=stop.is_set)
+    assert status["stop_requested"] is True
+    assert status["by_status"]["done"] == 1
+    assert status["by_status"]["pending"] == 1
+    assert status["workers"]["p1"]["status"] == "done"
+    assert status["workers"]["p2"]["status"] == "pending"
+
+
 def test_run_concurrent_is_bounded_by_max_workers(tmp_path):
     clock = _Clock()
     c = _campaign(tmp_path, workers=tuple(f"w{i}" for i in range(5)), lease_seconds=1000.0)

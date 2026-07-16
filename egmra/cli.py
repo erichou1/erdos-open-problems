@@ -2198,6 +2198,12 @@ def cmd_campaign(args: argparse.Namespace) -> int:
         target=_machine_heartbeat,
         name=f"egmra-machine-hb-{machine['machine_id']}", daemon=True)
     machine_thread.start()
+    stop_file = (
+        Path(args.stop_file) if getattr(args, "stop_file", None) is not None
+        else None)
+
+    def _stop_requested() -> bool:
+        return bool(stop_file and stop_file.is_file())
 
     outcome_ledger = (
         EgmraOutcomeLedger(Path(args.outcome_ledger))
@@ -2434,6 +2440,7 @@ def cmd_campaign(args: argparse.Namespace) -> int:
             run_one, max_workers=int(args.workers), now=time.time,
             provider_unavailable=provider_outages,
             permanent_failure=SourceResolutionError,
+            stop_requested=_stop_requested,
         )
         # Corpus-wide refresh AFTER the campaign: outcomes feed the searcher's
         # posterior scoring as capped weak evidence and the whole ranking is
@@ -2853,6 +2860,9 @@ def build_parser() -> argparse.ArgumentParser:
                                "telemetry only, never a release authority")
     campaign.add_argument("--state", type=Path, default=Path("egmra_campaign.json"),
                           help="durable campaign state file (resume by reusing it)")
+    campaign.add_argument(
+        "--stop-file", type=Path, default=None,
+        help="cooperative stop marker: finish active problems, then take no new leases")
     campaign.add_argument("--campaign-id", default=None)
     campaign.add_argument("--provider",
                           choices=("browser", "deterministic", "openai-api",
