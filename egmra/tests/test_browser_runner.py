@@ -148,6 +148,53 @@ def test_persistent_malformed_response_raises_response_error():
         runner.run("p", stage="s")
 
 
+class _DeadPageBackend(FakeBackend):
+    """Simulates the user closing the tab/window: raw engine errors, not ours."""
+
+    def __init__(self, *, fail_at: str):
+        super().__init__(["never used"])
+        self._fail_at = fail_at
+
+    def send(self, prompt):
+        if self._fail_at == "send":
+            raise RuntimeError("Target page, context or browser has been closed")
+        super().send(prompt)
+
+    def wait_response(self, *, timeout_s):
+        if self._fail_at == "wait":
+            raise RuntimeError("async browser engine is closed")
+        return super().wait_response(timeout_s=timeout_s)
+
+    def conversation_url(self):
+        if self._fail_at == "record":
+            raise RuntimeError("Target page, context or browser has been closed")
+        return super().conversation_url()
+
+
+@pytest.mark.parametrize("fail_at", ["send", "wait", "record"])
+def test_closed_tab_is_a_provider_outage_never_a_math_failure(fail_at):
+    """Closing the browser tab/window is INFRASTRUCTURE (live 2026-07-16).
+
+    A raw Playwright/engine error must surface as BrowserProviderUnavailable so
+    the campaign retains + refunds the attempt; unwrapped it reaches the loop's
+    crash isolation as an ordinary branch failure and the problem is wrongly
+    completed as OPEN_NO_PROGRESS.
+    """
+    runner = _runner(_DeadPageBackend(fail_at=fail_at))
+    with pytest.raises(BrowserProviderUnavailable) as excinfo:
+        runner.run("p", stage="s")
+    assert "not a mathematical result" in str(excinfo.value)
+
+
+def test_runner_errors_are_not_double_wrapped():
+    backend = FakeBackend(["never reached"], rate_limited_before=999)
+    runner = _runner(backend, sleep=lambda _s: None, max_rate_limit_pauses=3)
+    with pytest.raises(BrowserProviderUnavailable) as excinfo:
+        runner.run("p", stage="s")
+    # The budget-exhaustion signal keeps its own message (no wrap-of-wrap).
+    assert "throttled" in str(excinfo.value)
+
+
 def test_context_manager_closes_backend():
     backend = FakeBackend(["answer"])
     with _runner(backend) as runner:

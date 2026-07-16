@@ -215,24 +215,45 @@ class BrowserChatGPTRunner:
         total_pauses = 0
         response_attempts = 0
         while True:
-            # Pre-submission capacity wait (shares the cooldown budget with any
-            # mid-generation throttles already taken this run).
-            total_pauses += self._await_capacity(already_paused=total_pauses)
-            # Conversation isolation: a fresh chat per attempt.
-            self.backend.open_conversation()
-            self.backend.send(prompt)
-            text = self.backend.wait_response(timeout_s=self.response_timeout_s)
-            # A rate limit that surfaced DURING generation (a modal, or a throttle
-            # message returned as the response body) is a provider outage, not a
-            # result: take a bounded cooldown on the shared budget and retry — it is
-            # never returned as a mathematical answer, and never counted as a
-            # malformed-response retry.
-            if self.backend.is_rate_limited():
-                self._pause_once(total_pauses)
-                total_pauses += 1
-                continue
-            if not self._looks_malformed(text):
-                return self._record(stage, prompt_hash, text, total_pauses, response_attempts)
+            try:
+                # Pre-submission capacity wait (shares the cooldown budget with any
+                # mid-generation throttles already taken this run).
+                total_pauses += self._await_capacity(already_paused=total_pauses)
+                # Conversation isolation: a fresh chat per attempt.
+                self.backend.open_conversation()
+                self.backend.send(prompt)
+                text = self.backend.wait_response(timeout_s=self.response_timeout_s)
+                # A rate limit that surfaced DURING generation (a modal, or a throttle
+                # message returned as the response body) is a provider outage, not a
+                # result: take a bounded cooldown on the shared budget and retry — it is
+                # never returned as a mathematical answer, and never counted as a
+                # malformed-response retry.
+                if self.backend.is_rate_limited():
+                    self._pause_once(total_pauses)
+                    total_pauses += 1
+                    continue
+                if not self._looks_malformed(text):
+                    return self._record(stage, prompt_hash, text, total_pauses,
+                                        response_attempts)
+            except BrowserRunnerError:
+                raise
+            except Exception as exc:
+                # A dead page/browser — the user closed the tab or window,
+                # Chromium crashed, the CDP connection dropped, the engine was
+                # shut down — surfaces here as a raw Playwright/engine error.
+                # That is INFRASTRUCTURE, never a mathematical verdict: without
+                # this wrap the orchestrator's per-branch crash isolation
+                # records it as an ordinary branch failure, the run "completes"
+                # as OPEN_NO_PROGRESS, and the campaign burns an attempt and
+                # marks the problem done (observed live 2026-07-16 when a
+                # peer machine's tabs were closed). Wrapping it as a transient
+                # provider outage routes it to the campaign's retain/refund
+                # policy instead.
+                raise BrowserProviderUnavailable(
+                    f"browser backend failed during stage {stage!r} "
+                    f"({type(exc).__name__}: {exc}); pause and resume — this "
+                    "is not a mathematical result"
+                ) from exc
             response_attempts += 1
             if response_attempts > self.max_response_retries:
                 raise BrowserResponseError(
