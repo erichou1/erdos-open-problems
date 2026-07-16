@@ -390,6 +390,9 @@ class Campaign:
                 "branch": str(metadata.get("branch", ""))[:300],
                 "code_commit": str(metadata.get("code_commit", ""))[:64],
                 "latest_commit": str(metadata.get("latest_commit", ""))[:64],
+                "pipeline_tree": str(metadata.get("pipeline_tree", ""))[:64],
+                "latest_pipeline_tree": str(
+                    metadata.get("latest_pipeline_tree", ""))[:64],
                 "version_status": str(metadata.get("version_status", "unknown"))[:32],
                 "started_at": float(previous.get(
                     "started_at", metadata.get("started_at", now))),

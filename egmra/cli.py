@@ -2010,11 +2010,23 @@ def _machine_runtime_metadata(worker_count: int) -> dict:
     machine_id = f"{safe_host}-{sha256_hex(str(root))[:8]}"
     branch = git("branch", "--show-current") or "detached"
     local_commit = git("rev-parse", "HEAD")
+    local_pipeline_tree = git("rev-parse", "HEAD:egmra")
     latest_commit = ""
     if branch != "detached":
         remote_line = git("ls-remote", "--heads", "origin", branch)
         latest_commit = remote_line.split()[0] if remote_line else ""
-    if not local_commit or not latest_commit:
+        if latest_commit and latest_commit != local_commit:
+            # Bring the remote commit object into the local object database so
+            # tree and ancestry comparisons are meaningful. Does not modify
+            # the working tree or current branch.
+            git("fetch", "--quiet", "origin", branch, timeout=15.0)
+    latest_pipeline_tree = git("rev-parse", f"{latest_commit}:egmra") \
+        if latest_commit else ""
+    if local_pipeline_tree and latest_pipeline_tree \
+            and local_pipeline_tree == latest_pipeline_tree:
+        # Website/docs commits must not label a computer's PIPELINE outdated.
+        version_status = "current"
+    elif not local_commit or not latest_commit:
         version_status = "unknown"
     elif local_commit == latest_commit:
         version_status = "current"
@@ -2038,6 +2050,8 @@ def _machine_runtime_metadata(worker_count: int) -> dict:
         "branch": branch,
         "code_commit": local_commit,
         "latest_commit": latest_commit,
+        "pipeline_tree": local_pipeline_tree,
+        "latest_pipeline_tree": latest_pipeline_tree,
         "version_status": version_status,
         "started_at": time.time(),
         "worker_ids": workers,
@@ -2162,8 +2176,14 @@ def cmd_campaign(args: argparse.Namespace) -> int:
         machine["machine_id"], metadata=machine, now=time.time())
 
     def _machine_heartbeat() -> None:
+        last_version_refresh = time.monotonic()
         while not machine_stop.wait(30.0):
             try:
+                if time.monotonic() - last_version_refresh >= 300.0:
+                    refreshed = _machine_runtime_metadata(int(args.workers))
+                    refreshed["started_at"] = machine["started_at"]
+                    machine.update(refreshed)
+                    last_version_refresh = time.monotonic()
                 campaign.machine_heartbeat(
                     machine["machine_id"], metadata=machine, now=time.time())
             except Exception:  # noqa: BLE001 - observability is fail-open
