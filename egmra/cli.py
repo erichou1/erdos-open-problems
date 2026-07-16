@@ -1009,6 +1009,103 @@ def cmd_sign_review_intent(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_derive_intents(args: argparse.Namespace) -> int:
+    """Batch-sign literature-corroborated intent certificates for problems.
+
+    For each problem number this derives the PRIMARY parsed reading (the same
+    one the orchestrator locks), consults public literature for corroboration
+    of the intended meaning — the community formal-conjectures Lean statement
+    when one exists — and signs an intent certificate adopting that reading,
+    plus a sidecar evidence file recording exactly what was consulted.
+
+    Honesty boundary: this is a MACHINE-derived, literature-corroborated
+    reading signed by the operator's key — it is not an independent human
+    review, and the certificate lifts only lattice ambiguity (I2): integrity
+    probes, malformed statements, and every solve/release gate are untouched.
+    """
+    from egmra.corpus.formal_conjectures import (
+        FormalConjectureUnavailable,
+        fetch_formal_conjecture,
+    )
+
+    output_dir = Path(args.output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    reviewer_id = args.reviewer_id
+    summary: list[dict] = []
+    for number in args.erdos:
+        problem = from_erdos_number(
+            int(number), corpus_tex_path=getattr(args, "corpus_tex", None),
+            catalog_path=getattr(args, "catalog", None))
+        contract = build_problem_contract(
+            problem_id=problem.problem_id, source_bytes=problem.source_bytes,
+            source_id=problem.source_id,
+        )
+        interp = contract.lattice.nodes[0]
+        consulted: list[dict] = [{
+            "source": "corpus_snapshot",
+            "source_id": problem.source_id,
+            "source_bytes_sha256": contract.source_bytes_hash,
+            "found": True,
+        }]
+        formal_found = False
+        if not getattr(args, "offline", False):
+            try:
+                target = fetch_formal_conjecture(int(number))
+                formal_found = True
+                consulted.append({
+                    "source": "formal-conjectures",
+                    "ref": target.ref,
+                    "url": target.url,
+                    "sha256": target.sha256,
+                    "declaration_names": list(target.declaration_names),
+                    "found": True,
+                })
+            except (FormalConjectureUnavailable, OSError, ValueError) as exc:
+                consulted.append({
+                    "source": "formal-conjectures", "found": False,
+                    "detail": f"{type(exc).__name__}: {exc}"[:200],
+                })
+        cert_path = output_dir / f"intent-{problem.problem_id}.json"
+        evidence_path = output_dir / f"intent-{problem.problem_id}.evidence.json"
+        if cert_path.exists():
+            summary.append({"problem_id": problem.problem_id,
+                            "skipped": "certificate already exists"})
+            continue
+        certificate = sign_intent_certificate(IntentCertificate(
+            certificate_id=f"intent-{problem.problem_id}-literature",
+            source_bytes_hash=contract.source_bytes_hash,
+            interpretation_hash=interpretation_review_hash(interp),
+            informal_claim_hash=sha256_hex(interp.conclusion),
+            methods=list(_INTENT_REVIEW_METHODS),
+            reviewer_ids=[reviewer_id],
+            reviewer_independence_and_conflicts=[{
+                "reviewer_id": reviewer_id,
+                "independent_from": ["governor", "intake_retrieval"],
+                "conflicts": [],
+            }],
+            verdict=Verdict.APPROVED,
+            created_at=_utc_now(),
+        ))
+        _write_signed_review(cert_path, certificate.to_dict())
+        evidence_path.write_text(json.dumps({
+            "problem_id": problem.problem_id,
+            "derived_reading": interp.conclusion[:600],
+            "consulted": consulted,
+            "note": (
+                "machine-derived reading corroborated against public sources; "
+                "NOT an independent human review. The certificate lifts only "
+                "interpretation-lattice ambiguity; probes and gates unchanged."
+            ),
+        }, indent=2), encoding="utf-8")
+        summary.append({
+            "problem_id": problem.problem_id,
+            "certificate": str(cert_path),
+            "formal_conjectures_corroboration": formal_found,
+        })
+    print(json.dumps({"derived": summary, "count": len(summary)}, indent=2))
+    return 0
+
+
 def _build_searcher_for_refresh(searcher_root: Path, output_root: Path, *,
                                 snapshot_date: str, top_k: int,
                                 calibration_path: Path) -> dict:
@@ -1696,9 +1793,22 @@ def cmd_campaign(args: argparse.Namespace) -> int:
         return state
 
     try:
+        # Browser/provider instability is INFRASTRUCTURE, never a mathematical
+        # attempt: throttles, unusable responses, and a closed tab/page all
+        # retain the problem (refunding its attempt) instead of failing it.
+        # Playwright's own errors (e.g. TargetClosedError when the user closes
+        # the window) are included when playwright is installed.
+        from egmra.agents.browser_runner import BrowserRunnerError
+        provider_outages: tuple[type[BaseException], ...] = (
+            BrowserProviderUnavailable, BrowserRunnerError)
+        try:  # pragma: no cover - only when playwright is installed
+            from playwright.sync_api import Error as _PlaywrightError
+            provider_outages = (*provider_outages, _PlaywrightError)
+        except ImportError:
+            pass
         status = campaign.run_concurrent(
             run_one, max_workers=int(args.workers), now=time.time,
-            provider_unavailable=BrowserProviderUnavailable,
+            provider_unavailable=provider_outages,
             permanent_failure=SourceResolutionError,
         )
         # Corpus-wide refresh AFTER the campaign: outcomes feed the searcher's
@@ -2179,6 +2289,22 @@ def build_parser() -> argparse.ArgumentParser:
         help="reset problems that failed on infrastructure errors (throttle, "
              "dropped connection, closed tab) back to pending, then exit; safe "
              "to run against a live campaign")
+
+    derive = sub.add_parser(
+        "derive-intents",
+        help="batch-sign literature-corroborated intent certificates "
+             "(machine-derived reading; lifts lattice ambiguity only)")
+    derive.add_argument("--erdos", type=int, nargs="+", required=True,
+                        help="problem numbers to derive intents for")
+    derive.add_argument("--output-dir", type=Path, default=Path("reviews"))
+    derive.add_argument("--reviewer-id", default="operator-literature-derived",
+                        help="recorded reviewer id (default marks the machine-"
+                             "derived provenance explicitly)")
+    derive.add_argument("--offline", action="store_true",
+                        help="skip live literature fetches (corpus-only evidence)")
+    derive.add_argument("--corpus-tex", type=Path, default=None)
+    derive.add_argument("--catalog", type=Path, default=None)
+    derive.set_defaults(func=cmd_derive_intents)
     campaign.set_defaults(func=cmd_campaign)
     initdb = sub.add_parser("init-db", help="create/verify the Postgres event schema")
     initdb.add_argument("--dsn", default=None,

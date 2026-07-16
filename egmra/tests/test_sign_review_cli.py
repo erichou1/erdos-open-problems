@@ -298,3 +298,31 @@ def test_cli_signed_reviews_reach_a_kernel_checked_formal_proof(tmp_path):
         == "formal-correspondence-egmra_demo"
     assert lean_evidence[0].intent_certificate_id == intent.certificate_id
     assert result.graph.claims["goal"].truth_status.value == "SUPPORTED"
+
+
+# ── derive-intents: batch literature-corroborated certificates ───────────────
+
+def test_derive_intents_signs_verifiable_certs_with_evidence(tmp_path, capsys):
+    out = tmp_path / "reviews"
+    rc = main(["derive-intents", "--erdos", "312", "--offline",
+               "--output-dir", str(out)])
+    assert rc == 0
+    summary = json.loads(capsys.readouterr().out)
+    assert summary["count"] == 1
+    cert_path = out / "intent-erdos-312.json"          # campaign naming convention
+    evidence_path = out / "intent-erdos-312.evidence.json"
+    assert cert_path.exists() and evidence_path.exists()
+    # The certificate verifies under the intent-review key and binds the
+    # PRIMARY reading exactly as the orchestrator recomputes it.
+    cert = cli_module._load_intent_review(cert_path)
+    assert verify_intent_certificate(cert)
+    assert cert.reviewer_ids == ["operator-literature-derived"]
+    evidence = json.loads(evidence_path.read_text())
+    assert evidence["consulted"][0]["source"] == "corpus_snapshot"
+    assert "NOT an independent human review" in evidence["note"]
+    # Idempotent: an existing certificate is never overwritten.
+    rc2 = main(["derive-intents", "--erdos", "312", "--offline",
+                "--output-dir", str(out)])
+    assert rc2 == 0
+    summary2 = json.loads(capsys.readouterr().out)
+    assert summary2["derived"][0]["skipped"] == "certificate already exists"

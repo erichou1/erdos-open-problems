@@ -334,3 +334,38 @@ def test_heartbeat_extends_lease_and_rejects_stale_token(tmp_path):
     a = c.lease("w0", now=clock.now())
     assert c.heartbeat("p1", "w0", a.fencing_token, now=clock.now()) is True
     assert c.heartbeat("p1", "w0", a.fencing_token + 99, now=clock.now()) is False
+
+
+# ── infrastructure failures must not burn the mathematical attempt budget ────
+
+def test_retain_refunds_attempt_and_spends_infra_budget(tmp_path):
+    clock = _Clock()
+    c = _campaign(tmp_path, max_attempts=2)
+    c.initialize("camp", ["p1"])
+    # Throttle/closed-tab retains far more often than max_attempts allows...
+    for _ in range(6):
+        a = c.lease("w0", now=clock.now())
+        assert a is not None, "problem must survive repeated infra retains"
+        assert c.retain(a.problem_id, "w0", a.fencing_token, reason="throttled")
+    st = c.status()["workers"]["p1"]
+    # ...yet the MATHEMATICAL budget is untouched (every attempt refunded)
+    assert st["attempts"] == 0 and st["status"] == "retained"
+    assert st["infra_retries"] == 6
+    # and the problem still completes normally afterwards.
+    a = c.lease("w0", now=clock.now())
+    assert c.complete(a.problem_id, "w0", a.fencing_token,
+                      result_state="OPEN_NO_PROGRESS")
+
+
+def test_infra_budget_exhaustion_fails_honestly(tmp_path):
+    clock = _Clock()
+    c = _campaign(tmp_path, max_infra_retries=3)
+    c.initialize("camp", ["p1"])
+    for _ in range(3):
+        a = c.lease("w0", now=clock.now())
+        c.retain(a.problem_id, "w0", a.fencing_token, reason="provider down")
+    st = c.status()["workers"]["p1"]
+    assert st["status"] == "failed"
+    assert st["result_state"].startswith("infrastructure_budget_exhausted")
+    # A permanently broken environment terminates: nothing left to lease.
+    assert c.lease("w0", now=clock.now()) is None

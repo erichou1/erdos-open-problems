@@ -67,6 +67,11 @@ class Assignment:
     fencing_token: int = 0
     lease_expires_at: float = 0.0
     attempts: int = 0
+    # Infrastructure retries (throttle, dropped connection, closed tab) are
+    # counted SEPARATELY from mathematical attempts: they refund the attempt
+    # they interrupted, but exhaust their own (much larger) budget so a
+    # permanently broken environment still terminates honestly.
+    infra_retries: int = 0
     result_state: str = ""
 
     def to_dict(self) -> dict[str, Any]:
@@ -304,6 +309,7 @@ class Campaign:
         worker_ids: tuple[str, ...],
         lease_seconds: float = 900.0,
         max_attempts: int = 5,
+        max_infra_retries: int = 24,
         env: dict[str, str] | None = None,
         store: CampaignStore | None = None,
     ) -> None:
@@ -315,6 +321,7 @@ class Campaign:
         self.worker_ids = tuple(worker_ids)
         self.lease_seconds = float(lease_seconds)
         self.max_attempts = int(max_attempts)
+        self.max_infra_retries = int(max_infra_retries)
         self._thread_lock = threading.RLock()
         # Durable state lives behind a pluggable store: a signed local JSON file by
         # default, or an opt-in DB-backed store so leases/checkpoints are coordinated
@@ -471,12 +478,25 @@ class Campaign:
 
     def retain(self, problem_id: str, worker_id: str, fencing_token: int, *,
                reason: str = "provider_unavailable") -> bool:
-        """Return a problem to the queue for a later attempt (never a failure)."""
+        """Return a problem to the queue after an INFRASTRUCTURE interruption.
+
+        A throttle, dropped connection, or closed browser tab is never a
+        mathematical dead end: the interrupted attempt is refunded so the
+        problem keeps its full mathematical budget. Each retain spends the
+        separate (much larger) infrastructure budget instead — exhausting THAT
+        marks the problem failed honestly, so a permanently broken environment
+        cannot cycle forever.
+        """
         def _m(a: Assignment) -> None:
-            a.status = "retained"
-            a.result_state = reason
+            a.infra_retries += 1
             a.lease_expires_at = 0.0
             a.attempts = max(0, a.attempts - 1)  # a retained problem is not a spent attempt
+            if a.infra_retries >= self.max_infra_retries:
+                a.status = "failed"
+                a.result_state = f"infrastructure_budget_exhausted: {reason}"
+            else:
+                a.status = "retained"
+                a.result_state = reason
         return self._update(problem_id, worker_id, fencing_token, _m)
 
     def fail(self, problem_id: str, worker_id: str, fencing_token: int, *,
@@ -518,6 +538,7 @@ class Campaign:
                 if a.status == "failed":
                     a.status = "pending"
                     a.attempts = 0
+                    a.infra_retries = 0
                     a.worker_id = ""
                     a.fencing_token = 0
                     a.lease_expires_at = 0.0
@@ -546,7 +567,8 @@ class Campaign:
             "complete": all(a.status in _TERMINAL for a in assignments.values()),
             "workers": {
                 pid: {"worker_id": a.worker_id, "status": a.status,
-                      "attempts": a.attempts, "result_state": a.result_state}
+                      "attempts": a.attempts, "infra_retries": a.infra_retries,
+                      "result_state": a.result_state}
                 for pid, a in assignments.items()
             },
         }
