@@ -50,23 +50,33 @@ def test_local_config_is_private_and_gitignored(tmp_path):
         "operator.local.json\n.egmra_operator/\negmra.keys.sh\n")
     config = _load_config(tmp_path)
     path = tmp_path / "operator.local.json"
-    assert path.is_file() and config["prefer_solvable"] is True
+    assert path.is_file() and config["prefer_solvable"] is False
     assert stat.S_IMODE(path.stat().st_mode) == 0o600
 
 
-def test_campaign_command_contains_preferences_but_no_secrets(tmp_path):
+def test_campaign_command_preserves_current_allocation_and_contains_no_secrets(tmp_path):
     config = _load_config(tmp_path)
     assert config["aristotle_max_concurrent"] == 3
     assert config["max_problems"] == 0          # full ranked corpus by default
     command = build_campaign_command(config, tmp_path)
     joined = " ".join(command)
-    assert "--prefer-solvable" in command
+    assert "--prefer-solvable" not in command
     assert "--derive-missing-intents" in command
     assert "--max-problems 0" in joined
     assert "--state-store postgres" in joined
     assert "ARISTOTLE_API_KEY" not in joined
     assert "CHATGPT_PROJECT_URL" not in joined
     assert "egmra.keys.sh" not in joined
+
+
+def test_current_lane_is_not_overridden_by_legacy_solvability_sort(tmp_path):
+    config = _load_config(tmp_path)
+    config["triage_lane"] = "current"
+    config["prefer_solvable"] = True
+    assert "--prefer-solvable" not in build_campaign_command(config, tmp_path)
+
+    config["triage_lane"] = "tractable_frontier"
+    assert "--prefer-solvable" in build_campaign_command(config, tmp_path)
 
 
 def test_local_config_validates_aristotle_account_slots(tmp_path):
