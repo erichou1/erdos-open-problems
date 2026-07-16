@@ -424,32 +424,42 @@ class Campaign:
                 int(state["fencing_counter"]), machines))
 
     # ── lifecycle ────────────────────────────────────────────────────────────
-    def initialize(self, campaign_id: str, problem_ids: list[str]) -> None:
-        """Create campaign state (idempotent: refuses to clobber a different campaign).
+    def initialize(self, campaign_id: str, problem_ids: list[str]) -> list[str]:
+        """Create or grow campaign state; returns the campaign's full order.
 
         Joining an EXISTING campaign tolerates a permutation of the same
-        problem set: continuous rerank legitimately reorders the shared state,
-        so a second machine launching with the original triage order must
-        resume, not refuse.  A different campaign id or a different problem
-        SET still fails closed.
+        problem set (continuous rerank legitimately reorders shared state) and
+        GROWS the set when new ranked problems appear: unknown ids are
+        appended as fresh pending assignments, and existing assignments —
+        leased, done, failed, retained — are never touched or dropped.  A
+        different campaign id still fails closed.
         """
+        if len(set(problem_ids)) != len(problem_ids):
+            raise CampaignError("problem ids must be unique")
         with self._locked():
             existing = self._read()
             if existing is not None:
-                same_set = (
-                    len(problem_ids) == len(existing["order"])
-                    and set(existing["order"]) == set(problem_ids)
-                )
-                if existing["campaign_id"] != campaign_id or not same_set:
+                if existing["campaign_id"] != campaign_id:
                     raise CampaignError(
                         "campaign state already exists for a different campaign; "
                         "use resume or a fresh state path"
                     )
-                return
-            if len(set(problem_ids)) != len(problem_ids):
-                raise CampaignError("problem ids must be unique")
+                known = set(existing["order"])
+                added = [pid for pid in problem_ids if pid not in known]
+                if not added:
+                    return list(existing["order"])
+                assignments = self._decode(existing)
+                for pid in added:
+                    assignments[pid] = Assignment(problem_id=pid)
+                order = list(existing["order"]) + added
+                self._write(self._encode(
+                    campaign_id, order, assignments,
+                    int(existing["fencing_counter"]),
+                    existing.get("machines")))
+                return order
             assignments = {pid: Assignment(problem_id=pid) for pid in problem_ids}
             self._write(self._encode(campaign_id, list(problem_ids), assignments, 0))
+            return list(problem_ids)
 
     def lease(self, worker_id: str, *, now: float) -> Assignment | None:
         """Atomically lease the next available problem to ``worker_id``.
@@ -582,7 +592,7 @@ class Campaign:
             a.lease_expires_at = now + self.lease_seconds
         return self._update(problem_id, worker_id, fencing_token, _m)
 
-    def requeue_failed(self) -> list[str]:
+    def requeue_failed(self, *, infra_only: bool = False) -> list[str]:
         """Reset FAILED problems back to pending for a fresh set of attempts.
 
         Infrastructure failures — a provider throttle, a dropped DB connection,
@@ -593,6 +603,10 @@ class Campaign:
         campaign's in-flight work is never disturbed. Atomic under the same
         (cross-process) lock the campaign uses, so it is safe to call against a
         running campaign — the next lease picks the requeued problems up.
+
+        ``infra_only`` restricts the reset to problems whose failure was an
+        exhausted INFRASTRUCTURE budget (the provider was unavailable), so an
+        automatic startup requeue can never loop a genuinely crashing problem.
         """
         with self._locked():
             state = self._read()
@@ -601,15 +615,19 @@ class Campaign:
             assignments = self._decode(state)
             requeued: list[str] = []
             for pid, a in assignments.items():
-                if a.status == "failed":
-                    a.status = "pending"
-                    a.attempts = 0
-                    a.infra_retries = 0
-                    a.worker_id = ""
-                    a.fencing_token = 0
-                    a.lease_expires_at = 0.0
-                    a.result_state = ""
-                    requeued.append(pid)
+                if a.status != "failed":
+                    continue
+                if infra_only and not str(a.result_state).startswith(
+                        "infrastructure_budget_exhausted"):
+                    continue
+                a.status = "pending"
+                a.attempts = 0
+                a.infra_retries = 0
+                a.worker_id = ""
+                a.fencing_token = 0
+                a.lease_expires_at = 0.0
+                a.result_state = ""
+                requeued.append(pid)
             if requeued:
                 self._write(self._encode(
                     state["campaign_id"], state["order"], assignments,
@@ -735,6 +753,8 @@ class Campaign:
         poll_interval: float = 0.01,
         heartbeat_interval: float | None = None,
         stop_requested: Callable[[], bool] | None = None,
+        outage_backoff: Callable[[int], float] | None = None,
+        sleep: Callable[[float], None] = time.sleep,
     ) -> dict[str, Any]:
         """Drive the campaign with genuine bounded concurrency across worker threads.
 
@@ -749,6 +769,26 @@ class Campaign:
         active = {"n": 0}
         timeline: list[tuple[str, str, float, float]] = []
         should_stop = stop_requested or (lambda: False)
+        # Provider outages are usually GLOBAL (one throttled account, one dead
+        # browser).  Without a shared backoff, one worker cycles the entire
+        # pending queue in minutes, charging every problem an infrastructure
+        # retry per pass — an overnight outage then marks the whole campaign
+        # failed without a single mathematical attempt.  Consecutive outages
+        # now pause the leasing worker (bounded exponential), and any
+        # completed run resets the counter.
+        backoff = outage_backoff or (
+            lambda consecutive: min(30.0 * (2 ** max(0, consecutive - 1)), 600.0))
+        outages = {"consecutive": 0}
+
+        def _outage_pause() -> None:
+            with state_lock:
+                outages["consecutive"] += 1
+                pause = max(0.0, float(backoff(outages["consecutive"])))
+            remaining_pause = pause
+            while remaining_pause > 0 and not should_stop():
+                step = min(5.0, remaining_pause)
+                sleep(step)
+                remaining_pause -= step
 
         def worker_loop(worker_id: str) -> None:
             while True:
@@ -792,6 +832,7 @@ class Campaign:
                                           worker_id)
                 except provider_unavailable:
                     self.retain(assignment.problem_id, worker_id, assignment.fencing_token)
+                    _outage_pause()
                 except permanent_failure as exc:
                     self.fail(
                         assignment.problem_id, worker_id, assignment.fencing_token,
@@ -800,9 +841,13 @@ class Campaign:
                 except Exception as exc:  # noqa: BLE001 - recoverable per-problem failure
                     self.fail(assignment.problem_id, worker_id, assignment.fencing_token,
                               reason=f"{type(exc).__name__}: {exc}")
+                    with state_lock:
+                        outages["consecutive"] = 0
                 else:
                     self.complete(assignment.problem_id, worker_id, assignment.fencing_token,
                                   result_state=result_state)
+                    with state_lock:
+                        outages["consecutive"] = 0
                 finally:
                     stop_heartbeat.set()
                     heart.join(timeout=1.0)

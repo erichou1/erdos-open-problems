@@ -57,9 +57,12 @@ def test_local_config_is_private_and_gitignored(tmp_path):
 def test_campaign_command_contains_preferences_but_no_secrets(tmp_path):
     config = _load_config(tmp_path)
     assert config["aristotle_max_concurrent"] == 3
+    assert config["max_problems"] == 0          # full ranked corpus by default
     command = build_campaign_command(config, tmp_path)
     joined = " ".join(command)
     assert "--prefer-solvable" in command
+    assert "--derive-missing-intents" in command
+    assert "--max-problems 0" in joined
     assert "--state-store postgres" in joined
     assert "ARISTOTLE_API_KEY" not in joined
     assert "CHATGPT_PROJECT_URL" not in joined

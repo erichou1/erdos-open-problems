@@ -1364,13 +1364,22 @@ def research(
         )
         if resumed is not None:
             resumed_branches, prior_spend, chain_verified = resumed
-            attempted.update(resumed_branches)
-            if prior_spend > 0:
-                budget_ledger.allocate(
-                    "resumed_prior_spend",
-                    min(budget_ledger.remaining, prior_spend))
-            phases.append(
-                "resume_verified" if chain_verified else "resume_warm_start")
+            if chain_verified:
+                # A verified continuation of THIS run's own event chain: skip
+                # already-bought branches and re-book the budget they spent.
+                attempted.update(resumed_branches)
+                if prior_spend > 0:
+                    budget_ledger.allocate(
+                        "resumed_prior_spend",
+                        min(budget_ledger.remaining, prior_spend))
+                phases.append("resume_verified")
+            else:
+                # A NEW attempt is a fresh independent sample.  Prior learning
+                # arrives through the dossier and the exchange cache (replays
+                # are free); seeding prior branch families or re-booking prior
+                # spend here silently turned every later attempt into a
+                # zero-work no-op that burned the mathematical budget.
+                phases.append("resume_fresh_attempt")
     for _ in range(max_iterations):
         if not acquired or not programs or not controller.has_budget():
             break

@@ -596,7 +596,7 @@ The browser opens `http://127.0.0.1:8765/`. Configure these values and click
 | Lean repair rounds | `2` | `2` |
 | Hostile reviewers | `2` | `2` |
 | Problem budget | `100` | `100` |
-| Maximum problems | `25` | selected campaign size |
+| Maximum problems | `0` (= every ranked open problem) | `0` or a chosen size |
 | Prefer solvable | checked | checked |
 | Signed policy | `egmra_campaigns/policy-promotion-v3-local.json` | local signed policy |
 | Reviews directory | `reviews` | `reviews` |
@@ -607,9 +607,10 @@ The browser opens `http://127.0.0.1:8765/`. Configure these values and click
 | Checkpoints | `egmra_campaigns/ckpts-shared` | unique local directory |
 | ChatGPT profile | this machine's `.chatgpt_profile` | same |
 
-Do not change campaign ID, triage lane, or maximum problem count on a joining
-machine unless the primary changes them too. Shared state rejects a different
-campaign/problem set.
+Do not change campaign ID or triage lane on a joining machine unless the
+primary changes them too. Raising the maximum problem count extends the shared
+campaign in place (new ranked problems are appended as pending); problems are
+never dropped, and a different campaign ID still fails closed.
 
 Click **Open ChatGPT login**. The human must complete login and 2FA in the
 headed Chromium window, navigate into the configured workspace if needed, and
@@ -718,6 +719,11 @@ The app's current full command includes all of these required behaviors:
 - browser ChatGPT provider with `1`-`5` workers and four reasoning rounds;
 - `--prefer-solvable`, which reorders only pending work by the tractable-frontier
   prior while preserving leased/completed assignments;
+- `--derive-missing-intents`, which machine-derives an offline corpus-reading
+  intent certificate for any campaign problem lacking one (marked provenance;
+  lifts only interpretation ambiguity, never probes or release gates);
+- automatic requeue of problems whose only failure was an exhausted
+  infrastructure budget while the provider was down;
 - shared Postgres or standalone file state;
 - Aristotle formalization, pinned Lean project, two repair rounds, and the
   warm development REPL through `--lean-dev-repl`;

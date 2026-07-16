@@ -351,7 +351,7 @@ def _checkpointed_run(tmp_path, problem_id, *, ckpt_dir, resume_from=None,
     )
 
 
-def test_resume_consumes_a_verified_checkpoint(tmp_path):
+def test_resume_treats_a_new_attempt_as_a_fresh_independent_sample(tmp_path):
     ckpt_dir = tmp_path / "ckpts"
     first = _checkpointed_run(tmp_path, "res-1", ckpt_dir=ckpt_dir)
     assert "checkpoint" in first.phases
@@ -361,8 +361,12 @@ def test_resume_consumes_a_verified_checkpoint(tmp_path):
     second = _checkpointed_run(
         tmp_path, "res-1", ckpt_dir=ckpt_dir, resume_from=ckpt_dir,
         events_name="e2.jsonl")
-    assert "resume_warm_start" in second.phases
+    # An unverified chain (new event log) is a NEW attempt: no prior-branch
+    # seeding, no prior-spend re-booking — the fresh sample must do real work.
+    assert "resume_fresh_attempt" in second.phases
+    assert "resume_verified" not in second.phases
     assert not any(f.startswith("resume_rejected") for f in second.failures)
+    assert second.graph.claims["goal"].truth_status.value == "SUPPORTED"
 
 
 def test_tampered_checkpoint_is_rejected_and_run_starts_fresh(tmp_path):
@@ -377,7 +381,7 @@ def test_tampered_checkpoint_is_rejected_and_run_starts_fresh(tmp_path):
         tmp_path, "res-2", ckpt_dir=ckpt_dir, resume_from=ckpt_dir,
         events_name="e2.jsonl")
     assert any(f.startswith("resume_rejected") for f in second.failures)
-    assert "resume_warm_start" not in second.phases
+    assert "resume_fresh_attempt" not in second.phases
     # fresh run is unharmed
     assert second.graph.claims["goal"].truth_status.value == "SUPPORTED"
 

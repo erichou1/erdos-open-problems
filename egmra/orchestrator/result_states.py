@@ -95,6 +95,55 @@ def _executed_probe_failure(result: "ResearchResult", kinds: frozenset[str]):
     return None
 
 
+_INTENT_REVIEW_METHODS = frozenset({
+    "independent_parse", "examples", "anti_examples", "paraphrase",
+    "local_mutation",
+})
+
+
+def _certified_reading(result: "ResearchResult") -> bool:
+    """True when a VALID intent certificate binds this exact source + reading.
+
+    Interpretation-integrity probes measure whether the MACHINE parser's
+    reading can be trusted.  An authenticated intent certificate whose hashes
+    bind this exact source and primary interpretation certifies the reading
+    through a stronger channel (its methods include the independent versions
+    of the same checks), so a parser-integrity wobble no longer makes "the
+    reading is unknown" the honest headline.  Fail-closed: any missing hash,
+    wrong verdict, missing method, or signature failure keeps the block.
+    """
+    contract = result.contract
+    graph = getattr(result, "graph", None)
+    certificates = getattr(graph, "intent_certificates", None) or {}
+    source_hash = getattr(contract, "source_bytes_hash", None)
+    lattice_nodes = getattr(contract.lattice, "nodes", None)
+    if not certificates or not source_hash or not lattice_nodes:
+        return False
+    try:
+        from egmra.intake.review import (
+            interpretation_review_hash,
+            verify_intent_certificate,
+        )
+        from egmra.truth.entities import Verdict
+
+        expected_interpretation = interpretation_review_hash(lattice_nodes[0])
+    except Exception:  # noqa: BLE001 - classification must never crash a run
+        return False
+    for certificate in certificates.values():
+        try:
+            if (
+                certificate.verdict is Verdict.APPROVED
+                and certificate.source_bytes_hash == source_hash
+                and certificate.interpretation_hash == expected_interpretation
+                and _INTENT_REVIEW_METHODS.issubset(set(certificate.methods))
+                and verify_intent_certificate(certificate)
+            ):
+                return True
+        except Exception:  # noqa: BLE001 - a malformed certificate never lifts
+            continue
+    return False
+
+
 def _valid_release(result: "ResearchResult", goal: "Claim | None") -> bool:
     """A release artifact that is actually bound to *this* claim and contract.
 
@@ -194,8 +243,19 @@ def classify_result(
     interpretation_probe = _executed_probe_failure(result, _INTERPRETATION_PROBE_KINDS)
     refutation_probe = _executed_probe_failure(result, _REFUTATION_PROBE_KINDS)
     malformed = any(d.startswith("malformed:") for d in contract.unresolved_decisions)
+    # A binding, signature-verified intent certificate certifies the READING
+    # itself; it lifts parser-integrity probe failures only.  A still-blocked
+    # lattice or a malformed statement is never lifted at classification.
+    probe_lifted_by_certificate = (
+        interpretation_probe is not None
+        and not contract.lattice.release_blocked
+        and not malformed
+        and _certified_reading(result)
+    )
     interpretation_blocked = (
-        contract.lattice.release_blocked or interpretation_probe is not None or malformed
+        contract.lattice.release_blocked
+        or malformed
+        or (interpretation_probe is not None and not probe_lifted_by_certificate)
     )
     release_ok = _valid_release(result, goal)
     formal_ok = _valid_formal_certificate(result, goal)
@@ -226,6 +286,7 @@ def classify_result(
         "interpretation_probe_failed": None
         if interpretation_probe is None
         else interpretation_probe.name,
+        "interpretation_probe_lifted_by_intent_certificate": probe_lifted_by_certificate,
         "refutation_probe_failed": None
         if refutation_probe is None
         else refutation_probe.name,
@@ -241,7 +302,7 @@ def classify_result(
     #    evidence. A blocked interpretation can never be a proved/validated state.
     if interpretation_blocked:
         reason = "independent parsers disagree on a single interpretation"
-        if interpretation_probe is not None:
+        if interpretation_probe is not None and not probe_lifted_by_certificate:
             reason = (
                 f"integrity probe '{interpretation_probe.name}' failed: "
                 f"{interpretation_probe.detail}"

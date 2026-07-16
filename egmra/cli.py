@@ -1098,6 +1098,91 @@ def cmd_sign_review_intent(args: argparse.Namespace) -> int:
     return 0
 
 
+def _sign_derived_intent(number: int, *, output_dir: Path, reviewer_id: str,
+                         offline: bool, corpus_tex=None, catalog=None,
+                         targets_dir=None) -> dict:
+    """Derive + sign ONE machine-derived intent certificate (see cmd_derive_intents)."""
+    from egmra.corpus.formal_conjectures import (
+        FormalConjectureUnavailable,
+        fetch_formal_conjecture,
+    )
+
+    problem = from_erdos_number(
+        int(number), corpus_tex_path=corpus_tex, catalog_path=catalog)
+    contract = build_problem_contract(
+        problem_id=problem.problem_id, source_bytes=problem.source_bytes,
+        source_id=problem.source_id,
+    )
+    interp = contract.lattice.nodes[0]
+    consulted: list[dict] = [{
+        "source": "corpus_snapshot",
+        "source_id": problem.source_id,
+        "source_bytes_sha256": contract.source_bytes_hash,
+        "found": True,
+    }]
+    formal_found = False
+    if not offline:
+        try:
+            target = fetch_formal_conjecture(int(number))
+            formal_found = True
+            consulted.append({
+                "source": "formal-conjectures",
+                "ref": target.ref,
+                "url": target.url,
+                "sha256": target.sha256,
+                "declaration_names": list(target.declaration_names),
+                "found": True,
+            })
+            if targets_dir is not None:
+                target_path = Path(targets_dir) / f"{problem.problem_id}.lean"
+                if not target_path.exists():
+                    target_path.parent.mkdir(parents=True, exist_ok=True)
+                    target_path.write_text(target.lean_source, encoding="utf-8")
+        except (FormalConjectureUnavailable, OSError, ValueError) as exc:
+            consulted.append({
+                "source": "formal-conjectures", "found": False,
+                "detail": f"{type(exc).__name__}: {exc}"[:200],
+            })
+    cert_path = output_dir / f"intent-{problem.problem_id}.json"
+    # The sidecar must NOT match the reviews-dir 'intent-*.json' glob — it
+    # is evidence about the certificate, not a certificate.
+    evidence_path = output_dir / f"evidence-intent-{problem.problem_id}.json"
+    if cert_path.exists():
+        return {"problem_id": problem.problem_id,
+                "skipped": "certificate already exists"}
+    certificate = sign_intent_certificate(IntentCertificate(
+        certificate_id=f"intent-{problem.problem_id}-literature",
+        source_bytes_hash=contract.source_bytes_hash,
+        interpretation_hash=interpretation_review_hash(interp),
+        informal_claim_hash=sha256_hex(interp.conclusion),
+        methods=list(_INTENT_REVIEW_METHODS),
+        reviewer_ids=[reviewer_id],
+        reviewer_independence_and_conflicts=[{
+            "reviewer_id": reviewer_id,
+            "independent_from": ["governor", "intake_retrieval"],
+            "conflicts": [],
+        }],
+        verdict=Verdict.APPROVED,
+        created_at=_utc_now(),
+    ))
+    _write_signed_review(cert_path, certificate.to_dict())
+    evidence_path.write_text(json.dumps({
+        "problem_id": problem.problem_id,
+        "derived_reading": interp.conclusion[:600],
+        "consulted": consulted,
+        "note": (
+            "machine-derived reading corroborated against public sources; "
+            "NOT an independent human review. The certificate lifts only "
+            "interpretation-lattice ambiguity; probes and gates unchanged."
+        ),
+    }, indent=2), encoding="utf-8")
+    return {
+        "problem_id": problem.problem_id,
+        "certificate": str(cert_path),
+        "formal_conjectures_corroboration": formal_found,
+    }
+
+
 def cmd_derive_intents(args: argparse.Namespace) -> int:
     """Batch-sign literature-corroborated intent certificates for problems.
 
@@ -1112,95 +1197,55 @@ def cmd_derive_intents(args: argparse.Namespace) -> int:
     review, and the certificate lifts only lattice ambiguity (I2): integrity
     probes, malformed statements, and every solve/release gate are untouched.
     """
-    from egmra.corpus.formal_conjectures import (
-        FormalConjectureUnavailable,
-        fetch_formal_conjecture,
-    )
-
     output_dir = Path(args.output_dir)
     output_dir.mkdir(parents=True, exist_ok=True)
-    reviewer_id = args.reviewer_id
-    summary: list[dict] = []
-    for number in args.erdos:
-        problem = from_erdos_number(
-            int(number), corpus_tex_path=getattr(args, "corpus_tex", None),
-            catalog_path=getattr(args, "catalog", None))
-        contract = build_problem_contract(
-            problem_id=problem.problem_id, source_bytes=problem.source_bytes,
-            source_id=problem.source_id,
+    summary = [
+        _sign_derived_intent(
+            int(number), output_dir=output_dir, reviewer_id=args.reviewer_id,
+            offline=bool(getattr(args, "offline", False)),
+            corpus_tex=getattr(args, "corpus_tex", None),
+            catalog=getattr(args, "catalog", None),
+            targets_dir=getattr(args, "targets_dir", None),
         )
-        interp = contract.lattice.nodes[0]
-        consulted: list[dict] = [{
-            "source": "corpus_snapshot",
-            "source_id": problem.source_id,
-            "source_bytes_sha256": contract.source_bytes_hash,
-            "found": True,
-        }]
-        formal_found = False
-        if not getattr(args, "offline", False):
-            try:
-                target = fetch_formal_conjecture(int(number))
-                formal_found = True
-                consulted.append({
-                    "source": "formal-conjectures",
-                    "ref": target.ref,
-                    "url": target.url,
-                    "sha256": target.sha256,
-                    "declaration_names": list(target.declaration_names),
-                    "found": True,
-                })
-                targets_dir = getattr(args, "targets_dir", None)
-                if targets_dir is not None:
-                    target_path = Path(targets_dir) / f"{problem.problem_id}.lean"
-                    if not target_path.exists():
-                        target_path.parent.mkdir(parents=True, exist_ok=True)
-                        target_path.write_text(target.lean_source, encoding="utf-8")
-            except (FormalConjectureUnavailable, OSError, ValueError) as exc:
-                consulted.append({
-                    "source": "formal-conjectures", "found": False,
-                    "detail": f"{type(exc).__name__}: {exc}"[:200],
-                })
-        cert_path = output_dir / f"intent-{problem.problem_id}.json"
-        # The sidecar must NOT match the reviews-dir 'intent-*.json' glob — it
-        # is evidence about the certificate, not a certificate.
-        evidence_path = output_dir / f"evidence-intent-{problem.problem_id}.json"
-        if cert_path.exists():
-            summary.append({"problem_id": problem.problem_id,
-                            "skipped": "certificate already exists"})
-            continue
-        certificate = sign_intent_certificate(IntentCertificate(
-            certificate_id=f"intent-{problem.problem_id}-literature",
-            source_bytes_hash=contract.source_bytes_hash,
-            interpretation_hash=interpretation_review_hash(interp),
-            informal_claim_hash=sha256_hex(interp.conclusion),
-            methods=list(_INTENT_REVIEW_METHODS),
-            reviewer_ids=[reviewer_id],
-            reviewer_independence_and_conflicts=[{
-                "reviewer_id": reviewer_id,
-                "independent_from": ["governor", "intake_retrieval"],
-                "conflicts": [],
-            }],
-            verdict=Verdict.APPROVED,
-            created_at=_utc_now(),
-        ))
-        _write_signed_review(cert_path, certificate.to_dict())
-        evidence_path.write_text(json.dumps({
-            "problem_id": problem.problem_id,
-            "derived_reading": interp.conclusion[:600],
-            "consulted": consulted,
-            "note": (
-                "machine-derived reading corroborated against public sources; "
-                "NOT an independent human review. The certificate lifts only "
-                "interpretation-lattice ambiguity; probes and gates unchanged."
-            ),
-        }, indent=2), encoding="utf-8")
-        summary.append({
-            "problem_id": problem.problem_id,
-            "certificate": str(cert_path),
-            "formal_conjectures_corroboration": formal_found,
-        })
+        for number in args.erdos
+    ]
     print(json.dumps({"derived": summary, "count": len(summary)}, indent=2))
     return 0
+
+
+def _derive_missing_intent_certificates(
+        problem_ids: list[str], *, reviews_dir: Path,
+        reviewer_id: str = "operator-literature-derived",
+        corpus_tex=None, catalog=None) -> list[dict]:
+    """Offline machine-derived intent certificates for problems lacking one.
+
+    Campaign-launch helper: every campaign problem without a signed
+    ``intent-<problem_id>.json`` gets an OFFLINE corpus-derived certificate so
+    the full ranked corpus can be researched without each new problem stalling
+    at interpretation.  Per-problem failures (e.g. a ranked problem missing
+    from the corpus snapshot) are recorded and skipped, never fatal.  Existing
+    certificates are never touched.
+    """
+    from egmra.corpus.sources import SourceResolutionError
+
+    reviews_dir.mkdir(parents=True, exist_ok=True)
+    derived: list[dict] = []
+    for problem_id in problem_ids:
+        if (reviews_dir / f"intent-{problem_id}.json").exists():
+            continue
+        number = _problem_number_of(problem_id)
+        if number is None:
+            continue
+        try:
+            derived.append(_sign_derived_intent(
+                number, output_dir=reviews_dir, reviewer_id=reviewer_id,
+                offline=True, corpus_tex=corpus_tex, catalog=catalog))
+        except (SourceResolutionError, ValueError, OSError) as exc:
+            derived.append({
+                "problem_id": problem_id,
+                "error": f"{type(exc).__name__}: {exc}"[:160],
+            })
+    return derived
 
 
 def _build_searcher_for_refresh(searcher_root: Path, output_root: Path, *,
@@ -2169,9 +2214,36 @@ def cmd_campaign(args: argparse.Namespace) -> int:
             raise ValueError("--prefer-solvable requires --triage")
         problem_ids = solvability_order(Path(triage_dir), problem_ids)
         numbers = [int(pid.split("-", 1)[1]) for pid in problem_ids]
-    campaign.initialize(campaign_id, problem_ids)  # idempotent; safe to resume
+    # Growth-only merge: a larger ranked set extends the existing shared
+    # campaign in place (new problems appended pending); nothing is dropped.
+    full_order = campaign.initialize(campaign_id, problem_ids)
     if getattr(args, "prefer_solvable", False):
-        campaign.reorder_pending(problem_ids)
+        ordered = (
+            problem_ids if sorted(full_order) == sorted(problem_ids)
+            else solvability_order(Path(triage_dir), full_order))
+        campaign.reorder_pending(ordered)
+    # Infrastructure failures are never mathematical verdicts: problems that
+    # exhausted their infra budget while the provider was down get a fresh
+    # fair run automatically on every launch.
+    requeued_infra = campaign.requeue_failed(infra_only=True)
+    if requeued_infra:
+        print(json.dumps({
+            "requeued_infrastructure_failures": len(requeued_infra),
+            "problems": requeued_infra,
+        }), file=sys.stderr, flush=True)
+    if getattr(args, "derive_missing_intents", False):
+        if getattr(args, "reviews_dir", None) is None:
+            raise ValueError("--derive-missing-intents requires --reviews-dir")
+        derived = _derive_missing_intent_certificates(
+            list(full_order), reviews_dir=Path(args.reviews_dir),
+            corpus_tex=getattr(args, "corpus_tex", None),
+            catalog=getattr(args, "catalog", None))
+        if derived:
+            errors = [row for row in derived if "error" in row]
+            print(json.dumps({
+                "derived_missing_intents": len(derived) - len(errors),
+                "derivation_errors": len(errors),
+            }), file=sys.stderr, flush=True)
 
     # Signed physical-computer heartbeat for cross-machine observability.
     # Worker IDs are machine-qualified (host/workspace:wN), so two computers
@@ -2851,6 +2923,12 @@ def build_parser() -> argparse.ArgumentParser:
              "formal/exact-computation tractability formula before leasing; "
              "already leased/completed problems are untouched. Omit to keep "
              "the default exploitation + protected-exploration queue")
+    campaign.add_argument(
+        "--derive-missing-intents", action="store_true",
+        help="at launch, machine-derive and sign an OFFLINE corpus-reading "
+             "intent certificate into --reviews-dir for every campaign "
+             "problem lacking one (marked machine-derived provenance; lifts "
+             "only interpretation-lattice ambiguity, never probes or gates)")
     campaign.add_argument("--max-problems", type=int, default=0,
                           help="cap the number of triage problems drained "
                                "(0 = all ranked problems)")

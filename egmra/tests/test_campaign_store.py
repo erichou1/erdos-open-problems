@@ -182,9 +182,10 @@ def test_second_machine_joins_despite_reranked_order():
     """A rerank must not lock a second machine out of the shared campaign.
 
     Continuous rerank legitimately permutes the shared order; a machine
-    launching later with the ORIGINAL triage order joins as a resume. A
-    different problem SET (or id) still fails closed, and joining never
-    resets the reranked order or any in-flight status.
+    launching later with the ORIGINAL triage order joins as a resume. A grown
+    ranked set EXTENDS the campaign in place (nothing dropped, reranked order
+    and in-flight statuses preserved); a different campaign id still fails
+    closed.
     """
     store = _MemoryCampaignStore()
     machine_a = Campaign("unused.json", worker_ids=("A-w0",), store=store)
@@ -198,8 +199,13 @@ def test_second_machine_joins_despite_reranked_order():
     assert lease_b.problem_id == "p3"                  # reranked order preserved
     assert lease_b.problem_id != lease_a.problem_id    # and no double-lease
 
-    with pytest.raises(CampaignError):                 # different SET still refused
-        machine_b.initialize("camp", ["p1", "p2", "p9"])
+    # A grown ranked set extends in place: new problem appended pending, the
+    # reranked order and both live leases untouched.
+    order = machine_b.initialize("camp", ["p1", "p2", "p9"])
+    assert order == ["p3", "p2", "p1", "p9"]
+    workers = machine_b.status()["workers"]
+    assert workers["p9"]["status"] == "pending"
+    assert workers[lease_a.problem_id]["status"] == "leased"
     with pytest.raises(CampaignError):                 # different id still refused
         machine_b.initialize("other-camp", ["p1", "p2", "p3"])
 
