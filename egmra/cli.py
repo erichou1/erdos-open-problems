@@ -1604,6 +1604,31 @@ def cmd_campaign(args: argparse.Namespace) -> int:
             campaign.close()
         return 0
 
+    if getattr(args, "requeue_promising", False):
+        # Adaptive effort: completed problems whose RECORDED outcome shows real
+        # progress earn another independent sample (bounded per problem). The
+        # progress test reads the honest outcome ledger — never model text.
+        progress_states = {
+            "PARTIAL_PROGRESS", "CONDITIONAL_RESULT", "COMPUTATIONAL_EVIDENCE",
+            "CANDIDATE_PROOF", "CANDIDATE_DISPROOF", "FORMALLY_VERIFIED_CANDIDATE",
+        }
+        try:
+            promising: set[str] = set()
+            if outcome_ledger is not None:
+                for row in outcome_ledger.records():
+                    state_name = str(row.get("public_state", ""))
+                    salvage = row.get("salvage") or {}
+                    salvaged = bool(salvage.get("supported"))
+                    if state_name in progress_states or salvaged:
+                        promising.add(str(row.get("problem_id", "")))
+            requeued = campaign.requeue_promising(sorted(promising))
+            print(json.dumps({"promising": sorted(promising),
+                              "requeued": requeued,
+                              "count": len(requeued)}, indent=2))
+        finally:
+            campaign.close()
+        return 0
+
     # Problem source: an explicit --erdos-range, or the searcher's triage
     # rankings drained in ranked order (the single-pipeline replacement for the
     # legacy run_continuous.py, which drove ProofPipeline instead of EGMRA).
@@ -2291,6 +2316,11 @@ def build_parser() -> argparse.ArgumentParser:
         help="reset problems that failed on infrastructure errors (throttle, "
              "dropped connection, closed tab) back to pending, then exit; safe "
              "to run against a live campaign")
+    campaign.add_argument(
+        "--requeue-promising", action="store_true",
+        help="requeue COMPLETED problems whose recorded outcome showed real "
+             "progress (partial progress, computational evidence, candidates, "
+             "salvaged claims) for another independent sample (bounded), then exit")
 
     derive = sub.add_parser(
         "derive-intents",

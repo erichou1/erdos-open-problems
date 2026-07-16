@@ -369,3 +369,25 @@ def test_infra_budget_exhaustion_fails_honestly(tmp_path):
     assert st["result_state"].startswith("infrastructure_budget_exhausted")
     # A permanently broken environment terminates: nothing left to lease.
     assert c.lease("w0", now=clock.now()) is None
+
+
+def test_requeue_promising_is_evidence_bounded(tmp_path):
+    clock = _Clock()
+    c = _campaign(tmp_path)
+    c.initialize("camp", ["p1", "p2"])
+    for pid in ("p1", "p2"):
+        a = c.lease("w0", now=clock.now())
+        c.complete(a.problem_id, "w0", a.fencing_token,
+                   result_state="PARTIAL_PROGRESS" if pid == "p1" else "OPEN_NO_PROGRESS")
+    # Caller (the CLI) decides which are promising; only DONE + wanted requeue.
+    assert c.requeue_promising(["p1"]) == ["p1"]
+    st = c.status()["workers"]
+    assert st["p1"]["status"] == "pending" and st["p2"]["status"] == "done"
+    # Bounded: after max_resamples completions, no further resample.
+    a = c.lease("w0", now=clock.now())
+    c.complete(a.problem_id, "w0", a.fencing_token, result_state="PARTIAL_PROGRESS")
+    assert c.requeue_promising(["p1"]) == ["p1"]           # resample 2
+    a = c.lease("w0", now=clock.now())
+    c.complete(a.problem_id, "w0", a.fencing_token, result_state="PARTIAL_PROGRESS")
+    assert c.requeue_promising(["p1"]) == []               # budget spent
+    assert c.requeue_promising(["p2", "missing"]) == ["p2"]  # p2's first resample

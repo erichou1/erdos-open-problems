@@ -72,6 +72,9 @@ class Assignment:
     # they interrupted, but exhaust their own (much larger) budget so a
     # permanently broken environment still terminates honestly.
     infra_retries: int = 0
+    # Evidence-based resamples: a COMPLETED problem whose outcome showed real
+    # progress may be requeued for another independent run (bounded).
+    resamples: int = 0
     result_state: str = ""
 
     def to_dict(self) -> dict[str, Any]:
@@ -544,6 +547,47 @@ class Campaign:
                     a.lease_expires_at = 0.0
                     a.result_state = ""
                     requeued.append(pid)
+            if requeued:
+                self._write(self._encode(
+                    state["campaign_id"], state["order"], assignments,
+                    int(state["fencing_counter"])))
+            return requeued
+
+    def requeue_promising(self, problem_ids: list[str], *,
+                          max_resamples: int = 2) -> list[str]:
+        """Requeue COMPLETED problems that showed progress for another sample.
+
+        The adaptive-effort principle: total effort should follow evidence of
+        tractability, not a fixed constant. The CALLER decides which outcomes
+        count as progress (from the outcome ledger — e.g. PARTIAL_PROGRESS,
+        COMPUTATIONAL_EVIDENCE, CANDIDATE_*, or salvaged supported claims);
+        this method only performs the bounded state transition: done → pending
+        with fresh budgets, at most ``max_resamples`` times per problem, so a
+        problem can never be resampled forever on weak signals. The exchange
+        cache's attempt-salt makes each resample an INDEPENDENT draw, and the
+        problem's dossier carries everything already learned.
+        """
+        wanted = set(problem_ids)
+        with self._locked():
+            state = self._read()
+            if state is None:
+                return []
+            assignments = self._decode(state)
+            requeued: list[str] = []
+            for pid, a in assignments.items():
+                if pid not in wanted or a.status != "done":
+                    continue
+                if a.resamples >= max_resamples:
+                    continue
+                a.status = "pending"
+                a.attempts = 0
+                a.infra_retries = 0
+                a.resamples += 1
+                a.worker_id = ""
+                a.fencing_token = 0
+                a.lease_expires_at = 0.0
+                a.result_state = ""
+                requeued.append(pid)
             if requeued:
                 self._write(self._encode(
                     state["campaign_id"], state["order"], assignments,
