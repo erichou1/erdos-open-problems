@@ -496,6 +496,39 @@ class Campaign:
             a.lease_expires_at = now + self.lease_seconds
         return self._update(problem_id, worker_id, fencing_token, _m)
 
+    def requeue_failed(self) -> list[str]:
+        """Reset FAILED problems back to pending for a fresh set of attempts.
+
+        Infrastructure failures — a provider throttle, a dropped DB connection,
+        a closed browser tab — can exhaust a problem's attempt budget with no
+        genuine mathematical dead end. Requeuing clears those problems' attempt
+        counts so they get a fair run. Only ``failed`` problems are touched;
+        pending/leased/retained/done are left exactly as they are, so a live
+        campaign's in-flight work is never disturbed. Atomic under the same
+        (cross-process) lock the campaign uses, so it is safe to call against a
+        running campaign — the next lease picks the requeued problems up.
+        """
+        with self._locked():
+            state = self._read()
+            if state is None:
+                return []
+            assignments = self._decode(state)
+            requeued: list[str] = []
+            for pid, a in assignments.items():
+                if a.status == "failed":
+                    a.status = "pending"
+                    a.attempts = 0
+                    a.worker_id = ""
+                    a.fencing_token = 0
+                    a.lease_expires_at = 0.0
+                    a.result_state = ""
+                    requeued.append(pid)
+            if requeued:
+                self._write(self._encode(
+                    state["campaign_id"], state["order"], assignments,
+                    int(state["fencing_counter"])))
+            return requeued
+
     # ── status ───────────────────────────────────────────────────────────────
     def status(self) -> dict[str, Any]:
         state = self._read()

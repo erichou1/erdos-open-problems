@@ -145,6 +145,29 @@ def test_max_attempts_marks_failed(tmp_path):
     assert st["complete"] is True
 
 
+def test_requeue_failed_resets_only_failed_problems(tmp_path):
+    clock = _Clock()
+    c = _campaign(tmp_path, max_attempts=1)
+    c.initialize("camp", ["p1", "p2", "p3"])
+    # p1 fails (exhausts its single attempt); p2 completes; p3 stays pending.
+    a1 = c.lease("w0", now=clock.now())
+    c.fail(a1.problem_id, "w0", a1.fencing_token, reason="RuntimeError: infra")
+    a2 = c.lease("w0", now=clock.now())
+    c.complete(a2.problem_id, "w0", a2.fencing_token, result_state="OPEN_NO_PROGRESS")
+    assert c.status()["by_status"].get("failed") == 1
+
+    requeued = c.requeue_failed()
+    assert requeued == ["p1"]                       # only the failed one
+    st = c.status()
+    assert st["by_status"].get("failed") is None    # p1 no longer failed
+    assert st["workers"]["p1"]["status"] == "pending" and st["workers"]["p1"]["attempts"] == 0
+    assert st["workers"]["p2"]["status"] == "done"  # completed problem untouched
+    # A requeued problem can be leased and completed on its fresh attempt.
+    a = c.lease("w0", now=clock.now())
+    assert a.problem_id == "p1" and a.attempts == 1
+    assert c.requeue_failed() == []                 # nothing failed now -> no-op
+
+
 def test_rejects_more_than_five_workers(tmp_path):
     with pytest.raises(CampaignError):
         _campaign(tmp_path, workers=tuple(f"w{i}" for i in range(6)))

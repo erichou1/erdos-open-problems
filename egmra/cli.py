@@ -1494,6 +1494,17 @@ def cmd_campaign(args: argparse.Namespace) -> int:
             campaign.close()
         return 0
 
+    if getattr(args, "requeue_failed", False):
+        # Maintenance action: reset problems that exhausted their attempts on
+        # infrastructure failures (throttle, dropped connection, closed tab)
+        # back to pending. Safe against a running campaign (same lock).
+        try:
+            requeued = campaign.requeue_failed()
+            print(json.dumps({"requeued": requeued, "count": len(requeued)}, indent=2))
+        finally:
+            campaign.close()
+        return 0
+
     # Problem source: an explicit --erdos-range, or the searcher's triage
     # rankings drained in ranked order (the single-pipeline replacement for the
     # legacy run_continuous.py, which drove ProofPipeline instead of EGMRA).
@@ -2163,6 +2174,11 @@ def build_parser() -> argparse.ArgumentParser:
                                "weak-evidence posterior input, provenance recorded); "
                                "fail-open \u2014 a refresh error never affects outcomes")
     campaign.add_argument("--status", action="store_true", help="print campaign status and exit")
+    campaign.add_argument(
+        "--requeue-failed", action="store_true",
+        help="reset problems that failed on infrastructure errors (throttle, "
+             "dropped connection, closed tab) back to pending, then exit; safe "
+             "to run against a live campaign")
     campaign.set_defaults(func=cmd_campaign)
     initdb = sub.add_parser("init-db", help="create/verify the Postgres event schema")
     initdb.add_argument("--dsn", default=None,
