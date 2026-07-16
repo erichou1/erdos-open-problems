@@ -564,6 +564,16 @@ def _build_worker_formalizers(args: argparse.Namespace, worker_ids: tuple[str, .
     return formalizers
 
 
+def _set_formalizer_problem_id(formalizer, problem_id: str) -> None:
+    """Label future vendor drafts for operations; never a trust assertion."""
+    if formalizer is None:
+        return
+    if hasattr(formalizer, "problem_id"):
+        formalizer.problem_id = problem_id
+    for member in getattr(formalizer, "members", ()):
+        _set_formalizer_problem_id(member, problem_id)
+
+
 def _build_hostile_reviewers(count: int, providers: list[str] | None,
                              fallback_runner) -> list[tuple[str, object]]:
     """Build the hostile-review panel.
@@ -657,6 +667,7 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
     # Optional autonomous formalization worker (task #5): Aristotle produces the
     # proof for a pinned obligation; the pinned kernel above re-checks it.
     formalizer = _build_formalizer(args)
+    _set_formalizer_problem_id(formalizer, problem.problem_id)
     # Optional warm DEVELOPMENT Lean REPL (report R5): repair candidates are
     # pre-checked in seconds before spending sealed cold kernel runs.
     dev_lean_service = _build_dev_lean_service(args)
@@ -2032,12 +2043,14 @@ def cmd_campaign(args: argparse.Namespace) -> int:
                     problem_rounds = min(8, campaign_worker_rounds + 2)
             except (OSError, ValueError):
                 problem_rounds = campaign_worker_rounds
+        problem_formalizer = formalizers_by_worker.get(worker_id)
+        _set_formalizer_problem_id(problem_formalizer, problem.problem_id)
         worker = RunnerWorker(runner=worker_runner, goal_claim_id="goal",
                               goal_formula=problem.display_statement, role=args.role,
                               compute_service=ComputeService(),
                               lean_version=lean_version, mathlib_commit=mathlib_commit,
                               lean_project=args.lean_project,
-                              formalizer=formalizers_by_worker.get(worker_id),
+                              formalizer=problem_formalizer,
                               formal_target=problem_formal_target,
                               max_rounds=problem_rounds,
                               dev_lean_service=campaign_dev_lean,

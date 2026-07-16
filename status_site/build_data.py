@@ -170,7 +170,25 @@ def _aristotle_artifacts() -> tuple[list[dict[str, Any]], dict[str, list[dict[st
             r"^\s*(?:theorem|lemma|def)\s+([A-Za-z_][A-Za-z0-9_']*)",
             source, flags=re.MULTILINE,
         )[:12]
-        numbers = sorted({int(number) for number in re.findall(r"erdos[_-]?(\d+)", source, re.I)})
+        numbers = {int(number) for number in re.findall(r"erdos[_-]?(\d+)", source, re.I)}
+        linked_by = "Lean declaration names problem" if numbers else None
+        if session:
+            session_dir = next(
+                (parent for parent in path.parents if parent.name == session),
+                None,
+            )
+            sidecar = session_dir / "egmra-artifact-link.json" if session_dir else None
+            if sidecar is not None and sidecar.is_file() and not sidecar.is_symlink():
+                try:
+                    link = json.loads(sidecar.read_text(encoding="utf-8"))
+                except (OSError, json.JSONDecodeError):
+                    link = {}
+                linked_problem = str(link.get("problem_id", ""))
+                linked_number = _problem_number(linked_problem)
+                if linked_number is not None:
+                    numbers.add(linked_number)
+                    linked_by = "EGMRA submission metadata"
+        numbers = sorted(numbers)
         row = {
             "artifact_id": session or path.parent.name,
             "worker": worker or None,
@@ -178,6 +196,7 @@ def _aristotle_artifacts() -> tuple[list[dict[str, Any]], dict[str, list[dict[st
             "bytes": path.stat().st_size,
             "declarations": declarations,
             "problem_numbers": numbers,
+            "linked_by": linked_by,
             "status": "proof draft — not yet verified",
             "source_preview": source[:5000],
         }

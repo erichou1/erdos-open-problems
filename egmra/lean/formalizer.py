@@ -17,14 +17,53 @@ promotes on its own.
 from __future__ import annotations
 
 import os
+import json
 import threading
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Protocol
 
+from egmra.provenance.hashing import sha256_hex
+
 # Defensive ceiling on how much candidate Lean text we read back from a vendor
 # quarantine (the archive extractor already enforces per-entry / total limits).
 _MAX_SOURCE_BYTES = 2_000_000
+_ARTIFACT_LINK_NAME = "egmra-artifact-link.json"
+
+
+def _write_artifact_link(
+    quarantine_dir: Path, *, problem_id: str, declaration_name: str,
+    expected_type: str, informal_statement: str, project_id: str,
+) -> None:
+    """Attach search metadata to a vendor draft without conferring authority.
+
+    The sidecar contains no prompt, proof text, credential, or signature. It
+    exists only so operations tooling can say which problem produced a draft;
+    the Lean kernel and correspondence certificate remain the only formal
+    trust path. Persistence failure is an ops miss, never a math failure.
+    """
+    if not problem_id.strip() or not quarantine_dir.is_dir():
+        return
+    record = {
+        "schema_version": 1,
+        "authority": "metadata only; not proof evidence",
+        "problem_id": problem_id,
+        "declaration_name": declaration_name,
+        "expected_type_hash": sha256_hex(expected_type),
+        "informal_statement_hash": sha256_hex(informal_statement),
+        "aristotle_project_id": project_id,
+    }
+    path = quarantine_dir / _ARTIFACT_LINK_NAME
+    try:
+        flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+        if hasattr(os, "O_NOFOLLOW"):
+            flags |= os.O_NOFOLLOW
+        fd = os.open(path, flags, 0o600)
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            json.dump(record, handle, sort_keys=True)
+            handle.write("\n")
+    except OSError:
+        return
 
 # The Aristotle service allows at most this many proof tasks in flight per
 # ACCOUNT. The budget is shared process-wide across every AristotleFormalizer
@@ -148,6 +187,9 @@ class AristotleFormalizer:
     # Vendor-task slot budget. None = the process-wide shared semaphore (the
     # account allows at most 5 concurrent proofs); injectable for tests.
     slots: Any = None
+    # Set by the CLI for the worker's current problem. This only labels the
+    # quarantined draft; it is never sent to a trust gate.
+    problem_id: str = ""
 
     def formalize(self, *, declaration_name: str, expected_type: str,
                   informal_statement: str, previous_source: str = "",
@@ -165,7 +207,16 @@ class AristotleFormalizer:
             artifact = self.client.fetch(submission, wait=True)
         # The vendor archive is already extracted into a hardened quarantine and
         # is NEVER promotable on arrival; we only read the source to re-check it.
-        return read_lean_source(Path(artifact.quarantine_dir))
+        quarantine_dir = Path(artifact.quarantine_dir)
+        _write_artifact_link(
+            quarantine_dir,
+            problem_id=self.problem_id,
+            declaration_name=declaration_name,
+            expected_type=expected_type,
+            informal_statement=informal_statement,
+            project_id=str(getattr(submission, "project_id", "")),
+        )
+        return read_lean_source(quarantine_dir)
 
     def close(self) -> None:
         close = getattr(self.client, "close", None)
