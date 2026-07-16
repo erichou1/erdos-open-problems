@@ -1461,6 +1461,19 @@ def research(
                 # A replacement worker now owns the branch.  Its lease is not
                 # ours to release, and the stale output above has been dropped.
                 pass
+        # LIVE-CAMPAIGN FIX: the pre-branch token above expires after 300s,
+        # but a browser branch legitimately reasons for HOURS — write-phase
+        # authority must be issued AFTER the worker returns, once the lease
+        # fence has validated the batch. Elapsed-time staleness is the
+        # LEASE's job (heartbeat + fence); the token scopes authority, so a
+        # fresh short-lived token here keeps both properties honest instead
+        # of failing every long branch with 'authority token has expired'.
+        worker_token = authority_issuer.issue(
+            authority_name="program_worker",
+            subject=f"worker:{branch_id}",
+            resources=(f"branch:{branch_id}", f"packet:{board_packet_hash}"),
+            lineage=cold_identity.label,
+        )
         replay_reports.extend(output.replay_reports)
         failures.extend(output.failures)
         collected_proof_steps.extend(

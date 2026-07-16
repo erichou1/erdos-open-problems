@@ -37,7 +37,12 @@ def test_campaign_attempt_ids_are_namespaced_and_path_safe():
     second = cli_module._campaign_attempt_id("campaign/b", "erdos-601", 1)
     assert first != second
     assert "/" not in first and ".." not in first
-    assert first.endswith(".erdos-601.1")
+    assert ".erdos-601.1." in first
+    # Same campaign name + fencing token must still yield a FRESH id: a
+    # re-initialized campaign restarts its fencing counter, and a colliding
+    # id would replay the previous incarnation's event log (live GraphError).
+    again = cli_module._campaign_attempt_id("campaign/a", "erdos-601", 1)
+    assert again != first
 
 
 def _signed_intent_review_file(tmp_path, fixture_id: str):

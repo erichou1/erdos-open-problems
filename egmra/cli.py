@@ -309,11 +309,16 @@ def _campaign_attempt_id(campaign_id: str, problem_id: str, fencing_token: int) 
     """Namespace an attempt across campaigns without trusting an ID as a path.
 
     PostgreSQL event run IDs are global, and JSONL paths share one directory.
-    Fencing tokens are only monotonic *within* a campaign, so
-    ``problem_id.token`` collides when two campaigns cover the same problem.
+    Fencing tokens are only monotonic *within one incarnation* of a campaign
+    store: re-initializing a campaign under the same name (the documented
+    fresh-relaunch flow) restarts the counter, and a colliding attempt id
+    would REPLAY the previous incarnation's event log into the new graph
+    (observed live as 'GraphError: duplicate problem'). An epoch suffix makes
+    every attempt id unique without giving up the readable namespace.
     """
     campaign_namespace = sha256_hex(campaign_id)[:16]
-    return f"camp-{campaign_namespace}.{problem_id}.{int(fencing_token)}"
+    unique = f"{int(time.time())}-{secrets.token_hex(3)}"
+    return f"camp-{campaign_namespace}.{problem_id}.{int(fencing_token)}.{unique}"
 
 
 def _close_event_log(log) -> None:
