@@ -31,7 +31,7 @@ from egmra.provenance.hashing import canonical_json, content_id
 
 _SCHEMA_VERSION = 1
 _MIN_KEY_BYTES = 32
-_TERMINAL = frozenset({"done", "failed"})
+_TERMINAL = frozenset({"done", "failed", "retired"})
 
 
 class CampaignError(RuntimeError):
@@ -62,7 +62,7 @@ def _campaign_key(env: dict[str, str] | None = None) -> bytes:
 @dataclass
 class Assignment:
     problem_id: str
-    status: str = "pending"          # pending|leased|retained|done|failed
+    status: str = "pending"          # pending|leased|retained|done|failed|retired
     worker_id: str = ""
     fencing_token: int = 0
     lease_expires_at: float = 0.0
@@ -493,6 +493,70 @@ class Campaign:
             assignments = {pid: Assignment(problem_id=pid) for pid in problem_ids}
             self._write(self._encode(campaign_id, list(problem_ids), assignments, 0))
             return list(problem_ids)
+
+    def adopt_ranked_order(
+        self, campaign_id: str, problem_ids: list[str],
+    ) -> list[str]:
+        """Atomically adopt a coordinated-restart ranking.
+
+        Ranked assignments keep their exact durable state. Newly ranked or
+        reintroduced retired assignments become pending. Assignments absent
+        from the ranking are retired only when they are pending/retained;
+        active leases and completed/failed history are immutable.
+        """
+        if not isinstance(campaign_id, str) or not campaign_id.strip():
+            raise CampaignError("campaign id must be non-empty")
+        if len(set(problem_ids)) != len(problem_ids):
+            raise CampaignError("problem ids must be unique")
+        ranked = list(problem_ids)
+        ranked_set = set(ranked)
+        with self._locked():
+            existing = self._read()
+            if existing is None:
+                assignments = {
+                    problem_id: Assignment(problem_id=problem_id)
+                    for problem_id in ranked
+                }
+                self._write(self._encode(
+                    campaign_id, ranked, assignments, 0,
+                ))
+                return ranked
+            if existing["campaign_id"] != campaign_id:
+                raise CampaignError(
+                    "campaign state already exists for a different campaign; "
+                    "use resume or a fresh state path"
+                )
+            assignments = self._decode(existing)
+            for problem_id in ranked:
+                assignment = assignments.get(problem_id)
+                if assignment is None:
+                    assignments[problem_id] = Assignment(problem_id=problem_id)
+                elif assignment.status == "retired":
+                    assignment.status = "pending"
+                    assignment.worker_id = ""
+                    assignment.lease_expires_at = 0.0
+                    assignment.result_state = ""
+            for problem_id, assignment in assignments.items():
+                if problem_id in ranked_set:
+                    continue
+                if assignment.status in {"pending", "retained"}:
+                    assignment.status = "retired"
+                    assignment.worker_id = ""
+                    assignment.lease_expires_at = 0.0
+                    assignment.result_state = "retired_not_in_current_ranking"
+            historical = [
+                problem_id for problem_id in existing["order"]
+                if problem_id not in ranked_set
+            ]
+            order = ranked + historical
+            self._write(self._encode(
+                campaign_id,
+                order,
+                assignments,
+                int(existing["fencing_counter"]),
+                existing.get("machines"),
+            ))
+            return order
 
     def lease(self, worker_id: str, *, now: float) -> Assignment | None:
         """Atomically lease the next available problem to ``worker_id``.

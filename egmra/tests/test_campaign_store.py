@@ -234,6 +234,57 @@ def test_second_machine_joins_despite_reranked_order():
         machine_b.initialize("other-camp", ["p1", "p2", "p3"])
 
 
+def test_coordinated_adoption_preserves_work_and_retires_only_stale_pending():
+    store = _MemoryCampaignStore()
+    campaign = Campaign("unused.json", worker_ids=("w0", "w1"), store=store)
+    campaign.initialize("camp", ["p1", "p2", "p9"])
+    leased = campaign.lease("w0", now=0.0)
+    completed = campaign.lease("w1", now=0.0)
+    assert leased.problem_id == "p1" and completed.problem_id == "p2"
+    assert campaign.complete(
+        "p2", "w1", completed.fencing_token, result_state="OPEN_NO_PROGRESS"
+    )
+
+    adopted = campaign.adopt_ranked_order("camp", ["p3", "p4", "p1", "p2"])
+
+    assert adopted == ["p3", "p4", "p1", "p2", "p9"]
+    status = campaign.status()["workers"]
+    assert status["p1"]["status"] == "leased"
+    assert status["p2"]["status"] == "done"
+    assert status["p9"] == {
+        "worker_id": "",
+        "status": "retired",
+        "attempts": 0,
+        "infra_retries": 0,
+        "result_state": "retired_not_in_current_ranking",
+    }
+    assert campaign.lease("w1", now=2.0).problem_id == "p3"
+
+
+def test_coordinated_adoption_preserves_stale_active_lease():
+    store = _MemoryCampaignStore()
+    campaign = Campaign("unused.json", worker_ids=("w0", "w1"), store=store)
+    campaign.initialize("camp", ["p9", "p1"])
+    stale_but_active = campaign.lease("w0", now=0.0)
+
+    campaign.adopt_ranked_order("camp", ["p1"])
+
+    assert campaign.status()["workers"]["p9"]["status"] == "leased"
+    assert campaign.lease("w1", now=1.0).problem_id == "p1"
+    assert stale_but_active.problem_id == "p9"
+
+
+def test_coordinated_adoption_rejects_duplicates_without_mutation():
+    store = _MemoryCampaignStore()
+    campaign = Campaign("unused.json", worker_ids=("w0",), store=store)
+    campaign.initialize("camp", ["p1", "p2"])
+
+    with pytest.raises(CampaignError, match="unique"):
+        campaign.adopt_ranked_order("camp", ["p2", "p2"])
+
+    assert campaign.status()["workers"].keys() == {"p1", "p2"}
+
+
 # ── live Postgres round-trip (gated) ─────────────────────────────────────────
 
 @live_postgres
