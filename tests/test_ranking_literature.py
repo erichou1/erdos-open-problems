@@ -3,6 +3,7 @@ from pathlib import Path
 
 import pytest
 
+from egmra.retrieval.scholarly import ScholarlyRetrievalError
 from literature_research import LiteratureIndex
 from ranking_literature import (
     LIVE_SHORTLIST_LIMIT,
@@ -162,14 +163,18 @@ def test_source_failure_is_a_coverage_gap_not_a_bonus(tmp_path):
     card = make_card()
     local = build_local_enrichments([card], index)
 
+    def unavailable(url: str) -> str:
+        raise ScholarlyRetrievalError("rate limited")
+
     result = enrich_live_shortlist(
         {1: card}, local, shortlist_problem_numbers=(1,),
         cache_root=tmp_path / "cache", source_snapshot_id="snapshot-a",
-        refresh=False, offline=True,
+        refresh=True, offline=False, fetcher=unavailable,
     )[1]
     assert result.features == local[1].features
-    assert result.coverage_status == "local_only"
-    assert result.live_artifact_hashes == ()
+    assert result.coverage_status == "partial"
+    assert result.live_artifact_hashes
+    assert len(result.coverage_gaps) == 4
 
 
 def test_duplicate_paper_across_queries_counts_once(tmp_path):
