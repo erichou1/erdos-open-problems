@@ -86,6 +86,24 @@ class ProblemCatalogTests(unittest.TestCase):
         self.assertNotIn("ai_wiki_url", catalog)
         self.assertEqual(catalog["counts"]["ai_wiki_primary_full"], 0)
 
+    def test_build_catalog_preserves_raw_prize_and_counts_states(self):
+        source = [
+            {"number": "1", "prize": "no", "status": {"state": "open"}},
+            {"number": "2", "prize": "$5000", "status": {"state": "open"}},
+            {"number": "3", "status": {"state": "open"}},
+            {"number": "4", "prize": "€500", "status": {"state": "proved"}},
+        ]
+        catalog = build_catalog(source, fetched_at="now", source_url="source")
+        self.assertEqual(catalog["problems"]["1"]["prize"], "no")
+        self.assertEqual(catalog["problems"]["1"]["prize_status"], "unpaid")
+        self.assertEqual(catalog["problems"]["2"]["prize"], "$5000")
+        self.assertEqual(catalog["problems"]["2"]["prize_status"], "paid")
+        self.assertIsNone(catalog["problems"]["3"]["prize"])
+        self.assertEqual(catalog["problems"]["3"]["prize_status"], "unknown")
+        self.assertEqual(catalog["counts"]["monetary_prize"], 2)
+        self.assertEqual(catalog["counts"]["open_monetary_prize"], 1)
+        self.assertEqual(catalog["counts"]["unknown_prize"], 1)
+
 
 if __name__ == "__main__":
     unittest.main()

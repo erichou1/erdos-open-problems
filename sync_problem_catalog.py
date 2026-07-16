@@ -18,6 +18,7 @@ from pathlib import Path
 import yaml
 
 from erdos_ingest import MAX_REMOTE_RESPONSE_BYTES, fetch_url
+from ranking_policy import classify_prize
 
 SOURCE_DATA_URL = "https://raw.githubusercontent.com/teorth/erdosproblems/main/data/problems.yaml"
 AI_WIKI_URL = (
@@ -116,6 +117,7 @@ def build_catalog(
         number = str(problem["number"])
         status = problem.get("status") or {}
         state = str(status.get("state", "unknown"))
+        raw_prize = problem.get("prize")
         entry = {
             "problem": int(number),
             "source_state": state,
@@ -124,6 +126,8 @@ def build_catalog(
             "source_problem_url": SOURCE_PROBLEM_URL.format(number=number),
             "formalized": problem.get("formalized"),
             "tags": problem.get("tags", []),
+            "prize": raw_prize,
+            "prize_status": classify_prize(raw_prize),
         }
         wiki_entry = ai_wiki.get(number)
         if wiki_entry:
@@ -145,6 +149,17 @@ def build_catalog(
             ),
             "ai_wiki_any_signal": sum(
                 "ai_wiki" in item for item in entries.values()
+            ),
+            "monetary_prize": sum(
+                item["prize_status"] == "paid" for item in entries.values()
+            ),
+            "open_monetary_prize": sum(
+                item["prize_status"] == "paid"
+                and not item["source_reports_resolved"]
+                for item in entries.values()
+            ),
+            "unknown_prize": sum(
+                item["prize_status"] == "unknown" for item in entries.values()
             ),
         },
         "problems": dict(sorted(entries.items(), key=lambda item: int(item[0]))),
