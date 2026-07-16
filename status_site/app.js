@@ -10,6 +10,10 @@ const ACTION_LABELS={PROBLEM_FROZEN:"Saved the exact problem statement",INTERPRE
 const statusLabel=value=>STATUS_LABELS[value]||String(value||"Unknown").replaceAll("_"," ").toLowerCase();
 const resultLabel=value=>RESULT_LABELS[value]||String(value||"Not finished").replaceAll("_"," ").toLowerCase();
 const actionLabel=value=>ACTION_LABELS[value]||String(value||"Recorded a step").replaceAll("_"," ").toLowerCase();
+const progressHtml=progress=>{
+  const value=Math.max(0,Math.min(100,Number(progress?.percent||0)));
+  return `<div class="progress-block" title="${esc(progress?.disclaimer||"")}"><div class="progress-heading"><span>${esc(progress?.stage||"Queued")}</span><b>${value}</b></div><div class="progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${value}" aria-label="Research milestone ${value} of 100"><i style="width:${value}%"></i></div></div>`;
+};
 const typeset=root=>{
   if(!root||typeof window.renderMathInElement!=="function")return;
   window.renderMathInElement(root,{
@@ -27,8 +31,9 @@ const typeset=root=>{
 };
 
 const DATA_URL=location.hostname.endsWith("vercel.app")
-  ? "https://raw.githubusercontent.com/erichou1/erdos-open-problems/audit/egmra-independent-remediation-20260713/status_site/data.json"
+  ? "https://raw.githubusercontent.com/erichou1/erdos-open-problems/status-live/status_site/data.json"
   : "/data.json";
+const AUTO_REFRESH_MS=60_000;
 
 async function load(){
   $("#reloadButton").classList.add("loading");
@@ -44,7 +49,7 @@ async function load(){
 
 function render(){
   const {campaign,generated_at,summary,workers,problems,aristotle_artifacts}=state.data;
-  $("#campaignName").textContent=campaign;$("#snapshotTime").textContent=`Snapshot ${dt(generated_at)}`;$("#healthDot").classList.add("ok");
+  $("#campaignName").textContent=campaign;$("#snapshotTime").textContent=`Auto-updates · snapshot ${dt(generated_at)}`;$("#healthDot").classList.add("ok");
   const leased=summary.by_status.leased||0,pending=summary.by_status.pending||0;
   const metrics=[[summary.total,"problems being tracked"],[leased,"being worked on now"],[pending,"waiting for a worker"],[summary.total_runs,"research attempts logged"],[summary.aristotle_artifacts||aristotle_artifacts.length,"formal proof drafts"]];
   $("#metricStrip").innerHTML=metrics.map(([n,label])=>`<div class="metric"><strong>${esc(n)}</strong><span>${esc(label)}</span></div>`).join("");
@@ -68,7 +73,7 @@ function filteredProblems(){
 }
 function renderRows(){
   const rows=filteredProblems();
-  $("#problemRows").innerHTML=rows.length?rows.map(p=>`<tr class="problem-row" data-row="${p.number}" tabindex="0" aria-label="Open Erdős problem ${p.number}"><td><div class="problem-name"><strong class="problem-number">#${esc(p.number)}</strong><span class="problem-statement" title="${esc(p.statement)}">${esc(p.statement)}</span></div></td><td><span class="status-chip ${statusClass(p.status)}">${esc(statusLabel(p.status))}</span></td><td><span class="worker-tag">${esc(p.worker||"Not assigned")}</span></td><td>${esc(p.attempts)}</td><td>${esc(resultLabel(p.latest_state||p.result_state))}</td><td>${p.run_count} / ${p.chatgpt_run_count}</td><td><button class="open-row" data-open="${p.number}" aria-label="Open problem ${p.number}">→</button></td></tr>`).join(""):`<tr><td colspan="7" class="empty-row">No problems match this view.</td></tr>`;
+  $("#problemRows").innerHTML=rows.length?rows.map(p=>`<tr class="problem-row" data-row="${p.number}" tabindex="0" aria-label="Open Erdős problem ${p.number}"><td><div class="problem-name"><strong class="problem-number">#${esc(p.number)}</strong><span class="problem-statement" title="${esc(p.statement)}">${esc(p.statement)}</span></div></td><td><span class="status-chip ${statusClass(p.status)}">${esc(statusLabel(p.status))}</span></td><td><span class="worker-tag">${esc(p.worker||"Not assigned")}</span></td><td>${esc(p.attempts)}</td><td>${progressHtml(p.progress)}</td><td>${esc(resultLabel(p.latest_state||p.result_state))}</td><td>${p.run_count} / ${p.chatgpt_run_count}</td><td><button class="open-row" data-open="${p.number}" aria-label="Open problem ${p.number}">→</button></td></tr>`).join(""):`<tr><td colspan="8" class="empty-row">No problems match this view.</td></tr>`;
   $("#resultCount").textContent=`Showing ${rows.length} of ${state.data.problems.length} problems · research attempts / saved ChatGPT exchanges`;
   document.querySelectorAll("[data-open]").forEach(button=>button.onclick=()=>openProblem(Number(button.dataset.open)));
   document.querySelectorAll("[data-row]").forEach(row=>{
@@ -88,7 +93,9 @@ function openProblem(number,runId=null){
   const runs=p.runs.length?p.runs.map(run=>runHtml(run,p)).join(""):`<p class="missing-link">No completed run records yet.</p>`;
   const exchanges=p.exchanges?.length?`<table class="exchange-table"><thead><tr><th>Step</th><th>Model</th><th>Chat</th></tr></thead><tbody>${p.exchanges.slice(0,40).map(x=>`<tr><td>${esc(x.stage)}</td><td>${esc(x.model)}</td><td>${x.conversation_url?`<a href="${esc(x.conversation_url)}" target="_blank" rel="noopener">Open exact ChatGPT chat ↗</a>`:`Older exchange: chat link was not saved · ${esc(x.response_hash)}`}</td></tr>`).join("")}</tbody></table>`:`<p class="missing-link">No saved ChatGPT exchanges for this problem yet.</p>`;
   const aristotle=p.aristotle?.length?p.aristotle.map((a,i)=>`<details class="run-row"><summary><div><strong>${esc(a.declarations?.join(", ")||a.artifact_id)}</strong><span class="run-time">${esc(a.worker||"worker unknown")} · ${a.bytes.toLocaleString()} bytes</span></div><span class="run-state">not yet verified</span></summary><div class="run-body"><pre class="source-preview">${esc(a.source_preview)}</pre></div></details>`).join(""):`<p class="explanation-note"><strong>0 linked drafts does not mean Aristotle was not used.</strong> It means no saved Aristotle file safely names this problem. Most older drafts lack a problem number, so the dashboard keeps them in the global list instead of guessing.</p>`;
-  $("#detailContent").innerHTML=`<p class="detail-statement">${esc(p.statement)}</p><div class="detail-meta">${meta.map(([v,k])=>`<div><small>${k}</small><strong>${esc(v)}</strong></div>`).join("")}</div><nav class="detail-jumps" aria-label="Problem detail sections"><button data-jump="detail-runs">Attempts <b>${p.runs.length}</b></button><button data-jump="detail-exchanges">ChatGPT <b>${p.exchanges?.length||0}</b></button><button data-jump="detail-aristotle">Proof drafts <b>${p.aristotle?.length||0}</b></button></nav>${p.result_state?`<p class="error-state"><strong>Technical note:</strong> ${esc(p.result_state)}</p>`:""}<section id="detail-runs" class="detail-section"><h3>Research attempts · ${p.runs.length}</h3>${runs}</section><section id="detail-exchanges" class="detail-section"><h3>Saved ChatGPT exchanges · ${p.exchanges?.length||0}</h3>${exchanges}</section><section id="detail-aristotle" class="detail-section"><h3>Safely linked Aristotle proof drafts · ${p.aristotle?.length||0}</h3>${aristotle}</section>`;
+  const progress=p.progress||{percent:5,stage:"Queued",explanation:"The problem is in the campaign.",milestones:[]};
+  const milestoneList=(progress.milestones||[]).map(item=>`<li class="${item.achieved?"achieved":""}"><i>${item.achieved?"✓":""}</i><span>${esc(item.label)}</span></li>`).join("");
+  $("#detailContent").innerHTML=`<p class="detail-statement">${esc(p.statement)}</p><div class="detail-meta">${meta.map(([v,k])=>`<div><small>${k}</small><strong>${esc(v)}</strong></div>`).join("")}</div><section class="progress-detail"><div><p class="eyebrow">RESEARCH MILESTONE — NOT SOLUTION PROBABILITY</p><h3>${esc(progress.stage)} · ${progress.percent}/100</h3><p>${esc(progress.explanation)}</p>${progressHtml(progress)}</div><ol>${milestoneList}</ol></section><nav class="detail-jumps" aria-label="Problem detail sections"><button data-jump="detail-runs">Attempts <b>${p.runs.length}</b></button><button data-jump="detail-exchanges">ChatGPT <b>${p.exchanges?.length||0}</b></button><button data-jump="detail-aristotle">Proof drafts <b>${p.aristotle?.length||0}</b></button></nav>${p.result_state?`<p class="error-state"><strong>Technical note:</strong> ${esc(p.result_state)}</p>`:""}<section id="detail-runs" class="detail-section"><h3>Research attempts · ${p.runs.length}</h3>${runs}</section><section id="detail-exchanges" class="detail-section"><h3>Saved ChatGPT exchanges · ${p.exchanges?.length||0}</h3>${exchanges}</section><section id="detail-aristotle" class="detail-section"><h3>Safely linked Aristotle proof drafts · ${p.aristotle?.length||0}</h3>${aristotle}</section>`;
   document.querySelectorAll("[data-jump]").forEach(button=>button.onclick=()=>document.getElementById(button.dataset.jump)?.scrollIntoView({block:"start"}));
   typeset($("#detailContent"));
   showPanel();
@@ -118,3 +125,4 @@ $("#searchInput").addEventListener("input",event=>{state.query=event.target.valu
 $("#sortButton").onclick=event=>{state.ascending=!state.ascending;event.target.textContent=`Sort: number ${state.ascending?"↑":"↓"}`;renderRows()};
 $("#reloadButton").onclick=load;$("#closeDetail").onclick=closePanel;$("#scrim").onclick=closePanel;window.addEventListener("hashchange",route);document.addEventListener("keydown",event=>{if(event.key==="Escape")closePanel();if(event.key==="/"&&!event.metaKey&&!event.ctrlKey&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName||"")){event.preventDefault();$("#searchInput").focus()}});
 load();
+window.setInterval(()=>{if(!document.hidden)load()},AUTO_REFRESH_MS);

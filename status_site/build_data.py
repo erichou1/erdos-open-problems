@@ -14,6 +14,7 @@ responses, credentials, signatures, or full local paths.
 from __future__ import annotations
 
 import collections
+import argparse
 import glob
 import json
 import os
@@ -32,6 +33,98 @@ SITE_ROOT = ROOT / "status_site"
 CAMPAIGN = os.environ.get("EGMRA_STATUS_CAMPAIGN", "shared-current-v1")
 GITHUB_BRANCH = "audit/egmra-independent-remediation-20260713"
 GITHUB_ROOT = "https://github.com/erichou1/erdos-open-problems"
+
+
+def _solvability_record(number: int) -> dict[str, Any]:
+    """Transparent tractability index from the searcher's existing formula.
+
+    This is deliberately NOT called a solution probability. The card values
+    are uncalibrated weak priors; the index only ranks which problems best fit
+    the current formal/exact-computation pipeline.
+    """
+    path = ROOT / "triage" / "normalized" / "problem_cards" / f"{number}.json"
+    try:
+        card = json.loads(path.read_text(encoding="utf-8"))
+        posterior = card["posterior"]
+        lean = float(posterior["p_lean_verified_exact_target"]["probability"])
+        compute = float(
+            posterior["p_finite_computational_resolution"]["probability"])
+        partial = float(posterior["p_verified_partial_progress"]["probability"])
+        novel = float(posterior["p_verified_novel_resolution"]["probability"])
+        lean_route = bool(card["probe_summary"]["formal"]["lean_route_available"])
+        clear = card["statement"]["ambiguity_status"] == "clear"
+        score = 0.5 * lean + 0.4 * compute + 0.15 * lean_route + 0.05 * clear
+        signals = list(card.get("strongest_positive_signals", ()))[:4]
+        if not signals:
+            signals = list(card.get("probe_summary", {}).get("positive_signals", ()))[:4]
+        return {
+            "available": True,
+            "score": round(score, 6),
+            # The formula's theoretical maximum is 1.10. This 0-100 index is
+            # only a readable normalization of the formula, not probability.
+            "index": round(100 * score / 1.10),
+            "lean_route_estimate": round(100 * lean),
+            "finite_computation_estimate": round(100 * compute),
+            "verified_partial_progress_prior": round(100 * partial),
+            "verified_novel_resolution_prior": round(100 * novel, 1),
+            "lean_route_available": lean_route,
+            "statement_clear": clear,
+            "calibration": str(posterior.get("calibration_status", "weak prior")),
+            "positive_signals": signals,
+        }
+    except (OSError, KeyError, TypeError, ValueError, json.JSONDecodeError):
+        return {"available": False, "score": 0.0, "index": 0}
+
+
+def _progress_record(*, status: str, runs: list[dict[str, Any]],
+                     linked_aristotle: int) -> dict[str, Any]:
+    """Highest observable research milestone; never mathematical proximity."""
+    actions = collections.Counter()
+    for run in runs:
+        actions.update(run.get("actions") or {})
+    released = any(bool(run.get("released")) for run in runs)
+    states = {str(run.get("state", "")) for run in runs}
+    milestones = [
+        (5, "Queued", True, "The problem is in the campaign."),
+        (15, "Worker assigned", status == "leased",
+         "A worker is currently spending time on it."),
+        (20, "Meaning recorded", actions["INTERPRETATION_ADDED"] > 0,
+         "The pipeline recorded a precise reading of the statement."),
+        (30, "Meaning approved", actions["INTENT_CERTIFICATE_ISSUED"] > 0,
+         "The intended interpretation passed its review."),
+        (40, "Approaches explored", actions["BRANCH_OPENED"] > 0,
+         "At least one proof or counterexample approach was attempted."),
+        (50, "Candidate statement found", actions["CLAIM_PROPOSED"] > 0,
+         "The run produced a concrete lemma or intermediate claim."),
+        (65, "Checked evidence found",
+         actions["EVIDENCE_ATTACHED"] > 0 or actions["CLAIM_PROMOTED"] > 0,
+         "Independent checking accepted evidence for a claim."),
+        (75, "Formal proof draft linked", linked_aristotle > 0,
+         "An Aristotle Lean draft is reliably associated with this problem."),
+        (88, "Informal and Lean statements matched",
+         actions["FORMAL_CORRESPONDENCE_ISSUED"] > 0,
+         "A review confirmed that the Lean statement matches the problem."),
+        (95, "Formally checked candidate",
+         "FORMALLY_VERIFIED_CANDIDATE" in states,
+         "A candidate passed the independent formal checker."),
+        (100, "Released result", released,
+         "All release gates passed."),
+    ]
+    achieved = [item for item in milestones if item[2]]
+    percent, stage, _, explanation = max(achieved, key=lambda item: item[0])
+    return {
+        "percent": percent,
+        "stage": stage,
+        "explanation": explanation,
+        "disclaimer": (
+            "Research milestone, not the probability of solving the problem "
+            "and not mathematical distance to a proof."
+        ),
+        "milestones": [
+            {"percent": value, "label": label, "achieved": condition}
+            for value, label, condition, _ in milestones
+        ],
+    }
 
 
 def _json_lines(path: Path):
@@ -296,8 +389,25 @@ def build() -> dict[str, Any]:
             "runs": runs,
             "exchanges": exchanges,
             "aristotle": artifacts_by_problem.get(problem_id, []),
+            "solvability": _solvability_record(number) if number else {
+                "available": False, "score": 0.0, "index": 0},
             "erdos_page": f"https://www.erdosproblems.com/{number}" if number else None,
         })
+
+    ranked = sorted(
+        problems,
+        key=lambda problem: (
+            -float(problem["solvability"].get("score", 0.0)),
+            problem["number"],
+        ),
+    )
+    for rank, problem in enumerate(ranked, start=1):
+        problem["solvability"]["rank"] = rank
+        problem["progress"] = _progress_record(
+            status=str(problem["status"]),
+            runs=problem["runs"],
+            linked_aristotle=len(problem["aristotle"]),
+        )
 
     statuses = collections.Counter(str(problem["status"]) for problem in problems)
     states = collections.Counter(str(problem["latest_state"]) for problem in problems
@@ -328,6 +438,29 @@ def build() -> dict[str, Any]:
         "workers": workers,
         "problems": problems,
         "aristotle_artifacts": artifacts,
+        "ranking": [
+            {
+                "problem_id": problem["problem_id"],
+                "number": problem["number"],
+                "statement": problem["statement"],
+                "status": problem["status"],
+                "worker": problem["worker"],
+                "solvability": problem["solvability"],
+                "progress": problem["progress"],
+            }
+            for problem in ranked
+        ],
+        "ranking_method": {
+            "name": "Formal/exact-computation tractability index",
+            "formula": (
+                "0.5 × Lean-route prior + 0.4 × finite-computation prior + "
+                "0.15 if a Lean route exists + 0.05 if the statement is clear"
+            ),
+            "warning": (
+                "Uncalibrated weak-prior ordering. This is not a probability "
+                "that a problem will be solved."
+            ),
+        },
         "source": {
             "repository": GITHUB_ROOT,
             "branch": GITHUB_BRANCH,
@@ -337,10 +470,21 @@ def build() -> dict[str, Any]:
 
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "--output", type=Path, default=SITE_ROOT / "data.json",
+        help="snapshot path (default: status_site/data.json)",
+    )
+    args = parser.parse_args()
     SITE_ROOT.mkdir(parents=True, exist_ok=True)
-    output = SITE_ROOT / "data.json"
+    output = args.output.resolve()
+    output.parent.mkdir(parents=True, exist_ok=True)
     payload = build()
     output.write_text(json.dumps(payload, indent=2, ensure_ascii=True) + "\n",
                       encoding="utf-8")
-    print(f"wrote {output.relative_to(ROOT)}")
+    try:
+        display_path = output.relative_to(ROOT)
+    except ValueError:
+        display_path = output
+    print(f"wrote {display_path}")
     print(json.dumps(payload["summary"], indent=2))

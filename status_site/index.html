@@ -24,12 +24,13 @@
     <nav class="primary-nav" aria-label="Dashboard sections">
       <a href="#overview">Now</a>
       <a href="#problems">Problems</a>
+      <a href="/ranking.html">Ranking</a>
       <a href="#guide">Help</a>
       <a href="#artifacts">Proof drafts</a>
     </nav>
     <div class="snapshot-block">
       <span id="healthDot" class="health-dot"></span>
-      <div><strong id="campaignName">Loading campaign</strong><small id="snapshotTime">Reading snapshot…</small></div>
+      <div><strong id="campaignName">Loading campaign</strong><small id="snapshotTime">Reading live snapshot…</small></div>
       <button id="reloadButton" class="icon-button" title="Reload snapshot" aria-label="Reload snapshot">↻</button>
     </div>
   </header>
@@ -71,8 +72,8 @@
       </div>
       <div class="ledger-shell">
         <table class="problem-table">
-          <thead><tr><th>Problem</th><th>Work status</th><th>Worker</th><th>Times tried</th><th>Latest result</th><th>Attempts / chats</th><th aria-label="Open"></th></tr></thead>
-          <tbody id="problemRows"><tr><td colspan="7" class="empty-row">Loading campaign data…</td></tr></tbody>
+          <thead><tr><th>Problem</th><th>Work status</th><th>Worker</th><th>Times tried</th><th>Research progress</th><th>Latest result</th><th>Attempts / chats</th><th aria-label="Open"></th></tr></thead>
+          <tbody id="problemRows"><tr><td colspan="8" class="empty-row">Loading campaign data…</td></tr></tbody>
         </table>
       </div>
       <p id="resultCount" class="result-count"></p>
