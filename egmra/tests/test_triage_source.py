@@ -12,6 +12,8 @@ from pathlib import Path
 
 import pytest
 
+from ranking_queue import build_queue_projection
+
 from egmra.orchestrator.triage_source import (
     TriageSourceError,
     _read_json,
@@ -34,30 +36,66 @@ def _alloc(entries, *, status="ready", exclusions=()):
     }
 
 
+def _queue(numbers, *, exclusions=()):
+    rows = [
+        {
+            "problem_id": f"erdos-{number}",
+            "problem_number": number,
+            "allocation_rank": rank,
+            "allocation_lane": "exploitation",
+            "prize": "no",
+            "prize_status": "unpaid",
+            "selection_priority_tier": 0,
+            "literature_coverage_status": "local_only",
+            "base_acquisition_score": 0.1,
+            "literature_adjustment": 0.0,
+            "selection_score": 0.1,
+            "reason_selected": "test",
+        }
+        for rank, number in enumerate(numbers, start=1)
+    ]
+    return build_queue_projection({
+        "allocation_status": "ready",
+        "allocation_context_id": "a" * 64,
+        "ranking_content_sha256": "b" * 64,
+        "source_snapshot_id": "source-1",
+        "source_snapshot_sha256": "c" * 64,
+        "prize_policy_version": "prize-tier-v1",
+        "literature_policy_version": "literature-ranking-v1",
+        "literature_model_version": "literature-opportunity-v1",
+        "literature_coverage": {},
+        "corpus_integrity": {"status": "complete"},
+        "attempt_exclusions": list(exclusions),
+        "allocation_queue": rows,
+    })
+
+
+def test_current_lane_prefers_compact_queue_projection(tmp_path):
+    rankings = tmp_path / "rankings"
+    _write(rankings, "current", _alloc([{"problem_number": 999}]))
+    _write(rankings, "current_queue", _queue([312, 1104, 153]))
+
+    assert triage_ranked_problem_ids(tmp_path, lane="current") == [
+        "erdos-312", "erdos-1104", "erdos-153"]
+
+
 def test_allocation_queue_drained_in_rank_order(tmp_path):
     rankings = tmp_path / "rankings"
-    _write(rankings, "current", _alloc([
-        {"problem_number": 312, "allocation_rank": 1},
-        {"problem_number": 1104, "allocation_rank": 2},
-        {"problem_number": 153, "allocation_rank": 3},
-    ]))
+    _write(rankings, "current_queue", _queue([312, 1104, 153]))
     ids = triage_ranked_problem_ids(tmp_path, lane="current")
     assert ids == ["erdos-312", "erdos-1104", "erdos-153"]
 
 
 def test_limit_caps_and_preserves_order(tmp_path):
     rankings = tmp_path / "rankings"
-    _write(rankings, "current", _alloc([
-        {"problem_number": n} for n in (5, 6, 7, 8)
-    ]))
+    _write(rankings, "current_queue", _queue([5, 6, 7, 8]))
     assert triage_ranked_problem_ids(tmp_path, lane="current", limit=2) == [
         "erdos-5", "erdos-6"]
 
 
-def test_exclusions_and_duplicates_are_skipped(tmp_path):
+def test_exclusions_are_skipped(tmp_path):
     rankings = tmp_path / "rankings"
-    _write(rankings, "current", _alloc(
-        [{"problem_number": n} for n in (5, 6, 6, 7)], exclusions=[6]))
+    _write(rankings, "current_queue", _queue([5, 6, 7], exclusions=[6]))
     assert triage_ranked_problem_ids(tmp_path, lane="current") == [
         "erdos-5", "erdos-7"]
 
@@ -71,7 +109,7 @@ def test_allocation_not_ready_is_refused(tmp_path):
 
 def test_single_objective_lane_uses_its_own_list_and_current_exclusions(tmp_path):
     rankings = tmp_path / "rankings"
-    _write(rankings, "current", _alloc([{"problem_number": 5}], exclusions=[9]))
+    _write(rankings, "current_queue", _queue([5], exclusions=[9]))
     _write(rankings, "tractable_frontier", {
         "tractable_frontier": [
             {"problem_number": 8}, {"problem_number": 9}, {"problem_number": 10}]})
@@ -113,8 +151,8 @@ def test_symlink_ranking_refused(tmp_path):
     rankings = tmp_path / "rankings"
     rankings.mkdir()
     real = tmp_path / "real.json"
-    real.write_text(json.dumps(_alloc([{"problem_number": 5}])), encoding="utf-8")
-    (rankings / "current.json").symlink_to(real)
+    real.write_text(json.dumps(_queue([5])), encoding="utf-8")
+    (rankings / "current_queue.json").symlink_to(real)
     with pytest.raises(TriageSourceError):
         triage_ranked_problem_ids(tmp_path, lane="current")
 
