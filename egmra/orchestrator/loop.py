@@ -1103,16 +1103,37 @@ def research(
     cold_budget = 0.05 * budget_ledger.total
     if not budget_ledger.allocate("cold_pass", cold_budget):  # defensive: exact by construction
         raise RuntimeError("unable to reserve cold-pass budget")
-    runner_cold = runner.run(
-        f"Blindly list falsifiers and retrieval queries for: {interp.conclusion}",
-        stage="cold_pass",
-    )
-    runner_responses.append({
-        "stage": "cold_pass", "text": runner_cold.text,
-        "runner_id": runner.runner_id, "prompt_hash": runner_cold.prompt_hash,
-        "model_attested": runner_cold.model.attested,
-    })
+    # ONE structured cold pass (report R1): the worker's parsed pass is the
+    # single source of falsifiers/queries/bottleneck. The previous extra raw
+    # runner call duplicated this generation and fed only free text into the
+    # packet. Lineage/attestation now bind to the worker's own generation;
+    # legacy workers that do not expose their model identity keep the original
+    # probe call so those fields never silently change meaning.
     cold_output = worker.cold_pass(contract, budget=cold_budget)
+    cold_identity = getattr(worker, "last_model_identity", None)
+    cold_free_text = ""
+    if cold_identity is None:
+        runner_cold = runner.run(
+            f"Blindly list falsifiers and retrieval queries for: {interp.conclusion}",
+            stage="cold_pass",
+        )
+        cold_identity = runner_cold.model
+        cold_free_text = runner_cold.text
+        runner_responses.append({
+            "stage": "cold_pass", "text": runner_cold.text,
+            "runner_id": runner.runner_id, "prompt_hash": runner_cold.prompt_hash,
+            "model_attested": cold_identity.attested,
+            "decision_used": False,   # legacy identity probe only
+        })
+    else:
+        parsed_meta = (getattr(worker, "parsed_responses", None) or [{}])[-1]
+        runner_responses.append({
+            "stage": "cold_pass",
+            "runner_id": runner.runner_id,
+            "prompt_hash": str(parsed_meta.get("prompt_hash", "")),
+            "model_attested": bool(getattr(cold_identity, "attested", False)),
+            "decision_used": True,    # this generation's output drives the packet
+        })
     memory.problem_local.admit({
         "problem_id": problem_id,
         "stage": "cold_pass",
@@ -1138,7 +1159,7 @@ def research(
         techniques=tuple(dict.fromkeys([
             *cold_output.search_queries,
             *cold_output.falsifiers,
-            runner_cold.text,
+            *([cold_free_text] if cold_free_text else []),
         ])),
     ), limit=8, extra_queries=tuple(cold_output.search_queries[:8]))
     phases.append("freeze_solver_packet")
@@ -1189,6 +1210,11 @@ def research(
         bottleneck=cold_output.bottleneck,
         budget_each=action_budget,
         max_programs=max(1, min(max_iterations, 3)) if max_iterations else 1,
+        # Stratified wave signals (report R2): a community Lean target steers
+        # the tool stratum toward formal_library_first; an executable predicate
+        # toward computational_finite_reduction.
+        has_formal_target=bool(getattr(worker, "formal_target", "")),
+        has_predicate=probe_predicate is not None,
     ) if acquired else []
     diversity_archive = QualityDiversityArchive()
     program_fingerprints: dict[str, MechanismFingerprint] = {}
@@ -1323,15 +1349,10 @@ def research(
         ]
         if not candidates:
             break
-        runner_branch = runner.run(
-            "Select among branch mechanisms: " + ", ".join(bid for bid, _ in candidates),
-            stage="branch_selection",
-        )
-        runner_responses.append({
-            "stage": "branch_selection", "text": runner_branch.text,
-            "runner_id": runner.runner_id, "prompt_hash": runner_branch.prompt_hash,
-            "model_attested": runner_branch.model.attested,
-        })
+        # Branch selection is the numeric controller's decision (direct-first on
+        # the opening wave, posterior selection afterwards). The former model
+        # call here was recorded and then IGNORED — pure cost on the serialized
+        # provider budget (report R1) — so it was removed outright.
         direct_first = next(
             (branch for branch, _ in candidates if branch == "direct_structural"),
             None,
@@ -1361,7 +1382,7 @@ def research(
             authority_name="program_worker",
             subject=f"worker:{branch_id}",
             resources=(f"branch:{branch_id}", f"packet:{board_packet_hash}"),
-            lineage=runner_cold.model.label,
+            lineage=cold_identity.label,
         )
         branch_slice = blackboard.read_slice(
             branch_id=branch_id, packet_hash=board_packet_hash,
@@ -1897,7 +1918,7 @@ def research(
     referee = AdversarialReferee(
         referee_id="referee-1",
         diversity=DiversityProfile(
-            (runner_cold.model.label,),
+            (cold_identity.label,),
             ("mechanical-checks-v1",),
             tuple(dict.fromkeys(
                 environment
@@ -2000,7 +2021,7 @@ def research(
             ),
             autonomy={
                 "runner_id": runner.runner_id,
-                "runner_attested": runner_cold.model.attested,
+                "runner_attested": cold_identity.attested,
                 "intervention_counts": {
                     "pre_run": 0, "in_run": 0, "post_run": 0,
                 },

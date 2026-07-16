@@ -53,23 +53,89 @@ def compatible_families(domain: str, *, cross_domain_exploration: bool = False) 
     return out
 
 
+# Stratified first-wave selection (report R2). The old behavior truncated the
+# compatible list in REGISTRY order, so for classified domains the first three
+# were always direct_structural / contradiction_minimal_counterexample /
+# extremal_invariant — the computational, formal-library, and
+# model-construction families (and with them the experimentalist and
+# formalizer worker roles) were unreachable. A first wave must instead contain
+# materially different mechanisms: one proof route, one refutation or
+# construction route, one tool route.
+_PROOF_FAMILIES = (
+    "direct_structural", "extremal_invariant", "probabilistic_analytic",
+    "additive_combinatorial", "algebraic_spectral", "geometric_topological",
+    "ergodic_dynamical",
+)
+_REFUTATION_FAMILIES = (
+    "contradiction_minimal_counterexample", "counterexample_model_construction",
+)
+_TOOL_FAMILIES = (
+    "computational_finite_reduction", "formal_library_first",
+    "literature_derived_transfer",
+)
+
+
+def _pick(stratum: tuple[str, ...], available: list[str],
+          prefer: tuple[str, ...] = ()) -> str | None:
+    for family in prefer:
+        if family in stratum and family in available:
+            return family
+    for family in stratum:
+        if family in available:
+            return family
+    return None
+
+
 def instantiate_programs(
     domain: str, *, bottleneck: str = "", budget_each: float = 1.0,
     max_programs: int = 8, cross_domain_exploration: bool = False,
+    has_formal_target: bool = False, has_predicate: bool = False,
 ) -> list[ResearchProgram]:
-    """Governor: instantiate compatible, bottleneck-appropriate programs only."""
+    """Governor: a stratified, materially-diverse program wave.
+
+    Deterministic in its inputs. The wave is built one stratum at a time —
+    proof, refutation/construction, tool — then remaining slots fill from the
+    leftover compatible families in registry order. Signals steer the tool
+    stratum: a community formal target prefers ``formal_library_first``; an
+    executable predicate prefers ``computational_finite_reduction``; the
+    cold-pass bottleneck keeps its original hard filter.
+    """
     families = compatible_families(domain, cross_domain_exploration=cross_domain_exploration)
     if bottleneck == "counterexample":
         families = [f for f in families if "counterexample" in f or "computational" in f] or families
     elif bottleneck == "formalization":
         families = [f for f in families if "formal" in f] or families
-    programs = [
+
+    tool_prefer: tuple[str, ...] = ()
+    if has_formal_target:
+        tool_prefer = ("formal_library_first", "computational_finite_reduction")
+    elif has_predicate:
+        tool_prefer = ("computational_finite_reduction", "formal_library_first")
+
+    selected: list[str] = []
+    remaining = list(families)
+    for stratum, prefer in (
+        (_PROOF_FAMILIES, ()),
+        (_REFUTATION_FAMILIES, ()),
+        (_TOOL_FAMILIES, tool_prefer),
+    ):
+        if len(selected) >= max_programs:
+            break
+        choice = _pick(stratum, remaining, prefer)
+        if choice is not None:
+            selected.append(choice)
+            remaining.remove(choice)
+    for family in remaining:
+        if len(selected) >= max_programs:
+            break
+        selected.append(family)
+
+    return [
         ResearchProgram(
             family=f,
             falsifier=f"counterexample twin for {f}",
             budget=budget_each,
             kill_criterion="valid_counterexample or dominated_identical_state",
         )
-        for f in families[:max_programs]
+        for f in selected[:max_programs]
     ]
-    return programs

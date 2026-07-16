@@ -230,3 +230,57 @@ def test_presalt_cache_entries_still_replay(tmp_path):
     cached = CachedRunner(live, cache_dir)
     assert cached.run(prompt, stage="branch:b1").text == "old reply"
     assert live.calls == 0
+
+
+# ── yield-report telemetry (report R13-core) ─────────────────────────────────
+
+def test_yield_report_computes_ratios_and_fails_open(tmp_path):
+    from egmra.orchestrator.yield_report import build_yield_report
+
+    runs = tmp_path / "runs"
+    runs.mkdir()
+    (runs / "a.jsonl").write_text("\n".join([
+        json.dumps({"action": "PROBLEM_FROZEN"}),
+        json.dumps({"action": "BRANCH_OPENED"}),
+        json.dumps({"action": "BRANCH_OPENED"}),
+        json.dumps({"action": "CLAIM_PROPOSED"}),
+        json.dumps({"action": "MODEL_EXCHANGE_RECORDED"}),
+        json.dumps({"action": "EVIDENCE_ATTACHED"}),
+        "not json at all",
+    ]))
+    (runs / "b.jsonl").write_text("\n".join([
+        json.dumps({"action": "PROBLEM_FROZEN"}),
+        json.dumps({"action": "INTERPRETATION_ADDED"}),
+    ]))
+    ledger = tmp_path / "outcomes.jsonl"
+    ledger.write_text(json.dumps({
+        "problem_id": "erdos-1", "public_state": "PARTIAL_PROGRESS",
+        "salvage": {"supported": [{"claim_id": "lem1"}]},
+    }) + "\n")
+
+    report = build_yield_report(runs, (ledger,))
+    assert report["runs"]["files"] == 2
+    assert report["runs"]["two_event_runs"] == 1
+    assert report["runs"]["runs_with_admissible_evidence"] == 1
+    assert report["events_by_action"]["BRANCH_OPENED"] == 2
+    assert report["yield"]["evidence_per_100_branches"] == 50.0
+    assert report["yield"]["evidence_per_100_model_exchanges"] == 100.0
+    assert report["yield"]["progress_outcomes"] == 1
+    assert report["yield"]["salvaged_supported_claims"] == 1
+    assert report["malformed_lines"] == 1
+    # No exchanges recorded -> ratio None, never a division error.
+    empty = build_yield_report(tmp_path / "missing", ())
+    assert empty["yield"]["evidence_per_100_branches"] is None
+
+
+def test_yield_report_cli_command(tmp_path, capsys):
+    import egmra.cli as cli_module
+
+    runs = tmp_path / "runs"
+    runs.mkdir()
+    (runs / "r.jsonl").write_text(json.dumps({"action": "BRANCH_OPENED"}) + "\n")
+    rc = cli_module.main(["yield-report", "--runs", str(runs)])
+    assert rc == 0
+    out = json.loads(capsys.readouterr().out)
+    assert out["events_by_action"] == {"BRANCH_OPENED": 1}
+    assert "never a truth" in out["note"]

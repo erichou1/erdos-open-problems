@@ -563,6 +563,11 @@ class RunnerWorker:
     trust_policy: str = "classical-whitelist"
     formalizer: Any = None
     parsed_responses: list[dict[str, Any]] = field(default_factory=list)
+    # Identity of the model that produced the most recent parsed response —
+    # exposed so the orchestrator can bind lineage/attestation to the SAME
+    # generation the cold pass actually used instead of paying for a separate
+    # identity-probe call (report R1).
+    last_model_identity: Any = field(default=None, init=False)
 
     def for_role(self, role: str) -> "RunnerWorker":
         """A role-specialized view (distinct branch role) sharing the same runner.
@@ -642,6 +647,7 @@ class RunnerWorker:
         current = prompt
         for attempt in range(self.max_repair_attempts + 1):
             response = self.runner.run(current, stage=stage)
+            self.last_model_identity = response.model
             try:
                 parsed = parse_worker_response(response.text)
                 self.parsed_responses.append({"stage": stage, "attempt": attempt,

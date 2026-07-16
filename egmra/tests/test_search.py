@@ -223,3 +223,46 @@ def test_ucb_and_ao_star():
     assert ucb1(0.5, 10, 0) == float("inf")
     assert ao_star_next_leaf([{"node_id": "a", "centrality": 0.9, "cost": 1.0},
                               {"node_id": "b", "centrality": 0.2, "cost": 1.0}]) == "a"
+
+
+# ── stratified first-wave selection (report R2) ──────────────────────────────
+
+def test_first_wave_is_stratified_not_registry_prefix():
+    """The old prefix bias always chose direct/contradiction/extremal for
+    classified domains, silencing the computational/formal/model-construction
+    families (and the experimentalist and formalizer roles). A first wave must
+    span the proof, refutation, and tool strata."""
+    programs = instantiate_programs("number_theory", max_programs=3)
+    families = [p.family for p in programs]
+    assert families[0] == "direct_structural"                      # proof route
+    assert families[1] == "contradiction_minimal_counterexample"   # refutation
+    assert families[2] in {"computational_finite_reduction",
+                           "formal_library_first",
+                           "literature_derived_transfer"}          # tool route
+    assert families != ["direct_structural",
+                        "contradiction_minimal_counterexample",
+                        "extremal_invariant"]                      # the old bug
+
+
+def test_formal_target_and_predicate_steer_the_tool_stratum():
+    with_target = instantiate_programs("number_theory", max_programs=3,
+                                       has_formal_target=True)
+    assert with_target[2].family == "formal_library_first"
+    with_predicate = instantiate_programs("number_theory", max_programs=3,
+                                          has_predicate=True)
+    assert with_predicate[2].family == "computational_finite_reduction"
+
+
+def test_stratified_selection_is_deterministic_and_fills_remaining_slots():
+    a = [p.family for p in instantiate_programs("graph_theory", max_programs=5)]
+    b = [p.family for p in instantiate_programs("graph_theory", max_programs=5)]
+    assert a == b                                   # deterministic
+    assert len(a) == len(set(a)) == 5               # no duplicates
+    # After the three strata, remaining slots fill in registry order.
+    assert set(a[:3]) < set(a)
+
+
+def test_bottleneck_filter_still_dominates():
+    programs = instantiate_programs("number_theory", bottleneck="formalization",
+                                    max_programs=3)
+    assert all("formal" in p.family for p in programs)

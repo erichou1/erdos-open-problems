@@ -153,7 +153,11 @@ def test_runner_cold_pass_and_budget_are_consumed_by_production_flow(tmp_path):
     assert worker.cold_budgets == [pytest.approx(1.0)]
     assert sum(worker.branch_budgets) <= 19.0
     assert "cold-pass-square-invariant" in " ".join(worker.packet_queries)
-    assert {call["stage"] for call in runner.calls} >= {"cold_pass", "branch_selection"}
+    stages = {call["stage"] for call in runner.calls}
+    assert "cold_pass" in stages          # legacy identity probe (no worker identity)
+    # R1: the ignored branch-selection model call was removed outright —
+    # selection is the numeric controller's decision.
+    assert "branch_selection" not in stages
     assert worker.fencing_tokens and all(token > 0 for token in worker.fencing_tokens)
     assert worker.branch_ids[0] == "direct_structural"
     fingerprints = [

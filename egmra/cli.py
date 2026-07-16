@@ -1196,6 +1196,16 @@ def cmd_refresh_ranking(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_yield_report(args: argparse.Namespace) -> int:
+    """Cost/mathematical-yield telemetry over persisted runs (report R13)."""
+    from egmra.orchestrator.yield_report import build_yield_report
+
+    report = build_yield_report(
+        Path(args.runs), tuple(Path(p) for p in (args.outcomes or ())))
+    print(json.dumps(report, indent=2))
+    return 0
+
+
 def cmd_calibrate(args: argparse.Namespace) -> int:
     """Aggregate outcome ledgers into an honest calibration report (R11)."""
     from egmra.orchestrator.calibration import build_calibration_report
@@ -2528,6 +2538,18 @@ def build_parser() -> argparse.ArgumentParser:
                            help="write the report JSON here (refuses overwrite); "
                                 "prints to stdout when omitted")
     calibrate.set_defaults(func=cmd_calibrate)
+
+    yield_report = sub.add_parser(
+        "yield-report",
+        help="cost/mathematical-yield telemetry over persisted runs (report "
+             "R13): evidence per 100 branches/claims/exchanges, run-depth "
+             "distribution, outcome states — diagnostics only")
+    yield_report.add_argument("--runs", type=Path, default=Path("egmra_runs"),
+                              help="directory of per-attempt event logs")
+    yield_report.add_argument("--outcomes", type=Path, action="append",
+                              default=None,
+                              help="outcome-ledger JSONL path (repeatable)")
+    yield_report.set_defaults(func=cmd_yield_report)
 
     refresh = sub.add_parser(
         "refresh-ranking",
