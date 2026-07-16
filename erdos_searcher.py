@@ -56,6 +56,7 @@ from ranking_policy import (
     classify_prize,
     selection_priority_tier,
 )
+from ranking_queue import QUEUE_FILENAME, write_queue_projection
 from run_contract import (
     RunContractError,
     canonical_json,
@@ -3051,6 +3052,11 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
         write_json(context_path, rankings)
     if not history.exists():
         write_json(history, rankings)
+    if rankings["allocation_status"] == "ready":
+        write_queue_projection(
+            output_root / "rankings" / QUEUE_FILENAME,
+            rankings,
+        )
     return rankings
 
 

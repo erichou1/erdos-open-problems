@@ -717,8 +717,9 @@ same checkout or browser profile.
 The app's current full command includes all of these required behaviors:
 
 - browser ChatGPT provider with `1`-`5` workers and four reasoning rounds;
-- `--prefer-solvable`, which reorders only pending work by the tractable-frontier
-  prior while preserving leased/completed assignments;
+- coordinated adoption of the compact `current` allocation, which preserves
+  leased/completed assignments and gives the next lease to the highest-ranked
+  available literature/prize-aware problem;
 - `--derive-missing-intents`, which machine-derives an offline corpus-reading
   intent certificate for any campaign problem lacking one (marked provenance;
   lifts only interpretation ambiguity, never probes or release gates);
@@ -734,8 +735,8 @@ The app's current full command includes all of these required behaviors:
 
 Do not add `--refresh-ranking-after` to a live campaign. It can replace the
 triage queue during execution. The current app intentionally uses
-`--auto-rerank` and solvability ordering without rewriting the shared problem
-set.
+`--auto-rerank` after adopting the shared compact allocation. It does not apply
+the older tractable-frontier override to the `current` lane.
 
 Within roughly a heartbeat interval, verify:
 

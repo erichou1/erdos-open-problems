@@ -51,13 +51,13 @@ export EGMRA_ARISTOTLE_MAX_CONCURRENT=3   # sum across machines sharing one key 
 # 3. Refuse a double start (one campaign per checkout / browser profile)
 pgrep -f 'egmra.cli campaign' && { echo 'already running'; false; }
 
-# 4. Launch (full ranked corpus, highest-solvability first, survives logout)
+# 4. Launch (full literature/prize-ranked corpus, survives logout)
 rm -f .egmra_operator/stop-request.json
 nohup .venv/bin/python -u -m egmra.cli campaign \
   --campaign-id shared-current-v1 \
   --state-store postgres \
   --triage triage --triage-lane current --max-problems 0 \
-  --prefer-solvable --derive-missing-intents \
+  --derive-missing-intents \
   --provider browser --workers 3 --worker-rounds 4 --budget 100.0 \
   --reviews-dir reviews --targets-dir targets \
   --lemma-library egmra_lemma_library.jsonl \
@@ -95,7 +95,9 @@ shared campaign in place; problems are never dropped.
 - **Derives** an offline machine-signed intent certificate for any ranked
   problem missing one (marked provenance; lifts only interpretation
   ambiguity, never probes, reviews, or release gates).
-- **Reorders** pending work by the tractable-frontier solvability formula.
+- **Adopts** the compact current allocation on coordinated startup; leased and
+  terminal work is preserved, stale pending work is retired, and the next
+  lease follows the highest available literature/prize-aware rank.
 
 ## Verify it is running (about 2 minutes)
 

@@ -22,6 +22,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+from ranking_queue import (
+    QUEUE_FILENAME,
+    QueueProjectionError,
+    load_queue_projection,
+)
+
 # Ranking files whose entries carry an ordered ``problem_number``.  ``current``
 # maps to the interleaved allocation queue (exploitation + protected
 # exploration); the others are the searcher's single-objective lanes, including
@@ -59,6 +65,13 @@ def _read_json(path: Path) -> object:
         return json.loads(path.read_text(encoding="utf-8"))
     except (OSError, ValueError) as exc:
         raise TriageSourceError(f"cannot read triage ranking {path}: {exc}") from exc
+
+
+def _read_current_queue(rankings_dir: Path) -> dict:
+    try:
+        return load_queue_projection(rankings_dir / QUEUE_FILENAME)
+    except QueueProjectionError as exc:
+        raise TriageSourceError(str(exc)) from exc
 
 
 def _entries_for_lane(document: object, lane: str) -> list[dict]:
@@ -114,15 +127,21 @@ def triage_ranked_problem_ids(
         )
     triage_dir = Path(triage_dir)
     rankings_dir = triage_dir / "rankings" if (triage_dir / "rankings").is_dir() else triage_dir
-    document = _read_json(rankings_dir / f"{lane}.json")
+    document = (
+        _read_current_queue(rankings_dir)
+        if lane == _ALLOCATION_LANE
+        else _read_json(rankings_dir / f"{lane}.json")
+    )
 
     exclusions: set[int] = set()
     if lane != "t2_closable":
         # The allocation-context rankings record the searcher's exclusions; reuse
         # them so a problem the searcher retired is never drained.
-        current = document if lane == _ALLOCATION_LANE else _read_json(
-            rankings_dir / f"{_ALLOCATION_LANE}.json") if (
-                rankings_dir / f"{_ALLOCATION_LANE}.json").is_file() else {}
+        current = (
+            document
+            if lane == _ALLOCATION_LANE
+            else _read_current_queue(rankings_dir)
+        )
         if isinstance(current, dict):
             exclusions = {
                 int(n) for n in current.get("attempt_exclusions", [])

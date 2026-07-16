@@ -16,6 +16,7 @@ from egmra.policy import load_policy, sign_policy
 from egmra.provenance.hashing import sha256_hex
 from egmra.truth.entities import IntentCertificate, Verdict
 from egmra.truth.events import EventLog
+from ranking_queue import build_queue_projection
 
 
 def _signed_policy_file(tmp_path, *, promotion: bool = False):
@@ -431,15 +432,69 @@ def test_cli_verified_fixture_requires_independent_intent_review(tmp_path, capsy
 def _write_triage(tmp_path):
     rankings = tmp_path / "triage" / "rankings"
     rankings.mkdir(parents=True)
-    (rankings / "current.json").write_text(json.dumps({
+    rows = [
+        {
+            "problem_id": f"erdos-{number}",
+            "problem_number": number,
+            "allocation_rank": rank,
+            "allocation_lane": "exploitation",
+            "prize": "no",
+            "prize_status": "unpaid",
+            "selection_priority_tier": 0,
+            "literature_coverage_status": "local_only",
+            "base_acquisition_score": 0.1,
+            "literature_adjustment": 0.0,
+            "selection_score": 0.1,
+            "reason_selected": "test",
+        }
+        for rank, number in enumerate((312, 1104), start=1)
+    ]
+    projection = build_queue_projection({
         "allocation_status": "ready",
-        "allocation_queue": [
-            {"problem_number": 312, "allocation_rank": 1},
-            {"problem_number": 1104, "allocation_rank": 2},
-        ],
+        "allocation_context_id": "a" * 64,
+        "ranking_content_sha256": "b" * 64,
+        "source_snapshot_id": "source-1",
+        "source_snapshot_sha256": "c" * 64,
+        "prize_policy_version": "prize-tier-v1",
+        "literature_policy_version": "literature-ranking-v1",
+        "literature_model_version": "literature-opportunity-v1",
+        "literature_coverage": {},
+        "corpus_integrity": {"status": "complete"},
         "attempt_exclusions": [],
-    }))
+        "allocation_queue": rows,
+    })
+    (rankings / "current_queue.json").write_text(json.dumps(projection))
     return tmp_path / "triage"
+
+
+def test_campaign_triage_startup_adopts_ranked_order(
+    tmp_path, capsys, monkeypatch,
+):
+    cfg = tmp_path / "cfg.json"
+    cfg.write_text(json.dumps({"events_dir": str(tmp_path / "runs")}))
+    policy = _signed_policy_file(tmp_path)
+    triage = _write_triage(tmp_path)
+    adopted: list[list[str]] = []
+    real_adopt = cli_module.Campaign.adopt_ranked_order
+
+    def recording_adopt(self, campaign_id, problem_ids):
+        adopted.append(list(problem_ids))
+        return real_adopt(self, campaign_id, problem_ids)
+
+    monkeypatch.setattr(
+        cli_module.Campaign, "adopt_ranked_order", recording_adopt,
+        raising=False,
+    )
+    rc = main([
+        "--config", str(cfg), "campaign",
+        "--triage", str(triage), "--triage-lane", "current",
+        "--provider", "deterministic", "--policy", str(policy),
+        "--retrieval", "none", "--oeis", "offline",
+        "--state", str(tmp_path / "camp.json"),
+    ])
+
+    assert rc == 0
+    assert adopted == [["erdos-312", "erdos-1104"]]
 
 
 def test_campaign_triage_drains_ranked_problems_and_records_outcomes(

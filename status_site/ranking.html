@@ -4,7 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#f2f0e8">
-  <meta name="description" content="Transparent EGMRA ranking of Erdős problems by fit with the current formal and exact-computation pipeline.">
+  <meta name="description" content="Transparent EGMRA literature- and prize-aware allocation of Erdős problems.">
   <title>Problem Ranking · EGMRA</title>
   <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=20260716b">
   <link rel="mask-icon" href="/favicon.svg?v=20260716b" color="#1e2220">
@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
-  <link rel="stylesheet" href="/styles.css?v=20260716b">
+  <link rel="stylesheet" href="/styles.css?v=20260716c">
 </head>
 <body>
   <header class="topbar">
@@ -24,8 +24,10 @@
     <section class="ranking-intro">
       <div class="section-label"><span>01</span><h2>How this ranking should be read</h2></div>
       <div class="ranking-explainer">
-        <div><p class="eyebrow">SOLVABILITY INDEX</p><strong>Fit with this pipeline—not mathematical difficulty</strong><p>The index favors problems with an available Lean route, a finite exact-computation route, and a clear statement. A score of 40 does not mean a 40% chance of solution.</p></div>
+        <div><p class="eyebrow">SHARED ALLOCATION</p><strong>The same order used by every coordinated worker</strong><p>The base acquisition score is adjusted by bounded, auditable literature signals. Scores are search preferences—not solution probabilities or measures of mathematical difficulty.</p></div>
         <div><p class="eyebrow">RESEARCH PROGRESS</p><strong>Highest observable milestone—not percent solved</strong><p>The progress bar advances when the pipeline fixes the interpretation, explores approaches, proposes a concrete claim, checks evidence, or verifies formal work.</p></div>
+        <div><p class="eyebrow">PRIZE POLICY</p><strong>All eligible unpaid problems come first</strong><p>Paid targets are deferred until eligible unpaid problems are exhausted. Prize size is never treated as a calibrated estimate of difficulty.</p></div>
+        <div><p class="eyebrow">LITERATURE COVERAGE</p><strong>Coverage and outages remain visible</strong><p>Local and live literature can change selection preference within a prize tier. Missing providers are recorded neutrally rather than counted as negative mathematical evidence.</p></div>
       </div>
       <div id="methodNote" class="method-note"></div>
     </section>
@@ -34,17 +36,17 @@
       <div class="toolbar ranking-toolbar">
         <label class="search-field"><span>⌕</span><input id="rankingSearch" type="search" placeholder="Search rank, number, or statement…" autocomplete="off" aria-keyshortcuts="/"><kbd>/</kbd></label>
         <div class="segmented" aria-label="Ranking metric">
-          <button class="segment active" data-sort="solvability">Most solvable</button>
+          <button class="segment active" data-sort="allocation">Allocation order</button>
           <button class="segment" data-sort="progress">Most progress</button>
-          <button class="segment" data-sort="lean">Best Lean route</button>
-          <button class="segment" data-sort="compute">Best finite route</button>
+          <button class="segment" data-sort="final">Highest final score</button>
+          <button class="segment" data-sort="literature">Strongest literature lift</button>
         </div>
       </div>
       <div id="topRanks" class="top-ranks"></div>
       <div class="ranking-shell">
         <table class="ranking-table">
-          <thead><tr><th>Rank</th><th>Problem</th><th>Solvability index</th><th>Research progress</th><th>Lean route</th><th>Finite route</th><th>Verified-solution prior</th></tr></thead>
-          <tbody id="rankingRows"><tr><td colspan="7" class="empty-row">Loading ranking…</td></tr></tbody>
+          <thead><tr><th>Rank</th><th>Problem</th><th>Research progress</th><th>Prize tier</th><th>Literature</th><th>Base score</th><th>Literature adjustment</th><th>Final score</th></tr></thead>
+          <tbody id="rankingRows"><tr><td colspan="8" class="empty-row">Loading ranking…</td></tr></tbody>
         </table>
       </div>
       <p id="rankingCount" class="result-count"></p>
@@ -52,6 +54,6 @@
   </main>
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" defer></script>
   <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" defer></script>
-  <script src="/ranking.js?v=20260716b" defer></script>
+  <script src="/ranking.js?v=20260716c" defer></script>
 </body>
 </html>

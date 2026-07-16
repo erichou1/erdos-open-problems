@@ -7,6 +7,7 @@ from unittest import mock
 from pathlib import Path
 
 from erdos_ingest import CATALOG_URL, ingest_corpus
+from ranking_queue import load_queue_projection
 from erdos_searcher import (
     DEFAULT_BUDGET,
     append_ledger,
@@ -220,6 +221,8 @@ class ErdosSearcherTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             self.make_repo(root)
+            (root / "open" / "individual" / "problem_2.tex").unlink()
+            (root / "open" / "individual" / "problem_3.tex").write_text(TEX)
             ranking = build_searcher(
                 root, root / "triage", snapshot_date="2026-07-12", top_k=5,
                 model_portfolio="chatgpt-5.5-pro-2026-07",
@@ -227,6 +230,17 @@ class ErdosSearcherTests(unittest.TestCase):
             self.assertEqual(
                 ranking["direct_solve_probability"][0]["model_portfolio"],
                 "chatgpt-5.5-pro-2026-07",
+            )
+            queue = load_queue_projection(
+                root / "triage" / "rankings" / "current_queue.json"
+            )
+            self.assertEqual(
+                queue["ranking_content_sha256"],
+                ranking["ranking_content_sha256"],
+            )
+            self.assertEqual(
+                [row["problem_number"] for row in queue["allocation_queue"]],
+                [row["problem_number"] for row in ranking["allocation_queue"]],
             )
 
     def test_formalization_probe_reads_catalog_state_not_mapping_truthiness(self):

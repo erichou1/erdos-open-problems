@@ -2216,7 +2216,11 @@ def cmd_campaign(args: argparse.Namespace) -> int:
         numbers = [int(pid.split("-", 1)[1]) for pid in problem_ids]
     # Growth-only merge: a larger ranked set extends the existing shared
     # campaign in place (new problems appended pending); nothing is dropped.
-    full_order = campaign.initialize(campaign_id, problem_ids)
+    full_order = (
+        campaign.adopt_ranked_order(campaign_id, problem_ids)
+        if triage_dir is not None
+        else campaign.initialize(campaign_id, problem_ids)
+    )
     if getattr(args, "prefer_solvable", False):
         ordered = (
             problem_ids if sorted(full_order) == sorted(problem_ids)
@@ -2484,7 +2488,7 @@ def cmd_campaign(args: argparse.Namespace) -> int:
                     from egmra.orchestrator.rerank import rerank_pending
 
                     new_order, reasons = rerank_pending(
-                        list(problem_ids), outcome_ledger.records())
+                        list(full_order), outcome_ledger.records())
                     if campaign.reorder_pending(new_order) and reasons:
                         print(json.dumps({
                             "auto_rerank": {"order": new_order,

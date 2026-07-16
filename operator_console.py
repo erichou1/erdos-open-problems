@@ -144,7 +144,7 @@ def _default_config(root: Path = ROOT) -> dict[str, Any]:
         "campaign_id": "shared-current-v1",
         "workers": 3,
         "aristotle_max_concurrent": 3,
-        "prefer_solvable": True,
+        "prefer_solvable": False,
         "keys_file": "egmra.keys.sh",
         "chatgpt_profile": str(profile),
         "triage_dir": "triage",
@@ -329,7 +329,8 @@ def build_campaign_command(config: dict[str, Any], root: Path = ROOT) -> list[st
         "--state-store", str(config["state_store"]),
         "--policy", str(config["policy"]),
     ]
-    if config.get("prefer_solvable", True):
+    if config.get("prefer_solvable", False) \
+            and config.get("triage_lane") != "current":
         command.append("--prefer-solvable")
     if config.get("derive_missing_intents", True):
         command.append("--derive-missing-intents")
