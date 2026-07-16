@@ -1680,28 +1680,49 @@ def research(
                     imports=tuple(accepted.get("imports", ())),
                     options=dict(accepted.get("options", {})),
                 )
-                formal_certificate = lean_service.verify_declaration(
-                    environment=environment,
-                    source=accepted["source"],
-                    declaration_name=accepted["declaration_name"],
-                    expected_type_hash=accepted["expected_type_hash"],
-                    immutable_target_module_hash=accepted["immutable_target_module_hash"],
-                    expected_type_source=accepted.get("expected_type_source", ""),
-                    claim_bindings={
-                        accepted["claim_id"]: graph.claims[
-                            accepted["claim_id"]
-                        ].canonical_hash,
-                    },
-                    artifact_hashes=(
-                        accepted["project_hash"],
-                        accepted["immutable_target_module_hash"],
-                    ),
-                )
             except Exception as exc:  # noqa: BLE001 - external verifier isolation
                 failures.append(
                     f"formal_verification_error:{branch_id}:"
                     f"{type(exc).__name__}:{exc}"
                 )
+                continue
+            # A checker EXCEPTION (lake crash, OOM, timeout) is
+            # infrastructure, not a mathematical verdict — conflating the two
+            # is a false-rejection channel. Retry ONCE; only a repeated
+            # failure is recorded (as before). A genuine kernel REJECTION
+            # (passed=False) never raises and is never retried here.
+            formal_certificate = None
+            for verification_attempt in (1, 2):
+                try:
+                    formal_certificate = lean_service.verify_declaration(
+                        environment=environment,
+                        source=accepted["source"],
+                        declaration_name=accepted["declaration_name"],
+                        expected_type_hash=accepted["expected_type_hash"],
+                        immutable_target_module_hash=accepted["immutable_target_module_hash"],
+                        expected_type_source=accepted.get("expected_type_source", ""),
+                        claim_bindings={
+                            accepted["claim_id"]: graph.claims[
+                                accepted["claim_id"]
+                            ].canonical_hash,
+                        },
+                        artifact_hashes=(
+                            accepted["project_hash"],
+                            accepted["immutable_target_module_hash"],
+                        ),
+                    )
+                    break
+                except Exception as exc:  # noqa: BLE001 - external verifier isolation
+                    if verification_attempt == 1:
+                        failures.append(
+                            f"formal_verification_infra_retry:{branch_id}:"
+                            f"{type(exc).__name__}")
+                        continue
+                    failures.append(
+                        f"formal_verification_error:{branch_id}:"
+                        f"{type(exc).__name__}:{exc}"
+                    )
+            if formal_certificate is None:
                 continue
             formal_reports.append({
                 "branch_id": branch_id,
@@ -1811,6 +1832,19 @@ def research(
                         "repair_round": repair_round,
                         **formal_certificate.to_dict(),
                     })
+                    # FALSE-REJECTION SENTINEL: the warm development REPL
+                    # accepted this exact obligation but the sealed checker
+                    # rejected it. That signature usually means an
+                    # environment/toolchain mismatch or an over-strict sealed
+                    # gate — an operator should look at it, because the math
+                    # may be correct. Telemetry only; the sealed verdict
+                    # stands untouched.
+                    if not formal_certificate.passed \
+                            and dev_lean_service is not None \
+                            and dev_feedback is None:
+                        failures.append(
+                            f"checker_discrepancy:{branch_id}:"
+                            f"round{repair_round}:dev_accepted_sealed_rejected")
                     if formal_certificate.passed:
                         accepted = {**accepted, "source": repaired}
                         break

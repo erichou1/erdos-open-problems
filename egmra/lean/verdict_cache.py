@@ -108,13 +108,18 @@ class SealedLeanService:
         except (OSError, ValueError, TypeError, json.JSONDecodeError):
             return None
 
-    def _store(self, key: str, certificate: FormalCertificate) -> None:
+    def _store(self, key: str, certificate: FormalCertificate,
+               context: dict | None = None) -> None:
         if self.cache_dir is None:
             return
         try:
             payload = json.dumps({
                 "schema_version": _SCHEMA_VERSION,
                 "key": key,
+                # Operations context only — the certificate's own signature is
+                # the sole integrity/trust check on load; these fields never
+                # participate in verification.
+                "context": dict(context or {}),
                 "certificate": certificate.to_dict(),
             }, ensure_ascii=False)
             if len(payload.encode("utf-8")) > _MAX_ENTRY_BYTES:
@@ -166,7 +171,11 @@ class SealedLeanService:
         # rejection could never re-validate on load — rejected sources simply
         # re-check live (they are usually mutated by repair anyway).
         if getattr(certificate, "passed", False):
-            self._store(key, certificate)
+            self._store(key, certificate, context={
+                "declaration_name": declaration_name,
+                "expected_type_source": expected_type_source[:2000],
+                "problem_id": self.problem_id,
+            })
         if getattr(certificate, "passed", False) and self.lemma_library is not None:
             try:
                 append_sealed_lemma(

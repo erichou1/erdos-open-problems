@@ -1356,6 +1356,63 @@ def cmd_escalation_packet(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_pending_correspondence(args: argparse.Namespace) -> int:
+    """List kernel-PASSED proofs stuck waiting for a correspondence review.
+
+    This is the anti-false-rejection report for the formal boundary: a proof
+    the pinned kernel already accepted cannot promote until a human signs the
+    formal-correspondence certificate. Silence here means correct results sit
+    invisible in caches. The command surfaces each one with the exact
+    ready-to-run ``egmra sign-review correspondence`` invocation — the human
+    decision (statement fidelity) stays human; only the discovery cost drops.
+    """
+    rows: list[dict] = []
+    checkpoint_root = Path(args.checkpoint_dir)
+    reviews_dir = Path(args.reviews_dir) if getattr(args, "reviews_dir", None) else None
+    for cache_path in sorted(checkpoint_root.glob("*/kernel_verdicts/verdict.*.json")):
+        try:
+            record = json.loads(cache_path.read_text(encoding="utf-8"))
+            certificate = record.get("certificate") or {}
+        except (OSError, json.JSONDecodeError):
+            continue
+        if not (certificate.get("kernel_verified") and certificate.get("target_type_matches")
+                and certificate.get("axiom_whitelist_ok")):
+            continue                      # only kernel-PASSED proofs belong here
+        problem_id = cache_path.parent.parent.name
+        context = record.get("context") or {}
+        has_intent = bool(
+            reviews_dir and (reviews_dir / f"intent-{problem_id}.json").is_file())
+        has_correspondence = bool(
+            reviews_dir and (reviews_dir / f"correspondence-{problem_id}.json").is_file())
+        if has_correspondence:
+            continue                      # already unblocked
+        declaration = str(context.get("declaration_name", "")) or "(unrecorded)"
+        expected_type = str(context.get("expected_type_source", ""))[:300]
+        rows.append({
+            "problem_id": problem_id,
+            "declaration_name": declaration,
+            "expected_type": expected_type or None,
+            "expected_type_hash": certificate.get("expected_type_hash"),
+            "certificate_path": str(cache_path),
+            "intent_review_present": has_intent,
+            "blocked_on": "signed formal-correspondence review (human decision)",
+            "ready_to_sign": (
+                f"egmra sign-review correspondence --intent-review "
+                f"{reviews_dir}/intent-{problem_id}.json --declaration "
+                f"{declaration} --expected-type {json.dumps(expected_type) if expected_type else '<type>'} -o "
+                f"{reviews_dir}/correspondence-{problem_id}.json"
+                if reviews_dir else "provide --reviews-dir for a fill-in command"),
+        })
+    print(json.dumps({
+        "pending": rows,
+        "count": len(rows),
+        "note": (
+            "kernel-verified proofs awaiting the human statement-fidelity "
+            "review; signing is deliberately out-of-band and never automatic"),
+    }, indent=2))
+    return 0
+
+
 def cmd_lean_dev_check(args: argparse.Namespace) -> int:
     """One development compile on the warm REPL (report R5 live spike).
 
@@ -2860,6 +2917,15 @@ def build_parser() -> argparse.ArgumentParser:
     escalation.add_argument("--corpus-tex", type=Path, default=None)
     escalation.add_argument("--catalog", type=Path, default=None)
     escalation.set_defaults(func=cmd_escalation_packet)
+
+    pending = sub.add_parser(
+        "pending-correspondence",
+        help="list kernel-PASSED proofs blocked only on the human "
+             "formal-correspondence review (anti-false-rejection report)")
+    pending.add_argument("--checkpoint-dir", type=Path,
+                         default=Path("egmra_campaigns/ckpts-shared"))
+    pending.add_argument("--reviews-dir", type=Path, default=Path("reviews"))
+    pending.set_defaults(func=cmd_pending_correspondence)
 
     dev_check = sub.add_parser(
         "lean-dev-check",
