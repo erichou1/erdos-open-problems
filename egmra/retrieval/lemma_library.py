@@ -23,6 +23,7 @@ import os
 from pathlib import Path
 from typing import Any
 
+from egmra.learning.mechanisms import mechanism_tags
 from egmra.provenance.hashing import sha256_hex
 from egmra.retrieval.records import TheoremRecord
 
@@ -58,6 +59,10 @@ def append_sealed_lemma(path: Path, *, problem_id: str, declaration_name: str,
         "problem_id": problem_id,
         "declaration_name": declaration_name,
         "expected_type_source": expected_type_source[:2000],
+        # R10 (cheap half): coarse mechanism keywords recorded at seal time —
+        # search metadata only, never part of the content key or certificate.
+        "mechanism_tags": list(mechanism_tags(
+            f"{declaration_name} {expected_type_source} {source[:1000]}")),
         "source": source[:_MAX_SOURCE_CHARS],
         "source_sha256": sha256_hex(source),
         "certificate": {

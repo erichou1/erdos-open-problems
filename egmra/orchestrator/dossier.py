@@ -24,6 +24,8 @@ import time
 from pathlib import Path
 from typing import Any
 
+from egmra.learning.mechanisms import mechanism_tags
+
 _SCHEMA_VERSION = 1
 _MAX_BYTES = 1_000_000
 _MAX_FAMILY_OUTCOMES = 48
@@ -113,6 +115,13 @@ def harvest_for_dossier(memory: Any, worker: Any, problem_id: str) -> dict[str, 
         "failed_approaches": [
             str(item)[:200]
             for item in getattr(worker, "failed_approach_memory", ())],
+        # R10 (cheap half): coarse mechanism keywords derived at WRITE time
+        # from what this attempt actually tried — search metadata only.
+        "mechanism_tags": sorted({
+            tag
+            for item in getattr(worker, "failed_approach_memory", ())
+            for tag in mechanism_tags(str(item))
+        }),
     }
 
 
@@ -136,6 +145,12 @@ def update_dossier(path: Path, *, problem_id: str, public_state: str,
     states = list(stored.get("terminal_states", ()))
     if public_state:
         states.append(public_state)
+    tags = sorted({
+        str(t)
+        for t in (*stored.get("mechanism_tags", ()),
+                  *harvest.get("mechanism_tags", ()))
+        if str(t).strip()
+    })[:16]
     dossier = {
         "schema_version": _SCHEMA_VERSION,
         "problem_id": problem_id,
@@ -144,6 +159,7 @@ def update_dossier(path: Path, *, problem_id: str, public_state: str,
         "family_outcomes": family_outcomes[-_MAX_FAMILY_OUTCOMES:],
         "failed_approaches": failed[-_MAX_FAILED_APPROACHES:],
         "terminal_states": states[-_MAX_STATES:],
+        "mechanism_tags": tags,
     }
     payload = json.dumps(dossier, ensure_ascii=False)
     if len(payload.encode("utf-8")) > _MAX_BYTES:

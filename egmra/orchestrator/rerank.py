@@ -32,6 +32,8 @@ _PROGRESS_STATES = {
     "COMPUTATIONAL_EVIDENCE", "CANDIDATE_SOLUTION", "CANDIDATE_DISPROOF",
     "VERIFIED_CANDIDATE", "FORMALLY_VERIFIED_CANDIDATE",
 }
+# Public alias: the campaign's R8 escalation policy keys off the same set.
+PROGRESS_STATES = frozenset(_PROGRESS_STATES)
 
 
 def _score(problem_id: str, outcomes: dict[str, list[dict]]) -> tuple[int, list[str]]:

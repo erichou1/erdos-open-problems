@@ -426,6 +426,21 @@ def _build_dev_lean_service(args: argparse.Namespace):
     return WarmLeanService(command=str(command), cwd=Path(lean_project))
 
 
+def _build_extraction_runner(args: argparse.Namespace):
+    """Optional cheap attested extractor for the two-call mode (report R7).
+
+    Returns None when unconfigured — the default stays the single structured
+    call. The extractor is clerical: it structures the main model's
+    transcript and can never add mathematical content on its own authority.
+    """
+    provider = getattr(args, "extraction_provider", None)
+    if not provider:
+        return None
+    from egmra.agents.api_runner import build_api_runner
+
+    return build_api_runner(provider)
+
+
 def _build_formalizer(args: argparse.Namespace):
     """Build an autonomous formalization worker for `egmra run` (task #5 + R6).
 
@@ -652,6 +667,8 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
         formalizer=formalizer,
         max_rounds=worker_rounds,
         formal_target=formal_target,
+        dev_lean_service=dev_lean_service,
+        extractor_runner=_build_extraction_runner(args),
     )
     informal_reviewers = _build_hostile_reviewers(
         hostile_review, getattr(args, "hostile_review_provider", None), runner)
@@ -1996,6 +2013,20 @@ def cmd_campaign(args: argparse.Namespace) -> int:
         retrieval_corpus = (
             _build_retrieval_corpus(args, config, query=problem.display_statement)
             if scholarly_mode else shared_corpus)
+        # R8 escalation policy over existing knobs: a problem with a RECORDED
+        # progress outcome earns extra development rounds on its next attempt
+        # (search spend only — never truth, never release).
+        problem_rounds = campaign_worker_rounds
+        if outcome_ledger is not None:
+            try:
+                from egmra.orchestrator.rerank import PROGRESS_STATES
+
+                if any(row.get("problem_id") == problem.problem_id
+                       and str(row.get("public_state", "")) in PROGRESS_STATES
+                       for row in outcome_ledger.records()):
+                    problem_rounds = min(8, campaign_worker_rounds + 2)
+            except (OSError, ValueError):
+                problem_rounds = campaign_worker_rounds
         worker = RunnerWorker(runner=worker_runner, goal_claim_id="goal",
                               goal_formula=problem.display_statement, role=args.role,
                               compute_service=ComputeService(),
@@ -2003,7 +2034,9 @@ def cmd_campaign(args: argparse.Namespace) -> int:
                               lean_project=args.lean_project,
                               formalizer=formalizers_by_worker.get(worker_id),
                               formal_target=problem_formal_target,
-                              max_rounds=campaign_worker_rounds)
+                              max_rounds=problem_rounds,
+                              dev_lean_service=campaign_dev_lean,
+                              extractor_runner=_build_extraction_runner(args))
         # Kernel-verdict cache + lemma sealing: identical re-checks replay the
         # ORIGINAL signed certificate (its own HMAC re-verified on load; any
         # mismatch falls open to a live kernel check), and every PASSING lemma
@@ -2455,6 +2488,14 @@ def build_parser() -> argparse.ArgumentParser:
              "certificates (default: off)",
     )
     run.add_argument(
+        "--extraction-provider", default=None,
+        choices=("openai-api", "deepseek-api", "anthropic-api"),
+        help="two-call mode (report R7): the main provider reasons freely and "
+             "this cheap attested API model extracts the schema JSON from the "
+             "transcript; extraction is clerical and adds no content "
+             "(default: off, single structured call)",
+    )
+    run.add_argument(
         "--checkpoint-dir", type=Path, default=None,
         help="write a signed within-problem checkpoint (event-log prefix + "
              "graph view hash + remaining budget) after each completed branch "
@@ -2582,6 +2623,10 @@ def build_parser() -> argparse.ArgumentParser:
     campaign.add_argument("--lean-dev-repl", type=str, default=None, metavar="CMD",
                           help="warm DEVELOPMENT Lean REPL command (shared across "
                                "workers); same semantics as 'egmra run --lean-dev-repl'")
+    campaign.add_argument("--extraction-provider", default=None,
+                          choices=("openai-api", "deepseek-api", "anthropic-api"),
+                          help="two-call reasoning/extraction split; same semantics "
+                               "as 'egmra run --extraction-provider'")
     campaign.add_argument("--checkpoint-dir", type=Path, default=None,
                           help="write signed within-problem checkpoints after each "
                                "completed branch; same semantics as 'egmra run "

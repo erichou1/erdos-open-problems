@@ -213,6 +213,16 @@ def parse_worker_response(text: str) -> dict[str, Any]:
             entry["inputs"] = inputs if isinstance(inputs, dict) else {}
             entry["claim_id"] = str(exp.get("claim_id", "")).strip()
             entry["coverage"] = str(exp.get("coverage", "")).strip()
+        # SAT leaves (report R11): the model supplies DATA (a CNF plus a
+        # witness model or an UNSAT proof trace); the checking CODE is ours
+        # and runs in the same trusted sandbox. Solver testimony is never
+        # evidence until its witness/proof is reconstructed here.
+        if entry["kind"] in {"sat_witness", "sat_unsat"}:
+            payload = _normalize_sat_experiment(exp, kind=entry["kind"])
+            if payload is not None:
+                entry.update(payload)
+                entry["claim_id"] = str(exp.get("claim_id", "")).strip()
+                entry["coverage"] = str(exp.get("coverage", "")).strip()
         experiments.append(entry)
 
     lean_candidates: list[dict[str, str]] = []
@@ -274,6 +284,125 @@ def _confidence(value: Any) -> float:
     except (TypeError, ValueError):
         return 0.0
     return max(0.0, min(1.0, conf))
+
+
+_MAX_SAT_CLAUSES = 2000
+_MAX_SAT_CLAUSE_LEN = 64
+_MAX_SAT_VAR = 1_000_000
+_MAX_SAT_PROOF_STEPS = 5000
+
+
+def _sat_clause_list(raw: Any, *, max_items: int,
+                     allow_empty_clause: bool) -> list[list[int]] | None:
+    if not isinstance(raw, list) or len(raw) > max_items:
+        return None
+    clauses: list[list[int]] = []
+    for clause in raw:
+        if not isinstance(clause, list) or len(clause) > _MAX_SAT_CLAUSE_LEN:
+            return None
+        if not clause and not allow_empty_clause:
+            return None
+        literals: list[int] = []
+        for lit in clause:
+            if isinstance(lit, bool) or not isinstance(lit, int) \
+                    or lit == 0 or abs(lit) > _MAX_SAT_VAR:
+                return None
+            literals.append(lit)
+        clauses.append(literals)
+    return clauses
+
+
+def _normalize_sat_experiment(exp: dict[str, Any], *, kind: str) -> dict[str, Any] | None:
+    """Bounded, typed SAT payload — model-supplied DATA, never code (R11)."""
+    cnf = _sat_clause_list(exp.get("cnf"), max_items=_MAX_SAT_CLAUSES,
+                           allow_empty_clause=False)
+    if cnf is None or not cnf:
+        return None
+    if kind == "sat_witness":
+        raw_model = exp.get("model")
+        if not isinstance(raw_model, dict) or len(raw_model) > 2 * _MAX_SAT_CLAUSES * _MAX_SAT_CLAUSE_LEN:
+            return None
+        model: dict[str, bool] = {}
+        for key, value in raw_model.items():
+            try:
+                var = int(key)
+            except (TypeError, ValueError):
+                return None
+            if var <= 0 or var > _MAX_SAT_VAR or not isinstance(value, bool):
+                return None
+            model[str(var)] = value
+        return {"cnf": cnf, "model": model}
+    proof = _sat_clause_list(exp.get("proof"), max_items=_MAX_SAT_PROOF_STEPS,
+                             allow_empty_clause=True)
+    if proof is None:
+        return {"cnf": cnf}          # testimony only — routing records it
+    return {"cnf": cnf, "proof": proof}
+
+
+# Trusted checker sources for SAT leaves — written HERE, not by the model, and
+# executed through the same capability-free sandbox + independent-replay path
+# as any finite experiment (the model's cnf/model/proof are pure JSON inputs).
+_SAT_WITNESS_CODE = '''
+def experiment(inputs):
+    cnf = inputs["cnf"]
+    model = inputs["model"]
+    ok = True
+    for clause in cnf:
+        satisfied = False
+        for lit in clause:
+            key = str(abs(lit))
+            value = False
+            if key in model:
+                value = model[key]
+            if lit > 0 and value:
+                satisfied = True
+            if lit < 0 and not value:
+                satisfied = True
+        if not satisfied:
+            ok = False
+    return {"result": ok,
+            "coverage": "checked witness against " + str(len(cnf)) + " clauses"}
+'''
+
+_SAT_UNSAT_RUP_CODE = '''
+def experiment(inputs):
+    cnf = inputs["cnf"]
+    proof = inputs["proof"]
+    clauses = []
+    for c in cnf:
+        clauses = clauses + [list(c)]
+    ok = True
+    derived_empty = False
+    for step in proof:
+        assignment = {}
+        for lit in step:
+            assignment[-lit] = True
+        conflict = False
+        changed = True
+        while changed and not conflict:
+            changed = False
+            for cl in clauses:
+                unresolved = []
+                for lit in cl:
+                    if not (-lit in assignment):
+                        unresolved = unresolved + [lit]
+                if len(unresolved) == 0:
+                    conflict = True
+                if len(unresolved) == 1:
+                    unit = unresolved[0]
+                    if not (unit in assignment):
+                        assignment[unit] = True
+                        changed = True
+        if not conflict:
+            ok = False
+        clauses = clauses + [list(step)]
+        if len(step) == 0:
+            derived_empty = True
+    result = ok and derived_empty
+    return {"result": result,
+            "coverage": "RUP-checked " + str(len(proof)) + " proof steps against "
+                        + str(len(cnf)) + " clauses"}
+'''
 
 
 def _safe_claim_id(raw: str, *, fallback: str) -> str:
@@ -341,17 +470,28 @@ _CAPABILITY_AND_SCHEMA_TAIL = (
     "record from the FROZEN LITERATURE PACKET (use its exact theorem_id) as the "
     "published source of a subsidiary claim. Citations are mechanically audited "
     "against the frozen packet; citing sources outside the packet is rejected.\n"
-    "Put the JSON object inside one ```json fenced code block so rendered "
-    "browser text preserves all JSON escaping. Return no prose outside it. "
+    "You MAY propose SAT leaves as pure data (never solver output as fact): an "
+    "experiment {kind: 'sat_witness', cnf: [[int,...],...], model: {var: bool}, "
+    "claim_id} has its witness independently checked here; {kind: 'sat_unsat', "
+    "cnf, proof: [[int,...],...]} needs a RUP/DRAT-style trace ending in [] — an "
+    "unsat claim without a checkable trace is recorded as testimony only.\n"
+    "OUTPUT CONSTRAINTS (read first): put the JSON object inside one ```json "
+    "fenced code block so rendered browser text preserves all JSON escaping; "
+    "return no prose outside it. Every claim's depends_on may reference ONLY "
+    "claim ids appearing in this same response or already-established lemma ids "
+    "(the dependency cone — never forward references or inventions). Prefer ONE "
+    "decisive artifact (a checkable experiment, a formalizable lemma, a sharp "
+    "falsifier) over touching every category shallowly; empty lists are fine. "
     "Use keys: goal_restatement (string), claims "
-    "(list of {claim_id, statement, depends_on, scope, confidence}), proof_steps "
+    "(list of {claim_id, statement, depends_on, scope}), proof_steps "
     "(list of strings), assumptions (list of strings), falsifiers (list), "
     "search_queries (list), candidate_sequences (list of integer lists), "
-    "experiments (list of {description, kind, code_b64?, inputs?, claim_id?, coverage?}), "
+    "experiments (list of {description, kind, code_b64?, inputs?, cnf?, model?, "
+    "proof?, claim_id?, coverage?}), "
     "formalization_requests (list of strings), lean_declaration_candidates (list of "
     "{claim_id, declaration_name, source_b64?, expected_type}), literature_imports "
     "(list of {claim_id, theorem_id}), open_subgoals (list), "
-    "bottleneck (string), confidence (number 0..1)."
+    "bottleneck (string)."
 )
 
 
@@ -366,6 +506,44 @@ def _formal_target_block(formal_target: str) -> str:
         "When proposing lean_declaration_candidates for the TARGET itself, use "
         "this exact statement/type as the intended obligation instead of "
         "inventing a new translation.\n\n"
+    )
+
+
+# Free-reasoning contract used by the two-call mode (report R7): the main
+# model reasons without schema overhead; a cheap attested extractor structures
+# the transcript afterwards.
+_REASONING_TAIL = (
+    "Reason rigorously in prose — do NOT emit JSON; a separate extraction "
+    "step will structure your output afterwards. State candidate lemmas "
+    "explicitly (with any dependencies between them), describe finite "
+    "experiments or SAT leaves precisely with their exact data, give Lean "
+    "declaration candidates where apt (name + exact intended type), and note "
+    "falsifiers, retrieval queries, open subgoals, and the single current "
+    "bottleneck. Prefer ONE decisive artifact over touching everything "
+    "shallowly. Never assert the target is proved; proof requires independent "
+    "verification you do not perform."
+)
+
+
+def sketch_prompt(statement: str, *, formal_target: str,
+                  target_declaration: str) -> str:
+    """One AND/OR sketch request against the community target (R4 phase 2)."""
+    return (
+        "You are an EGMRA research worker producing a Lean 4 PROOF SKETCH "
+        "(an AND-decomposition) for the community formal target below.\n\n"
+        f"TARGET STATEMENT (informal):\n{statement}\n\n"
+        f"COMMUNITY FORMAL TARGET (authoritative obligation):\n{formal_target}\n\n"
+        "CONTRACT — your reply must be ONE ```lean fenced block containing:\n"
+        "1. At most 12 child lemmas, each of the exact form "
+        "`lemma name : TYPE := sorry` — the FULL obligation in the type "
+        "(∀-form), never in binders before the colon.\n"
+        f"2. The target `{target_declaration}` stated EXACTLY as in the "
+        "community target and proved FROM those child lemmas (its proof must "
+        "NOT be sorry).\n"
+        "No child may restate the target itself. Choose children that are "
+        "genuinely easier and independently provable; the decomposition will "
+        "be machine-checked by compiling this sketch, and each child becomes "
+        "a separate formal obligation. Do not claim anything is proved.\n"
     )
 
 
@@ -575,6 +753,15 @@ class RunnerWorker:
     # obligation and structurally central lemmas dispatch first; the rest are
     # deferred rather than consuming multi-minute vendor tasks.
     max_formalizations_per_branch: int = 3
+    # Optional cheap attested extraction model (report R7): when set, each
+    # structured round becomes reason-freely (main model) → extract-JSON
+    # (this model). The mathematician's identity stays the MAIN model's; the
+    # extractor is clerical and never adds content on its own authority.
+    extractor_runner: Any = None
+    # Optional warm development Lean service (reports R5/R4): enables the
+    # sketch lane on formal-target problems. Development-only — sketches can
+    # never mint certificates.
+    dev_lean_service: Any = None
     # Formalization obligations already dispatched or emitted for this problem
     # (shared across ``for_role`` views): the same pinned obligation is never
     # paid for twice — not to the vendor (a multi-minute proof) and not to the
@@ -673,6 +860,9 @@ class RunnerWorker:
         return "\n".join(lines)
 
     def _ask_structured(self, prompt: str, *, stage: str) -> tuple[dict[str, Any] | None, list[str]]:
+        if self.extractor_runner is not None \
+                and _CAPABILITY_AND_SCHEMA_TAIL in prompt:
+            return self._ask_two_call(prompt, stage=stage)
         failures: list[str] = []
         current = prompt
         for attempt in range(self.max_repair_attempts + 1):
@@ -693,6 +883,56 @@ class RunnerWorker:
                     + prompt
                 )
         # Reject: no claims/evidence are fabricated from unparseable output.
+        failures.append(f"unparseable_model_output:{stage}")
+        return None, failures
+
+    def _ask_two_call(self, prompt: str, *,
+                      stage: str) -> tuple[dict[str, Any] | None, list[str]]:
+        """Two-call round (report R7): reason freely, then extract cheaply.
+
+        The MAIN model gets the mathematical prompt with the JSON schema
+        replaced by a free-reasoning contract; the cheap attested EXTRACTOR
+        turns that transcript into schema JSON. The recorded model identity
+        stays the main model's — extraction is clerical, adds nothing, and a
+        malformed extraction is repaired against the SAME transcript.
+        """
+        failures: list[str] = []
+        reasoning_prompt = prompt.replace(
+            _CAPABILITY_AND_SCHEMA_TAIL, _REASONING_TAIL)
+        response = self.runner.run(reasoning_prompt, stage=f"{stage}:reasoning")
+        self.last_model_identity = response.model
+        transcript = (response.text or "").strip()
+        if not transcript:
+            failures.append(f"empty_reasoning_output:{stage}")
+            return None, failures
+        extraction = (
+            "You are a faithful extraction clerk. Convert the reasoning "
+            "transcript below into the required JSON WITHOUT adding, "
+            "strengthening, or inventing any mathematical content — omit "
+            "anything the transcript does not state.\n"
+            + _CAPABILITY_AND_SCHEMA_TAIL
+            + "\n\nREASONING TRANSCRIPT (sole source of content):\n"
+            + transcript[:60_000]
+        )
+        current = extraction
+        for attempt in range(self.max_repair_attempts + 1):
+            reply = self.extractor_runner.run(current, stage=f"{stage}:extract")
+            try:
+                parsed = parse_worker_response(reply.text)
+                self.parsed_responses.append({
+                    "stage": stage, "attempt": attempt,
+                    "prompt_hash": response.prompt_hash,
+                    "extraction_prompt_hash": reply.prompt_hash,
+                })
+                return parsed, failures
+            except (WorkerResponseSchemaError, json.JSONDecodeError) as exc:
+                failures.append(
+                    f"malformed_model_output:{stage}:extract{attempt}:{exc}")
+                current = (
+                    "Your previous reply was not valid JSON matching the "
+                    f"required schema ({exc}). Re-emit it inside one ```json "
+                    "fenced code block with no prose.\n\n" + extraction
+                )
         failures.append(f"unparseable_model_output:{stage}")
         return None, failures
 
@@ -754,6 +994,7 @@ class RunnerWorker:
         rounds = max(1, int(self.max_rounds))
         reframe_used = False
         reframe_pending = False
+        round_bottlenecks: list[str] = []
 
         for round_index in range(1, rounds + 1):
             if round_index == 1:
@@ -878,13 +1119,24 @@ class RunnerWorker:
                 if item not in literature_imports:
                     literature_imports.append(item)
             open_subgoals = list(parsed["open_subgoals"])
+            round_bottlenecks.append(str(parsed["bottleneck"]).strip())
 
             # Stagnation: nothing new proposed and nothing left open. Instead
             # of ending the branch on the first stall (the old behavior), spend
             # ONE reframe round demanding a materially different formulation —
             # the CDC-prompt discipline of relaunching with fresh viewpoints.
             # A second stall (or a stall after the reframe) ends the branch.
-            if round_index < rounds and not open_subgoals and new_claims == 0:
+            # R8 stop rule: a round that adds no claims AND reports the SAME
+            # bottleneck as the previous round is also a stall even when
+            # subgoals remain open — the model is circling, not progressing.
+            repeated_bottleneck = (
+                len(round_bottlenecks) >= 2
+                and round_bottlenecks[-1]
+                and round_bottlenecks[-1] == round_bottlenecks[-2]
+            )
+            stalled = new_claims == 0 and (
+                not open_subgoals or repeated_bottleneck)
+            if round_index < rounds and stalled:
                 if reframe_used:
                     break
                 reframe_used = True
@@ -898,6 +1150,19 @@ class RunnerWorker:
             self._remember_failure(
                 f"{branch_id}: ended with open subgoals: "
                 + "; ".join(open_subgoals[:3]))
+
+        # R4 phase 2: on the formal-library branch of a formal-target problem
+        # with a warm dev service, spend ONE extra call asking for an AND/OR
+        # sketch. A development-COMPILED decomposition feeds its children into
+        # the normal claim + pinned-obligation pipeline; anything less is a
+        # recorded note. Development-only throughout — no certificate here.
+        if (branch_id == "formal_library_first" and self.formal_target
+                and self.dev_lean_service is not None):
+            self._attempt_sketch(
+                statement, branch_id=branch_id, seen=seen,
+                seen_formulas=seen_formulas, proposals=proposals,
+                formal_candidates=formal_candidates, failures=failures,
+                proof_steps=proof_steps)
 
         return WorkerOutput(
             claim_proposals=proposals,
@@ -923,6 +1188,110 @@ class RunnerWorker:
             deps = ", ".join(prop.get("dependencies", [])) or "-"
             lines.append(f"- {prop['claim_id']} [deps: {deps}]: {formula}")
         return "\n".join(lines)
+
+    def _attempt_sketch(self, statement: str, *, branch_id: str,
+                        seen: set[str], seen_formulas: set[str],
+                        proposals: list[dict], formal_candidates: list[dict],
+                        failures: list[str], proof_steps: list[str]) -> None:
+        """One AND/OR sketch attempt against the community target (R4 p2).
+
+        Only a development-COMPILED sketch admits children: Lean elaborated
+        the parent proof term from the sorried children, so the decomposition
+        is machine-checked — then each child becomes a subsidiary claim plus a
+        pinned source-less obligation for the existing sealed pipeline, and
+        the GOAL claim's dependencies grow to include the children (honest
+        AND-semantics: assembly now requires the children).
+        """
+        from egmra.corpus.formal_conjectures import parse_declarations
+        from egmra.lean.formalizer import extract_lean_source
+        from egmra.lean.sketch import compile_sketch, validate_sketch
+
+        declarations = parse_declarations(self.formal_target)
+        if not declarations:
+            failures.append(f"sketch_no_target_declaration:{branch_id}")
+            return
+        target_declaration = next(
+            (d for d in declarations if "erdos" in d.lower()), declarations[0])
+        match = re.search(re.escape(target_declaration) + r"([\s\S]*?)(?::=|\Z)",
+                          self.formal_target)
+        target_statement = " ".join(
+            match.group(1).split()).lstrip(": ").strip() if match else ""
+        try:
+            reply = self.runner.run(
+                sketch_prompt(statement, formal_target=self.formal_target,
+                              target_declaration=target_declaration),
+                stage=f"sketch:{branch_id}")
+            source = extract_lean_source(reply.text)
+        except Exception as exc:  # noqa: BLE001 - provider isolation
+            failures.append(f"sketch_unavailable:{branch_id}:{type(exc).__name__}")
+            return
+        if not source.strip():
+            failures.append(f"sketch_unavailable:{branch_id}:no_lean_source")
+            return
+        report = validate_sketch(
+            source, problem_id=branch_id,
+            target_declaration=target_declaration,
+            target_statement=target_statement)
+        if report.problems:
+            failures.append(
+                f"sketch_rejected:{branch_id}:" + ";".join(report.problems[:4]))
+            self._remember_failure(
+                f"{branch_id}: sketch rejected: {report.problems[0]}")
+            return
+        dev_source = re.sub(r"^\s*import [^\n]*\n", "", source,
+                            flags=re.MULTILINE)
+        report = compile_sketch(report, dev_source, self.dev_lean_service)
+        if report.compiled is not True:
+            failures.append(
+                f"sketch_not_compiled:{branch_id}:"
+                + ";".join(report.dev_messages[:3]))
+            self._remember_failure(
+                f"{branch_id}: sketch failed development compile")
+            return
+        admitted: list[str] = []
+        child_candidates: list[dict] = []
+        for child in report.children:
+            formula = child.statement.strip()
+            if formula in seen_formulas:
+                continue
+            cid = _safe_claim_id(child.name, fallback=f"{branch_id}_sketch_child")
+            if cid in seen:
+                cid = f"{cid}_sketch"
+            if cid in seen:
+                continue
+            seen.add(cid)
+            seen_formulas.add(formula)
+            proposals.append({
+                "claim_id": cid,
+                "canonical_formula": formula,
+                "informal_text": formula,
+                "scope": "general",
+                "dependencies": [],
+            })
+            child_candidates.append({
+                "claim_id": cid,
+                "declaration_name": child.name,
+                "expected_type": child.statement,
+                "source": "",
+            })
+            admitted.append(child.name)
+        if not admitted:
+            failures.append(f"sketch_children_all_duplicates:{branch_id}")
+            return
+        # Machine-checked AND-decomposition: the goal now depends on the
+        # children, and each child is a pinned obligation for the prover
+        # pipeline (dispatch gate + sealed kernel + lemma library unchanged).
+        goal = proposals[0]
+        goal["dependencies"] = list(dict.fromkeys(
+            [*goal.get("dependencies", []),
+             *(c["claim_id"] for c in child_candidates)]))
+        formal_candidates.extend(self._build_formal_candidates(
+            child_candidates, branch_id=branch_id, seen=seen,
+            failures=failures,
+            dependency_counts={c["claim_id"]: 1 for c in child_candidates}))
+        proof_steps.append(
+            f"sketch decomposition machine-checked (dev): {target_declaration}"
+            f" from {', '.join(admitted[:12])}")
 
     def _remember_failure(self, entry: str) -> None:
         cleaned = entry.strip()[:200]
@@ -1106,6 +1475,49 @@ class RunnerWorker:
             return evidence, replays
         executed = max(0, int(already_executed))
         for index, exp in enumerate(experiments):
+            kind = exp.get("kind", "")
+            if kind in {"sat_witness", "sat_unsat"}:
+                cnf = exp.get("cnf")
+                if not cnf:
+                    failures.append(f"sat_experiment_malformed:{branch_id}:{index}")
+                    continue
+                if kind == "sat_unsat" and not exp.get("proof"):
+                    # UNSAT without a checkable proof trace stays solver
+                    # TESTIMONY: recorded as search guidance, never run,
+                    # never evidence (report R11's explicit asymmetry).
+                    failures.append(f"sat_unsat_unreconstructed:{branch_id}:{index}")
+                    continue
+                if executed >= 3:
+                    break
+                executed += 1
+                requested = exp.get("claim_id") or ""
+                target = requested if requested in seen else self.goal_claim_id
+                inputs: dict[str, Any] = {"cnf": cnf}
+                if kind == "sat_witness":
+                    inputs["model"] = exp.get("model") or {}
+                    checker = _SAT_WITNESS_CODE
+                else:
+                    inputs["proof"] = exp.get("proof") or []
+                    checker = _SAT_UNSAT_RUP_CODE
+                try:
+                    spec = ExperimentSpec(
+                        purpose=f"{branch_id}:{target}:{kind}:{index}",
+                        claim_ids=(target,), branch_ids=(branch_id,),
+                        inputs=inputs,
+                        coverage=exp.get("coverage")
+                        or f"{kind} reconstruction over {len(cnf)} clauses",
+                        arithmetic_mode="exact",
+                    )
+                except (ValueError, TypeError) as exc:
+                    failures.append(f"invalid_experiment_spec:{branch_id}:{exc}")
+                    continue
+                ev, rp, fl = _execute_finite_experiment(
+                    self.compute_service, self.replay_sandbox, spec, checker,
+                    target)
+                evidence.extend(ev)
+                replays.extend(rp)
+                failures.extend(fl)
+                continue
             code = exp.get("code")
             if not code:
                 continue
