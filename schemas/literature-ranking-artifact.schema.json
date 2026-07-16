@@ -1,0 +1,56 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/erdos/literature-ranking-artifact.schema.json",
+  "title": "Erdos Literature Ranking Artifact",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "literature_policy_version", "literature_model_version",
+    "problem_number", "statement_sha256", "source_snapshot_id", "query",
+    "query_hash", "retrieved_at", "source_coverage", "records",
+    "deduplication_identities", "features", "supporting_snippets",
+    "artifact_content_sha256"
+  ],
+  "properties": {
+    "schema_version": {"const": 1},
+    "literature_policy_version": {"const": "literature-ranking-v1"},
+    "literature_model_version": {"const": "literature-opportunity-v1"},
+    "problem_number": {"type": "integer", "minimum": 1},
+    "statement_sha256": {"$ref": "#/$defs/hash"},
+    "source_snapshot_id": {"type": "string", "minLength": 1},
+    "query": {"type": "string", "minLength": 1},
+    "query_hash": {"$ref": "#/$defs/hash"},
+    "retrieved_at": {"type": "string", "format": "date-time"},
+    "source_coverage": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["arxiv", "crossref", "semanticscholar", "mathoverflow"],
+      "properties": {
+        "arxiv": {"$ref": "#/$defs/coverage"},
+        "crossref": {"$ref": "#/$defs/coverage"},
+        "semanticscholar": {"$ref": "#/$defs/coverage"},
+        "mathoverflow": {"$ref": "#/$defs/coverage"}
+      }
+    },
+    "records": {"type": "array", "items": {"type": "object"}},
+    "deduplication_identities": {"type": "array", "items": {"type": "string"}},
+    "features": {"$ref": "#/$defs/features"},
+    "supporting_snippets": {"type": "array", "items": {"type": "object"}},
+    "artifact_content_sha256": {"$ref": "#/$defs/hash"}
+  },
+  "$defs": {
+    "hash": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "coverage": {"enum": ["complete", "unavailable", "unsupported", "not_queried"]},
+    "features": {
+      "type": "object",
+      "required": ["foothold", "reuse", "machinery_risk", "status_risk", "components"],
+      "properties": {
+        "foothold": {"type": "number", "minimum": 0, "maximum": 1},
+        "reuse": {"type": "number", "minimum": 0, "maximum": 1},
+        "machinery_risk": {"type": "number", "minimum": 0, "maximum": 1},
+        "status_risk": {"type": "number", "minimum": 0, "maximum": 1},
+        "components": {"type": "object"}
+      }
+    }
+  }
+}

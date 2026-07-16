@@ -17,6 +17,7 @@ class ArtifactSchemaTests(unittest.TestCase):
             "ledger-record.schema.json",
             "stage-cache-metadata.schema.json",
             "ingestion-manifest.schema.json",
+            "literature-ranking-artifact.schema.json",
         )
         for name in names:
             with self.subTest(name=name):
