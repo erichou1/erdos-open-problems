@@ -187,6 +187,27 @@ class PostgresCampaignStore:
         host = parsed.hostname + (f":{parsed.port}" if parsed.port else "")
         self.dsn = urlunsplit((parsed.scheme, host, parsed.path, parsed.query, ""))
 
+    def _connect_kwargs(self) -> dict[str, Any]:
+        """libpq connection params that make a sleep-dropped link SELF-RECOVER.
+
+        A laptop that sleeps (battery saver) silently drops the Neon TCP
+        connection. Without these, the next write blocks forever in ``recv``
+        with no timeout — freezing lease renewals and heartbeats while the
+        process keeps computing locally, so nothing it does can be recorded.
+        These are all CLIENT-SIDE TCP keepalive params (safe through the Neon
+        PgBouncer pooler, unlike server ``options`` GUCs): they force the OS to
+        detect the dead peer within ~1 min, which surfaces as an
+        ``OperationalError`` that :meth:`_is_disconnect` catches so
+        :meth:`_with_connection` reconnects once and continues.
+        """
+        return {
+            "connect_timeout": 10,
+            "keepalives": 1,
+            "keepalives_idle": 30,
+            "keepalives_interval": 10,
+            "keepalives_count": 3,
+        }
+
     def connect(self):  # pragma: no cover - requires a database server
         try:
             import psycopg  # type: ignore[import-not-found]
@@ -195,7 +216,7 @@ class PostgresCampaignStore:
                 "Postgres adapter unavailable: install the optional psycopg dependency"
             ) from exc
         try:
-            connection = psycopg.connect(self._dsn, connect_timeout=5)
+            connection = psycopg.connect(self._dsn, **self._connect_kwargs())
             with connection.cursor() as cursor:
                 cursor.execute(self.schema_ddl)
             connection.commit()

@@ -79,6 +79,22 @@ def test_postgres_campaign_store_requires_name_and_key():
         PostgresCampaignStore("postgresql://db.example.com:5432/egmra", name="c", env={})
 
 
+def test_postgres_connect_kwargs_survive_a_sleep_dropped_link():
+    # A laptop sleeping on battery drops the Neon TCP link; without keepalives
+    # the next write blocks forever, freezing lease renewals + heartbeats while
+    # the process keeps computing (nothing recorded). Keepalives are all
+    # client-side TCP params, so they stay safe through the Neon pooler (a
+    # server-side statement_timeout GUC would be rejected by PgBouncer).
+    store = PostgresCampaignStore(
+        "postgresql://db.example.com:5432/egmra", name="camp")
+    kwargs = store._connect_kwargs()
+    assert kwargs["keepalives"] == 1
+    assert kwargs["connect_timeout"] >= 5
+    assert all(kwargs[k] > 0 for k in
+               ("keepalives_idle", "keepalives_interval", "keepalives_count"))
+    assert "options" not in kwargs   # pooler-incompatible startup GUCs excluded
+
+
 # ── stale-connection resilience (Neon drops idle connections) ────────────────
 
 class _FakeCursor:
