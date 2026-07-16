@@ -4,6 +4,21 @@ const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt
 const dt=value=>{if(!value)return "—";const date=new Date(value);return Number.isNaN(date.valueOf())?String(value):date.toLocaleString([], {dateStyle:"medium",timeStyle:"short"})};
 const short=value=>{const text=String(value||"");return text.length>45?`${text.slice(0,20)}…${text.slice(-16)}`:text};
 const statusClass=value=>String(value||"pending").toLowerCase().replace(/[^a-z]/g,"-");
+const typeset=root=>{
+  if(!root||typeof window.renderMathInElement!=="function")return;
+  window.renderMathInElement(root,{
+    delimiters:[
+      {left:"\\[",right:"\\]",display:true},
+      {left:"\\(",right:"\\)",display:false},
+      {left:"$$",right:"$$",display:true},
+      {left:"$",right:"$",display:false}
+    ],
+    throwOnError:false,
+    strict:"ignore",
+    trust:false,
+    ignoredTags:["script","noscript","style","textarea","pre","code"]
+  });
+};
 
 const DATA_URL=location.hostname.endsWith("vercel.app")
   ? "https://raw.githubusercontent.com/erichou1/erdos-open-problems/audit/egmra-independent-remediation-20260713/status_site/data.json"
@@ -47,9 +62,14 @@ function filteredProblems(){
 }
 function renderRows(){
   const rows=filteredProblems();
-  $("#problemRows").innerHTML=rows.length?rows.map(p=>`<tr><td><div class="problem-name"><strong class="problem-number">#${esc(p.number)}</strong><span class="problem-statement" title="${esc(p.statement)}">${esc(p.statement)}</span></div></td><td><span class="status-chip ${statusClass(p.status)}">${esc(p.status)}</span></td><td><span class="worker-tag">${esc(p.worker||"—")}</span></td><td>${esc(p.attempts)}</td><td>${esc(p.latest_state||p.result_state||"—")}</td><td>${p.run_count} / ${p.chatgpt_run_count}</td><td><button class="open-row" data-open="${p.number}" aria-label="Open problem ${p.number}">→</button></td></tr>`).join(""):`<tr><td colspan="7" class="empty-row">No problems match this view.</td></tr>`;
+  $("#problemRows").innerHTML=rows.length?rows.map(p=>`<tr class="problem-row" data-row="${p.number}" tabindex="0" aria-label="Open Erdős problem ${p.number}"><td><div class="problem-name"><strong class="problem-number">#${esc(p.number)}</strong><span class="problem-statement" title="${esc(p.statement)}">${esc(p.statement)}</span></div></td><td><span class="status-chip ${statusClass(p.status)}">${esc(p.status)}</span></td><td><span class="worker-tag">${esc(p.worker||"—")}</span></td><td>${esc(p.attempts)}</td><td>${esc(p.latest_state||p.result_state||"—")}</td><td>${p.run_count} / ${p.chatgpt_run_count}</td><td><button class="open-row" data-open="${p.number}" aria-label="Open problem ${p.number}">→</button></td></tr>`).join(""):`<tr><td colspan="7" class="empty-row">No problems match this view.</td></tr>`;
   $("#resultCount").textContent=`Showing ${rows.length} of ${state.data.problems.length} problems · Runs / ChatGPT exchanges`;
   document.querySelectorAll("[data-open]").forEach(button=>button.onclick=()=>openProblem(Number(button.dataset.open)));
+  document.querySelectorAll("[data-row]").forEach(row=>{
+    row.onclick=event=>{if(!event.target.closest("button,a"))openProblem(Number(row.dataset.row))};
+    row.onkeydown=event=>{if(event.key==="Enter"||event.key===" "){event.preventDefault();openProblem(Number(row.dataset.row))}};
+  });
+  typeset($("#problemRows"));
 }
 function renderArtifacts(artifacts){
   $("#artifactRail").innerHTML=artifacts.slice(0,12).map((a,index)=>`<article class="artifact-item"><strong>${esc(a.declarations?.[0]||a.artifact_id)}</strong><span>${esc(a.worker||"unassigned")} · ${a.bytes.toLocaleString()} B · ${esc(a.status)}</span><a href="#artifact=${encodeURIComponent(a.artifact_id)}" data-artifact="${index}">Inspect source preview →</a></article>`).join("");
@@ -62,7 +82,9 @@ function openProblem(number,runId=null){
   const runs=p.runs.length?p.runs.map(run=>runHtml(run,p)).join(""):`<p class="missing-link">No completed run records yet.</p>`;
   const exchanges=p.exchanges?.length?`<table class="exchange-table">${p.exchanges.slice(0,40).map(x=>`<tr><td>${esc(x.stage)}</td><td>${esc(x.model)}</td><td>${x.conversation_url?`<a href="${esc(x.conversation_url)}" target="_blank" rel="noopener">Open ChatGPT ↗</a>`:`URL not recorded · ${esc(x.response_hash)}`}</td></tr>`).join("")}</table>`:`<p class="missing-link">No browser exchange records for this problem.</p>`;
   const aristotle=p.aristotle?.length?p.aristotle.map((a,i)=>`<details class="run-row"><summary><div><strong>${esc(a.declarations?.join(", ")||a.artifact_id)}</strong><span class="run-time">${esc(a.worker||"worker unknown")} · ${a.bytes.toLocaleString()} bytes</span></div><span class="run-state">quarantined</span></summary><div class="run-body"><pre class="source-preview">${esc(a.source_preview)}</pre></div></details>`).join(""):`<p class="missing-link">No Aristotle session can be reliably associated with this problem. Unlinked sessions remain in the global quarantine inventory.</p>`;
-  $("#detailContent").innerHTML=`<p class="detail-statement">${esc(p.statement)}</p><div class="detail-meta">${meta.map(([v,k])=>`<div><small>${k}</small><strong>${esc(v)}</strong></div>`).join("")}</div>${p.result_state?`<p class="error-state">${esc(p.result_state)}</p>`:""}<section class="detail-section"><h3>Research runs · ${p.runs.length}</h3>${runs}</section><section class="detail-section"><h3>ChatGPT browser exchanges · ${p.exchanges?.length||0}</h3>${exchanges}</section><section class="detail-section"><h3>Associated Aristotle artifacts · ${p.aristotle?.length||0}</h3>${aristotle}</section>`;
+  $("#detailContent").innerHTML=`<p class="detail-statement">${esc(p.statement)}</p><div class="detail-meta">${meta.map(([v,k])=>`<div><small>${k}</small><strong>${esc(v)}</strong></div>`).join("")}</div><nav class="detail-jumps" aria-label="Problem detail sections"><button data-jump="detail-runs">Runs <b>${p.runs.length}</b></button><button data-jump="detail-exchanges">ChatGPT <b>${p.exchanges?.length||0}</b></button><button data-jump="detail-aristotle">Aristotle <b>${p.aristotle?.length||0}</b></button></nav>${p.result_state?`<p class="error-state">${esc(p.result_state)}</p>`:""}<section id="detail-runs" class="detail-section"><h3>Research runs · ${p.runs.length}</h3>${runs}</section><section id="detail-exchanges" class="detail-section"><h3>ChatGPT browser exchanges · ${p.exchanges?.length||0}</h3>${exchanges}</section><section id="detail-aristotle" class="detail-section"><h3>Associated Aristotle artifacts · ${p.aristotle?.length||0}</h3>${aristotle}</section>`;
+  document.querySelectorAll("[data-jump]").forEach(button=>button.onclick=()=>document.getElementById(button.dataset.jump)?.scrollIntoView({block:"start"}));
+  typeset($("#detailContent"));
   showPanel();
   if(runId){const row=[...document.querySelectorAll("[data-run-id]")].find(item=>item.dataset.runId===runId);if(row){row.open=true;requestAnimationFrame(()=>row.scrollIntoView({block:"start"}))}}
 }
@@ -76,8 +98,8 @@ function openArtifact(a){
   $("#detailTitle").textContent="Aristotle artifact";$("#erdosLink").href="#";
   $("#detailContent").innerHTML=`<p class="detail-statement">${esc(a.declarations?.join(", ")||"Unnamed Lean candidate")}</p><div class="detail-meta"><div><small>worker</small><strong>${esc(a.worker||"—")}</strong></div><div><small>session</small><strong>${esc(short(a.session||"—"))}</strong></div><div><small>bytes</small><strong>${a.bytes.toLocaleString()}</strong></div><div><small>authority</small><strong>quarantined</strong></div></div><p class="missing-link">No public Aristotle vendor URL is stored. This is the local quarantined source preview; it is not proof evidence until kernel replay and correspondence review pass.</p><pre class="source-preview">${esc(a.source_preview)}</pre>`;showPanel();
 }
-function showPanel(){$("#detailPanel").classList.add("open");$("#detailPanel").setAttribute("aria-hidden","false");$("#scrim").hidden=false}
-function closePanel(){$("#detailPanel").classList.remove("open");$("#detailPanel").setAttribute("aria-hidden","true");$("#scrim").hidden=true;if(location.hash.startsWith("#problem="))history.replaceState(null,"",location.pathname)}
+function showPanel(){$("#detailPanel").classList.add("open");$("#detailPanel").setAttribute("aria-hidden","false");$("#scrim").hidden=false;document.body.classList.add("panel-open")}
+function closePanel(){$("#detailPanel").classList.remove("open");$("#detailPanel").setAttribute("aria-hidden","true");$("#scrim").hidden=true;document.body.classList.remove("panel-open");if(location.hash.startsWith("#problem=")||location.hash.startsWith("#artifact="))history.replaceState(null,"",location.pathname)}
 function route(){
   if(!state.data)return;
   const problem=location.hash.match(/^#problem=(\d+)(?:&run=(.+))?$/);
@@ -87,5 +109,5 @@ function route(){
 }
 $("#searchInput").addEventListener("input",event=>{state.query=event.target.value;renderRows()});
 $("#sortButton").onclick=event=>{state.ascending=!state.ascending;event.target.textContent=`Sort: number ${state.ascending?"↑":"↓"}`;renderRows()};
-$("#reloadButton").onclick=load;$("#closeDetail").onclick=closePanel;$("#scrim").onclick=closePanel;window.addEventListener("hashchange",route);document.addEventListener("keydown",event=>{if(event.key==="Escape")closePanel()});
+$("#reloadButton").onclick=load;$("#closeDetail").onclick=closePanel;$("#scrim").onclick=closePanel;window.addEventListener("hashchange",route);document.addEventListener("keydown",event=>{if(event.key==="Escape")closePanel();if(event.key==="/"&&!event.metaKey&&!event.ctrlKey&&!/INPUT|TEXTAREA|SELECT/.test(document.activeElement?.tagName||"")){event.preventDefault();$("#searchInput").focus()}});
 load();

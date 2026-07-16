@@ -9,6 +9,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
   <link rel="stylesheet" href="/styles.css">
 </head>
 <body>
@@ -20,6 +21,11 @@
         <h1>Erdős problem campaign</h1>
       </div>
     </div>
+    <nav class="primary-nav" aria-label="Dashboard sections">
+      <a href="#overview">Pulse</a>
+      <a href="#problems">Problems</a>
+      <a href="#artifacts">Aristotle</a>
+    </nav>
     <div class="snapshot-block">
       <span id="healthDot" class="health-dot"></span>
       <div><strong id="campaignName">Loading campaign</strong><small id="snapshotTime">Reading snapshot…</small></div>
@@ -28,7 +34,7 @@
   </header>
 
   <main>
-    <section class="overview-band" aria-labelledby="overviewTitle">
+    <section id="overview" class="overview-band" aria-labelledby="overviewTitle">
       <div class="section-label"><span>01</span><h2 id="overviewTitle">Campaign pulse</h2></div>
       <div id="metricStrip" class="metric-strip"></div>
       <div class="activity-grid">
@@ -43,10 +49,10 @@
       </div>
     </section>
 
-    <section class="workspace" aria-labelledby="problemsTitle">
+    <section id="problems" class="workspace" aria-labelledby="problemsTitle">
       <div class="section-label"><span>02</span><h2 id="problemsTitle">Problem ledger</h2></div>
       <div class="toolbar">
-        <label class="search-field"><span>⌕</span><input id="searchInput" type="search" placeholder="Search number, statement, worker, state…" autocomplete="off"></label>
+        <label class="search-field"><span>⌕</span><input id="searchInput" type="search" placeholder="Search number, statement, worker, state…" autocomplete="off" aria-keyshortcuts="/"><kbd>/</kbd></label>
         <div id="statusFilters" class="segmented" aria-label="Filter by status"></div>
         <button id="sortButton" class="text-button">Sort: number ↑</button>
       </div>
@@ -59,7 +65,7 @@
       <p id="resultCount" class="result-count"></p>
     </section>
 
-    <section class="artifacts-band" aria-labelledby="artifactsTitle">
+    <section id="artifacts" class="artifacts-band" aria-labelledby="artifactsTitle">
       <div class="section-label"><span>03</span><h2 id="artifactsTitle">Aristotle quarantine</h2></div>
       <div class="artifact-summary"><div><strong id="artifactCount">0</strong><span>candidate Lean artifacts</span></div><p>Vendor output is quarantined and non-authoritative until independent kernel replay and correspondence checks pass.</p></div>
       <div id="artifactRail" class="artifact-rail"></div>
@@ -76,6 +82,8 @@
     <details class="run-row"><summary><div><strong class="run-id"></strong><span class="run-time"></span></div><span class="run-state"></span></summary><div class="run-body"></div></details>
   </template>
 
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" defer></script>
   <script src="/app.js" defer></script>
 </body>
 </html>
