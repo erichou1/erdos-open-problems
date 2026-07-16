@@ -155,7 +155,7 @@ def build_catalog(
             ),
             "open_monetary_prize": sum(
                 item["prize_status"] == "paid"
-                and not item["source_reports_resolved"]
+                and item["source_state"].strip().lower() == "open"
                 for item in entries.values()
             ),
             "unknown_prize": sum(

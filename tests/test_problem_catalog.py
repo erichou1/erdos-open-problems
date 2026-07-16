@@ -92,6 +92,7 @@ class ProblemCatalogTests(unittest.TestCase):
             {"number": "2", "prize": "$5000", "status": {"state": "open"}},
             {"number": "3", "status": {"state": "open"}},
             {"number": "4", "prize": "€500", "status": {"state": "proved"}},
+            {"number": "5", "prize": "$100", "status": {"state": "unknown"}},
         ]
         catalog = build_catalog(source, fetched_at="now", source_url="source")
         self.assertEqual(catalog["problems"]["1"]["prize"], "no")
@@ -100,7 +101,7 @@ class ProblemCatalogTests(unittest.TestCase):
         self.assertEqual(catalog["problems"]["2"]["prize_status"], "paid")
         self.assertIsNone(catalog["problems"]["3"]["prize"])
         self.assertEqual(catalog["problems"]["3"]["prize_status"], "unknown")
-        self.assertEqual(catalog["counts"]["monetary_prize"], 2)
+        self.assertEqual(catalog["counts"]["monetary_prize"], 3)
         self.assertEqual(catalog["counts"]["open_monetary_prize"], 1)
         self.assertEqual(catalog["counts"]["unknown_prize"], 1)
 
