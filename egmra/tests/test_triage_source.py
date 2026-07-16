@@ -15,6 +15,7 @@ import pytest
 from egmra.orchestrator.triage_source import (
     TriageSourceError,
     available_lanes,
+    solvability_order,
     triage_ranked_problem_ids,
 )
 
@@ -120,3 +121,34 @@ def test_symlink_ranking_refused(tmp_path):
 def test_available_lanes_includes_t2_and_current():
     lanes = available_lanes()
     assert "current" in lanes and "t2_closable" in lanes
+
+
+def _card(root: Path, number: int, *, lean: float, compute: float,
+          route: bool, clear: bool) -> None:
+    directory = root / "normalized" / "problem_cards"
+    directory.mkdir(parents=True, exist_ok=True)
+    (directory / f"{number}.json").write_text(json.dumps({
+        "posterior": {
+            "p_lean_verified_exact_target": {"probability": lean},
+            "p_finite_computational_resolution": {"probability": compute},
+        },
+        "probe_summary": {"formal": {"lean_route_available": route}},
+        "statement": {"ambiguity_status": "clear" if clear else "ambiguous"},
+    }), encoding="utf-8")
+
+
+def test_solvability_order_matches_tractable_frontier_formula(tmp_path):
+    _card(tmp_path, 1, lean=.1, compute=.1, route=False, clear=True)
+    _card(tmp_path, 2, lean=.7, compute=.2, route=True, clear=True)
+    _card(tmp_path, 3, lean=.2, compute=.8, route=False, clear=True)
+    # score: #2=.63, #3=.47, #1=.14
+    assert solvability_order(
+        tmp_path, ["erdos-1", "erdos-2", "erdos-3"]
+    ) == ["erdos-2", "erdos-3", "erdos-1"]
+
+
+def test_solvability_order_keeps_missing_cards_last_and_stable(tmp_path):
+    _card(tmp_path, 2, lean=.2, compute=.2, route=False, clear=True)
+    assert solvability_order(
+        tmp_path, ["erdos-9", "erdos-2", "erdos-8"]
+    ) == ["erdos-2", "erdos-9", "erdos-8"]

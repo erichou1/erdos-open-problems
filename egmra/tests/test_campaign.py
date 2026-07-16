@@ -28,6 +28,47 @@ def test_initialize_and_status(tmp_path):
     assert st["total"] == 3 and st["by_status"]["pending"] == 3 and st["complete"] is False
 
 
+def test_machine_heartbeat_survives_assignment_transitions(tmp_path):
+    c = _campaign(tmp_path, workers=("host-a:w0", "host-a:w1"))
+    c.initialize("camp-machines", ["p1", "p2"])
+    metadata = {
+        "hostname": "host-a", "process_id": 123,
+        "branch": "main", "code_commit": "a" * 40,
+        "latest_commit": "a" * 40, "version_status": "current",
+        "started_at": 900.0,
+        "worker_ids": ["host-a:w0", "host-a:w1"],
+    }
+    c.machine_heartbeat("host-a", metadata=metadata, now=1000.0)
+    assignment = c.lease("host-a:w0", now=1001.0)
+    assert assignment is not None
+    assert c.heartbeat("p1", "host-a:w0", assignment.fencing_token,
+                       now=1002.0)
+    status = c.status()
+    machine = status["machines"]["host-a"]
+    assert machine["hostname"] == "host-a"
+    assert machine["heartbeat_at"] == 1000.0
+    assert machine["version_status"] == "current"
+    assert machine["worker_ids"] == ["host-a:w0", "host-a:w1"]
+
+
+def test_machine_graceful_stop_and_restart_preserve_start_time(tmp_path):
+    c = _campaign(tmp_path)
+    c.initialize("camp-machines", ["p1"])
+    metadata = {"hostname": "host-a", "process_id": 1,
+                "worker_ids": ["host-a:w0"], "started_at": 100.0}
+    c.machine_heartbeat("host-a", metadata=metadata, now=110.0)
+    c.machine_stopped("host-a", now=120.0)
+    assert c.status()["machines"]["host-a"]["stopped_at"] == 120.0
+    # A new heartbeat clears stopped_at but keeps the original registration
+    # start time for this machine identity.
+    metadata["process_id"] = 2
+    c.machine_heartbeat("host-a", metadata=metadata, now=130.0)
+    machine = c.status()["machines"]["host-a"]
+    assert machine["stopped_at"] == 0.0
+    assert machine["started_at"] == 100.0
+    assert machine["process_id"] == 2
+
+
 def test_five_workers_each_problem_assigned_exactly_once(tmp_path):
     clock = _Clock()
     c = _campaign(tmp_path, workers=("w0", "w1", "w2", "w3", "w4"))

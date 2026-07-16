@@ -354,14 +354,71 @@ class Campaign:
         return {pid: Assignment(**a) for pid, a in state["assignments"].items()}
 
     def _encode(self, campaign_id: str, order: list[str],
-                assignments: dict[str, Assignment], fencing: int) -> dict[str, Any]:
+                assignments: dict[str, Assignment], fencing: int,
+                machines: dict[str, dict[str, Any]] | None = None) -> dict[str, Any]:
         return {
             "schema_version": _SCHEMA_VERSION,
             "campaign_id": campaign_id,
             "order": list(order),
             "fencing_counter": fencing,
             "assignments": {pid: a.to_dict() for pid, a in assignments.items()},
+            # Signed cross-machine liveness/version registry. Optional for
+            # backward compatibility with pre-registry campaign states.
+            "machines": dict(machines or {}),
         }
+
+    def machine_heartbeat(self, machine_id: str, *, metadata: dict[str, Any],
+                          now: float) -> None:
+        """Register/renew one physical computer in signed shared state.
+
+        A process crash simply stops heartbeats; readers classify it stale.
+        This registry is operational metadata only — it never affects leases,
+        truth, ranking, or release.
+        """
+        if not isinstance(machine_id, str) or not machine_id.strip():
+            raise CampaignError("machine id must be non-empty")
+        with self._locked():
+            state = self._read()
+            if state is None:
+                raise CampaignError("campaign is not initialized")
+            machines = dict(state.get("machines") or {})
+            previous = machines.get(machine_id) or {}
+            record = {
+                "machine_id": machine_id,
+                "hostname": str(metadata.get("hostname", machine_id))[:200],
+                "process_id": int(metadata.get("process_id", 0) or 0),
+                "branch": str(metadata.get("branch", ""))[:300],
+                "code_commit": str(metadata.get("code_commit", ""))[:64],
+                "latest_commit": str(metadata.get("latest_commit", ""))[:64],
+                "version_status": str(metadata.get("version_status", "unknown"))[:32],
+                "started_at": float(previous.get(
+                    "started_at", metadata.get("started_at", now))),
+                "heartbeat_at": float(now),
+                "worker_ids": [str(item)[:250]
+                               for item in metadata.get("worker_ids", ())][:5],
+                "stopped_at": 0.0,
+            }
+            machines[machine_id] = record
+            self._write(self._encode(
+                state["campaign_id"], state["order"], self._decode(state),
+                int(state["fencing_counter"]), machines))
+
+    def machine_stopped(self, machine_id: str, *, now: float) -> None:
+        """Mark a graceful shutdown; crashes remain detectable as stale."""
+        with self._locked():
+            state = self._read()
+            if state is None:
+                return
+            machines = dict(state.get("machines") or {})
+            if machine_id not in machines:
+                return
+            machines[machine_id] = {
+                **machines[machine_id], "stopped_at": float(now),
+                "heartbeat_at": float(now),
+            }
+            self._write(self._encode(
+                state["campaign_id"], state["order"], self._decode(state),
+                int(state["fencing_counter"]), machines))
 
     # ── lifecycle ────────────────────────────────────────────────────────────
     def initialize(self, campaign_id: str, problem_ids: list[str]) -> None:
@@ -416,7 +473,8 @@ class Campaign:
                 if a.attempts >= self.max_attempts:
                     a.status = "failed"
                     self._write(self._encode(state["campaign_id"], state["order"],
-                                             assignments, fencing))
+                                             assignments, fencing,
+                                             state.get("machines")))
                     continue
                 fencing += 1
                 a.status = "leased"
@@ -425,7 +483,8 @@ class Campaign:
                 a.lease_expires_at = now + self.lease_seconds
                 a.attempts += 1
                 self._write(self._encode(state["campaign_id"], state["order"],
-                                         assignments, fencing))
+                                         assignments, fencing,
+                                         state.get("machines")))
                 return Assignment(**a.to_dict())
             return None
 
@@ -450,7 +509,7 @@ class Campaign:
                 return False
             self._write(self._encode(
                 state["campaign_id"], list(new_order), self._decode(state),
-                int(state["fencing_counter"])))
+                int(state["fencing_counter"]), state.get("machines")))
             return True
 
     def _update(self, problem_id: str, worker_id: str, fencing_token: int,
@@ -468,7 +527,8 @@ class Campaign:
                 return False
             mutate(a)
             self._write(self._encode(state["campaign_id"], state["order"], assignments,
-                                     int(state["fencing_counter"])))
+                                     int(state["fencing_counter"]),
+                                     state.get("machines")))
             return True
 
     def complete(self, problem_id: str, worker_id: str, fencing_token: int, *,
@@ -550,7 +610,7 @@ class Campaign:
             if requeued:
                 self._write(self._encode(
                     state["campaign_id"], state["order"], assignments,
-                    int(state["fencing_counter"])))
+                    int(state["fencing_counter"]), state.get("machines")))
             return requeued
 
     def requeue_promising(self, problem_ids: list[str], *,
@@ -591,7 +651,7 @@ class Campaign:
             if requeued:
                 self._write(self._encode(
                     state["campaign_id"], state["order"], assignments,
-                    int(state["fencing_counter"])))
+                    int(state["fencing_counter"]), state.get("machines")))
             return requeued
 
     # ── status ───────────────────────────────────────────────────────────────
@@ -615,6 +675,7 @@ class Campaign:
                       "result_state": a.result_state}
                 for pid, a in assignments.items()
             },
+            "machines": dict(state.get("machines") or {}),
         }
 
     def pending_count(self) -> int:

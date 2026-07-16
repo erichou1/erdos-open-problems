@@ -675,8 +675,13 @@ def test_campaign_assigns_and_closes_per_worker_formalizers(tmp_path, monkeypatc
         def close(self) -> None:
             self.closed = True
 
-    fzs = {"w0": _FZ(), "w1": _FZ()}
-    monkeypatch.setattr(cli_module, "_build_worker_formalizers", lambda args, workers: fzs)
+    fzs = {}
+
+    def _formalizers(_args, workers):
+        fzs.update({worker: _FZ() for worker in workers})
+        return fzs
+
+    monkeypatch.setattr(cli_module, "_build_worker_formalizers", _formalizers)
     monkeypatch.setattr(cli_module, "from_erdos_number",
                         lambda number, **kw: SimpleNamespace(
                             problem_id=f"erdos-{number}", source_bytes=b"S", source_id="fx",
@@ -701,7 +706,8 @@ def test_campaign_assigns_and_closes_per_worker_formalizers(tmp_path, monkeypatc
                "--state", str(tmp_path / "c.json")])
     assert rc == 0
     # Each worker used its OWN formalizer, and all are closed afterward.
-    assert {id(f) for f in seen} == {id(fzs["w0"]), id(fzs["w1"])}
+    assert len(fzs) == 2
+    assert {id(f) for f in seen} == {id(f) for f in fzs.values()}
     assert all(formalizer.closed for formalizer in fzs.values())
 
 

@@ -23,6 +23,7 @@
     </div>
     <nav class="primary-nav" aria-label="Dashboard sections">
       <a href="#overview">Now</a>
+      <a href="#computers">Computers</a>
       <a href="#problems">Problems</a>
       <a href="/ranking.html">Ranking</a>
       <a href="#guide">Help</a>
@@ -51,8 +52,14 @@
       </div>
     </section>
 
+    <section id="computers" class="computers-band" aria-labelledby="computersTitle">
+      <div class="section-label"><span>02</span><h2 id="computersTitle">Computers running the pipeline</h2></div>
+      <div class="computers-heading"><p>Each computer sends a signed heartbeat every 30 seconds. “Current” means its local commit matches the latest commit on its remote branch; stale computers remain visible so a silent crash is obvious.</p><strong id="computerSummary">Loading computers…</strong></div>
+      <div id="computerBoard" class="computer-board"></div>
+    </section>
+
     <section id="guide" class="guide-band" aria-labelledby="guideTitle">
-      <div class="section-label"><span>02</span><h2 id="guideTitle">What the labels mean</h2></div>
+      <div class="section-label"><span>03</span><h2 id="guideTitle">What the labels mean</h2></div>
       <div class="guide-grid">
         <div><strong>Working now</strong><p>A worker currently holds this problem and is asking ChatGPT, checking sources, or testing a proof.</p></div>
         <div><strong>Research attempt</strong><p>One complete or interrupted pass through several possible approaches to a problem.</p></div>
@@ -64,7 +71,7 @@
     </section>
 
     <section id="problems" class="workspace" aria-labelledby="problemsTitle">
-      <div class="section-label"><span>03</span><h2 id="problemsTitle">All problems</h2></div>
+      <div class="section-label"><span>04</span><h2 id="problemsTitle">All problems</h2></div>
       <div class="toolbar">
         <label class="search-field"><span>⌕</span><input id="searchInput" type="search" placeholder="Search by number, words, worker, or result…" autocomplete="off" aria-keyshortcuts="/"><kbd>/</kbd></label>
         <div id="statusFilters" class="segmented" aria-label="Filter by status"></div>
@@ -80,7 +87,7 @@
     </section>
 
     <section id="artifacts" class="artifacts-band" aria-labelledby="artifactsTitle">
-      <div class="section-label"><span>04</span><h2 id="artifactsTitle">Formal proof drafts from Aristotle</h2></div>
+      <div class="section-label"><span>05</span><h2 id="artifactsTitle">Formal proof drafts from Aristotle</h2></div>
       <div class="artifact-summary"><div><strong id="artifactCount">0</strong><span>saved Lean proof drafts</span></div><div><p id="artifactLinkNote">Counting safely linked and unlinked drafts…</p><p><strong>Why do most problems show 0?</strong> Older Aristotle files usually did not save the Erdős problem number. The site only links a draft when the file itself names the problem, rather than guessing from a worker or timestamp.</p></div></div>
       <div id="artifactRail" class="artifact-rail"></div>
     </section>

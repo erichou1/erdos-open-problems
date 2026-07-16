@@ -30,7 +30,10 @@ import os
 import re
 import secrets
 import shutil
+import socket
+import subprocess
 import sys
+import threading
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -71,7 +74,10 @@ from egmra.orchestrator.outcome_ledger import (
     EgmraOutcomeLedger,
     build_outcome_record,
 )
-from egmra.orchestrator.triage_source import triage_ranked_problem_ids
+from egmra.orchestrator.triage_source import (
+    solvability_order,
+    triage_ranked_problem_ids,
+)
 from egmra.policy import PolicyEnforcer, PolicyError, default_policy_path, load_policy, sign_policy
 from egmra.m2 import ContentAddressedObjectStore, PostgresEventStore
 from egmra.oeis import OEISClient
@@ -1983,6 +1989,61 @@ def _load_campaign_reviews(reviews_dir) -> dict:
     return reviews
 
 
+def _machine_runtime_metadata(worker_count: int) -> dict:
+    """Stable computer identity + honest local-vs-remote code status."""
+    root = Path(__file__).resolve().parent.parent
+
+    def git(*argv: str, timeout: float = 8.0) -> str:
+        try:
+            result = subprocess.run(
+                ("git", *argv), cwd=root, text=True,
+                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL,
+                timeout=timeout, check=False,
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            return ""
+        return result.stdout.strip() if result.returncode == 0 else ""
+
+    hostname = socket.gethostname().split(".", 1)[0] or "unknown-host"
+    safe_host = re.sub(r"[^A-Za-z0-9_.-]+", "-", hostname).strip("-") \
+        or "unknown-host"
+    machine_id = f"{safe_host}-{sha256_hex(str(root))[:8]}"
+    branch = git("branch", "--show-current") or "detached"
+    local_commit = git("rev-parse", "HEAD")
+    latest_commit = ""
+    if branch != "detached":
+        remote_line = git("ls-remote", "--heads", "origin", branch)
+        latest_commit = remote_line.split()[0] if remote_line else ""
+    if not local_commit or not latest_commit:
+        version_status = "unknown"
+    elif local_commit == latest_commit:
+        version_status = "current"
+    elif subprocess.run(
+            ("git", "merge-base", "--is-ancestor", local_commit, latest_commit),
+            cwd=root, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            check=False).returncode == 0:
+        version_status = "outdated"
+    elif subprocess.run(
+            ("git", "merge-base", "--is-ancestor", latest_commit, local_commit),
+            cwd=root, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL,
+            check=False).returncode == 0:
+        version_status = "ahead"
+    else:
+        version_status = "diverged"
+    workers = tuple(f"{machine_id}:w{i}" for i in range(int(worker_count)))
+    return {
+        "machine_id": machine_id,
+        "hostname": hostname,
+        "process_id": os.getpid(),
+        "branch": branch,
+        "code_commit": local_commit,
+        "latest_commit": latest_commit,
+        "version_status": version_status,
+        "started_at": time.time(),
+        "worker_ids": workers,
+    }
+
+
 def cmd_campaign(args: argparse.Namespace) -> int:
     """Run (or resume) a durable, bounded-worker campaign over Erdős problems.
 
@@ -2003,7 +2064,8 @@ def cmd_campaign(args: argparse.Namespace) -> int:
     if not 0 <= campaign_hostile_review <= 4:
         raise ValueError("--hostile-review must be between 0 and 4")
     state_path = Path(args.state)
-    workers = tuple(f"w{i}" for i in range(int(args.workers)))
+    machine = _machine_runtime_metadata(int(args.workers))
+    workers = tuple(machine["worker_ids"])
     # Durable campaign state: a signed local JSON file by default, or an opt-in
     # DB-backed store (--state-store postgres) so leases/checkpoints are durable
     # and coordinated across processes/hosts sharing the database.
@@ -2083,7 +2145,34 @@ def cmd_campaign(args: argparse.Namespace) -> int:
     else:
         raise ValueError(
             "provide --erdos-range (e.g. 900-905), --triage DIR, or --status")
+    if getattr(args, "prefer_solvable", False):
+        if triage_dir is None:
+            raise ValueError("--prefer-solvable requires --triage")
+        problem_ids = solvability_order(Path(triage_dir), problem_ids)
+        numbers = [int(pid.split("-", 1)[1]) for pid in problem_ids]
     campaign.initialize(campaign_id, problem_ids)  # idempotent; safe to resume
+    if getattr(args, "prefer_solvable", False):
+        campaign.reorder_pending(problem_ids)
+
+    # Signed physical-computer heartbeat for cross-machine observability.
+    # Worker IDs are machine-qualified (host/workspace:wN), so two computers
+    # can never both appear as the ambiguous `w0` in shared Neon state.
+    machine_stop = threading.Event()
+    campaign.machine_heartbeat(
+        machine["machine_id"], metadata=machine, now=time.time())
+
+    def _machine_heartbeat() -> None:
+        while not machine_stop.wait(30.0):
+            try:
+                campaign.machine_heartbeat(
+                    machine["machine_id"], metadata=machine, now=time.time())
+            except Exception:  # noqa: BLE001 - observability is fail-open
+                pass
+
+    machine_thread = threading.Thread(
+        target=_machine_heartbeat,
+        name=f"egmra-machine-hb-{machine['machine_id']}", daemon=True)
+    machine_thread.start()
 
     outcome_ledger = (
         EgmraOutcomeLedger(Path(args.outcome_ledger))
@@ -2338,6 +2427,12 @@ def cmd_campaign(args: argparse.Namespace) -> int:
                 status["ranking_refresh"] = {
                     "error": f"{type(exc).__name__}: {exc}"}
     finally:
+        machine_stop.set()
+        machine_thread.join(timeout=1.0)
+        try:
+            campaign.machine_stopped(machine["machine_id"], now=time.time())
+        except Exception:  # noqa: BLE001 - shutdown telemetry is best-effort
+            pass
         if browser_engine is not None:
             browser_engine.close()  # tears down the browser and every tab
         else:
@@ -2718,6 +2813,12 @@ def build_parser() -> argparse.ArgumentParser:
                                "= the interleaved allocation queue; e.g. "
                                "'t2_closable', 'tractable_frontier', "
                                "'highest_probability_lean_verification')")
+    campaign.add_argument(
+        "--prefer-solvable", action="store_true",
+        help="reorder this campaign's existing problem set by the searcher's "
+             "formal/exact-computation tractability formula before leasing; "
+             "already leased/completed problems are untouched. Omit to keep "
+             "the default exploitation + protected-exploration queue")
     campaign.add_argument("--max-problems", type=int, default=0,
                           help="cap the number of triage problems drained "
                                "(0 = all ranked problems)")

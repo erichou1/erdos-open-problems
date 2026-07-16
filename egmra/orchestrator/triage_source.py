@@ -143,3 +143,38 @@ def triage_ranked_problem_ids(
             f"triage lane {lane!r} yielded no drainable problems"
         )
     return ordered
+
+
+def solvability_order(triage_dir: Path, problem_ids: list[str]) -> list[str]:
+    """Order an EXISTING campaign set by formal/exact-computation fit.
+
+    Matches ``erdos_searcher.tractable_frontier_ranking`` exactly:
+    0.5 Lean prior + 0.4 finite-computation prior + 0.15 Lean-route flag +
+    0.05 statement clarity. This is a weak-prior search preference, never a
+    solution probability or truth signal. Missing/malformed cards sort last
+    in their original order rather than dropping a problem.
+    """
+    root = Path(triage_dir)
+    cards = root / "normalized" / "problem_cards"
+    original = {problem_id: index for index, problem_id in enumerate(problem_ids)}
+
+    def score(problem_id: str) -> float:
+        number = _problem_number({"problem_id": problem_id})
+        if number is None:
+            return -1.0
+        try:
+            card = _read_json(cards / f"{number}.json")
+            if not isinstance(card, dict):
+                return -1.0
+            posterior = card["posterior"]
+            lean = float(posterior["p_lean_verified_exact_target"]["probability"])
+            compute = float(
+                posterior["p_finite_computational_resolution"]["probability"])
+            lean_route = bool(
+                card["probe_summary"]["formal"]["lean_route_available"])
+            clear = card["statement"]["ambiguity_status"] == "clear"
+            return 0.5 * lean + 0.4 * compute + 0.15 * lean_route + 0.05 * clear
+        except (KeyError, TypeError, ValueError, TriageSourceError):
+            return -1.0
+
+    return sorted(problem_ids, key=lambda pid: (-score(pid), original[pid]))

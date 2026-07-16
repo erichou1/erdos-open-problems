@@ -26,6 +26,7 @@ from typing import Any
 import psycopg
 
 from egmra.corpus.sources import from_erdos_number
+from egmra.orchestrator.campaign import PostgresCampaignStore
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -330,6 +331,14 @@ def build() -> dict[str, Any]:
         str(dict(zip(columns, row))["problem_id"]): dict(zip(columns, row))
         for row in result
     }
+    # Read the same signed body through the production store adapter — never
+    # trust raw machine metadata without verifying its HMAC.
+    campaign_store = PostgresCampaignStore(dsn, name=CAMPAIGN)
+    try:
+        campaign_body = campaign_store.read() or {}
+    finally:
+        campaign_store.close()
+    machine_records = dict(campaign_body.get("machines") or {})
 
     outcomes = _outcomes()
     run_summaries: dict[str, dict[str, Any]] = {}
@@ -415,6 +424,42 @@ def build() -> dict[str, Any]:
     workers = [{"worker": problem["worker"], "problem_id": problem["problem_id"],
                 "number": problem["number"], "status": problem["status"]}
                for problem in problems if problem.get("worker")]
+    now_ts = datetime.now(timezone.utc).timestamp()
+    machines: list[dict[str, Any]] = []
+    for machine_id, record in sorted(machine_records.items()):
+        heartbeat_at = float(record.get("heartbeat_at", 0.0) or 0.0)
+        stopped_at = float(record.get("stopped_at", 0.0) or 0.0)
+        age = max(0.0, now_ts - heartbeat_at) if heartbeat_at else None
+        if stopped_at:
+            activity = "stopped"
+        elif age is not None and age <= 120.0:
+            activity = "active"
+        else:
+            activity = "stale"
+        worker_ids = [str(value) for value in record.get("worker_ids", ())]
+        current_problems = [
+            problem["problem_id"] for problem in problems
+            if problem.get("worker") in worker_ids
+        ]
+        machines.append({
+            "machine_id": machine_id,
+            "hostname": record.get("hostname") or machine_id,
+            "activity": activity,
+            "heartbeat_age_seconds": round(age) if age is not None else None,
+            "heartbeat_at": datetime.fromtimestamp(
+                heartbeat_at, timezone.utc).isoformat() if heartbeat_at else None,
+            "started_at": datetime.fromtimestamp(
+                float(record.get("started_at", 0.0)), timezone.utc).isoformat()
+                if record.get("started_at") else None,
+            "process_id": record.get("process_id"),
+            "branch": record.get("branch"),
+            "code_commit": record.get("code_commit"),
+            "latest_commit": record.get("latest_commit"),
+            "version_status": record.get("version_status", "unknown"),
+            "worker_slots": len(worker_ids),
+            "worker_ids": worker_ids,
+            "current_problems": current_problems,
+        })
     linked_artifacts = sum(bool(artifact["problem_numbers"]) for artifact in artifacts)
     recorded_chatgpt_links = sum(
         len(run.get("chatgpt", ()))
@@ -434,7 +479,11 @@ def build() -> dict[str, Any]:
             "aristotle_artifacts": len(artifacts),
             "aristotle_linked": linked_artifacts,
             "aristotle_unlinked": len(artifacts) - linked_artifacts,
+            "computers_active": sum(
+                machine["activity"] == "active" for machine in machines),
+            "computers_known": len(machines),
         },
+        "machines": machines,
         "workers": workers,
         "problems": problems,
         "aristotle_artifacts": artifacts,
