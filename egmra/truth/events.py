@@ -47,6 +47,7 @@ ACTIONS = frozenset(
         "BRANCH_REOPENED",
         "BRANCH_KILLED",
         "BRANCH_CLOSED",
+        "PACKET_REENTRY",
         "GATE_DECIDED",
         "ADJUDICATION_RECORDED",
         "PROMOTION_RECORDED",

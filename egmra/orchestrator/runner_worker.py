@@ -281,6 +281,15 @@ def _safe_claim_id(raw: str, *, fallback: str) -> str:
     return cleaned or fallback
 
 
+def _dependency_counts(proposals: list[dict[str, Any]]) -> dict[str, int]:
+    """How often each claim id is depended on — a cheap structural centrality."""
+    counts: dict[str, int] = {}
+    for proposal in proposals:
+        for dep in proposal.get("dependencies", ()):
+            counts[dep] = counts.get(dep, 0) + 1
+    return counts
+
+
 def _is_goal_equivalent(claim_text: str, goal_text: str) -> bool:
     """Mechanical anti-circularity flag: a near-restatement of the target.
 
@@ -423,9 +432,21 @@ def _family_history_block(family_history: list[str]) -> str:
     )
 
 
+def _carried_subgoals_block(subgoals: list[str]) -> str:
+    if not subgoals:
+        return ""
+    rendered = "\n".join(f"- {item}" for item in subgoals[:8])
+    return (
+        "OPEN SUBGOALS FROM PRIOR BRANCHES on this problem (attack these "
+        "specific gaps where your mechanism applies; do not restart from the "
+        "target):\n" + rendered + "\n\n"
+    )
+
+
 def branch_prompt(statement: str, *, role: str, branch_id: str, packet_summary: str,
                   formal_target: str = "", traps: list[str] | None = None,
-                  family_history: list[str] | None = None) -> str:
+                  family_history: list[str] | None = None,
+                  carried_subgoals: list[str] | None = None) -> str:
     return (
         f"You are an EGMRA research worker in the role '{role}' working branch "
         f"'{branch_id}'. {_role_directive(role)} Reason rigorously about the "
@@ -435,6 +456,7 @@ def branch_prompt(statement: str, *, role: str, branch_id: str, packet_summary: 
         + _formal_target_block(formal_target)
         + _traps_block(traps or [])
         + _family_history_block(family_history or [])
+        + _carried_subgoals_block(carried_subgoals or [])
         + "Propose subsidiary claims/lemmas (NOT the target itself), falsifiers, "
         "retrieval queries, candidate integer sequences for OEIS lookup, and "
         "finite experiments. Do NOT assert the target is proved; proof requires "
@@ -545,6 +567,14 @@ class RunnerWorker:
     # runs; rendered into the round-1 branch prompt so blocked routes are only
     # reopened with a materially new mechanism (CDC-prompt discipline).
     family_history: list[str] = field(default_factory=list)
+    # Unclosed subgoals carried over from PRIOR branches on this problem (set
+    # by the orchestrator; report R3 phase 1): later families attack the
+    # specific remaining gaps instead of restarting from the goal.
+    carried_subgoals: list[str] = field(default_factory=list)
+    # Value-aware formalization dispatch cap per branch (report R6): the goal
+    # obligation and structurally central lemmas dispatch first; the rest are
+    # deferred rather than consuming multi-minute vendor tasks.
+    max_formalizations_per_branch: int = 3
     # Formalization obligations already dispatched or emitted for this problem
     # (shared across ``for_role`` views): the same pinned obligation is never
     # paid for twice — not to the vendor (a multi-minute proof) and not to the
@@ -733,6 +763,7 @@ class RunnerWorker:
                     formal_target=self.formal_target,
                     traps=self.problem_traps,
                     family_history=self.family_history,
+                    carried_subgoals=self.carried_subgoals,
                 )
             else:
                 # Refocus the SAME frozen packet on what this branch is now
@@ -832,7 +863,8 @@ class RunnerWorker:
             experiment_replays.extend(round_replays)
             formal_candidates.extend(self._build_formal_candidates(
                 parsed["lean_declaration_candidates"], branch_id=branch_id,
-                seen=seen, failures=failures))
+                seen=seen, failures=failures,
+                dependency_counts=_dependency_counts(proposals)))
 
             search_queries = list(dict.fromkeys(
                 [*search_queries, *parsed["search_queries"]]))
@@ -881,6 +913,7 @@ class RunnerWorker:
             literature_imports=literature_imports,
             failures=failures,
             bottleneck=bottleneck,
+            open_subgoals=list(open_subgoals),
         )
 
     def _ledger_summary(self, proposals: list[dict[str, Any]]) -> str:
@@ -898,7 +931,8 @@ class RunnerWorker:
             del self.failed_approach_memory[:-24]
 
     def _build_formal_candidates(self, candidates, *, branch_id: str,
-                                 seen: set[str], failures: list[str] | None = None) -> list[dict]:
+                                 seen: set[str], failures: list[str] | None = None,
+                                 dependency_counts: dict[str, int] | None = None) -> list[dict]:
         """Turn model Lean declaration candidates into formal_candidates (task 4.6).
 
         Hashes are computed deterministically here (never trusted from the model):
@@ -949,6 +983,35 @@ class RunnerWorker:
                     continue
                 self.dispatched_obligations.add(obligation)
                 pending.append(idx)
+
+        # Value-aware dispatch gate (report R6): a vendor proof runs for many
+        # minutes, so per branch only the most valuable obligations dispatch —
+        # the GOAL obligation first, then lemmas other claims structurally
+        # depend on (centrality), then proposal order. Deferred candidates are
+        # recorded and release their dedupe slot so a later round may promote
+        # them; deferral is telemetry, never a mathematical failure.
+        cap = max(1, int(self.max_formalizations_per_branch))
+        if len(pending) > cap:
+            counts = dependency_counts or {}
+
+            def _priority(idx: int) -> tuple:
+                cand = candidates[idx]
+                requested = cand.get("claim_id") or ""
+                is_goal = requested not in seen or requested == self.goal_claim_id
+                return (0 if is_goal else 1, -counts.get(requested, 0), idx)
+
+            keep = set(sorted(pending, key=_priority)[:cap])
+            for idx in pending:
+                if idx not in keep:
+                    cand = candidates[idx]
+                    self.dispatched_obligations.discard(
+                        ("dispatch", cand["declaration_name"],
+                         _canonical_type_hash(cand["expected_type"])))
+                    if failures is not None:
+                        failures.append(
+                            f"formalization_deferred:{branch_id}:"
+                            f"{cand['declaration_name']}")
+            pending = [idx for idx in pending if idx in keep]
 
         def _produce(idx: int) -> str:
             cand = candidates[idx]

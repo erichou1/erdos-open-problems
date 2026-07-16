@@ -1206,6 +1206,96 @@ def cmd_yield_report(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_escalation_packet(args: argparse.Namespace) -> int:
+    """Render one bounded expert-escalation packet for a stalled problem (R12).
+
+    Pure read-only assembly of state that already exists — the dossier, the
+    latest event log, review/target artifacts — into a single concrete
+    question for a human expert. Expert input returns as a new fact or route
+    decision through the existing signed-review machinery; this packet can
+    never mint a certificate.
+    """
+    problem = from_erdos_number(
+        int(args.erdos), corpus_tex_path=getattr(args, "corpus_tex", None),
+        catalog_path=getattr(args, "catalog", None))
+    problem_id = problem.problem_id
+
+    dossier: dict = {}
+    if getattr(args, "checkpoint_dir", None) is not None:
+        from egmra.orchestrator.dossier import load_dossier
+
+        dossier = load_dossier(
+            Path(args.checkpoint_dir) / problem_id / "dossier.json")
+
+    # Newest event log for this problem: last actions + last recorded failures.
+    runs_dir = Path(args.runs)
+    newest = None
+    for path in runs_dir.glob(f"*{problem_id}*.jsonl"):
+        if newest is None or path.stat().st_mtime > newest.stat().st_mtime:
+            newest = path
+    recent_actions: list[str] = []
+    claims_proposed = 0
+    if newest is not None:
+        for line in newest.read_text(encoding="utf-8").splitlines():
+            try:
+                record = json.loads(line)
+            except json.JSONDecodeError:
+                continue
+            action = str(record.get("action", ""))
+            if action:
+                recent_actions.append(action)
+                if action == "CLAIM_PROPOSED":
+                    claims_proposed += 1
+
+    failed_approaches = list(dossier.get("failed_approaches", ()))[:8]
+    terminal_states = list(dossier.get("terminal_states", ()))[:8]
+    target_path = None
+    if getattr(args, "targets_dir", None) is not None:
+        for name in (f"{problem_id}.lean", f"erdos_{int(args.erdos)}.lean"):
+            candidate = Path(args.targets_dir) / name
+            if candidate.is_file():
+                target_path = candidate
+                break
+    intent_path = (Path(args.reviews_dir) / f"intent-{problem_id}.json"
+                   if getattr(args, "reviews_dir", None) is not None else None)
+
+    # One concrete question, from the most specific stall signal available.
+    if terminal_states and all(s == "BLOCKED_BY_INTERPRETATION" for s in terminal_states):
+        question = ("Which reading of the statement is intended? Attempts "
+                    "terminate at interpretation despite the derived certificate.")
+    elif failed_approaches:
+        question = ("The most recent blocking obstruction is: "
+                    f"{failed_approaches[-1]!r}. What fact, mechanism, or "
+                    "route-pruning decision removes it?")
+    else:
+        question = ("No verified progress after "
+                    f"{dossier.get('attempts', 0)} attempt(s); which single "
+                    "subgoal or mechanism should the next attempt commit to?")
+
+    packet = {
+        "schema_version": 1,
+        "problem_id": problem_id,
+        "statement": problem.display_statement[:800],
+        "attempts": dossier.get("attempts", 0),
+        "terminal_states": terminal_states,
+        "family_outcomes": list(dossier.get("family_outcomes", ()))[:12],
+        "failed_approaches": failed_approaches,
+        "recent_actions": recent_actions[-12:],
+        "claims_proposed_latest_run": claims_proposed,
+        "formal_target": str(target_path) if target_path else None,
+        "intent_certificate": (
+            str(intent_path) if intent_path is not None and intent_path.is_file()
+            else None),
+        "question": question,
+        "note": (
+            "expert input returns as a new fact, mechanism, interpretation "
+            "correction, or route decision via the signed-review machinery — "
+            "never directly as a certificate"),
+    }
+    print(json.dumps(packet, indent=2))
+    return 0
+
+
 def cmd_calibrate(args: argparse.Namespace) -> int:
     """Aggregate outcome ledgers into an honest calibration report (R11)."""
     from egmra.orchestrator.calibration import build_calibration_report
@@ -2550,6 +2640,19 @@ def build_parser() -> argparse.ArgumentParser:
                               default=None,
                               help="outcome-ledger JSONL path (repeatable)")
     yield_report.set_defaults(func=cmd_yield_report)
+
+    escalation = sub.add_parser(
+        "escalation-packet",
+        help="render one bounded expert-escalation packet for a stalled "
+             "problem (report R12): dossier + latest run + one concrete question")
+    escalation.add_argument("--erdos", type=int, required=True)
+    escalation.add_argument("--runs", type=Path, default=Path("egmra_runs"))
+    escalation.add_argument("--checkpoint-dir", type=Path, default=None)
+    escalation.add_argument("--targets-dir", type=Path, default=None)
+    escalation.add_argument("--reviews-dir", type=Path, default=None)
+    escalation.add_argument("--corpus-tex", type=Path, default=None)
+    escalation.add_argument("--catalog", type=Path, default=None)
+    escalation.set_defaults(func=cmd_escalation_packet)
 
     refresh = sub.add_parser(
         "refresh-ranking",

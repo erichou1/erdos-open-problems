@@ -157,6 +157,10 @@ class WorkerOutput:
     assumptions: list[str] = field(default_factory=list)
     formalization_requests: list[str] = field(default_factory=list)
     literature_imports: list[dict] = field(default_factory=list)
+    # Unclosed subgoals the branch left behind — fed forward so LATER branches
+    # attack the specific remaining gaps instead of restarting from the goal
+    # (report R3 phase 1: the gap generates the next work).
+    open_subgoals: list[str] = field(default_factory=list)
 
 
 class Worker(Protocol):
@@ -598,6 +602,22 @@ def _record_model_exchanges(log, artifact_store, problem_id: str, *, runners) ->
     return recorded
 
 
+def _source_identity(uri: str) -> str:
+    """Canonical mathematical-source identity for corroboration (report R9).
+
+    arXiv id and DOI dominate the host: two mirrors of one paper are ONE
+    source. Falls back to the host only when no canonical identity exists.
+    """
+    text = uri.strip().lower()
+    arxiv = re.search(r"arxiv\.org/(?:abs|pdf)/([a-z0-9.\-/]+?)(?:\.pdf)?(?:v\d+)?$", text)
+    if arxiv:
+        return f"arxiv:{arxiv.group(1)}"
+    doi = re.search(r"doi\.org/(\S+)", text)
+    if doi:
+        return f"doi:{doi.group(1)}"
+    return f"host:{urlparse(uri).netloc or uri}"
+
+
 def _admit_literature_imports(
     imports: list[dict], *, packet: SourcePacket, graph: EpistemicGraph,
     router: EvidenceRouter, branch_id: str, failures: list[str],
@@ -610,7 +630,8 @@ def _admit_literature_imports(
     exists in the graph, and the claim's formula genuinely overlaps the record
     text (a mechanical non-sequitur gate, not a truth assertion).  One passing
     record yields ``AUDITED_SOURCE`` \u2014 provenance only, never support; \u22652
-    passing records from distinct source hosts yield
+    passing records from distinct mathematical source identities (arXiv id /
+    DOI, host only as fallback) yield
     ``INDEPENDENTLY_CORROBORATED`` for that claim.  Fail-closed and capped.
     """
     records = {
@@ -645,11 +666,15 @@ def _admit_literature_imports(
         cited.setdefault(claim_id, []).append(record)
     admitted = 0
     for claim_id, claim_records in cited.items():
-        hosts = {
-            urlparse(str(record.source_uri or "")).netloc or record.source_uri
+        # Corroboration must identify independent mathematical SOURCES, not web
+        # hosts (report R9): two mirrors of the same arXiv paper are one
+        # source. Canonical paper identity (arXiv id / DOI) dominates; the
+        # host is only the fallback when no canonical identity exists.
+        identities = {
+            _source_identity(str(record.source_uri or ""))
             for record in claim_records
         }
-        corroborated = len(claim_records) >= 2 and len(hosts) >= 2
+        corroborated = len(claim_records) >= 2 and len(identities) >= 2
         claim = graph.claims[claim_id]
         for record in claim_records:
             evidence = Evidence(
@@ -674,7 +699,7 @@ def _admit_literature_imports(
                         "source_content_hash": record.source_content_hash,
                         "applicability_check_passed": True,
                         "independently_corroborated": corroborated,
-                        "distinct_source_hosts": sorted(hosts),
+                        "distinct_source_identities": sorted(identities),
                     },
                 },
                 verifier_identities=[{
@@ -1307,6 +1332,13 @@ def research(
         trusted_compute_service = getattr(worker, "compute_service", None)
     phases.append("deep_branches")
     attempted: set[str] = set()
+    # R3 phase 1: unclosed subgoals carried across branches (bounded, dedup) so
+    # each later family attacks the specific remaining gaps.
+    carried_subgoals: list[str] = []
+    # R9: bounded auditable packet re-entry state (queries already retried and
+    # how many chained packet versions were created for this problem).
+    reentry_seen_queries: set[str] = {e.query_text for e in packet.query_log}
+    reentry_count = 0
     # Consume a durable within-problem checkpoint: a verified prior snapshot
     # seeds the attempted-branch set (no branch is re-bought) and re-books the
     # budget already spent.  Verification fails closed — a bad checkpoint is
@@ -1795,6 +1827,19 @@ def research(
             graph.claims.get(goal_claim_id)
             and graph.claims[goal_claim_id].truth_status.value == "SUPPORTED"
         )
+        # Obligation-level credit (report R3): a branch that produced a
+        # verified CHILD claim made real search progress even when the goal
+        # itself stays open. The controller and the family registry learn from
+        # that, not only from terminal goal support. Truth is untouched — this
+        # only shapes future allocation.
+        supported_children = [
+            proposal["claim_id"]
+            for proposal in output.claim_proposals
+            if proposal["claim_id"] != goal_claim_id
+            and proposal["claim_id"] in graph.claims
+            and graph.claims[proposal["claim_id"]].truth_status.value == "SUPPORTED"
+        ]
+        search_success = supported or bool(supported_children)
         before_obligations = list(debt_obligations.values())
         if supported:
             # Closing one sufficient OR route discharges the target; alternative
@@ -1812,15 +1857,65 @@ def research(
             before_obligations, list(debt_obligations.values()), debt_policy,
         )
         controller.update_posterior(
-            branch_id, success=supported, debt_reduction=debt_reduction,
+            branch_id, success=search_success, debt_reduction=debt_reduction,
         )
         memory.procedural.admit({
             "kind": "branch_family_outcome",
             "problem_id": problem_id,
             "branch_family": branch_id,
-            "supported": bool(supported),
+            "supported": bool(search_success),
+            "supported_children": list(supported_children),
             "cross_problem_usable": True,
         })
+        # R3 phase 1: feed this branch's unclosed subgoals forward so the NEXT
+        # family attacks the specific remaining gaps (search guidance only).
+        for subgoal in output.open_subgoals:
+            text = str(subgoal).strip()[:300]
+            if text and text not in carried_subgoals:
+                carried_subgoals.append(text)
+        del carried_subgoals[:-8]
+        if hasattr(worker, "carried_subgoals"):
+            worker.carried_subgoals[:] = carried_subgoals
+        # R9: auditable retrieval RE-ENTRY — a branch's own queries may name a
+        # subgoal the frozen packet never covered. Re-query the LOCAL corpus
+        # index and extend the packet as a new chained VERSION (never mutated;
+        # parent hash + trigger + queries recorded in a signed event). The
+        # blackboard keeps the original packet identity (authority slices bind
+        # the frozen v1); imports audit against the current version.
+        new_queries = [
+            q.strip() for q in output.search_queries
+            if q.strip() and q.strip() not in reentry_seen_queries
+        ][:4]
+        if new_queries and getattr(svc, "corpus", None) and reentry_count < 2:
+            reentry_seen_queries.update(new_queries)
+            fresh_records = []
+            known_ids = {r.theorem_id for r in packet.theorem_records}
+            for query in new_queries:
+                for record, _score in svc.index.search(query, limit=2):
+                    if record.theorem_id not in known_ids:
+                        known_ids.add(record.theorem_id)
+                        fresh_records.append(record)
+            if fresh_records:
+                reentry_count += 1
+                parent_hash = packet.packet_hash()
+                packet = packet.reentry(
+                    new_records=fresh_records,
+                    reason=f"branch {branch_id} queries: " + "; ".join(new_queries)[:300],
+                    new_packet_id=f"{packet.packet_id}-r{reentry_count}",
+                )
+                log.append(
+                    action="PACKET_REENTRY", actor=ACTOR, object_ids=[problem_id],
+                    reason_code="retrieval_reentry",
+                    human_readable_reason=(
+                        f"packet re-entry after {branch_id}: "
+                        f"{len(fresh_records)} new records"),
+                    payload={
+                        "parent_packet_hash": parent_hash,
+                        "new_packet_hash": packet.packet_hash(),
+                        "queries": new_queries,
+                        "added_theorem_ids": [r.theorem_id for r in fresh_records],
+                    },
+                )
         leaf = blueprint.nodes.get(f"leaf:{branch_id}")
         if leaf is not None:
             leaf.closed = supported
