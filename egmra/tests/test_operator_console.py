@@ -7,8 +7,10 @@ import json
 import os
 import stat
 import subprocess
+from types import SimpleNamespace
 from pathlib import Path
 
+import operator_console as console_module
 from operator_console import (
     Operator,
     _load_config,
@@ -105,3 +107,58 @@ def test_safe_update_preserves_ignored_secrets_and_local_tracked_edits(tmp_path)
     assert hashlib.sha256(secret.read_bytes()).hexdigest() == before_hash
     # The safety backup remains even after a clean reapplication.
     assert _git(root, "rev-parse", "refs/stash")
+
+
+def _fake_app_sources(root: Path) -> None:
+    executable = root / "EGMRA Operator.app" / "Contents" / "MacOS" / "egmra-operator"
+    executable.parent.mkdir(parents=True)
+    executable.write_text("#!/bin/zsh\n")
+    (root / "EGMRA Operator.cmd").write_text("@echo off\r\n")
+
+
+def test_install_macos_app_writes_private_repo_pointer(tmp_path):
+    root, home = tmp_path / "repo", tmp_path / "home"
+    root.mkdir(); home.mkdir(); _fake_app_sources(root)
+    message = Operator(root=root, home=home, platform="darwin")._install_app()
+    installed = home / "Applications" / "EGMRA Operator.app"
+    pointer = home / "Library" / "Application Support" / "EGMRA Operator" / "repo-path"
+    assert installed.is_dir() and "Installed" in message
+    assert pointer.read_text().strip() == str(root.resolve())
+    assert stat.S_IMODE(pointer.stat().st_mode) == 0o600
+    assert stat.S_IMODE((installed / "Contents" / "MacOS" / "egmra-operator").stat().st_mode) == 0o755
+
+
+def test_install_windows_app_creates_launcher_pointer_and_shortcuts(
+        tmp_path, monkeypatch):
+    root, home = tmp_path / "repo", tmp_path / "home"
+    root.mkdir(); home.mkdir(); _fake_app_sources(root)
+    appdata = home / "AppData" / "Roaming"
+    local = home / "AppData" / "Local"
+    calls = []
+
+    def fake_run(args, **_kwargs):
+        calls.append(args)
+        return SimpleNamespace(returncode=0, stdout="")
+
+    monkeypatch.setattr(console_module, "_run", fake_run)
+    message = Operator(
+        root=root, home=home, platform="win32",
+        environment={"APPDATA": str(appdata), "LOCALAPPDATA": str(local)},
+    )._install_app()
+    installed = local / "EGMRA Operator"
+    assert (installed / "EGMRA Operator.cmd").is_file()
+    assert (installed / "repo-path.txt").read_text().strip() == str(root.resolve())
+    assert len(calls) == 2 and all(call[0] == "powershell.exe" for call in calls)
+    assert "Installed Windows launcher" in message
+
+
+def test_install_linux_desktop_entry_points_at_checkout(tmp_path):
+    root, home = tmp_path / "repo", tmp_path / "home"
+    root.mkdir(); home.mkdir()
+    message = Operator(root=root, home=home, platform="linux")._install_app()
+    desktop = home / ".local" / "share" / "applications" / "egmra-operator.desktop"
+    text = desktop.read_text()
+    assert "Name=EGMRA Operator" in text
+    assert str(root / "operator_console.py") in text
+    assert stat.S_IMODE(desktop.stat().st_mode) == 0o755
+    assert "application menu" in message

@@ -1,0 +1,26 @@
+#!/bin/zsh
+set -eu
+
+POINTER="$HOME/Library/Application Support/EGMRA Operator/repo-path"
+BUNDLE_DIR="${0:A:h:h:h}"
+if [[ -f "$POINTER" ]]; then
+  IFS= read -r REPO_ROOT < "$POINTER"
+else
+  REPO_ROOT="${BUNDLE_DIR:h}"
+fi
+
+PYTHON="$REPO_ROOT/.venv/bin/python"
+CONSOLE="$REPO_ROOT/operator_console.py"
+LOG="${TMPDIR:-/tmp}/egmra_operator_console.log"
+
+show_error() {
+  /usr/bin/osascript -e "display dialog \"$1\" with title \"EGMRA Operator\" buttons {\"OK\"} default button \"OK\" with icon stop"
+}
+
+if [[ ! -x "$PYTHON" || ! -f "$CONSOLE" ]]; then
+  show_error "Cannot find the EGMRA checkout or virtual environment. Open EGMRA Operator.app from the repository once, or reinstall it from the operator console."
+  exit 1
+fi
+
+/usr/bin/nohup "$PYTHON" -u "$CONSOLE" >> "$LOG" 2>&1 &
+exit 0

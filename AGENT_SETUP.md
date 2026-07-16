@@ -17,11 +17,19 @@ ever work the same problem.
 ## Recommended daily operation — local control console
 
 After completing setup once, operators should not need to edit launch commands.
-On macOS, double-click `run_operator_console.command`; on macOS/Linux terminal:
+
+- **macOS:** double-click `EGMRA Operator.app` in the checkout.
+- **Windows:** double-click `EGMRA Operator.cmd` in the checkout.
+- **Linux / terminal fallback:**
 
 ```bash
 .venv/bin/python operator_console.py
 ```
+
+In the console, click **Install / refresh app** to add it to `~/Applications`
+and Spotlight (macOS), Desktop + Start Menu (Windows), or the desktop
+application menu (Linux). The installed launcher stores only a private pointer
+to this checkout; update/launch logic always comes from the newly updated repo.
 
 It opens a localhost-only page with:
 

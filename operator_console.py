@@ -19,7 +19,9 @@ import json
 import os
 import re
 import shlex
+import shutil
 import signal
+import socket
 import stat
 import subprocess
 import sys
@@ -31,6 +33,8 @@ from http import HTTPStatus
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from typing import Any
+from urllib.error import URLError
+from urllib.request import urlopen
 
 ROOT = Path(__file__).resolve().parent
 STATE_DIR = ROOT / ".egmra_operator"
@@ -42,6 +46,20 @@ DEFAULT_PORT = 8765
 
 class OperatorError(RuntimeError):
     pass
+
+
+def _venv_python(root: Path, *, windowless: bool = False) -> Path:
+    if os.name == "nt":
+        name = "pythonw.exe" if windowless else "python.exe"
+        candidate = root / ".venv" / "Scripts" / name
+        if windowless and not candidate.is_file():
+            return root / ".venv" / "Scripts" / "python.exe"
+        return candidate
+    return root / ".venv" / "bin" / "python"
+
+
+def _hostname() -> str:
+    return socket.gethostname().split(".", 1)[0] or "unknown-host"
 
 
 def _run(args: list[str], *, root: Path = ROOT, timeout: float | None = None,
@@ -103,7 +121,8 @@ def _default_config(root: Path = ROOT) -> dict[str, Any]:
         root / "egmra_campaigns" / "policy-local.json",
     ]
     policy = next((path for path in policy_candidates if path.is_file()), policy_candidates[0])
-    repl = root.parent / "repl" / ".lake" / "build" / "bin" / "repl"
+    repl_name = "repl.exe" if os.name == "nt" else "repl"
+    repl = root.parent / "repl" / ".lake" / "build" / "bin" / repl_name
     return {
         "schema_version": 1,
         "branch": "audit/egmra-independent-remediation-20260713",
@@ -127,7 +146,9 @@ def _default_config(root: Path = ROOT) -> dict[str, Any]:
         "lean_repair_rounds": 2,
         "hostile_review": 2,
         "budget": 100,
-        "log_file": f"/tmp/egmra_campaign_{os.uname().nodename.split('.')[0]}.log",
+        "log_file": str(
+            (Path(os.environ.get("TEMP", "/tmp"))
+             / f"egmra_campaign_{_hostname()}.log")),
     }
 
 
@@ -198,6 +219,28 @@ def _pid_cwd(pid: int) -> Path | None:
 
 
 def _campaign_processes(root: Path = ROOT) -> list[dict[str, Any]]:
+    if os.name == "nt":
+        script = (
+            "Get-CimInstance Win32_Process | "
+            "Select-Object ProcessId,CommandLine | ConvertTo-Json -Compress")
+        result = _run([
+            "powershell.exe", "-NoProfile", "-NonInteractive",
+            "-Command", script,
+        ], timeout=8)
+        try:
+            payload = json.loads(result.stdout or "[]")
+        except json.JSONDecodeError:
+            return []
+        records = payload if isinstance(payload, list) else [payload]
+        root_text = str(root.resolve()).lower()
+        rows = []
+        for record in records:
+            command = str(record.get("CommandLine") or "")
+            pid = int(record.get("ProcessId") or 0)
+            if "-m egmra.cli campaign" in command \
+                    and root_text in command.lower():
+                rows.append({"pid": pid, "command": command, "managed": True})
+        return rows
     result = _run(["ps", "-axo", "pid=,command="], timeout=5)
     rows = []
     for line in result.stdout.splitlines():
@@ -214,7 +257,7 @@ def _campaign_processes(root: Path = ROOT) -> list[dict[str, Any]]:
 
 
 def build_campaign_command(config: dict[str, Any], root: Path = ROOT) -> list[str]:
-    python = root / ".venv" / "bin" / "python"
+    python = _venv_python(root)
     command = [
         str(python), "-u", "-m", "egmra.cli", "campaign",
         "--campaign-id", str(config["campaign_id"]),
@@ -235,7 +278,7 @@ def build_campaign_command(config: dict[str, Any], root: Path = ROOT) -> list[st
         "--retrieval", "corpus", "--oeis", "offline", "--explore-blocked",
         "--checkpoint-dir", str(config["checkpoint_dir"]),
         "--auto-rerank",
-        "--outcome-ledger", f"egmra_outcomes/shared-{os.uname().nodename.split('.')[0]}.jsonl",
+        "--outcome-ledger", f"egmra_outcomes/shared-{_hostname()}.jsonl",
         "--state-store", str(config["state_store"]),
         "--policy", str(config["policy"]),
     ]
@@ -247,6 +290,10 @@ def build_campaign_command(config: dict[str, Any], root: Path = ROOT) -> list[st
 @dataclass
 class Operator:
     root: Path = ROOT
+    home: Path = field(default_factory=Path.home)
+    platform: str = field(default_factory=lambda: sys.platform)
+    environment: dict[str, str] = field(
+        default_factory=lambda: dict(os.environ), repr=False)
     lock: threading.RLock = field(default_factory=threading.RLock)
     job: dict[str, Any] = field(default_factory=lambda: {
         "running": False, "name": "", "message": "", "ok": None,
@@ -289,7 +336,7 @@ class Operator:
         profile = _resolve(self.root, str(config["chatgpt_profile"]))
         policy = _resolve(self.root, str(config["policy"]))
         lean = _resolve(self.root, str(config["lean_project"]))
-        python = self.root / ".venv" / "bin" / "python"
+        python = _venv_python(self.root)
         env = _load_shell_exports(keys)
         env.update(_load_shell_exports(self.root / ".env"))
         return {
@@ -366,7 +413,7 @@ class Operator:
         changed = _git(self.root, "diff", "--name-only", old_head, new_head).stdout.splitlines()
         if any(path in changed for path in ("requirements.txt", "pyproject.toml")):
             self.log("Dependencies changed; updating virtual environment")
-            python = str(self.root / ".venv" / "bin" / "python")
+            python = str(_venv_python(self.root))
             _run([python, "-m", "pip", "install", "-r", "requirements.txt"],
                  root=self.root, timeout=1800, check=True)
             _run([python, "-m", "pip", "install", "-e", ".[aristotle]"],
@@ -432,6 +479,76 @@ class Operator:
                 "the console never force-kills because that could cut a checkpoint write.")
         return "Pipeline stopped cleanly: " + ", ".join(map(str, pids))
 
+    def _install_app(self) -> str:
+        """Install a native launcher; all control logic stays in this checkout."""
+        if self.platform == "darwin":
+            source = self.root / "EGMRA Operator.app"
+            if not source.is_dir():
+                raise OperatorError("EGMRA Operator.app is missing from this checkout")
+            destination = self.home / "Applications" / source.name
+            support = self.home / "Library" / "Application Support" / "EGMRA Operator"
+            destination.parent.mkdir(parents=True, exist_ok=True)
+            support.mkdir(parents=True, exist_ok=True)
+            shutil.copytree(source, destination, dirs_exist_ok=True)
+            (destination / "Contents" / "MacOS" / "egmra-operator").chmod(0o755)
+            pointer = support / "repo-path"
+            pointer.write_text(str(self.root.resolve()) + "\n", encoding="utf-8")
+            pointer.chmod(0o600)
+            return f"Installed {destination}. Open it from Finder or Spotlight."
+
+        if self.platform.startswith("win"):
+            source = self.root / "EGMRA Operator.cmd"
+            if not source.is_file():
+                raise OperatorError("EGMRA Operator.cmd is missing from this checkout")
+            local = Path(self.environment.get(
+                "LOCALAPPDATA", self.home / "AppData" / "Local"))
+            app_dir = local / "EGMRA Operator"
+            app_dir.mkdir(parents=True, exist_ok=True)
+            destination = app_dir / source.name
+            shutil.copyfile(source, destination)
+            pointer = app_dir / "repo-path.txt"
+            pointer.write_text(str(self.root.resolve()) + "\n", encoding="utf-8")
+            shortcut_paths = [self.home / "Desktop" / "EGMRA Operator.lnk"]
+            appdata = self.environment.get("APPDATA")
+            if appdata:
+                shortcut_paths.append(
+                    Path(appdata) / "Microsoft" / "Windows" / "Start Menu"
+                    / "Programs" / "EGMRA Operator.lnk")
+            installed = []
+            for shortcut in shortcut_paths:
+                shortcut.parent.mkdir(parents=True, exist_ok=True)
+                shortcut_ps = str(shortcut).replace("'", "''")
+                destination_ps = str(destination).replace("'", "''")
+                root_ps = str(self.root).replace("'", "''")
+                script = (
+                    "$w=New-Object -ComObject WScript.Shell;"
+                    f"$s=$w.CreateShortcut('{shortcut_ps}');"
+                    f"$s.TargetPath='{destination_ps}';"
+                    f"$s.WorkingDirectory='{root_ps}';"
+                    "$s.Save()")
+                result = _run([
+                    "powershell.exe", "-NoProfile", "-NonInteractive",
+                    "-Command", script], timeout=20)
+                if result.returncode == 0:
+                    installed.append(str(shortcut))
+            return (
+                f"Installed Windows launcher at {destination}. "
+                + ("Shortcuts: " + ", ".join(installed) if installed else
+                   "Open that .cmd directly; shortcut creation was unavailable."))
+
+        applications = self.home / ".local" / "share" / "applications"
+        applications.mkdir(parents=True, exist_ok=True)
+        destination = applications / "egmra-operator.desktop"
+        python = _venv_python(self.root)
+        content = (
+            "[Desktop Entry]\nType=Application\nName=EGMRA Operator\n"
+            f"Exec={shlex.quote(str(python))} -u "
+            f"{shlex.quote(str(self.root / 'operator_console.py'))}\n"
+            "Terminal=false\nIcon=utilities-terminal\nCategories=Science;Development;\n")
+        destination.write_text(content, encoding="utf-8")
+        destination.chmod(0o755)
+        return f"Installed {destination}. Open EGMRA Operator from the application menu."
+
     def perform(self, action: str, payload: dict[str, Any]) -> str:
         if action == "save_config":
             _save_config(dict(payload.get("config") or {}), self.root)
@@ -445,6 +562,8 @@ class Operator:
             return self._start()
         if action == "stop":
             return self._stop()
+        if action == "install_app":
+            return self._install_app()
         if action == "update_restart":
             stop_message = self._stop()
             update_message = self._safe_update()
@@ -477,13 +596,19 @@ class Operator:
 
 HTML = r'''<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>EGMRA Operator</title><style>
 :root{--bg:#eeece3;--ink:#1e2220;--line:#c4c5bd;--paper:#faf9f3;--green:#29775e;--red:#bd4736;--amber:#ae781f;--blue:#35677f}*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:13px ui-monospace,SFMono-Regular,Menlo,monospace}header{height:74px;border-bottom:1px solid var(--ink);display:flex;align-items:center;justify-content:space-between;padding:0 4vw;position:sticky;top:0;background:rgba(238,236,227,.96);z-index:3}h1{font:600 24px Georgia,serif;margin:0}header span{font-size:10px;color:#656a66}main{max-width:1200px;margin:auto;padding:30px 4vw 60px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.panel{border-top:1px solid var(--ink);padding-top:13px}.panel h2{font:600 18px Georgia,serif;margin:0 0 14px}.cards{display:grid;grid-template-columns:repeat(2,1fr);gap:1px;background:var(--line);border:1px solid var(--line)}.card{background:var(--paper);padding:13px}.card small,.card strong{display:block}.card small{font-size:8px;color:#676b68;text-transform:uppercase;margin-bottom:7px}.card strong{font-size:11px;overflow-wrap:anywhere}.ok{color:var(--green)}.bad{color:var(--red)}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions button{min-height:42px;border:1px solid var(--ink);background:transparent;font:600 10px inherit;cursor:pointer}.actions button:hover{background:var(--ink);color:var(--bg)}.actions .primary{background:var(--green);border-color:var(--green);color:white}.actions .danger{color:var(--red);border-color:var(--red)}.job{margin:12px 0;padding:12px;border-left:3px solid var(--amber);background:var(--paper);font-size:10px;line-height:1.5}.job.good{border-color:var(--green)}.job.fail{border-color:var(--red)}pre{background:var(--ink);color:#d9ded9;padding:14px;height:230px;overflow:auto;font-size:9px;line-height:1.5;white-space:pre-wrap}.config{display:grid;grid-template-columns:1fr 1fr;gap:9px}.field label{font-size:8px;text-transform:uppercase;color:#676b68;display:block;margin-bottom:4px}.field input{width:100%;height:34px;border:1px solid var(--line);background:var(--paper);padding:0 8px;font:10px inherit}.field.check{display:flex;align-items:end;gap:8px;padding-bottom:8px}.field.check label{margin:0}.footer-note{font-size:9px;line-height:1.6;color:#676b68;margin-top:13px}@media(max-width:750px){.grid{grid-template-columns:1fr}.config{grid-template-columns:1fr}.actions{grid-template-columns:1fr}header{padding:0 14px}main{padding:22px 14px}}</style></head><body><header><div><span>LOCALHOST ONLY / MACHINE CONTROL</span><h1>EGMRA Operator</h1></div><span id="clock">Loading…</span></header><main><div class="grid"><section class="panel"><h2>This computer</h2><div id="cards" class="cards"></div><div id="job" class="job">Ready.</div><div class="actions"><button data-action="check_update">Check for update</button><button data-action="update">Safe update</button><button class="primary" data-action="start">Run / resume pipeline</button><button data-action="update_restart">Update + restart</button><button class="danger" data-action="stop">Stop cleanly</button><button id="refresh">Refresh</button></div><p class="footer-note">Safe update is fast-forward only. Tracked and untracked local edits are backed up in a retained Git stash and reapplied. Ignored keys, browser cookies, runs, checkpoints, outcomes, reviews, targets, local config, and Lean caches are never touched.</p></section><section class="panel"><h2>Activity log</h2><pre id="log">No activity yet.</pre></section></div><section class="panel" style="margin-top:26px"><h2>Per-machine settings</h2><div id="config" class="config"></div><div class="actions" style="margin-top:12px"><button class="primary" id="save">Save local settings</button></div><p class="footer-note">Saved to operator.local.json (mode 600, gitignored). Secret values are never displayed here; edit egmra.keys.sh directly if credentials change.</p></section></main><script>
-const TOKEN='__TOKEN__';let last={};const $=s=>document.querySelector(s);const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const TOKEN='__TOKEN__';let last={};const $=s=>document.querySelector(s);const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]));
 const labels={branch:'Git branch',campaign_id:'Campaign ID',workers:'Browser workers (1–5)',chatgpt_profile:'ChatGPT profile directory',policy:'Signed policy path',lean_project:'Lean project',lean_dev_repl:'Warm Lean REPL command',keys_file:'Keys file',triage_dir:'Triage directory',triage_lane:'Triage lane',max_problems:'Maximum problems',reviews_dir:'Reviews directory',targets_dir:'Targets directory',checkpoint_dir:'Checkpoint directory',log_file:'Log file'};
 async function api(path,options={}){options.headers={...(options.headers||{}),'Content-Type':'application/json','X-EGMRA-Token':TOKEN};const r=await fetch(path,options);const d=await r.json();if(!r.ok)throw new Error(d.error||r.statusText);return d}
 function render(d){last=d;$('#clock').textContent=new Date().toLocaleTimeString();const p=d.prerequisites,g=d.git,c=d.campaign;const chatReady=p.chatgpt_profile&&p.chatgpt_workspace;const rows=[['Pipeline',c.running?`Running · ${c.processes.map(x=>x.pid).join(', ')}`:'Stopped',c.running],['Version',`${g.relation} · ${g.local.slice(0,8)}`,g.relation==='current'],['Local edits',`${g.dirty_count} files`,true],['Keys',p.keys_file&&p.aristotle_key?'Configured':'Missing / unsafe',p.keys_file&&p.aristotle_key],['ChatGPT',chatReady?'Login + workspace ready':p.chatgpt_profile?'Workspace URL missing':'Profile missing',chatReady],['Lean + policy',p.lean_project&&p.policy?'Ready':'Not ready',p.lean_project&&p.policy]];$('#cards').innerHTML=rows.map(x=>`<div class="card"><small>${x[0]}</small><strong class="${x[2]?'ok':'bad'}">${esc(x[1])}</strong></div>`).join('');const j=d.job;$('#job').className='job '+(j.ok===true?'good':j.ok===false?'fail':'');$('#job').textContent=j.running?`Running: ${j.name}…`:j.message||'Ready.';$('#log').textContent=(d.log||[]).join('\n')||'No activity yet.';$('#log').scrollTop=$('#log').scrollHeight;if(!$('#config').children.length){$('#config').innerHTML=Object.entries(labels).map(([k,l])=>`<div class="field"><label>${l}</label><input data-key="${k}" value="${esc(d.config[k])}"></div>`).join('')+`<div class="field check"><input id="prefer" type="checkbox" ${d.config.prefer_solvable?'checked':''}><label for="prefer">Prefer most solvable pending problems</label></div>`}}
 async function refresh(fetch=false){try{render(await api('/api/status'+(fetch?'?fetch=1':'')))}catch(e){$('#job').textContent=e.message;$('#job').className='job fail'}}
 document.querySelectorAll('[data-action]').forEach(b=>b.onclick=async()=>{try{await api('/api/action',{method:'POST',body:JSON.stringify({action:b.dataset.action})});refresh()}catch(e){alert(e.message)}});$('#refresh').onclick=()=>refresh();$('#save').onclick=async()=>{const config={...last.config};document.querySelectorAll('[data-key]').forEach(i=>config[i.dataset.key]=i.type==='number'?Number(i.value):i.value);config.workers=Number(config.workers);config.max_problems=Number(config.max_problems);config.prefer_solvable=$('#prefer').checked;await api('/api/action',{method:'POST',body:JSON.stringify({action:'save_config',config})});refresh()};refresh();setInterval(refresh,2000);
 </script></body></html>'''
+
+HTML = HTML.replace(
+    '<button id="refresh">Refresh</button>',
+    '<button data-action="install_app">Install / refresh app</button>'
+    '<button id="refresh">Refresh</button>',
+)
 
 
 class Handler(BaseHTTPRequestHandler):
@@ -551,10 +676,25 @@ def main() -> int:
     args = parser.parse_args()
     STATE_DIR.mkdir(parents=True, exist_ok=True)
     _load_config(ROOT)  # create private local defaults on first launch
+    url = f"http://{HOST}:{args.port}/"
+    try:
+        with urlopen(url, timeout=.7) as response:
+            existing = response.read(4096).decode("utf-8", errors="ignore")
+        if "EGMRA Operator" in existing:
+            print(f"EGMRA Operator is already running: {url}")
+            if not args.no_browser:
+                webbrowser.open(url)
+            return 0
+    except (OSError, URLError):
+        pass
     operator = Operator(ROOT)
     token = os.urandom(24).hex()
     handler = type("OperatorHandler", (Handler,), {"operator": operator, "token": token})
-    server = ThreadingHTTPServer((HOST, args.port), handler)
+    try:
+        server = ThreadingHTTPServer((HOST, args.port), handler)
+    except OSError as exc:
+        raise OperatorError(
+            f"cannot bind {url}; another program is using that port: {exc}") from exc
     url = f"http://{HOST}:{server.server_port}/"
     print(f"EGMRA Operator: {url}")
     print("Localhost only. Press Ctrl-C to stop the console (campaign continues).")
