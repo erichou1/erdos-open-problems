@@ -55,10 +55,51 @@
         "intended_statement_status": {"type": "string", "minLength": 1}
       }
     },
-    "metadata": {"type": "object"},
+    "metadata": {
+      "type": "object",
+      "required": ["prize", "prize_status", "ai_wiki"],
+      "properties": {
+        "prize": {"type": ["string", "null"]},
+        "prize_status": {"enum": ["unpaid", "paid", "unknown"]},
+        "ai_wiki": {"type": "object"}
+      }
+    },
     "problem_type": {"type": "object"},
     "subproblems": {"type": "array", "items": {"type": "object"}},
-    "probe_summary": {"type": "object"},
+    "probe_summary": {
+      "type": "object",
+      "required": ["literature_ranking"],
+      "properties": {
+        "literature_ranking": {
+          "type": "object",
+          "required": [
+            "coverage_status", "local_artifact_hash", "live_artifact_hashes",
+            "local_features", "features", "coverage_gaps",
+            "supporting_snippets", "queries", "cache_reused_artifacts",
+            "live_requests"
+          ],
+          "properties": {
+            "coverage_status": {
+              "enum": ["local_only", "partial", "live_complete"]
+            },
+            "local_artifact_hash": {
+              "type": "string", "pattern": "^[0-9a-f]{64}$"
+            },
+            "live_artifact_hashes": {
+              "type": "array",
+              "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+            },
+            "local_features": {"type": "object"},
+            "features": {"type": "object"},
+            "coverage_gaps": {"type": "array", "items": {"type": "string"}},
+            "supporting_snippets": {"type": "array", "items": {"type": "object"}},
+            "queries": {"type": "array", "items": {"type": "object"}},
+            "cache_reused_artifacts": {"type": "integer", "minimum": 0},
+            "live_requests": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    },
     "provenance": {
       "type": "object",
       "required": [

@@ -26,6 +26,91 @@ def _now() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+def _validate_allocation_prize_tiers(records: list[dict]) -> None:
+    statuses = [record.get("prize_status") for record in records]
+    if any(status not in {"unpaid", "paid"} for status in statuses):
+        raise ValueError("allocation contains unknown prize metadata")
+    if statuses != sorted(statuses, key={"unpaid": 0, "paid": 1}.__getitem__):
+        raise ValueError("paid allocation row precedes unpaid row")
+    for record in records:
+        expected_tier = 0 if record["prize_status"] == "unpaid" else 1
+        if record.get("selection_priority_tier") != expected_tier:
+            raise ValueError("allocation selection priority tier mismatch")
+
+
+def _validate_allocation_policy(context: dict) -> None:
+    valid = (
+        context.get("prize_policy_version") == "strict-unpaid-first-v1"
+        and context.get("literature_policy_version") == "literature-ranking-v1"
+        and context.get("literature_model_version") == "literature-opportunity-v1"
+        and context.get("literature_live_shortlist_limit") == 50
+        and isinstance(context.get("literature_snapshot_sha256"), str)
+        and re.fullmatch(
+            r"[0-9a-f]{64}", context["literature_snapshot_sha256"]
+        ) is not None
+    )
+    if not valid:
+        raise ValueError("allocation policy is unsupported or incomplete")
+
+
+def _expected_interleave(
+    exploitation: list[dict], exploration: list[dict], *,
+    exploit_per_explore: int,
+) -> list[tuple[int, str]]:
+    expected: list[tuple[int, str]] = []
+    exploit_index = 0
+    explore_index = 0
+    while exploit_index < len(exploitation) or explore_index < len(exploration):
+        for _ in range(exploit_per_explore):
+            if exploit_index >= len(exploitation):
+                break
+            expected.append((
+                exploitation[exploit_index]["problem_number"], "exploitation"
+            ))
+            exploit_index += 1
+        if explore_index < len(exploration):
+            expected.append((
+                exploration[explore_index]["problem_number"],
+                "protected_exploration",
+            ))
+            explore_index += 1
+        if exploit_index >= len(exploitation) and explore_index < len(exploration):
+            expected.extend(
+                (record["problem_number"], "protected_exploration")
+                for record in exploration[explore_index:]
+            )
+            break
+    return expected
+
+
+def _validate_tiered_lane_cadence(
+    allocation: list[dict], *, exploit_per_explore: int = 4,
+    exploitation: list[dict] | None = None,
+    exploration: list[dict] | None = None,
+) -> None:
+    exploitation = exploitation if exploitation is not None else [
+        record for record in allocation
+        if record.get("allocation_lane") == "exploitation"
+    ]
+    exploration = exploration if exploration is not None else [
+        record for record in allocation
+        if record.get("allocation_lane") == "protected_exploration"
+    ]
+    expected: list[tuple[int, str]] = []
+    for prize_status in ("unpaid", "paid"):
+        expected.extend(_expected_interleave(
+            [record for record in exploitation if record["prize_status"] == prize_status],
+            [record for record in exploration if record["prize_status"] == prize_status],
+            exploit_per_explore=exploit_per_explore,
+        ))
+    actual = [
+        (record["problem_number"], record["allocation_lane"])
+        for record in allocation
+    ]
+    if actual != expected:
+        raise ValueError("protected exploration cadence/order mismatch")
+
+
 @dataclass(frozen=True)
 class AllocationPlan:
     allocation_context_id: str
@@ -81,6 +166,7 @@ def load_allocation_plan(
     context = ranking.get("allocation_context")
     if not isinstance(context, dict):
         raise ValueError("allocation context is absent")
+    _validate_allocation_policy(context)
     calculated_context_id = hashlib.sha256(
         canonical_json(context).encode("utf-8")
     ).hexdigest()
@@ -134,6 +220,9 @@ def load_allocation_plan(
         ranking.get("protected_exploration"), "protected exploration"
     )
     allocation = records(ranking.get("allocation_queue"), "allocation")
+    _validate_allocation_prize_tiers(exploitation)
+    _validate_allocation_prize_tiers(exploration)
+    _validate_allocation_prize_tiers(allocation)
 
     def numbers(records: list[dict], label: str) -> list[int]:
         result = [validated_problem_number(record, label) for record in records]
@@ -148,6 +237,15 @@ def load_allocation_plan(
     allocation_numbers = numbers(allocation, "allocation")
     if set(allocation_numbers) != set(exploit_numbers) | set(explore_numbers):
         raise ValueError("allocation queue omits or adds lane members")
+    lane_prize_status = {
+        record["problem_number"]: record["prize_status"]
+        for record in [*exploitation, *exploration]
+    }
+    if any(
+        record["prize_status"] != lane_prize_status[record["problem_number"]]
+        for record in allocation
+    ):
+        raise ValueError("allocation prize metadata differs from source lane")
     for rank, record in enumerate(allocation, 1):
         allocation_rank = record.get("allocation_rank")
         if (
@@ -164,32 +262,10 @@ def load_allocation_plan(
         allocation_lane = record.get("allocation_lane")
         if not isinstance(allocation_lane, str) or allocation_lane != expected_lane:
             raise ValueError("allocation lane label mismatch")
-    expected_interleave: list[tuple[int, str]] = []
-    exploit_index = 0
-    explore_index = 0
-    while exploit_index < len(exploit_numbers) or explore_index < len(explore_numbers):
-        for _ in range(4):
-            if exploit_index >= len(exploit_numbers):
-                break
-            expected_interleave.append((exploit_numbers[exploit_index], "exploitation"))
-            exploit_index += 1
-        if explore_index < len(explore_numbers):
-            expected_interleave.append((
-                explore_numbers[explore_index], "protected_exploration"
-            ))
-            explore_index += 1
-        if exploit_index >= len(exploit_numbers) and explore_index < len(explore_numbers):
-            expected_interleave.extend(
-                (number, "protected_exploration")
-                for number in explore_numbers[explore_index:]
-            )
-            break
-    actual_interleave = [
-        (record["problem_number"], record["allocation_lane"])
-        for record in allocation
-    ]
-    if actual_interleave != expected_interleave:
-        raise ValueError("protected exploration cadence/order mismatch")
+    _validate_tiered_lane_cadence(
+        allocation, exploit_per_explore=4,
+        exploitation=exploitation, exploration=exploration,
+    )
     return AllocationPlan(
         allocation_context_id=recorded_context_id,
         ranking_content_sha256=calculated_ranking_hash,

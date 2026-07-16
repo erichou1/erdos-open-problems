@@ -162,6 +162,16 @@ class LiteratureContext:
         }
 
 
+@dataclass(frozen=True)
+class _IndexedProblem:
+    number: int
+    raw_tex: str
+    tags: frozenset[str]
+    citations: frozenset[str]
+    vector: dict[str, float]
+    source_sha256: str
+
+
 # ── corpus loading + scoring ─────────────────────────────────────────────────
 
 def _load_tags(root: Path) -> dict[int, set[str]]:
@@ -250,66 +260,112 @@ def _render(problem_number: int, related: list[RelatedProblem],
     return "\n".join(lines)
 
 
+class LiteratureIndex:
+    """A reusable, immutable TF-IDF/tag/citation view of the local corpus."""
+
+    def __init__(self, root: Path):
+        self.root = Path(root)
+        corpus_root = (
+            self.root
+            if (self.root / "individual").is_dir()
+            else self.root / "open"
+        )
+        texts = _corpus_texts(corpus_root)
+        tags = _load_tags(self.root)
+        token_map = {
+            number: tokens(display_text(tex)) for number, tex in texts.items()
+        }
+        document_frequency: Counter = Counter()
+        for document_tokens in token_map.values():
+            document_frequency.update(set(document_tokens))
+        document_count = max(1, len(texts))
+        self._problems = {
+            number: _IndexedProblem(
+                number=number,
+                raw_tex=tex,
+                tags=frozenset(tags.get(number, set())),
+                citations=frozenset(citations(tex)),
+                vector=_tfidf(
+                    token_map[number], document_frequency, document_count
+                ),
+                source_sha256=hashlib.sha256(tex.encode("utf-8")).hexdigest(),
+            )
+            for number, tex in texts.items()
+        }
+
+    def source_hashes(self, problem_number: int) -> tuple[str, ...]:
+        target = self._problems.get(problem_number)
+        if target is None:
+            return ()
+        context = self.research(problem_number)
+        numbers = [problem_number, *(item.number for item in context.related)]
+        return tuple(self._problems[number].source_sha256 for number in numbers)
+
+    def research(
+        self, problem_number: int, *, max_related: int = 6,
+        max_results_each: int = 3, max_refs: int = 15,
+        min_cosine: float = 0.05,
+    ) -> LiteratureContext:
+        target = self._problems.get(problem_number)
+        if target is None:
+            return LiteratureContext(problem_number, (), (), "", "")
+        scored: list[RelatedProblem] = []
+        for number, candidate in self._problems.items():
+            if number == problem_number:
+                continue
+            shared_tags = set(target.tags & candidate.tags)
+            shared_cites = set(target.citations & candidate.citations)
+            cosine = _cosine(target.vector, candidate.vector)
+            score = (
+                0.40 * _jaccard(set(target.tags), set(candidate.tags))
+                + 0.35 * _jaccard(
+                    set(target.citations), set(candidate.citations)
+                )
+                + 0.25 * cosine
+            )
+            if score <= 0 or not (
+                shared_tags or shared_cites or cosine >= min_cosine
+            ):
+                continue
+            scored.append(RelatedProblem(
+                number=number,
+                score=round(score, 3),
+                shared_tags=tuple(sorted(shared_tags)),
+                shared_citations=tuple(sorted(shared_cites)),
+                statement=_statement_snippet(candidate.raw_tex),
+                results=_result_sentences(
+                    candidate.raw_tex, max_results_each
+                ),
+            ))
+        scored.sort(key=lambda item: (-item.score, item.number))
+        related = scored[:max_related]
+        references: set[str] = set()
+        for item in related:
+            references.update(self._problems[item.number].citations)
+        ordered_refs = tuple(sorted(references or set(target.citations)))[:max_refs]
+        rendered = _render(problem_number, related, ordered_refs)
+        digest = (
+            hashlib.sha256(rendered.encode("utf-8")).hexdigest()
+            if rendered else ""
+        )
+        return LiteratureContext(
+            problem_number, tuple(related), ordered_refs, rendered, digest
+        )
+
+
 def research_literature(
     root: Path, problem_number: int, *,
     max_related: int = 6, max_results_each: int = 3, max_refs: int = 15,
     min_cosine: float = 0.05,
 ) -> LiteratureContext:
-    """Find related corpus problems + their known results for a target problem."""
-    root = Path(root)
-    target_tex = _read_tex(root, problem_number)
-    if not target_tex.strip():
-        return LiteratureContext(problem_number, (), (), "", "")
-
-    tags = _load_tags(root)
-    target_tags = tags.get(problem_number, set())
-    target_cites = citations(target_tex)
-
-    texts = _corpus_texts(root)
-    texts.pop(problem_number, None)
-    if not texts:
-        return LiteratureContext(problem_number, (), (), "", "")
-
-    doc_tokens = {n: tokens(display_text(t)) for n, t in texts.items()}
-    target_tokens = tokens(display_text(target_tex))
-    df: Counter = Counter()
-    for toks in doc_tokens.values():
-        df.update(set(toks))
-    df.update(set(target_tokens))
-    num_docs = len(doc_tokens) + 1
-    target_vector = _tfidf(target_tokens, df, num_docs)
-
-    scored: list[RelatedProblem] = []
-    for number, tex in texts.items():
-        candidate_cites = citations(tex)
-        candidate_tags = tags.get(number, set())
-        shared_tags = target_tags & candidate_tags
-        shared_cites = target_cites & candidate_cites
-        cosine = _cosine(target_vector, _tfidf(doc_tokens[number], df, num_docs))
-        score = (0.40 * _jaccard(target_tags, candidate_tags)
-                 + 0.35 * _jaccard(target_cites, candidate_cites)
-                 + 0.25 * cosine)
-        if score <= 0 or not (shared_tags or shared_cites or cosine >= min_cosine):
-            continue
-        scored.append(RelatedProblem(
-            number=number, score=round(score, 3),
-            shared_tags=tuple(sorted(shared_tags)),
-            shared_citations=tuple(sorted(shared_cites)),
-            statement=_statement_snippet(tex),
-            results=_result_sentences(tex, max_results_each),
-        ))
-
-    scored.sort(key=lambda r: (-r.score, r.number))
-    related = scored[:max_related]
-
-    references: set[str] = set()
-    for item in related:
-        references |= citations(_read_tex(root, item.number))
-    ordered_refs = tuple(sorted(references or target_cites))[:max_refs]
-
-    rendered = _render(problem_number, related, ordered_refs)
-    sha = hashlib.sha256(rendered.encode("utf-8")).hexdigest() if rendered else ""
-    return LiteratureContext(problem_number, tuple(related), ordered_refs, rendered, sha)
+    """Compatibility wrapper around the reusable local literature index."""
+    return LiteratureIndex(root).research(
+        problem_number,
+        max_related=max_related,
+        max_results_each=max_results_each,
+        max_refs=max_refs,
+        min_cosine=min_cosine,
+    )
 
 
 def main() -> None:

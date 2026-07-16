@@ -9,6 +9,11 @@
     "toolset_version", "run_contract_id", "allocation_context_id",
     "source_snapshot_id", "source_snapshot_sha256", "statement_sha256",
     "allocation_status", "probability", "credible_interval", "uncertainty",
+    "prize", "prize_status", "selection_priority_tier",
+    "literature_policy_version", "literature_coverage_status",
+    "local_literature_artifact_hash", "live_literature_artifact_hashes",
+    "literature_features", "literature_coverage_gaps",
+    "base_acquisition_score", "literature_adjustment", "selection_score",
     "recommended_attack_mode", "recommended_attack_modes",
     "research_directive", "research_directive_sha256",
     "strongest_positive_signals", "largest_risks",
@@ -33,6 +38,36 @@
     "source_snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "statement_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
     "allocation_status": {"type": "string"},
+    "prize": {"type": ["string", "null"]},
+    "prize_status": {"enum": ["unpaid", "paid", "unknown"]},
+    "selection_priority_tier": {"type": "integer", "minimum": 0, "maximum": 2},
+    "literature_status_tier": {"type": "integer", "minimum": 0, "maximum": 1},
+    "literature_policy_version": {"const": "literature-ranking-v1"},
+    "literature_coverage_status": {
+      "enum": ["not_available", "local_only", "partial", "live_complete"]
+    },
+    "local_literature_artifact_hash": {
+      "type": "string", "pattern": "^$|^[0-9a-f]{64}$"
+    },
+    "live_literature_artifact_hashes": {
+      "type": "array",
+      "items": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+    },
+    "literature_features": {
+      "type": "object",
+      "required": ["foothold", "reuse", "machinery_risk", "status_risk", "components"],
+      "properties": {
+        "foothold": {"type": "number", "minimum": 0, "maximum": 1},
+        "reuse": {"type": "number", "minimum": 0, "maximum": 1},
+        "machinery_risk": {"type": "number", "minimum": 0, "maximum": 1},
+        "status_risk": {"type": "number", "minimum": 0, "maximum": 1},
+        "components": {"type": "object"}
+      }
+    },
+    "literature_coverage_gaps": {"type": "array", "items": {"type": "string"}},
+    "base_acquisition_score": {"type": "number"},
+    "literature_adjustment": {"type": "number", "minimum": -0.02, "maximum": 0.03},
+    "selection_score": {"type": "number"},
     "probability": {"type": "number", "minimum": 0, "maximum": 1},
     "credible_interval": {
       "type": "array", "prefixItems": [

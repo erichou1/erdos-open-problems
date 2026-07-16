@@ -1,7 +1,9 @@
 import json
 import hashlib
+import copy
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 from erdos_ingest import CATALOG_URL, ingest_corpus
@@ -10,6 +12,7 @@ from erdos_searcher import (
     append_ledger,
     audit_corpus,
     build_searcher,
+    build_ranking_products,
     canonical_problem_run_inputs,
     formal_probe,
     pipeline_fingerprint,
@@ -31,6 +34,15 @@ Is it true that for every finite graph there exists a coloring with exactly 3 co
 
 
 class ErdosSearcherTests(unittest.TestCase):
+    SOLVE_ORIENTED = (
+        "direct_solve_probability", "diversified_attack_queue", "allocation_queue",
+        "highest_probability_verified_novel_solution",
+        "highest_probability_verified_partial_progress",
+        "highest_probability_lean_verification", "best_finite_computation_targets",
+        "tractable_frontier", "highest_value_uncertain_problems",
+        "protected_exploration",
+    )
+
     def outcome_record(
         self, output: Path, *, status: str, execution_id: str = "execution-0001",
         **overrides,
@@ -242,6 +254,8 @@ class ErdosSearcherTests(unittest.TestCase):
                     "source_reports_resolved": False,
                     "formalized": True,
                     "tags": ["graph theory"],
+                    "prize": "no",
+                    "prize_status": "unpaid",
                 },
                 "2": {
                     "problem": 2,
@@ -249,6 +263,8 @@ class ErdosSearcherTests(unittest.TestCase):
                     "source_reports_resolved": True,
                     "formalized": False,
                     "tags": ["graph theory"],
+                    "prize": "no",
+                    "prize_status": "unpaid",
                 },
                 "3": {
                     "problem": 3,
@@ -256,6 +272,8 @@ class ErdosSearcherTests(unittest.TestCase):
                     "source_reports_resolved": False,
                     "formalized": False,
                     "tags": ["number theory"],
+                    "prize": "no",
+                    "prize_status": "unpaid",
                 },
             },
         }))
@@ -291,6 +309,150 @@ class ErdosSearcherTests(unittest.TestCase):
             snapshot_time="2026-07-12T00:00:00+00:00",
             delay_s=0,
         )
+
+    def test_card_copies_raw_prize_and_status(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.make_repo(root)
+            catalog_path = root / "problem_catalog.json"
+            catalog = json.loads(catalog_path.read_text())
+            catalog["problems"]["1"].update({
+                "prize": "$5000", "prize_status": "paid",
+            })
+            catalog_path.write_text(json.dumps(catalog))
+            build_searcher(
+                root, root / "triage", snapshot_date="2026-07-12", top_k=5,
+                model_portfolio="model-a", offline_literature=True,
+            )
+            card = json.loads(
+                (root / "triage" / "normalized" / "problem_cards" / "1.json")
+                .read_text()
+            )
+            self.assertEqual(card["metadata"]["prize"], "$5000")
+            self.assertEqual(card["metadata"]["prize_status"], "paid")
+
+    def test_unknown_eligible_prize_withholds_allocation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.make_repo(root)
+            catalog_path = root / "problem_catalog.json"
+            catalog = json.loads(catalog_path.read_text())
+            catalog["problems"]["1"].update({
+                "prize": None, "prize_status": "unknown",
+            })
+            catalog_path.write_text(json.dumps(catalog))
+            ranking = build_searcher(
+                root, root / "triage", snapshot_date="2026-07-12", top_k=5,
+                model_portfolio="model-a", offline_literature=True,
+            )
+            self.assertEqual(ranking["unknown_prize_problem_numbers"], [1])
+            self.assertEqual(
+                ranking["allocation_status"], "withheld_unknown_prize_metadata"
+            )
+            self.assertEqual(ranking["allocation_queue"], [])
+
+    def test_normal_build_never_constructs_live_fetcher(self):
+        with tempfile.TemporaryDirectory() as directory, mock.patch(
+            "ranking_literature.UrllibFetcher",
+            side_effect=AssertionError("network attempted"),
+        ):
+            root = Path(directory)
+            self.make_repo(root)
+            ranking = build_searcher(
+                root, root / "triage", snapshot_date="2026-07-12", top_k=5,
+                model_portfolio="model-a", refresh_literature=False,
+                offline_literature=False,
+            )
+            self.assertEqual(ranking["literature_coverage"]["live_requests"], 0)
+            self.assertEqual(ranking["literature_live_shortlist"], [1])
+
+    def policy_cards(self, root: Path, specifications: list[dict]) -> list[dict]:
+        self.make_repo(root)
+        build_searcher(
+            root, root / "triage", snapshot_date="2026-07-12", top_k=5,
+            model_portfolio="model-a", offline_literature=True,
+        )
+        base = json.loads(
+            (root / "triage" / "normalized" / "problem_cards" / "1.json")
+            .read_text()
+        )
+        cards = []
+        for specification in specifications:
+            card = copy.deepcopy(base)
+            number = specification["number"]
+            card["problem_number"] = number
+            card["problem_id"] = f"erdos-{number}"
+            card["metadata"]["prize"] = specification["prize"]
+            card["metadata"]["prize_status"] = specification["prize_status"]
+            for posterior in card["posterior"].values():
+                if isinstance(posterior, dict) and "probability" in posterior:
+                    posterior["probability"] = specification.get("probability", 0.2)
+            card["probe_summary"]["literature_ranking"]["features"].update(
+                specification.get("features", {})
+            )
+            cards.append(card)
+        return cards
+
+    def test_paid_high_score_never_precedes_unpaid_low_score(self):
+        with tempfile.TemporaryDirectory() as directory:
+            cards = self.policy_cards(Path(directory), [
+                {"number": 1, "prize": "no", "prize_status": "unpaid", "probability": 0.01},
+                {"number": 2, "prize": "no", "prize_status": "unpaid", "probability": 0.02},
+                {"number": 3, "prize": "no", "prize_status": "unpaid", "probability": 0.03},
+                {"number": 4, "prize": "$500", "prize_status": "paid", "probability": 0.97},
+                {"number": 5, "prize": "$5000", "prize_status": "paid", "probability": 0.98},
+                {"number": 6, "prize": "10000 USD", "prize_status": "paid", "probability": 0.99},
+            ])
+            ranking = build_ranking_products(cards, top_k=6, allocation_ready=True)
+            order = {"unpaid": 0, "paid": 1}
+            for lane in self.SOLVE_ORIENTED:
+                statuses = [row["prize_status"] for row in ranking[lane]]
+                self.assertEqual(
+                    statuses, sorted(statuses, key=order.__getitem__), lane
+                )
+
+    def test_literature_foothold_reorders_two_unpaid_cards(self):
+        with tempfile.TemporaryDirectory() as directory:
+            cards = self.policy_cards(Path(directory), [
+                {"number": 1, "prize": "no", "prize_status": "unpaid",
+                 "probability": 0.2, "features": {"foothold": 0.0}},
+                {"number": 2, "prize": "no", "prize_status": "unpaid",
+                 "probability": 0.2, "features": {"foothold": 1.0}},
+            ])
+            ranking = build_ranking_products(cards, top_k=2, allocation_ready=True)
+            self.assertEqual(
+                [row["problem_number"] for row in ranking["direct_solve_probability"]],
+                [2, 1],
+            )
+
+    def test_status_risk_precedes_numeric_score_within_unpaid_tier(self):
+        with tempfile.TemporaryDirectory() as directory:
+            cards = self.policy_cards(Path(directory), [
+                {"number": 1, "prize": "no", "prize_status": "unpaid",
+                 "probability": 0.99, "features": {"status_risk": 0.6}},
+                {"number": 2, "prize": "no", "prize_status": "unpaid",
+                 "probability": 0.01, "features": {"status_risk": 0.0}},
+            ])
+            ranking = build_ranking_products(cards, top_k=2, allocation_ready=True)
+            self.assertEqual(
+                ranking["direct_solve_probability"][0]["problem_number"], 2
+            )
+
+    def test_descriptive_products_are_prize_neutral(self):
+        with tempfile.TemporaryDirectory() as directory:
+            cards = self.policy_cards(Path(directory), [
+                {"number": 1, "prize": "no", "prize_status": "unpaid", "probability": 0.01},
+                {"number": 2, "prize": "$500", "prize_status": "paid", "probability": 0.99},
+            ])
+            ranking = build_ranking_products(cards, top_k=2, allocation_ready=True)
+            self.assertEqual(
+                ranking["highest_mathematical_value_targets"][0]["prize_status"],
+                "paid",
+            )
+            self.assertEqual(
+                ranking["most_likely_stale_literature_records"][0]["prize_status"],
+                "paid",
+            )
 
     def test_builds_immutable_snapshot_cards_routes_and_rankings(self):
         with tempfile.TemporaryDirectory() as directory:

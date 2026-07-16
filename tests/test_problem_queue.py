@@ -6,6 +6,9 @@ from pathlib import Path
 
 from problem_queue import (
     AllocationPlan,
+    _validate_allocation_prize_tiers,
+    _validate_allocation_policy,
+    _validate_tiered_lane_cadence,
     claim,
     claim_next,
     load_allocation_plan,
@@ -63,6 +66,11 @@ def make_ranking(
         },
         "dependencies": {"requirements_lock_sha256": "c" * 64},
         "runtime": {"python": "3.14.4"},
+        "prize_policy_version": "strict-unpaid-first-v1",
+        "literature_policy_version": "literature-ranking-v1",
+        "literature_model_version": "literature-opportunity-v1",
+        "literature_snapshot_sha256": "d" * 64,
+        "literature_live_shortlist_limit": 50,
     }
     context_id = hashlib.sha256(canonical_json(context).encode()).hexdigest()
 
@@ -74,6 +82,9 @@ def make_ranking(
             "allocation_lane": lane,
             "allocation_context_id": context_id,
             "run_contract_id": f"{number:x}".rjust(64, "0"),
+            "prize": "no",
+            "prize_status": "unpaid",
+            "selection_priority_tier": 0,
         }
 
     exploit = [
@@ -142,6 +153,47 @@ def make_manifest(
 
 
 class ProblemQueueTests(unittest.TestCase):
+    def test_queue_rejects_unversioned_selection_policy(self):
+        with self.assertRaisesRegex(ValueError, "allocation policy is unsupported"):
+            _validate_allocation_policy({})
+
+    def test_queue_rejects_paid_row_before_unpaid_row(self):
+        rows = [
+            {"problem_number": 1, "prize_status": "paid", "selection_priority_tier": 1},
+            {"problem_number": 2, "prize_status": "unpaid", "selection_priority_tier": 0},
+        ]
+        with self.assertRaisesRegex(
+            ValueError, "paid allocation row precedes unpaid row"
+        ):
+            _validate_allocation_prize_tiers(rows)
+
+    def test_queue_rejects_unknown_prize_status(self):
+        rows = [
+            {"problem_number": 1, "prize_status": "unknown", "selection_priority_tier": 2}
+        ]
+        with self.assertRaisesRegex(ValueError, "unknown prize metadata"):
+            _validate_allocation_prize_tiers(rows)
+
+    def test_queue_accepts_cadence_reset_at_paid_boundary(self):
+        rows = []
+        rank = 1
+        for prize_status, tier in (("unpaid", 0), ("paid", 1)):
+            for lane in (
+                "exploitation", "exploitation", "exploitation", "exploitation",
+                "protected_exploration",
+            ):
+                rows.append({
+                    "problem_number": rank,
+                    "rank": rank,
+                    "allocation_rank": rank,
+                    "allocation_lane": lane,
+                    "prize_status": prize_status,
+                    "selection_priority_tier": tier,
+                })
+                rank += 1
+        _validate_allocation_prize_tiers(rows)
+        _validate_tiered_lane_cadence(rows, exploit_per_explore=4)
+
     def test_rerank_reuse_binds_requested_top_k(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
