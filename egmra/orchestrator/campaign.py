@@ -516,6 +516,10 @@ class Campaign:
                 a.fencing_token = fencing
                 a.lease_expires_at = now + self.lease_seconds
                 a.attempts += 1
+                # A fresh lease supersedes any retained-reason note (e.g.
+                # 'provider_unavailable'); leaving it would misreport an
+                # actively-worked problem as still blocked on infrastructure.
+                a.result_state = ""
                 self._write(self._encode(state["campaign_id"], state["order"],
                                          assignments, fencing,
                                          state.get("machines")))

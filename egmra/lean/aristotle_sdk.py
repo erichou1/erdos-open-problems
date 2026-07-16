@@ -21,6 +21,7 @@ import asyncio
 import inspect
 import threading
 import tempfile
+import time
 from collections.abc import Callable
 from dataclasses import dataclass, field
 from pathlib import Path
@@ -51,6 +52,26 @@ ARISTOTLE_MATHLIB_REV = "v4.28.0"
 # Map the SDK's TaskStatus names onto our normalized vocabulary.
 _SDK_COMPLETE = frozenset({"complete", "complete_with_errors"})
 _SDK_FAILED = frozenset({"failed", "canceled", "cancelled", "out_of_budget"})
+
+# Long-poll phrases the vendor explicitly labels transient ("try again"). A
+# proof task keeps running server-side through such a blip; treating it as
+# fatal discards a 10-15 minute proof and resubmits a NEW task — burning both
+# wall-clock and the 5-slot account quota on orphans.
+_TRANSIENT_PHRASES = (
+    "connection to server was interrupted",
+    "connection reset",
+    "timed out",
+    "timeout",
+    "temporarily unavailable",
+    "service unavailable",
+    "bad gateway",
+    "gateway time",
+)
+
+
+def _is_transient(exc: BaseException) -> bool:
+    text = f"{type(exc).__name__}: {exc}".lower()
+    return any(phrase in text for phrase in _TRANSIENT_PHRASES)
 
 
 class AristotleSdkUnavailable(AristotleClientError):
@@ -198,33 +219,50 @@ class AristotleSdkClient:
                     "percent_complete": getattr(task, "percent_complete", None)},
         )
 
-    def fetch(self, submission: AristotleSubmission, *, wait: bool = True) -> AristotleArtifact:
-        """Download the produced Lean into a hardened quarantine (never promotable)."""
+    def fetch(self, submission: AristotleSubmission, *, wait: bool = True,
+              transient_retries: int = 4,
+              retry_sleep: Callable[[float], None] | None = None) -> AristotleArtifact:
+        """Download the produced Lean into a hardened quarantine (never promotable).
+
+        A dropped long-poll connection is NOT a failed proof: the vendor task
+        keeps running server-side and the SDK error says "try again". The
+        wait/download phase therefore retries transient interruptions a
+        bounded number of times (with short growing pauses) before giving up;
+        genuine task failures and safety violations are never retried.
+        """
+        sleep = retry_sleep if retry_sleep is not None else time.sleep
         project = self._projects.get(submission.project_id)
         if project is None:
             project = self._await(
                 self.sdk.Project.from_id(validate_job_id(submission.project_id)))
         task = self._task(submission)
         quarantine_dir = self._resolve_quarantine_dir(submission.project_id)
-        try:
-            if wait:
-                self._await(task.wait_for_completion())
-            # The official SDK writes the result as a SINGLE archive blob to a
-            # file path (not a directory). Download it to a throwaway temp file,
-            # read the bytes, then extract it ourselves under strict
-            # traversal/symlink/bomb-safe limits into the quarantine dir.
-            with tempfile.NamedTemporaryFile(
-                    prefix="aristotle_", suffix=".tar.gz", delete=False) as handle:
-                archive_path = Path(handle.name)
+        attempts = max(1, int(transient_retries) + 1)
+        archive_bytes = None
+        for attempt in range(1, attempts + 1):
             try:
-                self._await(project.get_files(str(archive_path)))
-                archive_bytes = archive_path.read_bytes()
-            finally:
-                archive_path.unlink(missing_ok=True)
-        except UnsafeJobIdError:
-            raise
-        except Exception as exc:
-            raise AristotleClientError(f"aristotle fetch failed: {exc}") from exc
+                if wait:
+                    self._await(task.wait_for_completion())
+                # The official SDK writes the result as a SINGLE archive blob to a
+                # file path (not a directory). Download it to a throwaway temp file,
+                # read the bytes, then extract it ourselves under strict
+                # traversal/symlink/bomb-safe limits into the quarantine dir.
+                with tempfile.NamedTemporaryFile(
+                        prefix="aristotle_", suffix=".tar.gz", delete=False) as handle:
+                    archive_path = Path(handle.name)
+                try:
+                    self._await(project.get_files(str(archive_path)))
+                    archive_bytes = archive_path.read_bytes()
+                finally:
+                    archive_path.unlink(missing_ok=True)
+                break
+            except UnsafeJobIdError:
+                raise
+            except Exception as exc:
+                if attempt < attempts and _is_transient(exc):
+                    sleep(min(30.0, 5.0 * attempt))
+                    continue
+                raise AristotleClientError(f"aristotle fetch failed: {exc}") from exc
         # Extract the vendor archive under strict limits (rejects traversal,
         # symlinks, and archive bombs), then re-scan the written tree as defense
         # in depth. A vendor archive is never trusted on arrival.
@@ -236,11 +274,20 @@ class AristotleSdkClient:
             quarantine_dir, max_entries=self.max_entries,
             max_entry_bytes=self.max_entry_bytes, max_total_bytes=self.max_total_bytes,
         )
-        status = self.poll(submission)
+        # The archive is already safely on disk: a status-poll blip here must
+        # not discard it. Trust is unaffected — promotion needs the local
+        # kernel replay regardless of what the vendor status claims.
+        try:
+            status = self.poll(submission)
+            vendor_status = status.raw_status
+            vendor_complete = status.vendor_reports_complete
+        except AristotleClientError:
+            vendor_status = "unknown_poll_failed"
+            vendor_complete = False
         return AristotleArtifact(
             job_id=submission.project_id,
-            vendor_status=status.raw_status,
-            vendor_reports_complete=status.vendor_reports_complete,
+            vendor_status=vendor_status,
+            vendor_reports_complete=vendor_complete,
             quarantine_dir=quarantine_dir,
             extracted_files=files,
             total_bytes=total,

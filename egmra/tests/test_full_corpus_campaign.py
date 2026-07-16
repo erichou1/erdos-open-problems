@@ -170,6 +170,22 @@ def test_requeue_failed_infra_only_skips_genuine_failures(tmp_path):
     assert status["p2"]["status"] == "failed"
 
 
+def test_a_fresh_lease_clears_the_stale_retention_note(tmp_path):
+    # A retained problem carries 'provider_unavailable' as its result_state;
+    # once RE-LEASED and actively worked, that stale note must not keep
+    # reporting the problem as blocked on infrastructure.
+    c = _campaign(tmp_path)
+    c.initialize("camp", ["p1"])
+    first = c.lease("w0", now=1000.0)
+    c.retain(first.problem_id, "w0", first.fencing_token)
+    assert c.status()["workers"]["p1"]["result_state"] == "provider_unavailable"
+    second = c.lease("w0", now=1001.0)
+    assert second.problem_id == "p1"
+    row = c.status()["workers"]["p1"]
+    assert row["status"] == "leased"
+    assert row["result_state"] == ""
+
+
 # ── provider-outage backoff ──────────────────────────────────────────────────
 
 class _Outage(Exception):

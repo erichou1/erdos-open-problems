@@ -296,3 +296,77 @@ def test_client_drives_async_sdk_submit_poll_fetch(tmp_path):
     finally:
         client.close()
 
+
+# ── transient long-poll interruptions must not discard a running proof ──────
+
+class _FlakyWaitTask(_FakeTask):
+    """Vendor long-poll drops N times before the task completes normally."""
+
+    def __init__(self, failures: int):
+        super().__init__()
+        self.failures = failures
+        self.wait_calls = 0
+
+    def wait_for_completion(self, num_events: int = 3):
+        self.wait_calls += 1
+        if self.wait_calls <= self.failures:
+            raise RuntimeError(
+                "Connection to server was interrupted. Use 'aristotle show x' "
+                "to try again.")
+        self.waited = True
+
+
+def test_fetch_retries_transient_connection_interruptions(tmp_path):
+    task = _FlakyWaitTask(failures=2)
+    sleeps: list[float] = []
+    client = _client(tmp_path, project=_FakeProject(task=task))
+    submission = client.submit("prove True")
+    artifact = client.fetch(submission, retry_sleep=sleeps.append)
+    assert task.wait_calls == 3            # two interruptions, then success
+    assert sleeps == [5.0, 10.0]           # short growing pauses, never fatal
+    assert any(p.name == "Proof.lean" for p in artifact.extracted_files)
+    assert artifact.promotable is False    # trust boundary unchanged
+
+
+def test_fetch_gives_up_after_bounded_transient_retries(tmp_path):
+    task = _FlakyWaitTask(failures=99)
+    client = _client(tmp_path, project=_FakeProject(task=task))
+    submission = client.submit("prove True")
+    with pytest.raises(AristotleClientError, match="fetch failed"):
+        client.fetch(submission, transient_retries=2, retry_sleep=lambda _s: None)
+    assert task.wait_calls == 3            # 1 try + 2 bounded retries
+
+
+def test_fetch_never_retries_a_genuine_failure(tmp_path):
+    class _BrokenTask(_FakeTask):
+        def __init__(self):
+            super().__init__()
+            self.wait_calls = 0
+
+        def wait_for_completion(self, num_events: int = 3):
+            self.wait_calls += 1
+            raise RuntimeError("task failed: proof search out of budget")
+
+    task = _BrokenTask()
+    client = _client(tmp_path, project=_FakeProject(task=task))
+    submission = client.submit("prove True")
+    with pytest.raises(AristotleClientError, match="fetch failed"):
+        client.fetch(submission, retry_sleep=lambda _s: None)
+    assert task.wait_calls == 1            # non-transient: no retry
+
+
+def test_fetch_keeps_downloaded_archive_when_final_poll_blips(tmp_path):
+    class _PollBlipTask(_FakeTask):
+        def refresh(self):
+            raise RuntimeError("Connection to server was interrupted.")
+
+    task = _PollBlipTask()
+    client = _client(tmp_path, project=_FakeProject(task=task))
+    submission = client.submit("prove True")
+    artifact = client.fetch(submission, retry_sleep=lambda _s: None)
+    # The archive is safely on disk; only the vendor-status label degrades.
+    assert any(p.name == "Proof.lean" for p in artifact.extracted_files)
+    assert artifact.vendor_status == "unknown_poll_failed"
+    assert artifact.vendor_reports_complete is False
+    assert artifact.promotable is False
+
