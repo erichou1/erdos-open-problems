@@ -310,7 +310,7 @@ def test_derive_intents_signs_verifiable_certs_with_evidence(tmp_path, capsys):
     summary = json.loads(capsys.readouterr().out)
     assert summary["count"] == 1
     cert_path = out / "intent-erdos-312.json"          # campaign naming convention
-    evidence_path = out / "intent-erdos-312.evidence.json"
+    evidence_path = out / "evidence-intent-erdos-312.json"
     assert cert_path.exists() and evidence_path.exists()
     # The certificate verifies under the intent-review key and binds the
     # PRIMARY reading exactly as the orchestrator recomputes it.

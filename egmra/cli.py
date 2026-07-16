@@ -1066,7 +1066,9 @@ def cmd_derive_intents(args: argparse.Namespace) -> int:
                     "detail": f"{type(exc).__name__}: {exc}"[:200],
                 })
         cert_path = output_dir / f"intent-{problem.problem_id}.json"
-        evidence_path = output_dir / f"intent-{problem.problem_id}.evidence.json"
+        # The sidecar must NOT match the reviews-dir 'intent-*.json' glob — it
+        # is evidence about the certificate, not a certificate.
+        evidence_path = output_dir / f"evidence-intent-{problem.problem_id}.json"
         if cert_path.exists():
             summary.append({"problem_id": problem.problem_id,
                             "skipped": "certificate already exists"})
