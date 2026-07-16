@@ -342,7 +342,17 @@ def _build_retrieval_corpus(args: argparse.Namespace, config: EgmraConfig, *, qu
     if mode == "corpus":
         corpus_tex = getattr(args, "corpus_tex", None) or default_corpus_tex_path()
         catalog = getattr(args, "catalog", None) or default_catalog_path()
-        return build_erdos_corpus(corpus_tex, catalog)
+        corpus = build_erdos_corpus(corpus_tex, catalog)
+        # Compounding flywheel: kernel-sealed lemmas from PRIOR runs join the
+        # corpus as honestly-provenanced literature (proof_status
+        # kernel_checked). They seed prompts/imports like any retrieval —
+        # never problem-level truth.
+        library = getattr(args, "lemma_library", None)
+        if library is not None:
+            from egmra.retrieval.lemma_library import load_lemma_records
+
+            corpus = [*corpus, *load_lemma_records(Path(library))]
+        return corpus
     # Live scholarly retrieval — query-specific, confined to an allowlisted host set.
     sources = SCHOLARLY_SOURCES if mode == "scholarly" else (mode,)
     return build_scholarly_corpus(
@@ -590,6 +600,19 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
     # Optional real formal-candidate path (task 4.6): a LeanService whose kernel
     # runner is the pinned checker, so worker-proposed Lean is re-checked live.
     lean_service, lean_version, mathlib_commit = _build_lean_service(args)
+    if lean_service is not None:
+        from egmra.lean.verdict_cache import SealedLeanService
+
+        # Verdict cache (identical re-checks replay the ORIGINAL signed
+        # certificate, integrity re-verified on load) + lemma sealing.
+        lean_service = SealedLeanService(
+            lean_service,
+            cache_dir=(Path(args.checkpoint_dir) / problem.problem_id
+                       / "kernel_verdicts"
+                       if getattr(args, "checkpoint_dir", None) is not None
+                       else None),
+            lemma_library=getattr(args, "lemma_library", None),
+            problem_id=problem.problem_id)
     # Optional autonomous formalization worker (task #5): Aristotle produces the
     # proof for a pinned obligation; the pinned kernel above re-checks it.
     formalizer = _build_formalizer(args)
@@ -1060,6 +1083,12 @@ def cmd_derive_intents(args: argparse.Namespace) -> int:
                     "declaration_names": list(target.declaration_names),
                     "found": True,
                 })
+                targets_dir = getattr(args, "targets_dir", None)
+                if targets_dir is not None:
+                    target_path = Path(targets_dir) / f"{problem.problem_id}.lean"
+                    if not target_path.exists():
+                        target_path.parent.mkdir(parents=True, exist_ok=True)
+                        target_path.write_text(target.lean_source, encoding="utf-8")
             except (FormalConjectureUnavailable, OSError, ValueError) as exc:
                 consulted.append({
                     "source": "formal-conjectures", "found": False,
@@ -1702,6 +1731,19 @@ def cmd_campaign(args: argparse.Namespace) -> int:
         worker_runner = runners_by_worker[worker_id] if browser_engine is not None else runner
         number = int(problem_id.split("-", 1)[1])
         problem = from_erdos_number(number, corpus_tex_path=corpus_tex, catalog_path=catalog)
+        # Per-problem community formal target: point every vendor proof at the
+        # community's EXACT Lean statement of the problem instead of a
+        # model-invented obligation (read-only prompt context; correspondence
+        # review still gates any release use).
+        problem_formal_target = ""
+        targets_dir = getattr(args, "targets_dir", None)
+        if targets_dir is not None:
+            for candidate_name in (f"{problem.problem_id}.lean",
+                                   f"erdos_{number}.lean"):
+                candidate_path = Path(targets_dir) / candidate_name
+                if candidate_path.is_file():
+                    problem_formal_target = _load_formal_target(candidate_path)
+                    break
         if getattr(args, "checkpoint_dir", None) is not None:
             from egmra.agents.exchange_cache import CachedRunner
 
@@ -1730,7 +1772,24 @@ def cmd_campaign(args: argparse.Namespace) -> int:
                               lean_version=lean_version, mathlib_commit=mathlib_commit,
                               lean_project=args.lean_project,
                               formalizer=formalizers_by_worker.get(worker_id),
+                              formal_target=problem_formal_target,
                               max_rounds=campaign_worker_rounds)
+        # Kernel-verdict cache + lemma sealing: identical re-checks replay the
+        # ORIGINAL signed certificate (its own HMAC re-verified on load; any
+        # mismatch falls open to a live kernel check), and every PASSING lemma
+        # is sealed into the shared library for future problems.
+        problem_lean_service = lean_service
+        if lean_service is not None:
+            from egmra.lean.verdict_cache import SealedLeanService
+
+            problem_lean_service = SealedLeanService(
+                lean_service,
+                cache_dir=(Path(args.checkpoint_dir) / problem.problem_id
+                           / "kernel_verdicts"
+                           if getattr(args, "checkpoint_dir", None) is not None
+                           else None),
+                lemma_library=getattr(args, "lemma_library", None),
+                problem_id=problem.problem_id)
         # Durable per-problem dossier (search guidance only, never truth): a
         # NEW campaign process seeds this problem's approach-family outcomes
         # and failed approaches from the previous processes' learning instead
@@ -1759,7 +1818,7 @@ def cmd_campaign(args: argparse.Namespace) -> int:
                 source_id=problem.source_id, budget=float(args.budget), enforcer=enforcer,
                 worker=worker, goal_claim_id="goal", events_path=events_path,
                 event_log=event_log, retrieval_corpus=retrieval_corpus,
-                oeis_client=oeis_client, lean_service=lean_service,
+                oeis_client=oeis_client, lean_service=problem_lean_service,
                 informal_only=lean_service is None,
                 status_claims=list(problem.status_claims),
                 novelty_verdict=problem.novelty_verdict,
@@ -2063,6 +2122,10 @@ def build_parser() -> argparse.ArgumentParser:
                      help="bounded worker concurrency for the run (1-5); a single problem "
                           "is researched sequentially, so genuine multi-worker/multi-tab "
                           "overlap is a campaign feature (see 'egmra campaign --workers')")
+    run.add_argument(
+        "--lemma-library", type=Path, default=Path("egmra_lemma_library.jsonl"),
+        help="kernel-sealed lemma library: passing lemmas are appended and "
+             "prior sealed lemmas join the retrieval corpus (compounding)")
     run.add_argument("--corpus-tex", type=Path, default=None,
                      help="override the corpus TeX snapshot used by --erdos")
     run.add_argument("--catalog", type=Path, default=None,
@@ -2321,6 +2384,15 @@ def build_parser() -> argparse.ArgumentParser:
         help="requeue COMPLETED problems whose recorded outcome showed real "
              "progress (partial progress, computational evidence, candidates, "
              "salvaged claims) for another independent sample (bounded), then exit")
+    campaign.add_argument(
+        "--targets-dir", type=Path, default=None,
+        help="directory of per-problem community Lean statements "
+             "(<problem_id>.lean or erdos_<N>.lean); read-only prompt context "
+             "pinning the intended formal obligation per problem")
+    campaign.add_argument(
+        "--lemma-library", type=Path, default=Path("egmra_lemma_library.jsonl"),
+        help="kernel-sealed lemma library: passing lemmas are appended and "
+             "prior sealed lemmas join the retrieval corpus (compounding)")
 
     derive = sub.add_parser(
         "derive-intents",
@@ -2334,6 +2406,10 @@ def build_parser() -> argparse.ArgumentParser:
                              "derived provenance explicitly)")
     derive.add_argument("--offline", action="store_true",
                         help="skip live literature fetches (corpus-only evidence)")
+    derive.add_argument("--targets-dir", type=Path, default=None,
+                        help="also write each fetched community Lean statement "
+                             "to <targets-dir>/<problem_id>.lean for campaign "
+                             "--targets-dir")
     derive.add_argument("--corpus-tex", type=Path, default=None)
     derive.add_argument("--catalog", type=Path, default=None)
     derive.set_defaults(func=cmd_derive_intents)
