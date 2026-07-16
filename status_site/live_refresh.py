@@ -106,9 +106,15 @@ def _ensure_worktree(worktree: Path) -> None:
 
 
 def _semantic(document: dict) -> dict:
-    copy = dict(document)
-    copy.pop("generated_at", None)
-    return copy
+    """Return the complete public snapshot for publication comparison.
+
+    ``generated_at`` is a liveness signal: the browser marks a snapshot stale
+    after four minutes.  Excluding it here left the immutable ``status-live``
+    ref unchanged during quiet but healthy campaign periods, making active
+    workers appear stale.  Publishing the timestamp on every refresh keeps
+    the dashboard's liveness view honest.
+    """
+    return dict(document)
 
 
 def refresh(worktree: Path) -> bool:

@@ -62,7 +62,6 @@ async function dataUrl({force=false}={}){
     const ref=await fetch(`https://api.github.com/repos/${LIVE_REPO}/git/ref/heads/status-live?t=${Date.now()}`,{cache:"no-store"});
     if(ref.ok){const body=await ref.json();const sha=body?.object?.sha;if(sha){rememberLiveRef(sha);return immutableDataUrl(sha)}}
   }catch(_error){}
-  if(cached?.sha)return immutableDataUrl(cached.sha);
   return `https://raw.githubusercontent.com/${LIVE_REPO}/status-live/status_site/data.json`;
 }
 

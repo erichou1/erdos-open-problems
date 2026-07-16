@@ -44,9 +44,9 @@ def test_failed_child_output_redacts_private_values():
     assert "<redacted>" in str(raised.value)
 
 
-def test_semantic_snapshot_ignores_only_generation_time():
+def test_snapshot_change_detection_includes_generation_time():
     document = {"generated_at": "first", "summary": {"total_runs": 3}}
-    assert _semantic(document) == {"summary": {"total_runs": 3}}
+    assert _semantic(document) == document
 
 
 def test_both_pages_reference_the_branded_favicon():
@@ -64,3 +64,9 @@ def test_both_clients_refresh_on_timer_focus_and_reconnect():
         assert 'addEventListener("online"' in javascript
         assert "Updates delayed" in javascript
         assert "Update check failed" in javascript
+
+
+def test_clients_do_not_reuse_an_expired_immutable_status_ref_after_api_failure():
+    for name in ("app.js", "ranking.js"):
+        javascript = (SITE / name).read_text(encoding="utf-8")
+        assert "if(cached?.sha)return immutableDataUrl(cached.sha);" not in javascript

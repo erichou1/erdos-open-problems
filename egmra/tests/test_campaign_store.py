@@ -114,8 +114,12 @@ class _FakeCursor:
             raise psycopg.OperationalError(
                 "consuming input failed: SSL connection has been closed unexpectedly")
         self._conn.executed.append(sql.split()[0])
+        self._conn.executed_sql.append(sql)
+        self._conn.last_sql = sql
 
     def fetchone(self):
+        if "pg_try_advisory_lock" in self._conn.last_sql:
+            return (True,)
         return (self._conn.store_body, self._conn.store_sig)
 
 
@@ -124,6 +128,8 @@ class _FakeConn:
         self.dead = False
         self.closed = False
         self.executed: list[str] = []
+        self.executed_sql: list[str] = []
+        self.last_sql = ""
         self.store_body = None
         self.store_sig = None
 
@@ -154,6 +160,8 @@ def test_postgres_store_reconnects_when_neon_drops_the_idle_connection():
         pass
     assert dead_conn.closed and not fresh_conn.closed
     assert "SELECT" in fresh_conn.executed        # lock acquired on the retry conn
+    assert any("pg_try_advisory_lock" in sql
+               for sql in fresh_conn.executed_sql)  # never wait forever on an orphaned lock
 
 
 def test_postgres_store_reraises_non_disconnect_errors():

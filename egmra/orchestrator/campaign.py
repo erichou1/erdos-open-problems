@@ -297,14 +297,26 @@ class PostgresCampaignStore:
 
     @contextmanager
     def locked(self):  # pragma: no cover - requires a database server
-        # Reconnect at ACQUIRE time if the idle connection was dropped; the
-        # advisory lock is session-scoped, so a dropped connection has already
-        # released any prior lock server-side (unlock below is best-effort).
-        def _acquire(connection):
-            with connection.cursor() as cursor:
-                cursor.execute("SELECT pg_advisory_lock(%s)", (self._lock_key,))
-            return connection
-        connection = self._with_connection(_acquire)
+        # Never block indefinitely on ``pg_advisory_lock``. A laptop-sleep
+        # drop can leave the server believing its old session still holds the
+        # lock briefly; a restarted campaign must keep retrying and then fail
+        # visibly instead of freezing all leases and machine heartbeats.
+        deadline = time.monotonic() + 60.0
+        connection = None
+        while connection is None:
+            def _acquire(candidate):
+                with candidate.cursor() as cursor:
+                    cursor.execute("SELECT pg_try_advisory_lock(%s)", (self._lock_key,))
+                    row = cursor.fetchone()
+                return candidate if row and bool(row[0]) else None
+
+            connection = self._with_connection(_acquire)
+            if connection is not None:
+                break
+            if time.monotonic() >= deadline:
+                raise CampaignError(
+                    "timed out acquiring campaign lock; a previous database session may be stale")
+            time.sleep(1.0)
         try:
             yield
         finally:
