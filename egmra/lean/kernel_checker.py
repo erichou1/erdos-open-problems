@@ -32,6 +32,7 @@ from __future__ import annotations
 
 import json
 import re
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -72,8 +73,12 @@ def expected_type_hash(type_source: str) -> str:
 
 
 def _default_lake_runner(args: list[str], cwd: Path, timeout_s: float = 1800.0):
+    lake = shutil.which("lake")
+    if lake is None:
+        elan_lake = Path.home() / ".elan" / "bin" / ("lake.exe" if sys.platform == "win32" else "lake")
+        lake = str(elan_lake) if elan_lake.is_file() else "lake"
     return subprocess.run(
-        ["lake", *args], cwd=str(cwd), capture_output=True, text=True,
+        [lake, *args], cwd=str(cwd), capture_output=True, text=True,
         check=False, timeout=timeout_s,
     )
 

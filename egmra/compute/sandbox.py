@@ -128,7 +128,7 @@ def _apply_required_limits():
     memory = int(os.environ["EGMRA_MEM"])
     processes = int(os.environ["EGMRA_PROCESSES"])
     file_size = int(os.environ["EGMRA_FILE_SIZE"])
-    resource.setrlimit(resource.RLIMIT_CPU, (cpu, cpu))
+    resource.setrlimit(resource.RLIMIT_CPU, (cpu, cpu + 1))
     # macOS reports memory rlimits but rejects setting them for modern Python
     # processes.  The trusted parent enforces RSS there; Linux/OCI uses AS here.
     if sys.platform != "darwin":

@@ -20,6 +20,7 @@ backend it complements.
 from __future__ import annotations
 
 import asyncio
+import os
 import threading
 from typing import Any, Protocol
 
@@ -245,7 +246,8 @@ class PlaywrightAsyncPageDriver:  # pragma: no cover - requires an authenticated
     context (shared authenticated profile), ``tab_count`` pages, prompt submission
     via the synthetic-paste ProseMirror path, generation-start/settle detection,
     conversation-URL capture, and rate-limit handling. Reachable only with an
-    authenticated profile (set ``CHATGPT_PROFILE_DIR`` and log in once); it is
+    authenticated profile (set ``CHATGPT_PROFILE_DIR`` and log in once), or an
+    authenticated external Chromium exposed through ``CHATGPT_CDP_URL``; it is
     verified live, never in CI — the same posture as the sync backend.
     """
 
@@ -255,7 +257,10 @@ class PlaywrightAsyncPageDriver:  # pragma: no cover - requires an authenticated
         self.generation_poll_s = generation_poll_s
         self.generation_start_timeout_s = generation_start_timeout_s
         self._pw = None
+        self._browser = None
         self._context = None
+        self._external = False
+        self._owned_pages: list[Any] = []
         self._start_urls: dict[int, str] = {}
 
     async def start(self, tab_count: int) -> list[Any]:
@@ -265,18 +270,28 @@ class PlaywrightAsyncPageDriver:  # pragma: no cover - requires an authenticated
 
         self._cb = cb
         self._pw = await async_playwright().start()
-        self._context = await self._pw.chromium.launch_persistent_context(
-            user_data_dir=str(cb.profile_dir()),
-            headless=self.headless,
-            args=["--disable-blink-features=AutomationControlled"],
-            no_viewport=False,
-            viewport={"width": 1280, "height": 900},
-        )
+        cdp_url = os.environ.get("CHATGPT_CDP_URL", "").strip()
+        if cdp_url:
+            self._browser = await self._pw.chromium.connect_over_cdp(cdp_url)
+            if not self._browser.contexts:
+                raise RuntimeError("ChatGPT CDP browser has no usable context")
+            self._context = self._browser.contexts[0]
+            self._external = True
+        else:
+            self._context = await self._pw.chromium.launch_persistent_context(
+                user_data_dir=str(cb.profile_dir()),
+                headless=self.headless,
+                args=["--disable-blink-features=AutomationControlled"],
+                no_viewport=False,
+                viewport={"width": 1280, "height": 900},
+            )
         pages: list[Any] = []
         for index in range(tab_count):
-            page = self._context.pages[0] if (index == 0 and self._context.pages) \
-                else await self._context.new_page()
+            page = await self._context.new_page() if self._external else (
+                self._context.pages[0] if (index == 0 and self._context.pages)
+                else await self._context.new_page())
             pages.append(page)
+        self._owned_pages = list(pages)
         # Authenticate once on the first tab (the profile is shared across tabs).
         await pages[0].goto(cb.CHATGPT_URL, wait_until="domcontentloaded")
         if "login" in pages[0].url or "auth" in pages[0].url:
@@ -418,10 +433,19 @@ class PlaywrightAsyncPageDriver:  # pragma: no cover - requires an authenticated
 
     async def close(self) -> None:
         try:
-            if self._context is not None:
+            if self._external:
+                for page in self._owned_pages:
+                    try:
+                        await page.close()
+                    except Exception:
+                        pass
+            elif self._context is not None:
                 await self._context.close()
         finally:
             if self._pw is not None:
                 await self._pw.stop()
+            self._owned_pages = []
+            self._external = False
+            self._browser = None
             self._context = None
             self._pw = None
