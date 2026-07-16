@@ -51,7 +51,11 @@ from ranking_literature import (
     literature_status_tier,
     select_live_shortlist,
 )
-from ranking_policy import PRIZE_POLICY_VERSION, classify_prize
+from ranking_policy import (
+    PRIZE_POLICY_VERSION,
+    classify_prize,
+    selection_priority_tier,
+)
 from run_contract import (
     RunContractError,
     canonical_json,
@@ -1316,9 +1320,58 @@ def snapshot_sources(
     return snapshot_id, catalog, integrity
 
 
+def _literature_audit(card: dict) -> dict:
+    return card.get("probe_summary", {}).get("literature_ranking") or {
+        "coverage_status": "not_available",
+        "local_artifact_hash": "",
+        "live_artifact_hashes": [],
+        "coverage_gaps": ["literature ranking not available"],
+        "supporting_snippets": [],
+        "features": {
+            "foothold": 0.0,
+            "reuse": 0.0,
+            "machinery_risk": 0.0,
+            "status_risk": 0.0,
+            "components": {},
+        },
+    }
+
+
+def selection_fields(card: dict, *, base_score: float) -> dict:
+    audit = _literature_audit(card)
+    try:
+        priority_tier = selection_priority_tier(
+            card.get("metadata", {}).get("prize_status", "unknown")
+        )
+    except ValueError:
+        priority_tier = 2
+    adjustment = literature_adjustment(audit["features"])
+    return {
+        "selection_priority_tier": priority_tier,
+        "literature_status_tier": literature_status_tier(audit["features"]),
+        "base_acquisition_score": round(float(base_score), 6),
+        "literature_adjustment": adjustment,
+        "selection_score": round(float(base_score) + adjustment, 6),
+    }
+
+
+def solve_sort_key(card: dict, *, base_score: float) -> tuple[int, int, float, int]:
+    fields = selection_fields(card, base_score=base_score)
+    return (
+        fields["selection_priority_tier"],
+        fields["literature_status_tier"],
+        -fields["selection_score"],
+        card["problem_number"],
+    )
+
+
+def _novel_resolution_base(card: dict) -> float:
+    return float(card["posterior"]["p_verified_novel_resolution"]["probability"])
+
+
 def diversified_ranking(cards: list[dict], limit: int) -> list[dict]:
     remaining = list(cards)
-    selected: list[dict] = []
+    selected: list[tuple[dict, float]] = []
     domains: Counter[str] = Counter()
     while remaining and len(selected) < limit:
         def acquisition(card: dict) -> float:
@@ -1330,20 +1383,38 @@ def diversified_ranking(cards: list[dict], limit: int) -> list[dict]:
             cost = card["cost"]["relative_compute_units"]
             return p / cost + 0.08 * uncertainty + diversity
 
-        winner = max(remaining, key=lambda card: (acquisition(card), -card["problem_number"]))
+        winner = min(
+            remaining,
+            key=lambda card: solve_sort_key(card, base_score=acquisition(card)),
+        )
+        winner_score = acquisition(winner)
         remaining.remove(winner)
         domains[winner["problem_type"]["primary_domain"]] += 1
-        selected.append(winner)
-    return selected
+        selected.append((winner, winner_score))
+    return [
+        ranking_record(
+            card, rank,
+            reason="posterior plus uncertainty/domain diversity",
+            base_acquisition_score=score,
+        )
+        for rank, (card, score) in enumerate(selected, 1)
+    ]
 
 
 def ranking_record(card: dict, rank: int, *, reason: str,
-                   posterior_key: str = "p_verified_novel_resolution") -> dict:
+                   posterior_key: str = "p_verified_novel_resolution",
+                   base_acquisition_score: float | None = None) -> dict:
     directive = card.get("research_directive") or research_directive_for_card(card)
     directive_sha256 = card.get("research_directive_sha256") or research_directive_sha256(
         directive
     )
     posterior = card["posterior"][posterior_key]
+    base_score = (
+        posterior["probability"]
+        if base_acquisition_score is None else base_acquisition_score
+    )
+    selection = selection_fields(card, base_score=base_score)
+    literature_audit = _literature_audit(card)
     interval = posterior["credible_interval_approx"]
     compact_date = card["snapshot_id"].split("-", 1)[0]
     snapshot_date = (
@@ -1357,6 +1428,13 @@ def ranking_record(card: dict, rank: int, *, reason: str,
         risks.append("source reports the problem resolved; literature cleanup only")
     if card["probe_summary"]["early_research"]["censored"]:
         risks.append("prior run is incomplete/censored")
+    if card.get("metadata", {}).get("prize_status") == "paid":
+        risks.append("paid target: deferred until every explicitly unpaid target")
+    components = literature_audit["features"].get("components", {})
+    for item in components.get("machinery_snippets", [])[:2]:
+        risks.append(f"literature machinery risk: {item['snippet']}")
+    for item in components.get("status_snippets", [])[:2]:
+        risks.append(f"literature status risk: {item['snippet']}")
     positives = []
     if card["probe_summary"]["formal"]["lean_route_available"]:
         positives.append("source reports an existing formalization")
@@ -1364,6 +1442,11 @@ def ranking_record(card: dict, rank: int, *, reason: str,
         positives.append("deterministic finite/exact probe appears feasible")
     if not positives:
         positives.append("eligible for bounded natural-language research probe")
+    for item in (
+        components.get("partial_result_snippets", [])
+        + components.get("reuse_snippets", [])
+    )[:3]:
+        positives.append(f"literature foothold: {item['snippet']}")
     return {
         "problem_id": card["problem_id"],
         "problem_number": card["problem_number"],
@@ -1382,6 +1465,21 @@ def ranking_record(card: dict, rank: int, *, reason: str,
         "source_snapshot_sha256": card["provenance"]["source_snapshot_sha256"],
         "statement_sha256": card["statement"]["statement_sha256"],
         "allocation_status": card["allocation_status"],
+        "prize": card.get("metadata", {}).get("prize"),
+        "prize_status": card.get("metadata", {}).get("prize_status", "unknown"),
+        "selection_priority_tier": selection["selection_priority_tier"],
+        "literature_status_tier": selection["literature_status_tier"],
+        "literature_policy_version": LITERATURE_POLICY_VERSION,
+        "literature_coverage_status": literature_audit["coverage_status"],
+        "local_literature_artifact_hash": literature_audit["local_artifact_hash"],
+        "live_literature_artifact_hashes": list(
+            literature_audit["live_artifact_hashes"]
+        ),
+        "literature_features": literature_audit["features"],
+        "literature_coverage_gaps": list(literature_audit["coverage_gaps"]),
+        "base_acquisition_score": selection["base_acquisition_score"],
+        "literature_adjustment": selection["literature_adjustment"],
+        "selection_score": selection["selection_score"],
         "probability": posterior["probability"],
         "credible_interval": interval,
         "uncertainty": round(interval[1] - interval[0], 6),
@@ -1403,13 +1501,20 @@ def ranking_record(card: dict, rank: int, *, reason: str,
 
 
 def posterior_ranking(cards: list[dict], posterior_key: str, limit: int,
-                      reason: str) -> list[dict]:
-    ordered = sorted(
-        cards,
-        key=lambda card: (
+                      reason: str, *, solve_oriented: bool = True) -> list[dict]:
+    if solve_oriented:
+        sort_key = lambda card: solve_sort_key(
+            card,
+            base_score=card["posterior"][posterior_key]["probability"],
+        )
+    else:
+        sort_key = lambda card: (
             -card["posterior"][posterior_key]["probability"],
             card["problem_number"],
-        ),
+        )
+    ordered = sorted(
+        cards,
+        key=sort_key,
     )[:limit]
     return [
         ranking_record(card, rank, reason=reason, posterior_key=posterior_key)
@@ -1430,23 +1535,26 @@ def protected_exploration(
         if card["problem_number"] not in excluded_problem_numbers
     ]
     exploration_limit = min(len(candidates), max(1, limit // 5))
+    def exploration_base(card: dict) -> float:
+        interval = card["posterior"]["p_verified_novel_resolution"][
+            "credible_interval_approx"
+        ]
+        return (
+            (interval[1] - interval[0])
+            / card["cost"]["relative_compute_units"]
+            / (1 + card["probe_summary"]["early_research"]["attempts"])
+        )
     ordered = sorted(
         candidates,
-        key=lambda card: (
-            card["probe_summary"]["early_research"]["attempts"],
-            -(
-                card["posterior"]["p_verified_novel_resolution"]
-                ["credible_interval_approx"][1]
-                - card["posterior"]["p_verified_novel_resolution"]
-                ["credible_interval_approx"][0]
-            ),
-            card["problem_number"],
+        key=lambda card: solve_sort_key(
+            card, base_score=exploration_base(card)
         ),
     )[:exploration_limit]
     return [
         ranking_record(
             card, rank,
             reason="protected exploration: low attempt count and high uncertainty",
+            base_acquisition_score=exploration_base(card),
         )
         for rank, card in enumerate(ordered, 1)
     ]
@@ -1471,10 +1579,9 @@ def add_corpus_unlock_posteriors(cards: list[dict]) -> None:
         card["posterior"]["p_expected_corpus_wide_unlock"] = beta_summary(alpha, beta)
 
 
-def interleave_allocation(
+def _interleave_one_tier(
     exploitation: list[dict], exploration: list[dict], *, exploit_per_explore: int = 4
 ) -> list[dict]:
-    """Create the actual deterministic queue with an explicit protected lane."""
     combined: list[dict] = []
     exploit_index = 0
     explore_index = 0
@@ -1493,6 +1600,20 @@ def interleave_allocation(
                 for record in exploration[explore_index:]
             )
             break
+    return combined
+
+
+def interleave_allocation(
+    exploitation: list[dict], exploration: list[dict], *, exploit_per_explore: int = 4
+) -> list[dict]:
+    """Interleave lanes for every unpaid row, then restart for paid rows."""
+    combined: list[dict] = []
+    for prize_status in ("unpaid", "paid"):
+        combined.extend(_interleave_one_tier(
+            [row for row in exploitation if row["prize_status"] == prize_status],
+            [row for row in exploration if row["prize_status"] == prize_status],
+            exploit_per_explore=exploit_per_explore,
+        ))
     for rank, record in enumerate(combined, 1):
         record["lane_rank"] = record["rank"]
         record["rank"] = rank
@@ -2376,16 +2497,117 @@ def tractable_frontier_ranking(cards: list[dict], limit: int) -> list[dict]:
         return 0.5 * lean + 0.4 * compute + 0.15 * bool(lean_route) + 0.05 * bool(clear)
 
     ordered = sorted(
-        cards, key=lambda card: (-score(card), card["problem_number"])
+        cards, key=lambda card: solve_sort_key(card, base_score=score(card))
     )[:limit]
     return [
         ranking_record(
             card, rank,
             reason="formal/exact-computation tractable frontier",
             posterior_key="p_lean_verified_exact_target",
+            base_acquisition_score=score(card),
         )
         for rank, card in enumerate(ordered, 1)
     ]
+
+
+def build_ranking_products(
+    eligible: list[dict], *, top_k: int, allocation_ready: bool,
+) -> dict:
+    """Build every descriptive and solve-oriented product from one card set."""
+    direct_cards = sorted(
+        eligible,
+        key=lambda card: solve_sort_key(
+            card, base_score=_novel_resolution_base(card)
+        ),
+    )[:top_k]
+    direct_records = [
+        ranking_record(
+            card, rank, reason="highest transparent posterior",
+            base_acquisition_score=_novel_resolution_base(card),
+        )
+        for rank, card in enumerate(direct_cards, 1)
+    ]
+    exploration_quota = min(len(eligible), max(1, top_k // 5))
+    exploitation_limit = max(0, min(len(eligible), top_k) - exploration_quota)
+    diverse_records = diversified_ranking(eligible, exploitation_limit)
+    exploration_records = protected_exploration(
+        eligible,
+        top_k,
+        excluded_problem_numbers={
+            record["problem_number"] for record in diverse_records
+        },
+    )
+    allocation_queue = (
+        interleave_allocation(diverse_records, exploration_records)
+        if allocation_ready else []
+    )
+
+    def uncertain_base(card: dict) -> float:
+        interval = card["posterior"]["p_verified_novel_resolution"][
+            "credible_interval_approx"
+        ]
+        return (
+            (interval[1] - interval[0])
+            * card["posterior"]["p_high_mathematical_value"]["probability"]
+            / card["cost"]["relative_compute_units"]
+        )
+
+    uncertain_cards = sorted(
+        eligible,
+        key=lambda card: solve_sort_key(
+            card, base_score=uncertain_base(card)
+        ),
+    )[:top_k]
+    return {
+        "direct_solve_probability": direct_records,
+        "diversified_attack_queue": diverse_records,
+        "allocation_queue": allocation_queue,
+        "highest_probability_verified_novel_solution": posterior_ranking(
+            eligible, "p_verified_novel_resolution", top_k,
+            "highest transparent posterior for a verified novel resolution",
+        ),
+        "highest_probability_verified_partial_progress": posterior_ranking(
+            eligible, "p_verified_partial_progress", top_k,
+            "highest transparent posterior for verified partial progress",
+        ),
+        "highest_probability_lean_verification": posterior_ranking(
+            eligible, "p_lean_verified_exact_target", top_k,
+            "highest Lean-route posterior from the bounded probe",
+        ),
+        "best_finite_computation_targets": posterior_ranking(
+            eligible, "p_finite_computational_resolution", top_k,
+            "highest finite exact-computation posterior",
+        ),
+        "tractable_frontier": tractable_frontier_ranking(eligible, top_k),
+        "most_likely_stale_literature_records": posterior_ranking(
+            eligible, "p_correct_but_already_known", top_k,
+            "highest already-known/literature-cleanup posterior",
+            solve_oriented=False,
+        ),
+        "highest_value_uncertain_problems": [
+            ranking_record(
+                card, rank,
+                reason="uncertainty times mathematical-value prior per compute unit",
+                base_acquisition_score=uncertain_base(card),
+            )
+            for rank, card in enumerate(uncertain_cards, 1)
+        ],
+        "highest_mathematical_value_targets": posterior_ranking(
+            eligible, "p_high_mathematical_value", top_k,
+            "multi-signal mathematical-value prior", solve_oriented=False,
+        ),
+        "highest_reusable_formal_infrastructure_value": posterior_ranking(
+            eligible, "p_reusable_formal_infrastructure", top_k,
+            "highest reusable formal-infrastructure posterior",
+            solve_oriented=False,
+        ),
+        "highest_expected_corpus_wide_unlock": posterior_ranking(
+            eligible, "p_expected_corpus_wide_unlock", top_k,
+            "domain prevalence, shared routes, and formal reuse potential",
+            solve_oriented=False,
+        ),
+        "protected_exploration": exploration_records,
+    }
 
 
 ATTEMPT_EXCLUSIONS_FILENAME = "attempt_exclusions.json"
@@ -2651,25 +2873,6 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
         if stale_subproblem.name not in current_subproblem_names:
             stale_subproblem.unlink()
 
-    direct = sorted(
-        eligible,
-        key=lambda card: (
-            -card["posterior"]["p_verified_novel_resolution"]["probability"],
-            card["problem_number"],
-        ),
-    )[:top_k]
-    exploration_quota = min(len(eligible), max(1, top_k // 5))
-    exploitation_limit = max(0, min(len(eligible), top_k) - exploration_quota)
-    diversified = diversified_ranking(eligible, exploitation_limit)
-    direct_records = [ranking_record(card, i, reason="highest transparent posterior")
-                      for i, card in enumerate(direct, 1)]
-    diverse_records = [ranking_record(card, i, reason="posterior plus uncertainty/domain diversity")
-                       for i, card in enumerate(diversified, 1)]
-    exploration_records = protected_exploration(
-        eligible,
-        top_k,
-        excluded_problem_numbers={card["problem_number"] for card in diversified},
-    )
     unknown_prize_problem_numbers = sorted(
         card["problem_number"] for card in eligible
         if card["metadata"]["prize_status"] == "unknown"
@@ -2680,10 +2883,10 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
         and all(card.get("run_contract_id") for card in eligible)
         and integrity["status"] == "complete"
     )
-    allocation_queue = (
-        interleave_allocation(diverse_records, exploration_records)
-        if allocation_ready else []
+    ranking_products = build_ranking_products(
+        eligible, top_k=top_k, allocation_ready=allocation_ready
     )
+    allocation_queue = ranking_products["allocation_queue"]
     rankings = {
         "schema_version": SCHEMA_VERSION,
         "snapshot_id": snapshot_id,
@@ -2720,62 +2923,7 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
         "egmra_calibration": egmra_provenance,
         "corpus_integrity": integrity,
         "unranked_missing_source_records": integrity["missing_open_problem_numbers"],
-        "direct_solve_probability": direct_records,
-        "diversified_attack_queue": diverse_records,
-        "allocation_queue": allocation_queue,
-        "highest_probability_verified_novel_solution": posterior_ranking(
-            eligible, "p_verified_novel_resolution", top_k,
-            "highest transparent posterior for a verified novel resolution",
-        ),
-        "highest_probability_verified_partial_progress": posterior_ranking(
-            eligible, "p_verified_partial_progress", top_k,
-            "highest transparent posterior for verified partial progress",
-        ),
-        "highest_probability_lean_verification": posterior_ranking(
-            eligible, "p_lean_verified_exact_target", top_k,
-            "highest Lean-route posterior from the bounded probe",
-        ),
-        "best_finite_computation_targets": posterior_ranking(
-            eligible, "p_finite_computational_resolution", top_k,
-            "highest finite exact-computation posterior",
-        ),
-        "tractable_frontier": tractable_frontier_ranking(eligible, top_k),
-        "most_likely_stale_literature_records": posterior_ranking(
-            eligible, "p_correct_but_already_known", top_k,
-            "highest already-known/literature-cleanup posterior",
-        ),
-        "highest_value_uncertain_problems": [
-            ranking_record(
-                card, rank,
-                reason="uncertainty times mathematical-value prior per compute unit",
-            )
-            for rank, card in enumerate(sorted(
-                eligible,
-                key=lambda item: -(
-                    (
-                        item["posterior"]["p_verified_novel_resolution"]
-                        ["credible_interval_approx"][1]
-                        - item["posterior"]["p_verified_novel_resolution"]
-                        ["credible_interval_approx"][0]
-                    )
-                    * item["posterior"]["p_high_mathematical_value"]["probability"]
-                    / item["cost"]["relative_compute_units"]
-                ),
-            )[:top_k], 1)
-        ],
-        "highest_mathematical_value_targets": posterior_ranking(
-            eligible, "p_high_mathematical_value", top_k,
-            "multi-signal mathematical-value prior",
-        ),
-        "highest_reusable_formal_infrastructure_value": posterior_ranking(
-            eligible, "p_reusable_formal_infrastructure", top_k,
-            "highest reusable formal-infrastructure posterior",
-        ),
-        "highest_expected_corpus_wide_unlock": posterior_ranking(
-            eligible, "p_expected_corpus_wide_unlock", top_k,
-            "domain prevalence, shared routes, and formal reuse potential",
-        ),
-        "protected_exploration": exploration_records,
+        **ranking_products,
         "subproblem_attack_queue": subproblems,
     }
     (output_root / "rankings").mkdir(parents=True, exist_ok=True)
