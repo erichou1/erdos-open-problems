@@ -265,7 +265,12 @@ class LiteratureIndex:
 
     def __init__(self, root: Path):
         self.root = Path(root)
-        texts = _corpus_texts(self.root)
+        corpus_root = (
+            self.root
+            if (self.root / "individual").is_dir()
+            else self.root / "open"
+        )
+        texts = _corpus_texts(corpus_root)
         tags = _load_tags(self.root)
         token_map = {
             number: tokens(display_text(tex)) for number, tex in texts.items()

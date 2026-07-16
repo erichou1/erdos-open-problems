@@ -37,6 +37,21 @@ from erdos_ingest import (
     load_canonical_corpus,
 )
 from feature_flags import feature_enabled
+from egmra.retrieval.scholarly import Fetcher
+from literature_research import LiteratureIndex
+from ranking_literature import (
+    LITERATURE_MODEL_VERSION,
+    LITERATURE_POLICY_VERSION,
+    LIVE_SHORTLIST_LIMIT,
+    build_local_enrichments,
+    enrich_live_shortlist,
+    literature_adjustment,
+    literature_coverage_summary,
+    literature_snapshot_sha256,
+    literature_status_tier,
+    select_live_shortlist,
+)
+from ranking_policy import PRIZE_POLICY_VERSION, classify_prize
 from run_contract import (
     RunContractError,
     canonical_json,
@@ -138,6 +153,9 @@ PIPELINE_FINGERPRINT_FILES = (
     "erdos_ingest.py", "run_status.py", "problem_queue.py", "run_continuous.py",
     "run_verified_range.py", "run_sol2_batch.py", "outcome_ledger.py",
     "promote_verified_run.py", "feature_flags.py", "config/pipeline_features.json",
+    "ranking_policy.py", "ranking_literature.py", "literature_research.py",
+    "egmra/retrieval/scholarly.py", "schemas/problem-card.schema.json",
+    "schemas/ranking-card.schema.json", "schemas/literature-ranking-artifact.schema.json",
     "requirements.lock",
 )
 
@@ -384,6 +402,9 @@ def make_allocation_context(
     source_snapshot_id: str, canonical_open_source_records: int,
     pipeline_version: str, model_portfolio: str, budget: str,
     budget_config: dict | BudgetConfig, allocation_top_k: int,
+    prize_policy_version: str, literature_policy_version: str,
+    literature_model_version: str, literature_snapshot_sha256_value: str,
+    live_shortlist_limit: int,
 ) -> tuple[dict, str | None]:
     context = {
         "snapshot_id": snapshot_id,
@@ -396,6 +417,11 @@ def make_allocation_context(
         "budget": budget,
         "budget_config": budget_config,
         "allocation_top_k": int(allocation_top_k),
+        "prize_policy_version": prize_policy_version,
+        "literature_policy_version": literature_policy_version,
+        "literature_model_version": literature_model_version,
+        "literature_snapshot_sha256": literature_snapshot_sha256_value,
+        "literature_live_shortlist_limit": int(live_shortlist_limit),
         "dependencies": dependency_identity(root),
         "runtime": runtime_identity(),
     }
@@ -1106,6 +1132,11 @@ def build_card(root: Path, snapshot_id: str, source_commit: str,
             "source_problem_url": entry.get("source_problem_url"),
             "formalized": entry.get("formalized"),
             "tags": list(entry.get("tags") or []),
+            "prize": entry.get("prize"),
+            "prize_status": entry.get(
+                "prize_status", classify_prize(entry.get("prize"))
+            ),
+            "ai_wiki": dict(entry.get("ai_wiki") or {}),
             "references": refs,
             "source_sections": {
                 "remarks": str(canonical_source.get("remarks", "")),
@@ -2433,7 +2464,14 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
                    budget: str = DEFAULT_BUDGET,
                    budget_config: dict | BudgetConfig | None = None,
                    canonical_snapshot: Path | None = None,
-                   egmra_calibration_path: Path | None = None) -> dict:
+                   egmra_calibration_path: Path | None = None,
+                   refresh_literature: bool = False,
+                   offline_literature: bool = False,
+                   scholarly_fetcher: Fetcher | None = None) -> dict:
+    if refresh_literature and offline_literature:
+        raise ValueError(
+            "refresh and offline literature modes are mutually exclusive"
+        )
     if canonical_snapshot is None:
         source_roots = [output_root]
         default_source_root = root / "triage"
@@ -2472,18 +2510,6 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
     cards_dir = output_root / "normalized" / "problem_cards"
     cards_dir.mkdir(parents=True, exist_ok=True)
     source_commit = pipeline_fingerprint(root)
-    allocation_context, allocation_context_id = make_allocation_context(
-        root=root,
-        snapshot_id=snapshot_id,
-        source_snapshot_id=canonical_snapshot.name,
-        source_snapshot_sha256=source_snapshot_sha256,
-        canonical_open_source_records=len(canonical_sources),
-        pipeline_version=source_commit,
-        model_portfolio=model_portfolio,
-        budget=budget,
-        budget_config=normalized_budget,
-        allocation_top_k=top_k,
-    )
     outcome_records = load_outcome_records(output_root)
     egmra_by_problem, egmra_provenance = load_egmra_calibration(egmra_calibration_path)
     rankable_numbers = {
@@ -2534,11 +2560,77 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
             egmra_calibration=egmra_by_problem.get(f"erdos-{number}"),
         )
         card["cost"] = cost_estimate(card)
-        card["allocation_context_id"] = allocation_context_id
         card["provenance"]["catalog_fetched_at"] = catalog.get("fetched_at")
         cards.append(card)
 
     add_corpus_unlock_posteriors(cards)
+    eligible = [
+        card for card in cards
+        if not card["metadata"]["source_reports_resolved"]
+        and card["problem_number"] not in attempt_exclusions
+    ]
+    local_index = LiteratureIndex(root)
+    literature_by_problem = build_local_enrichments(cards, local_index)
+    for card in cards:
+        card["probe_summary"]["literature_ranking"] = (
+            literature_by_problem[card["problem_number"]].to_dict()
+        )
+    preliminary = sorted(
+        eligible,
+        key=lambda card: (
+            {"unpaid": 0, "paid": 1, "unknown": 2}.get(
+                card["metadata"]["prize_status"], 2
+            ),
+            literature_status_tier(
+                card["probe_summary"]["literature_ranking"]["features"]
+            ),
+            -(
+                card["posterior"]["p_verified_novel_resolution"]["probability"]
+                / card["cost"]["relative_compute_units"]
+                + literature_adjustment(
+                    card["probe_summary"]["literature_ranking"]["features"]
+                )
+            ),
+            card["problem_number"],
+        ),
+    )
+    literature_live_shortlist = select_live_shortlist(preliminary)
+    literature_by_problem = enrich_live_shortlist(
+        {card["problem_number"]: card for card in cards},
+        literature_by_problem,
+        shortlist_problem_numbers=literature_live_shortlist,
+        cache_root=output_root / "literature" / "ranking",
+        source_snapshot_id=canonical_snapshot.name,
+        refresh=refresh_literature,
+        offline=offline_literature,
+        fetcher=scholarly_fetcher,
+    )
+    for card in cards:
+        card["probe_summary"]["literature_ranking"] = (
+            literature_by_problem[card["problem_number"]].to_dict()
+        )
+    literature_snapshot = literature_snapshot_sha256(
+        literature_by_problem, literature_live_shortlist
+    )
+    allocation_context, allocation_context_id = make_allocation_context(
+        root=root,
+        snapshot_id=snapshot_id,
+        source_snapshot_id=canonical_snapshot.name,
+        source_snapshot_sha256=source_snapshot_sha256,
+        canonical_open_source_records=len(canonical_sources),
+        pipeline_version=source_commit,
+        model_portfolio=model_portfolio,
+        budget=budget,
+        budget_config=normalized_budget,
+        allocation_top_k=top_k,
+        prize_policy_version=PRIZE_POLICY_VERSION,
+        literature_policy_version=LITERATURE_POLICY_VERSION,
+        literature_model_version=LITERATURE_MODEL_VERSION,
+        literature_snapshot_sha256_value=literature_snapshot,
+        live_shortlist_limit=LIVE_SHORTLIST_LIMIT,
+    )
+    for card in cards:
+        card["allocation_context_id"] = allocation_context_id
     for card in cards:
         write_json(cards_dir / f"{card['problem_number']}.json", card)
 
@@ -2559,11 +2651,6 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
         if stale_subproblem.name not in current_subproblem_names:
             stale_subproblem.unlink()
 
-    eligible = [
-        card for card in cards
-        if not card["metadata"]["source_reports_resolved"]
-        and card["problem_number"] not in attempt_exclusions
-    ]
     direct = sorted(
         eligible,
         key=lambda card: (
@@ -2583,8 +2670,13 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
         top_k,
         excluded_problem_numbers={card["problem_number"] for card in diversified},
     )
+    unknown_prize_problem_numbers = sorted(
+        card["problem_number"] for card in eligible
+        if card["metadata"]["prize_status"] == "unknown"
+    )
     allocation_ready = (
-        allocation_context_id is not None
+        not unknown_prize_problem_numbers
+        and allocation_context_id is not None
         and all(card.get("run_contract_id") for card in eligible)
         and integrity["status"] == "complete"
     )
@@ -2608,9 +2700,20 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
         "allocation_context": allocation_context,
         "allocation_context_id": allocation_context_id,
         "allocation_status": (
-            "ready" if allocation_ready
+            "withheld_unknown_prize_metadata"
+            if unknown_prize_problem_numbers
+            else "ready" if allocation_ready
             else "withheld_until_complete_exact_recorded_context"
         ),
+        "prize_policy_version": PRIZE_POLICY_VERSION,
+        "literature_policy_version": LITERATURE_POLICY_VERSION,
+        "literature_model_version": LITERATURE_MODEL_VERSION,
+        "literature_snapshot_sha256": literature_snapshot,
+        "literature_live_shortlist": list(literature_live_shortlist),
+        "literature_coverage": literature_coverage_summary(
+            literature_by_problem
+        ),
+        "unknown_prize_problem_numbers": unknown_prize_problem_numbers,
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "eligible_problems": len(eligible),
         "attempt_exclusions": sorted(attempt_exclusions),
@@ -3055,6 +3158,15 @@ def main() -> None:
                              "frequencies apply a capped weak-evidence posterior "
                              "adjustment with recorded provenance \u2014 never a "
                              "verified outcome")
+    literature_mode = parser.add_mutually_exclusive_group()
+    literature_mode.add_argument(
+        "--refresh-literature", action="store_true",
+        help="retrieve and freeze literature for the unpaid live shortlist",
+    )
+    literature_mode.add_argument(
+        "--offline-literature", action="store_true",
+        help="forbid retrieval and use local plus compatible cached evidence",
+    )
     parser.add_argument("--record", type=Path)
     args = parser.parse_args()
     root = args.root.resolve()
@@ -3064,7 +3176,9 @@ def main() -> None:
                                   top_k=args.top_k,
                                   model_portfolio=args.model_portfolio,
                                   budget=args.budget,
-                                  egmra_calibration_path=args.egmra_calibration)
+                                  egmra_calibration_path=args.egmra_calibration,
+                                  refresh_literature=args.refresh_literature,
+                                  offline_literature=args.offline_literature)
         print(f"Built {rankings['eligible_problems']} eligible problem cards; "
               f"ranking snapshot {rankings['snapshot_id']}")
         return

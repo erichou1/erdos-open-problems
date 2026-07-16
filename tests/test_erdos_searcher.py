@@ -2,6 +2,7 @@ import json
 import hashlib
 import tempfile
 import unittest
+from unittest import mock
 from pathlib import Path
 
 from erdos_ingest import CATALOG_URL, ingest_corpus
@@ -242,6 +243,8 @@ class ErdosSearcherTests(unittest.TestCase):
                     "source_reports_resolved": False,
                     "formalized": True,
                     "tags": ["graph theory"],
+                    "prize": "no",
+                    "prize_status": "unpaid",
                 },
                 "2": {
                     "problem": 2,
@@ -249,6 +252,8 @@ class ErdosSearcherTests(unittest.TestCase):
                     "source_reports_resolved": True,
                     "formalized": False,
                     "tags": ["graph theory"],
+                    "prize": "no",
+                    "prize_status": "unpaid",
                 },
                 "3": {
                     "problem": 3,
@@ -256,6 +261,8 @@ class ErdosSearcherTests(unittest.TestCase):
                     "source_reports_resolved": False,
                     "formalized": False,
                     "tags": ["number theory"],
+                    "prize": "no",
+                    "prize_status": "unpaid",
                 },
             },
         }))
@@ -291,6 +298,62 @@ class ErdosSearcherTests(unittest.TestCase):
             snapshot_time="2026-07-12T00:00:00+00:00",
             delay_s=0,
         )
+
+    def test_card_copies_raw_prize_and_status(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.make_repo(root)
+            catalog_path = root / "problem_catalog.json"
+            catalog = json.loads(catalog_path.read_text())
+            catalog["problems"]["1"].update({
+                "prize": "$5000", "prize_status": "paid",
+            })
+            catalog_path.write_text(json.dumps(catalog))
+            build_searcher(
+                root, root / "triage", snapshot_date="2026-07-12", top_k=5,
+                model_portfolio="model-a", offline_literature=True,
+            )
+            card = json.loads(
+                (root / "triage" / "normalized" / "problem_cards" / "1.json")
+                .read_text()
+            )
+            self.assertEqual(card["metadata"]["prize"], "$5000")
+            self.assertEqual(card["metadata"]["prize_status"], "paid")
+
+    def test_unknown_eligible_prize_withholds_allocation(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            self.make_repo(root)
+            catalog_path = root / "problem_catalog.json"
+            catalog = json.loads(catalog_path.read_text())
+            catalog["problems"]["1"].update({
+                "prize": None, "prize_status": "unknown",
+            })
+            catalog_path.write_text(json.dumps(catalog))
+            ranking = build_searcher(
+                root, root / "triage", snapshot_date="2026-07-12", top_k=5,
+                model_portfolio="model-a", offline_literature=True,
+            )
+            self.assertEqual(ranking["unknown_prize_problem_numbers"], [1])
+            self.assertEqual(
+                ranking["allocation_status"], "withheld_unknown_prize_metadata"
+            )
+            self.assertEqual(ranking["allocation_queue"], [])
+
+    def test_normal_build_never_constructs_live_fetcher(self):
+        with tempfile.TemporaryDirectory() as directory, mock.patch(
+            "ranking_literature.UrllibFetcher",
+            side_effect=AssertionError("network attempted"),
+        ):
+            root = Path(directory)
+            self.make_repo(root)
+            ranking = build_searcher(
+                root, root / "triage", snapshot_date="2026-07-12", top_k=5,
+                model_portfolio="model-a", refresh_literature=False,
+                offline_literature=False,
+            )
+            self.assertEqual(ranking["literature_coverage"]["live_requests"], 0)
+            self.assertEqual(ranking["literature_live_shortlist"], [1])
 
     def test_builds_immutable_snapshot_cards_routes_and_rankings(self):
         with tempfile.TemporaryDirectory() as directory:

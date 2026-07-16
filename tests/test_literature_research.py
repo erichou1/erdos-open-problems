@@ -69,6 +69,17 @@ class LiteratureResearchTests(unittest.TestCase):
             self.assertTrue(first.source_hashes(1))
             self.assertTrue(all(len(value) == 64 for value in first.source_hashes(1)))
 
+    def test_index_uses_open_corpus_when_root_has_no_individual_directory(self):
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            make_corpus(root / "open")
+            (root / "problem_catalog.json").write_text(
+                (root / "open" / "problem_catalog.json").read_text()
+            )
+            (root / "open" / "problem_catalog.json").unlink()
+            context = L.LiteratureIndex(root).research(1)
+            self.assertTrue(context.related)
+
     def test_finds_related_and_excludes_unrelated(self):
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
