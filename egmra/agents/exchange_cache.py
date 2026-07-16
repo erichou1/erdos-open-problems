@@ -97,6 +97,9 @@ class CachedRunner:
                 model=AttestedModelIdentity(**identity),
                 context_id=str(record.get("context_id", "")),
                 prompt_hash=str(record.get("prompt_hash", cache_key)),
+                # Optional for backward compatibility with schema-v1 entries
+                # written before conversation URLs were propagated.
+                conversation_url=str(record.get("conversation_url", "")),
             )
         except (OSError, ValueError, TypeError, json.JSONDecodeError):
             return None
@@ -114,6 +117,7 @@ class CachedRunner:
                 "response_hash": sha256_hex(response.text),
                 "text": response.text,
                 "context_id": response.context_id,
+                "conversation_url": response.conversation_url,
                 "model": {
                     "provider": model.provider,
                     "model": model.model,

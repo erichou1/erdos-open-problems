@@ -21,11 +21,13 @@ from egmra.provenance.stage_identity import AttestedModelIdentity, attest_model_
 
 
 class CountingRunner:
-    def __init__(self, text="reply body", identity=None):
+    def __init__(self, text="reply body", identity=None,
+                 conversation_url="https://chatgpt.com/c/cache-test"):
         self.runner_id = "counting"
         self.calls = 0
         self.records = ["transcript-sentinel"]
         self._text = text
+        self._conversation_url = conversation_url
         self._identity = identity or AttestedModelIdentity(
             provider="local", model="counting", ui_surface="test")
 
@@ -33,7 +35,8 @@ class CountingRunner:
         self.calls += 1
         return RunnerResponse(
             text=self._text, model=self._identity,
-            context_id=f"ctx-{self.calls}", prompt_hash=sha256_hex(prompt))
+            context_id=f"ctx-{self.calls}", prompt_hash=sha256_hex(prompt),
+            conversation_url=self._conversation_url)
 
 
 def test_identical_prompt_replays_without_a_live_call(tmp_path):
@@ -66,6 +69,19 @@ def test_cache_survives_process_death(tmp_path):
         "p1", stage="cold_pass")
     assert second_attempt.calls == 0           # zero live cost
     assert replayed.text == "reply body"       # the ORIGINAL exchange
+
+
+def test_conversation_url_round_trips_with_cached_exchange(tmp_path):
+    directory = tmp_path / "exchanges"
+    original = CountingRunner(
+        conversation_url="https://chatgpt.com/c/exact-conversation")
+    live = CachedRunner(original, directory).run("p", stage="branch:b1")
+    replayed = CachedRunner(CountingRunner(), directory).run(
+        "p", stage="branch:b1")
+    assert live.conversation_url == "https://chatgpt.com/c/exact-conversation"
+    assert replayed.conversation_url == live.conversation_url
+    record = json.loads(next(directory.glob("*.json")).read_text())
+    assert record["conversation_url"] == live.conversation_url
 
 
 def test_attested_identity_round_trips_and_reverifies(tmp_path):

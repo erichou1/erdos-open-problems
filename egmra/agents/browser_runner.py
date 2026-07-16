@@ -273,7 +273,8 @@ class BrowserChatGPTRunner:
             f"{self.runner_id}:{stage}:{conversation_url}:{prompt_hash}:{BROWSER_RUNNER_VERSION}"
         )
         return RunnerResponse(
-            text=text, model=identity, context_id=context_id, prompt_hash=prompt_hash
+            text=text, model=identity, context_id=context_id,
+            prompt_hash=prompt_hash, conversation_url=conversation_url,
         )
 
 

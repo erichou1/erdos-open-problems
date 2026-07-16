@@ -74,17 +74,38 @@ def _event_summary(path: Path) -> dict[str, Any] | None:
     actions = collections.Counter(str(e.get("action", "UNKNOWN")) for e in events)
     families: list[str] = []
     chatgpt: list[dict[str, str]] = []
-    for event in events:
+    timeline: list[dict[str, Any]] = []
+    for index, event in enumerate(events, start=1):
+        payload = event.get("payload") or {}
+        conversation_url = payload.get("conversation_url")
+        safe_url = (
+            conversation_url
+            if isinstance(conversation_url, str)
+            and conversation_url.startswith("https://chatgpt.com/")
+            else None
+        )
+        timeline.append({
+            "sequence": event.get("sequence", index),
+            "action": str(event.get("action", "UNKNOWN")),
+            "timestamp": event.get("timestamp"),
+            "description": str(
+                event.get("human_readable_reason")
+                or event.get("reason_code") or ""
+            )[:240],
+            "stage": str(payload.get("stage", ""))[:120] or None,
+            "conversation_url": safe_url,
+        })
         if event.get("action") == "BRANCH_OPENED":
             for object_id in event.get("object_ids", ()):
                 value = str(object_id)
                 if value and not value.startswith("erdos-") and value not in families:
                     families.append(value)
-        payload = event.get("payload") or {}
         if event.get("action") == "MODEL_EXCHANGE_RECORDED":
-            url = payload.get("conversation_url")
-            if isinstance(url, str) and url.startswith("https://chatgpt.com/"):
-                chatgpt.append({"stage": str(payload.get("stage", "exchange")), "url": url})
+            if safe_url:
+                chatgpt.append({
+                    "stage": str(payload.get("stage", "exchange")),
+                    "url": safe_url,
+                })
     return {
         "run_id": run_id,
         "problem_id": problem_id,
@@ -98,6 +119,7 @@ def _event_summary(path: Path) -> dict[str, Any] | None:
         "packet_reentries": actions["PACKET_REENTRY"],
         "formal_correspondences": actions["FORMAL_CORRESPONDENCE_ISSUED"],
         "chatgpt": chatgpt,
+        "events": timeline,
         "actions": dict(sorted(actions.items())),
     }
 
@@ -156,7 +178,7 @@ def _aristotle_artifacts() -> tuple[list[dict[str, Any]], dict[str, list[dict[st
             "bytes": path.stat().st_size,
             "declarations": declarations,
             "problem_numbers": numbers,
-            "status": "quarantined candidate",
+            "status": "proof draft — not yet verified",
             "source_preview": source[:5000],
         }
         artifacts.append(row)
@@ -213,6 +235,7 @@ def build() -> dict[str, Any]:
             "families": [], "claims_proposed": 0, "evidence_attached": 0,
             "claims_promoted": 0, "packet_reentries": 0,
             "formal_correspondences": 0, "chatgpt": [], "actions": {},
+            "events": [],
         })
         summary.update({
             "machine": outcome.get("machine"),
@@ -263,6 +286,11 @@ def build() -> dict[str, Any]:
     workers = [{"worker": problem["worker"], "problem_id": problem["problem_id"],
                 "number": problem["number"], "status": problem["status"]}
                for problem in problems if problem.get("worker")]
+    linked_artifacts = sum(bool(artifact["problem_numbers"]) for artifact in artifacts)
+    recorded_chatgpt_links = sum(
+        len(run.get("chatgpt", ()))
+        for problem in problems for run in problem["runs"]
+    )
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "campaign": CAMPAIGN,
@@ -271,8 +299,12 @@ def build() -> dict[str, Any]:
             "by_status": dict(sorted(statuses.items())),
             "by_latest_state": dict(sorted(states.items())),
             "total_runs": sum(problem["run_count"] for problem in problems),
-            "runs_with_chatgpt": sum(bool(problem["exchanges"]) for problem in problems),
+            "problems_with_chatgpt_exchanges": sum(
+                bool(problem["exchanges"]) for problem in problems),
+            "chatgpt_links_recorded": recorded_chatgpt_links,
             "aristotle_artifacts": len(artifacts),
+            "aristotle_linked": linked_artifacts,
+            "aristotle_unlinked": len(artifacts) - linked_artifacts,
         },
         "workers": workers,
         "problems": problems,

@@ -577,7 +577,19 @@ def _record_model_exchanges(log, artifact_store, problem_id: str, *, runners) ->
     claims is tamper-evident and auditable. Idempotent across shared runners.
     """
     seen_runners: set[int] = set()
+    # Idempotent across repeated calls, not merely within this invocation.
+    # This lets the research loop seal exchanges after EACH completed branch
+    # (so a later crash cannot lose the ChatGPT links) and call once more at
+    # run end without duplicating events.
     seen_exchanges: set[tuple] = set()
+    for event in list(getattr(log, "events", ()) or ()):
+        if getattr(event, "action", "") != "MODEL_EXCHANGE_RECORDED":
+            continue
+        payload = getattr(event, "payload", {}) or {}
+        seen_exchanges.add((
+            payload.get("stage", ""), payload.get("prompt_hash", ""),
+            payload.get("response_hash", ""),
+        ))
     recorded = 0
     for runner in runners:
         if runner is None or id(runner) in seen_runners:
@@ -1972,6 +1984,18 @@ def research(
             leaf.closed = supported
         if branch_id == "direct_structural":
             blueprint.direct_attempted = True
+        # Persist browser/model exchange provenance as soon as this branch is
+        # complete. In particular, the exact ChatGPT conversation URL now
+        # survives a crash in a later branch. _record_model_exchanges is
+        # idempotent against events already in the log.
+        if artifact_store is not None:
+            _record_model_exchanges(
+                log, artifact_store, problem_id,
+                runners=(runner, getattr(worker, "runner", None),
+                         getattr(branch_worker, "runner", None)),
+            )
+            if "record_exchanges" not in phases:
+                phases.append("record_exchanges")
         # Durable within-problem checkpoint: after each completed branch, seal
         # a signed snapshot of the event-log prefix + graph view so a crashed
         # long run leaves verifiable state behind.  Checkpointing is an ops
@@ -1992,7 +2016,8 @@ def research(
     if artifact_store is not None:
         _record_model_exchanges(log, artifact_store, problem_id,
                                 runners=(runner, getattr(worker, "runner", None)))
-        phases.append("record_exchanges")
+        if "record_exchanges" not in phases:
+            phases.append("record_exchanges")
 
     # 15a. Hostile natural-language review of the PROPOSED dependency cone
     # (the T3 informal-evidence producer). Runs before assembly because the

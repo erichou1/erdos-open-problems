@@ -23,6 +23,10 @@ class RunnerResponse:
     model: AttestedModelIdentity
     context_id: str
     prompt_hash: str
+    # Exact browser conversation that produced this response. Empty for API,
+    # deterministic, and legacy cached responses. This is provenance only:
+    # it never affects truth, identity, or cache keys.
+    conversation_url: str = ""
 
 
 class ModelRunner(Protocol):

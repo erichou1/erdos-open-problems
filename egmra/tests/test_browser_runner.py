@@ -80,6 +80,7 @@ def test_run_returns_unattested_identity_and_records_provenance():
     assert rec.attested is False
     assert rec.runner_version == BROWSER_RUNNER_VERSION
     assert rec.conversation_url.startswith("https://chatgpt.com/c/")
+    assert resp.conversation_url == rec.conversation_url
     assert rec.prompt_hash == resp.prompt_hash
     assert rec.response_hash and rec.response_hash != rec.prompt_hash
 

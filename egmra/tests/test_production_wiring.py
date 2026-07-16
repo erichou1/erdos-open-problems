@@ -128,7 +128,8 @@ class _ModelRunner:
             runner_version="test", attested=False, rate_limit_pauses=0,
             response_retries=0, created_at="2026-07-13T00:00:00Z"))
         return RunnerResponse(text=text, model=base.model, context_id=base.context_id,
-                              prompt_hash=base.prompt_hash)
+                              prompt_hash=base.prompt_hash,
+                              conversation_url=self.records[-1].conversation_url)
 
 
 # ── 4.11: distinct worker roles per mechanism branch ────────────────────────────
@@ -188,6 +189,9 @@ def test_record_model_exchanges_persists_and_signs(tmp_path):
     for event in exchange_events:
         assert event.output_hashes and store.get(event.output_hashes[0])  # durable artifact
         assert event.payload["prompt_hash"] and "conversation_url" in event.payload
+    # Repeated branch/end-of-run recording is idempotent against the log.
+    assert _record_model_exchanges(log, store, "prob", runners=(runner,)) == 0
+    assert len([e for e in log.events if e.action == "MODEL_EXCHANGE_RECORDED"]) == 2
 
 
 def test_research_records_model_exchanges(tmp_path):
