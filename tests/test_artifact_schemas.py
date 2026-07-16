@@ -41,6 +41,29 @@ class ArtifactSchemaTests(unittest.TestCase):
             require_feature("continuous_scheduler")
         require_feature("continuous_scheduler", override=True)
 
+    def test_ranking_and_problem_schemas_require_selection_audit_fields(self):
+        ranking = json.loads(
+            (ROOT / "schemas" / "ranking-card.schema.json").read_text()
+        )
+        self.assertTrue({
+            "prize", "prize_status", "selection_priority_tier",
+            "literature_policy_version", "literature_coverage_status",
+            "local_literature_artifact_hash", "live_literature_artifact_hashes",
+            "literature_features", "base_acquisition_score",
+            "literature_adjustment", "selection_score",
+        } <= set(ranking["required"]))
+        problem = json.loads(
+            (ROOT / "schemas" / "problem-card.schema.json").read_text()
+        )
+        self.assertTrue(
+            {"prize", "prize_status", "ai_wiki"}
+            <= set(problem["properties"]["metadata"]["required"])
+        )
+        self.assertIn(
+            "literature_ranking",
+            problem["properties"]["probe_summary"]["required"],
+        )
+
 
 if __name__ == "__main__":
     unittest.main()
