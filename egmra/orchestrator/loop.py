@@ -40,6 +40,7 @@ from egmra.intake.contract import ProblemContract, build_problem_contract
 from egmra.intake.review import interpretation_review_hash, verify_intent_certificate
 from egmra.learning import LongTermMemory
 from egmra.lean import LeanService, verify_formal_correspondence_certificate
+from egmra.lean.warm import dev_obligation_source
 from egmra.oeis import OEISClient, OEISUnavailable
 from egmra.orchestrator.checkpoint import CheckpointError, take_checkpoint
 from egmra.policy import PolicyEnforcer
@@ -1021,6 +1022,7 @@ def research(
     ] | None = None,
     informal_reviewers: list[tuple[str, ModelRunner]] | None = None,
     lean_repair_rounds: int = 0,
+    dev_lean_service: Any | None = None,
     checkpoint_dir: Path | str | None = None,
     resume_from: Path | str | None = None,
     expert_review: ExpertReviewCertificate | None = None,
@@ -1691,11 +1693,15 @@ def research(
             if not formal_certificate.passed and formalizer is not None \
                     and lean_repair_rounds > 0 and _supports_repair(formalizer):
                 current_source = accepted["source"]
+                dev_feedback: str | None = None
                 for repair_round in range(1, int(lean_repair_rounds) + 1):
-                    feedback = "; ".join((
-                        *formal_certificate.placeholder_findings,
-                        *formal_certificate.unsafe_findings,
-                    ))[:1200]
+                    if dev_feedback is not None:
+                        feedback = dev_feedback
+                    else:
+                        feedback = "; ".join((
+                            *formal_certificate.placeholder_findings,
+                            *formal_certificate.unsafe_findings,
+                        ))[:1200]
                     try:
                         repaired = formalizer.formalize(
                             declaration_name=accepted["declaration_name"],
@@ -1717,6 +1723,38 @@ def research(
                             f"round{repair_round}")
                         break
                     current_source = repaired
+                    # R5: warm DEVELOPMENT pre-check — a repaired candidate
+                    # that does not even development-compile never spends a
+                    # sealed cold kernel run; its diagnostics feed the next
+                    # repair round instead. Development verdicts are search
+                    # guidance only; any dev failure falls OPEN to the sealed
+                    # check exactly as before.
+                    if dev_lean_service is not None:
+                        try:
+                            dev_result = dev_lean_service.check(
+                                dev_obligation_source(
+                                    repaired,
+                                    declaration_name=accepted[
+                                        "declaration_name"],
+                                    expected_type_source=accepted.get(
+                                        "expected_type_source", ""),
+                                ))
+                        except Exception:  # noqa: BLE001 - dev isolation
+                            dev_result = None
+                        if dev_result is not None and (
+                                not dev_result.ok or dev_result.sorries):
+                            failures.append(
+                                f"formal_dev_precheck_failed:{branch_id}:"
+                                f"round{repair_round}")
+                            dev_feedback = "; ".join(
+                                dev_result.messages)[:1200] or \
+                                "development compile failed"
+                            if dev_result.sorries:
+                                dev_feedback = (
+                                    "sorry placeholders are forbidden; "
+                                    + dev_feedback)[:1200]
+                            continue
+                    dev_feedback = None
                     try:
                         formal_certificate = lean_service.verify_declaration(
                             environment=environment,

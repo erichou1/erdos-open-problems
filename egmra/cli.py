@@ -27,6 +27,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import re
 import secrets
 import shutil
 import sys
@@ -405,6 +406,26 @@ def _build_lean_service(args: argparse.Namespace):
     return service, lean_version, args.mathlib_commit
 
 
+def _build_dev_lean_service(args: argparse.Namespace):
+    """Optional warm DEVELOPMENT Lean REPL (report R5). Never authoritative.
+
+    ``--lean-dev-repl CMD`` (e.g. ``lake env ../repl/.lake/build/bin/repl``)
+    runs inside ``--lean-project``; Mathlib loads once on first use, after
+    which repair candidates get second-scale development feedback. Verdicts
+    are search guidance only — sealed certificates still require the pinned
+    checker. Returns None when unconfigured.
+    """
+    command = getattr(args, "lean_dev_repl", None)
+    if not command:
+        return None
+    lean_project = getattr(args, "lean_project", None)
+    if not lean_project:
+        raise ValueError("--lean-dev-repl requires --lean-project")
+    from egmra.lean.warm import WarmLeanService
+
+    return WarmLeanService(command=str(command), cwd=Path(lean_project))
+
+
 def _build_formalizer(args: argparse.Namespace):
     """Build an autonomous formalization worker for `egmra run` (task #5 + R6).
 
@@ -616,6 +637,9 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
     # Optional autonomous formalization worker (task #5): Aristotle produces the
     # proof for a pinned obligation; the pinned kernel above re-checks it.
     formalizer = _build_formalizer(args)
+    # Optional warm DEVELOPMENT Lean REPL (report R5): repair candidates are
+    # pre-checked in seconds before spending sealed cold kernel runs.
+    dev_lean_service = _build_dev_lean_service(args)
     worker = RunnerWorker(
         runner=runner,
         goal_claim_id="goal",
@@ -658,6 +682,7 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
             ),
             informal_reviewers=informal_reviewers or None,
             lean_repair_rounds=lean_repair_rounds,
+            dev_lean_service=dev_lean_service,
             checkpoint_dir=getattr(args, "checkpoint_dir", None),
             resume_from=getattr(args, "resume_from", None),
             expert_review=_load_expert_review(getattr(args, "expert_review", None)),
@@ -683,6 +708,8 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
         _close_event_log(event_log)
         if formalizer is not None:
             formalizer.close()
+        if dev_lean_service is not None:
+            dev_lean_service.close()
     classification = classify_result(result, goal_claim_id="goal")
     rendered = result.render() | {
         "provider": args.provider,
@@ -1296,6 +1323,108 @@ def cmd_escalation_packet(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_lean_dev_check(args: argparse.Namespace) -> int:
+    """One development compile on the warm REPL (report R5 live spike).
+
+    Prints the :class:`DevCheckResult` as JSON. Development verdicts are
+    search guidance only — this command can never produce a certificate.
+    """
+    from egmra.lean.warm import WarmLeanService
+
+    if getattr(args, "source", None) is not None:
+        source = Path(args.source).read_text(encoding="utf-8")
+    else:
+        source = sys.stdin.read()
+    # A warm environment already has the header imported; leading imports in
+    # the checked source would be rejected by the REPL (imports must open a
+    # file), so they are stripped — the header environment supplies them.
+    source = re.sub(r"^\s*import [^\n]*\n", "", source, flags=re.MULTILINE)
+    service = WarmLeanService(
+        command=str(args.repl_cmd), cwd=Path(args.lean_project),
+        header=str(args.header))
+    try:
+        result = service.check(source)
+    finally:
+        service.close()
+    print(json.dumps(result.to_dict(), indent=2))
+    return 0 if result.ok else 1
+
+
+def cmd_sketch(args: argparse.Namespace) -> int:
+    """Validate (and optionally development-compile) an AND/OR proof sketch
+    against a problem's community Lean target (report R4 phase 1).
+
+    The sketch proves the pinned target FROM sorried child lemmas; a
+    compiling sketch machine-checks the decomposition. Children become
+    formalization obligations for the existing sealed pipeline — the sketch
+    itself is development-only and never touches truth or release.
+    """
+    from egmra.corpus.formal_conjectures import parse_declarations
+    from egmra.lean.sketch import compile_sketch, validate_sketch
+
+    problem = from_erdos_number(
+        int(args.erdos), corpus_tex_path=getattr(args, "corpus_tex", None),
+        catalog_path=getattr(args, "catalog", None))
+    target_path = None
+    for name in (f"{problem.problem_id}.lean", f"erdos_{int(args.erdos)}.lean"):
+        candidate = Path(args.targets_dir) / name
+        if candidate.is_file():
+            target_path = candidate
+            break
+    if target_path is None:
+        raise ValueError(
+            f"no community Lean target for {problem.problem_id} in "
+            f"{args.targets_dir} — the sketch lane is scoped to problems "
+            "with formal targets")
+    target_source = target_path.read_text(encoding="utf-8")
+    declarations = parse_declarations(target_source)
+    if not declarations:
+        raise ValueError(f"no declarations found in {target_path}")
+    target_declaration = next(
+        (d for d in declarations if "erdos" in d.lower()), declarations[0])
+    # The target's own statement text (for anti-circularity screening of
+    # children). Extraction is best-effort; on failure the circularity screen
+    # is skipped, never fabricated.
+    target_statement = ""
+    statement_match = re.search(
+        re.escape(target_declaration) + r"([\s\S]*?)(?::=|\Z)", target_source)
+    if statement_match:
+        target_statement = " ".join(
+            statement_match.group(1).split()).lstrip(": ").strip()
+
+    if getattr(args, "sketch_file", None) is not None:
+        sketch_source = Path(args.sketch_file).read_text(encoding="utf-8")
+    else:
+        sketch_source = sys.stdin.read()
+
+    report = validate_sketch(
+        sketch_source, problem_id=problem.problem_id,
+        target_declaration=target_declaration,
+        target_statement=target_statement)
+    if getattr(args, "repl_cmd", None) and not report.problems:
+        from egmra.lean.warm import WarmLeanService
+
+        if not getattr(args, "lean_project", None):
+            raise ValueError("--repl-cmd requires --lean-project")
+        dev_source = re.sub(
+            r"^\s*import [^\n]*\n", "", sketch_source, flags=re.MULTILINE)
+        service = WarmLeanService(
+            command=str(args.repl_cmd), cwd=Path(args.lean_project))
+        try:
+            report = compile_sketch(report, dev_source, service)
+        finally:
+            service.close()
+    rendered = report.to_dict()
+    if getattr(args, "output", None) is not None:
+        payload = json.dumps(rendered, indent=2)
+        fd = os.open(str(args.output), os.O_WRONLY | os.O_CREAT | os.O_EXCL
+                     | os.O_NOFOLLOW, 0o600)
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            handle.write(payload + "\n")
+    print(json.dumps(rendered, indent=2))
+    return 0 if report.viable else 1
+
+
 def cmd_calibrate(args: argparse.Namespace) -> int:
     """Aggregate outcome ledgers into an honest calibration report (R11)."""
     from egmra.orchestrator.calibration import build_calibration_report
@@ -1794,6 +1923,7 @@ def cmd_campaign(args: argparse.Namespace) -> int:
     # one autonomous Aristotle formalizer per worker (the SDK client owns a single
     # event loop, so it is never shared across the concurrent worker threads).
     lean_service, lean_version, mathlib_commit = _build_lean_service(args)
+    campaign_dev_lean = _build_dev_lean_service(args)
     formalizers_by_worker = _build_worker_formalizers(args, workers)
     # Genuine multi-worker overlap: the deterministic provider shares one runner
     # across threads, while the browser provider drives ONE authenticated Chromium
@@ -1927,6 +2057,7 @@ def cmd_campaign(args: argparse.Namespace) -> int:
                 expert_review=problem_reviews.get("expert"),
                 runner=worker_runner,
                 lean_repair_rounds=campaign_repair_rounds,
+                dev_lean_service=campaign_dev_lean,
                 checkpoint_dir=getattr(args, "checkpoint_dir", None),
                 # A campaign retry warm-starts from its own checkpoint dir: the
                 # verified snapshot skips already-attempted branches and
@@ -2020,6 +2151,8 @@ def cmd_campaign(args: argparse.Namespace) -> int:
             _close_runner(runner)
         for formalizer in formalizers_by_worker.values():
             formalizer.close()
+        if campaign_dev_lean is not None:
+            campaign_dev_lean.close()
         campaign.close()
     print(json.dumps(status, indent=2))
     return 0
@@ -2314,6 +2447,14 @@ def build_parser() -> argparse.ArgumentParser:
              "changes (default: 0, off)",
     )
     run.add_argument(
+        "--lean-dev-repl", type=str, default=None, metavar="CMD",
+        help="warm DEVELOPMENT Lean REPL command run inside --lean-project "
+             "(e.g. 'lake env /path/to/repl'); repair candidates are "
+             "pre-checked in seconds before spending sealed kernel runs. "
+             "Development verdicts are search guidance only — never "
+             "certificates (default: off)",
+    )
+    run.add_argument(
         "--checkpoint-dir", type=Path, default=None,
         help="write a signed within-problem checkpoint (event-log prefix + "
              "graph view hash + remaining budget) after each completed branch "
@@ -2438,6 +2579,9 @@ def build_parser() -> argparse.ArgumentParser:
                           help="bounded kernel-feedback repair rounds per rejected Lean "
                                "candidate (0-3); same semantics as 'egmra run "
                                "--lean-repair-rounds'")
+    campaign.add_argument("--lean-dev-repl", type=str, default=None, metavar="CMD",
+                          help="warm DEVELOPMENT Lean REPL command (shared across "
+                               "workers); same semantics as 'egmra run --lean-dev-repl'")
     campaign.add_argument("--checkpoint-dir", type=Path, default=None,
                           help="write signed within-problem checkpoints after each "
                                "completed branch; same semantics as 'egmra run "
@@ -2653,6 +2797,46 @@ def build_parser() -> argparse.ArgumentParser:
     escalation.add_argument("--corpus-tex", type=Path, default=None)
     escalation.add_argument("--catalog", type=Path, default=None)
     escalation.set_defaults(func=cmd_escalation_packet)
+
+    dev_check = sub.add_parser(
+        "lean-dev-check",
+        help="one development compile on the warm Lean REPL (report R5); "
+             "search guidance only — never a certificate")
+    dev_check.add_argument("--lean-project", type=Path, required=True,
+                           help="built pinned Lean project the REPL runs in")
+    dev_check.add_argument("--repl-cmd", type=str, required=True,
+                           help="REPL invocation, e.g. "
+                                "'lake env /path/to/repl/.lake/build/bin/repl'")
+    dev_check.add_argument("--source", type=Path, default=None,
+                           help="Lean source file to check (default: stdin)")
+    dev_check.add_argument("--header", type=str, default="import Mathlib",
+                           help="one-time warm environment header "
+                                "(default: 'import Mathlib')")
+    dev_check.set_defaults(func=cmd_lean_dev_check)
+
+    sketch = sub.add_parser(
+        "sketch",
+        help="validate + development-compile an AND/OR proof sketch against a "
+             "problem's community Lean target (report R4 phase 1); children "
+             "become formalization obligations, the sketch itself is "
+             "development-only")
+    sketch.add_argument("--erdos", type=int, required=True)
+    sketch.add_argument("--sketch-file", type=Path, default=None,
+                        help="sketch source (default: stdin); the target must "
+                             "be proved from sorried child lemmas of the form "
+                             "'lemma name : TYPE := sorry' (no binders)")
+    sketch.add_argument("--targets-dir", type=Path, default=Path("targets"))
+    sketch.add_argument("--lean-project", type=Path, default=None,
+                        help="required with --repl-cmd for development compile")
+    sketch.add_argument("--repl-cmd", type=str, default=None,
+                        help="warm REPL invocation; omitted = structural "
+                             "validation only")
+    sketch.add_argument("--output", type=Path, default=None,
+                        help="also write the report JSON here (refuses "
+                             "overwrite)")
+    sketch.add_argument("--corpus-tex", type=Path, default=None)
+    sketch.add_argument("--catalog", type=Path, default=None)
+    sketch.set_defaults(func=cmd_sketch)
 
     refresh = sub.add_parser(
         "refresh-ranking",
