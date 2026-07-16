@@ -329,10 +329,16 @@ _RETRIEVERS: dict[str, type] = {
 SCHOLARLY_SOURCES = tuple(_RETRIEVERS)
 
 
-def build_scholarly_corpus(
+@dataclass(frozen=True)
+class ScholarlySearchResult:
+    records: tuple[TheoremRecord, ...]
+    coverage: dict[str, str]
+
+
+def search_scholarly_sources(
     query: str, *, fetcher: Fetcher, sources: tuple[str, ...] = SCHOLARLY_SOURCES,
     limit: int = 5,
-) -> list[TheoremRecord]:
+) -> ScholarlySearchResult:
     """Search the selected scholarly sources and merge auditable TheoremRecords.
 
     A per-source outage (network / bad payload) is skipped so other sources still
@@ -341,23 +347,39 @@ def build_scholarly_corpus(
     yields a usable, auditable record.
     """
     if not query or not query.strip():
-        return []
+        return ScholarlySearchResult(
+            (), {name: "not_queried" for name in sources}
+        )
     records: list[TheoremRecord] = []
+    coverage: dict[str, str] = {}
     seen: set[str] = set()
     for name in sources:
         retriever_cls = _RETRIEVERS.get(name)
         if retriever_cls is None:
+            coverage[name] = "unsupported"
             continue
         try:
             found = retriever_cls(fetcher=fetcher).search(query, limit=limit)
         except ScholarlyRetrievalError:
+            coverage[name] = "unavailable"
             continue  # a source outage is not fatal; never a mathematical failure
+        coverage[name] = "complete"
         for record in found:
             if record.theorem_id in seen or not record.is_auditable():
                 continue
             seen.add(record.theorem_id)
             records.append(record)
-    return records
+    return ScholarlySearchResult(tuple(records), coverage)
+
+
+def build_scholarly_corpus(
+    query: str, *, fetcher: Fetcher, sources: tuple[str, ...] = SCHOLARLY_SOURCES,
+    limit: int = 5,
+) -> list[TheoremRecord]:
+    """Compatibility wrapper returning only auditable records."""
+    return list(search_scholarly_sources(
+        query, fetcher=fetcher, sources=sources, limit=limit
+    ).records)
 
 
 class UrllibFetcher:  # pragma: no cover - performs live network I/O

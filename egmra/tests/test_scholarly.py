@@ -11,6 +11,7 @@ from __future__ import annotations
 import pytest
 
 from egmra.retrieval.scholarly import (
+    SCHOLARLY_SOURCES,
     ScholarlyRetrievalError,
     UrllibFetcher,
     build_scholarly_corpus,
@@ -18,6 +19,7 @@ from egmra.retrieval.scholarly import (
     parse_crossref_json,
     parse_mathoverflow_json,
     parse_semantic_scholar_json,
+    search_scholarly_sources,
 )
 
 _ARXIV_XML = """<?xml version="1.0" encoding="UTF-8"?>
@@ -166,6 +168,39 @@ def test_build_scholarly_corpus_merges_all_four_sources():
     assert {r.theorem_id for r in records} == {
         "arxiv:2401.00001v1", "doi:10.1000/xyz", "s2:abc123", "mathoverflow:42"}
     assert all(r.is_auditable() and r.proof_status == "unknown" for r in records)
+
+
+def test_search_reports_each_source_coverage():
+    def fetcher(url: str) -> str:
+        if "export.arxiv.org" in url:
+            return _ARXIV_XML
+        if "api.crossref.org" in url:
+            return _CROSSREF_JSON
+        if "api.semanticscholar.org" in url:
+            return _S2_JSON
+        if "api.stackexchange.com" in url:
+            return _MO_JSON
+        raise AssertionError(f"unexpected url: {url}")
+
+    result = search_scholarly_sources("primes", fetcher=fetcher, limit=5)
+    assert set(result.coverage) == set(SCHOLARLY_SOURCES)
+    assert set(result.coverage.values()) == {"complete"}
+    assert result.records
+
+
+def test_source_outage_is_coverage_gap_not_empty_negative():
+    def flaky(url: str) -> str:
+        if "export.arxiv.org" in url:
+            raise ScholarlyRetrievalError("rate limited")
+        if "api.crossref.org" in url:
+            return _CROSSREF_JSON
+        raise AssertionError(f"unexpected url: {url}")
+
+    result = search_scholarly_sources(
+        "primes", fetcher=flaky, sources=("arxiv", "crossref"), limit=5
+    )
+    assert result.coverage == {"arxiv": "unavailable", "crossref": "complete"}
+    assert [record.theorem_id for record in result.records] == ["doi:10.1000/xyz"]
 
 
 def test_urllib_fetcher_refuses_non_allowlisted_urls():
