@@ -15,12 +15,21 @@ PAPERWORK look like mathematical rejection. Three channels are pinned here:
   promote only because the human formal-correspondence review has not been
   signed, with a fill-in signing command. Discovery becomes cheap; the
   human decision stays human.
+* The KERNEL-CHECKED EQUIVALENCE BRIDGE rescues proofs of the right
+  mathematics in a differently-cast form: one local ``first | exact |
+  exact_mod_cast | simpa`` declaration, dev-prechecked, verified by the
+  SAME sealed kernel against the SAME pinned type hash. A failed bridge
+  changes nothing.
+* ``egmra verify-reviews`` recomputes the orchestrator's exact intent-binding
+  checks against the CURRENT corpus, so certificate drift (a guaranteed
+  future interpretation stall) is caught before it burns attempts.
 """
 
 from __future__ import annotations
 
 import json
 
+from egmra.lean.warm import DevCheckResult
 from egmra.lean.verdict_cache import SealedLeanService
 from egmra.orchestrator.loop import research
 from egmra.tests.test_gap_closures import (
@@ -101,6 +110,83 @@ def test_dev_accepts_sealed_rejects_raises_discrepancy_sentinel(tmp_path):
     assert any(f.startswith("checker_discrepancy:")
                and "dev_accepted_sealed_rejected" in f
                for f in result.failures)
+
+
+class _BridgeAcceptingService(_FakeLeanService):
+    """Rejects the vendor declaration but accepts its `_egmra_bridge`."""
+
+    def verify_declaration(self, *, source, declaration_name="", **kwargs):
+        self.verify_calls.append(source)
+        if declaration_name.endswith("_egmra_bridge"):
+            return _FakeCert(True)
+        return _FakeCert(False, findings=("type mismatch: cast-shaped goal",))
+
+
+def test_equivalence_bridge_rescues_differently_cast_proof(tmp_path):
+    service = _BridgeAcceptingService(fail_first=0)
+    dev = _ScriptedDevService(fail_first=0)        # dev accepts the bridge
+    result = _research(tmp_path, service=service, problem_id="bridge-ok",
+                       dev=dev)
+    assert any(f.startswith("formal_bridge_applied:") for f in result.failures)
+    # the bridge source went through the SAME sealed checker
+    assert any("_egmra_bridge" in call for call in service.verify_calls)
+    bridge_reports = [r for r in result.formal_reports
+                      if r.get("equivalence_bridge")]
+    assert bridge_reports and bridge_reports[0]["passed"]
+    # dev pre-check saw the bridge with the pinned definitional obligation
+    assert any("_egmra_bridge" in call and "example :" in call
+               for call in dev.calls)
+
+
+def test_failed_bridge_changes_nothing(tmp_path):
+    service = _FakeLeanService(fail_first=99)      # rejects vendor AND bridge
+    dev = _ScriptedDevService(fail_first=0)
+    result = _research(tmp_path, service=service, problem_id="bridge-no",
+                       dev=dev)
+    assert not any(f.startswith("formal_bridge_applied:")
+                   for f in result.failures)
+    assert all(not r.get("passed") for r in result.formal_reports)
+
+
+def test_bridge_is_never_attempted_without_dev_precheck_pass(tmp_path):
+    class _DevRejects(_ScriptedDevService):
+        def check(self, source):
+            self.calls.append(source)
+            return DevCheckResult(ok=False, sorries=0,
+                                  messages=("error:bridge does not close",),
+                                  elapsed_seconds=0.01)
+
+    service = _FakeLeanService(fail_first=99)
+    result = _research(tmp_path, service=service, problem_id="bridge-gated",
+                       dev=_DevRejects())
+    # dev rejected the bridge -> no second sealed check was spent on it
+    assert len(service.verify_calls) == 1
+    assert not any(f.startswith("formal_bridge_applied:")
+                   for f in result.failures)
+
+
+def test_verify_reviews_reports_binding_and_drift(tmp_path, capsys):
+    from egmra.cli import main
+
+    reviews = tmp_path / "reviews"
+    # A REAL binding certificate, derived the same way the campaign's were.
+    rc = main(["derive-intents", "--erdos", "312", "--offline",
+               "--output-dir", str(reviews)])
+    assert rc == 0
+    capsys.readouterr()
+    assert main(["verify-reviews", "--reviews-dir", str(reviews)]) == 0
+    report = json.loads(capsys.readouterr().out)
+    assert report["reviews_checked"] == 1 and report["drifted_or_error"] == 0
+    assert report["rows"][0]["status"] == "OK"
+    # Tamper with the bound claim hash -> DRIFT with the re-sign command.
+    path = reviews / "intent-erdos-312.json"
+    record = json.loads(path.read_text())
+    record["informal_claim_hash"] = "0" * 64
+    path.write_text(json.dumps(record))
+    rc = main(["verify-reviews", "--reviews-dir", str(reviews)])
+    report = json.loads(capsys.readouterr().out)
+    assert rc == 1 and report["drifted_or_error"] == 1
+    assert report["rows"][0]["status"] in ("DRIFT", "ERROR")
 
 
 def test_pending_correspondence_lists_kernel_passed_unsigned_proofs(tmp_path, capsys):

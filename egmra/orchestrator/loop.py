@@ -1735,6 +1735,74 @@ def research(
             # expected type + hashes) never changes, and every repaired source
             # is re-checked by the same pinned kernel.  Exhausted repairs leave
             # the candidate rejected exactly as before \u2014 never masked.
+            # KERNEL-CHECKED EQUIVALENCE BRIDGE: a vendor sometimes proves
+            # the right mathematics in a differently-CAST form (ℕ vs ℤ
+            # coercions, simp-normal shape). The definitional obligation then
+            # fails even though a one-line bridge closes it. Before spending
+            # vendor repair rounds, try ONE local bridge declaration —
+            # `first | exact | exact_mod_cast | simpa` — dev-prechecked on
+            # the warm REPL, then verified by the SAME sealed kernel against
+            # the SAME pinned expected_type_hash. No trust change: the bridge
+            # is just more Lean source through the unchanged checker; a
+            # failed bridge changes nothing.
+            if not formal_certificate.passed and dev_lean_service is not None \
+                    and accepted.get("expected_type_source", "").strip():
+                bridge_name = f"{accepted['declaration_name']}_egmra_bridge"
+                bridge_source = (
+                    accepted["source"].rstrip() + "\n\n"
+                    f"theorem {bridge_name} : "
+                    f"{accepted['expected_type_source'].strip()} := by\n"
+                    "  first\n"
+                    f"  | exact {accepted['declaration_name']}\n"
+                    f"  | exact_mod_cast {accepted['declaration_name']}\n"
+                    f"  | simpa using {accepted['declaration_name']}\n")
+                bridge_ok = False
+                try:
+                    bridge_dev = dev_lean_service.check(dev_obligation_source(
+                        bridge_source, declaration_name=bridge_name,
+                        expected_type_source=accepted["expected_type_source"]))
+                    bridge_ok = bool(bridge_dev.ok and not bridge_dev.sorries)
+                except Exception:  # noqa: BLE001 - dev isolation, fail open
+                    bridge_ok = False
+                if bridge_ok:
+                    try:
+                        bridge_certificate = lean_service.verify_declaration(
+                            environment=environment,
+                            source=bridge_source,
+                            declaration_name=bridge_name,
+                            expected_type_hash=accepted["expected_type_hash"],
+                            immutable_target_module_hash=accepted[
+                                "immutable_target_module_hash"],
+                            expected_type_source=accepted.get(
+                                "expected_type_source", ""),
+                            claim_bindings={
+                                accepted["claim_id"]: graph.claims[
+                                    accepted["claim_id"]
+                                ].canonical_hash,
+                            },
+                            artifact_hashes=(
+                                accepted["project_hash"],
+                                accepted["immutable_target_module_hash"],
+                            ),
+                        )
+                    except Exception as exc:  # noqa: BLE001 - verifier isolation
+                        failures.append(
+                            f"formal_bridge_error:{branch_id}:"
+                            f"{type(exc).__name__}")
+                    else:
+                        formal_reports.append({
+                            "branch_id": branch_id,
+                            "claim_id": accepted["claim_id"],
+                            "equivalence_bridge": True,
+                            **bridge_certificate.to_dict(),
+                        })
+                        if bridge_certificate.passed:
+                            failures.append(
+                                f"formal_bridge_applied:{branch_id}:"
+                                f"{bridge_name}")
+                            formal_certificate = bridge_certificate
+                            accepted = {**accepted, "source": bridge_source,
+                                        "declaration_name": bridge_name}
             formalizer = getattr(worker, "formalizer", None)
             if not formal_certificate.passed and formalizer is not None \
                     and lean_repair_rounds > 0 and _supports_repair(formalizer):

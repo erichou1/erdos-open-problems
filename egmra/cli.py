@@ -1356,6 +1356,91 @@ def cmd_escalation_packet(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_verify_reviews(args: argparse.Namespace) -> int:
+    """Audit that every signed review still BINDS against the current corpus.
+
+    Intent certificates bind exact hashes (source bytes, interpretation,
+    claim). If the corpus snapshot or the parser changes, a certificate can
+    silently stop binding — every later run then stalls as "Needs
+    clarification" even though a valid-looking cert sits in the reviews
+    directory. That is a false-rejection channel: this command recomputes the
+    orchestrator's exact binding checks offline and reports OK/DRIFT per
+    problem, with the re-sign command for drifted ones. Read-only.
+    """
+    from egmra.corpus.sources import SourceResolutionError
+    from egmra.intake.contract import build_problem_contract
+    from egmra.intake.review import (
+        interpretation_review_hash,
+        verify_intent_certificate,
+    )
+    from egmra.provenance.hashing import sha256_hex as _sha
+    from egmra.truth.entities import Verdict as _Verdict
+
+    reviews_dir = Path(args.reviews_dir)
+    if not reviews_dir.is_dir():
+        raise ValueError(f"--reviews-dir is not a directory: {reviews_dir}")
+    review_methods = {"independent_parse", "examples", "anti_examples",
+                      "paraphrase", "local_mutation"}
+    rows: list[dict] = []
+    for path in sorted(reviews_dir.glob("intent-erdos-*.json")):
+        problem_id = path.name[len("intent-"):-len(".json")]
+        number = _problem_number_of(problem_id)
+        if number is None:
+            continue
+        row: dict = {"problem_id": problem_id, "artifact": path.name}
+        try:
+            cert = _load_intent_review(path)
+            problem = from_erdos_number(
+                number, corpus_tex_path=getattr(args, "corpus_tex", None),
+                catalog_path=getattr(args, "catalog", None))
+            contract = build_problem_contract(
+                problem_id=problem_id, source_bytes=problem.source_bytes,
+                source_id=problem.source_id)
+            interp = contract.lattice.nodes[0]
+            checks = {
+                "signature": verify_intent_certificate(cert),
+                "verdict_approved": cert.verdict is _Verdict.APPROVED,
+                "source_hash": cert.source_bytes_hash == contract.source_bytes_hash,
+                "interpretation_hash": cert.interpretation_hash
+                == interpretation_review_hash(interp),
+                "claim_hash": cert.informal_claim_hash == _sha(interp.conclusion),
+                "methods": review_methods.issubset(set(cert.methods)),
+            }
+        except (SourceResolutionError, ValueError, OSError, KeyError) as exc:
+            row.update({"status": "ERROR", "detail": f"{type(exc).__name__}: {exc}"})
+            rows.append(row)
+            continue
+        drifted = [name for name, ok in checks.items() if not ok]
+        row["status"] = "OK" if not drifted else "DRIFT"
+        if drifted:
+            row["failed_checks"] = drifted
+            row["consequence"] = (
+                "runs will stall at interpretation despite this certificate")
+            row["re_sign"] = (
+                f"egmra derive-intents --erdos {number} --offline "
+                f"--output-dir {reviews_dir} (after deleting the stale artifact)")
+        rows.append(row)
+    drifted_count = sum(1 for row in rows if row["status"] != "OK")
+    print(json.dumps({
+        "reviews_checked": len(rows),
+        "binding": len(rows) - drifted_count,
+        "drifted_or_error": drifted_count,
+        "rows": rows,
+        "note": (
+            "recomputes the orchestrator's exact intent-binding checks against "
+            "the CURRENT corpus; a DRIFT here is a guaranteed future "
+            "interpretation stall"),
+    }, indent=2))
+    return 0 if drifted_count == 0 else 1
+
+
+def _problem_number_of(problem_id: str) -> int | None:
+    import re as _re
+
+    match = _re.fullmatch(r"erdos-(\d+)", str(problem_id))
+    return int(match.group(1)) if match else None
+
+
 def cmd_pending_correspondence(args: argparse.Namespace) -> int:
     """List kernel-PASSED proofs stuck waiting for a correspondence review.
 
@@ -2926,6 +3011,15 @@ def build_parser() -> argparse.ArgumentParser:
                          default=Path("egmra_campaigns/ckpts-shared"))
     pending.add_argument("--reviews-dir", type=Path, default=Path("reviews"))
     pending.set_defaults(func=cmd_pending_correspondence)
+
+    verify_reviews = sub.add_parser(
+        "verify-reviews",
+        help="audit that every signed intent review still binds against the "
+             "CURRENT corpus (a drifted cert guarantees interpretation stalls)")
+    verify_reviews.add_argument("--reviews-dir", type=Path, default=Path("reviews"))
+    verify_reviews.add_argument("--corpus-tex", type=Path, default=None)
+    verify_reviews.add_argument("--catalog", type=Path, default=None)
+    verify_reviews.set_defaults(func=cmd_verify_reviews)
 
     dev_check = sub.add_parser(
         "lean-dev-check",

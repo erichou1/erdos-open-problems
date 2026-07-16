@@ -195,20 +195,25 @@ def test_dev_precheck_failure_skips_the_sealed_kernel_run(tmp_path):
     service = _FakeLeanService(fail_first=99)
     formalizer = _FakeFormalizer(sources=(
         "theorem a1 : True := bar", "theorem a2 : True := baz"))
-    dev = _ScriptedDevService(fail_first=1)
+    # Dev call order: 1 = equivalence-bridge attempt (fails -> no bridge),
+    # 2 = round-1 repair pre-check (fails -> sealed check SKIPPED),
+    # 3 = round-2 repair pre-check (passes -> sealed check spent).
+    dev = _ScriptedDevService(fail_first=2)
     result = _dev_repair_research(
         tmp_path, service=service, formalizer=formalizer, dev=dev,
         repair_rounds=2, problem_id="dev-gate")
     # original sealed check + ONE sealed re-check (round 2 only): round 1's
     # candidate failed the dev pre-check and never reached the cold kernel.
     assert len(service.verify_calls) == 2
-    assert len(dev.calls) == 2
+    assert len(dev.calls) == 3
     assert any(f.startswith("formal_dev_precheck_failed:") and "round1" in f
                for f in result.failures)
     # the dev diagnostics became the round-2 repair feedback
     assert "unknown identifier 'bar'" in formalizer.calls[1]["kernel_feedback"]
-    # the dev source carried the sealed checker's definitional obligation
-    assert "example : True := @erdos_test" in dev.calls[0]
+    # the bridge attempt carried its own pinned definitional obligation;
+    # the round-1 pre-check carried the vendor declaration's obligation
+    assert "_egmra_bridge" in dev.calls[0]
+    assert "example : True := @erdos_test" in dev.calls[1]
 
 
 def test_dev_service_outage_falls_open_to_sealed_behavior(tmp_path):
