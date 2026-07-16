@@ -25,6 +25,7 @@ from typing import Any
 
 from egmra.corpus.sources import from_erdos_number
 from egmra.orchestrator.campaign import PostgresCampaignStore
+from ranking_queue import QUEUE_FILENAME, load_queue_projection
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -124,6 +125,58 @@ def _progress_record(*, status: str, runs: list[dict[str, Any]],
             for value, label, condition, _ in milestones
         ],
     }
+
+
+def _card_statement(root: Path, number: int) -> str:
+    path = root / "triage" / "normalized" / "problem_cards" / f"{number}.json"
+    try:
+        card = json.loads(path.read_text(encoding="utf-8"))
+        statement = card["statement"]["normalized"]
+        if isinstance(statement, str) and statement.strip():
+            return statement.strip()
+    except (OSError, KeyError, TypeError, json.JSONDecodeError):
+        pass
+    try:
+        return from_erdos_number(number).display_statement
+    except Exception:
+        return "Statement unavailable in this snapshot."
+
+
+def build_public_ranking(
+    queue: dict,
+    problems: list[dict[str, Any]],
+    root: Path = ROOT,
+) -> list[dict[str, Any]]:
+    """Join public campaign progress onto the shared allocation projection."""
+    by_number = {
+        int(problem["number"]): problem
+        for problem in problems
+        if isinstance(problem.get("number"), int)
+    }
+    queued_progress = _progress_record(
+        status="pending", runs=[], linked_aristotle=0
+    )
+    public: list[dict[str, Any]] = []
+    for row in queue["allocation_queue"]:
+        number = int(row["problem_number"])
+        campaign = by_number.get(number, {})
+        public.append({
+            "problem_id": row["problem_id"],
+            "number": number,
+            "allocation_rank": row["allocation_rank"],
+            "statement": campaign.get("statement") or _card_statement(root, number),
+            "status": campaign.get("status", "pending"),
+            "worker": campaign.get("worker"),
+            "progress": campaign.get("progress") or dict(queued_progress),
+            "prize": row["prize"],
+            "prize_status": row["prize_status"],
+            "literature_coverage_status": row["literature_coverage_status"],
+            "base_acquisition_score": row["base_acquisition_score"],
+            "literature_adjustment": row["literature_adjustment"],
+            "selection_score": row["selection_score"],
+            "reason_selected": row["reason_selected"],
+        })
+    return public
 
 
 def _json_lines(path: Path):
@@ -402,14 +455,14 @@ def build() -> dict[str, Any]:
             "erdos_page": f"https://www.erdosproblems.com/{number}" if number else None,
         })
 
-    ranked = sorted(
+    solvability_ranked = sorted(
         problems,
         key=lambda problem: (
             -float(problem["solvability"].get("score", 0.0)),
             problem["number"],
         ),
     )
-    for rank, problem in enumerate(ranked, start=1):
+    for rank, problem in enumerate(solvability_ranked, start=1):
         problem["solvability"]["rank"] = rank
         problem["progress"] = _progress_record(
             status=str(problem["status"]),
@@ -481,6 +534,10 @@ def build() -> dict[str, Any]:
         len(run.get("chatgpt", ()))
         for problem in problems for run in problem["runs"]
     )
+    queue = load_queue_projection(
+        ROOT / "triage" / "rankings" / QUEUE_FILENAME
+    )
+    public_ranking = build_public_ranking(queue, problems)
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
         "campaign": CAMPAIGN,
@@ -503,28 +560,20 @@ def build() -> dict[str, Any]:
         "workers": workers,
         "problems": problems,
         "aristotle_artifacts": artifacts,
-        "ranking": [
-            {
-                "problem_id": problem["problem_id"],
-                "number": problem["number"],
-                "statement": problem["statement"],
-                "status": problem["status"],
-                "worker": problem["worker"],
-                "solvability": problem["solvability"],
-                "progress": problem["progress"],
-            }
-            for problem in ranked
-        ],
+        "ranking": public_ranking,
         "ranking_method": {
-            "name": "Formal/exact-computation tractability index",
+            "name": "Literature/prize-aware protected allocation",
             "formula": (
-                "0.5 × Lean-route prior + 0.4 × finite-computation prior + "
-                "0.15 if a Lean route exists + 0.05 if the statement is clear"
+                "base acquisition score + bounded literature adjustment; "
+                "protected exploration is interleaved within each prize tier"
             ),
             "warning": (
-                "Uncalibrated weak-prior ordering. This is not a probability "
-                "that a problem will be solved."
+                "Uncalibrated search preference, not a solution probability. "
+                "Every eligible unpaid problem precedes paid targets."
             ),
+            "projection_policy_version": queue["projection_policy_version"],
+            "projection_content_sha256": queue["projection_content_sha256"],
+            "ranking_content_sha256": queue["ranking_content_sha256"],
         },
         "source": {
             "repository": GITHUB_ROOT,
