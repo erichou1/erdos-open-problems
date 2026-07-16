@@ -40,16 +40,27 @@ const typeset=root=>{
   });
 };
 
-const DATA_URL=location.hostname.endsWith("vercel.app")
-  ? "https://raw.githubusercontent.com/erichou1/erdos-open-problems/status-live/status_site/data.json"
-  : "/data.json";
-const AUTO_REFRESH_MS=60_000;
+const LIVE_REPO="erichou1/erdos-open-problems";
+const DATA_URL="/data.json";
+// GitHub's raw branch URL can lag the actual force-updated ref by minutes.
+// Resolve the ref first, then fetch the immutable SHA URL. Two-minute polling
+// stays within GitHub's unauthenticated 60 requests/hour limit per viewer.
+const AUTO_REFRESH_MS=120_000;
+async function dataUrl(){
+  if(!location.hostname.endsWith("vercel.app"))return DATA_URL;
+  try{
+    const ref=await fetch(`https://api.github.com/repos/${LIVE_REPO}/git/ref/heads/status-live?t=${Date.now()}`,{cache:"no-store"});
+    if(ref.ok){const body=await ref.json();const sha=body?.object?.sha;if(sha)return `https://raw.githubusercontent.com/${LIVE_REPO}/${sha}/status_site/data.json`}
+  }catch(_error){}
+  return `https://raw.githubusercontent.com/${LIVE_REPO}/status-live/status_site/data.json`;
+}
 
 async function load(){
   $("#reloadButton").classList.add("loading");
   try{
-    const separator=DATA_URL.includes("?")?"&":"?";
-    const response=await fetch(`${DATA_URL}${separator}t=${Date.now()}`,{cache:"no-store"});
+    const url=await dataUrl();
+    const separator=url.includes("?")?"&":"?";
+    const response=await fetch(`${url}${separator}t=${Date.now()}`,{cache:"no-store"});
     if(!response.ok)throw new Error(`Snapshot request failed (${response.status})`);
     state.data=await response.json();render();route();
   }catch(error){

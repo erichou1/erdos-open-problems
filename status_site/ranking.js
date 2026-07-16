@@ -2,17 +2,18 @@ const state={data:null,sort:"solvability",query:""};
 const $=selector=>document.querySelector(selector);
 const esc=value=>String(value??"").replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[ch]));
 const dt=value=>{const date=new Date(value);return Number.isNaN(date.valueOf())?String(value||""):date.toLocaleString([], {dateStyle:"medium",timeStyle:"short"})};
-const DATA_URL=location.hostname.endsWith("vercel.app")
-  ? "https://raw.githubusercontent.com/erichou1/erdos-open-problems/status-live/status_site/data.json"
-  : "/data.json";
-const AUTO_REFRESH_MS=60_000;
+const LIVE_REPO="erichou1/erdos-open-problems";
+const DATA_URL="/data.json";
+const AUTO_REFRESH_MS=120_000;
+async function dataUrl(){if(!location.hostname.endsWith("vercel.app"))return DATA_URL;try{const ref=await fetch(`https://api.github.com/repos/${LIVE_REPO}/git/ref/heads/status-live?t=${Date.now()}`,{cache:"no-store"});if(ref.ok){const body=await ref.json(),sha=body?.object?.sha;if(sha)return `https://raw.githubusercontent.com/${LIVE_REPO}/${sha}/status_site/data.json`}}catch(_error){}return `https://raw.githubusercontent.com/${LIVE_REPO}/status-live/status_site/data.json`}
 const typeset=root=>{if(root&&typeof window.renderMathInElement==="function")window.renderMathInElement(root,{delimiters:[{left:"\\[",right:"\\]",display:true},{left:"\\(",right:"\\)",display:false},{left:"$$",right:"$$",display:true},{left:"$",right:"$",display:false}],throwOnError:false,strict:"ignore",trust:false,ignoredTags:["script","noscript","style","textarea","pre","code"]})};
 const bar=(value,label,kind="index")=>{const number=Math.max(0,Math.min(100,Number(value||0)));return `<div class="rank-bar ${kind}" title="${esc(label)}"><div><span>${esc(label)}</span><b>${number}${kind==="prior"?"%":""}</b></div><i><em style="width:${number}%"></em></i></div>`};
 
 async function load(){
   $("#reloadButton").classList.add("loading");
   try{
-    const response=await fetch(`${DATA_URL}?t=${Date.now()}`,{cache:"no-store"});
+    const url=await dataUrl();
+    const response=await fetch(`${url}?t=${Date.now()}`,{cache:"no-store"});
     if(!response.ok)throw new Error(`Ranking snapshot failed (${response.status})`);
     state.data=await response.json();render();
   }catch(error){$("#rankingRows").innerHTML=`<tr><td colspan="7"><div class="error-state">${esc(error.message)}</div></td></tr>`}
