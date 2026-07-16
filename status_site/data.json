@@ -1,21 +1,23 @@
 {
-  "generated_at": "2026-07-16T07:07:21.298597+00:00",
+  "generated_at": "2026-07-16T07:34:52.903508+00:00",
   "campaign": "shared-current-v1",
   "summary": {
     "total": 25,
     "by_status": {
-      "leased": 9,
-      "pending": 16
+      "done": 1,
+      "leased": 12,
+      "pending": 11,
+      "retained": 1
     },
     "by_latest_state": {
-      "BLOCKED_BY_INTERPRETATION": 4,
-      "OPEN_NO_PROGRESS": 1
+      "BLOCKED_BY_INTERPRETATION": 3,
+      "OPEN_NO_PROGRESS": 2
     },
-    "total_runs": 236,
-    "problems_with_chatgpt_exchanges": 12,
+    "total_runs": 244,
+    "problems_with_chatgpt_exchanges": 15,
     "chatgpt_links_recorded": 0,
-    "aristotle_artifacts": 116,
-    "aristotle_linked": 5,
+    "aristotle_artifacts": 121,
+    "aristotle_linked": 10,
     "aristotle_unlinked": 111,
     "computers_active": 1,
     "computers_known": 1
@@ -25,24 +27,24 @@
       "machine_id": "Erics-MacBook-Pro-8e6d155a",
       "hostname": "Erics-MacBook-Pro",
       "activity": "active",
-      "heartbeat_age_seconds": 6,
-      "heartbeat_at": "2026-07-16T07:07:15.044171+00:00",
+      "heartbeat_age_seconds": 28,
+      "heartbeat_at": "2026-07-16T07:34:24.463697+00:00",
       "started_at": "2026-07-16T07:02:42.759975+00:00",
-      "process_id": 96866,
+      "process_id": 9306,
       "branch": "audit/egmra-independent-remediation-20260713",
-      "code_commit": "fbe7fbf641e23be7f041f752e8fbf322a16cd82b",
-      "latest_commit": "fbe7fbf641e23be7f041f752e8fbf322a16cd82b",
+      "code_commit": "f78e6654abf5a7547602094524b9f27e972fe47c",
+      "latest_commit": "f78e6654abf5a7547602094524b9f27e972fe47c",
       "version_status": "current",
       "worker_slots": 3,
       "worker_ids": [
-        "Erics-MacBook-Pro-8e6d155a:w0",
-        "Erics-MacBook-Pro-8e6d155a:w1",
-        "Erics-MacBook-Pro-8e6d155a:w2"
+        "Erics-MacBook-Pro-8e6d155a:p9306:w0",
+        "Erics-MacBook-Pro-8e6d155a:p9306:w1",
+        "Erics-MacBook-Pro-8e6d155a:p9306:w2"
       ],
       "current_problems": [
-        "erdos-324",
-        "erdos-602",
-        "erdos-849"
+        "erdos-203",
+        "erdos-312",
+        "erdos-949"
       ]
     }
   ],
@@ -55,9 +57,9 @@
       "active": false
     },
     {
-      "worker": "w2",
-      "problem_id": "erdos-153",
-      "number": 153,
+      "worker": "Erics-MacBook-Pro-8e6d155a:w0",
+      "problem_id": "erdos-158",
+      "number": 158,
       "status": "leased",
       "active": false
     },
@@ -69,37 +71,51 @@
       "active": false
     },
     {
-      "worker": "w2",
+      "worker": "Erics-MacBook-Pro-8e6d155a:p9306:w2",
       "problem_id": "erdos-203",
       "number": 203,
       "status": "leased",
-      "active": false
+      "active": true
     },
     {
-      "worker": "w0",
+      "worker": "Erics-MacBook-Pro-8e6d155a:p9306:w0",
       "problem_id": "erdos-312",
       "number": 312,
       "status": "leased",
-      "active": false
+      "active": true
     },
     {
       "worker": "Erics-MacBook-Pro-8e6d155a:w0",
       "problem_id": "erdos-324",
       "number": 324,
       "status": "leased",
-      "active": true
+      "active": false
+    },
+    {
+      "worker": "Erics-MacBook-Pro-8e6d155a:w2",
+      "problem_id": "erdos-495",
+      "number": 495,
+      "status": "leased",
+      "active": false
     },
     {
       "worker": "Erics-MacBook-Pro-8e6d155a:w2",
       "problem_id": "erdos-602",
       "number": 602,
       "status": "leased",
-      "active": true
+      "active": false
     },
     {
       "worker": "Erics-MacBook-Pro-8e6d155a:w1",
       "problem_id": "erdos-849",
       "number": 849,
+      "status": "leased",
+      "active": false
+    },
+    {
+      "worker": "Erics-MacBook-Pro-8e6d155a:p9306:w1",
+      "problem_id": "erdos-949",
+      "number": 949,
       "status": "leased",
       "active": true
     },
@@ -107,6 +123,13 @@
       "worker": "w1",
       "problem_id": "erdos-1104",
       "number": 1104,
+      "status": "leased",
+      "active": false
+    },
+    {
+      "worker": "Erics-MacBook-Pro-8e6d155a:w1",
+      "problem_id": "erdos-1167",
+      "number": 1167,
       "status": "leased",
       "active": false
     }
@@ -121,7 +144,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "updated_at": null,
       "latest_state": null,
       "run_count": 0,
       "chatgpt_run_count": 0,
@@ -217,7 +240,7 @@
       "worker": "w1",
       "result_state": null,
       "lease_expires_at": "2026-07-16T07:13:00.931703+00:00",
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "updated_at": null,
       "latest_state": "BLOCKED_BY_INTERPRETATION",
       "run_count": 32,
       "chatgpt_run_count": 24,
@@ -2363,16 +2386,99 @@
       "problem_id": "erdos-153",
       "number": 153,
       "statement": "Let $A$ be a finite Sidon set and $A+A=\\{s_1<\\cdots<s_t\\}$. Is it true that\\[\\frac{1}{t}\\sum_{1\\leq i<t}(s_{i+1}-s_i)^2 \\to \\infty\\]as $\\lvert A\\rvert\\to \\infty$?",
-      "status": "leased",
-      "attempts": 1,
-      "worker": "w2",
-      "result_state": null,
-      "lease_expires_at": "2026-07-16T06:55:43.740897+00:00",
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
-      "latest_state": "BLOCKED_BY_INTERPRETATION",
-      "run_count": 36,
+      "status": "done",
+      "attempts": 2,
+      "worker": "Erics-MacBook-Pro-8e6d155a:w2",
+      "result_state": "OPEN_NO_PROGRESS",
+      "lease_expires_at": null,
+      "updated_at": null,
+      "latest_state": "OPEN_NO_PROGRESS",
+      "run_count": 37,
       "chatgpt_run_count": 22,
       "runs": [
+        {
+          "run_id": "camp-c2b90ad344141fb2.erdos-153.12.1784185781-b60a6f",
+          "problem_id": "erdos-153",
+          "started_at": "2026-07-16T07:09:41Z",
+          "updated_at": "2026-07-16T07:09:41Z",
+          "event_count": 6,
+          "families": [
+            "direct_structural",
+            "contradiction_minimal_counterexample",
+            "formal_library_first"
+          ],
+          "claims_proposed": 0,
+          "evidence_attached": 0,
+          "claims_promoted": 0,
+          "packet_reentries": 0,
+          "formal_correspondences": 0,
+          "chatgpt": [],
+          "events": [
+            {
+              "sequence": 0,
+              "action": "PROBLEM_FROZEN",
+              "timestamp": "2026-07-16T07:09:41Z",
+              "description": "SOURCE_FROZEN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 1,
+              "action": "INTERPRETATION_ADDED",
+              "timestamp": "2026-07-16T07:09:41Z",
+              "description": "RELATION_PLAUSIBLE",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 2,
+              "action": "INTENT_CERTIFICATE_ISSUED",
+              "timestamp": "2026-07-16T07:09:41Z",
+              "description": "INTENT_APPROVED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 3,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:09:41Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 4,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:09:41Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 5,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:09:41Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            }
+          ],
+          "actions": {
+            "BRANCH_OPENED": 3,
+            "INTENT_CERTIFICATE_ISSUED": 1,
+            "INTERPRETATION_ADDED": 1,
+            "PROBLEM_FROZEN": 1
+          },
+          "machine": "shared-Erics-MacBook-Pro",
+          "state": "OPEN_NO_PROGRESS",
+          "outcome": "honest_triage_report",
+          "released": false,
+          "recorded_at": "2026-07-16T07:09:41Z",
+          "salvage": {
+            "refuted": [],
+            "supported": []
+          }
+        },
         {
           "run_id": "camp-c2b90ad344141fb2.erdos-153.3.1784178040-7315f9",
           "problem_id": "erdos-153",
@@ -4471,7 +4577,7 @@
           {
             "percent": 15,
             "label": "Worker assigned",
-            "achieved": true
+            "achieved": false
           },
           {
             "percent": 20,
@@ -4520,7 +4626,7 @@
           }
         ]
       },
-      "worker_liveness": "stale"
+      "worker_liveness": "not_applicable"
     },
     {
       "problem_id": "erdos-155",
@@ -4531,7 +4637,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "updated_at": null,
       "latest_state": null,
       "run_count": 0,
       "chatgpt_run_count": 0,
@@ -4622,17 +4728,101 @@
       "problem_id": "erdos-158",
       "number": 158,
       "statement": "Let $A\\subset \\mathbb{N}$ be an infinite set such that, for any $n$, there are most $2$ solutions to $a+b=n$ with $a\\leq b$. Must\\[\\liminf_{N\\to\\infty}\\frac{\\lvert A\\cap \\{1,\\ldots,N\\}\\rvert}{N^{1/2}}=0?\\]",
-      "status": "pending",
-      "attempts": 0,
-      "worker": null,
+      "status": "leased",
+      "attempts": 1,
+      "worker": "Erics-MacBook-Pro-8e6d155a:w0",
       "result_state": null,
-      "lease_expires_at": null,
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "lease_expires_at": "2026-07-16T07:24:40.394823+00:00",
+      "updated_at": null,
       "latest_state": null,
-      "run_count": 0,
-      "chatgpt_run_count": 0,
-      "runs": [],
-      "exchanges": [],
+      "run_count": 1,
+      "chatgpt_run_count": 1,
+      "runs": [
+        {
+          "run_id": "camp-c2b90ad344141fb2.erdos-158.10.1784185780-9a0217",
+          "problem_id": "erdos-158",
+          "started_at": "2026-07-16T07:09:40Z",
+          "updated_at": "2026-07-16T07:10:27Z",
+          "event_count": 6,
+          "families": [
+            "direct_structural",
+            "contradiction_minimal_counterexample",
+            "formal_library_first"
+          ],
+          "claims_proposed": 0,
+          "evidence_attached": 0,
+          "claims_promoted": 0,
+          "packet_reentries": 0,
+          "formal_correspondences": 0,
+          "chatgpt": [],
+          "events": [
+            {
+              "sequence": 0,
+              "action": "PROBLEM_FROZEN",
+              "timestamp": "2026-07-16T07:09:40Z",
+              "description": "SOURCE_FROZEN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 1,
+              "action": "INTERPRETATION_ADDED",
+              "timestamp": "2026-07-16T07:09:40Z",
+              "description": "RELATION_PLAUSIBLE",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 2,
+              "action": "INTENT_CERTIFICATE_ISSUED",
+              "timestamp": "2026-07-16T07:09:40Z",
+              "description": "INTENT_APPROVED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 3,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:10:27Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 4,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:10:27Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 5,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:10:27Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            }
+          ],
+          "actions": {
+            "BRANCH_OPENED": 3,
+            "INTENT_CERTIFICATE_ISSUED": 1,
+            "INTERPRETATION_ADDED": 1,
+            "PROBLEM_FROZEN": 1
+          }
+        }
+      ],
+      "exchanges": [
+        {
+          "stage": "cold_pass",
+          "model": "ChatGPT (browser UI)",
+          "provider": "openai",
+          "prompt_hash": "a5a76509ddac2dfc",
+          "response_hash": "fea8ccad1ce78792",
+          "conversation_url": "https://chatgpt.com/c/6a5883b8-c050-83e8-afe9-d9f8d43223fa"
+        }
+      ],
       "aristotle": [],
       "solvability": {
         "available": true,
@@ -4650,9 +4840,9 @@
       },
       "erdos_page": "https://www.erdosproblems.com/158",
       "progress": {
-        "percent": 5,
-        "stage": "Queued",
-        "explanation": "The problem is in the campaign.",
+        "percent": 40,
+        "stage": "Approaches explored",
+        "explanation": "At least one proof or counterexample approach was attempted.",
         "disclaimer": "Research milestone, not the probability of solving the problem and not mathematical distance to a proof.",
         "milestones": [
           {
@@ -4663,22 +4853,22 @@
           {
             "percent": 15,
             "label": "Worker assigned",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 20,
             "label": "Meaning recorded",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 30,
             "label": "Meaning approved",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 40,
             "label": "Approaches explored",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 50,
@@ -4712,7 +4902,7 @@
           }
         ]
       },
-      "worker_liveness": "not_applicable"
+      "worker_liveness": "stale"
     },
     {
       "problem_id": "erdos-165",
@@ -4723,7 +4913,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "updated_at": null,
       "latest_state": null,
       "run_count": 6,
       "chatgpt_run_count": 5,
@@ -5282,7 +5472,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "updated_at": null,
       "latest_state": null,
       "run_count": 0,
       "chatgpt_run_count": 0,
@@ -5378,7 +5568,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "updated_at": null,
       "latest_state": null,
       "run_count": 0,
       "chatgpt_run_count": 0,
@@ -5474,7 +5664,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "updated_at": null,
       "latest_state": null,
       "run_count": 0,
       "chatgpt_run_count": 0,
@@ -5570,7 +5760,7 @@
       "worker": "w0",
       "result_state": null,
       "lease_expires_at": "2026-07-16T07:13:00.688299+00:00",
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "updated_at": null,
       "latest_state": "OPEN_NO_PROGRESS",
       "run_count": 40,
       "chatgpt_run_count": 17,
@@ -7900,7 +8090,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "updated_at": null,
       "latest_state": null,
       "run_count": 0,
       "chatgpt_run_count": 0,
@@ -7992,15 +8182,267 @@
       "number": 203,
       "statement": "Is there an integer $m\\geq 1$ with $(m,6)=1$ such that none of $2^k3^\\ell m+1$ are prime, for any $k,\\ell\\geq 0$?",
       "status": "leased",
-      "attempts": 1,
-      "worker": "w2",
+      "attempts": 2,
+      "worker": "Erics-MacBook-Pro-8e6d155a:p9306:w2",
       "result_state": null,
-      "lease_expires_at": "2026-07-16T07:13:01.110998+00:00",
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "lease_expires_at": "2026-07-16T07:45:19.840381+00:00",
+      "updated_at": null,
       "latest_state": null,
-      "run_count": 13,
-      "chatgpt_run_count": 33,
+      "run_count": 14,
+      "chatgpt_run_count": 35,
       "runs": [
+        {
+          "run_id": "camp-c2b90ad344141fb2.erdos-203.17.1784186119-833198",
+          "problem_id": "erdos-203",
+          "started_at": "2026-07-16T07:15:19Z",
+          "updated_at": "2026-07-16T07:27:44Z",
+          "event_count": 28,
+          "families": [
+            "direct_structural",
+            "contradiction_minimal_counterexample",
+            "formal_library_first"
+          ],
+          "claims_proposed": 21,
+          "evidence_attached": 0,
+          "claims_promoted": 0,
+          "packet_reentries": 0,
+          "formal_correspondences": 0,
+          "chatgpt": [],
+          "events": [
+            {
+              "sequence": 0,
+              "action": "PROBLEM_FROZEN",
+              "timestamp": "2026-07-16T07:15:19Z",
+              "description": "SOURCE_FROZEN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 1,
+              "action": "INTERPRETATION_ADDED",
+              "timestamp": "2026-07-16T07:15:19Z",
+              "description": "RELATION_PLAUSIBLE",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 2,
+              "action": "INTENT_CERTIFICATE_ISSUED",
+              "timestamp": "2026-07-16T07:15:19Z",
+              "description": "INTENT_APPROVED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 3,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:15:19Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 4,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:15:19Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 5,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:15:19Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 6,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:27:44Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 7,
+              "action": "CLAIM_INTENT_BOUND",
+              "timestamp": "2026-07-16T07:27:44Z",
+              "description": "APPROVED_INTENT_BOUND",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 8,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:27:44Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 9,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:27:44Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 10,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:27:44Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 11,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:27:44Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 12,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:27:44Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 13,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:27:44Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 14,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:27:44Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 15,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:27:44Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 16,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:27:44Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 17,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:27:44Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 18,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:27:44Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 19,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:27:44Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 20,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:27:44Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 21,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:27:44Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 22,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:27:44Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 23,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:27:44Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 24,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:27:44Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 25,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:27:44Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 26,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:27:44Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 27,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:27:44Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            }
+          ],
+          "actions": {
+            "BRANCH_OPENED": 3,
+            "CLAIM_INTENT_BOUND": 1,
+            "CLAIM_PROPOSED": 21,
+            "INTENT_CERTIFICATE_ISSUED": 1,
+            "INTERPRETATION_ADDED": 1,
+            "PROBLEM_FROZEN": 1
+          }
+        },
         {
           "run_id": "camp-c2b90ad344141fb2.erdos-203.6.1784184180-035e42",
           "problem_id": "erdos-203",
@@ -9245,6 +9687,22 @@
       ],
       "exchanges": [
         {
+          "stage": "sketch:formal_library_first",
+          "model": "ChatGPT (browser UI)",
+          "provider": "openai",
+          "prompt_hash": "c6edbbbfc5666f17",
+          "response_hash": "adeafcd5cd2f98c9",
+          "conversation_url": "https://chatgpt.com/c/6a5887a7-f500-83e8-ac59-10976c2c2ba3"
+        },
+        {
+          "stage": "branch:formal_library_first:round2",
+          "model": "ChatGPT (browser UI)",
+          "provider": "openai",
+          "prompt_hash": "63d113fdb60db6f0",
+          "response_hash": "41e8dbd6654f70ee",
+          "conversation_url": "https://chatgpt.com/c/6a588567-608c-83e8-971d-f6751493c8b9"
+        },
+        {
           "stage": "branch:formal_library_first:round2",
           "model": "ChatGPT (browser UI)",
           "provider": "openai",
@@ -9509,7 +9967,23 @@
           "conversation_url": null
         }
       ],
-      "aristotle": [],
+      "aristotle": [
+        {
+          "artifact_id": "e35674a2-8cf5-4c54-9d74-9a02f05877f2",
+          "worker": null,
+          "session": "e35674a2-8cf5-4c54-9d74-9a02f05877f2",
+          "bytes": 444,
+          "declarations": [
+            "egmra_project_builds"
+          ],
+          "problem_numbers": [
+            203
+          ],
+          "linked_by": "EGMRA submission metadata",
+          "status": "proof draft \u2014 not yet verified",
+          "source_preview": "import Mathlib\n\n/-!\nPinned Lean/Mathlib environment for Aristotle (Lean v4.28.0, Mathlib v4.28.0).\n\nAristotle writes candidate proofs into this project; EGMRA then re-checks them\nlocally with its pinned kernel (`egmra.lean.replay.LeanReplayVerifier`) before\nanything is trusted. A vendor \"COMPLETE\" is never a proof on its own.\n\nA trivial theorem so `lake build` succeeds on a fresh checkout.\n-/\n\ntheorem egmra_project_builds : True := trivial\n"
+        }
+      ],
       "solvability": {
         "available": true,
         "score": 0.378206,
@@ -9526,9 +10000,9 @@
       },
       "erdos_page": "https://www.erdosproblems.com/203",
       "progress": {
-        "percent": 50,
-        "stage": "Candidate statement found",
-        "explanation": "The run produced a concrete lemma or intermediate claim.",
+        "percent": 75,
+        "stage": "Formal proof draft linked",
+        "explanation": "An Aristotle Lean draft is reliably associated with this problem.",
         "disclaimer": "Research milestone, not the probability of solving the problem and not mathematical distance to a proof.",
         "milestones": [
           {
@@ -9569,7 +10043,7 @@
           {
             "percent": 75,
             "label": "Formal proof draft linked",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 88,
@@ -9588,22 +10062,178 @@
           }
         ]
       },
-      "worker_liveness": "stale"
+      "worker_liveness": "active"
     },
     {
       "problem_id": "erdos-312",
       "number": 312,
       "statement": "Does there exist some $c>0$ such that, for any $K>1$, whenever $A$ is a sufficiently large finite multiset of positive integers with $\\sum_{n\\in A}\\frac{1}{n}>K$ there exists some $S\\subseteq A$ such that\\[1-e^{-cK} < \\sum_{n\\in S}\\frac{1}{n}\\leq 1?\\]",
       "status": "leased",
-      "attempts": 1,
-      "worker": "w0",
+      "attempts": 2,
+      "worker": "Erics-MacBook-Pro-8e6d155a:p9306:w0",
       "result_state": null,
-      "lease_expires_at": "2026-07-16T06:55:43.454368+00:00",
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "lease_expires_at": "2026-07-16T07:47:17.722826+00:00",
+      "updated_at": null,
       "latest_state": "BLOCKED_BY_INTERPRETATION",
-      "run_count": 42,
+      "run_count": 43,
       "chatgpt_run_count": 24,
       "runs": [
+        {
+          "run_id": "camp-c2b90ad344141fb2.erdos-312.14.1784185937-6f09c9",
+          "problem_id": "erdos-312",
+          "started_at": "2026-07-16T07:12:17Z",
+          "updated_at": "2026-07-16T07:19:24Z",
+          "event_count": 16,
+          "families": [
+            "direct_structural",
+            "contradiction_minimal_counterexample",
+            "formal_library_first"
+          ],
+          "claims_proposed": 9,
+          "evidence_attached": 0,
+          "claims_promoted": 0,
+          "packet_reentries": 0,
+          "formal_correspondences": 0,
+          "chatgpt": [],
+          "events": [
+            {
+              "sequence": 0,
+              "action": "PROBLEM_FROZEN",
+              "timestamp": "2026-07-16T07:12:17Z",
+              "description": "SOURCE_FROZEN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 1,
+              "action": "INTERPRETATION_ADDED",
+              "timestamp": "2026-07-16T07:12:17Z",
+              "description": "RELATION_PLAUSIBLE",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 2,
+              "action": "INTENT_CERTIFICATE_ISSUED",
+              "timestamp": "2026-07-16T07:12:17Z",
+              "description": "INTENT_APPROVED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 3,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:12:17Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 4,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:12:17Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 5,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:12:17Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 6,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:19:23Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 7,
+              "action": "CLAIM_INTENT_BOUND",
+              "timestamp": "2026-07-16T07:19:23Z",
+              "description": "APPROVED_INTENT_BOUND",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 8,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:19:23Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 9,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:19:23Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 10,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:19:23Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 11,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:19:23Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 12,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:19:23Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 13,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:19:23Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 14,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:19:24Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 15,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:19:24Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            }
+          ],
+          "actions": {
+            "BRANCH_OPENED": 3,
+            "CLAIM_INTENT_BOUND": 1,
+            "CLAIM_PROPOSED": 9,
+            "INTENT_CERTIFICATE_ISSUED": 1,
+            "INTERPRETATION_ADDED": 1,
+            "PROBLEM_FROZEN": 1
+          }
+        },
         {
           "run_id": "camp-c2b90ad344141fb2.erdos-312.1.1784178039-6ffe6a",
           "problem_id": "erdos-312",
@@ -12360,6 +12990,66 @@
       ],
       "aristotle": [
         {
+          "artifact_id": "9dc66ce5-6e23-4c95-9b84-94564ef0d57d",
+          "worker": null,
+          "session": "9dc66ce5-6e23-4c95-9b84-94564ef0d57d",
+          "bytes": 444,
+          "declarations": [
+            "egmra_project_builds"
+          ],
+          "problem_numbers": [
+            312
+          ],
+          "linked_by": "EGMRA submission metadata",
+          "status": "proof draft \u2014 not yet verified",
+          "source_preview": "import Mathlib\n\n/-!\nPinned Lean/Mathlib environment for Aristotle (Lean v4.28.0, Mathlib v4.28.0).\n\nAristotle writes candidate proofs into this project; EGMRA then re-checks them\nlocally with its pinned kernel (`egmra.lean.replay.LeanReplayVerifier`) before\nanything is trusted. A vendor \"COMPLETE\" is never a proof on its own.\n\nA trivial theorem so `lake build` succeeds on a fresh checkout.\n-/\n\ntheorem egmra_project_builds : True := trivial\n"
+        },
+        {
+          "artifact_id": "51a1c61b-ef56-4f3c-9667-d40f411ea968",
+          "worker": null,
+          "session": "51a1c61b-ef56-4f3c-9667-d40f411ea968",
+          "bytes": 444,
+          "declarations": [
+            "egmra_project_builds"
+          ],
+          "problem_numbers": [
+            312
+          ],
+          "linked_by": "EGMRA submission metadata",
+          "status": "proof draft \u2014 not yet verified",
+          "source_preview": "import Mathlib\n\n/-!\nPinned Lean/Mathlib environment for Aristotle (Lean v4.28.0, Mathlib v4.28.0).\n\nAristotle writes candidate proofs into this project; EGMRA then re-checks them\nlocally with its pinned kernel (`egmra.lean.replay.LeanReplayVerifier`) before\nanything is trusted. A vendor \"COMPLETE\" is never a proof on its own.\n\nA trivial theorem so `lake build` succeeds on a fresh checkout.\n-/\n\ntheorem egmra_project_builds : True := trivial\n"
+        },
+        {
+          "artifact_id": "1fb97cca-0554-4473-bfa6-4f1bdd8319ef",
+          "worker": null,
+          "session": "1fb97cca-0554-4473-bfa6-4f1bdd8319ef",
+          "bytes": 444,
+          "declarations": [
+            "egmra_project_builds"
+          ],
+          "problem_numbers": [
+            312
+          ],
+          "linked_by": "EGMRA submission metadata",
+          "status": "proof draft \u2014 not yet verified",
+          "source_preview": "import Mathlib\n\n/-!\nPinned Lean/Mathlib environment for Aristotle (Lean v4.28.0, Mathlib v4.28.0).\n\nAristotle writes candidate proofs into this project; EGMRA then re-checks them\nlocally with its pinned kernel (`egmra.lean.replay.LeanReplayVerifier`) before\nanything is trusted. A vendor \"COMPLETE\" is never a proof on its own.\n\nA trivial theorem so `lake build` succeeds on a fresh checkout.\n-/\n\ntheorem egmra_project_builds : True := trivial\n"
+        },
+        {
+          "artifact_id": "24278bd6-98e5-4f5e-9195-73f763b76391",
+          "worker": null,
+          "session": "24278bd6-98e5-4f5e-9195-73f763b76391",
+          "bytes": 444,
+          "declarations": [
+            "egmra_project_builds"
+          ],
+          "problem_numbers": [
+            312
+          ],
+          "linked_by": "EGMRA submission metadata",
+          "status": "proof draft \u2014 not yet verified",
+          "source_preview": "import Mathlib\n\n/-!\nPinned Lean/Mathlib environment for Aristotle (Lean v4.28.0, Mathlib v4.28.0).\n\nAristotle writes candidate proofs into this project; EGMRA then re-checks them\nlocally with its pinned kernel (`egmra.lean.replay.LeanReplayVerifier`) before\nanything is trusted. A vendor \"COMPLETE\" is never a proof on its own.\n\nA trivial theorem so `lake build` succeeds on a fresh checkout.\n-/\n\ntheorem egmra_project_builds : True := trivial\n"
+        },
+        {
           "artifact_id": "9cb2c621-b127-4c0b-8a8f-6318884d4546",
           "worker": "w0",
           "session": "9cb2c621-b127-4c0b-8a8f-6318884d4546",
@@ -12468,7 +13158,7 @@
           }
         ]
       },
-      "worker_liveness": "stale"
+      "worker_liveness": "active"
     },
     {
       "problem_id": "erdos-324",
@@ -12478,8 +13168,8 @@
       "attempts": 1,
       "worker": "Erics-MacBook-Pro-8e6d155a:w0",
       "result_state": null,
-      "lease_expires_at": "2026-07-16T07:17:46.323141+00:00",
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "lease_expires_at": "2026-07-16T07:22:46.477171+00:00",
+      "updated_at": null,
       "latest_state": null,
       "run_count": 1,
       "chatgpt_run_count": 1,
@@ -12648,7 +13338,7 @@
           }
         ]
       },
-      "worker_liveness": "active"
+      "worker_liveness": "stale"
     },
     {
       "problem_id": "erdos-400",
@@ -12659,7 +13349,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "updated_at": null,
       "latest_state": null,
       "run_count": 0,
       "chatgpt_run_count": 0,
@@ -12750,16 +13440,90 @@
       "problem_id": "erdos-495",
       "number": 495,
       "statement": "Let $\\alpha,\\beta \\in \\mathbb{R}$. Is it true that\\[\\liminf_{n\\to \\infty} n \\| n\\alpha \\| \\| n\\beta\\| =0\\]where $\\|x\\|$ is the distance from $x$ to the nearest integer?",
-      "status": "pending",
-      "attempts": 0,
-      "worker": null,
+      "status": "leased",
+      "attempts": 1,
+      "worker": "Erics-MacBook-Pro-8e6d155a:w2",
       "result_state": null,
-      "lease_expires_at": null,
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "lease_expires_at": "2026-07-16T07:24:41.521594+00:00",
+      "updated_at": null,
       "latest_state": null,
-      "run_count": 10,
+      "run_count": 11,
       "chatgpt_run_count": 20,
       "runs": [
+        {
+          "run_id": "camp-c2b90ad344141fb2.erdos-495.13.1784185781-4ca521",
+          "problem_id": "erdos-495",
+          "started_at": "2026-07-16T07:09:41Z",
+          "updated_at": "2026-07-16T07:09:42Z",
+          "event_count": 6,
+          "families": [
+            "direct_structural",
+            "contradiction_minimal_counterexample",
+            "formal_library_first"
+          ],
+          "claims_proposed": 0,
+          "evidence_attached": 0,
+          "claims_promoted": 0,
+          "packet_reentries": 0,
+          "formal_correspondences": 0,
+          "chatgpt": [],
+          "events": [
+            {
+              "sequence": 0,
+              "action": "PROBLEM_FROZEN",
+              "timestamp": "2026-07-16T07:09:41Z",
+              "description": "SOURCE_FROZEN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 1,
+              "action": "INTERPRETATION_ADDED",
+              "timestamp": "2026-07-16T07:09:41Z",
+              "description": "RELATION_PLAUSIBLE",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 2,
+              "action": "INTENT_CERTIFICATE_ISSUED",
+              "timestamp": "2026-07-16T07:09:41Z",
+              "description": "INTENT_APPROVED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 3,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:09:42Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 4,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:09:42Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 5,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:09:42Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            }
+          ],
+          "actions": {
+            "BRANCH_OPENED": 3,
+            "INTENT_CERTIFICATE_ISSUED": 1,
+            "INTERPRETATION_ADDED": 1,
+            "PROBLEM_FROZEN": 1
+          }
+        },
         {
           "run_id": "camp-c2b90ad344141fb2.erdos-495.27",
           "problem_id": "erdos-495",
@@ -14020,7 +14784,7 @@
           {
             "percent": 15,
             "label": "Worker assigned",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 20,
@@ -14030,7 +14794,7 @@
           {
             "percent": 30,
             "label": "Meaning approved",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 40,
@@ -14069,7 +14833,7 @@
           }
         ]
       },
-      "worker_liveness": "not_applicable"
+      "worker_liveness": "stale"
     },
     {
       "problem_id": "erdos-602",
@@ -14079,8 +14843,8 @@
       "attempts": 1,
       "worker": "Erics-MacBook-Pro-8e6d155a:w2",
       "result_state": null,
-      "lease_expires_at": "2026-07-16T07:17:46.323274+00:00",
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "lease_expires_at": "2026-07-16T07:22:47.010325+00:00",
+      "updated_at": null,
       "latest_state": null,
       "run_count": 1,
       "chatgpt_run_count": 1,
@@ -14249,7 +15013,7 @@
           }
         ]
       },
-      "worker_liveness": "active"
+      "worker_liveness": "stale"
     },
     {
       "problem_id": "erdos-655",
@@ -14260,7 +15024,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "updated_at": null,
       "latest_state": null,
       "run_count": 0,
       "chatgpt_run_count": 0,
@@ -14355,8 +15119,8 @@
       "attempts": 1,
       "worker": "Erics-MacBook-Pro-8e6d155a:w1",
       "result_state": null,
-      "lease_expires_at": "2026-07-16T07:17:46.323244+00:00",
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "lease_expires_at": "2026-07-16T07:22:46.654425+00:00",
+      "updated_at": null,
       "latest_state": null,
       "run_count": 10,
       "chatgpt_run_count": 7,
@@ -15129,22 +15893,114 @@
           }
         ]
       },
-      "worker_liveness": "active"
+      "worker_liveness": "stale"
     },
     {
       "problem_id": "erdos-949",
       "number": 949,
       "statement": "Let $S\\subset \\mathbb{R}$ be a set containing no solutions to $a+b=c$. Must there be a set $A\\subseteq \\mathbb{R}\\backslash S$ of cardinality continuum such that $A+A\\subseteq \\mathbb{R}\\backslash S$?",
-      "status": "pending",
-      "attempts": 0,
-      "worker": null,
+      "status": "leased",
+      "attempts": 1,
+      "worker": "Erics-MacBook-Pro-8e6d155a:p9306:w1",
       "result_state": null,
-      "lease_expires_at": null,
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "lease_expires_at": "2026-07-16T07:47:17.891058+00:00",
+      "updated_at": null,
       "latest_state": null,
-      "run_count": 11,
-      "chatgpt_run_count": 3,
+      "run_count": 12,
+      "chatgpt_run_count": 5,
       "runs": [
+        {
+          "run_id": "camp-c2b90ad344141fb2.erdos-949.15.1784185937-05c444",
+          "problem_id": "erdos-949",
+          "started_at": "2026-07-16T07:12:17Z",
+          "updated_at": "2026-07-16T07:27:28Z",
+          "event_count": 8,
+          "families": [
+            "direct_structural",
+            "contradiction_minimal_counterexample",
+            "formal_library_first"
+          ],
+          "claims_proposed": 1,
+          "evidence_attached": 0,
+          "claims_promoted": 0,
+          "packet_reentries": 0,
+          "formal_correspondences": 0,
+          "chatgpt": [],
+          "events": [
+            {
+              "sequence": 0,
+              "action": "PROBLEM_FROZEN",
+              "timestamp": "2026-07-16T07:12:17Z",
+              "description": "SOURCE_FROZEN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 1,
+              "action": "INTERPRETATION_ADDED",
+              "timestamp": "2026-07-16T07:12:17Z",
+              "description": "RELATION_PLAUSIBLE",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 2,
+              "action": "INTENT_CERTIFICATE_ISSUED",
+              "timestamp": "2026-07-16T07:12:17Z",
+              "description": "INTENT_APPROVED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 3,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:12:17Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 4,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:12:17Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 5,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:12:17Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 6,
+              "action": "CLAIM_PROPOSED",
+              "timestamp": "2026-07-16T07:27:28Z",
+              "description": "PROPOSED_UNKNOWN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 7,
+              "action": "CLAIM_INTENT_BOUND",
+              "timestamp": "2026-07-16T07:27:28Z",
+              "description": "APPROVED_INTENT_BOUND",
+              "stage": null,
+              "conversation_url": null
+            }
+          ],
+          "actions": {
+            "BRANCH_OPENED": 3,
+            "CLAIM_INTENT_BOUND": 1,
+            "CLAIM_PROPOSED": 1,
+            "INTENT_CERTIFICATE_ISSUED": 1,
+            "INTERPRETATION_ADDED": 1,
+            "PROBLEM_FROZEN": 1
+          }
+        },
         {
           "run_id": "camp-c2b90ad344141fb2.erdos-949.31",
           "problem_id": "erdos-949",
@@ -15834,6 +16690,22 @@
       ],
       "exchanges": [
         {
+          "stage": "branch:direct_structural",
+          "model": "ChatGPT (browser UI)",
+          "provider": "openai",
+          "prompt_hash": "8ef5215158907b09",
+          "response_hash": "942087cc2d41e013",
+          "conversation_url": "https://chatgpt.com/c/6a5886a0-3390-83e8-a6be-aa9b3ab87ccd"
+        },
+        {
+          "stage": "branch:direct_structural",
+          "model": "ChatGPT (browser UI)",
+          "provider": "openai",
+          "prompt_hash": "f48f8501cb4b4ec6",
+          "response_hash": "942087cc2d41e013",
+          "conversation_url": "https://chatgpt.com/c/6a588458-0c58-83e8-8753-abdd6d4a647c"
+        },
+        {
           "stage": "branch_selection",
           "model": "ChatGPT (browser UI)",
           "provider": "openai",
@@ -15875,9 +16747,9 @@
       },
       "erdos_page": "https://www.erdosproblems.com/949",
       "progress": {
-        "percent": 40,
-        "stage": "Approaches explored",
-        "explanation": "At least one proof or counterexample approach was attempted.",
+        "percent": 50,
+        "stage": "Candidate statement found",
+        "explanation": "The run produced a concrete lemma or intermediate claim.",
         "disclaimer": "Research milestone, not the probability of solving the problem and not mathematical distance to a proof.",
         "milestones": [
           {
@@ -15888,7 +16760,7 @@
           {
             "percent": 15,
             "label": "Worker assigned",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 20,
@@ -15898,7 +16770,7 @@
           {
             "percent": 30,
             "label": "Meaning approved",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 40,
@@ -15908,7 +16780,7 @@
           {
             "percent": 50,
             "label": "Candidate statement found",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 65,
@@ -15937,23 +16809,107 @@
           }
         ]
       },
-      "worker_liveness": "not_applicable"
+      "worker_liveness": "active"
     },
     {
       "problem_id": "erdos-1049",
       "number": 1049,
       "statement": "Let $t>1$ be a rational number. Is\\[\\sum_{n=1}^\\infty\\frac{1}{t^n-1}=\\sum_{n=1}^\\infty \\frac{\\tau(n)}{t^n}\\]irrational, where $\\tau(n)$ counts the divisors of $n$?",
-      "status": "pending",
+      "status": "retained",
       "attempts": 0,
-      "worker": null,
-      "result_state": null,
+      "worker": "Erics-MacBook-Pro-8e6d155a:p9306:w2",
+      "result_state": "provider_unavailable",
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "updated_at": null,
       "latest_state": null,
-      "run_count": 0,
-      "chatgpt_run_count": 0,
-      "runs": [],
-      "exchanges": [],
+      "run_count": 1,
+      "chatgpt_run_count": 1,
+      "runs": [
+        {
+          "run_id": "camp-c2b90ad344141fb2.erdos-1049.16.1784185937-c06b6f",
+          "problem_id": "erdos-1049",
+          "started_at": "2026-07-16T07:12:17Z",
+          "updated_at": "2026-07-16T07:12:59Z",
+          "event_count": 6,
+          "families": [
+            "direct_structural",
+            "contradiction_minimal_counterexample",
+            "formal_library_first"
+          ],
+          "claims_proposed": 0,
+          "evidence_attached": 0,
+          "claims_promoted": 0,
+          "packet_reentries": 0,
+          "formal_correspondences": 0,
+          "chatgpt": [],
+          "events": [
+            {
+              "sequence": 0,
+              "action": "PROBLEM_FROZEN",
+              "timestamp": "2026-07-16T07:12:17Z",
+              "description": "SOURCE_FROZEN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 1,
+              "action": "INTERPRETATION_ADDED",
+              "timestamp": "2026-07-16T07:12:17Z",
+              "description": "RELATION_PLAUSIBLE",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 2,
+              "action": "INTENT_CERTIFICATE_ISSUED",
+              "timestamp": "2026-07-16T07:12:17Z",
+              "description": "INTENT_APPROVED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 3,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:12:59Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 4,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:12:59Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 5,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:12:59Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            }
+          ],
+          "actions": {
+            "BRANCH_OPENED": 3,
+            "INTENT_CERTIFICATE_ISSUED": 1,
+            "INTERPRETATION_ADDED": 1,
+            "PROBLEM_FROZEN": 1
+          }
+        }
+      ],
+      "exchanges": [
+        {
+          "stage": "cold_pass",
+          "model": "ChatGPT (browser UI)",
+          "provider": "openai",
+          "prompt_hash": "cd60a15b1483f2d3",
+          "response_hash": "d99bbfbd18bdeced",
+          "conversation_url": "https://chatgpt.com/c/6a588454-7bc8-83e8-8522-17892c4996e0"
+        }
+      ],
       "aristotle": [],
       "solvability": {
         "available": true,
@@ -15971,9 +16927,9 @@
       },
       "erdos_page": "https://www.erdosproblems.com/1049",
       "progress": {
-        "percent": 5,
-        "stage": "Queued",
-        "explanation": "The problem is in the campaign.",
+        "percent": 40,
+        "stage": "Approaches explored",
+        "explanation": "At least one proof or counterexample approach was attempted.",
         "disclaimer": "Research milestone, not the probability of solving the problem and not mathematical distance to a proof.",
         "milestones": [
           {
@@ -15989,17 +16945,17 @@
           {
             "percent": 20,
             "label": "Meaning recorded",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 30,
             "label": "Meaning approved",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 40,
             "label": "Approaches explored",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 50,
@@ -16044,7 +17000,7 @@
       "worker": "w1",
       "result_state": null,
       "lease_expires_at": "2026-07-16T06:55:43.596849+00:00",
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "updated_at": null,
       "latest_state": "BLOCKED_BY_INTERPRETATION",
       "run_count": 34,
       "chatgpt_run_count": 29,
@@ -18878,7 +19834,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "updated_at": null,
       "latest_state": null,
       "run_count": 0,
       "chatgpt_run_count": 0,
@@ -18969,17 +19925,101 @@
       "problem_id": "erdos-1167",
       "number": 1167,
       "statement": "Let $r\\geq 2$ be finite and $\\lambda$ be an infinite cardinal. Let $\\kappa_\\alpha$ be cardinals for all $\\alpha<\\gamma$. Is it true that\\[2^\\lambda \\to (\\kappa_\\alpha+1)_{\\alpha<\\gamma}^{r+1}\\]implies\\[\\lambda \\to (\\kappa_\\alpha)_{\\alpha<\\gamma}^{r}?\\]Here $+$ means cardinal addition, so that $\\kappa_\\alpha+1=\\kappa_\\alpha$ if $\\kappa_\\alpha$ is infinite.",
-      "status": "pending",
-      "attempts": 0,
-      "worker": null,
+      "status": "leased",
+      "attempts": 1,
+      "worker": "Erics-MacBook-Pro-8e6d155a:w1",
       "result_state": null,
-      "lease_expires_at": null,
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "lease_expires_at": "2026-07-16T07:24:40.394933+00:00",
+      "updated_at": null,
       "latest_state": null,
-      "run_count": 0,
-      "chatgpt_run_count": 0,
-      "runs": [],
-      "exchanges": [],
+      "run_count": 1,
+      "chatgpt_run_count": 1,
+      "runs": [
+        {
+          "run_id": "camp-c2b90ad344141fb2.erdos-1167.11.1784185780-8a57e2",
+          "problem_id": "erdos-1167",
+          "started_at": "2026-07-16T07:09:40Z",
+          "updated_at": "2026-07-16T07:11:50Z",
+          "event_count": 6,
+          "families": [
+            "direct_structural",
+            "contradiction_minimal_counterexample",
+            "formal_library_first"
+          ],
+          "claims_proposed": 0,
+          "evidence_attached": 0,
+          "claims_promoted": 0,
+          "packet_reentries": 0,
+          "formal_correspondences": 0,
+          "chatgpt": [],
+          "events": [
+            {
+              "sequence": 0,
+              "action": "PROBLEM_FROZEN",
+              "timestamp": "2026-07-16T07:09:40Z",
+              "description": "SOURCE_FROZEN",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 1,
+              "action": "INTERPRETATION_ADDED",
+              "timestamp": "2026-07-16T07:09:40Z",
+              "description": "RELATION_PLAUSIBLE",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 2,
+              "action": "INTENT_CERTIFICATE_ISSUED",
+              "timestamp": "2026-07-16T07:09:40Z",
+              "description": "INTENT_APPROVED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 3,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:11:50Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 4,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:11:50Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            },
+            {
+              "sequence": 5,
+              "action": "BRANCH_OPENED",
+              "timestamp": "2026-07-16T07:11:50Z",
+              "description": "BRANCH_PROPOSED",
+              "stage": null,
+              "conversation_url": null
+            }
+          ],
+          "actions": {
+            "BRANCH_OPENED": 3,
+            "INTENT_CERTIFICATE_ISSUED": 1,
+            "INTERPRETATION_ADDED": 1,
+            "PROBLEM_FROZEN": 1
+          }
+        }
+      ],
+      "exchanges": [
+        {
+          "stage": "cold_pass",
+          "model": "ChatGPT (browser UI)",
+          "provider": "openai",
+          "prompt_hash": "0ca9b5dd1bf8b3ec",
+          "response_hash": "8f61c580febea014",
+          "conversation_url": "https://chatgpt.com/c/6a5883b8-e06c-83e8-ae73-37a097fb741d"
+        }
+      ],
       "aristotle": [],
       "solvability": {
         "available": true,
@@ -18997,9 +20037,9 @@
       },
       "erdos_page": "https://www.erdosproblems.com/1167",
       "progress": {
-        "percent": 5,
-        "stage": "Queued",
-        "explanation": "The problem is in the campaign.",
+        "percent": 40,
+        "stage": "Approaches explored",
+        "explanation": "At least one proof or counterexample approach was attempted.",
         "disclaimer": "Research milestone, not the probability of solving the problem and not mathematical distance to a proof.",
         "milestones": [
           {
@@ -19010,22 +20050,22 @@
           {
             "percent": 15,
             "label": "Worker assigned",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 20,
             "label": "Meaning recorded",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 30,
             "label": "Meaning approved",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 40,
             "label": "Approaches explored",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 50,
@@ -19059,7 +20099,7 @@
           }
         ]
       },
-      "worker_liveness": "not_applicable"
+      "worker_liveness": "stale"
     },
     {
       "problem_id": "erdos-1175",
@@ -19070,7 +20110,7 @@
       "worker": null,
       "result_state": null,
       "lease_expires_at": null,
-      "updated_at": "2026-07-16T07:07:15.154512+00:00",
+      "updated_at": null,
       "latest_state": null,
       "run_count": 0,
       "chatgpt_run_count": 0,
@@ -19159,6 +20199,81 @@
     }
   ],
   "aristotle_artifacts": [
+    {
+      "artifact_id": "1fb97cca-0554-4473-bfa6-4f1bdd8319ef",
+      "worker": null,
+      "session": "1fb97cca-0554-4473-bfa6-4f1bdd8319ef",
+      "bytes": 444,
+      "declarations": [
+        "egmra_project_builds"
+      ],
+      "problem_numbers": [
+        312
+      ],
+      "linked_by": "EGMRA submission metadata",
+      "status": "proof draft \u2014 not yet verified",
+      "source_preview": "import Mathlib\n\n/-!\nPinned Lean/Mathlib environment for Aristotle (Lean v4.28.0, Mathlib v4.28.0).\n\nAristotle writes candidate proofs into this project; EGMRA then re-checks them\nlocally with its pinned kernel (`egmra.lean.replay.LeanReplayVerifier`) before\nanything is trusted. A vendor \"COMPLETE\" is never a proof on its own.\n\nA trivial theorem so `lake build` succeeds on a fresh checkout.\n-/\n\ntheorem egmra_project_builds : True := trivial\n"
+    },
+    {
+      "artifact_id": "24278bd6-98e5-4f5e-9195-73f763b76391",
+      "worker": null,
+      "session": "24278bd6-98e5-4f5e-9195-73f763b76391",
+      "bytes": 444,
+      "declarations": [
+        "egmra_project_builds"
+      ],
+      "problem_numbers": [
+        312
+      ],
+      "linked_by": "EGMRA submission metadata",
+      "status": "proof draft \u2014 not yet verified",
+      "source_preview": "import Mathlib\n\n/-!\nPinned Lean/Mathlib environment for Aristotle (Lean v4.28.0, Mathlib v4.28.0).\n\nAristotle writes candidate proofs into this project; EGMRA then re-checks them\nlocally with its pinned kernel (`egmra.lean.replay.LeanReplayVerifier`) before\nanything is trusted. A vendor \"COMPLETE\" is never a proof on its own.\n\nA trivial theorem so `lake build` succeeds on a fresh checkout.\n-/\n\ntheorem egmra_project_builds : True := trivial\n"
+    },
+    {
+      "artifact_id": "51a1c61b-ef56-4f3c-9667-d40f411ea968",
+      "worker": null,
+      "session": "51a1c61b-ef56-4f3c-9667-d40f411ea968",
+      "bytes": 444,
+      "declarations": [
+        "egmra_project_builds"
+      ],
+      "problem_numbers": [
+        312
+      ],
+      "linked_by": "EGMRA submission metadata",
+      "status": "proof draft \u2014 not yet verified",
+      "source_preview": "import Mathlib\n\n/-!\nPinned Lean/Mathlib environment for Aristotle (Lean v4.28.0, Mathlib v4.28.0).\n\nAristotle writes candidate proofs into this project; EGMRA then re-checks them\nlocally with its pinned kernel (`egmra.lean.replay.LeanReplayVerifier`) before\nanything is trusted. A vendor \"COMPLETE\" is never a proof on its own.\n\nA trivial theorem so `lake build` succeeds on a fresh checkout.\n-/\n\ntheorem egmra_project_builds : True := trivial\n"
+    },
+    {
+      "artifact_id": "9dc66ce5-6e23-4c95-9b84-94564ef0d57d",
+      "worker": null,
+      "session": "9dc66ce5-6e23-4c95-9b84-94564ef0d57d",
+      "bytes": 444,
+      "declarations": [
+        "egmra_project_builds"
+      ],
+      "problem_numbers": [
+        312
+      ],
+      "linked_by": "EGMRA submission metadata",
+      "status": "proof draft \u2014 not yet verified",
+      "source_preview": "import Mathlib\n\n/-!\nPinned Lean/Mathlib environment for Aristotle (Lean v4.28.0, Mathlib v4.28.0).\n\nAristotle writes candidate proofs into this project; EGMRA then re-checks them\nlocally with its pinned kernel (`egmra.lean.replay.LeanReplayVerifier`) before\nanything is trusted. A vendor \"COMPLETE\" is never a proof on its own.\n\nA trivial theorem so `lake build` succeeds on a fresh checkout.\n-/\n\ntheorem egmra_project_builds : True := trivial\n"
+    },
+    {
+      "artifact_id": "e35674a2-8cf5-4c54-9d74-9a02f05877f2",
+      "worker": null,
+      "session": "e35674a2-8cf5-4c54-9d74-9a02f05877f2",
+      "bytes": 444,
+      "declarations": [
+        "egmra_project_builds"
+      ],
+      "problem_numbers": [
+        203
+      ],
+      "linked_by": "EGMRA submission metadata",
+      "status": "proof draft \u2014 not yet verified",
+      "source_preview": "import Mathlib\n\n/-!\nPinned Lean/Mathlib environment for Aristotle (Lean v4.28.0, Mathlib v4.28.0).\n\nAristotle writes candidate proofs into this project; EGMRA then re-checks them\nlocally with its pinned kernel (`egmra.lean.replay.LeanReplayVerifier`) before\nanything is trusted. A vendor \"COMPLETE\" is never a proof on its own.\n\nA trivial theorem so `lake build` succeeds on a fresh checkout.\n-/\n\ntheorem egmra_project_builds : True := trivial\n"
+    },
     {
       "artifact_id": "268de62e-9e4f-4d7e-be0e-ca15150e10f9",
       "worker": "w0",
@@ -20955,8 +22070,8 @@
       "problem_id": "erdos-158",
       "number": 158,
       "statement": "Let $A\\subset \\mathbb{N}$ be an infinite set such that, for any $n$, there are most $2$ solutions to $a+b=n$ with $a\\leq b$. Must\\[\\liminf_{N\\to\\infty}\\frac{\\lvert A\\cap \\{1,\\ldots,N\\}\\rvert}{N^{1/2}}=0?\\]",
-      "status": "pending",
-      "worker": null,
+      "status": "leased",
+      "worker": "Erics-MacBook-Pro-8e6d155a:w0",
       "solvability": {
         "available": true,
         "score": 0.378206,
@@ -20972,9 +22087,9 @@
         "rank": 4
       },
       "progress": {
-        "percent": 5,
-        "stage": "Queued",
-        "explanation": "The problem is in the campaign.",
+        "percent": 40,
+        "stage": "Approaches explored",
+        "explanation": "At least one proof or counterexample approach was attempted.",
         "disclaimer": "Research milestone, not the probability of solving the problem and not mathematical distance to a proof.",
         "milestones": [
           {
@@ -20985,22 +22100,22 @@
           {
             "percent": 15,
             "label": "Worker assigned",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 20,
             "label": "Meaning recorded",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 30,
             "label": "Meaning approved",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 40,
             "label": "Approaches explored",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 50,
@@ -21040,7 +22155,7 @@
       "number": 203,
       "statement": "Is there an integer $m\\geq 1$ with $(m,6)=1$ such that none of $2^k3^\\ell m+1$ are prime, for any $k,\\ell\\geq 0$?",
       "status": "leased",
-      "worker": "w2",
+      "worker": "Erics-MacBook-Pro-8e6d155a:p9306:w2",
       "solvability": {
         "available": true,
         "score": 0.378206,
@@ -21054,174 +22169,6 @@
         "calibration": "uncalibrated_weak_prior_mvp",
         "positive_signals": [],
         "rank": 5
-      },
-      "progress": {
-        "percent": 50,
-        "stage": "Candidate statement found",
-        "explanation": "The run produced a concrete lemma or intermediate claim.",
-        "disclaimer": "Research milestone, not the probability of solving the problem and not mathematical distance to a proof.",
-        "milestones": [
-          {
-            "percent": 5,
-            "label": "Queued",
-            "achieved": true
-          },
-          {
-            "percent": 15,
-            "label": "Worker assigned",
-            "achieved": true
-          },
-          {
-            "percent": 20,
-            "label": "Meaning recorded",
-            "achieved": true
-          },
-          {
-            "percent": 30,
-            "label": "Meaning approved",
-            "achieved": true
-          },
-          {
-            "percent": 40,
-            "label": "Approaches explored",
-            "achieved": true
-          },
-          {
-            "percent": 50,
-            "label": "Candidate statement found",
-            "achieved": true
-          },
-          {
-            "percent": 65,
-            "label": "Checked evidence found",
-            "achieved": false
-          },
-          {
-            "percent": 75,
-            "label": "Formal proof draft linked",
-            "achieved": false
-          },
-          {
-            "percent": 88,
-            "label": "Informal and Lean statements matched",
-            "achieved": false
-          },
-          {
-            "percent": 95,
-            "label": "Formally checked candidate",
-            "achieved": false
-          },
-          {
-            "percent": 100,
-            "label": "Released result",
-            "achieved": false
-          }
-        ]
-      }
-    },
-    {
-      "problem_id": "erdos-1167",
-      "number": 1167,
-      "statement": "Let $r\\geq 2$ be finite and $\\lambda$ be an infinite cardinal. Let $\\kappa_\\alpha$ be cardinals for all $\\alpha<\\gamma$. Is it true that\\[2^\\lambda \\to (\\kappa_\\alpha+1)_{\\alpha<\\gamma}^{r+1}\\]implies\\[\\lambda \\to (\\kappa_\\alpha)_{\\alpha<\\gamma}^{r}?\\]Here $+$ means cardinal addition, so that $\\kappa_\\alpha+1=\\kappa_\\alpha$ if $\\kappa_\\alpha$ is infinite.",
-      "status": "pending",
-      "worker": null,
-      "solvability": {
-        "available": true,
-        "score": 0.371276,
-        "index": 34,
-        "lean_route_estimate": 25,
-        "finite_computation_estimate": 12,
-        "verified_partial_progress_prior": 26,
-        "verified_novel_resolution_prior": 4.4,
-        "lean_route_available": true,
-        "statement_clear": true,
-        "calibration": "uncalibrated_weak_prior_mvp",
-        "positive_signals": [],
-        "rank": 6
-      },
-      "progress": {
-        "percent": 5,
-        "stage": "Queued",
-        "explanation": "The problem is in the campaign.",
-        "disclaimer": "Research milestone, not the probability of solving the problem and not mathematical distance to a proof.",
-        "milestones": [
-          {
-            "percent": 5,
-            "label": "Queued",
-            "achieved": true
-          },
-          {
-            "percent": 15,
-            "label": "Worker assigned",
-            "achieved": false
-          },
-          {
-            "percent": 20,
-            "label": "Meaning recorded",
-            "achieved": false
-          },
-          {
-            "percent": 30,
-            "label": "Meaning approved",
-            "achieved": false
-          },
-          {
-            "percent": 40,
-            "label": "Approaches explored",
-            "achieved": false
-          },
-          {
-            "percent": 50,
-            "label": "Candidate statement found",
-            "achieved": false
-          },
-          {
-            "percent": 65,
-            "label": "Checked evidence found",
-            "achieved": false
-          },
-          {
-            "percent": 75,
-            "label": "Formal proof draft linked",
-            "achieved": false
-          },
-          {
-            "percent": 88,
-            "label": "Informal and Lean statements matched",
-            "achieved": false
-          },
-          {
-            "percent": 95,
-            "label": "Formally checked candidate",
-            "achieved": false
-          },
-          {
-            "percent": 100,
-            "label": "Released result",
-            "achieved": false
-          }
-        ]
-      }
-    },
-    {
-      "problem_id": "erdos-153",
-      "number": 153,
-      "statement": "Let $A$ be a finite Sidon set and $A+A=\\{s_1<\\cdots<s_t\\}$. Is it true that\\[\\frac{1}{t}\\sum_{1\\leq i<t}(s_{i+1}-s_i)^2 \\to \\infty\\]as $\\lvert A\\rvert\\to \\infty$?",
-      "status": "leased",
-      "worker": "w2",
-      "solvability": {
-        "available": true,
-        "score": 0.367312,
-        "index": 33,
-        "lean_route_estimate": 24,
-        "finite_computation_estimate": 12,
-        "verified_partial_progress_prior": 26,
-        "verified_novel_resolution_prior": 4.4,
-        "lean_route_available": true,
-        "statement_clear": true,
-        "calibration": "uncalibrated_weak_prior_mvp",
-        "positive_signals": [],
-        "rank": 7
       },
       "progress": {
         "percent": 75,
@@ -21288,11 +22235,179 @@
       }
     },
     {
+      "problem_id": "erdos-1167",
+      "number": 1167,
+      "statement": "Let $r\\geq 2$ be finite and $\\lambda$ be an infinite cardinal. Let $\\kappa_\\alpha$ be cardinals for all $\\alpha<\\gamma$. Is it true that\\[2^\\lambda \\to (\\kappa_\\alpha+1)_{\\alpha<\\gamma}^{r+1}\\]implies\\[\\lambda \\to (\\kappa_\\alpha)_{\\alpha<\\gamma}^{r}?\\]Here $+$ means cardinal addition, so that $\\kappa_\\alpha+1=\\kappa_\\alpha$ if $\\kappa_\\alpha$ is infinite.",
+      "status": "leased",
+      "worker": "Erics-MacBook-Pro-8e6d155a:w1",
+      "solvability": {
+        "available": true,
+        "score": 0.371276,
+        "index": 34,
+        "lean_route_estimate": 25,
+        "finite_computation_estimate": 12,
+        "verified_partial_progress_prior": 26,
+        "verified_novel_resolution_prior": 4.4,
+        "lean_route_available": true,
+        "statement_clear": true,
+        "calibration": "uncalibrated_weak_prior_mvp",
+        "positive_signals": [],
+        "rank": 6
+      },
+      "progress": {
+        "percent": 40,
+        "stage": "Approaches explored",
+        "explanation": "At least one proof or counterexample approach was attempted.",
+        "disclaimer": "Research milestone, not the probability of solving the problem and not mathematical distance to a proof.",
+        "milestones": [
+          {
+            "percent": 5,
+            "label": "Queued",
+            "achieved": true
+          },
+          {
+            "percent": 15,
+            "label": "Worker assigned",
+            "achieved": true
+          },
+          {
+            "percent": 20,
+            "label": "Meaning recorded",
+            "achieved": true
+          },
+          {
+            "percent": 30,
+            "label": "Meaning approved",
+            "achieved": true
+          },
+          {
+            "percent": 40,
+            "label": "Approaches explored",
+            "achieved": true
+          },
+          {
+            "percent": 50,
+            "label": "Candidate statement found",
+            "achieved": false
+          },
+          {
+            "percent": 65,
+            "label": "Checked evidence found",
+            "achieved": false
+          },
+          {
+            "percent": 75,
+            "label": "Formal proof draft linked",
+            "achieved": false
+          },
+          {
+            "percent": 88,
+            "label": "Informal and Lean statements matched",
+            "achieved": false
+          },
+          {
+            "percent": 95,
+            "label": "Formally checked candidate",
+            "achieved": false
+          },
+          {
+            "percent": 100,
+            "label": "Released result",
+            "achieved": false
+          }
+        ]
+      }
+    },
+    {
+      "problem_id": "erdos-153",
+      "number": 153,
+      "statement": "Let $A$ be a finite Sidon set and $A+A=\\{s_1<\\cdots<s_t\\}$. Is it true that\\[\\frac{1}{t}\\sum_{1\\leq i<t}(s_{i+1}-s_i)^2 \\to \\infty\\]as $\\lvert A\\rvert\\to \\infty$?",
+      "status": "done",
+      "worker": "Erics-MacBook-Pro-8e6d155a:w2",
+      "solvability": {
+        "available": true,
+        "score": 0.367312,
+        "index": 33,
+        "lean_route_estimate": 24,
+        "finite_computation_estimate": 12,
+        "verified_partial_progress_prior": 26,
+        "verified_novel_resolution_prior": 4.4,
+        "lean_route_available": true,
+        "statement_clear": true,
+        "calibration": "uncalibrated_weak_prior_mvp",
+        "positive_signals": [],
+        "rank": 7
+      },
+      "progress": {
+        "percent": 75,
+        "stage": "Formal proof draft linked",
+        "explanation": "An Aristotle Lean draft is reliably associated with this problem.",
+        "disclaimer": "Research milestone, not the probability of solving the problem and not mathematical distance to a proof.",
+        "milestones": [
+          {
+            "percent": 5,
+            "label": "Queued",
+            "achieved": true
+          },
+          {
+            "percent": 15,
+            "label": "Worker assigned",
+            "achieved": false
+          },
+          {
+            "percent": 20,
+            "label": "Meaning recorded",
+            "achieved": true
+          },
+          {
+            "percent": 30,
+            "label": "Meaning approved",
+            "achieved": true
+          },
+          {
+            "percent": 40,
+            "label": "Approaches explored",
+            "achieved": true
+          },
+          {
+            "percent": 50,
+            "label": "Candidate statement found",
+            "achieved": true
+          },
+          {
+            "percent": 65,
+            "label": "Checked evidence found",
+            "achieved": false
+          },
+          {
+            "percent": 75,
+            "label": "Formal proof draft linked",
+            "achieved": true
+          },
+          {
+            "percent": 88,
+            "label": "Informal and Lean statements matched",
+            "achieved": false
+          },
+          {
+            "percent": 95,
+            "label": "Formally checked candidate",
+            "achieved": false
+          },
+          {
+            "percent": 100,
+            "label": "Released result",
+            "achieved": false
+          }
+        ]
+      }
+    },
+    {
       "problem_id": "erdos-495",
       "number": 495,
       "statement": "Let $\\alpha,\\beta \\in \\mathbb{R}$. Is it true that\\[\\liminf_{n\\to \\infty} n \\| n\\alpha \\| \\| n\\beta\\| =0\\]where $\\|x\\|$ is the distance from $x$ to the nearest integer?",
-      "status": "pending",
-      "worker": null,
+      "status": "leased",
+      "worker": "Erics-MacBook-Pro-8e6d155a:w2",
       "solvability": {
         "available": true,
         "score": 0.367312,
@@ -21321,7 +22436,7 @@
           {
             "percent": 15,
             "label": "Worker assigned",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 20,
@@ -21331,7 +22446,7 @@
           {
             "percent": 30,
             "label": "Meaning approved",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 40,
@@ -21376,7 +22491,7 @@
       "number": 312,
       "statement": "Does there exist some $c>0$ such that, for any $K>1$, whenever $A$ is a sufficiently large finite multiset of positive integers with $\\sum_{n\\in A}\\frac{1}{n}>K$ there exists some $S\\subseteq A$ such that\\[1-e^{-cK} < \\sum_{n\\in S}\\frac{1}{n}\\leq 1?\\]",
       "status": "leased",
-      "worker": "w0",
+      "worker": "Erics-MacBook-Pro-8e6d155a:p9306:w0",
       "solvability": {
         "available": true,
         "score": 0.356723,
@@ -21543,8 +22658,8 @@
       "problem_id": "erdos-949",
       "number": 949,
       "statement": "Let $S\\subset \\mathbb{R}$ be a set containing no solutions to $a+b=c$. Must there be a set $A\\subseteq \\mathbb{R}\\backslash S$ of cardinality continuum such that $A+A\\subseteq \\mathbb{R}\\backslash S$?",
-      "status": "pending",
-      "worker": null,
+      "status": "leased",
+      "worker": "Erics-MacBook-Pro-8e6d155a:p9306:w1",
       "solvability": {
         "available": true,
         "score": 0.352329,
@@ -21560,9 +22675,9 @@
         "rank": 11
       },
       "progress": {
-        "percent": 40,
-        "stage": "Approaches explored",
-        "explanation": "At least one proof or counterexample approach was attempted.",
+        "percent": 50,
+        "stage": "Candidate statement found",
+        "explanation": "The run produced a concrete lemma or intermediate claim.",
         "disclaimer": "Research milestone, not the probability of solving the problem and not mathematical distance to a proof.",
         "milestones": [
           {
@@ -21573,7 +22688,7 @@
           {
             "percent": 15,
             "label": "Worker assigned",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 20,
@@ -21583,7 +22698,7 @@
           {
             "percent": 30,
             "label": "Meaning approved",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 40,
@@ -21593,7 +22708,7 @@
           {
             "percent": 50,
             "label": "Candidate statement found",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 65,
@@ -21627,8 +22742,8 @@
       "problem_id": "erdos-1049",
       "number": 1049,
       "statement": "Let $t>1$ be a rational number. Is\\[\\sum_{n=1}^\\infty\\frac{1}{t^n-1}=\\sum_{n=1}^\\infty \\frac{\\tau(n)}{t^n}\\]irrational, where $\\tau(n)$ counts the divisors of $n$?",
-      "status": "pending",
-      "worker": null,
+      "status": "retained",
+      "worker": "Erics-MacBook-Pro-8e6d155a:p9306:w2",
       "solvability": {
         "available": true,
         "score": 0.352329,
@@ -21644,9 +22759,9 @@
         "rank": 12
       },
       "progress": {
-        "percent": 5,
-        "stage": "Queued",
-        "explanation": "The problem is in the campaign.",
+        "percent": 40,
+        "stage": "Approaches explored",
+        "explanation": "At least one proof or counterexample approach was attempted.",
         "disclaimer": "Research milestone, not the probability of solving the problem and not mathematical distance to a proof.",
         "milestones": [
           {
@@ -21662,17 +22777,17 @@
           {
             "percent": 20,
             "label": "Meaning recorded",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 30,
             "label": "Meaning approved",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 40,
             "label": "Approaches explored",
-            "achieved": false
+            "achieved": true
           },
           {
             "percent": 50,

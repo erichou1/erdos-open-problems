@@ -23,8 +23,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-import psycopg
-
 from egmra.corpus.sources import from_erdos_number
 from egmra.orchestrator.campaign import PostgresCampaignStore
 
@@ -316,28 +314,29 @@ def build() -> dict[str, Any]:
     dsn = os.environ.get("EGMRA_POSTGRES_DSN")
     if not dsn:
         raise RuntimeError("EGMRA_POSTGRES_DSN is required (source egmra.keys.sh)")
-    columns = (
-        "problem_id", "status", "attempts", "worker", "result_state",
-        "lease_expires_at", "updated_at", "campaign",
-    )
-    with psycopg.connect(dsn) as connection:
-        result = connection.execute(
-            "SELECT problem_id, status, attempts, worker, result_state, "
-            "lease_expires_at, updated_at, campaign "
-            "FROM problem_status WHERE campaign=%s",
-            (CAMPAIGN,),
-        ).fetchall()
-    assignments = {
-        str(dict(zip(columns, row))["problem_id"]): dict(zip(columns, row))
-        for row in result
-    }
-    # Read the same signed body through the production store adapter — never
-    # trust raw machine metadata without verifying its HMAC.
+    # One atomic HMAC-verified read for BOTH assignments and machines. Reading
+    # assignments from the SQL view and machines from a later store read can
+    # straddle a complete→next-lease transition and briefly make one slot look
+    # assigned to two problems. One body gives a coherent point-in-time view.
     campaign_store = PostgresCampaignStore(dsn, name=CAMPAIGN)
     try:
         campaign_body = campaign_store.read() or {}
     finally:
         campaign_store.close()
+    assignments = {}
+    for problem_id, raw in dict(campaign_body.get("assignments") or {}).items():
+        record = dict(raw)
+        lease_value = float(record.get("lease_expires_at", 0.0) or 0.0)
+        assignments[str(problem_id)] = {
+            **record,
+            "problem_id": str(problem_id),
+            "worker": record.get("worker_id") or None,
+            "lease_expires_at": (
+                datetime.fromtimestamp(lease_value, timezone.utc)
+                if lease_value else None),
+            "updated_at": None,
+            "campaign": campaign_body.get("campaign_id", CAMPAIGN),
+        }
     machine_records = dict(campaign_body.get("machines") or {})
 
     outcomes = _outcomes()
@@ -423,7 +422,8 @@ def build() -> dict[str, Any]:
                                  if problem.get("latest_state"))
     workers = [{"worker": problem["worker"], "problem_id": problem["problem_id"],
                 "number": problem["number"], "status": problem["status"]}
-               for problem in problems if problem.get("worker")]
+               for problem in problems
+               if problem["status"] == "leased" and problem.get("worker")]
     now_ts = datetime.now(timezone.utc).timestamp()
     machines: list[dict[str, Any]] = []
     for machine_id, record in sorted(machine_records.items()):
@@ -439,7 +439,8 @@ def build() -> dict[str, Any]:
         worker_ids = [str(value) for value in record.get("worker_ids", ())]
         current_problems = [
             problem["problem_id"] for problem in problems
-            if problem.get("worker") in worker_ids
+            if problem["status"] == "leased"
+            and problem.get("worker") in worker_ids
         ]
         machines.append({
             "machine_id": machine_id,
