@@ -623,7 +623,9 @@ def _formal_target_block(formal_target: str) -> str:
 # the transcript afterwards.
 _REASONING_TAIL = (
     "Reason rigorously in prose — do NOT emit JSON; a separate extraction "
-    "step will structure your output afterwards. State candidate lemmas "
+    "step will structure your output afterwards. Think as long and as deeply "
+    "as you need — extended reasoning measured in hours is welcome on hard "
+    "targets; never cut reasoning short to answer quickly. State candidate lemmas "
     "explicitly (with any dependencies between them), describe finite "
     "experiments or SAT leaves precisely with their exact data (a decisive "
     "experiment checks the TARGET itself on a bounded domain — lemma-bound "
@@ -906,7 +908,12 @@ def branch_prompt(statement: str, *, role: str, branch_id: str, packet_summary: 
     return (
         f"You are an EGMRA research worker in the role '{role}' working branch "
         f"'{branch_id}'. {_role_directive(role)} Reason rigorously about the "
-        "target below.\n\n"
+        "target below.\n"
+        "DEPTH OVER SPEED: this is open mathematical research, not a chat "
+        "reply. Think as long and as deeply as you need — extended reasoning "
+        "measured in hours is welcome and expected on hard targets; a single "
+        "deep, coherent attack beats several shallow passes. Do not cut "
+        "reasoning short to answer quickly.\n\n"
         f"TARGET STATEMENT:\n{statement}\n\n"
         + _exact_model_block(exact_model)
         + _family_guidance_block(branch_id)

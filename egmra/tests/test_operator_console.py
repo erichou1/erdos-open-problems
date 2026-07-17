@@ -69,6 +69,19 @@ def test_campaign_command_preserves_current_allocation_and_contains_no_secrets(t
     assert "egmra.keys.sh" not in joined
 
 
+def test_deep_thinking_defaults_flow_into_the_campaign_command(tmp_path):
+    config = _load_config(tmp_path)
+    assert config["browser_response_timeout_s"] == 7200   # hours-long thinking
+    assert config["free_reasoning"] is True
+    command = build_campaign_command(config, tmp_path)
+    joined = " ".join(command)
+    assert "--extraction-provider browser" in joined       # keyless two-call
+    # Free reasoning is a config choice, not hardwired.
+    config["free_reasoning"] = False
+    assert "--extraction-provider" not in " ".join(
+        build_campaign_command(config, tmp_path))
+
+
 def test_current_lane_is_not_overridden_by_legacy_solvability_sort(tmp_path):
     config = _load_config(tmp_path)
     config["triage_lane"] = "current"

@@ -242,17 +242,25 @@ def _build_runner(provider: str, *, throttle: "SharedThrottle | None" = None):
 
 
 def _browser_response_timeout() -> float:
-    """Per-exchange browser response timeout (deep reasoning can exceed 5 min).
+    """Per-exchange browser response wait — the DEEP-THINKING ceiling.
 
-    Override with ``EGMRA_BROWSER_RESPONSE_TIMEOUT_S``; the default matches the
-    proven legacy think-timeout of 600s. Bounded to a sane operator range.
+    Every public breakthrough case (CDC, Kerger, Dobriban's BH disproof)
+    involved the model reasoning for 30 minutes to multiple hours on one
+    prompt. The old 600s default actively PUNISHED that: a Pro/thinking model
+    that reasoned past 10 minutes was cut off, retried 3×, and the round was
+    discarded as a provider outage — the pipeline structurally selected for
+    shallow answers. The wait is passive polling (the lease heartbeat renews
+    throughout), so a long ceiling costs nothing when replies come back
+    quickly and simply ALLOWS deep reasoning when the operator selects a
+    thinking model in the ChatGPT UI. Override with
+    ``EGMRA_BROWSER_RESPONSE_TIMEOUT_S`` (clamped 60-14400).
     """
     raw = os.environ.get("EGMRA_BROWSER_RESPONSE_TIMEOUT_S", "").strip()
     try:
-        value = float(raw) if raw else 600.0
+        value = float(raw) if raw else 7200.0
     except ValueError:
-        return 600.0
-    return min(3600.0, max(60.0, value))
+        return 7200.0
+    return min(14400.0, max(60.0, value))
 
 
 def _liveness_watchdog_seconds() -> float:
@@ -542,18 +550,34 @@ def _build_dev_lean_service(args: argparse.Namespace):
 
 
 def _build_extraction_runner(args: argparse.Namespace):
-    """Optional cheap attested extractor for the two-call mode (report R7).
+    """Optional extractor for the two-call mode (report R7).
 
     Returns None when unconfigured — the default stays the single structured
     call. The extractor is clerical: it structures the main model's
     transcript and can never add mathematical content on its own authority.
+
+    ``browser`` (no API key needed) returns the sentinel ``"browser"``: the
+    caller resolves it to the worker's OWN browser runner, so the MAIN call
+    reasons freely in prose (no JSON format pressure — the regime every
+    public breakthrough prompt ran in) and a second browser exchange does the
+    clerical JSON extraction. Recorded mathematician identity stays the main
+    model's either way.
     """
     provider = getattr(args, "extraction_provider", None)
     if not provider:
         return None
+    if provider == "browser":
+        return "browser"
     from egmra.agents.api_runner import build_api_runner
 
     return build_api_runner(provider)
+
+
+def _resolve_extraction_runner(configured, worker_runner):
+    """Map the ``browser`` sentinel to this worker's own runner."""
+    if configured == "browser":
+        return worker_runner
+    return configured
 
 
 def _build_formalizer(args: argparse.Namespace):
@@ -794,7 +818,8 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
         max_rounds=worker_rounds,
         formal_target=formal_target,
         dev_lean_service=dev_lean_service,
-        extractor_runner=_build_extraction_runner(args),
+        extractor_runner=_resolve_extraction_runner(
+            _build_extraction_runner(args), runner),
     )
     informal_reviewers = _build_hostile_reviewers(
         hostile_review, getattr(args, "hostile_review_provider", None), runner)
@@ -2576,7 +2601,8 @@ def cmd_campaign(args: argparse.Namespace) -> int:
                               formal_target=problem_formal_target,
                               max_rounds=problem_rounds,
                               dev_lean_service=campaign_dev_lean,
-                              extractor_runner=_build_extraction_runner(args))
+                              extractor_runner=_resolve_extraction_runner(
+                                  _build_extraction_runner(args), worker_runner))
         # Kernel-verdict cache + lemma sealing: identical re-checks replay the
         # ORIGINAL signed certificate (its own HMAC re-verified on load; any
         # mismatch falls open to a live kernel check), and every PASSING lemma
@@ -3108,10 +3134,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
     run.add_argument(
         "--extraction-provider", default=None,
-        choices=("openai-api", "deepseek-api", "anthropic-api"),
-        help="two-call mode (report R7): the main provider reasons freely and "
-             "this cheap attested API model extracts the schema JSON from the "
-             "transcript; extraction is clerical and adds no content "
+        choices=("browser", "openai-api", "deepseek-api", "anthropic-api"),
+        help="two-call mode (report R7): the main provider reasons freely "
+             "(prose, no JSON format pressure — the regime the public "
+             "breakthrough prompts ran in) and this extractor structures the "
+             "transcript into schema JSON afterwards; extraction is clerical "
+             "and adds no content. 'browser' reuses the worker's own browser "
+             "tab for extraction — no API key needed "
              "(default: off, single structured call)",
     )
     run.add_argument(
@@ -3289,7 +3318,8 @@ def build_parser() -> argparse.ArgumentParser:
                           help="warm DEVELOPMENT Lean REPL command (shared across "
                                "workers); same semantics as 'egmra run --lean-dev-repl'")
     campaign.add_argument("--extraction-provider", default=None,
-                          choices=("openai-api", "deepseek-api", "anthropic-api"),
+                          choices=("browser", "openai-api", "deepseek-api",
+                                   "anthropic-api"),
                           help="two-call reasoning/extraction split; same semantics "
                                "as 'egmra run --extraction-provider'")
     campaign.add_argument("--checkpoint-dir", type=Path, default=None,

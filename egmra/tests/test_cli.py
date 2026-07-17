@@ -48,6 +48,50 @@ def test_liveness_watchdog_seconds_clamps_and_disables(monkeypatch):
     assert _liveness_watchdog_seconds() == 600.0      # falls back to default
 
 
+# ── deep thinking: response ceiling + keyless free-reasoning extraction ──────
+
+
+def test_browser_response_timeout_allows_hours_of_thinking(monkeypatch):
+    # Public breakthrough cases reasoned 30 min - 2 h+ on one prompt; the old
+    # 600s default cut a thinking model off and discarded the round. The
+    # default must comfortably cover multi-hour reasoning.
+    from egmra.cli import _browser_response_timeout
+    monkeypatch.delenv("EGMRA_BROWSER_RESPONSE_TIMEOUT_S", raising=False)
+    assert _browser_response_timeout() == 7200.0
+    monkeypatch.setenv("EGMRA_BROWSER_RESPONSE_TIMEOUT_S", "600")
+    assert _browser_response_timeout() == 600.0       # operator may lower it
+    monkeypatch.setenv("EGMRA_BROWSER_RESPONSE_TIMEOUT_S", "999999")
+    assert _browser_response_timeout() == 14400.0     # ceiling 4 h
+    monkeypatch.setenv("EGMRA_BROWSER_RESPONSE_TIMEOUT_S", "1")
+    assert _browser_response_timeout() == 60.0        # floor
+    monkeypatch.setenv("EGMRA_BROWSER_RESPONSE_TIMEOUT_S", "junk")
+    assert _browser_response_timeout() == 7200.0
+
+
+def test_browser_extraction_provider_reuses_the_worker_runner():
+    from egmra.cli import _build_extraction_runner, _resolve_extraction_runner
+
+    browser_args = argparse.Namespace(extraction_provider="browser")
+    sentinel = _build_extraction_runner(browser_args)
+    assert sentinel == "browser"                       # no API key touched
+    worker_runner = object()
+    assert _resolve_extraction_runner(sentinel, worker_runner) is worker_runner
+    # Unconfigured stays None; None resolves to None (single structured call).
+    none_args = argparse.Namespace(extraction_provider=None)
+    assert _build_extraction_runner(none_args) is None
+    assert _resolve_extraction_runner(None, worker_runner) is None
+
+
+def test_prompts_invite_deep_thinking():
+    from egmra.orchestrator.runner_worker import _REASONING_TAIL, branch_prompt
+
+    prompt = branch_prompt("S", role="prover", branch_id="b1", packet_summary="")
+    assert "DEPTH OVER SPEED" in prompt
+    assert "measured in hours" in prompt
+    assert "Do not cut" in prompt
+    assert "measured in hours" in _REASONING_TAIL
+
+
 def _signed_policy_file(tmp_path, *, promotion: bool = False):
     flags = {
         "claim_graph": True,
