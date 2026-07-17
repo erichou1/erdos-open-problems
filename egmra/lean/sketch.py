@@ -54,6 +54,12 @@ _DECL_RE = re.compile(
     re.MULTILINE,
 )
 _TOKEN_RE = re.compile(r"[A-Za-z0-9_]+")
+# Explicit formalization-friendly weakenings, recorded in the sketch itself
+# (`-- DIVERGENCE: <what was weakened and why>`). The strongest public
+# verification records keep exactly this fidelity note machine-readable so a
+# kernel-checked weaker statement is never silently conflated with the
+# informal target.
+_DIVERGENCE_RE = re.compile(r"^[ \t]*--[ \t]*DIVERGENCE:[ \t]*(.+)$", re.MULTILINE)
 
 
 @dataclass(frozen=True)
@@ -82,6 +88,7 @@ class SketchReport:
     children: tuple[SketchChild, ...] = ()
     rejected_children: tuple[str, ...] = ()     # circularity rejections
     problems: tuple[str, ...] = ()              # structural contract violations
+    divergences: tuple[str, ...] = ()           # recorded formalization weakenings
     compiled: bool | None = None                # None = no dev service ran
     dev_sorries: int | None = None
     dev_messages: tuple[str, ...] = ()
@@ -103,6 +110,7 @@ class SketchReport:
             "obligations": [c.to_obligation() for c in self.children],
             "rejected_children": list(self.rejected_children),
             "problems": list(self.problems),
+            "divergences": list(self.divergences),
             "compiled": self.compiled,
             "dev_sorries": self.dev_sorries,
             "dev_messages": list(self.dev_messages),
@@ -184,6 +192,8 @@ def validate_sketch(source: str, *, problem_id: str, target_declaration: str,
         children=tuple(children),
         rejected_children=tuple(rejected),
         problems=tuple(problems),
+        divergences=tuple(
+            " ".join(note.split()) for note in _DIVERGENCE_RE.findall(text)[:12]),
     )
 
 

@@ -220,7 +220,12 @@ def run_kernel_check(
         driver_path = Path(tmp) / "EgmraKernelCheck.lean"
         driver_path.write_text(driver, encoding="utf-8")
         try:
-            completed = lake_runner(["env", "lean", str(driver_path)], lean_project)
+            # --trust=0: replay at trust level zero so the kernel accepts
+            # nothing on faith from compiled reductions (the strictest replay
+            # the toolchain offers — the same flag the strongest public
+            # verification records use for their final checks).
+            completed = lake_runner(
+                ["env", "lean", "--trust=0", str(driver_path)], lean_project)
         except Exception as exc:  # noqa: BLE001 - a failed replay is a rejection
             return _rejection(f"kernel runner failed: {exc}", source_tree_hash=source_tree_hash)
 

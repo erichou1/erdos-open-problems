@@ -137,8 +137,14 @@ def build_formalization_prompt(*, declaration_name: str, expected_type: str,
         "Requirements:\n"
         f"- The declaration MUST be named `{declaration_name}` and have EXACTLY the "
         "type above (do not weaken, generalize, or restate it).\n"
-        "- Do NOT use `sorry`, `admit`, `native_decide`, or any axiom beyond "
-        "Mathlib's classical logic.\n"
+        "- Do NOT use `sorry`, `admit`, `native_decide`, `partial`, `opaque`, "
+        "`unsafe`, `@[extern]`, `@[implemented_by]`, or any axiom beyond "
+        "Mathlib's classical logic — the proof is replayed at kernel trust "
+        "level zero and its axiom closure is audited.\n"
+        "- Work library-first: search Mathlib for the closest existing lemmas "
+        "before proving anything from scratch; when an intermediate estimate "
+        "is needed, prove the weakest version with explicit slack that still "
+        "closes the goal rather than the sharpest available bound.\n"
         "- Return only Lean source."
         + repair
     )

@@ -595,6 +595,20 @@ def sketch_prompt(statement: str, *, formal_target: str,
         "genuinely easier and independently provable; the decomposition will "
         "be machine-checked by compiling this sketch, and each child becomes "
         "a separate formal obligation. Do not claim anything is proved.\n"
+        "MATHLIB COVERAGE RULE: decompose along what Mathlib can already "
+        "prove. If the natural argument needs infrastructure Mathlib lacks "
+        "(e.g. specialized inequalities, measure-geometric machinery), choose "
+        "an explicitly weaker or reparameterized child that existing lemmas "
+        "reach, and record each such choice on its own comment line "
+        "`-- DIVERGENCE: <what was weakened and why>`. A kernel-checked "
+        "weaker bound beats an unformalizable sharp one.\n"
+        "SLACK RULE: state numeric constants and exponents in children with "
+        "explicit slack — the weakest constant that still lets the parent "
+        "proof close — never the tightest constant of the informal argument; "
+        "slack absorbs estimate losses discovered during proving.\n"
+        "NOTATION: precede children with `-- NOTATION:` comment lines mapping "
+        "each informal object to its Lean representation, so reviewers can "
+        "audit the encoding at a glance.\n"
     )
 
 

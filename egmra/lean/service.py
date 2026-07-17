@@ -32,6 +32,18 @@ DEFAULT_AXIOM_WHITELIST = frozenset({"propext", "Quot.sound", "Classical.choice"
 FORBIDDEN_AXIOMS = frozenset({"sorryAx"})
 # Kernel-bypassing native mechanisms are forbidden for release (or external).
 NATIVE_MECHANISMS = ("native_decide", "implemented_by", "unsafe ")
+# Line-anchored escape-hatch declarations, matching the strongest public
+# production-source scan (Kerger zero-order-bounds verification record):
+# `axiom` adds unproved assumptions, `opaque`/`partial` introduce constants
+# the kernel cannot unfold, and `@[extern]`/`@[implemented_by]` swap in
+# unchecked native code. The axiom closure catches declared axioms too — this
+# scan is defense in depth that also names the offending line.
+_ESCAPE_DECL_RE = re.compile(
+    r"^[ \t]*(?:@\[[^\]]*\][ \t]*)?(?:private\s+|protected\s+|noncomputable\s+)*"
+    r"(axiom|opaque|unsafe|partial)\b",
+    re.MULTILINE,
+)
+_ESCAPE_ATTR_RE = re.compile(r"@\[\s*(extern|implemented_by)\b")
 LOCAL_KERNEL_METHOD = "local_lean_kernel"
 _MIN_CHECKER_KEY_BYTES = 32
 
@@ -72,7 +84,12 @@ def has_placeholder(source: str) -> bool:
 
 def native_findings(source: str) -> list[str]:
     stripped = strip_comments(source)
-    return [m for m in NATIVE_MECHANISMS if m.strip() in stripped]
+    findings = [m for m in NATIVE_MECHANISMS if m.strip() in stripped]
+    findings += [f"{kw} declaration" for kw in _ESCAPE_DECL_RE.findall(stripped)]
+    findings += [f"@[{attr}] attribute" for attr in _ESCAPE_ATTR_RE.findall(stripped)]
+    # De-duplicate while preserving order (e.g. `unsafe ` + `unsafe` decl).
+    seen: set[str] = set()
+    return [f for f in findings if not (f in seen or seen.add(f))]
 
 
 def declared_axioms(source: str) -> list[str]:
