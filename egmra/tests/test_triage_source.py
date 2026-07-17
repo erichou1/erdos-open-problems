@@ -12,7 +12,7 @@ from pathlib import Path
 
 import pytest
 
-from ranking_queue import build_queue_projection
+from egmra.ranking_queue import build_queue_projection
 
 from egmra.orchestrator.triage_source import (
     TriageSourceError,

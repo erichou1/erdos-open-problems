@@ -7,7 +7,7 @@ from unittest import mock
 from pathlib import Path
 
 from erdos_ingest import CATALOG_URL, ingest_corpus
-from ranking_queue import load_queue_projection
+from egmra.ranking_queue import load_queue_projection
 from erdos_searcher import (
     DEFAULT_BUDGET,
     append_ledger,

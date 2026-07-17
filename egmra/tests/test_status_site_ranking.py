@@ -5,7 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from ranking_queue import build_queue_projection
+from egmra.ranking_queue import build_queue_projection
 from status_site.build_data import build_public_ranking
 
 

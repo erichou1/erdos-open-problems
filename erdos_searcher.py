@@ -56,7 +56,7 @@ from ranking_policy import (
     classify_prize,
     selection_priority_tier,
 )
-from ranking_queue import QUEUE_FILENAME, write_queue_projection
+from egmra.ranking_queue import QUEUE_FILENAME, write_queue_projection
 from run_contract import (
     RunContractError,
     canonical_json,

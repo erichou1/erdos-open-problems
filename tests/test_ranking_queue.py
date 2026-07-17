@@ -5,7 +5,7 @@ import json
 
 import pytest
 
-from ranking_queue import (
+from egmra.ranking_queue import (
     QueueProjectionError,
     build_queue_projection,
     load_queue_projection,

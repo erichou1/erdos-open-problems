@@ -4,7 +4,7 @@
 
 **Goal:** Publish one compact, integrity-checked literature/prize allocation that coordinated EGMRA restarts and the public website both consume.
 
-**Architecture:** A new `ranking_queue.py` module owns deterministic queue projection and validation. The searcher emits that projection, campaign startup atomically adopts it without touching active or terminal work, and the status publisher renders the same order and fields. The compact projection is committed and pushed; the complete 42 MB audit artifact remains local.
+**Architecture:** A new `egmra/ranking_queue.py` module owns deterministic queue projection and validation. The searcher emits that projection, campaign startup atomically adopts it without touching active or terminal work, and the status publisher renders the same order and fields. The compact projection is committed and pushed; the complete 42 MB audit artifact remains local.
 
 **Tech Stack:** Python 3.12+, pytest, signed EGMRA campaign stores, static HTML/JavaScript, Git, GitHub, Vercel status feed.
 
@@ -24,7 +24,7 @@
 ### Task 1: Compact queue projection boundary
 
 **Files:**
-- Create: `ranking_queue.py`
+- Create: `egmra/ranking_queue.py`
 - Create: `tests/test_ranking_queue.py`
 
 **Interfaces:**
@@ -114,7 +114,7 @@ Expected: all projection tests pass.
 - [ ] **Step 5: Commit the projection boundary**
 
 ```bash
-git add ranking_queue.py tests/test_ranking_queue.py
+git add egmra/ranking_queue.py tests/test_ranking_queue.py
 git commit -m "feat: publish compact ranked queue projection"
 ```
 

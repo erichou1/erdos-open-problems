@@ -22,7 +22,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
-from ranking_queue import (
+from egmra.ranking_queue import (
     QUEUE_FILENAME,
     QueueProjectionError,
     load_queue_projection,

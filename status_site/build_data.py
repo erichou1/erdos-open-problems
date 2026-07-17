@@ -19,16 +19,21 @@ import glob
 import json
 import os
 import re
+import sys
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-from egmra.corpus.sources import from_erdos_number
-from egmra.orchestrator.campaign import PostgresCampaignStore
-from ranking_queue import QUEUE_FILENAME, load_queue_projection
-
 
 ROOT = Path(__file__).resolve().parents[1]
+if str(ROOT) not in sys.path:
+    sys.path.insert(0, str(ROOT))
+
+from egmra.corpus.sources import from_erdos_number
+from egmra.orchestrator.campaign import PostgresCampaignStore
+from egmra.ranking_queue import QUEUE_FILENAME, load_queue_projection
+
+
 SITE_ROOT = ROOT / "status_site"
 CAMPAIGN = os.environ.get("EGMRA_STATUS_CAMPAIGN", "shared-current-v1")
 GITHUB_BRANCH = "audit/egmra-independent-remediation-20260713"

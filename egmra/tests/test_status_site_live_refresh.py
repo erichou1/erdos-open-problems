@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import subprocess
 import sys
 from pathlib import Path
 
@@ -70,3 +71,16 @@ def test_clients_do_not_reuse_an_expired_immutable_status_ref_after_api_failure(
     for name in ("app.js", "ranking.js"):
         javascript = (SITE / name).read_text(encoding="utf-8")
         assert "if(cached?.sha)return immutableDataUrl(cached.sha);" not in javascript
+
+
+def test_snapshot_builder_can_run_as_a_direct_script():
+    result = subprocess.run(
+        [sys.executable, str(SITE / "build_data.py"), "--help"],
+        cwd=ROOT,
+        check=False,
+        text=True,
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+    )
+
+    assert result.returncode == 0, result.stdout

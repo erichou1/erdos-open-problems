@@ -16,7 +16,7 @@ from egmra.policy import load_policy, sign_policy
 from egmra.provenance.hashing import sha256_hex
 from egmra.truth.entities import IntentCertificate, Verdict
 from egmra.truth.events import EventLog
-from ranking_queue import build_queue_projection
+from egmra.ranking_queue import build_queue_projection
 
 
 def _signed_policy_file(tmp_path, *, promotion: bool = False):
