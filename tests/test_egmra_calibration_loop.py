@@ -144,7 +144,16 @@ def test_refresh_ranking_command_writes_report_and_rebuilds(tmp_path, capsys,
         seen.update(root=searcher_root, output=output_root,
                     calibration=Path(calibration_path))
         return {"eligible_problems": 591, "snapshot_id": "snap-1",
-                "egmra_calibration": {"enabled": True}}
+                "egmra_calibration": {"enabled": True},
+                "ranking_pipeline": {
+                    "policy_version": "egmra-ranking-pipeline-v1",
+                    "content_sha256": "a" * 64,
+                    "selected_count": 25,
+                    "stages": [
+                        {"stage": "validate", "status": "passed"},
+                        {"stage": "allocate", "status": "passed"},
+                    ],
+                }}
 
     monkeypatch.setattr(cli_module, "_build_searcher_for_refresh", fake_build)
     rc = cli_module.main(["refresh-ranking", "--outcomes", str(ledger),
@@ -153,10 +162,120 @@ def test_refresh_ranking_command_writes_report_and_rebuilds(tmp_path, capsys,
     assert rc == 0
     summary = json.loads(capsys.readouterr().out)
     assert summary["eligible_problems"] == 591
+    assert summary["ranking_pipeline"] == {
+        "policy_version": "egmra-ranking-pipeline-v1",
+        "content_sha256": "a" * 64,
+        "selected_count": 25,
+        "stages": [
+            {"stage": "validate", "status": "passed"},
+            {"stage": "allocate", "status": "passed"},
+        ],
+    }
     # the derived calibration report was written where the searcher reads it
     report = json.loads(seen["calibration"].read_text())
     assert report["by_problem"]["erdos-312"]["attempts"] == 1
     assert seen["calibration"].parent.name == "labels"
+
+
+def test_build_searcher_refresh_inherits_exact_current_allocation_contract(
+        tmp_path, monkeypatch):
+    from egmra.ranking_queue import write_queue_projection
+
+    output = tmp_path / "triage"
+    rankings = output / "rankings"
+    context_id = "c" * 64
+    ranking_hash = "d" * 64
+    complete_ranking = {
+        "allocation_status": "ready",
+        "allocation_context_id": context_id,
+        "ranking_content_sha256": ranking_hash,
+        "source_snapshot_id": "snapshot-1",
+        "source_snapshot_sha256": "e" * 64,
+        "prize_policy_version": "p1",
+        "literature_policy_version": "l1",
+        "literature_model_version": "m1",
+        "literature_coverage": {},
+        "corpus_integrity": {"status": "complete"},
+        "attempt_exclusions": [],
+        "allocation_queue": [{
+            "problem_id": "erdos-1", "problem_number": 1,
+            "allocation_rank": 1, "allocation_lane": "exploitation",
+            "prize": "no", "prize_status": "unpaid",
+            "selection_priority_tier": 0,
+            "literature_coverage_status": "partial",
+            "base_acquisition_score": 0.1, "literature_adjustment": 0.0,
+            "selection_score": 0.1, "reason_selected": "test",
+        }],
+    }
+    write_queue_projection(rankings / "current_queue.json", complete_ranking)
+    immutable = rankings / "contexts" / context_id / f"{ranking_hash}.json"
+    immutable.parent.mkdir(parents=True)
+    immutable.write_text(json.dumps({
+        "allocation_context_id": context_id,
+        "ranking_content_sha256": ranking_hash,
+        "model_portfolio": "chatgpt-5.6",
+        "budget": "verified_pipeline_v2:test",
+        "allocation_context": {
+            "model_portfolio": "chatgpt-5.6",
+            "budget": "verified_pipeline_v2:test",
+            "budget_config": {"prover_calls": 1, "verifier_calls": 1,
+                              "literature_calls": 1, "max_iterations": 1},
+        },
+    }))
+    captured = {}
+
+    def fake_searcher(root, output_root, **kwargs):
+        captured.update(kwargs)
+        return {"ok": True}
+
+    import erdos_searcher
+    monkeypatch.setattr(erdos_searcher, "build_searcher", fake_searcher)
+    result = cli_module._build_searcher_for_refresh(
+        tmp_path, output, snapshot_date="2026-07-17", top_k=25,
+        calibration_path=tmp_path / "calibration.json")
+    assert result == {"ok": True}
+    assert captured["model_portfolio"] == "chatgpt-5.6"
+    assert captured["budget"] == "verified_pipeline_v2:test"
+    assert captured["budget_config"]["max_iterations"] == 1
+
+
+def test_build_searcher_refresh_rejects_misbound_immutable_contract(
+        tmp_path):
+    from egmra.ranking_queue import write_queue_projection
+
+    output = tmp_path / "triage"
+    rankings = output / "rankings"
+    context_id, ranking_hash = "c" * 64, "d" * 64
+    write_queue_projection(rankings / "current_queue.json", {
+        "allocation_status": "ready", "allocation_context_id": context_id,
+        "ranking_content_sha256": ranking_hash,
+        "source_snapshot_id": "s", "source_snapshot_sha256": "e" * 64,
+        "prize_policy_version": "p", "literature_policy_version": "l",
+        "literature_model_version": "m", "literature_coverage": {},
+        "corpus_integrity": {"status": "complete"}, "attempt_exclusions": [],
+        "allocation_queue": [{
+            "problem_id": "erdos-1", "problem_number": 1,
+            "allocation_rank": 1, "allocation_lane": "exploitation",
+            "prize": "no", "prize_status": "unpaid",
+            "selection_priority_tier": 0,
+            "literature_coverage_status": "partial",
+            "base_acquisition_score": 0.1, "literature_adjustment": 0.0,
+            "selection_score": 0.1, "reason_selected": "test",
+        }],
+    })
+    immutable = rankings / "contexts" / context_id / f"{ranking_hash}.json"
+    immutable.parent.mkdir(parents=True)
+    immutable.write_text(json.dumps({
+        "allocation_context_id": "wrong", "ranking_content_sha256": ranking_hash,
+        "model_portfolio": "chatgpt-5.6", "budget": "b",
+        "allocation_context": {
+            "model_portfolio": "chatgpt-5.6", "budget": "b", "budget_config": {},
+        },
+    }))
+    with pytest.raises(RuntimeError, match="binding mismatch"):
+        cli_module._build_searcher_for_refresh(
+            tmp_path, output, snapshot_date="2026-07-17", top_k=25,
+            calibration_path=tmp_path / "calibration.json")
 
 
 def test_campaign_refresh_ranking_after_runs_the_full_loop(tmp_path, capsys,

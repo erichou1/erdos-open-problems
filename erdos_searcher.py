@@ -57,6 +57,7 @@ from ranking_policy import (
     selection_priority_tier,
 )
 from egmra.ranking_queue import QUEUE_FILENAME, write_queue_projection
+from egmra.ranking_pipeline import build_ranking_plan
 from run_contract import (
     RunContractError,
     canonical_json,
@@ -2538,10 +2539,42 @@ def build_ranking_products(
             record["problem_number"] for record in diverse_records
         },
     )
-    allocation_queue = (
-        interleave_allocation(diverse_records, exploration_records)
+    # First-class ranking pipeline: validate → score → capability-route →
+    # diversity/protected-exploration allocation → audit/hash.  Descriptive
+    # ranking products below remain unchanged; this plan controls only the
+    # campaign allocation queue (search preference, never truth/release).
+    # Use the previous transparent policy (diversified exploitation with a
+    # protected-exploration splice) as the explicit baseline/tie-break. This
+    # makes queue drift measurable against policy, not incidental card order.
+    legacy_allocation = (
+        interleave_allocation(
+            [dict(record) for record in diverse_records],
+            [dict(record) for record in exploration_records])
         if allocation_ready else []
     )
+    ranking_plan = build_ranking_plan(
+        eligible, limit=min(len(eligible), top_k),
+        allocation_ready=allocation_ready,
+        prior_order=[str(row["problem_id"]) for row in legacy_allocation],
+    )
+    cards_by_id = {str(card["problem_id"]): card for card in eligible}
+    decisions_by_id = {
+        str(decision["problem_id"]): decision
+        for decision in ranking_plan.decisions
+    }
+    allocation_queue: list[dict] = []
+    for rank, problem_id in enumerate(ranking_plan.order, 1):
+        decision = decisions_by_id[problem_id]
+        card = cards_by_id[problem_id]
+        record = ranking_record(
+            card, rank,
+            reason=decision["reason"],
+            base_acquisition_score=float(decision["priority_index"]),
+        )
+        record["allocation_lane"] = decision["allocation_lane"]
+        record["lane_rank"] = rank
+        record["allocation_rank"] = rank
+        allocation_queue.append(record)
 
     def uncertain_base(card: dict) -> float:
         interval = card["posterior"]["p_verified_novel_resolution"][
@@ -2608,6 +2641,7 @@ def build_ranking_products(
             solve_oriented=False,
         ),
         "protected_exploration": exploration_records,
+        "ranking_pipeline": ranking_plan.audit,
     }
 
 
@@ -2928,6 +2962,10 @@ def build_searcher(root: Path, output_root: Path, *, snapshot_date: str,
         "subproblem_attack_queue": subproblems,
     }
     (output_root / "rankings").mkdir(parents=True, exist_ok=True)
+    write_json(
+        output_root / "rankings" / "ranking_pipeline.json",
+        rankings["ranking_pipeline"],
+    )
     write_json(output_root / "rankings" / "subproblem_attack_queue.json", subproblems)
     subproblem_lines = [
         "# Explicit Multi-Part Subproblem Queue", "",

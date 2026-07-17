@@ -184,6 +184,39 @@ def build_public_ranking(
     return public
 
 
+def ranking_method_record(queue: dict, ranking_pipeline: dict) -> dict:
+    """Public, credential-free description of the active allocation policy."""
+    pipeline_decisions = ranking_pipeline.get("allocation_decisions") or []
+    lane_counts = dict(sorted(collections.Counter(
+        str(row.get("assigned_lane", "unknown"))
+        for row in pipeline_decisions if isinstance(row, dict)
+    ).items()))
+    return {
+        "name": "Evidence-gated five-stage research allocation",
+        "formula": (
+            "validate → multi-objective scorecard → capability routing → "
+            "domain/lane-diverse allocation with 20% protected exploration → audit"
+        ),
+        "warning": (
+            "Transparent search-order indices, not solution probabilities. "
+            "Every eligible unpaid problem precedes paid targets."
+        ),
+        "ranking_pipeline_policy_version": ranking_pipeline.get("policy_version"),
+        "ranking_pipeline_content_sha256": ranking_pipeline.get("content_sha256"),
+        "ranking_pipeline_stages": [
+            {"stage": row.get("stage"), "status": row.get("status")}
+            for row in (ranking_pipeline.get("stages") or [])
+            if isinstance(row, dict)
+        ],
+        "ranking_pipeline_lane_counts": lane_counts,
+        "ranking_pipeline_stability": ranking_pipeline.get(
+            "stability_vs_input_order"),
+        "projection_policy_version": queue["projection_policy_version"],
+        "projection_content_sha256": queue["projection_content_sha256"],
+        "ranking_content_sha256": queue["ranking_content_sha256"],
+    }
+
+
 def _json_lines(path: Path):
     try:
         for line in path.read_text(encoding="utf-8").splitlines():
@@ -542,6 +575,14 @@ def build() -> dict[str, Any]:
     queue = load_queue_projection(
         ROOT / "triage" / "rankings" / QUEUE_FILENAME
     )
+    ranking_pipeline: dict[str, Any] = {}
+    pipeline_path = ROOT / "triage" / "rankings" / "ranking_pipeline.json"
+    try:
+        candidate = json.loads(pipeline_path.read_text(encoding="utf-8"))
+        if isinstance(candidate, dict) and candidate.get("content_sha256"):
+            ranking_pipeline = candidate
+    except (OSError, json.JSONDecodeError):
+        pass
     public_ranking = build_public_ranking(queue, problems)
     return {
         "generated_at": datetime.now(timezone.utc).isoformat(),
@@ -566,20 +607,7 @@ def build() -> dict[str, Any]:
         "problems": problems,
         "aristotle_artifacts": artifacts,
         "ranking": public_ranking,
-        "ranking_method": {
-            "name": "Literature/prize-aware protected allocation",
-            "formula": (
-                "base acquisition score + bounded literature adjustment; "
-                "protected exploration is interleaved within each prize tier"
-            ),
-            "warning": (
-                "Uncalibrated search preference, not a solution probability. "
-                "Every eligible unpaid problem precedes paid targets."
-            ),
-            "projection_policy_version": queue["projection_policy_version"],
-            "projection_content_sha256": queue["projection_content_sha256"],
-            "ranking_content_sha256": queue["ranking_content_sha256"],
-        },
+        "ranking_method": ranking_method_record(queue, ranking_pipeline),
         "source": {
             "repository": GITHUB_ROOT,
             "branch": GITHUB_BRANCH,

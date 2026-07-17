@@ -1395,8 +1395,54 @@ def _build_searcher_for_refresh(searcher_root: Path, output_root: Path, *,
         sys.path.insert(0, str(root))
     import erdos_searcher
 
+    # A refresh must preserve the exact allocation contract that produced the
+    # current ready queue.  Falling back to build_searcher's
+    # ``chatgpt-ui-unrecorded`` default silently withholds every refreshed
+    # allocation even when the prior queue was valid. Resolve the current
+    # compact projection (strictly validated), then bind to its immutable full
+    # ranking artifact by context + ranking hash. Never guess from filenames or
+    # mutable current.json.
+    from egmra.ranking_queue import QUEUE_FILENAME, load_queue_projection
+
+    rankings_dir = Path(output_root) / "rankings"
+    queue = load_queue_projection(rankings_dir / QUEUE_FILENAME)
+    context_id = str(queue["allocation_context_id"])
+    ranking_hash = str(queue["ranking_content_sha256"])
+    immutable = rankings_dir / "contexts" / context_id / f"{ranking_hash}.json"
+    if immutable.is_symlink() or not immutable.is_file() \
+            or immutable.stat().st_size > 64_000_000:
+        raise RuntimeError(
+            "refresh-ranking cannot resolve the current immutable allocation contract")
+    try:
+        prior = json.loads(immutable.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        raise RuntimeError(
+            "refresh-ranking immutable allocation contract is unreadable") from exc
+    if prior.get("allocation_context_id") != context_id \
+            or prior.get("ranking_content_sha256") != ranking_hash:
+        raise RuntimeError(
+            "refresh-ranking immutable allocation contract binding mismatch")
+    context = prior.get("allocation_context")
+    if not isinstance(context, dict):
+        raise RuntimeError(
+            "refresh-ranking immutable allocation contract has no context body")
+    model_portfolio = str(context.get("model_portfolio", "")).strip()
+    budget = str(context.get("budget", "")).strip()
+    budget_config = context.get("budget_config")
+    if prior.get("model_portfolio") != model_portfolio \
+            or prior.get("budget") != budget:
+        raise RuntimeError(
+            "refresh-ranking allocation context disagrees with ranking identity")
+    if not model_portfolio or "unrecorded" in model_portfolio.lower() \
+            or not budget or not isinstance(budget_config, dict):
+        raise RuntimeError(
+            "refresh-ranking current allocation contract lacks exact model/budget identity")
+
     return erdos_searcher.build_searcher(
         root, Path(output_root), snapshot_date=snapshot_date, top_k=top_k,
+        model_portfolio=model_portfolio,
+        budget=budget,
+        budget_config=budget_config,
         egmra_calibration_path=calibration_path)
 
 
@@ -1422,12 +1468,23 @@ def _refresh_ranking(outcome_paths: list[Path], *, searcher_root: Path,
     rankings = _build_searcher_for_refresh(
         Path(searcher_root), Path(output_root), snapshot_date=snapshot_date,
         top_k=top_k, calibration_path=report_path)
+    pipeline = rankings.get("ranking_pipeline") or {}
     return {
         "calibration_report": str(report_path),
         "calibration_runs": report["total_runs"],
         "eligible_problems": rankings.get("eligible_problems"),
         "snapshot_id": rankings.get("snapshot_id"),
         "egmra_calibration": rankings.get("egmra_calibration"),
+        "ranking_pipeline": {
+            "policy_version": pipeline.get("policy_version"),
+            "content_sha256": pipeline.get("content_sha256"),
+            "selected_count": pipeline.get("selected_count"),
+            "stages": [
+                {"stage": row.get("stage"), "status": row.get("status")}
+                for row in (pipeline.get("stages") or [])
+                if isinstance(row, dict)
+            ],
+        },
     }
 
 

@@ -6,7 +6,7 @@ import json
 from pathlib import Path
 
 from egmra.ranking_queue import build_queue_projection
-from status_site.build_data import build_public_ranking
+from status_site.build_data import build_public_ranking, ranking_method_record
 
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -95,3 +95,30 @@ def test_ranking_page_names_shared_policy_and_renders_projection_fields():
         "selection_score",
     ):
         assert field in javascript
+    assert "ranking_pipeline_lane_counts" in javascript
+
+
+def test_ranking_method_exposes_pipeline_hash_stages_and_lanes():
+    queue = _queue()
+    pipeline = {
+        "policy_version": "egmra-ranking-pipeline-v1",
+        "content_sha256": "d" * 64,
+        "stages": [
+            {"stage": "validate", "status": "passed"},
+            {"stage": "allocate", "status": "passed"},
+        ],
+        "allocation_decisions": [
+            {"assigned_lane": "direct_resolution"},
+            {"assigned_lane": "protected_exploration"},
+            {"assigned_lane": "direct_resolution"},
+        ],
+        "stability_vs_input_order": {"top_k_overlap": 0.4},
+    }
+    method = ranking_method_record(queue, pipeline)
+    assert method["name"] == "Evidence-gated five-stage research allocation"
+    assert method["ranking_pipeline_content_sha256"] == "d" * 64
+    assert method["ranking_pipeline_lane_counts"] == {
+        "direct_resolution": 2, "protected_exploration": 1}
+    assert method["ranking_pipeline_stages"][0] == {
+        "stage": "validate", "status": "passed"}
+    assert "not solution probabilities" in method["warning"]

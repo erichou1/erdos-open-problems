@@ -43,7 +43,8 @@ function ordered(){
 function render(){
   const {campaign,generated_at,ranking_method}=state.data;
   $("#campaignName").textContent=campaign;updateSnapshotStatus();
-  $("#methodNote").innerHTML=`<strong>${esc(ranking_method.name)}</strong><span>${esc(ranking_method.formula)}</span><b>${esc(ranking_method.warning)}</b>`;
+  const lanes=Object.entries(ranking_method.ranking_pipeline_lane_counts||{}).map(([name,count])=>`${name.replaceAll("_"," ")}: ${count}`).join(" · ");
+  $("#methodNote").innerHTML=`<strong>${esc(ranking_method.name)}</strong><span>${esc(ranking_method.formula)}${lanes?`<br>${esc(lanes)}`:""}</span><b>${esc(ranking_method.warning)}</b>`;
   renderRows();
 }
 function renderRows(){

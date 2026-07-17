@@ -519,6 +519,17 @@ class ErdosSearcherTests(unittest.TestCase):
                 "protected_exploration",
             }
             self.assertTrue(expected_rankings <= set(first))
+            pipeline_path = output / "rankings" / "ranking_pipeline.json"
+            self.assertTrue(pipeline_path.exists())
+            pipeline = json.loads(pipeline_path.read_text())
+            self.assertEqual(
+                pipeline["content_sha256"],
+                first["ranking_pipeline"]["content_sha256"],
+            )
+            self.assertEqual(
+                [stage["stage"] for stage in pipeline["stages"]],
+                ["validate", "score", "route", "allocate", "audit"],
+            )
             for ranking_name in expected_rankings:
                 self.assertTrue((output / "rankings" / f"{ranking_name}.md").exists())
             ranking_card = first["highest_probability_verified_novel_solution"][0]
