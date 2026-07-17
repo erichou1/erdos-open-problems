@@ -92,6 +92,22 @@ def test_async_engine_runs_tabs_concurrently():
         engine.close()
 
 
+def test_response_wait_uses_generation_budget_not_short_bridge_budget():
+    class _SlowResponseDriver(_ConcurrentFakeDriver):
+        async def wait_response(self, page, *, timeout_s):
+            await asyncio.sleep(0.08)
+            return f"slow-{page.index}"
+
+    driver = _SlowResponseDriver(1)
+    # Ordinary bridge calls have a deliberately tiny budget. A model response
+    # with its own larger generation budget must not be killed by that cap.
+    engine = AsyncBrowserEngine(driver, tab_count=1, op_timeout_s=0.02).start()
+    try:
+        assert engine.wait_response(engine.pages[0], timeout_s=0.2) == "slow-0"
+    finally:
+        engine.close()
+
+
 def test_async_engine_rejects_out_of_range_tab_count():
     with pytest.raises(ValueError):
         AsyncBrowserEngine(_ConcurrentFakeDriver(0), tab_count=0)

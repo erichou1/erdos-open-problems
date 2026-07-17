@@ -73,9 +73,13 @@ def test_deep_thinking_defaults_flow_into_the_campaign_command(tmp_path):
     config = _load_config(tmp_path)
     assert config["browser_response_timeout_s"] == 36000  # 10 h: never truncate
     assert config["free_reasoning"] is True
+    assert config["research_iterations"] == 6
+    assert config["worker_rounds"] == 8
     command = build_campaign_command(config, tmp_path)
     joined = " ".join(command)
     assert "--extraction-provider browser" in joined       # keyless two-call
+    assert "--research-iterations 6" in joined
+    assert "--worker-rounds 8" in joined
     # Free reasoning is a config choice, not hardwired.
     config["free_reasoning"] = False
     assert "--extraction-provider" not in " ".join(
@@ -96,6 +100,13 @@ def test_local_config_validates_aristotle_account_slots(tmp_path):
     config = _load_config(tmp_path)
     config["aristotle_max_concurrent"] = 0
     with pytest.raises(console_module.OperatorError, match="Aristotle concurrency"):
+        _save_config(config, tmp_path)
+
+
+def test_local_config_validates_research_iterations(tmp_path):
+    config = _load_config(tmp_path)
+    config["research_iterations"] = 9
+    with pytest.raises(console_module.OperatorError, match="research_iterations"):
         _save_config(config, tmp_path)
 
 

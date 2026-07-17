@@ -42,7 +42,7 @@ class PromptRecordingRunner:
 
 
 def _round_reply(*, claims=(), open_subgoals=(), bottleneck="", falsifiers=(),
-                 regulator_action=None):
+                 proof_steps=(), assumptions=(), regulator_action=None):
     document = {
         "goal_restatement": "restated",
         "claims": [
@@ -51,6 +51,8 @@ def _round_reply(*, claims=(), open_subgoals=(), bottleneck="", falsifiers=(),
             for cid, statement in claims
         ],
         "falsifiers": list(falsifiers),
+        "proof_steps": list(proof_steps),
+        "assumptions": list(assumptions),
         "search_queries": [],
         "candidate_sequences": [],
         "experiments": [],
@@ -181,7 +183,9 @@ def test_continuation_prompt_carries_ledger_subgoals_objections_and_memory():
     runner = PromptRecordingRunner([
         _round_reply(claims=[("lem1", "the key lemma")],
                      open_subgoals=["bound the second moment"],
-                     falsifiers=["objection: variance blow-up"]),
+                     falsifiers=["objection: variance blow-up"],
+                     proof_steps=["Expand the second moment and isolate diagonal terms"],
+                     assumptions=["uniform tail bound for every parameter"]),
         _round_reply(claims=[("lem2", "L2")]),
     ])
     worker = RunnerWorker(runner=runner, goal_claim_id="goal",
@@ -194,6 +198,10 @@ def test_continuation_prompt_carries_ledger_subgoals_objections_and_memory():
     assert "bound the second moment" in round2_prompt
     assert "objection: variance blow-up" in round2_prompt
     assert "greedy packing dead end" in round2_prompt
+    assert "PROOF-DEVELOPMENT LEDGER" in round2_prompt
+    assert "Expand the second moment" in round2_prompt
+    assert "DECLARED ASSUMPTIONS" in round2_prompt
+    assert "uniform tail bound" in round2_prompt
     assert "REPLACE" in round2_prompt
     # Later rounds must never relax the no-self-verification boundary.
     assert "Do NOT assert the target is proved" in round2_prompt

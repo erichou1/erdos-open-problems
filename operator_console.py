@@ -161,7 +161,11 @@ def _default_config(root: Path = ROOT) -> dict[str, Any]:
         "lemma_library": "egmra_lemma_library.jsonl",
         "stop_file": ".egmra_operator/stop-request.json",
         "state_store": "postgres",
-        "worker_rounds": 4,
+        # Long-horizon search ceilings: six independent mechanism families,
+        # each allowed up to eight continuation rounds. Existing stagnation,
+        # blocker, lease, and budget rules still stop unproductive routes.
+        "research_iterations": 6,
+        "worker_rounds": 8,
         "lean_repair_rounds": 2,
         "hostile_review": 2,
         "budget": 100,
@@ -218,6 +222,7 @@ def _save_config(config: dict[str, Any], root: Path = ROOT) -> None:
         raise OperatorError("state store must be 'file' or 'postgres'")
     clean["state_store"] = state_store
     for name, minimum, maximum in (
+        ("research_iterations", 1, 8),
         ("worker_rounds", 1, 8),
         ("lean_repair_rounds", 0, 3),
         ("hostile_review", 0, 4),
@@ -327,6 +332,7 @@ def build_campaign_command(config: dict[str, Any], root: Path = ROOT) -> list[st
         "--triage-lane", str(config["triage_lane"]),
         "--max-problems", str(int(config["max_problems"])),
         "--provider", "browser", "--workers", str(int(config["workers"])),
+        "--research-iterations", str(int(config["research_iterations"])),
         "--worker-rounds", str(int(config["worker_rounds"])),
         "--budget", str(float(config["budget"])),
         "--reviews-dir", str(config["reviews_dir"]),

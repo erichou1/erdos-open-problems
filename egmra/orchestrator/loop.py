@@ -1248,7 +1248,11 @@ def research(
         domain,
         bottleneck=cold_output.bottleneck,
         budget_each=action_budget,
-        max_programs=max(1, min(max_iterations, 3)) if max_iterations else 1,
+        # CDC/Kerger long-horizon search: the old hard cap of three meant
+        # max_iterations > 3 could never run more than three method families.
+        # The caller's bounded max_iterations is already the spend/termination
+        # control; domain compatibility and quality-diversity dedupe remain.
+        max_programs=max(1, min(max_iterations, 8)) if max_iterations else 1,
         # Stratified wave signals (report R2): a community Lean target steers
         # the tool stratum toward formal_library_first; an executable predicate
         # toward computational_finite_reduction.

@@ -68,6 +68,7 @@ def test_run_wires_worker_rounds_and_formal_target(tmp_path, capsys, monkeypatch
 
     def spy(**kwargs):
         captured["worker"] = kwargs["worker"]
+        captured["max_iterations"] = kwargs["max_iterations"]
         return real_research(**kwargs)
 
     monkeypatch.setattr(cli_module, "research", spy)
@@ -75,11 +76,13 @@ def test_run_wires_worker_rounds_and_formal_target(tmp_path, capsys, monkeypatch
                "--statement", "Prove that for all natural numbers n, n = n.",
                "--provider", "deterministic", "--policy", str(policy),
                "--retrieval", "none", "--oeis", "offline",
-               "--worker-rounds", "3", "--formal-target-file", str(lean)])
+               "--worker-rounds", "3", "--research-iterations", "6",
+               "--formal-target-file", str(lean)])
     assert rc == 0
     worker = captured["worker"]
     assert worker.max_rounds == 3
     assert worker.formal_target.startswith("theorem erdos_x")
+    assert captured["max_iterations"] == 6
 
 
 def test_run_rejects_out_of_range_worker_rounds(tmp_path, capsys):
@@ -91,6 +94,17 @@ def test_run_rejects_out_of_range_worker_rounds(tmp_path, capsys):
     assert rc != 0
     captured = capsys.readouterr()
     assert "--worker-rounds" in (captured.err + captured.out)
+
+
+def test_run_rejects_out_of_range_research_iterations(tmp_path, capsys):
+    cfg = _config_file(tmp_path)
+    policy = _signed_policy_file(tmp_path)
+    rc = main(["--config", str(cfg), "run",
+               "--statement", "s", "--provider", "deterministic",
+               "--policy", str(policy), "--research-iterations", "9"])
+    assert rc != 0
+    captured = capsys.readouterr()
+    assert "--research-iterations" in (captured.err + captured.out)
 
 
 def test_repeated_statement_runs_preserve_prior_log_and_start_new_attempt(tmp_path, capsys):

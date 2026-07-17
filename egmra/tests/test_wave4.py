@@ -25,6 +25,7 @@ from egmra.orchestrator.dossier import update_dossier
 from egmra.orchestrator.rerank import PROGRESS_STATES
 from egmra.orchestrator.runner_worker import (
     _CAPABILITY_AND_SCHEMA_TAIL,
+    _MAX_REASONING_TRANSCRIPT_BYTES,
     _normalize_sat_experiment,
     _REASONING_TAIL,
     parse_worker_response,
@@ -153,6 +154,32 @@ def test_two_call_mode_keeps_main_identity_and_repairs_the_extractor():
     # the recorded mathematician is the MAIN model, not the extractor
     assert worker.last_model_identity.model == "recording"
     assert any("malformed_model_output:branch:b1:extract0" in f
+               for f in out.failures)
+
+
+def test_two_call_mode_preserves_reasoning_beyond_old_60k_cutoff():
+    marker = "DECISIVE_END_OF_PROOF_MARKER"
+    transcript = "A" * 65_000 + marker
+    main = PromptRecordingRunner([transcript])
+    extractor = PromptRecordingRunner([
+        _round_reply(claims=[("lem1", "L1", [])])])
+    worker = RunnerWorker(runner=main, goal_claim_id="goal", goal_formula="T",
+                          extractor_runner=extractor)
+    worker.work_branch(None, None, branch_id="b1", budget=5.0,
+                       fencing_token=1)
+    assert marker in extractor.calls[0][1]
+
+
+def test_two_call_mode_rejects_oversize_reasoning_instead_of_truncating():
+    transcript = "x" * (_MAX_REASONING_TRANSCRIPT_BYTES + 1)
+    main = PromptRecordingRunner([transcript])
+    extractor = PromptRecordingRunner([])
+    worker = RunnerWorker(runner=main, goal_claim_id="goal", goal_formula="T",
+                          extractor_runner=extractor)
+    out = worker.work_branch(None, None, branch_id="b1", budget=5.0,
+                             fencing_token=1)
+    assert extractor.calls == []
+    assert any(f.startswith("reasoning_output_too_large:branch:b1")
                for f in out.failures)
 
 

@@ -748,6 +748,9 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
     worker_rounds = int(getattr(args, "worker_rounds", 1) or 1)
     if not 1 <= worker_rounds <= 8:
         raise ValueError("--worker-rounds must be between 1 and 8")
+    research_iterations = int(getattr(args, "research_iterations", 4) or 4)
+    if not 1 <= research_iterations <= 8:
+        raise ValueError("--research-iterations must be between 1 and 8")
     hostile_review = int(getattr(args, "hostile_review", 0) or 0)
     if not 0 <= hostile_review <= 4:
         raise ValueError("--hostile-review must be between 0 and 4")
@@ -857,6 +860,7 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
             expert_review=_load_expert_review(getattr(args, "expert_review", None)),
             explore_blocked=bool(getattr(args, "explore_blocked", False)),
             runner=runner,
+            max_iterations=research_iterations,
         )
     except BrowserProviderUnavailable as exc:
         # Provider throttling/outage is transient: retain the job's durable event
@@ -2251,6 +2255,10 @@ def cmd_campaign(args: argparse.Namespace) -> int:
     campaign_worker_rounds = int(getattr(args, "worker_rounds", 1) or 1)
     if not 1 <= campaign_worker_rounds <= 8:
         raise ValueError("--worker-rounds must be between 1 and 8")
+    campaign_research_iterations = int(
+        getattr(args, "research_iterations", 4) or 4)
+    if not 1 <= campaign_research_iterations <= 8:
+        raise ValueError("--research-iterations must be between 1 and 8")
     campaign_repair_rounds = int(getattr(args, "lean_repair_rounds", 0) or 0)
     if not 0 <= campaign_repair_rounds <= 3:
         raise ValueError("--lean-repair-rounds must be between 0 and 3")
@@ -2669,6 +2677,7 @@ def cmd_campaign(args: argparse.Namespace) -> int:
                     campaign_hostile_review,
                     getattr(args, "hostile_review_provider", None),
                     worker_runner) or None,
+                max_iterations=campaign_research_iterations,
             )
         finally:
             _close_event_log(event_log)
@@ -3101,6 +3110,12 @@ def build_parser() -> argparse.ArgumentParser:
              "(default: 1, single-shot)",
     )
     run.add_argument(
+        "--research-iterations", type=int, default=4,
+        help="distinct mechanism-family branches attempted per problem (1-8). "
+             "Each branch may use --worker-rounds continuation rounds; "
+             "blocked/stagnant routes stop early (default: 4)",
+    )
+    run.add_argument(
         "--hostile-review", type=int, default=0, metavar="N",
         help="run N (0-4) hostile natural-language reviews of the proposed "
              "dependency cone before assembly; passing reviews admit "
@@ -3269,6 +3284,9 @@ def build_parser() -> argparse.ArgumentParser:
     campaign.add_argument("--worker-rounds", type=int, default=1,
                           help="model rounds per mechanism branch (1-8); see "
                                "'egmra run --worker-rounds'")
+    campaign.add_argument("--research-iterations", type=int, default=4,
+                          help="distinct mechanism-family branches per problem "
+                               "(1-8); see 'egmra run --research-iterations'")
     campaign.add_argument("--workers", type=int, default=3,
                           help="bounded worker count (1-5; default 3 — one browser "
                                "tab + one Aristotle formalizer per worker; one "

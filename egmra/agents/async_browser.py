@@ -102,9 +102,10 @@ class AsyncBrowserEngine:
         if not self._started:
             raise RuntimeError("async browser engine has not been started")
 
-    def _await(self, coro: "Any") -> Any:
+    def _await(self, coro: "Any", *, timeout_s: float | None = None) -> Any:
         future = asyncio.run_coroutine_threadsafe(coro, self._loop)
-        return future.result(timeout=self._op_timeout_s)
+        return future.result(
+            timeout=self._op_timeout_s if timeout_s is None else timeout_s)
 
     def start(self) -> "AsyncBrowserEngine":
         if self._started:
@@ -143,7 +144,16 @@ class AsyncBrowserEngine:
 
     def wait_response(self, page: Any, *, timeout_s: float) -> str:
         self._ensure_live()
-        return self._await(self._driver.wait_response(page, timeout_s=timeout_s))
+        # The driver owns the model-generation deadline.  The synchronous
+        # bridge must wait at least that long too: its old fixed 900s timeout
+        # silently killed every multi-tab response after 15 minutes even when
+        # BrowserChatGPTRunner allowed hours.  Keep a small margin for the
+        # driver's final DOM extraction/event-loop scheduling.
+        bridge_timeout = max(self._op_timeout_s, float(timeout_s) + 60.0)
+        return self._await(
+            self._driver.wait_response(page, timeout_s=timeout_s),
+            timeout_s=bridge_timeout,
+        )
 
     def conversation_url(self, page: Any) -> str:
         self._ensure_live()
