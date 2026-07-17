@@ -265,3 +265,100 @@ def test_install_linux_desktop_entry_points_at_checkout(tmp_path):
     assert str(root / "operator_console.py") in text
     assert stat.S_IMODE(desktop.stat().st_mode) == 0o755
     assert "application menu" in message
+
+
+# ── auto-restart supervisor ──────────────────────────────────────────────────
+
+def _supervised_operator(tmp_path, monkeypatch, *, running, campaign_pid=999,
+                         started_at=None, config_overrides=None):
+    """An Operator wired for supervise_once tests (no real launch/ps)."""
+    import time as _time
+
+    root = tmp_path / "repo"
+    root.mkdir(exist_ok=True)
+    _load_config(root)
+    if config_overrides:
+        cfg = _load_config(root)
+        cfg.update(config_overrides)
+        _save_config(cfg, root)
+    # supervise_once reads the module-global STATE_PATH; point it at a tmp file.
+    state_path = root / ".egmra_operator" / "state.json"
+    state_path.parent.mkdir(parents=True, exist_ok=True)
+    if campaign_pid is not None:
+        state_path.write_text(json.dumps({
+            "campaign_pid": campaign_pid,
+            "started_at": started_at if started_at is not None else _time.time(),
+        }))
+    monkeypatch.setattr(console_module, "STATE_PATH", state_path)
+    monkeypatch.setattr(console_module, "_campaign_processes",
+                        lambda _root: ([{"pid": campaign_pid, "command": "campaign",
+                                         "managed": True}] if running else []))
+    op = Operator(root=root)
+    op._kill_orphaned_browser_profile = lambda: 0  # never touch real processes
+    starts: list[int] = []
+
+    def _fake_start():
+        starts.append(1)
+        return "Pipeline started as PID 4242"
+
+    op._start = _fake_start
+    op._starts = starts  # expose for assertions
+    return op
+
+
+def test_supervisor_restarts_a_campaign_that_died_unexpectedly(tmp_path, monkeypatch):
+    op = _supervised_operator(tmp_path, monkeypatch, running=False)
+    result = op.supervise_once()
+    assert result.startswith("auto-restarted")
+    assert op._starts == [1]
+
+
+def test_supervisor_leaves_a_healthy_campaign_alone(tmp_path, monkeypatch):
+    op = _supervised_operator(tmp_path, monkeypatch, running=True)
+    assert op.supervise_once() == "campaign running"
+    assert op._starts == []
+
+
+def test_supervisor_does_not_restart_after_a_requested_stop(tmp_path, monkeypatch):
+    op = _supervised_operator(tmp_path, monkeypatch, running=False)
+    stop_path = console_module._resolve(op.root, str(op.config()["stop_file"]))
+    stop_path.parent.mkdir(parents=True, exist_ok=True)
+    stop_path.write_text(json.dumps({"requested_at": 1.0, "process_ids": [999]}))
+    assert op.supervise_once() == "stopped by request; not restarting"
+    assert op._starts == []
+
+
+def test_supervisor_respects_a_clean_exit(tmp_path, monkeypatch):
+    op = _supervised_operator(tmp_path, monkeypatch, running=False)
+    op._campaign_process = SimpleNamespace(poll=lambda: 0)   # exited rc 0
+    assert op.supervise_once() == "clean exit (rc 0); not restarting"
+    assert op._starts == []
+
+
+def test_supervisor_can_be_disabled(tmp_path, monkeypatch):
+    op = _supervised_operator(tmp_path, monkeypatch, running=False,
+                              config_overrides={"auto_restart": False})
+    assert op.supervise_once() == "auto-restart disabled"
+    assert op._starts == []
+
+
+def test_supervisor_pauses_after_too_many_restarts(tmp_path, monkeypatch):
+    import time as _time
+    op = _supervised_operator(tmp_path, monkeypatch, running=False,
+                              config_overrides={"auto_restart_max_in_window": 3,
+                                                "auto_restart_window_seconds": 900})
+    now = _time.time()
+    op._restart_history = [now - 10, now - 8, now - 5]   # already at the cap
+    result = op.supervise_once()
+    assert "paused" in result
+    assert op._starts == []
+    assert op._autorestart_paused is True
+    # And once paused it stays paused on the next tick (no restart).
+    assert op.supervise_once() == "auto-restart paused (manual attention needed)"
+
+
+def test_supervisor_skips_while_a_console_job_is_running(tmp_path, monkeypatch):
+    op = _supervised_operator(tmp_path, monkeypatch, running=False)
+    op.job = {**op.job, "running": True, "name": "update"}
+    assert op.supervise_once().startswith("job running")
+    assert op._starts == []

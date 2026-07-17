@@ -22,6 +22,7 @@ import os
 import re
 import shlex
 import shutil
+import signal
 import socket
 import stat
 import subprocess
@@ -167,6 +168,13 @@ def _default_config(root: Path = ROOT) -> dict[str, Any]:
         "log_file": str(
             (Path(os.environ.get("TEMP", "/tmp"))
              / f"egmra_campaign_{_hostname()}.log")),
+        # Auto-restart supervisor: the console relaunches a campaign that dies
+        # unexpectedly (e.g. the liveness watchdog force-exited a wedged
+        # process), unless the operator asked it to stop. Bounded so a
+        # genuinely broken environment can't hot-loop forever.
+        "auto_restart": True,
+        "auto_restart_window_seconds": 900,
+        "auto_restart_max_in_window": 5,
     }
 
 
@@ -350,6 +358,12 @@ class Operator:
         "started_at": None, "finished_at": None,
     })
     lines: list[str] = field(default_factory=list)
+    # Auto-restart supervisor state (see supervise_once). Non-init: process
+    # exit-code awareness survives only within one console lifetime; a restarted
+    # console falls back to the PID + stop-file heuristic.
+    _campaign_process: Any = field(default=None, init=False, repr=False)
+    _restart_history: list[float] = field(default_factory=list, init=False, repr=False)
+    _autorestart_paused: bool = field(default=False, init=False, repr=False)
 
     def log(self, message: str) -> None:
         stamp = time.strftime("%H:%M:%S")
@@ -576,6 +590,7 @@ class Operator:
             "campaign_pid": process.pid, "started_at": time.time(),
             "log_file": str(log_path), "command": command,
         })
+        self._campaign_process = process
         return f"Pipeline started as PID {process.pid}; log: {log_path}"
 
     def _stop(self, *, wait_seconds: float = 12.0) -> str:
@@ -605,6 +620,117 @@ class Operator:
                 f"Stop requested; processes {remaining} are finishing their current "
                 "problems and will take no new leases. Wait and refresh.")
         return "Pipeline stopped cleanly: " + ", ".join(map(str, pids))
+
+    def _kill_orphaned_browser_profile(self) -> int:
+        """Kill browser processes still holding THIS checkout's ChatGPT profile.
+
+        A watchdog/hard exit can orphan the campaign's Chromium; because the
+        profile is single-instance, a leftover browser would block the relaunch.
+        Matches ONLY processes whose command references the resolved profile
+        path, so the operator's personal browsers are never touched.
+        """
+        profile = str(_resolve(self.root, str(self.config()["chatgpt_profile"])))
+        pids: list[int] = []
+        try:
+            if os.name == "nt":
+                script = ("Get-CimInstance Win32_Process | "
+                          "Select-Object ProcessId,CommandLine | ConvertTo-Json -Compress")
+                result = _run(["powershell.exe", "-NoProfile", "-NonInteractive",
+                               "-Command", script], timeout=8)
+                try:
+                    payload = json.loads(result.stdout or "[]")
+                except json.JSONDecodeError:
+                    payload = []
+                for record in (payload if isinstance(payload, list) else [payload]):
+                    command = str(record.get("CommandLine") or "")
+                    pid = int(record.get("ProcessId") or 0)
+                    if pid and profile in command and (
+                            "chrome" in command.lower() or "chromium" in command.lower()):
+                        pids.append(pid)
+            else:
+                result = _run(["ps", "-axo", "pid=,command="], timeout=5)
+                for line in result.stdout.splitlines():
+                    match = re.match(r"\s*(\d+)\s+(.*)", line)
+                    if not match:
+                        continue
+                    pid, command = int(match.group(1)), match.group(2)
+                    if profile in command and "chrom" in command.lower():
+                        pids.append(pid)
+        except OSError:
+            return 0
+        killed = 0
+        for pid in pids:
+            try:
+                os.kill(pid, signal.SIGTERM)
+                killed += 1
+            except OSError:
+                pass
+        if pids:
+            time.sleep(2.0)
+            for pid in pids:
+                try:
+                    os.kill(pid, signal.SIGKILL)
+                except OSError:
+                    pass
+        return killed
+
+    def supervise_once(self) -> str:
+        """One monitor tick: relaunch a campaign that died unexpectedly.
+
+        Restart happens ONLY when: auto-restart is enabled, a campaign was
+        started from this console, no campaign process is currently running, the
+        operator did not request a stop (stop-file absent), and the last known
+        exit was not a clean rc 0. Bounded by ``auto_restart_max_in_window``
+        restarts per ``auto_restart_window_seconds`` — exceeding it PAUSES
+        auto-restart (a genuinely broken environment needs a human, not a
+        hot-loop). Safe to call on a fixed interval; never raises.
+        """
+        config = self.config()
+        if not bool(config.get("auto_restart", True)):
+            return "auto-restart disabled"
+        with self.lock:
+            if self.job["running"]:
+                return f"job running ({self.job['name']}); skip"
+        try:
+            state = json.loads(STATE_PATH.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            return "no campaign state; nothing to supervise"
+        if not int(state.get("campaign_pid", 0) or 0):
+            return "no campaign tracked"
+        now = time.time()
+        window = float(config.get("auto_restart_window_seconds", 900) or 900)
+        if _campaign_processes(self.root):
+            # Healthy. Once it has been stable for a full window, reset the
+            # restart budget so a later, independent failure is recoverable.
+            started = float(state.get("started_at", 0.0) or 0.0)
+            if started and now - started >= window:
+                self._restart_history = []
+                self._autorestart_paused = False
+            return "campaign running"
+        stop_path = _resolve(self.root, str(config["stop_file"]))
+        if stop_path.is_file():
+            return "stopped by request; not restarting"
+        process = self._campaign_process
+        if process is not None and process.poll() == 0:
+            return "clean exit (rc 0); not restarting"
+        if self._autorestart_paused:
+            return "auto-restart paused (manual attention needed)"
+        self._restart_history = [t for t in self._restart_history if now - t < window]
+        if len(self._restart_history) >= int(config.get("auto_restart_max_in_window", 5) or 5):
+            self._autorestart_paused = True
+            self.log(f"auto-restart PAUSED: too many restarts within {int(window)}s "
+                     "— campaign keeps dying; manual attention needed")
+            return "auto-restart paused after too many restarts"
+        killed = self._kill_orphaned_browser_profile()
+        self._restart_history.append(now)
+        try:
+            message = self._start()
+        except OperatorError as exc:
+            self.log(f"auto-restart attempt failed: {exc}")
+            return f"auto-restart failed: {exc}"
+        self.log(f"AUTO-RESTARTED campaign (cleared {killed} orphan browser "
+                 f"process(es)): {message}")
+        return f"auto-restarted: {message}"
 
     def _install_app(self) -> str:
         """Install a native launcher; all control logic stays in this checkout."""
@@ -865,6 +991,21 @@ def main() -> int:
     url = f"http://{HOST}:{server.server_port}/"
     print(f"EGMRA Operator: {url}")
     print("Localhost only. Press Ctrl-C to stop the console (campaign continues).")
+    # Auto-restart supervisor: relaunch a campaign that dies unexpectedly (e.g.
+    # the liveness watchdog force-exited a wedged process) while this console is
+    # open. Respects a requested stop and a clean exit; bounded to avoid a
+    # hot-loop. Runs only while the console is running.
+    supervisor_stop = threading.Event()
+
+    def _supervisor_loop() -> None:
+        while not supervisor_stop.wait(15.0):
+            try:
+                operator.supervise_once()
+            except Exception:  # noqa: BLE001 - supervisor must never crash the console
+                pass
+
+    threading.Thread(target=_supervisor_loop, name="egmra-operator-supervisor",
+                     daemon=True).start()
     if not args.no_browser:
         threading.Timer(.4, lambda: webbrowser.open(url)).start()
     try:
@@ -872,6 +1013,7 @@ def main() -> int:
     except KeyboardInterrupt:
         pass
     finally:
+        supervisor_stop.set()
         server.server_close()
     return 0
 
