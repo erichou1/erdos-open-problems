@@ -216,29 +216,64 @@ def test_rejects_more_than_five_workers(tmp_path):
 
 # ── crash-burned attempt budgets are infrastructure, not math (live incident) ──
 
-def test_expired_lease_exhaustion_records_honest_marker(tmp_path):
-    """Attempts burned entirely by dead processes get an explicit marker.
+def test_expired_lease_refunds_attempt_and_charges_infra_budget(tmp_path):
+    """A dead process's expired lease never spends the mathematical budget.
 
     Live incident: a repeatedly-crashing machine leased the same problem five
     times (each expiry burning an attempt) and the problem was marked failed
-    with an EMPTY result_state — indistinguishable from a genuine dead end and
-    invisible to the startup requeue.
+    without a single recorded outcome. Expired-lease pickup now mirrors
+    ``retain``: refund the attempt, charge the infrastructure budget.
     """
     clock = _Clock()
     c = _campaign(tmp_path, max_attempts=2, lease_seconds=10.0)
     c.initialize("camp", ["p1"])
-    # Two leases expire without any completion/failure (process died).
-    for _ in range(2):
-        assert c.lease("w0", now=clock.now()).problem_id == "p1"
-        clock.t += 11.0     # lease expires; nothing was recorded
-    # The next scan exhausts the budget: failed, with the honest marker.
-    assert c.lease("w0", now=clock.now()) is None
+    for crash in range(1, 4):     # three crash/expiry cycles > max_attempts
+        assignment = c.lease("w0", now=clock.now())
+        assert assignment is not None and assignment.problem_id == "p1"
+        clock.t += 11.0           # holder dies; lease expires; nothing recorded
+        row = c.status()["workers"]["p1"]
+        assert row["attempts"] == 1  # the single live lease, never accumulating
+    # After all those crashes the problem is still leasable with a full
+    # mathematical budget, and the crashes were charged to infrastructure.
+    assignment = c.lease("w0", now=clock.now())
+    assert assignment is not None
+    row = c.status()["workers"]["p1"]
+    assert row["attempts"] == 1
+    assert row["infra_retries"] == 3
+    # A genuinely recorded outcome still completes normally.
+    assert c.complete("p1", "w0", assignment.fencing_token,
+                      result_state="OPEN_NO_PROGRESS")
+
+
+def test_crash_looping_problem_is_bounded_by_infra_budget(tmp_path):
+    """A permanently crashing environment terminates honestly (never spins)."""
+    clock = _Clock()
+    c = _campaign(tmp_path, max_attempts=5, max_infra_retries=3,
+                  lease_seconds=10.0)
+    c.initialize("camp", ["p1"])
+    for _ in range(3):            # each cycle: lease, die, expire
+        assert c.lease("w0", now=clock.now()) is not None
+        clock.t += 11.0
+    assert c.lease("w0", now=clock.now()) is None   # infra budget spent
     row = c.status()["workers"]["p1"]
     assert row["status"] == "failed"
-    assert row["result_state"] == "attempt_budget_exhausted_without_result"
-    # And the automatic infra-only startup requeue rescues it.
+    assert row["result_state"].startswith("infrastructure_budget_exhausted")
+    # And the automatic startup requeue gives it a fresh run next launch.
     assert c.requeue_failed(infra_only=True) == ["p1"]
-    assert c.status()["workers"]["p1"]["status"] == "pending"
+
+
+def test_is_infrastructure_failure_classification():
+    from egmra.orchestrator.campaign import _is_infrastructure_failure
+
+    assert _is_infrastructure_failure("")                       # legacy crash-burn
+    assert _is_infrastructure_failure("  ")
+    assert _is_infrastructure_failure(
+        "attempt_budget_exhausted_without_result")
+    assert _is_infrastructure_failure(
+        "infrastructure_budget_exhausted: provider_unavailable")
+    assert not _is_infrastructure_failure(
+        "SourceResolutionError: no statement")                  # genuine verdicts
+    assert not _is_infrastructure_failure("ValueError: malformed")
 
 
 def test_infra_only_requeue_still_skips_genuine_failures(tmp_path):

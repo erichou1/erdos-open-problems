@@ -163,6 +163,22 @@ def _pg_retry_seconds() -> float:
     return min(3600.0, max(0.0, value))
 
 
+def _is_infrastructure_failure(result_state: str) -> bool:
+    """True when a FAILED problem's verdict is an infrastructure artifact.
+
+    Every genuine mathematical or permanent failure path records a non-empty
+    reason, so an exhausted infrastructure budget, the crash-burn marker, or
+    nothing at all (older code's crash-burn signature) all mean the
+    environment — not the mathematics — killed the problem.
+    """
+    result = str(result_state).strip()
+    return (
+        result.startswith("infrastructure_budget_exhausted")
+        or result.startswith("attempt_budget_exhausted_without_result")
+        or not result
+    )
+
+
 class PostgresCampaignStore:
     """DB-backed campaign store: signed state in one row + a cross-process advisory
     lock (``pg_advisory_lock``), so leases/checkpoints are durable and coordinated
@@ -607,12 +623,30 @@ class Campaign:
             fencing = int(state["fencing_counter"])
             for pid in state["order"]:
                 a = assignments[pid]
-                available = (
-                    a.status in {"pending", "retained"}
-                    or (a.status == "leased" and a.lease_expires_at <= now)
-                )
+                expired = a.status == "leased" and a.lease_expires_at <= now
+                available = a.status in {"pending", "retained"} or expired
                 if not available:
                     continue
+                if expired:
+                    # The previous holder died without recording any outcome
+                    # (an alive worker renews its lease via the heartbeat), so
+                    # its lease consumed an attempt for zero mathematical
+                    # work. Exactly like ``retain``: refund the attempt and
+                    # spend the separate bounded INFRASTRUCTURE budget, so
+                    # crashes never eat the mathematical budget while a
+                    # crash-looping environment still terminates honestly.
+                    a.attempts = max(0, a.attempts - 1)
+                    a.infra_retries += 1
+                    if a.infra_retries >= self.max_infra_retries:
+                        a.status = "failed"
+                        a.worker_id = ""
+                        a.lease_expires_at = 0.0
+                        a.result_state = (
+                            "infrastructure_budget_exhausted: expired_lease")
+                        self._write(self._encode(
+                            state["campaign_id"], state["order"], assignments,
+                            fencing, state.get("machines")))
+                        continue
                 if a.attempts >= self.max_attempts:
                     a.status = "failed"
                     # No completion/failure ever recorded a verdict for this
@@ -764,13 +798,7 @@ class Campaign:
             for pid, a in assignments.items():
                 if a.status != "failed":
                     continue
-                result = str(a.result_state).strip()
-                infra_artifact = (
-                    result.startswith("infrastructure_budget_exhausted")
-                    or result.startswith("attempt_budget_exhausted_without_result")
-                    or not result
-                )
-                if infra_only and not infra_artifact:
+                if infra_only and not _is_infrastructure_failure(a.result_state):
                     continue
                 a.status = "pending"
                 a.attempts = 0
