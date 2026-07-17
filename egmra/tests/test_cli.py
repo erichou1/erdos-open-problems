@@ -19,6 +19,35 @@ from egmra.truth.events import EventLog
 from egmra.ranking_queue import build_queue_projection
 
 
+# ── liveness watchdog (fixes 'process alive but computer shows stale') ────────
+
+
+@pytest.mark.parametrize("last_ok,now,threshold,expired", [
+    (0.0, 100.0, 600.0, False),      # well within budget
+    (0.0, 599.0, 600.0, False),      # just under
+    (0.0, 601.0, 600.0, True),       # just over -> wedged
+    (0.0, 10_000.0, 0.0, False),     # threshold 0 disables the watchdog
+    (0.0, 10_000.0, -1.0, False),    # negative disables too
+])
+def test_liveness_watchdog_expiry_policy(last_ok, now, threshold, expired):
+    from egmra.cli import _liveness_watchdog_expired
+    assert _liveness_watchdog_expired(last_ok, now, threshold) is expired
+
+
+def test_liveness_watchdog_seconds_clamps_and_disables(monkeypatch):
+    from egmra.cli import _liveness_watchdog_seconds
+    monkeypatch.delenv("EGMRA_LIVENESS_WATCHDOG_SECONDS", raising=False)
+    assert _liveness_watchdog_seconds() == 600.0
+    monkeypatch.setenv("EGMRA_LIVENESS_WATCHDOG_SECONDS", "0")
+    assert _liveness_watchdog_seconds() == 0.0        # explicitly disabled
+    monkeypatch.setenv("EGMRA_LIVENESS_WATCHDOG_SECONDS", "5")
+    assert _liveness_watchdog_seconds() == 300.0      # clamped up to the floor
+    monkeypatch.setenv("EGMRA_LIVENESS_WATCHDOG_SECONDS", "99999")
+    assert _liveness_watchdog_seconds() == 7200.0     # clamped to the ceiling
+    monkeypatch.setenv("EGMRA_LIVENESS_WATCHDOG_SECONDS", "garbage")
+    assert _liveness_watchdog_seconds() == 600.0      # falls back to default
+
+
 def _signed_policy_file(tmp_path, *, promotion: bool = False):
     flags = {
         "claim_graph": True,

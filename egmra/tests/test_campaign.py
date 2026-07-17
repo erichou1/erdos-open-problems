@@ -40,13 +40,13 @@ class _FlakyStore:
             self._skip = skip
             self._fail_n = then_fail
 
-    def read(self):
+    def read(self, *, retry_seconds=None):
         return self.inner.read()
 
     def locked(self):
         return self.inner.locked()
 
-    def write(self, body):
+    def write(self, body, *, retry_seconds=None):
         with self._lock:
             if self._skip > 0:
                 self._skip -= 1
@@ -89,6 +89,45 @@ def test_machine_heartbeat_survives_assignment_transitions(tmp_path):
     assert machine["heartbeat_at"] == 1000.0
     assert machine["version_status"] == "current"
     assert machine["worker_ids"] == ["host-a:w0", "host-a:w1"]
+
+
+def test_heartbeat_uses_short_retry_budget_and_file_store_ignores_it(tmp_path):
+    # The liveness heartbeat must NOT inherit the worker loop's long reconnect
+    # budget (a beat that blocked for minutes would starve real work and make an
+    # alive process look dead). The Campaign passes a short budget to the store;
+    # the file store accepts and ignores it (no network to hang on).
+    from egmra.orchestrator.campaign import (
+        FileCampaignStore,
+        _pg_heartbeat_retry_seconds,
+        _pg_retry_seconds,
+    )
+
+    assert _pg_heartbeat_retry_seconds() < _pg_retry_seconds()   # short vs long
+
+    store = FileCampaignStore(tmp_path / "state.json")
+    # Interface parity: both accept the keyword and behave identically.
+    store.write({"campaign_id": "c", "order": [], "fencing_counter": 0,
+                 "assignments": {}, "machines": {}}, retry_seconds=15.0)
+    assert store.read(retry_seconds=15.0)["campaign_id"] == "c"
+
+    c = _campaign(tmp_path, workers=("host-a:w0",))
+    c.initialize("camp-hb", ["p1"])
+    metadata = {"hostname": "host-a", "process_id": 1,
+                "worker_ids": ["host-a:w0"], "started_at": 100.0}
+    c.machine_heartbeat("host-a", metadata=metadata, now=110.0)  # no exception
+    assert c.status()["machines"]["host-a"]["heartbeat_at"] == 110.0
+
+
+def test_heartbeat_budget_env_override_and_clamp(monkeypatch):
+    from egmra.orchestrator.campaign import _pg_heartbeat_retry_seconds
+    monkeypatch.delenv("EGMRA_PG_HEARTBEAT_RETRY_SECONDS", raising=False)
+    assert _pg_heartbeat_retry_seconds() == 20.0
+    monkeypatch.setenv("EGMRA_PG_HEARTBEAT_RETRY_SECONDS", "5")
+    assert _pg_heartbeat_retry_seconds() == 5.0
+    monkeypatch.setenv("EGMRA_PG_HEARTBEAT_RETRY_SECONDS", "9999")
+    assert _pg_heartbeat_retry_seconds() == 120.0     # clamped to the ceiling
+    monkeypatch.setenv("EGMRA_PG_HEARTBEAT_RETRY_SECONDS", "oops")
+    assert _pg_heartbeat_retry_seconds() == 20.0      # falls back to default
 
 
 def test_machine_graceful_stop_and_restart_preserve_start_time(tmp_path):

@@ -137,10 +137,15 @@ def test_build_packet_unions_targeted_extra_queries():
 
 
 def test_continuation_round_refocuses_frozen_packet_on_own_queries():
-    # 14 filler records ahead of the one the worker will ask for: the default
-    # render (12-record cap) cuts it; the round-2 refocus must surface it.
+    # Filler records ahead of the one the worker will ask for, sized past the
+    # render cap so the default order cuts it; the round-2 refocus must
+    # surface it.  Derived from the constant so a raised budget keeps the
+    # scenario meaningful.
+    from egmra.orchestrator.runner_worker import _PACKET_MAX_RECORDS
+
+    fill = _PACKET_MAX_RECORDS + 2
     records = [_record(f"t-fill-{i}", f"unrelated filler lemma number {i} about widgets")
-               for i in range(14)]
+               for i in range(fill)]
     records.append(_record(
         "t-needed", "Vinogradov equidistribution of primes in Beatty sequences"))
     packet = SimpleNamespace(theorem_records=tuple(records))

@@ -255,6 +255,42 @@ def _browser_response_timeout() -> float:
     return min(3600.0, max(60.0, value))
 
 
+def _liveness_watchdog_seconds() -> float:
+    """How long with NO successful machine heartbeat before self-terminating.
+
+    A wedged process (a hung vendor call, a deadlocked store lock, a dead DB
+    socket) keeps existing but stops heartbeating, so the dashboard shows the
+    computer "stale" forever while it does no work. The watchdog converts that
+    silent zombie into a clean, loud exit that an operator (or a supervisor)
+    can restart. The default 600s sits safely above the worker loop's own
+    bounded reconnect window (``EGMRA_PG_RETRY_SECONDS``, default 300s) plus
+    the ~60s advisory-lock wait, so a mere transient network outage \u2014 which
+    self-recovers \u2014 never trips it. Override with
+    ``EGMRA_LIVENESS_WATCHDOG_SECONDS`` (clamped 300-7200); 0 disables it.
+    """
+    raw = os.environ.get("EGMRA_LIVENESS_WATCHDOG_SECONDS", "").strip()
+    try:
+        value = float(raw) if raw else 600.0
+    except ValueError:
+        return 600.0
+    if value <= 0:
+        return 0.0
+    return min(7200.0, max(300.0, value))
+
+
+def _liveness_watchdog_expired(
+    last_ok_monotonic: float, now_monotonic: float, threshold: float
+) -> bool:
+    """True when the liveness heartbeat has lapsed past the watchdog threshold.
+
+    Pure and side-effect-free so the exit policy is unit-testable without a
+    real clock or process. ``threshold <= 0`` disables the watchdog.
+    """
+    if threshold <= 0:
+        return False
+    return (now_monotonic - last_ok_monotonic) > threshold
+
+
 def _browser_throttle(config: EgmraConfig, provider: str) -> "SharedThrottle | None":
     """A durable, cross-worker cooldown coordinator for the browser providers.
 
@@ -2323,6 +2359,9 @@ def cmd_campaign(args: argparse.Namespace) -> int:
     machine_stop = threading.Event()
     campaign.machine_heartbeat(
         machine["machine_id"], metadata=machine, now=time.time())
+    # Last time a heartbeat write SUCCEEDED (monotonic). The watchdog below
+    # reads this to distinguish a live-but-busy process from a wedged one.
+    hb_state = {"last_ok": time.monotonic()}
 
     def _machine_heartbeat() -> None:
         last_version_refresh = time.monotonic()
@@ -2335,13 +2374,48 @@ def cmd_campaign(args: argparse.Namespace) -> int:
                     last_version_refresh = time.monotonic()
                 campaign.machine_heartbeat(
                     machine["machine_id"], metadata=machine, now=time.time())
-            except Exception:  # noqa: BLE001 - observability is fail-open
-                pass
+                hb_state["last_ok"] = time.monotonic()
+            except Exception as exc:  # noqa: BLE001 - observability is fail-open
+                # Make a lapsing heartbeat VISIBLE instead of silently swallowed:
+                # this is exactly the signal that a computer is about to show
+                # "stale" on the dashboard.
+                print(json.dumps({
+                    "heartbeat_error": f"{type(exc).__name__}: {exc}",
+                    "machine_id": machine["machine_id"],
+                }), file=sys.stderr, flush=True)
+
+    def _liveness_watchdog() -> None:
+        # An INDEPENDENT thread that touches neither the store nor its lock, so
+        # it stays responsive even when every other thread is wedged. If no
+        # heartbeat has landed within the threshold, the process is a zombie
+        # (alive but doing nothing and unable to report) — exit loudly so it
+        # stops masquerading and can be restarted.
+        threshold = _liveness_watchdog_seconds()
+        if threshold <= 0:
+            return
+        while not machine_stop.wait(15.0):
+            if _liveness_watchdog_expired(
+                    hb_state["last_ok"], time.monotonic(), threshold):
+                lapse = time.monotonic() - hb_state["last_ok"]
+                print(json.dumps({
+                    "liveness_watchdog": "no successful heartbeat within threshold; "
+                                         "process is wedged — exiting for restart",
+                    "machine_id": machine["machine_id"],
+                    "lapse_seconds": round(lapse),
+                    "threshold_seconds": round(threshold),
+                }), file=sys.stderr, flush=True)
+                # Hard exit: a clean sys.exit would itself block on whatever
+                # lock/socket wedged the process. Skips atexit/finally by design.
+                os._exit(75)
 
     machine_thread = threading.Thread(
         target=_machine_heartbeat,
         name=f"egmra-machine-hb-{machine['machine_id']}", daemon=True)
     machine_thread.start()
+    watchdog_thread = threading.Thread(
+        target=_liveness_watchdog,
+        name=f"egmra-liveness-wd-{machine['machine_id']}", daemon=True)
+    watchdog_thread.start()
     stop_file = (
         Path(args.stop_file) if getattr(args, "stop_file", None) is not None
         else None)
@@ -2650,6 +2724,7 @@ def cmd_campaign(args: argparse.Namespace) -> int:
     finally:
         machine_stop.set()
         machine_thread.join(timeout=1.0)
+        watchdog_thread.join(timeout=1.0)
         try:
             campaign.machine_stopped(machine["machine_id"], now=time.time())
         except Exception:  # noqa: BLE001 - shutdown telemetry is best-effort

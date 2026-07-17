@@ -18,7 +18,9 @@ kernel replay seals a :class:`LocalLeanReplayAttestation`
 from __future__ import annotations
 
 import asyncio
+import concurrent.futures
 import inspect
+import os
 import threading
 import tempfile
 import time
@@ -72,6 +74,27 @@ _TRANSIENT_PHRASES = (
 def _is_transient(exc: BaseException) -> bool:
     text = f"{type(exc).__name__}: {exc}".lower()
     return any(phrase in text for phrase in _TRANSIENT_PHRASES)
+
+
+def _aristotle_max_wait_s() -> float:
+    """Hard ceiling on ONE vendor completion wait (default 1800s = 30 min).
+
+    A proof legitimately runs 10-15 min server-side, but a task the vendor
+    leaves QUEUED indefinitely (or a long-poll that never resolves after a
+    server disconnect) must not block the worker thread forever — that is the
+    exact hang that wedges a campaign worker and, downstream, starves the
+    machine liveness heartbeat. Exceeding the budget raises a clean failure so
+    the worker records it and moves on. Override with
+    ``EGMRA_ARISTOTLE_MAX_WAIT_S`` (clamped 60-14400); 0 disables the ceiling.
+    """
+    raw = os.environ.get("EGMRA_ARISTOTLE_MAX_WAIT_S", "").strip()
+    try:
+        value = float(raw) if raw else 1800.0
+    except ValueError:
+        return 1800.0
+    if value <= 0:
+        return 0.0
+    return min(14400.0, max(60.0, value))
 
 
 class AristotleSdkUnavailable(AristotleClientError):
@@ -136,7 +159,7 @@ class AristotleSdkClient:
     # run each awaitable to completion on a persistent, client-owned event loop.
     # Non-awaitable values (the synchronous fake SDK in tests) pass through
     # unchanged, so the same control flow exercises both.
-    def _await(self, value: Any) -> Any:
+    def _await(self, value: Any, *, timeout: float | None = None) -> Any:
         if not inspect.isawaitable(value):
             return value
         # Marshal EVERY awaitable to a single client-owned loop thread. This one
@@ -158,7 +181,16 @@ class AristotleSdkClient:
                     name="aristotle-sdk-loop", daemon=True)
                 self._bg_thread.start()
         future = asyncio.run_coroutine_threadsafe(value, self._bg_loop)
-        return future.result()
+        # A bounded wait (used for the long completion poll) prevents a stuck or
+        # never-resolving vendor task from blocking the worker thread forever.
+        # On expiry the orphaned coroutine is cancelled on its own loop and a
+        # non-transient error is raised so the caller fails cleanly and moves on.
+        try:
+            return future.result(timeout=timeout)
+        except concurrent.futures.TimeoutError as exc:
+            future.cancel()
+            raise AristotleClientError(
+                f"aristotle wait exceeded {timeout:.0f}s budget") from exc
 
     def close(self) -> None:
         """Close the client-owned event loops (best-effort teardown)."""
@@ -242,7 +274,8 @@ class AristotleSdkClient:
         for attempt in range(1, attempts + 1):
             try:
                 if wait:
-                    self._await(task.wait_for_completion())
+                    self._await(task.wait_for_completion(),
+                                timeout=_aristotle_max_wait_s() or None)
                 # The official SDK writes the result as a SINGLE archive blob to a
                 # file path (not a directory). Download it to a throwaway temp file,
                 # read the bytes, then extract it ourselves under strict

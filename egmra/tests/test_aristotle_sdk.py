@@ -370,3 +370,48 @@ def test_fetch_keeps_downloaded_archive_when_final_poll_blips(tmp_path):
     assert artifact.vendor_reports_complete is False
     assert artifact.promotable is False
 
+
+# ── bounded vendor wait: a stuck task must never wedge the worker forever ────
+
+
+def test_aristotle_max_wait_s_clamps_and_disables(monkeypatch):
+    from egmra.lean.aristotle_sdk import _aristotle_max_wait_s
+    monkeypatch.delenv("EGMRA_ARISTOTLE_MAX_WAIT_S", raising=False)
+    assert _aristotle_max_wait_s() == 1800.0
+    monkeypatch.setenv("EGMRA_ARISTOTLE_MAX_WAIT_S", "0")
+    assert _aristotle_max_wait_s() == 0.0            # disabled (no ceiling)
+    monkeypatch.setenv("EGMRA_ARISTOTLE_MAX_WAIT_S", "5")
+    assert _aristotle_max_wait_s() == 60.0           # clamped up to the floor
+    monkeypatch.setenv("EGMRA_ARISTOTLE_MAX_WAIT_S", "999999")
+    assert _aristotle_max_wait_s() == 14400.0        # clamped to the ceiling
+    monkeypatch.setenv("EGMRA_ARISTOTLE_MAX_WAIT_S", "nonsense")
+    assert _aristotle_max_wait_s() == 1800.0         # falls back to default
+
+
+def test_await_bounded_timeout_raises_clean_budget_error(tmp_path):
+    import asyncio
+
+    (tmp_path / "lp").mkdir()
+    client = AristotleSdkClient(
+        quarantine_root=tmp_path / "quar", project_dir=tmp_path / "lp",
+        sdk=_AsyncFakeSdk(_AsyncFakeProject()), env=_ENV)
+    try:
+        async def _never():
+            await asyncio.sleep(30)
+
+        # A wait that never resolves within the budget fails FAST and cleanly
+        # (non-transient message, so the caller does not retry it as a blip).
+        with pytest.raises(AristotleClientError, match="budget"):
+            client._await(_never(), timeout=0.05)
+
+        async def _quick():
+            return 42
+
+        # A coroutine that finishes within the budget returns normally.
+        assert client._await(_quick(), timeout=5.0) == 42
+        # And with no timeout the fast path is unchanged.
+        assert client._await(_quick()) == 42
+    finally:
+        client.close()
+
+

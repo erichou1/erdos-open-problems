@@ -46,14 +46,28 @@ from egmra.provenance.hashing import sha256_hex
 
 _CLAIM_ID_RE = re.compile(r"[^A-Za-z0-9_.-]")
 _WORD_RE = re.compile(r"[a-z0-9]+")
+# Kerger/Theorist-Toolbox hand-wave markers: language that hides an unproved
+# precision, extension, or compatibility step inside a proof step or claim.
+_HANDWAVE_RE = re.compile(
+    r"\b(clearly|obviously|trivially|routine|standard argument|"
+    r"easy to see|well[- ]known|similar argument|omitted|left to the reader)\b",
+    re.IGNORECASE)
 _MAX_CLAIMS = 16
 _MAX_LIST = 24
 _MAX_SEQ_TERMS = 64
+_REGULATOR_ACTIONS = frozenset({
+    "REVISE_PROOF", "REVISE_PLAN", "REWRITE", "FOCUS_BLOCKER",
+})
+_DEFAULT_REGULATOR_ACTION = "REVISE_PROOF"
 # Literature packet rendering budget for the branch prompt (audit R9): enough
 # for real theorem statements with provenance, bounded so retrieval noise can
-# never crowd out the target statement.
-_PACKET_MAX_RECORDS = 12
-_PACKET_CHAR_BUDGET = 4000
+# never crowd out the target statement.  Raised 4000→8000 chars / 12→16
+# records (2026-07 source review): Kerger's literature checkpoint carried
+# exact bounds and full statements — truncating retrieved theorems mid-formula
+# starves the model of the content retrieval already paid for, and browser
+# context is not the binding constraint.
+_PACKET_MAX_RECORDS = 16
+_PACKET_CHAR_BUDGET = 8000
 # Width of the per-branch formalization dispatch pool. Matches the Aristotle
 # account's concurrent-proof limit; the ACTUAL account-wide cap is enforced by
 # the shared slot semaphore inside AristotleFormalizer (this is just how many
@@ -74,6 +88,7 @@ WORKER_RESPONSE_SCHEMA = {
     "literature_imports": "list[{claim_id, theorem_id}]",
     "open_subgoals": "list[str]",
     "bottleneck": "str",
+    "regulator_action": "REVISE_PROOF|REVISE_PLAN|REWRITE|FOCUS_BLOCKER",
     "confidence": "number 0..1",
 }
 
@@ -182,6 +197,39 @@ def _as_falsifier_list(value: Any) -> list[str]:
         if cleaned:
             out.append(cleaned)
     return out
+
+
+def _regulator_action(value: Any) -> str:
+    """Normalize an advisory next-round action to the conservative default."""
+    if not isinstance(value, str):
+        return _DEFAULT_REGULATOR_ACTION
+    normalized = re.sub(r"[\s-]+", "_", value.strip().upper())
+    if normalized not in _REGULATOR_ACTIONS:
+        return _DEFAULT_REGULATOR_ACTION
+    return normalized
+
+
+def _handwave_objections(parsed: dict[str, Any]) -> list[str]:
+    """Kerger discipline: reject 'standard'/'routine' as a proof step.
+
+    A hand-wave phrase in a proof step or claim statement is exactly where
+    precision, extension, and compatibility gaps hide.  Each match becomes a
+    recorded OBJECTION the next round must justify rigorously or replace —
+    purely advisory prompt context, never an automatic rejection, never an
+    evidence signal.
+    """
+    objections: list[str] = []
+    texts = list(parsed.get("proof_steps") or [])
+    texts += [str(c.get("statement", "")) for c in parsed.get("claims") or []]
+    for text in texts:
+        match = _HANDWAVE_RE.search(text or "")
+        if match:
+            objections.append(
+                f"hand-wave flagged ('{match.group(0)}') — justify this step "
+                f"rigorously or replace it: {text[:160]}")
+        if len(objections) >= 4:
+            break
+    return objections
 
 
 def parse_worker_response(text: str) -> dict[str, Any]:
@@ -311,6 +359,7 @@ def parse_worker_response(text: str) -> dict[str, Any]:
         "literature_imports": literature_imports,
         "open_subgoals": _as_str_list(document.get("open_subgoals"), field_name="open_subgoals"),
         "bottleneck": str(document.get("bottleneck", "")).strip(),
+        "regulator_action": _regulator_action(document.get("regulator_action")),
         "confidence": _confidence(document.get("confidence")),
     }
 
@@ -525,7 +574,12 @@ _CAPABILITY_AND_SCHEMA_TAIL = (
     "claim ids appearing in this same response or already-established lemma ids "
     "(the dependency cone — never forward references or inventions). Prefer ONE "
     "decisive artifact (a checkable experiment, a formalizable lemma, a sharp "
-    "falsifier) over touching every category shallowly; empty lists are fine. "
+    "falsifier) over touching every category shallowly; empty lists are fine, "
+    "but a reply containing NO concrete artifact at all (no claim, experiment, "
+    "Lean candidate, literature import, falsifier, or sequence) is a "
+    "non-actionable status report and is treated as a stalled round. Never "
+    "describe a precision, extension, or compatibility step as 'standard' or "
+    "'routine' — prove it, cite it exactly, or list it as an open subgoal. "
     "REPLY BUDGET: at most 4 new claims, at most ONE coded experiment (code "
     "under 50 lines — the smallest decisive check, tight input bounds), and at "
     "most 2 lean_declaration_candidates per reply; keep the entire reply "
@@ -539,8 +593,14 @@ _CAPABILITY_AND_SCHEMA_TAIL = (
     "proof?, claim_id?, coverage?}), "
     "formalization_requests (list of strings), lean_declaration_candidates (list of "
     "{claim_id, declaration_name, source_b64?, expected_type}), literature_imports "
-    "(list of {claim_id, theorem_id}), open_subgoals (list), "
-    "bottleneck (string)."
+    "(list of {claim_id, theorem_id}), open_subgoals (list), bottleneck "
+    "(string), regulator_action (exactly one of REVISE_PROOF, REVISE_PLAN, "
+    "REWRITE, FOCUS_BLOCKER). The regulator action schedules only the next "
+    "research round and has NO evidentiary force: REVISE_PROOF keeps the "
+    "mechanism and repairs/replaces local claims; REVISE_PLAN keeps the "
+    "mechanism but rebuilds its dependency plan; REWRITE abandons the failed "
+    "mechanism for a materially different one; FOCUS_BLOCKER freezes a sound "
+    "reduction and attacks the one exact gap named in bottleneck."
 )
 
 
@@ -570,7 +630,9 @@ _REASONING_TAIL = (
     "experiments are advisory only), give Lean "
     "declaration candidates where apt (name + exact intended type), and note "
     "falsifiers, retrieval queries, open subgoals, and the single current "
-    "bottleneck. Prefer ONE decisive artifact over touching everything "
+    "bottleneck. Recommend exactly one next-round action: REVISE_PROOF, "
+    "REVISE_PLAN, REWRITE, or FOCUS_BLOCKER; this is advisory scheduling, "
+    "never evidence. Prefer ONE decisive artifact over touching everything "
     "shallowly. Never assert the target is proved; proof requires independent "
     "verification you do not perform."
 )
@@ -652,6 +714,94 @@ def _role_directive(role: str) -> str:
     return _ROLE_DIRECTIVES.get(role, _ROLE_DIRECTIVES["prover"])
 
 
+# Kerger-style per-family mechanism guidance: his prompt gave every approach
+# family 2-4 sentences of what to explore plus one specific thing NOT to
+# assume.  Branch ids for deep branches ARE method-family names, so the
+# matching entry is rendered into that branch's round-1 prompt.  Unknown
+# branch ids (tests, ad-hoc branches) render nothing.  Guidance is search
+# direction only — never evidence, never a truth claim.
+_FAMILY_GUIDANCE = {
+    "direct_structural": (
+        "Decompose the target along its own structure: the decisive artifact is "
+        "the single hardest global step, stated as an explicit lemma. Do not "
+        "bury that step inside an outline or call it standard."),
+    "contradiction_minimal_counterexample": (
+        "Assume a minimal counterexample and extract structure from minimality "
+        "until it self-destructs. State the well-founded minimality measure "
+        "explicitly; an extremal object must be proved to exist before its "
+        "properties are used."),
+    "extremal_invariant": (
+        "Hunt for a monotone invariant or potential function that extremal "
+        "configurations must optimize. Prove the invariant's bound for ALL "
+        "configurations — a bound checked on symmetric or generic cases only "
+        "is not a lemma."),
+    "probabilistic_analytic": (
+        "Try random or weighted constructions: first/second moment, deletion, "
+        "concentration, Lovász Local Lemma. Define the probability space "
+        "explicitly and justify every independence or negative-correlation "
+        "claim — dependent events are where these proofs silently fail."),
+    "additive_combinatorial": (
+        "Work with sumsets, density increments, and Fourier/analytic tools. "
+        "Track uniformity: every constant and exponent must be uniform over "
+        "the claimed density regime, and each increment step must terminate "
+        "in finitely many rounds."),
+    "algebraic_spectral": (
+        "Recast via eigenvalues, rank, interlacing, or polynomial identities. "
+        "Verify the exact algebraic hypotheses (symmetry, field, "
+        "multiplicity conventions) before importing a spectral bound — an "
+        "off-by-one in multiplicity breaks interlacing arguments."),
+    "geometric_topological": (
+        "Use convexity, incidence, or topological invariants. Degenerate "
+        "configurations — collinear points, boundary contact, measure-zero "
+        "coincidences — must be handled explicitly, not dismissed as "
+        "non-generic."),
+    "ergodic_dynamical": (
+        "Reformulate dynamically: recurrence, equidistribution, a "
+        "correspondence principle. The transfer between the finitary "
+        "statement and the dynamical one must be proved in BOTH directions "
+        "at the exact quantifier strength used."),
+    "computational_finite_reduction": (
+        "Reduce the target to a finite check plus a reduction theorem. The "
+        "computation is the easy half: the reduction theorem covering ALL "
+        "remaining parameters is the real obligation and needs a full proof, "
+        "never extrapolation from verified cases."),
+    "formal_library_first": (
+        "Work from what Mathlib can already prove toward the target. Where "
+        "the library lacks infrastructure, choose an explicitly weaker child "
+        "and record the divergence — never silently substitute a weaker "
+        "statement for the pinned obligation."),
+    "literature_derived_transfer": (
+        "Import the nearest published theorem and transfer it. Align "
+        "hypotheses one by one against this exact setting; the residue after "
+        "transfer IS the problem — name it as the central lemma instead of "
+        "treating the citation as progress."),
+    "counterexample_model_construction": (
+        "Build explicit candidate counterexamples or models. Verify EVERY "
+        "hypothesis of the target on the construction — normalization, edge "
+        "conventions, degenerate members — and compute the violated quantity "
+        "exactly, not asymptotically."),
+}
+
+
+def _family_guidance_block(branch_id: str) -> str:
+    guidance = _FAMILY_GUIDANCE.get(branch_id)
+    if not guidance:
+        return ""
+    return (
+        f"BRANCH MECHANISM ({branch_id}): {guidance}\n\n"
+    )
+
+
+def _exact_model_block(exact_model: str) -> str:
+    if not exact_model:
+        return ""
+    return (
+        "EXACT MODEL (locked interpretation — every claim and import must be "
+        "checked against precisely these quantifiers and hypotheses, not a "
+        "remembered variant of the problem):\n" + exact_model + "\n\n"
+    )
+
+
 def _traps_block(traps: list[str]) -> str:
     if not traps:
         return ""
@@ -686,20 +836,87 @@ def _carried_subgoals_block(subgoals: list[str]) -> str:
     )
 
 
+def _research_contract_block(statement: str, *, role: str,
+                             formal_target: str = "") -> str:
+    """Compact, problem-derived completion and exclusion contract.
+
+    Kerger's successful long prompt devoted most of its useful specificity to
+    defining the exact model and enumerating attractive results that would not
+    solve *that* problem.  EGMRA already enforces these boundaries downstream;
+    this block surfaces the relevant subset before generation without adding
+    response keys or weakening any gate.  Lexical cues only choose additional
+    warnings — they never classify evidence or truth.
+    """
+    lowered = statement.lower()
+    exclusions = [
+        "a restatement or theorem-strength missing lemma equivalent to the target",
+        "finite examples, numerical evidence, or a bounded computation presented as a general proof",
+        "a literature citation without matching its exact hypotheses and parameter regime",
+        "an outline whose decisive compatibility, extension, or uniformity step is still open",
+    ]
+    if any(token in lowered for token in (
+            "for every", "for all", " all ", " any ", "infinitely many")):
+        exclusions.append(
+            "checking finitely many cases as evidence for the target's universal or infinite quantifier")
+    if any(token in lowered for token in (
+            "estimate", "asymptotic", "limsup", "liminf", " limit", "o(", "omega(")):
+        exclusions.append(
+            "changing an exponent, constant, asymptotic regime, or quantifier without recording the weaker claim")
+    if any(token in lowered for token in (
+            "if and only if", "equivalent", "equal to", " equals ", "=", "matching")):
+        exclusions.append(
+            "a one-sided implication or bound when the target asks for equality, equivalence, or matching bounds")
+    if formal_target:
+        exclusions.append(
+            "Lean code for a weakened or different statement instead of the exact community formal target")
+    role_exclusion = {
+        "experimentalist": (
+            "a computational pattern with no exact reduction from the general target"),
+        "formalizer": (
+            "compiling code with sorry/axioms or proving a convenient translation rather than the pinned obligation"),
+        "skeptic": (
+            "a heuristic obstruction without a checkable witness or a proved contradiction"),
+        "prover": (
+            "a proof sketch that labels its hardest global step standard or routine"),
+    }.get(role)
+    if role_exclusion:
+        exclusions.append(role_exclusion)
+    rendered = "\n".join(f"- {item}" for item in exclusions[:8])
+    return (
+        "COMPLETION CONTRACT: preserve the target's own quantifiers, parameter "
+        "range, model, and requested conclusion. Your branch succeeds only by "
+        "producing a strictly weaker checkable lemma, a decisive falsifier, or "
+        "an artifact that directly discharges an open dependency; only the "
+        "independent pipeline can declare the target proved.\n"
+        "RESULTS THAT DO NOT COUNT for this target:\n" + rendered + "\n"
+        "BASELINE ALIGNMENT: for each imported theorem, state in proof_steps "
+        "the exact hypothesis overlap and the remaining gap; otherwise do not "
+        "use it. AUDIT ROUTING: a proposed upper/existence result needs a "
+        "boundary or error-accounting falsifier; a lower/impossibility result "
+        "needs a model-fidelity or quantifier-order falsifier. Keep proved, "
+        "finite-tested-only, and open-subgoal statements separate.\n\n"
+    )
+
+
 def branch_prompt(statement: str, *, role: str, branch_id: str, packet_summary: str,
                   formal_target: str = "", traps: list[str] | None = None,
                   family_history: list[str] | None = None,
-                  carried_subgoals: list[str] | None = None) -> str:
+                  carried_subgoals: list[str] | None = None,
+                  exact_model: str = "") -> str:
     return (
         f"You are an EGMRA research worker in the role '{role}' working branch "
         f"'{branch_id}'. {_role_directive(role)} Reason rigorously about the "
         "target below.\n\n"
         f"TARGET STATEMENT:\n{statement}\n\n"
-        f"FROZEN LITERATURE PACKET (read-only):\n{packet_summary or '(none available)'}\n\n"
+        + _exact_model_block(exact_model)
+        + _family_guidance_block(branch_id)
+        + f"FROZEN LITERATURE PACKET (read-only):\n{packet_summary or '(none available)'}\n\n"
         + _formal_target_block(formal_target)
         + _traps_block(traps or [])
         + _family_history_block(family_history or [])
         + _carried_subgoals_block(carried_subgoals or [])
+        + _research_contract_block(
+            statement, role=role, formal_target=formal_target)
         + "First choose the single most decisive next artifact for this "
         "branch's mechanism — ONE goal-bound finite experiment, ONE "
         "formalizable lemma, or ONE sharp falsifier — and build the reply "
@@ -718,7 +935,10 @@ def continuation_prompt(statement: str, *, role: str, branch_id: str, round_inde
                         objections: list[str], failed_approaches: list[str],
                         formal_target: str = "", traps: list[str] | None = None,
                         reframe: bool = False, packet_summary: str = "",
-                        experiment_results: list[str] | None = None) -> str:
+                        experiment_results: list[str] | None = None,
+                        blocker_only: str = "",
+                        regulator_action: str = _DEFAULT_REGULATOR_ACTION,
+                        exact_model: str = "") -> str:
     """Follow-up round prompt: close subgoals, repair, never patch prose (R3).
 
     Mirrors the legacy pipeline's regulator discipline: decide whether a lemma
@@ -747,6 +967,41 @@ def continuation_prompt(statement: str, *, role: str, branch_id: str, round_inde
             "an attack on the contrapositive. Name the new mechanism explicitly "
             "in goal_restatement before proposing claims.\n\n"
         )
+    regulator_block = ""
+    if regulator_action == "REVISE_PLAN":
+        regulator_block = (
+            "PLAN REVISION REQUIRED: retain the core mechanism and every "
+            "still-valid ledger claim, but rebuild the dependency plan. Name "
+            "the failed dependency or quantifier transition, replace that "
+            "part of the plan, and expose the revised dependency chain in "
+            "claims.depends_on. Do not merely reword the old proof.\n\n"
+        )
+    elif regulator_action == "REWRITE":
+        regulator_block = (
+            "MECHANISM REWRITE REQUIRED: the previous mechanism, not merely "
+            "one lemma or its dependency order, has failed. Do not inherit "
+            "its open-subgoal plan. Start from a materially different "
+            "mechanism, name it in goal_restatement, and state the first "
+            "strictly weaker artifact that could falsify or validate it.\n\n"
+        )
+    elif regulator_action == "REVISE_PROOF":
+        regulator_block = (
+            "LOCAL PROOF REVISION: preserve the current mechanism and valid "
+            "dependency plan. Replace any refuted or circular local claim "
+            "under a new claim_id and repair only the smallest broken proof "
+            "step.\n\n"
+        )
+    blocker_block = ""
+    if blocker_only:
+        blocker_block = (
+            "BLOCKER-ONLY ROUND (Sabidussi protocol): STAGNATION has isolated "
+            "the exact gap below. Freeze the target-level plan; "
+            "do not restart the original problem or summarize the reduction. "
+            "Attack this blocker directly and return either a proof via "
+            "strictly weaker dependencies, a concrete counterexample, or the "
+            "smallest sharper sub-blocker.\n"
+            f"EXACT BLOCKER: {blocker_only[:500]}\n\n"
+        )
     literature_block = ""
     if packet_summary:
         literature_block = (
@@ -768,9 +1023,14 @@ def continuation_prompt(statement: str, *, role: str, branch_id: str, round_inde
         f"You are an EGMRA research worker in the role '{role}' continuing branch "
         f"'{branch_id}' (round {round_index}). The immutable TARGET STATEMENT is "
         f"unchanged:\n{statement}\n\n"
+        + _exact_model_block(exact_model)
         + _formal_target_block(formal_target)
         + _traps_block(traps or [])
+        + _research_contract_block(
+            statement, role=role, formal_target=formal_target)
+        + blocker_block
         + reframe_block
+        + regulator_block
         + literature_block
         + experiment_block
         + f"LEMMA LEDGER so far (unverified proposals, read-only):\n{ledger_summary or '(empty)'}\n\n"
@@ -783,8 +1043,14 @@ def continuation_prompt(statement: str, *, role: str, branch_id: str, round_inde
         "refuted, circular, or unprovable, REPLACE it under a new claim_id — "
         "never patch prose around it. Close the open subgoals with new lemmas, "
         "finite experiments, or Lean declaration candidates. Restate any claim "
-        "you still rely on. Do NOT assert the target is proved; proof requires "
-        "independent verification you do not perform.\n"
+        "you still rely on. Choose regulator_action with this prior (the "
+        "evidence overrides it): a local execution slip in one claim or "
+        "calculation is REVISE_PROOF; a missing, misordered, or refuted "
+        "dependency inside an otherwise sound mechanism is REVISE_PLAN; the "
+        "same mechanism failing the same way across rounds is REWRITE; one "
+        "stable theorem-strength gap is FOCUS_BLOCKER. Do NOT assert the "
+        "target is proved; proof requires independent verification you do "
+        "not perform.\n"
         + _ANTI_CIRCULARITY_RULE
         + _CAPABILITY_AND_SCHEMA_TAIL
     )
@@ -793,9 +1059,14 @@ def continuation_prompt(statement: str, *, role: str, branch_id: str, round_inde
 def referee_prompt(statement: str, claims: list[dict[str, Any]]) -> str:
     rendered = "\n".join(f"- {c['claim_id'] or '?'}: {c['statement']}" for c in claims) or "(none)"
     return (
-        "You are an independent skeptical referee. For the target and the "
-        "proposed claims below, list concrete objections or gaps as JSON.\n\n"
+        "You are an independent skeptical referee. Assume the claims below are "
+        "WRONG. Walk them in dependency order and find the FIRST unjustified "
+        "step; report concrete objections or gaps as JSON.\n\n"
         f"TARGET:\n{statement}\n\nPROPOSED CLAIMS:\n{rendered}\n\n"
+        "For each objection name the claim id, the defect class (gap | "
+        "circular | false | scope | import-mismatch | hand-wave), and the "
+        "exact broken step. If you are uncertain whether a step is "
+        "established, it is NOT established. "
         "Put the JSON inside one ```json fenced code block and return no prose "
         "outside it. Use keys: falsifiers (list of strings) and "
         "bottleneck (string). Do NOT approve or assert any proof."
@@ -885,6 +1156,38 @@ class RunnerWorker:
             return contract.lattice.nodes[0].conclusion
         except (AttributeError, IndexError):
             return ""
+
+    def _exact_model(self, contract) -> str:
+        """Render the locked interpretation's structured reading (Kerger model).
+
+        Intake already parsed quantifier binders and hypotheses into the
+        interpretation node; rendering them costs nothing and pins the exact
+        model the way Kerger's prompt did by hand.  Read-only prompt context
+        from data the pipeline already trusts — never new authority.
+        """
+        try:
+            node = contract.lattice.nodes[0]
+        except (AttributeError, IndexError):
+            return ""
+        lines: list[str] = []
+        for binder in list(getattr(node, "binders", None) or [])[:6]:
+            if isinstance(binder, dict):
+                name = str(binder.get("name", "")).strip()
+                domain = str(binder.get("domain", "")).strip()
+                quantifier = str(binder.get("quantifier", "")).strip()
+            else:
+                name = str(getattr(binder, "name", "")).strip()
+                domain = str(getattr(binder, "domain", "")).strip()
+                quantifier = str(getattr(binder, "quantifier", "")).strip()
+            if name and quantifier:
+                lines.append(
+                    f"- binder: {quantifier} {name}"
+                    + (f" ranging over {domain}" if domain else ""))
+        for hyp in list(getattr(node, "hypotheses", None) or [])[:6]:
+            text = str(hyp).strip()
+            if text:
+                lines.append(f"- hypothesis: {text[:200]}")
+        return "\n".join(lines)
 
     def _packet_summary(self, packet, *, focus: str = "") -> str:
         """Render the frozen literature packet for the branch prompt.
@@ -1045,6 +1348,7 @@ class RunnerWorker:
         branch-wide cap, and nothing a model asserts becomes evidence.
         """
         statement = self._statement(contract)
+        exact_model = self._exact_model(contract)
         failures: list[str] = []
         proposals: list[dict[str, Any]] = [{
             "claim_id": self.goal_claim_id,
@@ -1076,6 +1380,9 @@ class RunnerWorker:
         rounds = max(1, int(self.max_rounds))
         reframe_used = False
         reframe_pending = False
+        regulator_action_pending = _DEFAULT_REGULATOR_ACTION
+        blocker_focus_used = False
+        blocker_only_pending = ""
         round_bottlenecks: list[str] = []
 
         for round_index in range(1, rounds + 1):
@@ -1087,18 +1394,26 @@ class RunnerWorker:
                     traps=self.problem_traps,
                     family_history=self.family_history,
                     carried_subgoals=self.carried_subgoals,
+                    exact_model=exact_model,
                 )
             else:
+                active_regulator_action = regulator_action_pending
+                # A mechanism rewrite retains the ledger and failure memory
+                # for audit/non-repetition, but must not inherit the failed
+                # route's todo list as if it were still the active plan.
+                prompt_subgoals = (
+                    [] if active_regulator_action == "REWRITE"
+                    else open_subgoals)
                 # Refocus the SAME frozen packet on what this branch is now
                 # hunting (its own queries + open subgoals) — continuation
                 # rounds previously carried no literature at all, so the model
                 # could never see the theorem it had just asked for.
-                focus = " ".join([*search_queries[-8:], *open_subgoals[:8]])
+                focus = " ".join([*search_queries[-8:], *prompt_subgoals[:8]])
                 prompt = continuation_prompt(
                     statement, role=self.role, branch_id=branch_id,
                     round_index=round_index,
                     ledger_summary=self._ledger_summary(proposals),
-                    open_subgoals=open_subgoals,
+                    open_subgoals=prompt_subgoals,
                     objections=falsifiers,
                     failed_approaches=self.failed_approach_memory,
                     formal_target=self.formal_target,
@@ -1108,8 +1423,13 @@ class RunnerWorker:
                         self._packet_summary(packet, focus=focus)
                         if focus.strip() else ""),
                     experiment_results=experiment_outcomes,
+                    blocker_only=blocker_only_pending,
+                    regulator_action=active_regulator_action,
+                    exact_model=exact_model,
                 )
             reframe_pending = False
+            regulator_action_pending = _DEFAULT_REGULATOR_ACTION
+            blocker_only_pending = ""
             try:
                 parsed, round_failures = self._ask_structured(
                     prompt, stage=f"branch:{branch_id}:round{round_index}"
@@ -1173,6 +1493,11 @@ class RunnerWorker:
                 })
 
             falsifiers = list(dict.fromkeys([*falsifiers, *parsed["falsifiers"]]))
+            # Kerger/Theorist-Toolbox: hand-wave phrases in proof steps or
+            # claims become recorded objections the NEXT round must justify
+            # or replace (advisory prompt context only — never a gate).
+            falsifiers = list(dict.fromkeys(
+                [*falsifiers, *_handwave_objections(parsed)]))
             bottleneck = parsed["bottleneck"] or bottleneck
             if self.referee is not None:
                 failures, falsifiers, bottleneck = self._referee_pass(
@@ -1205,6 +1530,26 @@ class RunnerWorker:
             open_subgoals = list(parsed["open_subgoals"])
             round_bottlenecks.append(str(parsed["bottleneck"]).strip())
 
+            # QED-style typed regulator: this schedules only the NEXT bounded
+            # model round. It cannot alter a claim/evidence status. Unknown or
+            # omitted values were normalized to REVISE_PROOF at parse time.
+            action_pending = False
+            if round_index < rounds:
+                regulator_action = parsed["regulator_action"]
+                if regulator_action == "FOCUS_BLOCKER":
+                    exact_blocker = bottleneck or (
+                        open_subgoals[0] if open_subgoals else "")
+                    if exact_blocker and not blocker_focus_used:
+                        blocker_focus_used = True
+                        blocker_only_pending = exact_blocker
+                        regulator_action_pending = "FOCUS_BLOCKER"
+                        action_pending = True
+                elif regulator_action in {"REVISE_PLAN", "REWRITE"}:
+                    regulator_action_pending = regulator_action
+                    if regulator_action == "REWRITE":
+                        reframe_used = True
+                    action_pending = True
+
             # Stagnation: nothing new proposed and nothing left open. Instead
             # of ending the branch on the first stall (the old behavior), spend
             # ONE reframe round demanding a materially different formulation —
@@ -1218,13 +1563,38 @@ class RunnerWorker:
                 and round_bottlenecks[-1]
                 and round_bottlenecks[-1] == round_bottlenecks[-2]
             )
-            stalled = new_claims == 0 and (
-                not open_subgoals or repeated_bottleneck)
-            if round_index < rounds and stalled:
-                if reframe_used:
+            # Kerger concreteness rule: a reply with NO concrete artifact in
+            # any category is a status report, not mathematics — treat it as
+            # a stalled round even when it lists open subgoals.
+            actionable = bool(
+                parsed["claims"] or parsed["experiments"]
+                or parsed["lean_declaration_candidates"]
+                or parsed["literature_imports"] or parsed["falsifiers"]
+                or parsed["candidate_sequences"])
+            if not actionable:
+                failures.append(
+                    f"non_actionable_round:{branch_id}:round{round_index}")
+            stalled = (new_claims == 0 and (
+                not open_subgoals or repeated_bottleneck)) or not actionable
+            if round_index < rounds and stalled and not action_pending:
+                if repeated_bottleneck and not blocker_focus_used:
+                    # Sabidussi pattern: once one exact theorem-strength gap is
+                    # stable, spend a dedicated round on that gap before
+                    # abandoning/reframing the surrounding reduction.
+                    blocker_focus_used = True
+                    blocker_only_pending = bottleneck
+                    regulator_action_pending = "FOCUS_BLOCKER"
+                elif repeated_bottleneck and blocker_focus_used:
+                    # The dedicated blocker round was the branch's last cheap
+                    # recovery for this exact gap. Repeating it again without
+                    # a new plan/mechanism would only spend another model call.
                     break
-                reframe_used = True
-                reframe_pending = True
+                elif reframe_used:
+                    break
+                else:
+                    reframe_used = True
+                    reframe_pending = True
+                    regulator_action_pending = "REWRITE"
 
         for failure in failures:
             if failure.startswith(("malformed_model_output", "referee_unavailable")):

@@ -36,7 +36,7 @@ class _MemoryCampaignStore:
         self._row: tuple[str, str] | None = None
         self._lock = threading.RLock()
 
-    def read(self):
+    def read(self, *, retry_seconds=None):
         if self._row is None:
             return None
         body_text, signature = self._row
@@ -44,7 +44,7 @@ class _MemoryCampaignStore:
             raise CampaignError("campaign state signature is invalid (tampered or wrong key)")
         return json.loads(body_text)
 
-    def write(self, body):
+    def write(self, body, *, retry_seconds=None):
         body_text = canonical_json(body)
         self._row = (body_text, _hmac_hex(self._key, body_text))
 

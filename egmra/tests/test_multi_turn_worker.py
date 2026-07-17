@@ -41,8 +41,9 @@ class PromptRecordingRunner:
         )
 
 
-def _round_reply(*, claims=(), open_subgoals=(), bottleneck="", falsifiers=()):
-    return json.dumps({
+def _round_reply(*, claims=(), open_subgoals=(), bottleneck="", falsifiers=(),
+                 regulator_action=None):
+    document = {
         "goal_restatement": "restated",
         "claims": [
             {"claim_id": cid, "statement": statement, "depends_on": [],
@@ -58,7 +59,10 @@ def _round_reply(*, claims=(), open_subgoals=(), bottleneck="", falsifiers=()):
         "open_subgoals": list(open_subgoals),
         "bottleneck": bottleneck,
         "confidence": 0.5,
-    })
+    }
+    if regulator_action is not None:
+        document["regulator_action"] = regulator_action
+    return json.dumps(document)
 
 
 def test_single_round_default_is_one_model_call():
@@ -121,6 +125,56 @@ def test_reframe_round_that_produces_new_claims_continues():
     out = worker.work_branch(None, None, branch_id="b1", budget=5.0, fencing_token=1)
     assert len(runner.calls) == 4
     assert {"lem2", "lem3"} <= {p["claim_id"] for p in out.claim_proposals}
+
+
+def test_revise_plan_action_rebuilds_dependencies_without_rewriting_mechanism():
+    runner = PromptRecordingRunner([
+        _round_reply(
+            claims=[("lem1", "L1")], open_subgoals=["repair dependency D"],
+            regulator_action="REVISE_PLAN"),
+        _round_reply(claims=[("lem2", "replacement for D")]),
+    ])
+    worker = RunnerWorker(runner=runner, goal_claim_id="goal", goal_formula="T",
+                          max_rounds=2)
+    worker.work_branch(None, None, branch_id="b1", budget=5.0, fencing_token=1)
+    prompt = runner.calls[1][1]
+    assert "PLAN REVISION REQUIRED" in prompt
+    assert "repair dependency D" in prompt
+    assert "MECHANISM REWRITE REQUIRED" not in prompt
+
+
+def test_rewrite_action_drops_stale_subgoals_but_keeps_audit_ledger():
+    runner = PromptRecordingRunner([
+        _round_reply(
+            claims=[("lem1", "valid fact from failed route")],
+            open_subgoals=["stale todo from failed mechanism"],
+            regulator_action="REWRITE"),
+        _round_reply(claims=[("lem2", "first artifact of new mechanism")]),
+    ])
+    worker = RunnerWorker(runner=runner, goal_claim_id="goal", goal_formula="T",
+                          max_rounds=2)
+    worker.work_branch(None, None, branch_id="b1", budget=5.0, fencing_token=1)
+    prompt = runner.calls[1][1]
+    assert "MECHANISM REWRITE REQUIRED" in prompt
+    assert "stale todo from failed mechanism" not in prompt
+    assert "valid fact from failed route" in prompt
+
+
+def test_focus_blocker_action_uses_exact_named_gap_next_round():
+    runner = PromptRecordingRunner([
+        _round_reply(
+            claims=[("lem1", "sound reduction")],
+            open_subgoals=["other todo"], bottleneck="prove exact gap G",
+            regulator_action="FOCUS_BLOCKER"),
+        _round_reply(claims=[("lem2", "strict sublemma for G")]),
+    ])
+    worker = RunnerWorker(runner=runner, goal_claim_id="goal", goal_formula="T",
+                          max_rounds=2)
+    worker.work_branch(None, None, branch_id="b1", budget=5.0, fencing_token=1)
+    prompt = runner.calls[1][1]
+    assert "BLOCKER-ONLY ROUND (Sabidussi protocol)" in prompt
+    assert "EXACT BLOCKER: prove exact gap G" in prompt
+    assert "Freeze the target-level plan" in prompt
 
 
 def test_continuation_prompt_carries_ledger_subgoals_objections_and_memory():

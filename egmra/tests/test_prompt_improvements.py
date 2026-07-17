@@ -111,6 +111,30 @@ def test_branch_prompt_is_decision_first():
     assert "single most decisive next artifact" in prompt
 
 
+def test_branch_prompt_derives_problem_specific_completion_and_exclusions():
+    prompt = branch_prompt(
+        "For every n, estimate the limsup and determine whether it equals 2.",
+        role="formalizer", branch_id="b1", packet_summary="",
+        formal_target="theorem target : True := by trivial")
+    assert "COMPLETION CONTRACT" in prompt
+    assert "RESULTS THAT DO NOT COUNT" in prompt
+    assert "universal or infinite quantifier" in prompt
+    assert "asymptotic regime" in prompt
+    assert "one-sided implication" in prompt
+    assert "exact community formal target" in prompt
+    assert "BASELINE ALIGNMENT" in prompt
+    assert "AUDIT ROUTING" in prompt
+
+
+def test_role_specific_exclusion_is_rendered_without_schema_growth():
+    prompt = branch_prompt(
+        "Does the proposed construction exist?", role="skeptic",
+        branch_id="b1", packet_summary="")
+    assert "heuristic obstruction without a checkable witness" in prompt
+    # Prompt guidance reuses existing fields; no response-schema key was added.
+    assert "results_that_do_not_count" not in _CAPABILITY_AND_SCHEMA_TAIL
+
+
 # --- sandbox verdicts feed later rounds ------------------------------------
 
 _TRUE_CODE = 'def experiment(inputs):\n    return {"result": True, "coverage": "n <= 4"}\n'
@@ -128,6 +152,26 @@ def test_experiment_results_render_in_continuation_prompt():
         "S", role="prover", branch_id="b1", round_index=2, ledger_summary="",
         open_subgoals=[], objections=[], failed_approaches=[])
     assert "SANDBOX EXPERIMENT RESULTS" not in bare
+
+
+def test_repeated_exact_bottleneck_triggers_blocker_only_round():
+    runner = PromptRecordingRunner([
+        _reply(claims=[("lem1", "A useful strict sublemma")],
+               open_subgoals=("prove frame balancing",)),
+        _reply(open_subgoals=("prove frame balancing",)),
+        _reply(claims=[("lem2", "The frame balancing lemma")],
+               open_subgoals=()),
+    ])
+    worker = RunnerWorker(
+        runner=runner, goal_claim_id="goal", goal_formula="Target",
+        max_rounds=3)
+    out = worker.work_branch(
+        None, None, branch_id="b1", budget=5.0, fencing_token=1)
+    third_prompt = runner.calls[2][1]
+    assert "BLOCKER-ONLY ROUND (Sabidussi protocol)" in third_prompt
+    assert "EXACT BLOCKER: b" in third_prompt
+    assert "Freeze the target-level plan" in third_prompt
+    assert any(p["claim_id"] == "lem2" for p in out.claim_proposals)
 
 
 def test_work_branch_feeds_sandbox_verdicts_into_next_round():
@@ -184,3 +228,148 @@ def test_outcome_line_reports_crash_diagnostics():
         branch_id="b1", seen={"goal"}, failures=[], outcomes=outcomes)
     assert len(outcomes) == 1
     assert "PASSED" not in outcomes[0]
+
+
+# --- Kerger concreteness + hand-wave discipline -----------------------------
+
+
+def test_handwave_phrases_become_recorded_objections_for_next_round():
+    reply1 = json.dumps({
+        "goal_restatement": "r",
+        "claims": [{"claim_id": "lem1",
+                    "statement": "The extension step is standard argument",
+                    "depends_on": [], "scope": "general"}],
+        "proof_steps": ["The compatibility step is routine and omitted"],
+        "falsifiers": [], "search_queries": [], "candidate_sequences": [],
+        "experiments": [], "formalization_requests": [],
+        "lean_declaration_candidates": [],
+        "open_subgoals": ["close it"], "bottleneck": "b1",
+    })
+    runner = PromptRecordingRunner([
+        reply1,
+        _reply(claims=[("lem2", "L2")], open_subgoals=()),
+    ])
+    worker = RunnerWorker(runner=runner, goal_claim_id="goal", goal_formula="T",
+                          max_rounds=2)
+    out = worker.work_branch(None, None, branch_id="b1", budget=5.0,
+                             fencing_token=1)
+    assert any("hand-wave flagged" in f for f in out.falsifiers)
+    round2_prompt = runner.calls[1][1]
+    assert "hand-wave flagged" in round2_prompt          # rendered as objection
+    assert "justify this step rigorously or replace it" in round2_prompt
+
+
+def test_schema_tail_forbids_status_reports_and_routine_steps():
+    assert "non-actionable status report" in _CAPABILITY_AND_SCHEMA_TAIL
+    assert "'standard' or 'routine'" in _CAPABILITY_AND_SCHEMA_TAIL
+
+
+def test_artifact_free_round_is_recorded_and_treated_as_stalled():
+    empty = json.dumps({
+        "goal_restatement": "still thinking",
+        "claims": [], "proof_steps": [], "falsifiers": [],
+        "search_queries": [], "candidate_sequences": [], "experiments": [],
+        "formalization_requests": [], "lean_declaration_candidates": [],
+        "open_subgoals": ["promising directions remain"],
+        "bottleneck": "different each time 1",
+    })
+    runner = PromptRecordingRunner([
+        _reply(claims=[("lem1", "L1")], open_subgoals=("g",)),
+        empty,
+        _reply(claims=[("lem2", "L2")], open_subgoals=()),
+    ])
+    worker = RunnerWorker(runner=runner, goal_claim_id="goal", goal_formula="T",
+                          max_rounds=3)
+    out = worker.work_branch(None, None, branch_id="b1", budget=5.0,
+                             fencing_token=1)
+    assert any(f.startswith("non_actionable_round:b1:round2")
+               for f in out.failures)
+    # The stall consumed the recovery escalation (round 3 is a recovery round).
+    third = runner.calls[2][1]
+    assert ("STAGNATION" in third) or ("BLOCKER-ONLY" in third)
+
+
+def test_continuation_prompt_states_regulator_decision_priors():
+    later = continuation_prompt(
+        "S", role="prover", branch_id="b1", round_index=2, ledger_summary="",
+        open_subgoals=[], objections=[], failed_approaches=[])
+    assert "local execution slip" in later               # REVISE_PROOF prior
+    assert "misordered, or refuted" in later             # REVISE_PLAN prior
+    assert "same mechanism failing the same way" in later  # REWRITE prior
+    assert "theorem-strength gap is FOCUS_BLOCKER" in later
+    assert "the evidence overrides it" in later          # prior, not verdict
+
+
+def test_referee_prompt_hunts_first_error_with_defect_classes():
+    from egmra.orchestrator.runner_worker import referee_prompt
+
+    prompt = referee_prompt("T", [{"claim_id": "c1", "statement": "s"}])
+    assert "FIRST unjustified step" in prompt
+    assert "dependency order" in prompt
+    assert "import-mismatch" in prompt and "hand-wave" in prompt
+    assert "it is NOT established" in prompt             # uncertain => fail
+    assert "Do NOT approve or assert any proof." in prompt
+
+
+# --- Kerger information density: exact model + family guidance ---------------
+
+
+def test_every_method_family_has_mechanism_guidance():
+    from egmra.orchestrator.runner_worker import _FAMILY_GUIDANCE
+    from egmra.search.mechanism import METHOD_FAMILIES
+
+    assert set(_FAMILY_GUIDANCE) == set(METHOD_FAMILIES)
+    for family, guidance in _FAMILY_GUIDANCE.items():
+        assert len(guidance.split()) >= 20, family   # real guidance, not a label
+
+
+def test_branch_prompt_renders_family_guidance_for_known_family_only():
+    known = branch_prompt("S", role="prover",
+                          branch_id="probabilistic_analytic", packet_summary="")
+    assert "BRANCH MECHANISM (probabilistic_analytic)" in known
+    assert "independence or negative-correlation" in known
+    adhoc = branch_prompt("S", role="prover", branch_id="b1", packet_summary="")
+    assert "BRANCH MECHANISM" not in adhoc
+
+
+def test_exact_model_block_renders_binders_and_hypotheses_from_contract():
+    from types import SimpleNamespace
+
+    node = SimpleNamespace(
+        conclusion="the target",
+        binders=[{"name": "n", "domain": "natural numbers",
+                  "quantifier": "for all"}],
+        hypotheses=["A is a basis of order 2", "A is infinite"],
+    )
+    contract = SimpleNamespace(lattice=SimpleNamespace(nodes=[node]))
+    worker = RunnerWorker(runner=PromptRecordingRunner([]), goal_claim_id="goal",
+                          goal_formula="T")
+    model = worker._exact_model(contract)
+    assert "- binder: for all n ranging over natural numbers" in model
+    assert "- hypothesis: A is a basis of order 2" in model
+    prompt = branch_prompt("T", role="prover", branch_id="b1",
+                           packet_summary="", exact_model=model)
+    assert "EXACT MODEL (locked interpretation" in prompt
+    assert "for all n ranging over natural numbers" in prompt
+    # No contract -> no block, prompts unchanged.
+    assert worker._exact_model(None) == ""
+    assert "EXACT MODEL" not in branch_prompt(
+        "T", role="prover", branch_id="b1", packet_summary="")
+
+
+def test_exact_model_persists_into_continuation_rounds():
+    later = continuation_prompt(
+        "S", role="prover", branch_id="b1", round_index=2, ledger_summary="",
+        open_subgoals=[], objections=[], failed_approaches=[],
+        exact_model="- binder: for all n ranging over integers")
+    assert "EXACT MODEL (locked interpretation" in later
+    assert "for all n ranging over integers" in later
+
+
+def test_packet_budget_was_raised_for_information_density():
+    from egmra.orchestrator.runner_worker import (
+        _PACKET_CHAR_BUDGET,
+        _PACKET_MAX_RECORDS,
+    )
+    assert _PACKET_CHAR_BUDGET >= 8000
+    assert _PACKET_MAX_RECORDS >= 16

@@ -94,8 +94,8 @@ def _sign_body(key: bytes, body: dict[str, Any]) -> str:
 class CampaignStore(Protocol):
     """Durable, mutually-exclusive storage for one campaign's signed state."""
 
-    def read(self) -> dict[str, Any] | None: ...
-    def write(self, body: dict[str, Any]) -> None: ...
+    def read(self, *, retry_seconds: float | None = None) -> dict[str, Any] | None: ...
+    def write(self, body: dict[str, Any], *, retry_seconds: float | None = None) -> None: ...
     def locked(self): ...  # cross-process mutual-exclusion context manager
     def close(self) -> None: ...
 
@@ -108,7 +108,9 @@ class FileCampaignStore:
         self._key = _campaign_key(env)
         self.state_path.parent.mkdir(parents=True, exist_ok=True)
 
-    def read(self) -> dict[str, Any] | None:
+    def read(self, *, retry_seconds: float | None = None) -> dict[str, Any] | None:
+        # ``retry_seconds`` is a Postgres-store concept; the file store never
+        # blocks on a network, so it is accepted and ignored for interface parity.
         if not self.state_path.exists():
             return None
         try:
@@ -122,7 +124,7 @@ class FileCampaignStore:
             raise CampaignError("campaign state signature is invalid (tampered or wrong key)")
         return body
 
-    def write(self, body: dict[str, Any]) -> None:
+    def write(self, body: dict[str, Any], *, retry_seconds: float | None = None) -> None:
         state = dict(body) | {"signature": _sign_body(self._key, body)}
         tmp = self.state_path.with_suffix(self.state_path.suffix + ".tmp")
         tmp.write_text(json.dumps(state), encoding="utf-8")
@@ -161,6 +163,24 @@ def _pg_retry_seconds() -> float:
     except ValueError:
         return 300.0
     return min(3600.0, max(0.0, value))
+
+
+def _pg_heartbeat_retry_seconds() -> float:
+    """SHORT disconnect-retry window for machine-liveness writes (default 20s).
+
+    The liveness heartbeat must never inherit the worker loop's long
+    :func:`_pg_retry_seconds` budget: a single beat that blocked for minutes
+    on a stale socket would hold the campaign lock, starve real work, and
+    make an alive process look dead. A short budget lets a beat fail fast and
+    retry on the next 30s tick. Override with
+    ``EGMRA_PG_HEARTBEAT_RETRY_SECONDS`` (clamped 0-120).
+    """
+    raw = os.environ.get("EGMRA_PG_HEARTBEAT_RETRY_SECONDS", "").strip()
+    try:
+        value = float(raw) if raw else 20.0
+    except ValueError:
+        return 20.0
+    return min(120.0, max(0.0, value))
 
 
 def _is_infrastructure_failure(result_state: str) -> bool:
@@ -288,7 +308,8 @@ class PostgresCampaignStore:
             except Exception:  # noqa: BLE001 - discarding a dead connection
                 pass
 
-    def _with_connection(self, operation, *, _retries: int | None = None):  # pragma: no cover
+    def _with_connection(self, operation, *, _retries: int | None = None,
+                         retry_seconds: float | None = None):  # pragma: no cover
         """Run ``operation(connection)``, retrying disconnects with backoff.
 
         A single immediate reconnect is not enough in the common failure mode:
@@ -299,9 +320,12 @@ class PostgresCampaignStore:
         pg_try_advisory_lock), so patiently retrying disconnect-class errors
         for a bounded window (default 300s, override
         ``EGMRA_PG_RETRY_SECONDS``) rides out sleep/wake and network blips
-        while still failing visibly on genuine persistent outages.
+        while still failing visibly on genuine persistent outages. A caller may
+        pass a SHORTER ``retry_seconds`` (the liveness heartbeat does) so a
+        best-effort write fails fast instead of holding the lock for minutes.
         """
-        deadline = time.monotonic() + _pg_retry_seconds()
+        budget = retry_seconds if retry_seconds is not None else _pg_retry_seconds()
+        deadline = time.monotonic() + budget
         pause = 2.0
         while True:
             try:
@@ -316,14 +340,14 @@ class PostgresCampaignStore:
                 time.sleep(min(pause, max(0.0, deadline - time.monotonic())))
                 pause = min(pause * 2.0, 60.0)
 
-    def read(self) -> dict[str, Any] | None:  # pragma: no cover - requires a server
+    def read(self, *, retry_seconds: float | None = None) -> dict[str, Any] | None:  # pragma: no cover - requires a server
         def _op(connection):
             with connection.cursor() as cursor:
                 cursor.execute(
                     "SELECT body, signature FROM campaign_state WHERE name = %s",
                     (self.name,))
                 return cursor.fetchone()
-        row = self._with_connection(_op)
+        row = self._with_connection(_op, retry_seconds=retry_seconds)
         if row is None:
             return None
         body_text, signature = str(row[0]), str(row[1])
@@ -331,7 +355,7 @@ class PostgresCampaignStore:
             raise CampaignError("campaign state signature is invalid (tampered or wrong key)")
         return json.loads(body_text)
 
-    def write(self, body: dict[str, Any]) -> None:  # pragma: no cover - requires a server
+    def write(self, body: dict[str, Any], *, retry_seconds: float | None = None) -> None:  # pragma: no cover - requires a server
         body_text = canonical_json(body)
         signature = _hmac_hex(self._key, body_text)
 
@@ -342,7 +366,7 @@ class PostgresCampaignStore:
                     "VALUES (%s, %s, %s, now()) ON CONFLICT (name) DO UPDATE SET "
                     "body = EXCLUDED.body, signature = EXCLUDED.signature, updated_at = now()",
                     (self.name, body_text, signature))
-        self._with_connection(_op)
+        self._with_connection(_op, retry_seconds=retry_seconds)
 
     @contextmanager
     def locked(self):  # pragma: no cover - requires a database server
@@ -419,11 +443,11 @@ class Campaign:
         self._store.close()
 
     # ── durable state (delegated to the pluggable store) ─────────────────────
-    def _write(self, state: dict[str, Any]) -> None:
-        self._store.write(state)
+    def _write(self, state: dict[str, Any], *, retry_seconds: float | None = None) -> None:
+        self._store.write(state, retry_seconds=retry_seconds)
 
-    def _read(self) -> dict[str, Any] | None:
-        return self._store.read()
+    def _read(self, *, retry_seconds: float | None = None) -> dict[str, Any] | None:
+        return self._store.read(retry_seconds=retry_seconds)
 
     @contextmanager
     def _locked(self):
@@ -459,8 +483,9 @@ class Campaign:
         """
         if not isinstance(machine_id, str) or not machine_id.strip():
             raise CampaignError("machine id must be non-empty")
+        hb_budget = _pg_heartbeat_retry_seconds()
         with self._locked():
-            state = self._read()
+            state = self._read(retry_seconds=hb_budget)
             if state is None:
                 raise CampaignError("campaign is not initialized")
             machines = dict(state.get("machines") or {})
@@ -486,12 +511,13 @@ class Campaign:
             machines[machine_id] = record
             self._write(self._encode(
                 state["campaign_id"], state["order"], self._decode(state),
-                int(state["fencing_counter"]), machines))
+                int(state["fencing_counter"]), machines), retry_seconds=hb_budget)
 
     def machine_stopped(self, machine_id: str, *, now: float) -> None:
         """Mark a graceful shutdown; crashes remain detectable as stale."""
+        hb_budget = _pg_heartbeat_retry_seconds()
         with self._locked():
-            state = self._read()
+            state = self._read(retry_seconds=hb_budget)
             if state is None:
                 return
             machines = dict(state.get("machines") or {})
@@ -503,7 +529,7 @@ class Campaign:
             }
             self._write(self._encode(
                 state["campaign_id"], state["order"], self._decode(state),
-                int(state["fencing_counter"]), machines))
+                int(state["fencing_counter"]), machines), retry_seconds=hb_budget)
 
     # ── lifecycle ────────────────────────────────────────────────────────────
     def initialize(self, campaign_id: str, problem_ids: list[str]) -> list[str]:

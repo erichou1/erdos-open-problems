@@ -135,6 +135,16 @@ def test_browser_safe_base64_source_fields_survive_rendered_json_transport():
     assert parsed["lean_declaration_candidates"][0]["source"] == lean_source
 
 
+def test_regulator_action_is_normalized_with_conservative_fallback():
+    assert parse_worker_response(
+        '{"regulator_action": "focus-blocker"}'
+    )["regulator_action"] == "FOCUS_BLOCKER"
+    assert parse_worker_response(
+        '{"regulator_action": "approve proof"}'
+    )["regulator_action"] == "REVISE_PROOF"
+    assert parse_worker_response("{}")["regulator_action"] == "REVISE_PROOF"
+
+
 def test_branch_prompt_uses_fenced_json_and_base64_for_source_payloads():
     prompt = branch_prompt("T", role="prover", branch_id="direct", packet_summary="")
 
