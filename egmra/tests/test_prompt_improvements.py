@@ -31,12 +31,14 @@ import pytest
 from egmra.compute.service import ComputeService
 from egmra.orchestrator.runner_worker import (
     _CAPABILITY_AND_SCHEMA_TAIL,
+    _EXTRACTION_SCHEMA_TAIL,
     _REASONING_TAIL,
     RunnerWorker,
     WorkerResponseSchemaError,
     branch_prompt,
     continuation_prompt,
     parse_worker_response,
+    problem_research_protocol,
 )
 from egmra.tests.test_multi_turn_worker import PromptRecordingRunner
 
@@ -373,3 +375,94 @@ def test_packet_budget_was_raised_for_information_density():
     )
     assert _PACKET_CHAR_BUDGET >= 8000
     assert _PACKET_MAX_RECORDS >= 16
+
+
+# --- per-problem Kerger/CDC protocol compiler -------------------------------
+
+
+def test_protocol_compiler_contains_full_operational_architecture():
+    protocol = problem_research_protocol(
+        "For every graph G, prove the matching upper and lower bounds.",
+        role="prover", branch_id="direct_structural",
+        packet_summary="- t1: exact baseline theorem",
+        exact_model="- binder: for all G ranging over finite graphs",
+        formal_target="theorem target : True := by trivial",
+        traps=["parallel edges are distinct"],
+        family_history=["extremal_invariant: BLOCKED at compatibility lemma"],
+        carried_subgoals=["prove the extension lemma"],
+    )
+    for heading in (
+        "1. LOCKED TASK AND MODEL",
+        "2. COMPLETION STANDARD AND NEGATIVE SPECIFICATION",
+        "3. VERIFIED BASELINE AND LITERATURE CHECKPOINT",
+        "4. INDEPENDENT BRANCH ASSIGNMENT",
+        "5. APPROACH-FAMILY REGISTRY AND PRIOR FAILURES",
+        "6. CARRIED OBLIGATIONS",
+        "7. LONG-HORIZON SEARCH DISCIPLINE",
+        "8. CONCRETE MATHEMATICS REQUIREMENT",
+        "9. REQUIRED ADVERSARIAL AUDIT",
+        "10. ROOT-SYNTHESIS AND REPORTING CONTRACT",
+    ):
+        assert heading in protocol
+    assert "RESULTS THAT DO NOT COUNT" in protocol
+    assert "exact baseline theorem" in protocol
+    assert "parallel edges are distinct" in protocol
+    assert "prove the extension lemma" in protocol
+    assert "Continue beyond the first failed wave" in protocol
+    assert "independent pipeline alone assigns truth status" in protocol
+    # Unsafe benchmark truth pressure is deliberately not generalized to open work.
+    assert "Assume for purposes of this task that" not in protocol
+    assert "Return only when" not in protocol
+
+
+def test_protocol_audit_is_problem_and_role_specific():
+    graph = problem_research_protocol(
+        "For every finite multigraph prove a probabilistic asymptotic bound.",
+        role="skeptic", branch_id="counterexample_model_construction",
+        packet_summary="")
+    assert "Combinatorial-model audit" in graph
+    assert "Probability audit" in graph
+    assert "Error accounting" in graph
+    assert "Counterexample audit" in graph
+
+
+def test_exact_model_renders_full_primary_ir_fields():
+    from types import SimpleNamespace
+
+    definition = SimpleNamespace(
+        symbol="f", semantics="f(n) is the extremal count", conventions="n >= 1")
+    ir = SimpleNamespace(
+        definitions=[definition], requested_outcome="prove",
+        parameter_regime="n tends to infinity", constraints=["n is even"],
+        edge_cases=["n=2"])
+    node = SimpleNamespace(
+        conclusion="target", binders=[], hypotheses=[],
+        ambiguities_open=["ordered versus unordered pairs"])
+    contract = SimpleNamespace(
+        lattice=SimpleNamespace(nodes=[node]), primary_ir=ir)
+    worker = RunnerWorker(runner=PromptRecordingRunner([]), goal_formula="T")
+    model = worker._exact_model(contract)
+    assert "definition f: f(n) is the extremal count" in model
+    assert "requested outcome: prove" in model
+    assert "parameter regime: n tends to infinity" in model
+    assert "constraint: n is even" in model
+    assert "required edge case: n=2" in model
+    assert "unresolved interpretation risk: ordered versus unordered pairs" in model
+
+
+def test_extraction_schema_preserves_detailed_proof_instead_of_10k_compression():
+    assert "aim under 10000 characters" in _CAPABILITY_AND_SCHEMA_TAIL
+    assert "aim under 10000 characters" not in _EXTRACTION_SCHEMA_TAIL
+    assert "preserve the COMPLETE mathematical content" in _EXTRACTION_SCHEMA_TAIL
+    assert "250000 characters" in _EXTRACTION_SCHEMA_TAIL
+
+
+def test_continuation_preserves_long_prior_proof_detail():
+    marker = "DETAIL_AT_END_OF_LONG_DERIVATION"
+    long_step = "equation " + "x" * 2_000 + marker
+    prompt = continuation_prompt(
+        "S", role="prover", branch_id="b1", round_index=2,
+        ledger_summary="", open_subgoals=["finish"], objections=[],
+        failed_approaches=[], prior_proof_steps=[long_step])
+    assert marker in prompt
+    assert "PER-PROBLEM LONG-HORIZON RESEARCH PROTOCOL" in prompt

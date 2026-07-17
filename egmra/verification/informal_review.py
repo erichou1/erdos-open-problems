@@ -35,6 +35,7 @@ from egmra.truth.entities import Evidence, EvidenceKind
 UNATTESTED_LINEAGE = "unattested-model"
 _MAX_LIST = 64
 _MAX_TEXT = 2000
+_MAX_REVIEW_PROOF_CHARS = 250_000
 
 
 class ReviewResponseError(ValueError):
@@ -114,7 +115,24 @@ def hostile_review_prompt(statement: str, ledger: list[dict[str, Any]],
         f"{str(row.get('canonical_formula', ''))[:300]}"
         for row in ledger
     ) or "(none)"
-    steps = "\n".join(f"{i}. {s[:300]}" for i, s in enumerate(proof_steps, 1)) or "(none)"
+    # Preserve full mathematical detail under a TOTAL prompt envelope.  The old
+    # per-step ``s[:300]`` clipped every long derivation at exactly the point
+    # where hypotheses/error terms usually matter, making hours-long proofs
+    # impossible to review. Prefer complete earlier dependency-ordered steps;
+    # append an explicit omission marker if the overall bounded envelope fills.
+    step_lines: list[str] = []
+    used = 0
+    for index, raw in enumerate(proof_steps[:_MAX_LIST], 1):
+        line = f"{index}. {str(raw)}"
+        if used + len(line) + 1 > _MAX_REVIEW_PROOF_CHARS:
+            step_lines.append(
+                f"[remaining proof steps omitted: review envelope exceeded "
+                f"{_MAX_REVIEW_PROOF_CHARS} characters — verdict must FAIL "
+                "because the full argument was unavailable]")
+            break
+        step_lines.append(line)
+        used += len(line) + 1
+    steps = "\n".join(step_lines) or "(none)"
     angle_block = f"YOUR PRIMARY ATTACK ANGLE:\n{audit_angle}\n\n" if audit_angle else ""
     return (
         "You are an independent HOSTILE referee. Assume the argument below is "

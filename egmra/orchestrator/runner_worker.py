@@ -608,6 +608,22 @@ _CAPABILITY_AND_SCHEMA_TAIL = (
     "reduction and attacks the one exact gap named in bottleneck."
 )
 
+# In direct single-call mode, a compact reply protects browser JSON transport.
+# In two-call mode the main mathematician already produced a long prose proof;
+# telling the extraction clerk to squeeze it below 10K silently destroys the
+# detail we paid hours to obtain. Keep artifact cardinality caps, but replace
+# only the compactness instruction with a bounded high-fidelity proof contract.
+_EXTRACTION_SCHEMA_TAIL = _CAPABILITY_AND_SCHEMA_TAIL.replace(
+    "keep the entire reply compact (aim under 10000 characters) — an over-long "
+    "reply risks truncation and is then discarded whole. ",
+    "preserve the COMPLETE mathematical content of the reasoning transcript: "
+    "proof_steps may contain up to 24 detailed steps with equations, hypotheses, "
+    "case splits, constants, and dependency interfaces intact. Do not summarize "
+    "away a derivation or replace it by 'as above'. Keep the full JSON below "
+    "250000 characters; if necessary omit commentary and failed brainstorms "
+    "before shortening any surviving proof step. ",
+)
+
 
 def _formal_target_block(formal_target: str) -> str:
     if not formal_target:
@@ -917,6 +933,204 @@ def _research_contract_block(statement: str, *, role: str,
     )
 
 
+def _problem_audit_items(statement: str, *, role: str,
+                         branch_id: str, traps: list[str]) -> list[str]:
+    """Derive a problem/role/mechanism-specific adversarial audit checklist.
+
+    This is prompt guidance only. Lexical cues select relevant checks; they do
+    not classify the problem or produce evidence.
+    """
+    lowered = statement.lower()
+    items = [
+        "Statement fidelity: compare every conclusion to the locked target; check quantifiers, domains, hypotheses, constants, strict/non-strict inequalities, and direction of implication.",
+        "Dependency integrity: identify the first step not proved from earlier claims or an exactly aligned imported theorem; do not hide it behind 'standard', 'routine', or notation changes.",
+        "Noncircularity: verify that no proposed lemma is the target, an equivalent reformulation, or a global compatibility statement carrying essentially all of the original difficulty.",
+        "Boundary and degeneracy: test the smallest admissible parameters, equality cases, empty or disconnected objects, repeated elements, zero terms, and every convention named in the statement.",
+        "Literature alignment: for every imported theorem check all hypotheses and the exact parameter regime; state the residual gap after the import.",
+    ]
+    if any(token in lowered for token in (
+            "for every", "for all", "infinitely many", "sufficiently large")):
+        items.append(
+            "Uniformity and quantifier order: ensure constants and exceptional sets are uniform at the required scope; finite verification cannot discharge a universal or infinite claim.")
+    if any(token in lowered for token in (
+            "asymptotic", "estimate", "limsup", "liminf", "bound", "o(", "omega(")):
+        items.append(
+            "Error accounting: recompute exponents, constants, logarithmic losses, limiting regimes, and accumulated errors from scratch; no hidden polynomial loss is allowed.")
+    if any(token in lowered for token in (
+            "random", "probability", "probabilistic", "expected", "almost surely")) \
+            or branch_id == "probabilistic_analytic":
+        items.append(
+            "Probability audit: define the probability space, verify dependence assumptions and conditioning, and convert probabilistic existence into the exact deterministic conclusion when required.")
+    if any(token in lowered for token in (
+            "graph", "cycle", "edge", "vertex", "multigraph")):
+        items.append(
+            "Combinatorial-model audit: preserve multiplicities, loops/parallel objects, connectivity conventions, induced-versus-non-induced meanings, and effects of reductions on forbidden structures.")
+    if any(token in lowered for token in (
+            "integer", "natural", "divides", "prime", "congru", "sequence")):
+        items.append(
+            "Arithmetic audit: check integrality, divisibility, signs, zero cases, residue classes, indexing conventions, and whether an asymptotic statement covers all required integers.")
+    if role == "experimentalist" or branch_id == "computational_finite_reduction":
+        items.append(
+            "Computation audit: separate exact checked facts from extrapolation; state the reduction proving why the bounded computation addresses the claimed scope.")
+    if role == "formalizer" or branch_id == "formal_library_first":
+        items.append(
+            "Formalization audit: match the exact pinned type, record every encoding choice/divergence, reject sorry/axiom/unsafe escape hatches, and treat a compiling weaker statement as weaker progress only.")
+    if role == "skeptic" or "counterexample" in branch_id:
+        items.append(
+            "Counterexample audit: verify every target hypothesis on one fixed explicit construction and compute the violated conclusion exactly; a heuristic obstruction is not a refutation.")
+    for trap in traps[:8]:
+        text = str(trap).strip()
+        if text:
+            items.append(f"Problem-specific trap: {text[:350]}")
+    return items[:16]
+
+
+def problem_research_protocol(
+    statement: str, *, role: str, branch_id: str, packet_summary: str,
+    exact_model: str = "", formal_target: str = "",
+    traps: list[str] | None = None,
+    family_history: list[str] | None = None,
+    carried_subgoals: list[str] | None = None,
+) -> str:
+    """Compile a Kerger/CDC-style protocol for one concrete problem branch.
+
+    Kerger's prompt worked because it was a task-specific research program,
+    not because it contained a magic phrase or a fixed number of pages. This
+    compiler instantiates the same architecture from EGMRA's frozen problem
+    contract, literature packet, mechanism registry, prior failures, and
+    verifier boundaries for every problem. It deliberately omits truth-pressure
+    clauses ("assume a proof exists", "return only solved"): those are unsafe
+    on genuinely open research and conflict with honest abstention.
+    """
+    trap_values = list(traps or [])
+    history_values = list(family_history or [])
+    subgoal_values = list(carried_subgoals or [])
+    audit = "\n".join(
+        f"{index}. {item}" for index, item in enumerate(
+            _problem_audit_items(
+                statement, role=role, branch_id=branch_id,
+                traps=trap_values), 1))
+    history = "\n".join(f"- {item}" for item in history_values[:12])
+    subgoals = "\n".join(f"- {item}" for item in subgoal_values[:8])
+    family = _FAMILY_GUIDANCE.get(branch_id)
+    exact_model_section = (
+        "EXACT MODEL (locked interpretation):\n" + exact_model + "\n\n"
+        if exact_model else
+        "No additional structured model was recovered; use the locked target "
+        "verbatim and do not invent missing conventions.\n\n"
+    )
+    family_section = (
+        f"BRANCH MECHANISM ({branch_id}):\n"
+        f"Role: {role}. Mechanism family: {branch_id}.\n"
+        f"Role directive: {_role_directive(role)}\n"
+        f"Mechanism directive: {family}\n"
+        "Remain inside this mechanism long enough to reveal its real power and "
+        "failure point. Do not imitate a favored route merely because another "
+        "branch tried it. Internally test several variants of this mechanism, "
+        "then foreground the strongest one.\n\n"
+        if family else
+        f"Role: {role}. Ad-hoc branch: {branch_id}.\n"
+        f"Role directive: {_role_directive(role)}\n"
+        "Develop one mathematically coherent mechanism, state its central "
+        "lemma, and expose the exact interface where it could fail.\n\n"
+    )
+    history_section = (
+        "5. APPROACH-FAMILY REGISTRY AND PRIOR FAILURES\n"
+        "APPROACH-FAMILY REGISTRY:\n"
+        "Routes already attempted are grouped by actual mechanism, not wording. "
+        "Do not reopen a blocked route without naming the materially new "
+        "ingredient: an invariant, construction, reduction, or counterexample "
+        "that attacks its recorded gap.\n"
+        f"{history}\n\n"
+        if history else
+        "5. INDEPENDENCE FROM PRIOR ROUTES\n"
+        "No prior family outcome is available. Preserve this route's "
+        "independence and expose its own exact blocker.\n\n"
+    )
+    subgoal_section = (
+        "6. CARRIED OBLIGATIONS\n"
+        "OPEN SUBGOALS FROM PRIOR BRANCHES:\n"
+        "These are exact gaps from prior branches. Attack one when this branch's "
+        "mechanism applies; otherwise derive a genuinely weaker dependency. Do "
+        "not restart from a vague restatement of the target.\n"
+        f"{subgoals}\n\n"
+        if subgoals else
+        "6. OBLIGATION DISCOVERY\n"
+        "No subgoal was carried in. Identify the first genuinely weaker "
+        "dependency yourself; do not merely rename the target.\n\n"
+    )
+    traps_section = (
+        "ADVERSARIAL CHECKLIST for THIS problem:\n"
+        + "\n".join(f"- {item}" for item in trap_values[:12]) + "\n\n"
+        if trap_values else ""
+    )
+    formal = _formal_target_block(formal_target)
+    contract = _research_contract_block(
+        statement, role=role, formal_target=formal_target)
+    return (
+        "PER-PROBLEM LONG-HORIZON RESEARCH PROTOCOL\n"
+        "This protocol is compiled for the present target. Follow it as an "
+        "operational research program, not as decorative prose.\n\n"
+        "1. LOCKED TASK AND MODEL\n"
+        "The target statement above is immutable. Preserve its exact objects, "
+        "definitions, conventions, hypotheses, quantifiers, parameter ranges, "
+        "and requested conclusion. Do not silently solve a remembered variant, "
+        "a special case, a converse, or a nearby literature problem.\n"
+        + exact_model_section +
+        "2. COMPLETION STANDARD AND NEGATIVE SPECIFICATION\n"
+        + contract +
+        "A complete candidate must expose a dependency chain from accepted "
+        "premises to the exact target with no theorem-strength hole. Partial "
+        "progress remains valuable only when labelled honestly as a weaker "
+        "lemma, finite result, conditional theorem, counterexample candidate, "
+        "or exact blocker. The independent pipeline alone assigns truth status.\n\n"
+        "3. VERIFIED BASELINE AND LITERATURE CHECKPOINT\n"
+        "The following frozen packet is the only literature available in this "
+        "round. It is read-only and untrusted until hypotheses are matched. For "
+        "each theorem used, state its exact role, verify every hypothesis, and "
+        "name the remaining gap. A title, citation, or consensus is not a proof.\n"
+        "FROZEN LITERATURE PACKET (read-only):\n"
+        f"{packet_summary or '(none available — reason self-containedly and emit precise search queries)'}\n\n"
+        + formal +
+        "4. INDEPENDENT BRANCH ASSIGNMENT\n"
+        + family_section
+        + history_section
+        + subgoal_section +
+        "7. LONG-HORIZON SEARCH DISCIPLINE\n"
+        "Work in repeated internal waves before writing the final transcript. "
+        "First formulate multiple variants of this mechanism. Next falsify them "
+        "on edge cases, known examples, dimensional/scaling checks, and imported "
+        "theorem hypotheses. Then deepen the surviving route into explicit "
+        "lemmas and dependencies. Recompute fragile interfaces independently. "
+        "If the route stalls at a theorem-strength lemma, mark it blocked and "
+        "identify the smallest sharper sub-blocker; do not call the route nearly "
+        "complete. Continue beyond the first failed wave and use the available "
+        "thinking time. Honest failure analysis is preferable to a forced proof.\n\n"
+        "8. CONCRETE MATHEMATICS REQUIREMENT\n"
+        "The final transcript must contain at least one actionable artifact: "
+        "a formally stated lemma with proof, an explicit construction or hard "
+        "family with all hypotheses checked, an algorithm with a proved invariant "
+        "and complete resource count, a reduction with every parameter transform, "
+        "a concrete counterexample to a proposed lemma, exact equations deriving "
+        "the claimed bound, a finite certificate/checker payload, or a pinned Lean "
+        "obligation. Reject status reports, broad suggestions, and vague optimism.\n\n"
+        "9. REQUIRED ADVERSARIAL AUDIT\n"
+        + traps_section +
+        "Before finalizing, assume the argument is wrong and run every relevant "
+        "check below. Report the first unresolved defect as the bottleneck.\n"
+        f"{audit}\n\n"
+        "10. ROOT-SYNTHESIS AND REPORTING CONTRACT\n"
+        "Separate established steps, imported steps, finite-tested facts, "
+        "assumptions, false lemmas, counterexamples, and open obligations. Preserve "
+        "exact equations and dependency order. If a complete proof candidate "
+        "emerges, audit it from the locked statement forward and from the target "
+        "backward before returning it. If it fails audit, retain every rigorous "
+        "component and return the exact failure plus the next decisive artifact. "
+        "Do not claim the problem solved; independent replay, formal checking, "
+        "correspondence review, and release gates make that determination.\n\n"
+    )
+
+
 def branch_prompt(statement: str, *, role: str, branch_id: str, packet_summary: str,
                   formal_target: str = "", traps: list[str] | None = None,
                   family_history: list[str] | None = None,
@@ -932,15 +1146,12 @@ def branch_prompt(statement: str, *, role: str, branch_id: str, packet_summary: 
         "deep, coherent attack beats several shallow passes. Do not cut "
         "reasoning short to answer quickly.\n\n"
         f"TARGET STATEMENT:\n{statement}\n\n"
-        + _exact_model_block(exact_model)
-        + _family_guidance_block(branch_id)
-        + f"FROZEN LITERATURE PACKET (read-only):\n{packet_summary or '(none available)'}\n\n"
-        + _formal_target_block(formal_target)
-        + _traps_block(traps or [])
-        + _family_history_block(family_history or [])
-        + _carried_subgoals_block(carried_subgoals or [])
-        + _research_contract_block(
-            statement, role=role, formal_target=formal_target)
+        + problem_research_protocol(
+            statement, role=role, branch_id=branch_id,
+            packet_summary=packet_summary, exact_model=exact_model,
+            formal_target=formal_target, traps=traps,
+            family_history=family_history,
+            carried_subgoals=carried_subgoals)
         + "First choose the single most decisive next artifact for this "
         "branch's mechanism — ONE goal-bound finite experiment, ONE "
         "formalizable lemma, or ONE sharp falsifier — and build the reply "
@@ -959,6 +1170,9 @@ def continuation_prompt(statement: str, *, role: str, branch_id: str, round_inde
                         objections: list[str], failed_approaches: list[str],
                         prior_proof_steps: list[str] | None = None,
                         prior_assumptions: list[str] | None = None,
+                        protocol_packet_summary: str = "",
+                        family_history: list[str] | None = None,
+                        carried_subgoals: list[str] | None = None,
                         formal_target: str = "", traps: list[str] | None = None,
                         reframe: bool = False, packet_summary: str = "",
                         experiment_results: list[str] | None = None,
@@ -981,10 +1195,18 @@ def continuation_prompt(statement: str, *, role: str, branch_id: str, round_inde
     subgoals = "\n".join(f"- {item}" for item in open_subgoals) or "(none reported)"
     objections_text = "\n".join(f"- {item}" for item in objections[:16]) or "(none)"
     failed = "\n".join(f"- {item}" for item in failed_approaches[:16]) or "(none)"
-    prior_steps_text = "\n".join(
-        f"{index}. {item[:500]}"
-        for index, item in enumerate((prior_proof_steps or [])[-16:], 1)
-    ) or "(none yet)"
+    prior_step_lines: list[str] = []
+    prior_step_chars = 0
+    for index, item in enumerate((prior_proof_steps or [])[-24:], 1):
+        line = f"{index}. {item}"
+        if prior_step_chars + len(line) + 1 > 100_000:
+            prior_step_lines.append(
+                "[older proof detail omitted at the 100000-character "
+                "continuation envelope; treat any unavailable step as open]")
+            break
+        prior_step_lines.append(line)
+        prior_step_chars += len(line) + 1
+    prior_steps_text = "\n".join(prior_step_lines) or "(none yet)"
     prior_assumptions_text = "\n".join(
         f"- {item[:300]}" for item in (prior_assumptions or [])[-12:]
     ) or "(none declared)"
@@ -1056,11 +1278,12 @@ def continuation_prompt(statement: str, *, role: str, branch_id: str, round_inde
         f"You are an EGMRA research worker in the role '{role}' continuing branch "
         f"'{branch_id}' (round {round_index}). The immutable TARGET STATEMENT is "
         f"unchanged:\n{statement}\n\n"
-        + _exact_model_block(exact_model)
-        + _formal_target_block(formal_target)
-        + _traps_block(traps or [])
-        + _research_contract_block(
-            statement, role=role, formal_target=formal_target)
+        + problem_research_protocol(
+            statement, role=role, branch_id=branch_id,
+            packet_summary=protocol_packet_summary,
+            exact_model=exact_model, formal_target=formal_target,
+            traps=traps, family_history=family_history,
+            carried_subgoals=carried_subgoals or open_subgoals)
         + blocker_block
         + reframe_block
         + regulator_block
@@ -1208,6 +1431,7 @@ class RunnerWorker:
             node = contract.lattice.nodes[0]
         except (AttributeError, IndexError):
             return ""
+        ir = getattr(contract, "primary_ir", None)
         lines: list[str] = []
         for binder in list(getattr(node, "binders", None) or [])[:6]:
             if isinstance(binder, dict):
@@ -1226,6 +1450,33 @@ class RunnerWorker:
             text = str(hyp).strip()
             if text:
                 lines.append(f"- hypothesis: {text[:200]}")
+        for definition in list(getattr(ir, "definitions", None) or [])[:8]:
+            symbol = str(getattr(definition, "symbol", "")).strip()
+            semantics = str(getattr(definition, "semantics", "")).strip()
+            conventions = str(getattr(definition, "conventions", "")).strip()
+            if symbol and semantics:
+                rendered = f"- definition {symbol}: {semantics[:300]}"
+                if conventions:
+                    rendered += f" (conventions: {conventions[:160]})"
+                lines.append(rendered)
+        outcome = str(getattr(ir, "requested_outcome", "")).strip()
+        if outcome:
+            lines.append(f"- requested outcome: {outcome}")
+        regime = str(getattr(ir, "parameter_regime", "")).strip()
+        if regime:
+            lines.append(f"- parameter regime: {regime[:300]}")
+        for constraint in list(getattr(ir, "constraints", None) or [])[:8]:
+            text = str(constraint).strip()
+            if text:
+                lines.append(f"- constraint: {text[:300]}")
+        for edge_case in list(getattr(ir, "edge_cases", None) or [])[:8]:
+            text = str(edge_case).strip()
+            if text:
+                lines.append(f"- required edge case: {text[:200]}")
+        for ambiguity in list(getattr(node, "ambiguities_open", None) or [])[:6]:
+            text = str(ambiguity).strip()
+            if text:
+                lines.append(f"- unresolved interpretation risk: {text[:250]}")
         return "\n".join(lines)
 
     def _packet_summary(self, packet, *, focus: str = "") -> str:
@@ -1339,7 +1590,7 @@ class RunnerWorker:
             "transcript below into the required JSON WITHOUT adding, "
             "strengthening, or inventing any mathematical content — omit "
             "anything the transcript does not state.\n"
-            + _CAPABILITY_AND_SCHEMA_TAIL
+            + _EXTRACTION_SCHEMA_TAIL
             + "\n\nREASONING TRANSCRIPT (sole source of content):\n"
             + transcript
         )
@@ -1429,12 +1680,13 @@ class RunnerWorker:
         blocker_focus_used = False
         blocker_only_pending = ""
         round_bottlenecks: list[str] = []
+        baseline_packet_summary = self._packet_summary(packet)
 
         for round_index in range(1, rounds + 1):
             if round_index == 1:
                 prompt = branch_prompt(
                     statement, role=self.role, branch_id=branch_id,
-                    packet_summary=self._packet_summary(packet),
+                    packet_summary=baseline_packet_summary,
                     formal_target=self.formal_target,
                     traps=self.problem_traps,
                     family_history=self.family_history,
@@ -1463,6 +1715,9 @@ class RunnerWorker:
                     failed_approaches=self.failed_approach_memory,
                     prior_proof_steps=proof_steps,
                     prior_assumptions=assumptions,
+                    protocol_packet_summary=baseline_packet_summary,
+                    family_history=self.family_history,
+                    carried_subgoals=self.carried_subgoals,
                     formal_target=self.formal_target,
                     traps=self.problem_traps,
                     reframe=reframe_pending,
