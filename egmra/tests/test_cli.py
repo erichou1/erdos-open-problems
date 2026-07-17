@@ -52,20 +52,20 @@ def test_liveness_watchdog_seconds_clamps_and_disables(monkeypatch):
 
 
 def test_browser_response_timeout_allows_hours_of_thinking(monkeypatch):
-    # Public breakthrough cases reasoned 30 min - 2 h+ on one prompt; the old
-    # 600s default cut a thinking model off and discarded the round. The
-    # default must comfortably cover multi-hour reasoning.
+    # Public breakthrough cases reasoned 30 min - many hours on one prompt; an
+    # old short default cut a thinking model off and discarded the round. The
+    # default and ceiling now cover a 10-hour reasoning run.
     from egmra.cli import _browser_response_timeout
     monkeypatch.delenv("EGMRA_BROWSER_RESPONSE_TIMEOUT_S", raising=False)
-    assert _browser_response_timeout() == 7200.0
+    assert _browser_response_timeout() == 36000.0     # 10 h default
     monkeypatch.setenv("EGMRA_BROWSER_RESPONSE_TIMEOUT_S", "600")
     assert _browser_response_timeout() == 600.0       # operator may lower it
     monkeypatch.setenv("EGMRA_BROWSER_RESPONSE_TIMEOUT_S", "999999")
-    assert _browser_response_timeout() == 14400.0     # ceiling 4 h
+    assert _browser_response_timeout() == 36000.0     # ceiling 10 h
     monkeypatch.setenv("EGMRA_BROWSER_RESPONSE_TIMEOUT_S", "1")
     assert _browser_response_timeout() == 60.0        # floor
     monkeypatch.setenv("EGMRA_BROWSER_RESPONSE_TIMEOUT_S", "junk")
-    assert _browser_response_timeout() == 7200.0
+    assert _browser_response_timeout() == 36000.0
 
 
 def test_browser_extraction_provider_reuses_the_worker_runner():

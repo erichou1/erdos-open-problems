@@ -246,21 +246,22 @@ def _browser_response_timeout() -> float:
 
     Every public breakthrough case (CDC, Kerger, Dobriban's BH disproof)
     involved the model reasoning for 30 minutes to multiple hours on one
-    prompt. The old 600s default actively PUNISHED that: a Pro/thinking model
-    that reasoned past 10 minutes was cut off, retried 3×, and the round was
+    prompt. An old short timeout actively PUNISHED that: a Pro/thinking model
+    that reasoned past the cap was cut off, retried 3×, and the round was
     discarded as a provider outage — the pipeline structurally selected for
     shallow answers. The wait is passive polling (the lease heartbeat renews
     throughout), so a long ceiling costs nothing when replies come back
     quickly and simply ALLOWS deep reasoning when the operator selects a
-    thinking model in the ChatGPT UI. Override with
-    ``EGMRA_BROWSER_RESPONSE_TIMEOUT_S`` (clamped 60-14400).
+    thinking model in the ChatGPT UI. Default and ceiling are 10 hours so a
+    genuinely long reasoning run is never truncated. Override with
+    ``EGMRA_BROWSER_RESPONSE_TIMEOUT_S`` (clamped 60s-10h).
     """
     raw = os.environ.get("EGMRA_BROWSER_RESPONSE_TIMEOUT_S", "").strip()
     try:
-        value = float(raw) if raw else 7200.0
+        value = float(raw) if raw else 36000.0
     except ValueError:
-        return 7200.0
-    return min(14400.0, max(60.0, value))
+        return 36000.0
+    return min(36000.0, max(60.0, value))
 
 
 def _liveness_watchdog_seconds() -> float:

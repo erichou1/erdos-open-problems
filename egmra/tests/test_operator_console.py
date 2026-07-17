@@ -71,7 +71,7 @@ def test_campaign_command_preserves_current_allocation_and_contains_no_secrets(t
 
 def test_deep_thinking_defaults_flow_into_the_campaign_command(tmp_path):
     config = _load_config(tmp_path)
-    assert config["browser_response_timeout_s"] == 7200   # hours-long thinking
+    assert config["browser_response_timeout_s"] == 36000  # 10 h: never truncate
     assert config["free_reasoning"] is True
     command = build_campaign_command(config, tmp_path)
     joined = " ".join(command)

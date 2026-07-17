@@ -169,11 +169,12 @@ def _default_config(root: Path = ROOT) -> dict[str, Any]:
             (Path(os.environ.get("TEMP", "/tmp"))
              / f"egmra_campaign_{_hostname()}.log")),
         # Deep-thinking controls: how long one browser exchange may reason
-        # (Pro/thinking models legitimately run 30 min - 2 h+ on hard targets;
-        # the public breakthrough cases all did), and whether the main call
-        # reasons freely in prose with a second browser exchange doing the
-        # clerical JSON extraction (no API key needed).
-        "browser_response_timeout_s": 7200,
+        # (Pro/thinking models legitimately run 30 min - many hours on hard
+        # targets; the public breakthrough cases all did), and whether the
+        # main call reasons freely in prose with a second browser exchange
+        # doing the clerical JSON extraction (no API key needed). Default 10h
+        # so a long reasoning run is never truncated.
+        "browser_response_timeout_s": 36000,
         "free_reasoning": True,
         # Auto-restart supervisor: the console relaunches a campaign that dies
         # unexpectedly (e.g. the liveness watchdog force-exited a wedged
@@ -569,7 +570,7 @@ class Operator:
         env["EGMRA_ARISTOTLE_MAX_CONCURRENT"] = str(
             int(config["aristotle_max_concurrent"]))
         env["EGMRA_BROWSER_RESPONSE_TIMEOUT_S"] = str(
-            int(config.get("browser_response_timeout_s", 7200)))
+            int(config.get("browser_response_timeout_s", 36000)))
         env["CHATGPT_PROFILE_DIR"] = str(
             _resolve(self.root, str(config["chatgpt_profile"])))
         stop_path = _resolve(self.root, str(config["stop_file"]))
