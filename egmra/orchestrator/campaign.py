@@ -957,6 +957,8 @@ class Campaign:
         provider_unavailable: type[BaseException] = _NoConfiguredProviderOutage,
         permanent_failure: type[BaseException] = _NoConfiguredPermanentFailure,
         poll_interval: float = 0.01,
+        idle_poll_interval: float = 2.0,
+        max_idle_resume_polls: int = 15,
         heartbeat_interval: float | None = None,
         stop_requested: Callable[[], bool] | None = None,
         outage_backoff: Callable[[int], float] | None = None,
@@ -1050,6 +1052,7 @@ class Campaign:
                 except Exception:  # noqa: BLE001 - transient store/DB/network outage
                     return False
 
+            idle_polls = 0
             while True:
                 if should_stop():
                     return
@@ -1060,9 +1063,27 @@ class Campaign:
                     with state_lock:
                         busy = active["n"] > 0
                     if busy and self.pending_count() > 0:
+                        idle_polls = 0
                         time.sleep(poll_interval)
                         continue
+                    # No local worker is busy right now and this worker could
+                    # not lease. Do NOT exit immediately: with a SHARED
+                    # cross-machine pool, all of a machine's workers can be
+                    # momentarily idle at once while another machine holds every
+                    # leasable problem. The old code exited here permanently (no
+                    # respawn), silently dropping a machine below its worker
+                    # count for the rest of the run even with hundreds of
+                    # problems still waiting. Ride out that transient race with
+                    # a BOUNDED number of short retries while work still exists
+                    # anywhere, then exit if the pool is genuinely drained (so
+                    # finite runs still terminate and a permanently unleasable
+                    # remainder can never hang the run).
+                    if self.pending_count() > 0 and idle_polls < max_idle_resume_polls:
+                        idle_polls += 1
+                        sleep(idle_poll_interval)
+                        continue
                     return
+                idle_polls = 0
                 with state_lock:
                     active["n"] += 1
                 started = time.monotonic()

@@ -470,6 +470,44 @@ def test_run_concurrent_no_duplicate_or_skipped_problems(tmp_path):
     assert status["concurrency"]["distinct_workers"] <= 3
 
 
+def test_worker_does_not_exit_permanently_on_a_transient_unleasable_pool(tmp_path):
+    """A worker that momentarily can't lease must stay alive while work exists.
+
+    Regression for the observed 'a machine sits at <3 workers with hundreds of
+    problems still waiting' degradation: with a shared cross-machine pool a
+    worker can briefly get no leasable problem (another machine holds them all)
+    while its own machine has no other busy worker at that instant. The old
+    ``busy and pending>0`` guard let it EXIT permanently (no respawn). It must
+    instead keep polling until the pool is genuinely drained.
+    """
+    c = _campaign(tmp_path, workers=("w0",))
+    c.initialize("camp", ["p1"])
+    real_lease = c.lease
+    calls = {"n": 0}
+
+    def flaky_lease(worker_id, *, now):
+        # First few attempts: nothing leasable (held by 'another machine'),
+        # but the problem is still pending so pending_count() > 0.
+        calls["n"] += 1
+        if calls["n"] <= 3:
+            return None
+        return real_lease(worker_id, now=now)
+
+    c.lease = flaky_lease
+    ran = {"n": 0}
+
+    def runner(problem_id, token, worker_id):
+        ran["n"] += 1
+        return "OPEN_NO_PROGRESS"
+
+    status = c.run_concurrent(
+        runner, max_workers=1, now=_Clock().now,
+        poll_interval=0.0, idle_poll_interval=0.0, sleep=lambda _s: None)
+    assert ran["n"] == 1                          # resumed and worked the problem
+    assert calls["n"] >= 4                         # polled through the transient Nones
+    assert status["by_status"].get("done") == 1    # and the pool drained cleanly
+
+
 def test_run_concurrent_cooperative_stop_finishes_current_problem(tmp_path):
     clock = _Clock()
     c = _campaign(tmp_path, workers=("w0",))
