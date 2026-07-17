@@ -148,6 +148,21 @@ class FileCampaignStore:
         return None
 
 
+def _pg_retry_seconds() -> float:
+    """Bounded disconnect-retry window for the Postgres store (default 300s).
+
+    Override with ``EGMRA_PG_RETRY_SECONDS`` (clamped 0-3600). Long enough to
+    ride out laptop sleep/wake and Wi-Fi re-association; short enough that a
+    genuinely dead database still fails visibly within minutes.
+    """
+    raw = os.environ.get("EGMRA_PG_RETRY_SECONDS", "").strip()
+    try:
+        value = float(raw) if raw else 300.0
+    except ValueError:
+        return 300.0
+    return min(3600.0, max(0.0, value))
+
+
 class PostgresCampaignStore:
     """DB-backed campaign store: signed state in one row + a cross-process advisory
     lock (``pg_advisory_lock``), so leases/checkpoints are durable and coordinated
@@ -257,15 +272,33 @@ class PostgresCampaignStore:
             except Exception:  # noqa: BLE001 - discarding a dead connection
                 pass
 
-    def _with_connection(self, operation, *, _retries: int = 1):  # pragma: no cover
-        """Run ``operation(connection)``, reconnecting ONCE on a dropped connection."""
-        try:
-            return operation(self._connection())
-        except Exception as exc:  # noqa: BLE001 - reconnect only on disconnects
-            if _retries > 0 and self._is_disconnect(exc):
+    def _with_connection(self, operation, *, _retries: int | None = None):  # pragma: no cover
+        """Run ``operation(connection)``, retrying disconnects with backoff.
+
+        A single immediate reconnect is not enough in the common failure mode:
+        a laptop wakes from sleep, TCP keepalives surface the dead peer within
+        ~1 min, but Wi-Fi/DNS take longer to come back — the immediate retry
+        then dies on "failed to resolve host" and the whole campaign process
+        exits. Every store operation is idempotent (SELECT, upsert,
+        pg_try_advisory_lock), so patiently retrying disconnect-class errors
+        for a bounded window (default 300s, override
+        ``EGMRA_PG_RETRY_SECONDS``) rides out sleep/wake and network blips
+        while still failing visibly on genuine persistent outages.
+        """
+        deadline = time.monotonic() + _pg_retry_seconds()
+        pause = 2.0
+        while True:
+            try:
+                return operation(self._connection())
+            except Exception as exc:  # noqa: BLE001 - retry only on disconnects
+                disconnect = self._is_disconnect(exc) or (
+                    isinstance(exc, RuntimeError)
+                    and "connection/schema initialization failed" in str(exc))
+                if not disconnect or time.monotonic() >= deadline:
+                    raise
                 self._reset()
-                return self._with_connection(operation, _retries=_retries - 1)
-            raise
+                time.sleep(min(pause, max(0.0, deadline - time.monotonic())))
+                pause = min(pause * 2.0, 60.0)
 
     def read(self) -> dict[str, Any] | None:  # pragma: no cover - requires a server
         def _op(connection):
@@ -582,6 +615,13 @@ class Campaign:
                     continue
                 if a.attempts >= self.max_attempts:
                     a.status = "failed"
+                    # No completion/failure ever recorded a verdict for this
+                    # problem — its attempts were burned by expired leases
+                    # (dead worker processes). Mark that honestly so the
+                    # startup requeue can distinguish this INFRASTRUCTURE
+                    # artifact from a genuine mathematical dead end.
+                    if not str(a.result_state).strip():
+                        a.result_state = "attempt_budget_exhausted_without_result"
                     self._write(self._encode(state["campaign_id"], state["order"],
                                              assignments, fencing,
                                              state.get("machines")))
@@ -708,6 +748,12 @@ class Campaign:
         ``infra_only`` restricts the reset to problems whose failure was an
         exhausted INFRASTRUCTURE budget (the provider was unavailable), so an
         automatic startup requeue can never loop a genuinely crashing problem.
+        Attempt budgets burned entirely by expired leases (crashed worker
+        processes — recorded as ``attempt_budget_exhausted_without_result``,
+        or an empty result state from older code) are infrastructure too:
+        every genuine mathematical or permanent failure path records a
+        non-empty verdict, so "failed with nothing recorded" can only mean
+        the processes died out from under the leases.
         """
         with self._locked():
             state = self._read()
@@ -718,8 +764,13 @@ class Campaign:
             for pid, a in assignments.items():
                 if a.status != "failed":
                     continue
-                if infra_only and not str(a.result_state).startswith(
-                        "infrastructure_budget_exhausted"):
+                result = str(a.result_state).strip()
+                infra_artifact = (
+                    result.startswith("infrastructure_budget_exhausted")
+                    or result.startswith("attempt_budget_exhausted_without_result")
+                    or not result
+                )
+                if infra_only and not infra_artifact:
                     continue
                 a.status = "pending"
                 a.attempts = 0

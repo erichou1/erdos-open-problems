@@ -617,6 +617,36 @@ headed Chromium window, navigate into the configured workspace if needed, and
 then close the entire Chromium window. Never share `.chatgpt_profile` between
 computers or run two processes against one profile.
 
+### Kimi login (optional secondary provider)
+
+The `kimi-browser` provider drives kimi.com through its own persistent
+profile (`KIMI_PROFILE_DIR`, default `.kimi_profile` — never shared with the
+ChatGPT profile). Log it in once, headed:
+
+```bash
+.venv/bin/python - <<'EOF'
+import time
+from playwright.sync_api import sync_playwright
+from egmra.agents.kimi_browser import KIMI_URL, kimi_profile_dir
+
+with sync_playwright() as pw:
+    ctx = pw.chromium.launch_persistent_context(
+        str(kimi_profile_dir()), headless=False,
+        args=["--disable-blink-features=AutomationControlled"])
+    page = ctx.pages[0] if ctx.pages else ctx.new_page()
+    page.goto(KIMI_URL, wait_until="domcontentloaded")
+    print("Log in to Kimi in the window, then close the whole window.")
+    while any(not p.is_closed() for p in ctx.pages):
+        time.sleep(0.5)
+    ctx.close()
+EOF
+```
+
+Kimi is a weaker model than the primary provider: allocate it the easier
+lanes (for example `--triage-lane t2_closable`) under its own campaign ID,
+and cap its Aristotle slots (`EGMRA_ARISTOTLE_MAX_CONCURRENT=2`) so both
+campaigns fit the vendor's 5-task account limit.
+
 Click **Install / refresh app** once the local console works. Future launches
 can use the installed native app/shortcut.
 

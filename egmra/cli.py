@@ -200,6 +200,21 @@ def _build_runner(provider: str, *, throttle: "SharedThrottle | None" = None):
             return build_api_runner(provider)
         except ApiProviderError as exc:
             raise ValueError(str(exc)) from exc
+    if provider == "kimi-browser":
+        # Single-run Kimi = a one-tab async engine whose teardown is owned by
+        # the returned runner (campaigns build a multi-tab pool instead).
+        engine = _build_browser_engine(1, provider=provider)
+        from egmra.agents.async_browser import TabBackend
+        from egmra.agents.browser_runner import BrowserChatGPTRunner
+
+        class _EngineOwningTabBackend(TabBackend):
+            def close(self) -> None:  # the lone tab owns the whole engine
+                engine.close()
+
+        return BrowserChatGPTRunner(
+            backend=_EngineOwningTabBackend(engine, engine.pages[0]),
+            throttle=throttle, response_timeout_s=_browser_response_timeout(),
+            **_KIMI_RUNNER_KWARGS)  # pragma: no cover
     if provider == "browser":
         try:
             from egmra.agents.browser_runner import (
@@ -241,14 +256,32 @@ def _browser_response_timeout() -> float:
 
 
 def _browser_throttle(config: EgmraConfig, provider: str) -> "SharedThrottle | None":
-    """A durable, cross-worker cooldown coordinator for the browser provider."""
-    if provider != "browser":
+    """A durable, cross-worker cooldown coordinator for the browser providers.
+
+    Each browser provider is a separate account, so each gets its own durable
+    throttle state (a ChatGPT cooldown must never pause Kimi tabs and vice
+    versa).
+    """
+    if provider not in _BROWSER_PROVIDERS:
         return None
-    state = Path(config.events_dir) / "browser_throttle.json"
+    name = "browser_throttle.json" if provider == "browser" \
+        else f"{provider.replace('-', '_')}_throttle.json"
+    state = Path(config.events_dir) / name
     return SharedThrottle(state, max_cooldown_s=config.max_backoff_seconds)
 
 
-def _build_browser_engine(workers: int):
+#: Browser-family providers (one authenticated Chromium, N tabs, unattested).
+_BROWSER_PROVIDERS = ("browser", "kimi-browser")
+
+#: Runner identity for Kimi tabs (unattested browser lineage, like ChatGPT).
+_KIMI_RUNNER_KWARGS = {
+    "runner_id": "browser-kimi",
+    "model_label": "Kimi (browser UI)",
+    "provider": "moonshot",
+}
+
+
+def _build_browser_engine(workers: int, *, provider: str = "browser"):
     """Start an async multi-tab browser engine with ``workers`` tabs.
 
     Playwright's sync API is single-threaded, so genuine multi-worker overlap on
@@ -265,14 +298,49 @@ def _build_browser_engine(workers: int):
             "browser provider requires the 'browser' extra (pip install -e .[browser] "
             "&& playwright install chromium); or use --provider deterministic"
         ) from exc
+    if provider == "kimi-browser":
+        from egmra.agents.kimi_browser import KimiAsyncPageDriver
+
+        driver = KimiAsyncPageDriver()
+        login_hint = ("log the Kimi profile in once (see the kimi login step in "
+                      "AGENT_SETUP.md)")
+    else:
+        driver = PlaywrightAsyncPageDriver()
+        login_hint = "authenticate a profile (python3 solve_submit.py --login)"
     try:  # pragma: no cover - needs an authenticated profile + display
-        return AsyncBrowserEngine(PlaywrightAsyncPageDriver(), tab_count=int(workers)).start()
+        return AsyncBrowserEngine(driver, tab_count=int(workers)).start()
     except (Exception, SystemExit) as exc:  # noqa: BLE001 - surface as a clean CLI error
         raise ValueError(
-            f"browser provider is not operational ({type(exc).__name__}: {exc}); "
-            "authenticate a profile (python3 solve_submit.py --login) or use "
-            "--provider deterministic"
+            f"{provider} provider is not operational ({type(exc).__name__}: {exc}); "
+            f"{login_hint} or use --provider deterministic"
         ) from exc
+
+
+def _build_campaign_notifier(args: argparse.Namespace):
+    """Build the in-pipeline progress notifier, or ``None`` when disabled.
+
+    ``--notify off`` disables it; ``on`` requires a configured delivery method
+    (misconfiguration fails the launch with a clean error); ``auto`` (default)
+    enables it only when recipients are configured and otherwise stays quiet,
+    failing OPEN so a notification-config problem never blocks a campaign.
+    """
+    mode = getattr(args, "notify", "auto")
+    if mode == "off":
+        return None
+    from egmra.comms.notify import NotifyError, build_sender
+
+    configured = bool((os.environ.get("EGMRA_NOTIFY_TO") or "").strip())
+    if mode == "auto" and not configured:
+        return None
+    try:
+        return build_sender()
+    except NotifyError as exc:
+        if mode == "on":
+            raise ValueError(
+                f"--notify on, but notifications are not configured: {exc}") from exc
+        print(json.dumps({"notify_disabled": str(exc)}),
+              file=sys.stderr, flush=True)
+        return None
 
 
 def _resolve_postgres_dsn(args: argparse.Namespace) -> str:
@@ -2285,6 +2353,45 @@ def cmd_campaign(args: argparse.Namespace) -> int:
         EgmraOutcomeLedger(Path(args.outcome_ledger))
         if getattr(args, "outcome_ledger", None) else None
     )
+    # In-pipeline email notifications: when recipients are configured, the
+    # campaign emails significant progress itself (no separate watcher needed).
+    # It reuses the same append-only ledger/lemma scan as `egmra notify-watch`,
+    # baselined at launch so pre-existing history never re-notifies, and is
+    # strictly fail-open — a delivery problem never affects a math outcome.
+    notifier = _build_campaign_notifier(args)
+    notify_lock = threading.Lock()
+    notify_cursor: dict[str, Any] = {"state": {}}
+    notify_outcome_paths = (
+        [Path(args.outcome_ledger)]
+        if getattr(args, "outcome_ledger", None) else [])
+    notify_lemma_path = (
+        Path(args.lemma_library)
+        if getattr(args, "lemma_library", None) else None)
+    if notifier is not None:
+        from egmra.comms.notify import scan_events as _scan_events
+        try:
+            _, notify_cursor["state"] = _scan_events(
+                outcome_paths=notify_outcome_paths,
+                lemma_path=notify_lemma_path, state={})
+        except OSError:
+            notify_cursor["state"] = {}
+
+    def _fire_notifications() -> None:
+        if notifier is None:
+            return
+        from egmra.comms.notify import format_email
+        from egmra.comms.notify import scan_events as _scan
+        with notify_lock:
+            try:
+                events, notify_cursor["state"] = _scan(
+                    outcome_paths=notify_outcome_paths,
+                    lemma_path=notify_lemma_path, state=notify_cursor["state"])
+                if events:
+                    subject, body = format_email(events)
+                    notifier.send(subject, body)
+            except Exception as exc:  # noqa: BLE001 - ops aid, never a verdict
+                print(json.dumps({"notify_error": f"{type(exc).__name__}: {exc}"}),
+                      file=sys.stderr, flush=True)
 
     policy = load_policy(Path(args.policy) if args.policy else default_policy_path())
     enforcer = PolicyEnforcer(policy)
@@ -2303,11 +2410,14 @@ def cmd_campaign(args: argparse.Namespace) -> int:
     runners_by_worker: dict[str, Any] = {}
     runner = None
     try:
-        if args.provider == "browser":
-            browser_engine = _build_browser_engine(int(args.workers))
+        if args.provider in _BROWSER_PROVIDERS:
+            browser_engine = _build_browser_engine(
+                int(args.workers), provider=args.provider)
+            pool_kwargs = dict(_KIMI_RUNNER_KWARGS) \
+                if args.provider == "kimi-browser" else {}
             pool = build_browser_runner_pool(
                 browser_engine, throttle=_browser_throttle(config, args.provider),
-                response_timeout_s=_browser_response_timeout())
+                response_timeout_s=_browser_response_timeout(), **pool_kwargs)
             runners_by_worker = dict(zip(workers, pool))
         else:
             runner = _build_runner(
@@ -2496,6 +2606,9 @@ def cmd_campaign(args: argparse.Namespace) -> int:
                         }), file=sys.stderr, flush=True)
                 except (CampaignError, OSError, ValueError):
                     pass
+        # In-pipeline notifications: email significant progress (and any lemmas
+        # sealed during this problem) right after the outcome is durably on disk.
+        _fire_notifications()
         return state
 
     try:
@@ -2718,6 +2831,73 @@ def cmd_status(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_notify_watch(args: argparse.Namespace) -> int:
+    """Email a summary whenever significant progress lands in the ledgers.
+
+    Fail-open ops telemetry: scan/delivery problems are printed and retried on
+    the next cycle — they never touch pipeline state. On the FIRST run (no
+    state file) the watcher baselines the existing history without emailing,
+    so only genuinely new events ever notify.
+    """
+    from egmra.comms.notify import (
+        NotifyError,
+        build_sender,
+        format_email,
+        load_state,
+        save_state,
+        scan_events,
+    )
+
+    try:
+        sender = build_sender()
+    except NotifyError as exc:
+        print(json.dumps({"error": str(exc)}), file=sys.stderr)
+        return 2
+    outcome_paths = [Path(p) for p in (args.outcomes or [Path("egmra_outcomes")])]
+    if args.test:
+        sender.send(
+            "EGMRA notification test",
+            "This is a test notification from the EGMRA pipeline watcher.\n"
+            f"Watching: {', '.join(str(p) for p in outcome_paths)} and "
+            f"{args.lemma_library}")
+        print(json.dumps({"test_email": "sent",
+                          "recipients": list(sender.recipients)}))
+        return 0
+
+    lemma_path = Path(args.lemma_library) if args.lemma_library else None
+    state_path = Path(args.state_file)
+    while True:
+        try:
+            state = load_state(state_path)
+            if state is None:
+                _, baseline = scan_events(
+                    outcome_paths=outcome_paths, lemma_path=lemma_path, state={})
+                save_state(state_path, baseline)
+                print(json.dumps({"baseline": baseline}), flush=True)
+            else:
+                events, new_state = scan_events(
+                    outcome_paths=outcome_paths, lemma_path=lemma_path,
+                    state=state)
+                if events:
+                    subject, body = format_email(events)
+                    sender.send(subject, body)
+                    print(json.dumps({
+                        "notified": len(events), "subject": subject,
+                        "recipients": list(sender.recipients),
+                    }), flush=True)
+                # Cursors advance only after a successful send, so a delivery
+                # failure re-notifies the same events on the next cycle.
+                save_state(state_path, new_state)
+        except NotifyError as exc:
+            print(json.dumps({"notify_error": str(exc)}), file=sys.stderr,
+                  flush=True)
+        except OSError as exc:
+            print(json.dumps({"notify_error": f"{type(exc).__name__}: {exc}"}),
+                  file=sys.stderr, flush=True)
+        if args.once:
+            return 0
+        time.sleep(max(30.0, float(args.interval)))
+
 
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="egmra", description=__doc__)
@@ -2740,11 +2920,12 @@ def build_parser() -> argparse.ArgumentParser:
                           "AST-restricted to numeric expressions (no imports, attribute "
                           "access, or arbitrary calls). Applies to --erdos/--statement runs")
     run.add_argument("--provider",
-                     choices=("browser", "deterministic", "openai-api",
-                              "deepseek-api", "anthropic-api"),
+                     choices=("browser", "kimi-browser", "deterministic",
+                              "openai-api", "deepseek-api", "anthropic-api"),
                      default="browser",
-                     help="reasoning provider: 'browser' (primary) or 'deterministic' "
-                          "(tests/demos only)")
+                     help="reasoning provider: 'browser' (primary ChatGPT), "
+                          "'kimi-browser' (Kimi web UI; weaker model — allocate "
+                          "easier lanes), or 'deterministic' (tests/demos only)")
     run.add_argument("--role", default="prover",
                      help="worker role that shapes the reasoning prompt")
     run.add_argument("--workers", type=int, default=1,
@@ -2907,6 +3088,30 @@ def build_parser() -> argparse.ArgumentParser:
                         help="override the events directory (default: config events_dir)")
     status.set_defaults(func=cmd_status)
 
+    notify = sub.add_parser(
+        "notify-watch",
+        help="email a summary when significant progress/solves land "
+             "(EGMRA_NOTIFY_TO + either macOS Mail.app or EGMRA_SMTP_* creds; "
+             "EGMRA_NOTIFY_METHOD=mailapp|smtp|auto)")
+    notify.add_argument(
+        "--outcomes", type=Path, action="append", default=None,
+        help="outcome ledger file or directory of *.jsonl (repeatable; "
+             "default: egmra_outcomes/)")
+    notify.add_argument(
+        "--lemma-library", type=Path, default=Path("egmra_lemma_library.jsonl"),
+        help="kernel-sealed lemma library to watch for verified lemmas")
+    notify.add_argument(
+        "--state-file", type=Path,
+        default=Path("egmra_outcomes/.notify_state.json"),
+        help="cursor state (first run baselines history without emailing)")
+    notify.add_argument("--interval", type=float, default=300.0,
+                        help="seconds between scans (min 30)")
+    notify.add_argument("--once", action="store_true",
+                        help="scan/notify one cycle and exit")
+    notify.add_argument("--test", action="store_true",
+                        help="send a test email to the recipients and exit")
+    notify.set_defaults(func=cmd_notify_watch)
+
     campaign = sub.add_parser("campaign", help="run/resume a durable bounded-worker campaign")
     campaign.add_argument("--erdos-range", default="",
                           help="Erdős problems as 'N' or 'A-B' (e.g. 900-905)")
@@ -2940,6 +3145,11 @@ def build_parser() -> argparse.ArgumentParser:
                           help="append each EGMRA outcome (public state + gate "
                                "profile + run id) to this JSONL; honest "
                                "telemetry only, never a release authority")
+    campaign.add_argument(
+        "--notify", choices=("auto", "on", "off"), default="auto",
+        help="email significant progress/solves inline (needs EGMRA_NOTIFY_TO "
+             "plus a delivery method; 'auto' enables when configured, 'on' "
+             "requires it, 'off' disables) — no separate watcher needed")
     campaign.add_argument("--state", type=Path, default=Path("egmra_campaign.json"),
                           help="durable campaign state file (resume by reusing it)")
     campaign.add_argument(
@@ -2947,8 +3157,8 @@ def build_parser() -> argparse.ArgumentParser:
         help="cooperative stop marker: finish active problems, then take no new leases")
     campaign.add_argument("--campaign-id", default=None)
     campaign.add_argument("--provider",
-                          choices=("browser", "deterministic", "openai-api",
-                                   "deepseek-api", "anthropic-api"),
+                          choices=("browser", "kimi-browser", "deterministic",
+                                   "openai-api", "deepseek-api", "anthropic-api"),
                           default="browser")
     campaign.add_argument("--role", default="prover")
     campaign.add_argument("--worker-rounds", type=int, default=1,

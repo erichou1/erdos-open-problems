@@ -485,7 +485,7 @@ def test_campaign_browser_multiworker_assigns_distinct_tabs(tmp_path, monkeypatc
 
     engines: list = []
     monkeypatch.setattr(cli_module, "_build_browser_engine",
-                        lambda workers: engines.append(_FakeEngine(workers)) or engines[-1])
+                        lambda workers, **kw: engines.append(_FakeEngine(workers)) or engines[-1])
     monkeypatch.setattr(cli_module, "from_erdos_number",
                         lambda number, **kw: SimpleNamespace(
                             problem_id=f"erdos-{number}", source_bytes=b"S", source_id="fx",
@@ -523,7 +523,7 @@ def test_campaign_browser_workers_no_longer_capped_to_one(tmp_path, monkeypatch)
     import egmra.cli as cli_module
 
     monkeypatch.setattr(cli_module, "_build_browser_engine",
-                        lambda workers: _FakeEngine(workers))
+                        lambda workers, **kw: _FakeEngine(workers))
     monkeypatch.setattr(cli_module, "from_erdos_number",
                         lambda number, **kw: SimpleNamespace(
                             problem_id=f"erdos-{number}", source_bytes=b"S", source_id="fx",

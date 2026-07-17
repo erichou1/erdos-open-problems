@@ -214,6 +214,62 @@ def test_rejects_more_than_five_workers(tmp_path):
         _campaign(tmp_path, workers=tuple(f"w{i}" for i in range(6)))
 
 
+# ── crash-burned attempt budgets are infrastructure, not math (live incident) ──
+
+def test_expired_lease_exhaustion_records_honest_marker(tmp_path):
+    """Attempts burned entirely by dead processes get an explicit marker.
+
+    Live incident: a repeatedly-crashing machine leased the same problem five
+    times (each expiry burning an attempt) and the problem was marked failed
+    with an EMPTY result_state — indistinguishable from a genuine dead end and
+    invisible to the startup requeue.
+    """
+    clock = _Clock()
+    c = _campaign(tmp_path, max_attempts=2, lease_seconds=10.0)
+    c.initialize("camp", ["p1"])
+    # Two leases expire without any completion/failure (process died).
+    for _ in range(2):
+        assert c.lease("w0", now=clock.now()).problem_id == "p1"
+        clock.t += 11.0     # lease expires; nothing was recorded
+    # The next scan exhausts the budget: failed, with the honest marker.
+    assert c.lease("w0", now=clock.now()) is None
+    row = c.status()["workers"]["p1"]
+    assert row["status"] == "failed"
+    assert row["result_state"] == "attempt_budget_exhausted_without_result"
+    # And the automatic infra-only startup requeue rescues it.
+    assert c.requeue_failed(infra_only=True) == ["p1"]
+    assert c.status()["workers"]["p1"]["status"] == "pending"
+
+
+def test_infra_only_requeue_still_skips_genuine_failures(tmp_path):
+    clock = _Clock()
+    c = _campaign(tmp_path, max_attempts=1)
+    c.initialize("camp", ["p1"])
+    a = c.lease("w0", now=clock.now())
+    c.fail(a.problem_id, "w0", a.fencing_token,
+           reason="ValueError: genuinely malformed statement", permanent=True)
+    assert c.status()["workers"]["p1"]["status"] == "failed"
+    # A recorded genuine failure reason is NOT an infrastructure artifact.
+    assert c.requeue_failed(infra_only=True) == []
+    # The unrestricted (operator-invoked) requeue still can.
+    assert c.requeue_failed() == ["p1"]
+
+
+def test_pg_retry_seconds_default_override_and_clamp(monkeypatch):
+    from egmra.orchestrator.campaign import _pg_retry_seconds
+
+    monkeypatch.delenv("EGMRA_PG_RETRY_SECONDS", raising=False)
+    assert _pg_retry_seconds() == 300.0
+    monkeypatch.setenv("EGMRA_PG_RETRY_SECONDS", "45")
+    assert _pg_retry_seconds() == 45.0
+    monkeypatch.setenv("EGMRA_PG_RETRY_SECONDS", "999999")
+    assert _pg_retry_seconds() == 3600.0
+    monkeypatch.setenv("EGMRA_PG_RETRY_SECONDS", "-5")
+    assert _pg_retry_seconds() == 0.0
+    monkeypatch.setenv("EGMRA_PG_RETRY_SECONDS", "not-a-number")
+    assert _pg_retry_seconds() == 300.0
+
+
 # ── real concurrency (defect 4.2) ───────────────────────────────────────────
 
 def test_run_concurrent_has_real_overlap_across_five_workers(tmp_path):
