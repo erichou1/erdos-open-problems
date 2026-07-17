@@ -6,7 +6,7 @@ import threading
 
 import pytest
 
-from egmra.orchestrator.campaign import Campaign, CampaignError
+from egmra.orchestrator.campaign import Campaign, CampaignError, FileCampaignStore
 
 
 class _Clock:
@@ -19,6 +19,46 @@ class _Clock:
 
 def _campaign(tmp_path, workers=("w0",), **kw):
     return Campaign(tmp_path / "campaign.json", worker_ids=workers, **kw)
+
+
+class _FlakyStore:
+    """Wraps a real store and injects transient write failures on demand.
+
+    Simulates a network/DB blip (psycopg.OperationalError etc.) mid-campaign.
+    ``arm(skip=N, then_fail=M)`` lets the next N writes pass, then raises on the
+    following M writes; reads/locks always delegate.
+    """
+
+    def __init__(self, inner):
+        self.inner = inner
+        self._skip = 0
+        self._fail_n = 0
+        self._lock = threading.Lock()
+
+    def arm(self, *, skip: int, then_fail: int) -> None:
+        with self._lock:
+            self._skip = skip
+            self._fail_n = then_fail
+
+    def read(self):
+        return self.inner.read()
+
+    def locked(self):
+        return self.inner.locked()
+
+    def write(self, body):
+        with self._lock:
+            if self._skip > 0:
+                self._skip -= 1
+            elif self._fail_n > 0:
+                self._fail_n -= 1
+                raise RuntimeError("simulated DB disconnect (write)")
+        self.inner.write(body)
+
+    def close(self):
+        self.inner.close()
+
+
 
 
 def test_initialize_and_status(tmp_path):
@@ -452,6 +492,53 @@ def test_run_concurrent_recovers_from_worker_crash(tmp_path):
     status = c.run_concurrent(runner, max_workers=3, now=clock.now)
     assert status["complete"] is True                 # crashed problem recovered
     assert status["workers"]["p3"]["status"] == "done"
+
+
+def test_run_concurrent_survives_transient_store_outage_during_lease(tmp_path):
+    # Live 2026-07-16: the internet dropped, the Neon pooler became
+    # unreachable, and uncaught psycopg errors from the lease/complete writes
+    # killed every worker thread — the process stayed alive (heartbeat daemon)
+    # but did zero research. A store blip during leasing must now back off and
+    # retry, never kill the worker; the campaign still drains.
+    clock = _Clock()
+    flaky = _FlakyStore(FileCampaignStore(tmp_path / "campaign.json"))
+    c = Campaign(tmp_path / "campaign.json", worker_ids=("w0",), store=flaky)
+    c.initialize("camp", ["p0", "p1"])
+    flaky.arm(skip=0, then_fail=3)          # the next 3 writes (leasing p0) raise
+
+    def runner(problem_id, token, worker_id):
+        return "OPEN_NO_PROGRESS"
+
+    status = c.run_concurrent(
+        runner, max_workers=1, now=clock.now,
+        outage_backoff=lambda _n: 0.0, sleep=lambda _s: None)
+    assert status["complete"] is True                  # drained despite the blip
+    assert status["by_status"]["done"] == 2
+
+
+def test_run_concurrent_completion_write_failure_does_not_kill_worker(tmp_path):
+    # A blip that loses the COMPLETION write must not crash the worker or burn
+    # the attempt: the worker survives to finish the next problem, and the
+    # unrecorded one stays leased for the normal expiry-reclaim path.
+    clock = _Clock(1000.0)                              # static: leases never expire here
+    flaky = _FlakyStore(FileCampaignStore(tmp_path / "campaign.json"))
+    c = Campaign(tmp_path / "campaign.json", worker_ids=("w0",),
+                 lease_seconds=1000.0, store=flaky)
+    c.initialize("camp", ["p0", "p1"])
+    flaky.arm(skip=1, then_fail=1)          # lease p0 ok (#1), complete p0 fails (#2)
+
+    def runner(problem_id, token, worker_id):
+        return "OPEN_NO_PROGRESS"
+
+    status = c.run_concurrent(
+        runner, max_workers=1, now=clock.now,
+        outage_backoff=lambda _n: 0.0, sleep=lambda _s: None)
+    # The worker survived the lost completion and finished p1.
+    assert status["workers"]["p1"]["status"] == "done"
+    # p0's completion was lost to the blip -> left leased for reclaim, never a
+    # spurious done/failed, and its attempt is not wrongly spent.
+    assert status["workers"]["p0"]["status"] == "leased"
+    assert status["workers"]["p0"]["attempts"] == 1
 
 
 def test_run_concurrent_does_not_retry_declared_permanent_failure(tmp_path):

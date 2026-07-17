@@ -971,11 +971,66 @@ class Campaign:
                 remaining_pause -= step
 
         def worker_loop(worker_id: str) -> None:
+            def _lease_next() -> "Assignment | None":
+                """Lease the next problem, tolerating transient store outages.
+
+                A dropped network or a Neon reconnect that outlasts the store's
+                own bounded retry window raises here; without this guard the
+                exception escapes ``worker_loop`` and silently kills the worker
+                thread, leaving the campaign process alive but doing no research
+                (observed live 2026-07-16 when the internet dropped — both the
+                browser and the Postgres pooler failed at once, and uncaught
+                ``psycopg.OperationalError`` from the lease/complete writes
+                killed every worker). A store failure is INFRASTRUCTURE, so we
+                back off on the shared outage schedule and keep retrying — a
+                worker rides out a multi-hour outage and resumes when the
+                network returns instead of dying. ``CampaignError`` (a genuine
+                logic error such as an unknown worker id) still propagates.
+                """
+                while not should_stop():
+                    try:
+                        return self.lease(worker_id, now=now())
+                    except CampaignError:
+                        raise
+                    except Exception:  # noqa: BLE001 - transient store/DB/network outage
+                        _outage_pause()
+                return None
+
+            def _record_outcome(assignment, *, kind: str, reason: str = "",
+                                result_state: str = "") -> bool:
+                """Apply a terminal transition without ever crashing the worker.
+
+                The store already retries disconnect-class errors internally; if
+                the write STILL fails (an outage longer than that window) we
+                swallow it and move on. The lease then expires and is reclaimed
+                with the attempt refunded (see ``lease``'s expired-lease path),
+                so no attempt is wrongly spent, no result is silently converted
+                into a math verdict, and the worker thread survives to keep
+                working when connectivity returns.
+                """
+                pid, token = assignment.problem_id, assignment.fencing_token
+                try:
+                    if kind == "retain":
+                        self.retain(pid, worker_id, token)
+                    elif kind == "permanent":
+                        self.fail(pid, worker_id, token, reason=reason, permanent=True)
+                    elif kind == "fail":
+                        self.fail(pid, worker_id, token, reason=reason)
+                    else:  # "complete"
+                        self.complete(pid, worker_id, token, result_state=result_state)
+                    return True
+                except CampaignError:
+                    raise
+                except Exception:  # noqa: BLE001 - transient store/DB/network outage
+                    return False
+
             while True:
                 if should_stop():
                     return
-                assignment = self.lease(worker_id, now=now())
+                assignment = _lease_next()
                 if assignment is None:
+                    if should_stop():
+                        return
                     with state_lock:
                         busy = active["n"] > 0
                     if busy and self.pending_count() > 0:
@@ -1011,21 +1066,21 @@ class Campaign:
                     result_state = runner(assignment.problem_id, assignment.fencing_token,
                                           worker_id)
                 except provider_unavailable:
-                    self.retain(assignment.problem_id, worker_id, assignment.fencing_token)
+                    _record_outcome(assignment, kind="retain")
                     _outage_pause()
                 except permanent_failure as exc:
-                    self.fail(
-                        assignment.problem_id, worker_id, assignment.fencing_token,
-                        reason=f"{type(exc).__name__}: {exc}", permanent=True,
-                    )
+                    _record_outcome(
+                        assignment, kind="permanent",
+                        reason=f"{type(exc).__name__}: {exc}")
                 except Exception as exc:  # noqa: BLE001 - recoverable per-problem failure
-                    self.fail(assignment.problem_id, worker_id, assignment.fencing_token,
-                              reason=f"{type(exc).__name__}: {exc}")
+                    _record_outcome(
+                        assignment, kind="fail",
+                        reason=f"{type(exc).__name__}: {exc}")
                     with state_lock:
                         outages["consecutive"] = 0
                 else:
-                    self.complete(assignment.problem_id, worker_id, assignment.fencing_token,
-                                  result_state=result_state)
+                    _record_outcome(
+                        assignment, kind="complete", result_state=result_state)
                     with state_lock:
                         outages["consecutive"] = 0
                 finally:
