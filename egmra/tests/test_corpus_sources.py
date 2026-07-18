@@ -142,6 +142,33 @@ def test_from_erdos_number_boundary_does_not_confuse_prefixes(corpus):
     assert "f(n)" not in seven.display_statement
 
 
+def test_monolithic_horizontal_rule_is_an_auditable_statement_boundary(
+        tmp_path):
+    tex = tmp_path / "corpus.tex"
+    tex.write_text(r"""\section{Problem \#1}
+\noindent\textbf{Statement:}
+
+Is $A$ true?
+
+\noindent\rule{\linewidth}{0.4pt}
+
+\section{Problem \#2}
+\noindent\textbf{Statement:}
+
+Is $B$ true?
+
+\noindent\rule{\linewidth}{0.4pt}
+""", encoding="utf-8")
+    catalog = tmp_path / "catalog.json"
+    catalog.write_text(json.dumps({"problems": {}}), encoding="utf-8")
+
+    first = from_erdos_number(1, corpus_tex_path=tex, catalog_path=catalog)
+    second = from_erdos_number(2, corpus_tex_path=tex, catalog_path=catalog)
+
+    assert first.display_statement == "Is $A$ true?"
+    assert second.display_statement == "Is $B$ true?"
+
+
 def test_from_erdos_number_missing_section_raises(corpus):
     tex, catalog = corpus
     with pytest.raises(SourceResolutionError, match="no section"):
@@ -256,3 +283,11 @@ def test_bundled_corpus_defaults_resolve_a_real_problem():
     assert pi.problem_id == "erdos-312"
     assert pi.display_statement
     assert pi.status_claims and pi.status_claims[0].status == "open"
+
+
+@pytest.mark.parametrize("number", [1137, 1139, 361, 468, 598, 911, 943])
+def test_bundled_corpus_resolves_sections_ending_at_generated_rule(number):
+    pi = from_erdos_number(number)
+    assert pi.problem_id == f"erdos-{number}"
+    assert pi.display_statement
+    assert "\\noindent\\rule" not in pi.display_statement

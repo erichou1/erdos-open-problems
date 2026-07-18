@@ -29,6 +29,12 @@ _TEX_STATEMENT_BOUNDARY = re.compile(
     r"(?:Remarks|References|Related OEIS sequences):\}"
     r"|\n[ \t]*References[ \t]*(?=\n|$)"
     r"|\n[ \t]*\\noindent\s*\\small\{Source:"
+    # The monolithic corpus generator terminates every problem section with
+    # this exact line before the next ``\\section{Problem ...}``.  It is a
+    # structural separator, not theorem text; omitting it left sections with
+    # no Remarks/References falsely unextractable even though their source
+    # statement and boundary were explicit.
+    r"|\n[ \t]*\\noindent\s*\\rule\{\\linewidth\}\{0\.4pt\}[ \t]*(?=\n|$)"
     r"|\n[ \t]*\\end\{document\}",
     re.IGNORECASE,
 )
