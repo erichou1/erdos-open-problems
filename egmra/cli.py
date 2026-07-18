@@ -264,6 +264,25 @@ def _browser_response_timeout() -> float:
     return min(36000.0, max(60.0, value))
 
 
+def _build_compute_service() -> ComputeService | None:
+    """Build optional finite-compute support without blocking research startup.
+
+    ``RestrictedPythonExecutor`` deliberately requires OS-enforced Unix resource
+    limits.  A machine without that runtime (notably Windows) must never pretend
+    it can safely execute model-supplied code, but it can still do browser,
+    literature, Lean, and Aristotle research.  Fail closed for computational
+    evidence and fail open for the rest of the pipeline.
+    """
+    try:
+        return ComputeService()
+    except (OSError, ValueError) as exc:
+        print(json.dumps({
+            "compute_service_unavailable": f"{type(exc).__name__}: {exc}",
+            "effect": "finite experiments disabled; mathematical research continues",
+        }), file=sys.stderr, flush=True)
+        return None
+
+
 def _liveness_watchdog_seconds() -> float:
     """How long with NO successful machine heartbeat before self-terminating.
 
@@ -814,7 +833,7 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
         goal_claim_id="goal",
         goal_formula=problem.display_statement,
         role=args.role,
-        compute_service=ComputeService(),
+        compute_service=_build_compute_service(),
         lean_version=lean_version,
         mathlib_commit=mathlib_commit,
         lean_project=args.lean_project,
@@ -2568,6 +2587,8 @@ def cmd_campaign(args: argparse.Namespace) -> int:
     lean_service, lean_version, mathlib_commit = _build_lean_service(args)
     campaign_dev_lean = _build_dev_lean_service(args)
     formalizers_by_worker = _build_worker_formalizers(args, workers)
+    compute_services_by_worker = {
+        worker_id: _build_compute_service() for worker_id in workers}
     # Genuine multi-worker overlap: the deterministic provider shares one runner
     # across threads, while the browser provider drives ONE authenticated Chromium
     # with N tabs on a dedicated event loop (async multi-tab), one tab per worker.
@@ -2660,7 +2681,7 @@ def cmd_campaign(args: argparse.Namespace) -> int:
         _set_formalizer_problem_id(problem_formalizer, problem.problem_id)
         worker = RunnerWorker(runner=worker_runner, goal_claim_id="goal",
                               goal_formula=problem.display_statement, role=args.role,
-                              compute_service=ComputeService(),
+                              compute_service=compute_services_by_worker.get(worker_id),
                               lean_version=lean_version, mathlib_commit=mathlib_commit,
                               lean_project=args.lean_project,
                               formalizer=problem_formalizer,

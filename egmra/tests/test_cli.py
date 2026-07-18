@@ -68,6 +68,22 @@ def test_browser_response_timeout_allows_hours_of_thinking(monkeypatch):
     assert _browser_response_timeout() == 36000.0
 
 
+def test_compute_service_probe_failure_disables_only_finite_compute(
+        monkeypatch, capsys):
+    from egmra.cli import _build_compute_service
+
+    class BrokenComputeService:
+        def __init__(self):
+            raise ValueError("Python executable failed the isolated runtime probe")
+
+    monkeypatch.setattr(cli_module, "ComputeService", BrokenComputeService)
+
+    assert _build_compute_service() is None
+    error = capsys.readouterr().err
+    assert "compute_service_unavailable" in error
+    assert "finite experiments disabled; mathematical research continues" in error
+
+
 def test_browser_extraction_provider_reuses_the_worker_runner():
     from egmra.cli import _build_extraction_runner, _resolve_extraction_runner
 

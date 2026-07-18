@@ -220,6 +220,30 @@ def test_provider_unavailable_retains_problem_not_failed(tmp_path):
     assert calls["n"] == 2             # retained then retried, never failed
 
 
+def test_runtime_probe_outage_is_infrastructure_and_refunds_math_attempt(tmp_path):
+    clock = _Clock()
+    c = _campaign(tmp_path)
+    c.initialize("camp", ["p1"])
+    calls = {"n": 0}
+
+    def runner(_problem_id, _fencing_token, _worker_id):
+        calls["n"] += 1
+        raise ValueError("Python executable failed the isolated runtime probe")
+
+    status = c.run_concurrent(
+        runner, max_workers=1, now=clock.now,
+        stop_requested=lambda: calls["n"] >= 1,
+        outage_backoff=lambda _attempt: 0.0,
+        sleep=lambda _seconds: None,
+    )
+
+    row = status["workers"]["p1"]
+    assert row["status"] == "retained"
+    assert row["attempts"] == 0
+    assert row["result_state"] == (
+        "ValueError: Python executable failed the isolated runtime probe")
+
+
 def test_kill_and_restart_resumes_without_skip_or_duplicate(tmp_path):
     clock = _Clock()
     problems = [f"p{i}" for i in range(6)]
@@ -350,6 +374,8 @@ def test_is_infrastructure_failure_classification():
         "attempt_budget_exhausted_without_result")
     assert _is_infrastructure_failure(
         "infrastructure_budget_exhausted: provider_unavailable")
+    assert _is_infrastructure_failure(
+        "ValueError: Python executable failed the isolated runtime probe")
     assert not _is_infrastructure_failure(
         "SourceResolutionError: no statement")                  # genuine verdicts
     assert not _is_infrastructure_failure("ValueError: malformed")

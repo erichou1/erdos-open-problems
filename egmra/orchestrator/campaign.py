@@ -198,6 +198,14 @@ def _is_infrastructure_failure(result_state: str) -> bool:
     return (
         result.startswith("infrastructure_budget_exhausted")
         or result.startswith("attempt_budget_exhausted_without_result")
+        # Restricted local computation is an OPTIONAL capability.  On Windows
+        # the required Unix ``resource`` limits are unavailable, so the Python
+        # identity subprocess exits before any mathematical work begins.  Older
+        # workers misclassified that deployment/runtime outage as a generic
+        # ValueError and burned all five mathematical attempts for hundreds of
+        # unrelated problems. Match this exact diagnostic only; arbitrary
+        # ValueError remains a genuine per-problem failure.
+        or result == "ValueError: Python executable failed the isolated runtime probe"
         or not result
     )
 
@@ -1161,7 +1169,9 @@ class Campaign:
                 pid, token = assignment.problem_id, assignment.fencing_token
                 try:
                     if kind == "retain":
-                        self.retain(pid, worker_id, token)
+                        self.retain(
+                            pid, worker_id, token,
+                            reason=reason or "provider_unavailable")
                     elif kind == "permanent":
                         self.fail(pid, worker_id, token, reason=reason, permanent=True)
                     elif kind == "fail":
@@ -1240,18 +1250,24 @@ class Campaign:
                     result_state = runner(assignment.problem_id, assignment.fencing_token,
                                           worker_id)
                 except provider_unavailable:
-                    _record_outcome(assignment, kind="retain")
+                    _record_outcome(
+                        assignment, kind="retain", reason="provider_unavailable")
                     _outage_pause()
                 except permanent_failure as exc:
                     _record_outcome(
                         assignment, kind="permanent",
                         reason=f"{type(exc).__name__}: {exc}")
                 except Exception as exc:  # noqa: BLE001 - recoverable per-problem failure
-                    _record_outcome(
-                        assignment, kind="fail",
-                        reason=f"{type(exc).__name__}: {exc}")
-                    with state_lock:
-                        outages["consecutive"] = 0
+                    reason = f"{type(exc).__name__}: {exc}"
+                    if _is_infrastructure_failure(reason):
+                        _record_outcome(
+                            assignment, kind="retain", reason=reason)
+                        _outage_pause()
+                    else:
+                        _record_outcome(
+                            assignment, kind="fail", reason=reason)
+                        with state_lock:
+                            outages["consecutive"] = 0
                 else:
                     _record_outcome(
                         assignment, kind="complete", result_state=result_state)
