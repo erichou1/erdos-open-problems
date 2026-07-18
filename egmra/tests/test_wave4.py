@@ -206,6 +206,36 @@ def test_substantive_reasoning_skips_adaptive_deepening():
     assert [stage for stage, _prompt in main.calls] == ["branch:b1:reasoning"]
 
 
+def test_two_hour_horizon_turns_early_completion_into_active_continuation():
+    transcript = " ".join(
+        ["derive"] * 800 + ["dependency", "audit", "counterexample", "blocker"])
+    continuation = (
+        "A new derivation closes the dependency after checking the equality case; "
+        "the exact remaining blocker is the imported theorem's endpoint hypothesis.")
+    combined = (
+        transcript + "\n\nLONG-HORIZON CONTINUATION WAVE 1:\n" + continuation)
+    main = PromptRecordingRunner([transcript, continuation])
+    extractor = PromptRecordingRunner([
+        _extraction_reply(combined, claims=[("lem1", "L1", [])])])
+    clock_values = iter((0.0, 1200.0, 7200.0))
+    worker = RunnerWorker(
+        runner=main, goal_claim_id="goal", goal_formula="T",
+        extractor_runner=extractor, minimum_reasoning_seconds=7200.0,
+        monotonic=lambda: next(clock_values))
+
+    out = worker.work_branch(
+        None, None, branch_id="b1", budget=5.0, fencing_token=1)
+
+    assert [stage for stage, _prompt in main.calls] == [
+        "branch:b1:reasoning", "branch:b1:reasoning_horizon1"]
+    assert "This branch has a 120-minute active research horizon" in main.calls[0][1]
+    assert "LONG-HORIZON RESEARCH CONTINUATION WAVE 1" in main.calls[1][1]
+    assert "configured active research horizon is 120 minutes" in main.calls[1][1]
+    assert not any(f.startswith("reasoning_horizon_unmet:") for f in out.failures)
+    assert {proposal["claim_id"] for proposal in out.claim_proposals} == {
+        "goal", "lem1"}
+
+
 def test_two_call_mode_rejects_wrong_transcript_hash_and_repairs():
     transcript = ("derive dependency audit counterexample blocker " * 200).strip()
     wrong = json.loads(_round_reply(claims=[("bad", "invented", [])]))

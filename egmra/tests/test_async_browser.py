@@ -116,6 +116,26 @@ def test_async_engine_ops_before_start_raise():
         engine.send(_FakePage(0), "hi")
 
 
+def test_wait_response_uses_requested_generation_timeout_plus_settlement_headroom(
+        monkeypatch):
+    driver = _ConcurrentFakeDriver(1)
+    engine = AsyncBrowserEngine(driver, tab_count=1, op_timeout_s=900.0).start()
+    captured: dict[str, float | None] = {}
+    original_await = engine._await
+
+    def recording_await(coro, *, timeout_s=None):
+        captured["timeout_s"] = timeout_s
+        return original_await(coro, timeout_s=timeout_s)
+
+    monkeypatch.setattr(engine, "_await", recording_await)
+    try:
+        assert engine.wait_response(engine.pages[0], timeout_s=7200.0) == "resp-tab-0"
+    finally:
+        engine.close()
+
+    assert captured["timeout_s"] == 7260.0
+
+
 class _RecordingEngine:
     def __init__(self) -> None:
         self.calls: list[tuple] = []

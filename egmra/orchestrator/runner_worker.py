@@ -26,6 +26,7 @@ import base64
 import binascii
 import json
 import re
+import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field, replace
 from pathlib import Path
@@ -745,6 +746,29 @@ def _deepening_prompt(original_prompt: str, transcript: str) -> str:
         "complete proof is unavailable, say so precisely. Return only substantive "
         "new reasoning in prose; a clerk will combine it with the first transcript.\n\n"
         "FIRST TRANSCRIPT (untrusted prior work):\n"
+        + transcript
+    )
+
+
+def _horizon_continuation_prompt(
+        original_prompt: str, transcript: str, *, wave: int,
+        minimum_seconds: float) -> str:
+    horizon_minutes = max(1, int((minimum_seconds + 59.0) // 60.0))
+    return (
+        original_prompt
+        + f"\n\nLONG-HORIZON RESEARCH CONTINUATION WAVE {wave}\n"
+        f"The configured active research horizon is {horizon_minutes} minutes. "
+        "Continue the SAME investigation with substantive new "
+        "mathematics; do not summarize, restate, pad, or merely polish the prior "
+        "transcript. Select the most load-bearing unresolved dependency below and "
+        "either derive it line by line, falsify it with an exact counterexample, or "
+        "replace the failed mechanism with a materially independent one. Recheck "
+        "quantifiers, constants, equality/edge cases, imported theorem hypotheses, "
+        "and every interface used by the proposed chain. Finish this wave with the "
+        "strongest newly justified artifact and the exact smallest remaining gap. "
+        "A separate clerk will combine all waves; return only new rigorous prose and "
+        "never claim independent verification.\n\n"
+        "ACCUMULATED PRIOR TRANSCRIPT (untrusted research record):\n"
         + transcript
     )
 
@@ -1496,6 +1520,12 @@ class RunnerWorker:
     # Later rounds close open subgoals and repair refuted lemmas instead of
     # re-deriving everything; a stagnant round ends the branch early.
     max_rounds: int = 1
+    # Minimum ACTIVE wall-clock research horizon for each free-reasoning round.
+    # A model response that returns early triggers transcript-bound continuation
+    # waves; no time is spent sleeping merely to satisfy the clock. Zero keeps
+    # library/test callers and single-call structured mode unchanged.
+    minimum_reasoning_seconds: float = 0.0
+    monotonic: Any = field(default=time.monotonic, repr=False, compare=False)
     # R5: optional community-reviewed Lean statement (read-only prompt context)
     # pinning the intended formal obligation for the goal.
     formal_target: str = ""
@@ -1721,6 +1751,27 @@ class RunnerWorker:
         failures: list[str] = []
         reasoning_prompt = prompt.replace(
             _CAPABILITY_AND_SCHEMA_TAIL, _REASONING_TAIL)
+        # The two-hour operator horizon applies to the first mathematical round
+        # of each branch, not the cold pass or every later continuation round.
+        # Later rounds already have their own bounded multi-turn protocol; applying
+        # this horizon to all eight rounds would multiply one branch into 16 hours.
+        initial_branch_round = stage.startswith("branch:") and ":round" not in stage
+        minimum_horizon = (
+            max(0.0, float(self.minimum_reasoning_seconds))
+            if initial_branch_round else 0.0)
+        if minimum_horizon > 0:
+            horizon_minutes = max(1, int((minimum_horizon + 59.0) // 60.0))
+            reasoning_prompt += (
+                "\n\nMINIMUM ACTIVE RESEARCH HORIZON\n"
+                f"This branch has a {horizon_minutes}-minute active research horizon "
+                "across this response and transcript-bound continuation waves. Use "
+                "the present response for the deepest coherent derivation you can; "
+                "the pipeline will request additional non-redundant waves if you "
+                "finish early. Do not pad or delay: spend effort on new mechanisms, "
+                "explicit dependency closure, adversarial falsification, exact edge "
+                "cases, and the smallest remaining blocker.\n"
+            )
+        reasoning_started = self.monotonic() if minimum_horizon > 0 else 0.0
         response = self.runner.run(reasoning_prompt, stage=f"{stage}:reasoning")
         self.last_model_identity = response.model
         transcript = (response.text or "").strip()
@@ -1745,6 +1796,33 @@ class RunnerWorker:
                     + "\n\nADAPTIVE DEEPENING TRANSCRIPT:\n" + addition)
             else:
                 failures.append(f"empty_reasoning_deepening_output:{stage}")
+        horizon_wave = 0
+        elapsed = (
+            self.monotonic() - reasoning_started if minimum_horizon > 0 else 0.0)
+        while minimum_horizon > 0 and elapsed < minimum_horizon:
+            horizon_wave += 1
+            continued = self.runner.run(
+                _horizon_continuation_prompt(
+                    reasoning_prompt, transcript, wave=horizon_wave,
+                    minimum_seconds=minimum_horizon),
+                stage=f"{stage}:reasoning_horizon{horizon_wave}")
+            self.last_model_identity = continued.model
+            addition = (continued.text or "").strip()
+            if not addition:
+                failures.append(
+                    f"empty_reasoning_horizon_output:{stage}:wave{horizon_wave}")
+                elapsed = self.monotonic() - reasoning_started
+                continue
+            combined = (
+                transcript
+                + f"\n\nLONG-HORIZON CONTINUATION WAVE {horizon_wave}:\n"
+                + addition)
+            if len(combined.encode("utf-8")) > _MAX_REASONING_TRANSCRIPT_BYTES:
+                failures.append(
+                    f"reasoning_output_too_large:{stage}:horizon{horizon_wave}")
+                return None, failures
+            transcript = combined
+            elapsed = self.monotonic() - reasoning_started
         transcript_bytes = transcript.encode("utf-8")
         if len(transcript_bytes) > _MAX_REASONING_TRANSCRIPT_BYTES:
             failures.append(

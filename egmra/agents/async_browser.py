@@ -101,9 +101,11 @@ class AsyncBrowserEngine:
         if not self._started:
             raise RuntimeError("async browser engine has not been started")
 
-    def _await(self, coro: "Any") -> Any:
+    def _await(self, coro: "Any", *, timeout_s: float | None = None) -> Any:
         future = asyncio.run_coroutine_threadsafe(coro, self._loop)
-        return future.result(timeout=self._op_timeout_s)
+        timeout = self._op_timeout_s if timeout_s is None else max(
+            self._op_timeout_s, float(timeout_s))
+        return future.result(timeout=timeout)
 
     def start(self) -> "AsyncBrowserEngine":
         if self._started:
@@ -142,7 +144,15 @@ class AsyncBrowserEngine:
 
     def wait_response(self, page: Any, *, timeout_s: float) -> str:
         self._ensure_live()
-        return self._await(self._driver.wait_response(page, timeout_s=timeout_s))
+        # Generation is the one operation intentionally allowed to run for
+        # hours.  The old generic 900-second bridge timeout killed the Future
+        # at 15 minutes even when BrowserChatGPTRunner requested the configured
+        # 10-hour response ceiling.  Leave one minute for the driver's final
+        # stable-text settlement after its own generation deadline.
+        return self._await(
+            self._driver.wait_response(page, timeout_s=timeout_s),
+            timeout_s=float(timeout_s) + 60.0,
+        )
 
     def conversation_url(self, page: Any) -> str:
         self._ensure_live()

@@ -264,6 +264,23 @@ def _browser_response_timeout() -> float:
     return min(36000.0, max(60.0, value))
 
 
+def _minimum_reasoning_seconds() -> float:
+    """Minimum active free-reasoning horizon configured by the local operator.
+
+    This is not a sleep and cannot force hidden model compute. When a browser
+    response returns early, RunnerWorker spends the remaining horizon on
+    transcript-bound continuation waves. The environment default is zero so
+    library, deterministic, and test callers retain their existing behavior;
+    the production operator explicitly sets 7200 seconds.
+    """
+    raw = os.environ.get("EGMRA_MINIMUM_REASONING_SECONDS", "").strip()
+    try:
+        value = float(raw) if raw else 0.0
+    except ValueError:
+        return 0.0
+    return min(36000.0, max(0.0, value))
+
+
 def _liveness_watchdog_seconds() -> float:
     """How long with NO successful machine heartbeat before self-terminating.
 
@@ -820,6 +837,7 @@ def _run_arbitrary(args: argparse.Namespace, config: EgmraConfig) -> int:
         lean_project=args.lean_project,
         formalizer=formalizer,
         max_rounds=worker_rounds,
+        minimum_reasoning_seconds=_minimum_reasoning_seconds(),
         formal_target=formal_target,
         dev_lean_service=dev_lean_service,
         extractor_runner=_resolve_extraction_runner(
@@ -2666,6 +2684,7 @@ def cmd_campaign(args: argparse.Namespace) -> int:
                               formalizer=problem_formalizer,
                               formal_target=problem_formal_target,
                               max_rounds=problem_rounds,
+                              minimum_reasoning_seconds=_minimum_reasoning_seconds(),
                               dev_lean_service=campaign_dev_lean,
                               extractor_runner=_resolve_extraction_runner(
                                   _build_extraction_runner(args), worker_runner))

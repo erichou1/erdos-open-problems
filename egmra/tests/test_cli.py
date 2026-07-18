@@ -68,6 +68,19 @@ def test_browser_response_timeout_allows_hours_of_thinking(monkeypatch):
     assert _browser_response_timeout() == 36000.0
 
 
+def test_minimum_reasoning_horizon_is_opt_in_and_bounded(monkeypatch):
+    from egmra.cli import _minimum_reasoning_seconds
+
+    monkeypatch.delenv("EGMRA_MINIMUM_REASONING_SECONDS", raising=False)
+    assert _minimum_reasoning_seconds() == 0.0
+    monkeypatch.setenv("EGMRA_MINIMUM_REASONING_SECONDS", "7200")
+    assert _minimum_reasoning_seconds() == 7200.0
+    monkeypatch.setenv("EGMRA_MINIMUM_REASONING_SECONDS", "999999")
+    assert _minimum_reasoning_seconds() == 36000.0
+    monkeypatch.setenv("EGMRA_MINIMUM_REASONING_SECONDS", "junk")
+    assert _minimum_reasoning_seconds() == 0.0
+
+
 def test_browser_extraction_provider_reuses_the_worker_runner():
     from egmra.cli import _build_extraction_runner, _resolve_extraction_runner
 

@@ -72,6 +72,7 @@ def test_campaign_command_preserves_current_allocation_and_contains_no_secrets(t
 def test_deep_thinking_defaults_flow_into_the_campaign_command(tmp_path):
     config = _load_config(tmp_path)
     assert config["browser_response_timeout_s"] == 36000  # 10 h: never truncate
+    assert config["minimum_reasoning_seconds"] == 7200
     assert config["free_reasoning"] is True
     assert config["research_iterations"] == 6
     assert config["worker_rounds"] == 8
@@ -107,6 +108,13 @@ def test_local_config_validates_research_iterations(tmp_path):
     config = _load_config(tmp_path)
     config["research_iterations"] = 9
     with pytest.raises(console_module.OperatorError, match="research_iterations"):
+        _save_config(config, tmp_path)
+
+
+def test_local_config_validates_minimum_reasoning_horizon(tmp_path):
+    config = _load_config(tmp_path)
+    config["minimum_reasoning_seconds"] = 36001
+    with pytest.raises(console_module.OperatorError, match="minimum_reasoning_seconds"):
         _save_config(config, tmp_path)
 
 
@@ -234,6 +242,53 @@ def test_stop_refuses_to_force_legacy_campaign(tmp_path, monkeypatch):
     with pytest.raises(console_module.OperatorError, match="predate cooperative stop"):
         Operator(root=root)._stop(wait_seconds=0)
     assert not (root / ".egmra_operator" / "stop-request.json").exists()
+
+
+def test_update_restart_escalates_after_grace_then_updates_and_starts(
+        tmp_path, monkeypatch):
+    root = tmp_path / "repo"
+    root.mkdir()
+    _load_config(root)
+    process = {
+        "pid": 123, "command": "campaign --stop-file stop.json", "managed": True}
+    running = [process]
+    monkeypatch.setattr(
+        console_module, "_campaign_processes", lambda _root: list(running))
+    op = Operator(root=root, platform="darwin")
+    calls: list[str] = []
+
+    def fake_stop(*, wait_seconds=12.0):
+        calls.append(f"stop:{wait_seconds}")
+        return "Stop requested"
+
+    def fake_terminate(processes, *, wait_seconds=8.0):
+        assert processes == [process]
+        calls.append("terminate")
+        running.clear()
+        return "Terminated"
+
+    op._stop = fake_stop
+    op._terminate_campaign_processes = fake_terminate
+    op._kill_orphaned_browser_profile = lambda: 0
+    op._safe_update = lambda: calls.append("update") or "Updated"
+    op._start = lambda: calls.append("start") or "Started"
+
+    message = op.perform("update_restart", {})
+
+    assert calls == ["stop:15.0", "terminate", "update", "start"]
+    assert "Stop requested Terminated Updated Started" in message
+
+
+def test_safe_update_button_uses_update_restart_while_campaign_runs(
+        tmp_path, monkeypatch):
+    root = tmp_path / "repo"
+    root.mkdir()
+    _load_config(root)
+    monkeypatch.setattr(console_module, "_campaign_processes", lambda _root: [
+        {"pid": 123, "command": "campaign --stop-file stop.json", "managed": True}])
+    op = Operator(root=root)
+    op._update_restart = lambda: "one-click update"
+    assert op.perform("update", {}) == "one-click update"
 
 
 def _fake_app_sources(root: Path) -> None:
