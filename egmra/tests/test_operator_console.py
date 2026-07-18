@@ -72,7 +72,6 @@ def test_campaign_command_preserves_current_allocation_and_contains_no_secrets(t
 def test_deep_thinking_defaults_flow_into_the_campaign_command(tmp_path):
     config = _load_config(tmp_path)
     assert config["browser_response_timeout_s"] == 36000  # 10 h: never truncate
-    assert config["minimum_reasoning_seconds"] == 7200
     assert config["free_reasoning"] is True
     assert config["research_iterations"] == 6
     assert config["worker_rounds"] == 8
@@ -108,13 +107,6 @@ def test_local_config_validates_research_iterations(tmp_path):
     config = _load_config(tmp_path)
     config["research_iterations"] = 9
     with pytest.raises(console_module.OperatorError, match="research_iterations"):
-        _save_config(config, tmp_path)
-
-
-def test_local_config_validates_minimum_reasoning_horizon(tmp_path):
-    config = _load_config(tmp_path)
-    config["minimum_reasoning_seconds"] = 36001
-    with pytest.raises(console_module.OperatorError, match="minimum_reasoning_seconds"):
         _save_config(config, tmp_path)
 
 

@@ -108,9 +108,12 @@ def test_tail_states_goal_binding_rule_and_reply_budget():
     assert "TARGET" in _REASONING_TAIL  # two-call parity for the rule
 
 
-def test_branch_prompt_is_decision_first():
+def test_branch_prompt_searches_portfolio_before_final_artifact_selection():
     prompt = branch_prompt("S", role="prover", branch_id="b1", packet_summary="")
-    assert "single most decisive next artifact" in prompt
+    search = prompt.index("Do not commit to the first plausible route")
+    decision = prompt.index("After completing the internal portfolio search and audit")
+    assert search < decision
+    assert "single most decisive surviving artifact" in prompt
 
 
 def test_branch_prompt_derives_problem_specific_completion_and_exclusions():
@@ -503,11 +506,33 @@ def test_protocol_compiler_contains_full_operational_architecture():
     assert "exact baseline theorem" in protocol
     assert "parallel edges are distinct" in protocol
     assert "prove the extension lemma" in protocol
-    assert "Continue beyond the first failed wave" in protocol
+    assert "After a failed wave, run at least one materially independent" in protocol
+    assert "Do not commit to the first plausible route" in protocol
+    assert "A wave is PRODUCTIVE only if" in protocol
+    assert "marginal mathematical yield remains positive" in protocol
+    assert "Stop efficiently when all surviving routes" in protocol
+    assert "Do not continue merely to consume time" in protocol
+    assert "Search broadly internally; report selectively externally" in protocol
     assert "independent pipeline alone assigns truth status" in protocol
     # Unsafe benchmark truth pressure is deliberately not generalized to open work.
     assert "Assume for purposes of this task that" not in protocol
     assert "Return only when" not in protocol
+
+
+def test_free_reasoning_separates_deep_search_from_compact_reporting():
+    from egmra.orchestrator.runner_worker import _REASONING_TAIL, branch_prompt
+
+    prompt = branch_prompt(
+        "Prove T.", role="prover", branch_id="direct_structural",
+        packet_summary="")
+    assert "After completing the internal portfolio search and audit" in prompt
+    assert "must not truncate the preceding search" in prompt
+    assert "Do not draft the answer or commit to the first elegant route" in (
+        _REASONING_TAIL)
+    assert "productive wave must add" in _REASONING_TAIL
+    assert "mechanisms are genuinely saturated" in _REASONING_TAIL
+    assert "not at an arbitrary time" in _REASONING_TAIL
+    assert "compact reporting is not a cap on exploration" in _REASONING_TAIL
 
 
 def test_protocol_audit_is_problem_and_role_specific():

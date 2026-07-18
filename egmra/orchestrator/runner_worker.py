@@ -26,7 +26,6 @@ import base64
 import binascii
 import json
 import re
-import time
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass, field, replace
 from pathlib import Path
@@ -701,14 +700,22 @@ _REASONING_TAIL = (
     "step will structure your output afterwards. Think as long and as deeply "
     "as you need — extended reasoning measured in hours is welcome on hard "
     "targets; never cut reasoning short to answer quickly. Before writing the "
-    "final transcript, internally run a long-horizon research cycle: generate "
-    "several materially different mechanisms, preserve their independence "
+    "final transcript, internally run a long-horizon research cycle. Do not "
+    "draft the answer or commit to the first elegant route while alternatives "
+    "remain untested. Generate several materially different mechanisms, preserve their independence "
     "long enough to expose real gaps, and keep a registry of each route's "
     "central lemma, proved components, exact blocker, and counterexamples. "
     "Challenge every unproved interface; do not let one elegant reduction "
     "dominate merely because it ends at a theorem-strength missing lemma. "
     "When a route fails, record why and try a genuinely new mechanism rather "
-    "than cosmetic rewording. Continue beyond the first failed wave. If no "
+    "than cosmetic rewording. A productive wave must add a new invariant, proved "
+    "dependency, exact falsifier, strictly weaker sub-blocker, theorem match, or "
+    "checkable artifact. Continue beyond the first failed wave while such marginal "
+    "yield remains positive. If one exact load-bearing blocker remains, freeze the "
+    "sound reduction and attack that blocker directly. Stop when mechanisms are "
+    "genuinely saturated — all survivors close, fail on an explicit witness, or "
+    "repeat a recorded theorem-strength blocker without a new ingredient — not at "
+    "an arbitrary time and not merely after producing a plausible sketch. If no "
     "complete proof emerges, return the strongest rigorously justified "
     "derivation and its exact remaining gap — honest incompleteness is better "
     "than a forced proof. State candidate lemmas "
@@ -720,8 +727,10 @@ _REASONING_TAIL = (
     "falsifiers, retrieval queries, open subgoals, and the single current "
     "bottleneck. Recommend exactly one next-round action: REVISE_PROOF, "
     "REVISE_PLAN, REWRITE, or FOCUS_BLOCKER; this is advisory scheduling, "
-    "never evidence. Explore broadly and deeply internally; in the FINAL "
-    "transcript foreground ONE decisive artifact rather than reporting every "
+    "never evidence. Search broadly and deeply internally; compact reporting is "
+    "not a cap on exploration. Only after search saturation, exact blocker isolation, "
+    "or a complete candidate, foreground ONE decisive artifact in the FINAL "
+    "transcript rather than reporting every "
     "abandoned thought shallowly. Never assert the target is proved; proof requires independent "
     "verification you do not perform."
 )
@@ -746,29 +755,6 @@ def _deepening_prompt(original_prompt: str, transcript: str) -> str:
         "complete proof is unavailable, say so precisely. Return only substantive "
         "new reasoning in prose; a clerk will combine it with the first transcript.\n\n"
         "FIRST TRANSCRIPT (untrusted prior work):\n"
-        + transcript
-    )
-
-
-def _horizon_continuation_prompt(
-        original_prompt: str, transcript: str, *, wave: int,
-        minimum_seconds: float) -> str:
-    horizon_minutes = max(1, int((minimum_seconds + 59.0) // 60.0))
-    return (
-        original_prompt
-        + f"\n\nLONG-HORIZON RESEARCH CONTINUATION WAVE {wave}\n"
-        f"The configured active research horizon is {horizon_minutes} minutes. "
-        "Continue the SAME investigation with substantive new "
-        "mathematics; do not summarize, restate, pad, or merely polish the prior "
-        "transcript. Select the most load-bearing unresolved dependency below and "
-        "either derive it line by line, falsify it with an exact counterexample, or "
-        "replace the failed mechanism with a materially independent one. Recheck "
-        "quantifiers, constants, equality/edge cases, imported theorem hypotheses, "
-        "and every interface used by the proposed chain. Finish this wave with the "
-        "strongest newly justified artifact and the exact smallest remaining gap. "
-        "A separate clerk will combine all waves; return only new rigorous prose and "
-        "never claim independent verification.\n\n"
-        "ACCUMULATED PRIOR TRANSCRIPT (untrusted research record):\n"
         + transcript
     )
 
@@ -1231,15 +1217,31 @@ def problem_research_protocol(
         + history_section
         + subgoal_section +
         "7. LONG-HORIZON SEARCH DISCIPLINE\n"
-        "Work in repeated internal waves before writing the final transcript. "
-        "First formulate multiple variants of this mechanism. Next falsify them "
-        "on edge cases, known examples, dimensional/scaling checks, and imported "
-        "theorem hypotheses. Then deepen the surviving route into explicit "
-        "lemmas and dependencies. Recompute fragile interfaces independently. "
-        "If the route stalls at a theorem-strength lemma, mark it blocked and "
-        "identify the smallest sharper sub-blocker; do not call the route nearly "
-        "complete. Continue beyond the first failed wave and use the available "
-        "thinking time. Honest failure analysis is preferable to a forced proof.\n\n"
+        "Do not commit to the first plausible route or begin drafting the final "
+        "answer while the search space is still live. Work in repeated internal "
+        "waves and keep a scratch registry of mechanism variants, their central "
+        "lemmas, falsifiers, and exact blockers. First formulate multiple genuinely "
+        "different variants of this branch mechanism. Next try to kill each one on "
+        "edge cases, known examples, dimensional/scaling checks, and imported "
+        "theorem hypotheses. Then deepen every survivor far enough to expose its "
+        "full dependency chain and recompute fragile interfaces independently.\n"
+        "A wave is PRODUCTIVE only if it yields at least one of: a new invariant or "
+        "construction, a proved dependency, a concrete falsifier, a strictly weaker "
+        "sub-blocker, an exact theorem match, or a checkable computation/formal "
+        "obligation. Cosmetic variants, more prose, and repeating the same missing "
+        "lemma are not progress. After a failed wave, run at least one materially "
+        "independent recovery wave unless the failure already isolates one exact "
+        "load-bearing blocker. When one exact blocker remains, freeze the sound "
+        "surrounding reduction and spend the remaining useful effort attacking that "
+        "blocker directly; discard the motivating analogy if another mechanism works.\n"
+        "Continue while marginal mathematical yield remains positive: while a fresh "
+        "mechanism, falsifier, dependency reduction, or sharper blocker is still "
+        "being found. Stop efficiently when all surviving routes either close, fail "
+        "on an explicit witness, or repeat already-recorded theorem-strength blockers "
+        "without a new ingredient. Do not continue merely to consume time, and do not "
+        "stop merely because a plausible sketch or first failed wave exists. Honest "
+        "saturation or exact blocker isolation is preferable to both shallow speed "
+        "and performative length.\n\n"
         "8. CONCRETE MATHEMATICS REQUIREMENT\n"
         "The final transcript must contain at least one actionable artifact: "
         "a formally stated lemma with proof, an explicit construction or hard "
@@ -1254,6 +1256,12 @@ def problem_research_protocol(
         "check below. Report the first unresolved defect as the bottleneck.\n"
         f"{audit}\n\n"
         "10. ROOT-SYNTHESIS AND REPORTING CONTRACT\n"
+        "Search broadly internally; report selectively externally. Compact final "
+        "reporting is not a limit on internal exploration and must occur only after "
+        "the long-horizon search and adversarial audit have reached a candidate, an "
+        "exact blocker, or documented saturation. Foreground the best surviving "
+        "artifact, but retain every load-bearing dependency and every falsifier that "
+        "changes its validity. "
         "Separate established steps, imported steps, finite-tested facts, "
         "assumptions, false lemmas, counterexamples, and open obligations. Preserve "
         "exact equations and dependency order. If a complete proof candidate "
@@ -1286,10 +1294,11 @@ def branch_prompt(statement: str, *, role: str, branch_id: str, packet_summary: 
             formal_target=formal_target, traps=traps,
             family_history=family_history,
             carried_subgoals=carried_subgoals)
-        + "First choose the single most decisive next artifact for this "
-        "branch's mechanism — ONE goal-bound finite experiment, ONE "
-        "formalizable lemma, or ONE sharp falsifier — and build the reply "
-        "around it. Add only the subsidiary claims/lemmas (NOT the target "
+        + "After completing the internal portfolio search and audit above, choose "
+        "the single most decisive surviving artifact for this branch's mechanism "
+        "— ONE goal-bound finite experiment, ONE formalizable lemma, or ONE sharp "
+        "falsifier — and build the final report around it. This reporting choice "
+        "must not truncate the preceding search. Add only the subsidiary claims/lemmas (NOT the target "
         "itself), falsifiers, retrieval queries, and candidate integer "
         "sequences for OEIS lookup that genuinely support that artifact. Do "
         "NOT assert the target is proved; proof requires independent "
@@ -1520,12 +1529,6 @@ class RunnerWorker:
     # Later rounds close open subgoals and repair refuted lemmas instead of
     # re-deriving everything; a stagnant round ends the branch early.
     max_rounds: int = 1
-    # Minimum ACTIVE wall-clock research horizon for each free-reasoning round.
-    # A model response that returns early triggers transcript-bound continuation
-    # waves; no time is spent sleeping merely to satisfy the clock. Zero keeps
-    # library/test callers and single-call structured mode unchanged.
-    minimum_reasoning_seconds: float = 0.0
-    monotonic: Any = field(default=time.monotonic, repr=False, compare=False)
     # R5: optional community-reviewed Lean statement (read-only prompt context)
     # pinning the intended formal obligation for the goal.
     formal_target: str = ""
@@ -1751,27 +1754,6 @@ class RunnerWorker:
         failures: list[str] = []
         reasoning_prompt = prompt.replace(
             _CAPABILITY_AND_SCHEMA_TAIL, _REASONING_TAIL)
-        # The two-hour operator horizon applies to the first mathematical round
-        # of each branch, not the cold pass or every later continuation round.
-        # Later rounds already have their own bounded multi-turn protocol; applying
-        # this horizon to all eight rounds would multiply one branch into 16 hours.
-        initial_branch_round = stage.startswith("branch:") and ":round" not in stage
-        minimum_horizon = (
-            max(0.0, float(self.minimum_reasoning_seconds))
-            if initial_branch_round else 0.0)
-        if minimum_horizon > 0:
-            horizon_minutes = max(1, int((minimum_horizon + 59.0) // 60.0))
-            reasoning_prompt += (
-                "\n\nMINIMUM ACTIVE RESEARCH HORIZON\n"
-                f"This branch has a {horizon_minutes}-minute active research horizon "
-                "across this response and transcript-bound continuation waves. Use "
-                "the present response for the deepest coherent derivation you can; "
-                "the pipeline will request additional non-redundant waves if you "
-                "finish early. Do not pad or delay: spend effort on new mechanisms, "
-                "explicit dependency closure, adversarial falsification, exact edge "
-                "cases, and the smallest remaining blocker.\n"
-            )
-        reasoning_started = self.monotonic() if minimum_horizon > 0 else 0.0
         response = self.runner.run(reasoning_prompt, stage=f"{stage}:reasoning")
         self.last_model_identity = response.model
         transcript = (response.text or "").strip()
@@ -1796,33 +1778,6 @@ class RunnerWorker:
                     + "\n\nADAPTIVE DEEPENING TRANSCRIPT:\n" + addition)
             else:
                 failures.append(f"empty_reasoning_deepening_output:{stage}")
-        horizon_wave = 0
-        elapsed = (
-            self.monotonic() - reasoning_started if minimum_horizon > 0 else 0.0)
-        while minimum_horizon > 0 and elapsed < minimum_horizon:
-            horizon_wave += 1
-            continued = self.runner.run(
-                _horizon_continuation_prompt(
-                    reasoning_prompt, transcript, wave=horizon_wave,
-                    minimum_seconds=minimum_horizon),
-                stage=f"{stage}:reasoning_horizon{horizon_wave}")
-            self.last_model_identity = continued.model
-            addition = (continued.text or "").strip()
-            if not addition:
-                failures.append(
-                    f"empty_reasoning_horizon_output:{stage}:wave{horizon_wave}")
-                elapsed = self.monotonic() - reasoning_started
-                continue
-            combined = (
-                transcript
-                + f"\n\nLONG-HORIZON CONTINUATION WAVE {horizon_wave}:\n"
-                + addition)
-            if len(combined.encode("utf-8")) > _MAX_REASONING_TRANSCRIPT_BYTES:
-                failures.append(
-                    f"reasoning_output_too_large:{stage}:horizon{horizon_wave}")
-                return None, failures
-            transcript = combined
-            elapsed = self.monotonic() - reasoning_started
         transcript_bytes = transcript.encode("utf-8")
         if len(transcript_bytes) > _MAX_REASONING_TRANSCRIPT_BYTES:
             failures.append(
