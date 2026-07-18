@@ -1284,9 +1284,12 @@ def branch_prompt(statement: str, *, role: str, branch_id: str, packet_summary: 
         "target below.\n"
         "DEPTH OVER SPEED: this is open mathematical research, not a chat "
         "reply. Think as long and as deeply as you need — extended reasoning "
-        "measured in hours is welcome and expected on hard targets; a single "
-        "deep, coherent attack beats several shallow passes. Do not cut "
-        "reasoning short to answer quickly.\n\n"
+        "measured in hours is welcome on hard targets, but elapsed time and "
+        "verbosity are not goals. Test several genuinely independent attacks far "
+        "enough to expose their real gaps, then concentrate on the strongest "
+        "survivor or exact blocker. Depth means closing dependencies, searching "
+        "adversarially, and delaying commitment — not writing more words. Do not "
+        "cut productive reasoning short merely to answer quickly.\n\n"
         f"TARGET STATEMENT:\n{statement}\n\n"
         + problem_research_protocol(
             statement, role=role, branch_id=branch_id,

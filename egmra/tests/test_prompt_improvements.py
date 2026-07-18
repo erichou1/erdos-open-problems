@@ -110,6 +110,9 @@ def test_tail_states_goal_binding_rule_and_reply_budget():
 
 def test_branch_prompt_searches_portfolio_before_final_artifact_selection():
     prompt = branch_prompt("S", role="prover", branch_id="b1", packet_summary="")
+    assert "elapsed time and verbosity are not goals" in prompt
+    assert "Test several genuinely independent attacks" in prompt
+    assert "Depth means closing dependencies" in prompt
     search = prompt.index("Do not commit to the first plausible route")
     decision = prompt.index("After completing the internal portfolio search and audit")
     assert search < decision
