@@ -96,7 +96,7 @@ class CampaignStore(Protocol):
 
     def read(self, *, retry_seconds: float | None = None) -> dict[str, Any] | None: ...
     def write(self, body: dict[str, Any], *, retry_seconds: float | None = None) -> None: ...
-    def locked(self): ...  # cross-process mutual-exclusion context manager
+    def locked(self, *, deadline_seconds: float | None = None): ...  # cross-process mutual-exclusion context manager
     def close(self) -> None: ...
 
 
@@ -132,7 +132,10 @@ class FileCampaignStore:
         os.replace(tmp, self.state_path)
 
     @contextmanager
-    def locked(self):
+    def locked(self, *, deadline_seconds: float | None = None):
+        # ``deadline_seconds`` is a Postgres-store concept (bounding advisory-lock
+        # acquisition); the file store's OS lock has no such budget, so it is
+        # accepted and ignored for interface parity with the Protocol.
         lock_path = self.state_path.with_suffix(self.state_path.suffix + ".lock")
         handle = open(lock_path, "a+")
         try:
@@ -233,6 +236,20 @@ class PostgresCampaignStore:
         self._conn = None
         self._lock = threading.RLock()
         self._transaction_connection = None
+        # The thread id that currently owns ``_transaction_connection``. Reads
+        # from a DIFFERENT thread must never reuse it directly — it is a
+        # process-wide attribute, but only the owning thread synchronously
+        # calling back into ``read()``/``write()`` from within its own
+        # ``locked()`` block may touch that connection safely.
+        self._transaction_owner: int | None = None
+        # A separate connection + lock for plain (non-transactional) reads
+        # (``pending_count``/``status`` poll this often). Sharing ``self._lock``
+        # with the transactional connection once made every status poll queue
+        # behind whichever thread was mid-``locked()``, so a single thread stuck
+        # for up to 60s acquiring the cross-machine advisory lock froze machine
+        # heartbeats AND lease renewals across the WHOLE process at once.
+        self._read_conn = None
+        self._read_lock = threading.RLock()
         # A stable 64-bit advisory-lock key derived from the campaign name.
         self._lock_key = int.from_bytes(
             hashlib.sha256(name.encode("utf-8")).digest()[:8], "big", signed=True)
@@ -309,6 +326,45 @@ class PostgresCampaignStore:
             except Exception:  # noqa: BLE001 - discarding a dead connection
                 pass
 
+    def _read_connection(self):  # pragma: no cover - requires a database server
+        if self._read_conn is None or getattr(self._read_conn, "closed", False):
+            self._read_conn = self.connect()
+        return self._read_conn
+
+    def _reset_read(self) -> None:  # pragma: no cover - requires a database server
+        conn, self._read_conn = self._read_conn, None
+        if conn is not None:
+            try:
+                conn.close()
+            except Exception:  # noqa: BLE001 - discarding a dead connection
+                pass
+
+    def _with_read_connection(self, operation, *,
+                              retry_seconds: float | None = None):  # pragma: no cover
+        """Run ``operation`` on a connection dedicated to lock-free reads.
+
+        A plain status read must never wait behind another thread's in-flight
+        ``locked()`` transaction: this never touches ``self._conn``/``self._lock``,
+        so frequent idle-poll reads stay fast and independent of transactional
+        work instead of queuing behind cross-machine advisory-lock contention.
+        """
+        with self._read_lock:
+            budget = retry_seconds if retry_seconds is not None else _pg_retry_seconds()
+            deadline = time.monotonic() + budget
+            pause = 2.0
+            while True:
+                try:
+                    return operation(self._read_connection())
+                except Exception as exc:  # noqa: BLE001 - retry only on disconnects
+                    disconnect = self._is_disconnect(exc) or (
+                        isinstance(exc, RuntimeError)
+                        and "connection/schema initialization failed" in str(exc))
+                    if not disconnect or time.monotonic() >= deadline:
+                        raise
+                    self._reset_read()
+                    time.sleep(min(pause, max(0.0, deadline - time.monotonic())))
+                    pause = min(pause * 2.0, 60.0)
+
     def _with_connection(self, operation, *, _retries: int | None = None,
                          retry_seconds: float | None = None):  # pragma: no cover
         """Run ``operation(connection)``, retrying disconnects with backoff.
@@ -356,7 +412,19 @@ class PostgresCampaignStore:
                     "SELECT body, signature FROM campaign_state WHERE name = %s",
                     (self.name,))
                 return cursor.fetchone()
-        row = self._with_connection(_op, retry_seconds=retry_seconds)
+        # Inside an active ``locked()`` transaction ON THIS SAME THREAD, read
+        # from the SAME connection the caller is about to write back to
+        # (consistency with the pending mutation). A DIFFERENT thread must
+        # never reuse it — ``_transaction_connection`` is shared process-wide,
+        # but only its owning thread may touch it safely — so any other caller
+        # (or the owning thread calling from outside its own ``locked()``)
+        # uses the independent read connection instead, and never blocks on
+        # another thread's in-flight transaction.
+        if (self._transaction_connection is not None
+                and self._transaction_owner == threading.get_ident()):
+            row = _op(self._transaction_connection)
+        else:
+            row = self._with_read_connection(_op, retry_seconds=retry_seconds)
         if row is None:
             return None
         body_text, signature = str(row[0]), str(row[1])
@@ -378,14 +446,19 @@ class PostgresCampaignStore:
         self._with_connection(_op, retry_seconds=retry_seconds)
 
     @contextmanager
-    def locked(self):  # pragma: no cover - requires a database server
+    def locked(self, *, deadline_seconds: float | None = None):  # pragma: no cover - requires a database server
         # The old session-level lock survived an interrupted pooled connection:
         # Neon showed an IDLE backend holding it for hours, blocking every
         # machine heartbeat and lease. A transaction-scoped lock is released by
         # PostgreSQL on commit, rollback, OR disconnect, with no manual unlock
         # statement and therefore no orphanable server-side session state.
+        # ``deadline_seconds`` lets a best-effort caller (the machine heartbeat)
+        # fail fast instead of holding ``Campaign._thread_lock`` — and therefore
+        # every worker thread's own lease/heartbeat/complete call — for the full
+        # default budget under cross-machine advisory-lock contention.
         with self._lock:
-            deadline = time.monotonic() + 60.0
+            deadline = time.monotonic() + (
+                60.0 if deadline_seconds is None else max(0.0, deadline_seconds))
             connection = None
             while connection is None:
                 candidate = self._connection()
@@ -417,6 +490,7 @@ class PostgresCampaignStore:
                     raise CampaignError("timed out acquiring campaign transaction lock")
                 time.sleep(1.0)
             self._transaction_connection = connection
+            self._transaction_owner = threading.get_ident()
             try:
                 yield
             except BaseException:
@@ -424,6 +498,7 @@ class PostgresCampaignStore:
                     connection.rollback()
                 finally:
                     self._transaction_connection = None
+                    self._transaction_owner = None
                     try:
                         connection.autocommit = True
                     except Exception:  # noqa: BLE001 - a disconnect already released the lock
@@ -434,6 +509,7 @@ class PostgresCampaignStore:
                     connection.commit()
                 finally:
                     self._transaction_connection = None
+                    self._transaction_owner = None
                     try:
                         connection.autocommit = True
                     except Exception:  # noqa: BLE001 - a disconnect already released the lock
@@ -446,6 +522,12 @@ class PostgresCampaignStore:
                     self._conn.close()
                 finally:
                     self._conn = None
+        with self._read_lock:
+            if self._read_conn is not None:
+                try:
+                    self._read_conn.close()
+                finally:
+                    self._read_conn = None
 
 
 class Campaign:
@@ -490,10 +572,10 @@ class Campaign:
         return self._store.read(retry_seconds=retry_seconds)
 
     @contextmanager
-    def _locked(self):
+    def _locked(self, *, deadline_seconds: float | None = None):
         # In-process mutual exclusion (threads) plus the store's cross-process lock.
         with self._thread_lock:
-            with self._store.locked():
+            with self._store.locked(deadline_seconds=deadline_seconds):
                 yield
 
     def _decode(self, state: dict[str, Any]) -> dict[str, Assignment]:
@@ -524,7 +606,7 @@ class Campaign:
         if not isinstance(machine_id, str) or not machine_id.strip():
             raise CampaignError("machine id must be non-empty")
         hb_budget = _pg_heartbeat_retry_seconds()
-        with self._locked():
+        with self._locked(deadline_seconds=hb_budget):
             state = self._read(retry_seconds=hb_budget)
             if state is None:
                 raise CampaignError("campaign is not initialized")
@@ -556,7 +638,7 @@ class Campaign:
     def machine_stopped(self, machine_id: str, *, now: float) -> None:
         """Mark a graceful shutdown; crashes remain detectable as stale."""
         hb_budget = _pg_heartbeat_retry_seconds()
-        with self._locked():
+        with self._locked(deadline_seconds=hb_budget):
             state = self._read(retry_seconds=hb_budget)
             if state is None:
                 return

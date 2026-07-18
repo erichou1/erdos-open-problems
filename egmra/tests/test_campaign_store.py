@@ -12,6 +12,7 @@ import hmac
 import json
 import os
 import threading
+import time
 import uuid
 from contextlib import contextmanager
 
@@ -49,7 +50,7 @@ class _MemoryCampaignStore:
         self._row = (body_text, _hmac_hex(self._key, body_text))
 
     @contextmanager
-    def locked(self):
+    def locked(self, *, deadline_seconds=None):
         with self._lock:
             yield
 
@@ -211,6 +212,80 @@ def test_postgres_store_reraises_non_disconnect_errors():
     store = _pg_store_with_fake_conns([_BoomConn(), _FakeConn()])
     with pytest.raises(RuntimeError, match="not a disconnect"):
         store.read()
+
+
+def test_locked_respects_a_custom_deadline_instead_of_the_default_60s():
+    # A lock that NEVER acquires must fail fast on a short caller-supplied
+    # budget (the machine heartbeat's use case) rather than the default 60s.
+    class _NeverLockCursor(_FakeCursor):
+        def fetchone(self):
+            if "pg_try_advisory_xact_lock" in self._conn.last_sql:
+                return (False,)
+            return (self._conn.store_body, self._conn.store_sig)
+
+    class _NeverLockConn(_FakeConn):
+        def cursor(self):
+            return _NeverLockCursor(self)
+
+    store = _pg_store_with_fake_conns([_NeverLockConn()])
+    start = time.monotonic()
+    with pytest.raises(CampaignError, match="timed out acquiring campaign transaction lock"):
+        with store.locked(deadline_seconds=0.01):
+            pass
+    assert time.monotonic() - start < 5.0  # nowhere near the default 60s budget
+
+
+def test_plain_read_uses_a_connection_independent_of_the_transaction():
+    tx_conn, read_conn = _FakeConn(), _FakeConn()
+    body_text = canonical_json({"campaign_id": "c"})
+    store = _pg_store_with_fake_conns([tx_conn, read_conn])
+
+    with store.locked():
+        assert store._conn is tx_conn
+        read_conn.store_body = body_text
+        read_conn.store_sig = _hmac_hex(store._key, body_text)
+
+    assert store.read() == {"campaign_id": "c"}
+    assert store._read_conn is read_conn
+    assert store._conn is tx_conn
+    assert any("pg_try_advisory_xact_lock" in sql for sql in tx_conn.executed_sql)
+    assert not any("pg_try_advisory_xact_lock" in sql for sql in read_conn.executed_sql)
+
+
+def test_plain_read_does_not_block_behind_an_open_transaction():
+    # THE CONVOY BUG: before separating the read connection, ``self._lock``
+    # wrapped BOTH the transactional connection and plain reads, so a quick
+    # ``pending_count``/``status`` poll queued behind whichever thread was
+    # mid-``locked()`` — turning a bounded cross-machine lock wait (up to 60s)
+    # into a freeze of EVERY thread in the process, including the machine
+    # heartbeat and idle worker threads. A plain read must never wait on the
+    # transaction lock at all.
+    tx_conn, read_conn = _FakeConn(), _FakeConn()
+    body_text = canonical_json({"campaign_id": "c"})
+    read_conn.store_body = body_text
+    store = _pg_store_with_fake_conns([tx_conn, read_conn])
+    read_conn.store_sig = _hmac_hex(store._key, body_text)
+    entered = threading.Event()
+    release = threading.Event()
+
+    def _hold_transaction():
+        with store.locked():
+            entered.set()
+            release.wait(timeout=5.0)
+
+    holder = threading.Thread(target=_hold_transaction)
+    holder.start()
+    try:
+        assert entered.wait(timeout=5.0)
+        start = time.monotonic()
+        result = store.read()
+        elapsed = time.monotonic() - start
+    finally:
+        release.set()
+        holder.join(timeout=5.0)
+    assert not holder.is_alive()
+    assert result == {"campaign_id": "c"}
+    assert elapsed < 1.0  # never waited for the OTHER thread's open transaction
 
 
 

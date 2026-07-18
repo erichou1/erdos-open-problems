@@ -43,8 +43,8 @@ class _FlakyStore:
     def read(self, *, retry_seconds=None):
         return self.inner.read()
 
-    def locked(self):
-        return self.inner.locked()
+    def locked(self, *, deadline_seconds=None):
+        return self.inner.locked(deadline_seconds=deadline_seconds)
 
     def write(self, body, *, retry_seconds=None):
         with self._lock:
