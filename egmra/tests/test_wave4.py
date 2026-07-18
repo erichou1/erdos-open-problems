@@ -26,6 +26,7 @@ from egmra.orchestrator.rerank import PROGRESS_STATES
 from egmra.orchestrator.runner_worker import (
     _CAPABILITY_AND_SCHEMA_TAIL,
     _MAX_REASONING_TRANSCRIPT_BYTES,
+    _reasoning_needs_deepening,
     _normalize_sat_experiment,
     _REASONING_TAIL,
     parse_worker_response,
@@ -34,6 +35,14 @@ from egmra.orchestrator.runner_worker import (
 )
 from egmra.retrieval.lemma_library import append_sealed_lemma
 from egmra.tests.test_wave2 import PromptRecordingRunner, _round_reply
+
+
+def _extraction_reply(transcript: str, *, claims=()):
+    payload = json.loads(_round_reply(claims=claims))
+    from egmra.provenance.hashing import sha256_hex
+
+    payload["source_transcript_sha256"] = sha256_hex(transcript)
+    return json.dumps(payload)
 
 
 # ── R11: SAT leaves — witness checked, testimony refused ─────────────────────
@@ -135,21 +144,32 @@ def test_schema_tail_is_trimmed_and_constraint_first():
 
 
 def test_two_call_mode_keeps_main_identity_and_repairs_the_extractor():
-    main = PromptRecordingRunner(["I believe lemma L1 (statement: T holds "
-                                  "for even n) follows by induction."])
+    transcript = ("I believe lemma L1 (statement: T holds for even n) "
+                  "follows by induction.")
+    deepening = (
+        "The dependency is the induction hypothesis. Audit the base and successor "
+        "cases; the exact remaining blocker is preservation of parity.")
+    combined = ("FIRST REASONING TRANSCRIPT:\n" + transcript
+                + "\n\nADAPTIVE DEEPENING TRANSCRIPT:\n" + deepening)
+    main = PromptRecordingRunner([transcript, deepening])
     extractor = PromptRecordingRunner([
-        "not json", _round_reply(claims=[("lem1", "L1 for even n", [])])])
+        "not json", _extraction_reply(
+            combined, claims=[("lem1", "L1 for even n", [])])])
     worker = RunnerWorker(runner=main, goal_claim_id="goal", goal_formula="T",
                           extractor_runner=extractor)
     out = worker.work_branch(None, None, branch_id="b1", budget=5.0,
                              fencing_token=1)
-    # main model reasoned once, free of the JSON schema
-    assert [s for s, _ in main.calls] == ["branch:b1:reasoning"]
+    # a shallow main response gets exactly one targeted deepening call
+    assert [s for s, _ in main.calls] == [
+        "branch:b1:reasoning", "branch:b1:reasoning_deepen"]
     assert _REASONING_TAIL[:40] in main.calls[0][1]
     assert "OUTPUT CONSTRAINTS" not in main.calls[0][1]
+    assert "ADAPTIVE DEEPENING ROUND" in main.calls[1][1]
     # extraction happened on the cheap model, repaired once, same transcript
     assert [s for s, _ in extractor.calls] == ["branch:b1:extract"] * 2
     assert "I believe lemma L1" in extractor.calls[1][1]
+    assert "SOURCE-INTEGRITY CONTRACT" in extractor.calls[0][1]
+    assert "source_transcript_sha256" in extractor.calls[0][1]
     assert {p["claim_id"] for p in out.claim_proposals} == {"goal", "lem1"}
     # the recorded mathematician is the MAIN model, not the extractor
     assert worker.last_model_identity.model == "recording"
@@ -159,15 +179,51 @@ def test_two_call_mode_keeps_main_identity_and_repairs_the_extractor():
 
 def test_two_call_mode_preserves_reasoning_beyond_old_60k_cutoff():
     marker = "DECISIVE_END_OF_PROOF_MARKER"
-    transcript = "A" * 65_000 + marker
+    transcript = ("derive dependency audit counterexample blocker " * 1_500) + marker
+    assert len(transcript) > 65_000
     main = PromptRecordingRunner([transcript])
     extractor = PromptRecordingRunner([
-        _round_reply(claims=[("lem1", "L1", [])])])
+        _extraction_reply(transcript, claims=[("lem1", "L1", [])])])
     worker = RunnerWorker(runner=main, goal_claim_id="goal", goal_formula="T",
                           extractor_runner=extractor)
     worker.work_branch(None, None, branch_id="b1", budget=5.0,
                        fencing_token=1)
     assert marker in extractor.calls[0][1]
+
+
+def test_substantive_reasoning_skips_adaptive_deepening():
+    transcript = " ".join(
+        ["derive"] * 800 + ["dependency", "audit", "counterexample", "blocker"])
+    assert not _reasoning_needs_deepening(transcript)
+    main = PromptRecordingRunner([transcript])
+    extractor = PromptRecordingRunner([
+        _extraction_reply(transcript, claims=[("lem1", "L1", [])])])
+    worker = RunnerWorker(runner=main, goal_claim_id="goal", goal_formula="T",
+                          extractor_runner=extractor)
+
+    worker.work_branch(None, None, branch_id="b1", budget=5.0, fencing_token=1)
+
+    assert [stage for stage, _prompt in main.calls] == ["branch:b1:reasoning"]
+
+
+def test_two_call_mode_rejects_wrong_transcript_hash_and_repairs():
+    transcript = ("derive dependency audit counterexample blocker " * 200).strip()
+    wrong = json.loads(_round_reply(claims=[("bad", "invented", [])]))
+    wrong["source_transcript_sha256"] = "0" * 64
+    extractor = PromptRecordingRunner([
+        json.dumps(wrong),
+        _extraction_reply(transcript, claims=[("lem1", "faithful", [])]),
+    ])
+    worker = RunnerWorker(
+        runner=PromptRecordingRunner([transcript]), goal_claim_id="goal",
+        goal_formula="T", extractor_runner=extractor)
+    out = worker.work_branch(
+        None, None, branch_id="b1", budget=5.0, fencing_token=1)
+    assert [stage for stage, _prompt in extractor.calls] == [
+        "branch:b1:extract", "branch:b1:extract"]
+    assert {proposal["claim_id"] for proposal in out.claim_proposals} == {
+        "goal", "lem1"}
+    assert any("source_transcript_sha256" in failure for failure in out.failures)
 
 
 def test_two_call_mode_rejects_oversize_reasoning_instead_of_truncating():
@@ -179,6 +235,7 @@ def test_two_call_mode_rejects_oversize_reasoning_instead_of_truncating():
     out = worker.work_branch(None, None, branch_id="b1", budget=5.0,
                              fencing_token=1)
     assert extractor.calls == []
+    assert [stage for stage, _prompt in main.calls] == ["branch:b1:reasoning"]
     assert any(f.startswith("reasoning_output_too_large:branch:b1")
                for f in out.failures)
 

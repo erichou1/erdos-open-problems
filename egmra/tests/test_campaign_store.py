@@ -118,7 +118,7 @@ class _FakeCursor:
         self._conn.last_sql = sql
 
     def fetchone(self):
-        if "pg_try_advisory_lock" in self._conn.last_sql:
+        if "pg_try_advisory_xact_lock" in self._conn.last_sql:
             return (True,)
         return (self._conn.store_body, self._conn.store_sig)
 
@@ -127,6 +127,9 @@ class _FakeConn:
     def __init__(self):
         self.dead = False
         self.closed = False
+        self.autocommit = True
+        self.commits = 0
+        self.rollbacks = 0
         self.executed: list[str] = []
         self.executed_sql: list[str] = []
         self.last_sql = ""
@@ -138,6 +141,12 @@ class _FakeConn:
 
     def close(self):
         self.closed = True
+
+    def commit(self):
+        self.commits += 1
+
+    def rollback(self):
+        self.rollbacks += 1
 
 
 def _pg_store_with_fake_conns(conns):
@@ -160,8 +169,39 @@ def test_postgres_store_reconnects_when_neon_drops_the_idle_connection():
         pass
     assert dead_conn.closed and not fresh_conn.closed
     assert "SELECT" in fresh_conn.executed        # lock acquired on the retry conn
-    assert any("pg_try_advisory_lock" in sql
-               for sql in fresh_conn.executed_sql)  # never wait forever on an orphaned lock
+    assert any("pg_try_advisory_xact_lock" in sql
+               for sql in fresh_conn.executed_sql)
+    assert not any("pg_advisory_unlock" in sql for sql in fresh_conn.executed_sql)
+
+
+def test_postgres_lock_is_transaction_scoped_and_auto_released():
+    connection = _FakeConn()
+    store = _pg_store_with_fake_conns([connection])
+
+    with store.locked():
+        assert connection.autocommit is False
+        assert store._transaction_connection is connection
+
+    assert connection.commits == 1
+    assert connection.rollbacks == 0
+    assert connection.autocommit is True
+    assert store._transaction_connection is None
+    assert any("pg_try_advisory_xact_lock" in sql for sql in connection.executed_sql)
+    assert not any("pg_advisory_unlock" in sql for sql in connection.executed_sql)
+
+
+def test_postgres_transaction_lock_rolls_back_on_body_error():
+    connection = _FakeConn()
+    store = _pg_store_with_fake_conns([connection])
+
+    with pytest.raises(RuntimeError, match="body failed"):
+        with store.locked():
+            raise RuntimeError("body failed")
+
+    assert connection.commits == 0
+    assert connection.rollbacks == 1
+    assert connection.autocommit is True
+    assert store._transaction_connection is None
 
 
 def test_postgres_store_reraises_non_disconnect_errors():

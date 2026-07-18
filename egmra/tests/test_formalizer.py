@@ -9,7 +9,6 @@ kernel elsewhere.
 
 from __future__ import annotations
 
-import json
 from types import SimpleNamespace
 
 from egmra.lean.formalizer import (
@@ -47,6 +46,11 @@ def test_build_formalization_prompt_pins_the_exact_obligation():
     assert "egmra_demo : 2 + 2 = 4" in prompt
     assert "EXACTLY" in prompt
     assert "sorry" in prompt and "native_decide" in prompt  # forbidden escapes named
+    assert "LOCKED FORMAL OBLIGATION" in prompt
+    assert "RESULTS THAT DO NOT COUNT" in prompt
+    assert "several materially different routes" in prompt
+    assert "Independent kernel replay decides success" in prompt
+    assert "return no source rather than fabricating a proof" in prompt
 
 
 def test_read_lean_source_concatenates_and_handles_missing(tmp_path):
@@ -67,7 +71,7 @@ def test_aristotle_formalizer_submits_and_reads_produced_lean(tmp_path):
     quarantine.mkdir()
     (quarantine / "Candidate.lean").write_text(_CANDIDATE_LEAN, encoding="utf-8")
     client = _FakeSdkClient(quarantine)
-    formalizer = AristotleFormalizer(client=client, problem_id="erdos-312")
+    formalizer = AristotleFormalizer(client=client)
 
     source = formalizer.formalize(
         declaration_name="egmra_demo", expected_type="2 + 2 = 4",
@@ -76,13 +80,6 @@ def test_aristotle_formalizer_submits_and_reads_produced_lean(tmp_path):
     assert "theorem egmra_demo : 2 + 2 = 4 := rfl" in source
     # The submitted prompt pinned the exact obligation (name + type).
     assert client.prompts and "egmra_demo : 2 + 2 = 4" in client.prompts[0]
-    link_path = quarantine / "egmra-artifact-link.json"
-    link = json.loads(link_path.read_text())
-    assert link["problem_id"] == "erdos-312"
-    assert link["declaration_name"] == "egmra_demo"
-    assert link["aristotle_project_id"] == "proj"
-    assert link["authority"] == "metadata only; not proof evidence"
-    assert oct(link_path.stat().st_mode & 0o777) == "0o600"
     formalizer.close()
     assert client.closed is True
 

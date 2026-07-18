@@ -138,7 +138,19 @@ class RecordingWorker:
 
 def test_runner_cold_pass_and_budget_are_consumed_by_production_flow(tmp_path):
     worker = RecordingWorker()
-    runner = DeterministicRunner()
+
+    class PromptCapturingRunner(DeterministicRunner):
+        prompts: list[tuple[str, str]]
+
+        def __init__(self):
+            super().__init__()
+            self.prompts = []
+
+        def run(self, prompt: str, *, stage: str):
+            self.prompts.append((stage, prompt))
+            return super().run(prompt, stage=stage)
+
+    runner = PromptCapturingRunner()
     source = b"Prove that for all natural numbers n, n squared is at least 0."
     event_path = tmp_path / "events.jsonl"
 
@@ -155,6 +167,12 @@ def test_runner_cold_pass_and_budget_are_consumed_by_production_flow(tmp_path):
     assert "cold-pass-square-invariant" in " ".join(worker.packet_queries)
     stages = {call["stage"] for call in runner.calls}
     assert "cold_pass" in stages          # legacy identity probe (no worker identity)
+    identity_prompt = next(
+        prompt for stage, prompt in runner.prompts if stage == "cold_pass")
+    assert "MODEL IDENTITY / TRANSPORT PROBE ONLY" in identity_prompt
+    assert "Do not reason about the mathematical target" in identity_prompt
+    assert "EGMRA_IDENTITY_PROBE_OK" in identity_prompt
+    assert "Blindly list falsifiers" not in identity_prompt
     # R1: the ignored branch-selection model call was removed outright —
     # selection is the numeric controller's decision.
     assert "branch_selection" not in stages

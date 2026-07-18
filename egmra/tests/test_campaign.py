@@ -508,6 +508,28 @@ def test_worker_does_not_exit_permanently_on_a_transient_unleasable_pool(tmp_pat
     assert status["by_status"].get("done") == 1    # and the pool drained cleanly
 
 
+def test_persistent_fleet_worker_outlives_the_old_idle_retry_window(tmp_path):
+    c = _campaign(tmp_path, workers=("w0",))
+    c.initialize("camp", ["p1"])
+    real_lease = c.lease
+    calls = {"n": 0}
+
+    def delayed_lease(worker_id, *, now):
+        calls["n"] += 1
+        if calls["n"] <= 40:  # longer than the former 15-poll fleet window
+            return None
+        return real_lease(worker_id, now=now)
+
+    c.lease = delayed_lease
+    status = c.run_concurrent(
+        lambda _problem, _token, _worker: "OPEN_NO_PROGRESS",
+        max_workers=1, now=_Clock().now, max_idle_resume_polls=None,
+        idle_poll_interval=0.0, sleep=lambda _seconds: None,
+    )
+    assert calls["n"] == 42  # includes the final terminal-queue check
+    assert status["by_status"] == {"done": 1}
+
+
 def test_run_concurrent_cooperative_stop_finishes_current_problem(tmp_path):
     clock = _Clock()
     c = _campaign(tmp_path, workers=("w0",))

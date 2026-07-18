@@ -23,11 +23,11 @@ import os
 import threading
 import time
 from contextlib import contextmanager
-from dataclasses import dataclass, field
+from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable, Protocol
 
-from egmra.provenance.hashing import canonical_json, content_id
+from egmra.provenance.hashing import canonical_json
 
 _SCHEMA_VERSION = 1
 _MIN_KEY_BYTES = 32
@@ -201,7 +201,7 @@ def _is_infrastructure_failure(result_state: str) -> bool:
 
 class PostgresCampaignStore:
     """DB-backed campaign store: signed state in one row + a cross-process advisory
-    lock (``pg_advisory_lock``), so leases/checkpoints are durable and coordinated
+    transaction lock, so leases/checkpoints are durable and coordinated
     across processes/hosts sharing the database (not just a local JSON file).
 
     Requires a Postgres server + the optional psycopg dependency. The signed body
@@ -232,6 +232,7 @@ class PostgresCampaignStore:
         self._key = _campaign_key(env)
         self._conn = None
         self._lock = threading.RLock()
+        self._transaction_connection = None
         # A stable 64-bit advisory-lock key derived from the campaign name.
         self._lock_key = int.from_bytes(
             hashlib.sha256(name.encode("utf-8")).digest()[:8], "big", signed=True)
@@ -324,21 +325,29 @@ class PostgresCampaignStore:
         pass a SHORTER ``retry_seconds`` (the liveness heartbeat does) so a
         best-effort write fails fast instead of holding the lock for minutes.
         """
-        budget = retry_seconds if retry_seconds is not None else _pg_retry_seconds()
-        deadline = time.monotonic() + budget
-        pause = 2.0
-        while True:
-            try:
-                return operation(self._connection())
-            except Exception as exc:  # noqa: BLE001 - retry only on disconnects
-                disconnect = self._is_disconnect(exc) or (
-                    isinstance(exc, RuntimeError)
-                    and "connection/schema initialization failed" in str(exc))
-                if not disconnect or time.monotonic() >= deadline:
-                    raise
-                self._reset()
-                time.sleep(min(pause, max(0.0, deadline - time.monotonic())))
-                pause = min(pause * 2.0, 60.0)
+        with self._lock:
+            # A read/write inside ``locked()`` must stay on the SAME database
+            # transaction that owns the xact advisory lock. If that connection
+            # drops, PostgreSQL has already rolled back and released the lock;
+            # retrying only the inner statement on a fresh unlocked connection
+            # would violate atomicity. Let the outer campaign operation retry.
+            if self._transaction_connection is not None:
+                return operation(self._transaction_connection)
+            budget = retry_seconds if retry_seconds is not None else _pg_retry_seconds()
+            deadline = time.monotonic() + budget
+            pause = 2.0
+            while True:
+                try:
+                    return operation(self._connection())
+                except Exception as exc:  # noqa: BLE001 - retry only on disconnects
+                    disconnect = self._is_disconnect(exc) or (
+                        isinstance(exc, RuntimeError)
+                        and "connection/schema initialization failed" in str(exc))
+                    if not disconnect or time.monotonic() >= deadline:
+                        raise
+                    self._reset()
+                    time.sleep(min(pause, max(0.0, deadline - time.monotonic())))
+                    pause = min(pause * 2.0, 60.0)
 
     def read(self, *, retry_seconds: float | None = None) -> dict[str, Any] | None:  # pragma: no cover - requires a server
         def _op(connection):
@@ -370,34 +379,65 @@ class PostgresCampaignStore:
 
     @contextmanager
     def locked(self):  # pragma: no cover - requires a database server
-        # Never block indefinitely on ``pg_advisory_lock``. A laptop-sleep
-        # drop can leave the server believing its old session still holds the
-        # lock briefly; a restarted campaign must keep retrying and then fail
-        # visibly instead of freezing all leases and machine heartbeats.
-        deadline = time.monotonic() + 60.0
-        connection = None
-        while connection is None:
-            def _acquire(candidate):
-                with candidate.cursor() as cursor:
-                    cursor.execute("SELECT pg_try_advisory_lock(%s)", (self._lock_key,))
-                    row = cursor.fetchone()
-                return candidate if row and bool(row[0]) else None
-
-            connection = self._with_connection(_acquire)
-            if connection is not None:
-                break
-            if time.monotonic() >= deadline:
-                raise CampaignError(
-                    "timed out acquiring campaign lock; a previous database session may be stale")
-            time.sleep(1.0)
-        try:
-            yield
-        finally:
+        # The old session-level lock survived an interrupted pooled connection:
+        # Neon showed an IDLE backend holding it for hours, blocking every
+        # machine heartbeat and lease. A transaction-scoped lock is released by
+        # PostgreSQL on commit, rollback, OR disconnect, with no manual unlock
+        # statement and therefore no orphanable server-side session state.
+        with self._lock:
+            deadline = time.monotonic() + 60.0
+            connection = None
+            while connection is None:
+                candidate = self._connection()
+                try:
+                    candidate.autocommit = False
+                    with candidate.cursor() as cursor:
+                        cursor.execute(
+                            "SELECT pg_try_advisory_xact_lock(%s)",
+                            (self._lock_key,))
+                        row = cursor.fetchone()
+                    if row and bool(row[0]):
+                        connection = candidate
+                        break
+                    candidate.rollback()
+                    candidate.autocommit = True
+                except Exception as exc:  # noqa: BLE001 - reconnect only before lock acquisition
+                    try:
+                        candidate.rollback()
+                    except Exception:  # noqa: BLE001 - dead connection
+                        pass
+                    try:
+                        candidate.autocommit = True
+                    except Exception:  # noqa: BLE001 - dead connection
+                        pass
+                    if not self._is_disconnect(exc):
+                        raise
+                    self._reset()
+                if time.monotonic() >= deadline:
+                    raise CampaignError("timed out acquiring campaign transaction lock")
+                time.sleep(1.0)
+            self._transaction_connection = connection
             try:
-                with connection.cursor() as cursor:
-                    cursor.execute("SELECT pg_advisory_unlock(%s)", (self._lock_key,))
-            except Exception:  # noqa: BLE001 - a dropped connection freed the lock already
-                pass
+                yield
+            except BaseException:
+                try:
+                    connection.rollback()
+                finally:
+                    self._transaction_connection = None
+                    try:
+                        connection.autocommit = True
+                    except Exception:  # noqa: BLE001 - a disconnect already released the lock
+                        self._reset()
+                raise
+            else:
+                try:
+                    connection.commit()
+                finally:
+                    self._transaction_connection = None
+                    try:
+                        connection.autocommit = True
+                    except Exception:  # noqa: BLE001 - a disconnect already released the lock
+                        self._reset()
 
     def close(self) -> None:  # pragma: no cover - requires a database server
         with self._lock:
@@ -958,7 +998,7 @@ class Campaign:
         permanent_failure: type[BaseException] = _NoConfiguredPermanentFailure,
         poll_interval: float = 0.01,
         idle_poll_interval: float = 2.0,
-        max_idle_resume_polls: int = 15,
+        max_idle_resume_polls: int | None = 15,
         heartbeat_interval: float | None = None,
         stop_requested: Callable[[], bool] | None = None,
         outage_backoff: Callable[[int], float] | None = None,
@@ -1074,11 +1114,16 @@ class Campaign:
                     # respawn), silently dropping a machine below its worker
                     # count for the rest of the run even with hundreds of
                     # problems still waiting. Ride out that transient race with
-                    # a BOUNDED number of short retries while work still exists
-                    # anywhere, then exit if the pool is genuinely drained (so
-                    # finite runs still terminate and a permanently unleasable
-                    # remainder can never hang the run).
-                    if self.pending_count() > 0 and idle_polls < max_idle_resume_polls:
+                    # short retries while work still exists anywhere. Library
+                    # callers default to a bounded ride-out so a permanently
+                    # unleasable fixture cannot hang. Production fleet mode
+                    # passes ``None`` and keeps registered worker slots alive
+                    # until the campaign is terminal or cooperatively stopped.
+                    idle_budget_available = (
+                        max_idle_resume_polls is None
+                        or idle_polls < max(0, int(max_idle_resume_polls))
+                    )
+                    if self.pending_count() > 0 and idle_budget_available:
                         idle_polls += 1
                         sleep(idle_poll_interval)
                         continue

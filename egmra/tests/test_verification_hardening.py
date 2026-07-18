@@ -125,6 +125,10 @@ def test_sketch_prompt_carries_coverage_and_slack_rules():
     assert "-- DIVERGENCE:" in text
     assert "SLACK RULE" in text
     assert "NOTATION" in text
+    assert "at least three materially different assembly plans" in text
+    assert "RESULTS THAT DO NOT COUNT" in text
+    assert "LOCKED COMMUNITY FORMAL TARGET" in text
+    assert "walk dependencies forward" in text
 
 
 def test_formalization_prompt_bans_escape_hatches_and_demands_slack():
@@ -135,3 +139,6 @@ def test_formalization_prompt_bans_escape_hatches_and_demands_slack():
     assert "trust level zero" in text
     assert "@[extern]" in text and "opaque" in text and "partial" in text
     assert "library-first" in text and "slack" in text
+    assert "LOCKED FORMAL OBLIGATION" in text
+    assert "preserve binder order" in text
+    assert "RESULTS THAT DO NOT COUNT" in text

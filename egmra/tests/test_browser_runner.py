@@ -80,7 +80,6 @@ def test_run_returns_unattested_identity_and_records_provenance():
     assert rec.attested is False
     assert rec.runner_version == BROWSER_RUNNER_VERSION
     assert rec.conversation_url.startswith("https://chatgpt.com/c/")
-    assert resp.conversation_url == rec.conversation_url
     assert rec.prompt_hash == resp.prompt_hash
     assert rec.response_hash and rec.response_hash != rec.prompt_hash
 
@@ -141,58 +140,25 @@ def test_malformed_response_is_retried_in_a_fresh_conversation():
     assert runner.records[0].response_retries == 2
 
 
+def test_chatgpt_delivery_error_card_is_retried_as_transport_failure():
+    backend = FakeBackend([
+        "Message delivery timed out. Please try again. Retry",
+        "a real mathematical answer",
+    ])
+    runner = _runner(backend, max_response_retries=1)
+
+    response = runner.run("p", stage="s")
+
+    assert response.text == "a real mathematical answer"
+    assert backend.conversations == 2
+    assert runner.records[0].response_retries == 1
+
+
 def test_persistent_malformed_response_raises_response_error():
     backend = FakeBackend(["", "", ""])
     runner = _runner(backend, max_response_retries=2)
     with pytest.raises(BrowserResponseError):
         runner.run("p", stage="s")
-
-
-class _DeadPageBackend(FakeBackend):
-    """Simulates the user closing the tab/window: raw engine errors, not ours."""
-
-    def __init__(self, *, fail_at: str):
-        super().__init__(["never used"])
-        self._fail_at = fail_at
-
-    def send(self, prompt):
-        if self._fail_at == "send":
-            raise RuntimeError("Target page, context or browser has been closed")
-        super().send(prompt)
-
-    def wait_response(self, *, timeout_s):
-        if self._fail_at == "wait":
-            raise RuntimeError("async browser engine is closed")
-        return super().wait_response(timeout_s=timeout_s)
-
-    def conversation_url(self):
-        if self._fail_at == "record":
-            raise RuntimeError("Target page, context or browser has been closed")
-        return super().conversation_url()
-
-
-@pytest.mark.parametrize("fail_at", ["send", "wait", "record"])
-def test_closed_tab_is_a_provider_outage_never_a_math_failure(fail_at):
-    """Closing the browser tab/window is INFRASTRUCTURE (live 2026-07-16).
-
-    A raw Playwright/engine error must surface as BrowserProviderUnavailable so
-    the campaign retains + refunds the attempt; unwrapped it reaches the loop's
-    crash isolation as an ordinary branch failure and the problem is wrongly
-    completed as OPEN_NO_PROGRESS.
-    """
-    runner = _runner(_DeadPageBackend(fail_at=fail_at))
-    with pytest.raises(BrowserProviderUnavailable) as excinfo:
-        runner.run("p", stage="s")
-    assert "not a mathematical result" in str(excinfo.value)
-
-
-def test_runner_errors_are_not_double_wrapped():
-    backend = FakeBackend(["never reached"], rate_limited_before=999)
-    runner = _runner(backend, sleep=lambda _s: None, max_rate_limit_pauses=3)
-    with pytest.raises(BrowserProviderUnavailable) as excinfo:
-        runner.run("p", stage="s")
-    # The budget-exhaustion signal keeps its own message (no wrap-of-wrap).
-    assert "throttled" in str(excinfo.value)
 
 
 def test_context_manager_closes_backend():

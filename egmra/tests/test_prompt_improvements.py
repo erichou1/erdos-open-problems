@@ -305,12 +305,107 @@ def test_continuation_prompt_states_regulator_decision_priors():
 def test_referee_prompt_hunts_first_error_with_defect_classes():
     from egmra.orchestrator.runner_worker import referee_prompt
 
-    prompt = referee_prompt("T", [{"claim_id": "c1", "statement": "s"}])
+    prompt = referee_prompt(
+        "T", [{"claim_id": "c1", "statement": "s",
+               "depends_on": ["c0"]}])
     assert "FIRST unjustified step" in prompt
     assert "dependency order" in prompt
+    assert "c1 [deps: c0]: s" in prompt
     assert "import-mismatch" in prompt and "hand-wave" in prompt
     assert "it is NOT established" in prompt             # uncertain => fail
+    assert "LOCKED TARGET STATEMENT (immutable)" in prompt
+    assert "RESULTS THAT DO NOT COUNT" in prompt
+    assert "smallest, degenerate, equality" in prompt
+    assert "has no authority to approve a proof" in prompt
     assert "Do NOT approve or assert any proof." in prompt
+
+
+def test_cold_pass_is_specific_rigid_and_model_locked():
+    from egmra.orchestrator.runner_worker import cold_pass_prompt
+
+    prompt = cold_pass_prompt(
+        "For every integer n, prove P(n).", role="skeptic",
+        exact_model="- binder: for all n ranging over integers",
+        traps=["n=0 changes the convention"],
+    )
+    assert "LOCKED TARGET STATEMENT (immutable)" in prompt
+    assert "EXACT MODEL (locked interpretation)" in prompt
+    assert "for all n ranging over integers" in prompt
+    assert "n=0 changes the convention" in prompt
+    assert "at least four materially different failure mechanisms" in prompt
+    assert "RESULTS THAT DO NOT COUNT" in prompt
+    assert "retrieval queries" in prompt and "parameter regime" in prompt
+    assert "no evidentiary authority" in prompt
+
+
+def test_every_active_reasoning_prompt_has_a_purpose_specific_rigorous_contract():
+    from egmra.lean.formalizer import build_formalization_prompt
+    from egmra.orchestrator.runner_worker import (
+        cold_pass_prompt,
+        referee_prompt,
+        sketch_prompt,
+    )
+    from egmra.verification.informal_review import hostile_review_prompt
+
+    prompts = {
+        "branch": branch_prompt(
+            "For every n, prove P(n).", role="prover", branch_id="b1",
+            packet_summary="", exact_model="- binder: for all n"),
+        "continuation": continuation_prompt(
+            "For every n, prove P(n).", role="prover", branch_id="b1",
+            round_index=2, ledger_summary="", open_subgoals=["bridge"],
+            objections=[], failed_approaches=[], exact_model="- binder: for all n"),
+        "cold": cold_pass_prompt(
+            "For every n, prove P(n).", role="skeptic",
+            exact_model="- binder: for all n"),
+        "sketch": sketch_prompt(
+            "For every n, prove P(n).",
+            formal_target="theorem target : True := by trivial",
+            target_declaration="target"),
+        "referee": referee_prompt(
+            "For every n, prove P(n).",
+            [{"claim_id": "c1", "statement": "P(0)"}]),
+        "formalizer": build_formalization_prompt(
+            declaration_name="target", expected_type="True",
+            informal_statement="For every n, prove P(n)."),
+        "hostile_review": hostile_review_prompt(
+            "For every n, prove P(n).", [], []),
+    }
+    required_markers = {
+        "branch": (
+            "TARGET STATEMENT", "LONG-HORIZON SEARCH DISCIPLINE",
+            "RESULTS THAT DO NOT COUNT", "REQUIRED ADVERSARIAL AUDIT",
+            "independent pipeline"),
+        "continuation": (
+            "immutable TARGET STATEMENT", "LONG-HORIZON SEARCH DISCIPLINE",
+            "RESULTS THAT DO NOT COUNT", "REQUIRED ADVERSARIAL AUDIT",
+            "independent verification"),
+        "cold": (
+            "LOCKED TARGET STATEMENT", "DELIBERATION CONTRACT",
+            "materially different failure mechanisms",
+            "RESULTS THAT DO NOT COUNT", "no evidentiary authority"),
+        "sketch": (
+            "LOCKED COMMUNITY FORMAL TARGET", "INTERNAL SEARCH PROTOCOL",
+            "materially different assembly plans", "RESULTS THAT DO NOT COUNT",
+            "downstream sealed kernel"),
+        "referee": (
+            "LOCKED TARGET STATEMENT", "AUDIT PROTOCOL",
+            "RESULTS THAT DO NOT COUNT", "FIRST unjustified step",
+            "no authority to approve a proof"),
+        "formalizer": (
+            "LOCKED FORMAL OBLIGATION", "PROOF-DEVELOPMENT PROTOCOL",
+            "materially different routes", "RESULTS THAT DO NOT COUNT",
+            "Independent kernel replay decides success"),
+        "hostile_review": (
+            "LOCKED TARGET STATEMENT", "REVIEW COMPLETION CONTRACT",
+            "at least four distinct passes", "RESULTS THAT DO NOT COUNT AS A PASS",
+            "it is NOT established"),
+    }
+    for name, markers in required_markers.items():
+        for marker in markers:
+            assert marker in prompts[name], f"{name} prompt lost {marker!r}"
+        assert "Assume for purposes of this task that" not in prompts[name]
+        assert "Return only when the problem is solved" not in prompts[name]
 
 
 # --- Kerger information density: exact model + family guidance ---------------

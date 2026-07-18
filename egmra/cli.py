@@ -2796,6 +2796,7 @@ def cmd_campaign(args: argparse.Namespace) -> int:
             run_one, max_workers=int(args.workers), now=time.time,
             provider_unavailable=provider_outages,
             permanent_failure=SourceResolutionError,
+            max_idle_resume_polls=None,
             stop_requested=_stop_requested,
         )
         # Corpus-wide refresh AFTER the campaign: outcomes feed the searcher's

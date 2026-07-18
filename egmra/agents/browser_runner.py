@@ -208,7 +208,14 @@ class BrowserChatGPTRunner:
         stripped = (text or "").strip()
         if len(stripped) < self.min_response_chars:
             return True
-        return stripped == "[Could not extract response]"
+        lowered = stripped.lower()
+        return (
+            stripped == "[Could not extract response]"
+            or "message delivery timed out" in lowered
+            or "there was an error generating a response" in lowered
+            or "a network error occurred" in lowered
+            or lowered in {"retry", "please try again", "something went wrong"}
+        )
 
     def run(self, prompt: str, *, stage: str) -> RunnerResponse:
         prompt_hash = sha256_hex(prompt)
@@ -309,10 +316,12 @@ class PlaywrightChatGPTBackend:  # pragma: no cover - requires an authenticated 
     """
 
     def __init__(self, *, headless: bool = False, generation_poll_s: float = 1.0,
-                 generation_start_timeout_s: float = 30.0) -> None:
+                 generation_start_timeout_s: float = 30.0,
+                 stable_polls: int = 2) -> None:
         self.headless = headless
         self.generation_poll_s = generation_poll_s
         self.generation_start_timeout_s = generation_start_timeout_s
+        self.stable_polls = max(1, int(stable_polls))
         self._pw = None
         self._context = None
         self._page = None
@@ -344,7 +353,20 @@ class PlaywrightChatGPTBackend:  # pragma: no cover - requires an authenticated 
             self._page, timeout_s=min(self.generation_start_timeout_s, timeout_s)
         )
         deadline = time.time() + timeout_s
-        while time.time() < deadline and self._cb.is_generating(self._page):
+        previous = ""
+        stable = 0
+        while time.time() < deadline:
+            if self._cb.is_generating(self._page):
+                previous, stable = "", 0
+                time.sleep(self.generation_poll_s)
+                continue
+            text = self._cb.extract_response(self._page)
+            if text.strip() and text == previous:
+                stable += 1
+                if stable >= self.stable_polls:
+                    return text
+            else:
+                previous, stable = text, 0
             time.sleep(self.generation_poll_s)
         return self._cb.extract_response(self._page)
 

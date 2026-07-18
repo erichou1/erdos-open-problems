@@ -1150,14 +1150,16 @@ def research(
     # probe call so those fields never silently change meaning.
     cold_output = worker.cold_pass(contract, budget=cold_budget)
     cold_identity = getattr(worker, "last_model_identity", None)
-    cold_free_text = ""
     if cold_identity is None:
         runner_cold = runner.run(
-            f"Blindly list falsifiers and retrieval queries for: {interp.conclusion}",
+            "MODEL IDENTITY / TRANSPORT PROBE ONLY. Do not reason about the "
+            "mathematical target, propose claims, list falsifiers, or suggest "
+            "retrieval queries. This response is discarded and has no "
+            "decision or evidentiary authority. Return exactly the ASCII token "
+            "EGMRA_IDENTITY_PROBE_OK and nothing else.",
             stage="cold_pass",
         )
         cold_identity = runner_cold.model
-        cold_free_text = runner_cold.text
         runner_responses.append({
             "stage": "cold_pass", "text": runner_cold.text,
             "runner_id": runner.runner_id, "prompt_hash": runner_cold.prompt_hash,
@@ -1198,7 +1200,6 @@ def research(
         techniques=tuple(dict.fromkeys([
             *cold_output.search_queries,
             *cold_output.falsifiers,
-            *([cold_free_text] if cold_free_text else []),
         ])),
     ), limit=8, extra_queries=tuple(cold_output.search_queries[:8]))
     phases.append("freeze_solver_packet")

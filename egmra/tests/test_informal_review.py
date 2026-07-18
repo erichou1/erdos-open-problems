@@ -154,6 +154,16 @@ def test_hostile_review_preserves_long_proof_steps():
     assert marker in prompt
 
 
+def test_hostile_review_preserves_long_claim_formulas():
+    marker = "DECISIVE_CLAIM_DETAIL_NEAR_END"
+    ledger = [{
+        "claim_id": "lem", "dependencies": [],
+        "canonical_formula": "forall n, " + "x" * 5_000 + marker,
+    }]
+    prompt = hostile_review_prompt("stmt", ledger, [])
+    assert marker in prompt
+
+
 def test_hostile_review_fails_closed_when_proof_exceeds_envelope():
     from egmra.verification.informal_review import _MAX_REVIEW_PROOF_CHARS
 
@@ -165,6 +175,10 @@ def test_hostile_review_fails_closed_when_proof_exceeds_envelope():
 
 def test_prompt_checks_statement_integrity_first_and_fails_on_uncertainty():
     prompt = hostile_review_prompt("stmt", [], [])
+    assert "deep verification task, not a quick plausibility check" in prompt
+    assert "at least four distinct passes" in prompt
+    assert "RESULTS THAT DO NOT COUNT AS A PASS" in prompt
+    assert "reconstruct the argument backward from the target" in prompt
     assert "STATEMENT INTEGRITY" in prompt
     assert "cheapest and most fatal first" in prompt
     assert "GENUINE WORK" in prompt

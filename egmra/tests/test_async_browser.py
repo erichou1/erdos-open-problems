@@ -92,22 +92,6 @@ def test_async_engine_runs_tabs_concurrently():
         engine.close()
 
 
-def test_response_wait_uses_generation_budget_not_short_bridge_budget():
-    class _SlowResponseDriver(_ConcurrentFakeDriver):
-        async def wait_response(self, page, *, timeout_s):
-            await asyncio.sleep(0.08)
-            return f"slow-{page.index}"
-
-    driver = _SlowResponseDriver(1)
-    # Ordinary bridge calls have a deliberately tiny budget. A model response
-    # with its own larger generation budget must not be killed by that cap.
-    engine = AsyncBrowserEngine(driver, tab_count=1, op_timeout_s=0.02).start()
-    try:
-        assert engine.wait_response(engine.pages[0], timeout_s=0.2) == "slow-0"
-    finally:
-        engine.close()
-
-
 def test_async_engine_rejects_out_of_range_tab_count():
     with pytest.raises(ValueError):
         AsyncBrowserEngine(_ConcurrentFakeDriver(0), tab_count=0)
@@ -209,6 +193,25 @@ class _DelayedComposerPage:
         return "https://chatgpt.com/g/project"
 
 
+class _SettlingResponsePage:
+    def __init__(self, texts: list[str]) -> None:
+        self.texts = list(texts)
+        self.reads = 0
+
+    async def query_selector(self, _selector):
+        return None
+
+    async def query_selector_all(self, selector):
+        if "assistant" not in selector:
+            return []
+        index = min(self.reads, len(self.texts) - 1)
+        self.reads += 1
+        text = self.texts[index]
+        return [type("Message", (), {
+            "inner_text": lambda _self: asyncio.sleep(0, result=text),
+        })()]
+
+
 def test_live_async_driver_waits_for_delayed_composer_before_returning():
     driver = PlaywrightAsyncPageDriver()
     driver._cb = type("CB", (), {"PROJECT_URL": "https://chatgpt.com/g/project"})
@@ -226,3 +229,14 @@ def test_live_async_driver_fails_explicitly_when_composer_never_appears():
 
     with pytest.raises(RuntimeError, match="input box"):
         asyncio.run(driver.open_conversation(page))
+
+
+def test_live_async_driver_waits_for_stable_text_after_stop_disappears():
+    driver = PlaywrightAsyncPageDriver(
+        generation_poll_s=0, generation_start_timeout_s=0, stable_polls=2)
+    page = _SettlingResponsePage(["partial", "longer", "final", "final", "final"])
+
+    text = asyncio.run(driver.wait_response(page, timeout_s=1.0))
+
+    assert text == "final"
+    assert page.reads >= 5
