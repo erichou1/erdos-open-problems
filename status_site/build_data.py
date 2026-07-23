@@ -401,6 +401,76 @@ def _outcomes() -> dict[str, dict[str, Any]]:
     return rows
 
 
+# Per-stage text is truncated in the public snapshot; the full transcript stays
+# in ChatGPT (linked by conversation_url) and in the local state file.
+SIDE_PIPELINE_TEXT_LIMIT = 8000
+
+
+def _side_pipeline() -> dict[str, Any]:
+    """Read the standalone side-pipeline state files (adapt/research/continue).
+
+    Independent of the Neon campaign: it scans ``side_pipeline_runs/*.json``
+    written by ``side_pipeline.py`` and exposes each problem with every stage of
+    iteration so the dashboard can show the adaptation, first research attempt,
+    and each continuation round.
+    """
+    directory = ROOT / "side_pipeline_runs"
+    problems: list[dict[str, Any]] = []
+    for path in sorted(directory.glob("*.json")):
+        try:
+            record = json.loads(path.read_text(encoding="utf-8"))
+        except (OSError, json.JSONDecodeError):
+            continue
+        if not isinstance(record, dict) or not record.get("id"):
+            continue
+        stages: list[dict[str, Any]] = []
+        for stage in record.get("stages") or []:
+            text = str(stage.get("text") or "")
+            clipped = text[:SIDE_PIPELINE_TEXT_LIMIT]
+            stages.append({
+                "stage": stage.get("stage"),
+                "role": stage.get("role"),
+                "round": stage.get("round"),
+                "at": stage.get("at"),
+                "chars": stage.get("chars", len(text)),
+                "conversation_url": stage.get("conversation_url"),
+                "assessment": stage.get("assessment"),
+                "timed_out": bool(stage.get("timed_out")),
+                "text": clipped,
+                "text_truncated": len(text) > len(clipped),
+            })
+        problems.append({
+            "id": record.get("id"),
+            "title": record.get("title") or record.get("id"),
+            "status": record.get("status"),
+            "current_stage": record.get("current_stage"),
+            "phase": record.get("phase"),
+            "round": record.get("round", 0),
+            "max_rounds": record.get("max_rounds"),
+            "worker": record.get("worker"),
+            "started_at": record.get("started_at"),
+            "updated_at": record.get("updated_at"),
+            "adapt_conversation_url": record.get("adapt_conversation_url"),
+            "research_conversation_url": record.get("research_conversation_url"),
+            "problem_statement": str(record.get("problem_statement") or "")[:SIDE_PIPELINE_TEXT_LIMIT],
+            "references": str(record.get("references") or "")[:4000],
+            "stages": stages,
+        })
+    problems.sort(key=lambda item: str(item.get("updated_at") or ""), reverse=True)
+    status_counts = collections.Counter(str(item.get("status")) for item in problems)
+    return {
+        "problems": problems,
+        "summary": {
+            "total": len(problems),
+            "by_status": dict(sorted(status_counts.items())),
+            "solved": status_counts.get("solved", 0),
+            "running": status_counts.get("running", 0),
+            "exhausted": status_counts.get("exhausted", 0),
+            "failed": status_counts.get("failed", 0),
+        },
+    }
+
+
 def build() -> dict[str, Any]:
     dsn = os.environ.get("EGMRA_POSTGRES_DSN")
     if not dsn:
@@ -608,6 +678,7 @@ def build() -> dict[str, Any]:
         "aristotle_artifacts": artifacts,
         "ranking": public_ranking,
         "ranking_method": ranking_method_record(queue, ranking_pipeline),
+        "side_pipeline": _side_pipeline(),
         "source": {
             "repository": GITHUB_ROOT,
             "branch": GITHUB_BRANCH,

@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#f2f0e8">
+  <meta name="description" content="Side pipeline: adapt-a-meta-prompt then drive ChatGPT to a complete unconditional result, shown stage by stage.">
+  <title>Side Pipeline · EGMRA</title>
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg?v=20260716b">
+  <link rel="mask-icon" href="/favicon.svg?v=20260716b" color="#1e2220">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css">
+  <link rel="stylesheet" href="/styles.css?v=20260716c">
+  <style>
+    .sp-metrics{display:flex;flex-wrap:wrap;gap:.75rem;margin:.5rem 0 1.25rem}
+    .sp-metric{border:1px solid var(--line,#d8d3c4);border-radius:.6rem;padding:.6rem .9rem;min-width:7rem;background:rgba(255,255,255,.4)}
+    .sp-metric b{display:block;font-size:1.5rem;font-family:"IBM Plex Mono",monospace}
+    .sp-metric span{font-size:.72rem;letter-spacing:.06em;text-transform:uppercase;opacity:.7}
+    .sp-card{border:1px solid var(--line,#d8d3c4);border-radius:.7rem;margin:.75rem 0;background:rgba(255,255,255,.55);overflow:hidden}
+    .sp-card>summary{list-style:none;cursor:pointer;padding:.9rem 1.1rem;display:flex;flex-wrap:wrap;align-items:center;gap:.6rem}
+    .sp-card>summary::-webkit-details-marker{display:none}
+    .sp-card>summary::before{content:"▸";opacity:.5;margin-right:.2rem}
+    .sp-card[open]>summary::before{content:"▾"}
+    .sp-title{font-family:"Newsreader",Georgia,serif;font-weight:600;font-size:1.05rem;margin-right:auto}
+    .sp-title small{display:block;font-family:"IBM Plex Mono",monospace;font-size:.72rem;opacity:.6}
+    .sp-badge{font-family:"IBM Plex Mono",monospace;font-size:.68rem;text-transform:uppercase;letter-spacing:.05em;padding:.18rem .5rem;border-radius:.4rem;border:1px solid transparent;white-space:nowrap}
+    .sp-badge.running{background:#fdf1d6;color:#7a5200;border-color:#e8c877}
+    .sp-badge.solved{background:#d9f2e0;color:#1c6b3a;border-color:#8fd3a7}
+    .sp-badge.exhausted{background:#ece9df;color:#5a5545;border-color:#cdc6b2}
+    .sp-badge.failed{background:#f7dcdc;color:#8a2020;border-color:#e2a2a2}
+    .sp-badge.unsolved{background:#fdf1d6;color:#7a5200;border-color:#e8c877}
+    .sp-badge.unclear{background:#ece9df;color:#5a5545;border-color:#cdc6b2}
+    .sp-body{padding:0 1.1rem 1rem}
+    .sp-links{display:flex;flex-wrap:wrap;gap:.6rem;margin:.3rem 0 .8rem}
+    .sp-links a{font-size:.78rem;font-family:"IBM Plex Mono",monospace}
+    .sp-statement{font-family:"Newsreader",Georgia,serif;opacity:.85;margin:.2rem 0 .9rem;white-space:pre-wrap}
+    .sp-stage{border-left:3px solid #cdc6b2;margin:.5rem 0;background:rgba(255,255,255,.5);border-radius:0 .4rem .4rem 0}
+    .sp-stage.prompt{border-left-color:#b9c2d0}
+    .sp-stage.response{border-left-color:#9fbfa8}
+    .sp-stage>summary{list-style:none;cursor:pointer;padding:.5rem .8rem;display:flex;flex-wrap:wrap;gap:.5rem;align-items:center;font-size:.82rem}
+    .sp-stage>summary::-webkit-details-marker{display:none}
+    .sp-stage .k{font-family:"IBM Plex Mono",monospace;text-transform:uppercase;letter-spacing:.05em;font-size:.7rem;opacity:.75}
+    .sp-stage .meta{margin-left:auto;font-family:"IBM Plex Mono",monospace;font-size:.7rem;opacity:.6}
+    .sp-text{margin:0;padding:.7rem .9rem;white-space:pre-wrap;word-break:break-word;font-family:"IBM Plex Mono",monospace;font-size:.78rem;line-height:1.5;max-height:32rem;overflow:auto;background:rgba(30,34,32,.03);border-top:1px solid var(--line,#e2ddce)}
+    .sp-trunc{font-size:.72rem;opacity:.7;padding:.3rem .9rem;font-family:"IBM Plex Mono",monospace}
+    .sp-empty{opacity:.7;padding:2rem 0}
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-block"><div class="brand-mark" aria-hidden="true"><span>E</span><i>∞</i></div><div><p class="eyebrow">EGMRA / SIDE PIPELINE</p><h1>Adapt → research → finish</h1></div></div>
+    <nav class="primary-nav" aria-label="Dashboard sections"><a href="/">Status</a><a href="/ranking.html">Ranking</a><a href="/pipeline.html" aria-current="page">Pipeline</a><a href="/#guide">Help</a></nav>
+    <div class="snapshot-block"><span id="healthDot" class="health-dot"></span><div><strong id="campaignName">Loading pipeline</strong><small id="snapshotTime">Reading live snapshot…</small></div><button id="reloadButton" class="icon-button" title="Reload pipeline" aria-label="Reload pipeline">↻</button></div>
+  </header>
+  <main>
+    <section class="ranking-intro">
+      <div class="section-label"><span>01</span><h2>What this pipeline does</h2></div>
+      <div class="ranking-explainer">
+        <div><p class="eyebrow">STAGE 1 · ADAPT</p><strong>The fixed meta-prompt is adapted to each problem</strong><p>A fresh chat receives the template prompt plus an instruction to adapt it to the target problem and its literature, and returns a problem-specific research prompt.</p></div>
+        <div><p class="eyebrow">STAGE 2 · RESEARCH</p><strong>One chat per problem</strong><p>The adapted prompt is submitted in a second chat (named after the problem) so the whole search — and any later manual follow-up — lives in one conversation.</p></div>
+        <div><p class="eyebrow">STAGE 3 · CONTINUE</p><strong>Nudged toward a complete unconditional result</strong><p>While an attempt does not declare a complete result, a continuation nudge is sent in the same chat, up to the configured round cap.</p></div>
+        <div><p class="eyebrow">TRANSPARENCY</p><strong>Every stage of iteration is shown</strong><p>Each adaptation, research attempt, and continuation round is recorded with a link to the exact ChatGPT conversation. Text is truncated here; open the chat for the full transcript.</p></div>
+      </div>
+    </section>
+    <section class="ranking-workspace">
+      <div class="section-label"><span>02</span><h2>Problems in the side pipeline</h2></div>
+      <div id="spSummary" class="sp-metrics"></div>
+      <div class="toolbar ranking-toolbar">
+        <label class="search-field"><span>⌕</span><input id="spSearch" type="search" placeholder="Search id, title, or statement…" autocomplete="off" aria-keyshortcuts="/"><kbd>/</kbd></label>
+      </div>
+      <div id="spList"><p class="sp-empty">Loading side pipeline…</p></div>
+      <p id="spCount" class="result-count"></p>
+    </section>
+  </main>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" defer></script>
+  <script src="/pipeline.js?v=20260722a" defer></script>
+</body>
+</html>
