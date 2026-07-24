@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 684,
+  "raw_page": {
+    "path": "raw/pages/problem_684.html",
+    "sha256": "7aa1f048c90d253499cec55d0f5dbc640086d8df6807aebfd1515075e9bb7509"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "a33ffe97c134e149eb4d0b5bfa3b93525f488ff0ca36b0eb18db493bed223ee8",
+      "source_region": "div.problem-additional-text",
+      "text": "[APSSV26] B. Alexeev, M. Putterman, M. Sawhney, M. Sellke, and G. Valiant, Short proofs in combinatorics and number theory. arXiv:2603.29961 (2026)."
+    },
+    "remarks": {
+      "sha256": "e99d7dac3353cd24e840e3aa877a3b61a98ec27725fcab9e5bc9001a782fc29d",
+      "source_region": "div.problem-additional-text",
+      "text": "A classical theorem of Mahler states that for any $\\epsilon>0$ and integers $k$ and $l$ then, writing\\[(n+1)\\cdots (n+k) = ab\\]where the only primes dividing $a$ are $\\leq l$ and the only primes dividing $b$ are $>l$, we have $a < n^{1+\\epsilon}$ for all sufficiently large (depending on $\\epsilon,k,l$) $n$.\n\nMahler's theorem implies $f(n)\\to \\infty$ as $n\\to \\infty$, but is ineffective, and so gives no bounds on the growth of $f(n)$.\n\nOne can similarly ask for estimates on the smallest integer $f(n,k)$ such that if $m$ is the factor of $\\binom{n}{k}$ containing all primes $\\leq f(n,k)$ then $m > n^2$.\n\nTang and ChatGPT have proved that\\[f(n)\\leq n^{30/43+o(1)}.\\]The same proof would prove $f(n) \\leq n^{2/3+o(1)}$ assuming the Riemann Hypothesis (or Density Hypothesis). \n\nA heuristic given by Sothanaphan and ChatGPT in the comments suggests that, at least for most $n$, $f(n)\\sim 2\\log n$.\n\nAn internal OpenAI model \\cite{APSSV26} has given an elementary argument which shows $f(n) \\ll (\\log n)^2$, and constructs arbitrarily large $n$ such that $f(n)\\geq (1/2-o(1))\\log n$."
+    },
+    "statement": {
+      "sha256": "eddc57a6f62b8094d057594925b0a4122b82651beefd732123b67c6eed628057",
+      "source_region": "div#content",
+      "text": "For $0\\leq k\\leq n$ write\\[\\binom{n}{k} = uv\\]where the only primes dividing $u$ are in $[2,k]$ and the only primes dividing $v$ are in $(k,n]$. \n\nLet $f(n)$ be the smallest $k$ such that $u>n^2$. Give bounds for $f(n)$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/684"
+}

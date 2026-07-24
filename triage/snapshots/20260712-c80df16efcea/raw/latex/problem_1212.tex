@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#1212}
+\date{Last updated: 2026-04-04}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, primes
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $G$ be the graph with vertex set those pairs $(x,y)\in \mathbb{N}^2$ with $\mathrm{gcd}(x,y)=1$, in which we join two vertices if the differ in only one coordinate, and there by $\pm 1$. Is there a path going to infinity on $G$, say $P$, such that for all $(x,y)\in P$ both $\min(x,y)&#62;1$ and at least one of $x$ or $y$ is composite?
+
+
+
+
+Herzog and Stewart studied the graph $G$, which they called visible lattice points, and proved that there is only one infinite component, and conjectured that if $p$ is prime and $p\nmid a$ then $(a,p)$ always belongs to the infinite component. (This is according to \cite{Er80}; I can find no such results of Herzog and Stewart, who have a paper \cite{HeSt71} on which finite patterns appear in the set of visible lattice points, but does not address this question.) Erd\H{o}s originally asked this question with just the condition that $\min(x,y)&#62;1$ and (as he recounts in \cite{Er80}) 'foolishly offered 25 dollars for a proof. In the evening Stewart gave the simple proof: $(p_k,p_{k+1})$ can be joined to $(p_{k+1},p_{k+2})$'. Indeed, if $p_k$ is the $k$th prime then there is a path\[(p_k,p_{k+1})\to (p_k,p_{k+1}+1)\to \cdots \]\[\to (p_{k},p_{k+2})\to (p_{k}+1,p_{k+2})\to (p_{k+1},p_{k+2}).\]This is permissible provided $[p_{k+1},p_{k+2}]$ contains no multiple of $p_k$, which is true provided $p_{k+2}&lt;2p_{k}$, which is true for all $k\geq 4$. One could further demand that the path be monotone (i.e. every step increases the distance from the origin). Is there a monotone path where we change direction after a bounded number of steps? The first $50\times 50$ block of the graph $G$ restricted to those vertices $(x,y)$ with both $x,y&gt;1$ and at least one of $x$ or $y$ composite is shown {IMAGE=1212,here}.
+
+
+
+
+References
+
+[Er80] Erd\H{o}s, Paul, A survey of problems in combinatorial number theory . Ann. Discrete Math. (1980), 89-115.
+
+[HeSt71] Herzog, Fritz and Stewart, B. M., Patterns of visible and nonvisible lattice points . Amer. Math. Monthly (1971), 487--496.
+
+\noindent\textbf{Related OEIS sequences:} possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/1212}}
+\end{document}

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1104,
+  "raw_page": {
+    "path": "raw/pages/problem_1104.html",
+    "sha256": "f2281133256763e4e91639f73295fc638d25541f99731500f3b234d694ed276a"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "151b3bd6a8eea386776bfba3b90218f276304569f93454c8930e1d8c30c9078a",
+      "source_region": "div.problem-additional-text",
+      "text": "[DaIl22] Davies, Ewan and Illingworth, Freddie, The {$\\chi$}-{R}amsey problem for triangle-free graphs. SIAM J. Discrete Math. (2022), 1124--1134.\n \n [HHKP25] Z. Hefty, P. Horn, D. King, and F. Pfender, Improving $R(3,k)$ in just two bites. arXiv:2510.19718 (2025).\n \n [Ki95] Kim, J. H., The Ramsey number $R(3,t)$ has order of magnitude $t^2/\\log t$. Random Structures and Algorithms (1995), 173-207."
+    },
+    "remarks": {
+      "sha256": "b8b0470d1ca975f220447d83c29631648ad861614b6054e95371d1467b6915dc",
+      "source_region": "div.problem-additional-text",
+      "text": "The best bounds available are\\[(1-o(1))(n/\\log n)^{1/2}\\leq f(n) \\leq (2+o(1))(n/\\log n)^{1/2}.\\]The upper bound is due to Davies and Illingworth \\cite{DaIl22}, the lower bound follows from a construction of Hefty, Horn, King, and Pfender \\cite{HHKP25}.\n\nOne can ask a similar question for the maximum possible chromatic number of a triangle-free graph on $m$ edges. Let this be $g(m)$. Davies and Illingworth \\cite{DaIl22} prove\\[g(m) \\leq (3^{5/3}+o(1))\\left(\\frac{m}{(\\log m)^2}\\right)^{1/3}.\\]Kim \\cite{Ki95} gave a construction which implies $g(m) \\gg (m/(\\log m)^2)^{1/3}$.\n\nThe function $f(n)$ is the inverse to the function $h_3(k)$ considered in [1013].\n\nA generalisation of $f(n)$ is considered in [920]."
+    },
+    "statement": {
+      "sha256": "3c868344378f366ed20186f7718ff7739ac5d70a124f717b169a1a82119ea980",
+      "source_region": "div#content",
+      "text": "Let $f(n)$ be the maximum possible chromatic number of a triangle-free graph on $n$ vertices. Estimate $f(n)$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1104"
+}

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 282,
+  "raw_page": {
+    "path": "raw/pages/problem_282.html",
+    "sha256": "a2f0174db9790b9534f933fc9dc45e8e24013bc427ad8ae3def3d0cdba5bf74f"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "f7c3399900419affa173f30b75b10ca0551e8763d5636b36294952a97bee5a89",
+      "source_region": "div.problem-additional-text",
+      "text": "[Gr64b] Graham, R. L., On finite sums of unit fractions. Proc. London Math. Soc. (3) (1964), 193-207.\n \n [Gr64c] Graham, R. L., On finite sums of reciprocals of distinct nth powers. Pacific J. Math. (1964), 85-92."
+    },
+    "remarks": {
+      "sha256": "8904338cfd531b3420535df8ef16682c48636dae82f767e32893de2095b0b885",
+      "source_region": "div.problem-additional-text",
+      "text": "In 1202 Fibonacci observed that this process terminates for any $x$ when $A=\\mathbb{N}$. The problem when $A$ is the set of odd numbers is due to Stein. \n\nGraham \\cite{Gr64b} has shown that $\\frac{m}{n}$ is the sum of distinct unit fractions with denominators $\\equiv a\\pmod{d}$ if and only if\\[\\left(\\frac{n}{(n,(a,d))},\\frac{d}{(a,d)}\\right)=1.\\]Does the greedy algorithm always terminate in such cases?\n\nGraham \\cite{Gr64c} has also shown that $x$ is the sum of distinct unit fractions with square denominators if and only if $x\\in [0,\\pi^2/6-1)\\cup [1,\\pi^2/6)$. Does the greedy algorithm for this always terminate? Erd\\H{o}s and Graham believe not - indeed, perhaps it fails to terminate almost always.\n\nSee also [206]."
+    },
+    "statement": {
+      "sha256": "aa9b0f168a3df7d118a72656a21ec49708ff7900daf7b89a9b15cb4914a6aa4c",
+      "source_region": "div#content",
+      "text": "Let $A\\subseteq \\mathbb{N}$ be an infinite set and consider the following greedy algorithm for a rational $x\\in (0,1)$: choose the minimal $n\\in A$ such that $n\\geq 1/x$ and repeat with $x$ replaced by $x-\\frac{1}{n}$. If this terminates after finitely many steps then this produces a representation of $x$ as the sum of distinct unit fractions with denominators from $A$.\n\nDoes this process always terminate if $x$ has odd denominator and $A$ is the set of odd numbers? More generally, for which pairs $x$ and $A$ does this process terminate?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/282"
+}

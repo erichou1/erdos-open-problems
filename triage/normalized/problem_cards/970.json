@@ -1,0 +1,302 @@
+{
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.454
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "FGKMT18",
+      "Iw78"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/970",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[FGKMT18] Ford, Kevin and Green, Ben and Konyagin, Sergei and Maynard, James and Tao, Terence, Long gaps between primes. J. Amer. Math. Soc. (2018), 65-105.\n \n [Iw78] Iwaniec, Henryk, On the problem of {J}acobsthal. Demonstratio Math. (1978), 225--231.",
+      "remarks": "That $h(k)\\ll k^2$ is a conjecture of Jacobsthal. Iwaniec \\cite{Iw78} proved\\[h(k) \\ll (k\\log k)^2.\\]The best lower bound known is\\[h(k) \\gg \\frac{(\\log k)(\\log\\log\\log k)}{(\\log\\log k)^2}k,\\]due to Ford, Green, Konyagin, Maynard, and Tao \\cite{FGKMT18}.\n\nThis is a more general form of the function considered in [687]."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.5,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.272872
+      ],
+      "probability": 0.111111
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 1.93,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.362493
+      ],
+      "probability": 0.161773
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.3,
+      "beta": 14.0,
+      "credible_interval_approx": [
+        0.0,
+        0.220332
+      ],
+      "probability": 0.084967
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.8,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.004227,
+        0.470349
+      ],
+      "probability": 0.237288
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.033,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.220645
+      ],
+      "probability": 0.079284
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.3,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.251666
+      ],
+      "probability": 0.097744
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 40.0,
+      "credible_interval_approx": [
+        0.0,
+        0.071043
+      ],
+      "probability": 0.02439
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.436385
+      ],
+      "probability": 0.2
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "minor"
+    },
+    "literature": {
+      "comment_count": 0,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:19:45.206220+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "cc5f368dbd401b3de870a201229a9819acda2a4e03c1137158443a1898ece7c5"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "asymptotic_notation"
+      ],
+      "ambiguity_status": "minor",
+      "quantifier_signal_count": 2,
+      "question_count": 1,
+      "requires_source_audit": true,
+      "statement_characters": 291,
+      "statement_tokens_approx": 51
+    },
+    "structure": {
+      "asymptotic": true,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "prove_or_disprove",
+      "multi_part": false,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-970",
+  "problem_number": 970,
+  "problem_type": {
+    "asymptotic": true,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "prove_or_disprove",
+    "multi_part": false,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_970.html",
+      "raw_html_sha256": "2741668eec0c40bd9efc29c64ad28043afb93a1d85564c5ed7161dd24baf0997",
+      "section_sha256": {
+        "references": "18a25ab5eaf6631cbc14b4c5c589aa573dde8cb76c8486c5b2f2fb4930948e9c",
+        "remarks": "6527df57ddb2c68f99b8693d4b24f86e359df0efa35526ab7e06a9ee0b3d30c6",
+        "statement": "0222b4ae270c52d8498c69465103878681756fa93df12aae0c84e58e84f67228"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_970.json",
+      "source_record_sha256": "1be191d6e9b0c809c12c385925ad978fd25e2fd81d3f432d1dd393ab3d6a25fd",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_970.tex",
+    "latex_sha256": "44e939338b3124d15fc8043141a3c42ce6f4363a9336f9ab165d87ead903c129",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "0222b4ae270c52d8498c69465103878681756fa93df12aae0c84e58e84f67228",
+    "recommended_attack_modes": [
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "9dd6bf10285d1728c11adf67320461b62e20320fd3dbc34c375623d93842f38d",
+  "routes": [
+    "natural_language_research"
+  ],
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "9dd6bf10285d1728c11adf67320461b62e20320fd3dbc34c375623d93842f38d",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "0222b4ae270c52d8498c69465103878681756fa93df12aae0c84e58e84f67228",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "a9525b2185f6c50911e13bae159c1353618c251493944ffee77ee6c1304d3d41",
+  "schema_version": 2,
+  "snapshot_id": "20260713-deb58d0facd9",
+  "statement": {
+    "ambiguity_status": "minor",
+    "intended": "Let $h(k)$ be Jacobsthal's function, defined to as the minimal $m$ such that, if $n$ has at most $k$ prime factors, then in any set of $m$ consecutive integers there exists an integer coprime to $n$. Determine the order of magnitude of $h(k)$. In particular, is it true that\\[h(k) \\ll k^2?\\]",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $h(k)$ be Jacobsthal's function, defined to as the minimal $m$ such that, if $n$ has at most $k$ prime factors, then in any set of $m$ consecutive integers there exists an integer coprime to $n$. Determine the order of magnitude of $h(k)$. In particular, is it true that\\[h(k) \\ll k^2?\\]",
+    "original": "Let $h(k)$ be Jacobsthal's function, defined to as the minimal $m$ such that, if $n$ has at most $k$ prime factors, then in any set of $m$ consecutive integers there exists an integer coprime to $n$. Determine the order of magnitude of $h(k)$. In particular, is it true that\\[h(k) \\ll k^2?\\]",
+    "statement_sha256": "0222b4ae270c52d8498c69465103878681756fa93df12aae0c84e58e84f67228"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#265}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} irrationality
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $1\leq a_1<a_2<\cdots$ be an increasing sequence of integers. How fast can $a_n\to \infty$ grow if\[\sum\frac{1}{a_n}\quad\textrm{and}\quad\sum\frac{1}{a_n-1}\]are both rational?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Cantor observed that $a_n=\binom{n}{2}$ is such a sequence. If we replace $-1$ by a different constant then higher degree polynomials can be used - for example if we consider $\sum_{n\geq 2}\frac{1}{a_n}$ and $\sum_{n\geq 2}\frac{1}{a_n-12}$ then $a_n=n^3+6n^2+5n$ is an example of both series being rational.
+
+Erd\H{o}s believed that $a_n^{1/n}\to \infty$ is possible, but $a_n^{1/2^n}\to 1$ is necessary.
+
+This has been almost completely solved by Kova\v{c} and Tao \cite{KoTa24}, who prove that such a sequence can grow doubly exponentially. More precisely, there exists such a sequence such that $a_n^{1/\beta^n}\to \infty$ for some $\beta >1$.
+
+It remains open whether one can achieve\[\limsup a_n^{1/2^n}>1.\]A folklore result states that $\sum \frac{1}{a_n}$ is irrational whenever $\lim a_n^{1/2^n}=\infty$, and hence such a sequence cannot grow faster than doubly exponentially - the remaining question is the precise exponent possible.
+
+\bigskip
+\noindent\textbf{References:}
+
+[KoTa24] Kova\vC, V. and Tao T., On several irrationality problems for Ahmes series. arXiv:2406.17593 (2024).
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/265}}
+\end{document}

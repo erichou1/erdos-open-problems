@@ -1,0 +1,90 @@
+{
+  "problem_number": 978,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/978",
+  "retrieved_at": "2026-07-10T23:19:48.581407+00:00",
+  "page_title": "978 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "86527902322dc01f60ac7ea421f187714d2e5d2a0bed08d3fe28dba60d93df6b",
+  "comment_count": 16,
+  "comments": [
+    {
+      "post_id": "5133",
+      "text": "The DeepMind prover agent has formally verified that the answer to the second part of the question is 'False' by constructing an explicit counterexample polynomial (assuming our formalisation) of the question is correct). The polynomial $f(X) = X^6 + 33X^5 + 21X^4 + 63X^3 + 18X^2 + 24X + 48$ satisfies all the hypotheses (irreducible, degree $> 3$, degree not a power of $2$, positive leading coefficient, no fixed $p^5$ divisor) yet $f(n)$ is never $4$-powerfree. Irreducibility follows from Eisenstein's criterion at $p = 3$, since $3$ divides all non-leading coefficients but $3^2 = 9 \\nmid 48$, the constant coefficient. The key observation is that $f(X) \\equiv X(X-1)(X-2)(X-3)(X-4)(X-5) \\pmod{16}$, and the product of $6$ consecutive integers is always divisible by $6! = 720$, which is divisible by $16 = 2^4$. So $2^4 \\mid f(n)$ for all $n$, meaning $f(n)$ is never $4$-powerfree - contradicting the conclusion that infinitely many values should be. The full formal proof in Lean 4 is available here).",
+      "meta": "Moritz Firsching — 11:25 on 31 Mar 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5134",
+      "text": "Wow, such a nice solutions. Congrats for finding it! May you, please, tell us a bit more how you made the DM prover agent to arrive at this f( )? Congrats again, Ingo.",
+      "meta": "old-bielefelder — 11:35 on 31 Mar 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5138",
+      "text": "This is why one would prefer the restriction that $f$ has no fixed divisor.",
+      "meta": "Dogmachine — 12:31 on 31 Mar 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5139",
+      "text": "On looking at the literature, in most papers on the subject (e.g. Heath-Brown or Browning) when asking for $f(n)$ to take on infinitely many $r$th power-free values they assume the natural condition that, for all primes $p$, there exists at least one integer such that $p^r\\nmid f(n)$. For example in [Br11] Browning writes 'It is conjectured that this is the only obstruction to $f$ taking on infinitely many $r$-free values'. Although Erdős does not state this explicitly in [Er65b] or [Er81h] he was certainly aware of this obstruction, and he probably had it in mind - when he wrote about this problem he generally had specific polynomials like $n^4+2$ in mind. I think the existence of irreducible polynomials of degree $6$ that fail this necessary criterion, as in your example, is well-known to people in the field.",
+      "meta": "Thomas Bloom — 12:42 on 31 Mar 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5142",
+      "text": "So might it make sense to modify the problem statement here and add a condition like: \"Suppose further that for every prime $p$, there exists some $n \\in \\mathbb{Z}$ such that $p^{k-2} \\nmid f(n)$\" for the part of the question \"If $k > 3$ then are there infinitely many $n$ for which $f(n)$ is $(k-2)$-power-free?\"? Are there other implicit assumptions here?",
+      "meta": "Moritz Firsching — 12:53 on 31 Mar 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5144",
+      "text": "Indeed (this has been changed). I'm not aware of any additional assumptions (and the Heath-Brown and Browning papers don't seem to mention any). As with many other problems in number theory, the question is asked 'modulo the obvious obstructions', and we often update what an 'obvious obstruction' is with the benefit of hindsight!",
+      "meta": "Thomas Bloom — 13:01 on 31 Mar 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5146",
+      "text": "ChatPGT 5.4 and Gemini 3.1 Pro claim a positive answer for $n^4 + 2$ if the abc-Conjecture holds. Here is the comment of Gemini By the way: Did Paul Erdos ever comment on the abc-Conjecture?",
+      "meta": "old-bielefelder — 14:10 on 31 Mar 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5147",
+      "text": "Some more here https://www.sciencedirect.com/science/article/pii/S0022314X24000635 and granville paper here https://dms.umontreal.ca/~andrew/PDF/polysq3.pdf",
+      "meta": "qrdl — 14:39 on 31 Mar 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4576",
+      "text": "For the \"Are there infinitely many $n$ for which $f(n)$ is $(k-2)$-power-free?\" question, I assume one not only want degree $k>2$, but $k>3$. This was noticed when formalising the problem: https://github.com/google-deepmind/formal-conjectures/pull/3408 (The site has been updated to address this comment.)",
+      "meta": "Moritz Firsching — 21:56 on 03 Mar 2026 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "3927",
+      "text": "I believe the description should say 'except for possibly when $k=2^l$, when it may happen that $2^{k−1}|f(n)$ for all $n$' instead of saying '$2^{l-1}|f(n)$'. . (The site has been updated to address this comment.)",
+      "meta": "Adenwalla — 02:09 on 30 Jan 2026 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "3248",
+      "text": "In [Er53], Erdos defined $l$-th power free to be \"not divisible by any integral $l$-th power greater than 1\" and also assumed that \"the highest coefficient in $f(x)$ is positive\". This definition of power free suggests that Erdos considered $f n$ as natural numbers/nonnegative integers (at least for large enough $n$), which suggests that the assumption that the highest coefficient in $f(x)$ needs to be positive is necessary. If we don't assume this, infinitely many values of $f(n)$ may be negative and then it does not make sense to talk about set with positive density. May we include this assumption in the problem statement? I also suggests changing \"Does the set of integers ...\" to \"Does the set of natural numbers ...\" (The site has been updated to address this comment.)",
+      "meta": "Yongxi Lin — 06:37 on 16 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "602",
+      "text": "Sorry, I do not quite understand the restriction on the degree, specially since the last problem IS about a 4th degree polynomial anyway. Wouldnt be better to replace It with a condition concerning a fixed divisor, à la Bunyakovsky conjecture?",
+      "meta": "Dogmachine — 00:13 on 19 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "603",
+      "text": "See [Er53]. There are polynomials, the presented example is $k! \\binom xk+k!$ ($k$ needs to be even or it is reducible), that are a multiple of $2^{k-1}$ when $k=2^{\\ell}$. So a condition had to be imposed for the general case to ensure there are infinitely many examples which are $(k-1)$ power-free. Nevertheless, one could say the density is zero otherwise. So no additional condition was necessary for the subquestion. For the final question: this is an example where the expression may be square-free. (so there is no obvious reason ruling out that it can infinitely often square-free, as was the case with $x(x-1)(x-2)(x-3)+24$)",
+      "meta": "StijnC — 05:31 on 19 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "604",
+      "text": "for the last problem: Bunyakovsky conjecture would imply that $x^4+2$ is infinitely often a prime, and thus in particular square-free.",
+      "meta": "StijnC — 05:36 on 19 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "606",
+      "text": "I see. Another natural question is whether a cyclotomic polynomial is squarefree infinitely often. Dont see why Erdos chose this example instead of the 8th order cyclotomic polynomial, but I guess It is just his example.",
+      "meta": "Dogmachine — 05:47 on 19 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "607",
+      "text": "Both are equally natural, and follow from the same conjecture. I got an error when accessing https://eudml.org/doc/298177, thinking that maybe we can prove one of the two is at least true. When $n^2+a$ is square-free with positive probability, and there is no obvious reason that $n^4+a$ is not square-free in general, there should be infinitely many square-free numbers of the latter form as well. So it may be one of the doable questions, and there is some related literature",
+      "meta": "StijnC — 06:09 on 19 Sep 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

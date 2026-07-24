@@ -1,0 +1,300 @@
+{
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.314
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2026-01-23",
+      "state": "no"
+    },
+    "references": [
+      "BNV07",
+      "Pa03"
+    ],
+    "source_last_update": "2026-01-23",
+    "source_problem_url": "https://www.erdosproblems.com/1160",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[BNV07] Blackburn, Simon R. and Neumann, Peter M. and Venkataraman,\nGeetha, Enumeration of finite groups. (2007), xii+281.\n \n [Pa03] I. Pantelidakis, On the Number of Non-isomorphic Groups of the Same Order. DPhil Thesis, University of Oxford (2003).",
+      "remarks": "This is listed as an open problem (Question 22.16) in \\cite{BNV07}, which reports it as a 'quite natural conjecture, whose origin we have been unable to trace satisfactorily. We have heard it attributed at various times to various people, such as Paul Erd\\H{o}s and Graham Higman.'\n\nQuestion 22.18 of \\cite{BNV07} suggests the even stronger conjecture\\[\\sum_{n<2^m}g(n) \\leq g(2^m)\\]for all sufficiently large $m$ (perhaps even as soon as $m\\geq 7$).\n\nPantelidakis \\cite{Pa03} proved that the original conjecture is true if $n$ is odd and $m\\geq 3619$."
+    },
+    "source_state": "open",
+    "tags": [
+      "group theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.62,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.284884
+      ],
+      "probability": 0.118943
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 0.795,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.222756
+      ],
+      "probability": 0.073671
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.8,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.190215
+      ],
+      "probability": 0.0625
+    },
+    "p_high_mathematical_value": {
+      "alpha": 1.767,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.375702
+      ],
+      "probability": 0.164087
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.6,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.282916
+      ],
+      "probability": 0.117647
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 0.9,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.203695
+      ],
+      "probability": 0.069767
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 39.0,
+      "credible_interval_approx": [
+        0.0,
+        0.07279
+      ],
+      "probability": 0.025
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.436385
+      ],
+      "probability": 0.2
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "clear"
+    },
+    "literature": {
+      "comment_count": 3,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:20:51.379907+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "bba92c4469a4766d57a06f07248d56d5f674f76838e6a41af3071d80847edd3a"
+    },
+    "statement": {
+      "ambiguity_markers": [],
+      "ambiguity_status": "clear",
+      "quantifier_signal_count": 0,
+      "question_count": 0,
+      "requires_source_audit": false,
+      "statement_characters": 91,
+      "statement_tokens_approx": 16
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove",
+      "multi_part": false,
+      "primary_domain": "group theory"
+    }
+  },
+  "problem_id": "erdos-1160",
+  "problem_number": 1160,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove",
+    "multi_part": false,
+    "primary_domain": "group theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_1160.html",
+      "raw_html_sha256": "810560ba0c654ccd2ac046bedd0ce2dfa7f6ad526a4590cefba8c035e21569c9",
+      "section_sha256": {
+        "references": "db01e7e5c0c2f896404029cbd23a0f04f990e0d990f8a1342f64707184224fd8",
+        "remarks": "bc3cc8277d884ef4913465e5fac0add9b72a8ee825bc78fec96b423db1ad4373",
+        "statement": "3be92b088a9c2a7f5e8a4c418e614eac87976f203d1f0234cd0ff0dd77e69f12"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_1160.json",
+      "source_record_sha256": "b978aacdc73e6579726880ff4cdfcff4b6df1cd86a9ba39917c475ed77be2939",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_1160.tex",
+    "latex_sha256": "99f170888cbb248811150ea2c28a554a418844fa85aa0244675e389fb54b2f62",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "3be92b088a9c2a7f5e8a4c418e614eac87976f203d1f0234cd0ff0dd77e69f12",
+    "recommended_attack_modes": [
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "ab50515e4e5fda406e99092c974bc7b7c0f5af181b637cf13d602306e3b70900",
+  "routes": [
+    "natural_language_research"
+  ],
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "ab50515e4e5fda406e99092c974bc7b7c0f5af181b637cf13d602306e3b70900",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "3be92b088a9c2a7f5e8a4c418e614eac87976f203d1f0234cd0ff0dd77e69f12",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "f723de98a3d251b2c7dd5817d1b6960b30623d153accae8e31ed901403326d31",
+  "schema_version": 2,
+  "snapshot_id": "20260713-deb58d0facd9",
+  "statement": {
+    "ambiguity_status": "clear",
+    "intended": "Let $g(n)$ denote the number of groups of order $n$. If $n\\leq 2^m$ then $g(n)\\leq g(2^m)$.",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $g(n)$ denote the number of groups of order $n$. If $n\\leq 2^m$ then $g(n)\\leq g(2^m)$.",
+    "original": "Let $g(n)$ denote the number of groups of order $n$. If $n\\leq 2^m$ then $g(n)\\leq g(2^m)$.",
+    "statement_sha256": "3be92b088a9c2a7f5e8a4c418e614eac87976f203d1f0234cd0ff0dd77e69f12"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

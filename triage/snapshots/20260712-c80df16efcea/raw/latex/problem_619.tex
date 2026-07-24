@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#619}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+For a triangle-free graph $G$ let $h_r(G)$ be the smallest number of edges that need to be added to $G$ so that it has diameter $r$ (while preserving the property of being triangle-free). Is it true that there exists a constant $c&#62;0$ such that if $G$ is a connected graph on $n$ vertices then $h_4(G)&#60;(1-c)n$?
+
+
+
+
+A problem of Erd\H{o}s, Gy\'{a}rf\'{a}s, and Ruszink\'{o} \cite{EGR98} who proved that $h_3(G)\leq n$ and $h_5(G) \leq \frac{n-1}{2}$ and there exist connected graphs $G$ on $n$ vertices with $h_3(G)\geq n-c$ for some constant $c&gt;0$. If we omit the condition that the graph must remain triangle-free then Alon, Gy\'{a}rf\'{a}s, and Ruszink\'{o} \cite{AGR00} have proved that adding $n/2$ edges always suffices to obtain diameter at most $4$. See also [134] and [618] .
+
+
+
+
+References
+
+[AGR00] Alon, Noga and Gy\'{a}rf\'{a}s, Andr\'{a}s and Ruszink\'{o}, Mikl\'{o}s, Decreasing the diameter of bounded degree graphs . J. Graph Theory (2000), 161--172.
+
+[EGR98] Erd\H{o}s, Paul and Gy\'{a}rf\'{a}s, Andr\'{a}s and Ruszink\'{o}, Mikl\'{o}s, How to decrease the diameter of triangle-free graphs . Combinatorica (1998), 493-501.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/619}}
+\end{document}

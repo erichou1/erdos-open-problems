@@ -1,0 +1,90 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/erdos/problem-card.schema.json",
+  "title": "Erdos Problem Card",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "problem_id", "problem_number", "snapshot_id",
+    "pipeline_version", "model_portfolio", "budget", "budget_config",
+    "toolset_version", "run_contract_id", "run_contract", "allocation_status",
+    "allocation_context_id", "cheap_probe_version", "statement", "metadata",
+    "problem_type", "subproblems", "probe_summary", "provenance", "routes",
+    "research_directive", "research_directive_sha256",
+    "posterior", "cost"
+  ],
+  "properties": {
+    "schema_version": {"const": 2},
+    "problem_id": {"type": "string", "pattern": "^erdos-[0-9]+$"},
+    "problem_number": {"type": "integer", "minimum": 1},
+    "snapshot_id": {"type": "string", "minLength": 1},
+    "pipeline_version": {"type": "string", "minLength": 1},
+    "model_portfolio": {"type": "string", "minLength": 1},
+    "budget": {"type": "string", "minLength": 1},
+    "budget_config": {"type": "object"},
+    "toolset_version": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "run_contract_id": {
+      "oneOf": [
+        {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        {"type": "null"}
+      ]
+    },
+    "run_contract": {"type": ["object", "null"]},
+    "allocation_status": {"type": "string", "minLength": 1},
+    "allocation_context_id": {
+      "oneOf": [
+        {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        {"type": "null"}
+      ]
+    },
+    "cheap_probe_version": {"type": "string", "minLength": 1},
+    "statement": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "original", "normalized", "intended", "statement_sha256",
+        "ambiguity_status", "interpretation_branches", "intended_statement_status"
+      ],
+      "properties": {
+        "original": {"type": "string", "minLength": 1},
+        "normalized": {"type": "string", "minLength": 1},
+        "intended": {"type": "string", "minLength": 1},
+        "statement_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "ambiguity_status": {"enum": ["clear", "minor", "material"]},
+        "interpretation_branches": {"type": "array"},
+        "intended_statement_status": {"type": "string", "minLength": 1}
+      }
+    },
+    "metadata": {"type": "object"},
+    "problem_type": {"type": "object"},
+    "subproblems": {"type": "array", "items": {"type": "object"}},
+    "probe_summary": {"type": "object"},
+    "provenance": {
+      "type": "object",
+      "required": [
+        "latex_path", "latex_sha256", "source_commit", "source_snapshot_id",
+        "source_snapshot_sha256", "canonical_source"
+      ],
+      "properties": {
+        "latex_path": {"type": "string"},
+        "latex_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "catalog_fetched_at": {},
+        "source_commit": {"type": "string"},
+        "source_snapshot_id": {"type": "string", "minLength": 1},
+        "source_snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+        "canonical_source": {
+          "type": "object",
+          "required": [
+            "snapshot_id", "extractor_version", "source_record_sha256",
+            "raw_html_sha256", "section_sha256"
+          ]
+        }
+      }
+    },
+    "routes": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+    "research_directive": {"type": "object"},
+    "research_directive_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "posterior": {"type": "object"},
+    "cost": {"type": "object"}
+  }
+}

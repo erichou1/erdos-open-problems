@@ -1,0 +1,35 @@
+{
+  "problem_number": 1074,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/1074",
+  "retrieved_at": "2026-07-10T23:20:26.331413+00:00",
+  "page_title": "1074 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "0cde3180ef4c95b60fbdfaacd2c92805b1ba4b61efb25ca78427492d9a3a530d",
+  "comment_count": 5,
+  "comments": [
+    {
+      "post_id": "4786",
+      "text": "I would guess that the natural density of $S$ is $1$. Heuristic: write $N_m=m!+1$. For every prime $q\\le m$, we have $m!\\equiv 0 \\pmod q$, hence $N_m\\equiv 1 \\pmod q$, so every prime divisor of $N_m$ is $>m$. The condition $m\\notin S$ means that every prime divisor $p$ of $N_m$ satisfies $p\\equiv 1 \\pmod m$. Thus the exceptional set consists of those $m$ for which all prime factors of $m!+1$ lie in the single residue class $1 \\pmod m$. Now treat $N_m$ as having “random-looking” prime divisors, subject only to the local restrictions above. Since $\\log\\log(m!+1)\\sim \\log m$, one expects $N_m$ to have about $\\log m$ distinct prime factors. For a random large prime not dividing $m$, the chance of lying in the class $1 \\pmod m$ should be about $1/\\varphi(m)$. So the chance that all prime factors of $N_m$ lie in that one class should be roughly $$(1/\\varphi(m))^{\\log m},$$ which tends to $0$ extremely fast. This suggests that the number of exceptional $m\\le x$ should be $o(x)$, and therefore $$|S\\cap [1,x]|/x \\to 1.$$ So my guess for the first question is that the limit exists and equals $1$. This also seems more plausible than a limit near $1/2$: the condition defining the complement of $S$ is much more rigid than merely asking for one prime factor in a prescribed congruence class. One is requiring that every prime factor of $m!+1$ fall into the same residue class $1 \\pmod m$, and heuristically that should be very rare. References: Hardy and Subbarao, *On Euclid’s algorithm and the theory of infinitely many primes*, Colloq. Math. 44 (1981), 47–59. Subbarao, *Some remarks on Euclid’s number*, in *Number Theory and its Applications* (Ankara, 1996), Lecture Notes in Pure and Appl. Math. 204, Dekker, 1999, 281–290. Guy and Selfridge, unstarred problem on Erdős–Selfridge–Hardy numbers / Pillai primes, as listed on Erdős Problems.",
+      "meta": "Zeraoulia Rafik — 03:23 on 15 Mar 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4973",
+      "text": "Yes, I agree the density should be $1$, and think this is also the belief of Hardy and Subbarao (and Erdős), although they phrase it in a confusing manner (which is partially why I quoted the paragraph in full).",
+      "meta": "Thomas Bloom — 21:40 on 23 Mar 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1308",
+      "text": "in the second quote, \"monotonoically\" is written rather than \"monotonoically\". (The site has been updated to address this comment.)",
+      "meta": "zach hunter — 10:09 on 20 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1310",
+      "text": "Yeah, just a small typo. It should have been \"monotonoically\" of course. (Sorry, couldn't resist)",
+      "meta": "Woett — 10:15 on 20 Oct 2025 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "961",
+      "text": "If the density of EHS numbers is proven to be one, then we would also prove the folklore conjecture that $n!+1$ is almost always composite.",
+      "meta": "Dogmachine — 00:08 on 09 Oct 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

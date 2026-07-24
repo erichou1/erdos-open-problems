@@ -1,0 +1,80 @@
+% corpus_supplement: Erdős problem #19
+% source: https://www.erdosproblems.com/latex/19
+% fetched_at: 2026-07-14T18:47:46Z
+% payload_sha256: 47aa0c752c84293ab794f24d7798b65077da924fcc4d78961fd59c19c3797fc3
+% statement/remarks/references extracted by erdos_ingest.extract_source_page;
+% rendered by erdos_ingest.render_tex — do not edit
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#19}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory, chromatic number
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+If $G$ is an edge-disjoint union of $n$ copies of $K_n$ then is $\chi(G)=n$?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Conjectured by Erd\H{o}s, Faber, and Lov\'{a}sz (apparently 'at a party in Boulder, Colarado in September 1972' \cite{Er81}). 
+
+Kahn \cite{Ka92} proved that $\chi(G)\leq (1+o(1))n$ (for which Erd\H{o}s gave him a 'consolation prize' of \$100). Hindman \cite{Hi81} proved the conjecture for $n<10$. Various special cases have been established by Romero and S\'{a}chez-Arroyo \cite{RoSa07}, Araujo-Pardo and V\'{a}zquez-\'{A}vila \cite{ArVa16}, and Alesandroi \cite{Al21}.
+
+Kang, Kelly, K\"{u}hn, Methuku, and Osthus \cite{KKKMO21} have proved the answer is yes for all sufficiently large $n$.
+
+In \cite{Er97d} Erd\H{o}s asks how large $\chi(G)$ can be if instead of asking for the copies of $K_n$ to be edge disjoint we only ask for their intersections to be triangle free, or to contain at most one edge.
+
+In \cite{Er93} Erd\H{o}s and F\"{u}redi conjecture the generalisation that if $G$ is the union of $n$ copies of $K_n$, which pairwise intersect in at most $k$ vertices, then $\chi(G)\leq kn$. This has been proved for all sufficiently large $n$ (not depending on $k$) by Kang, Kelly, K\"{u}hn, Methuku, and Osthus \cite{KKKMO24}. Furthermore, Hor\'{a}k and Tuza \cite{HoTu90} proved that if $\chi(G) \leq n^{3/2}$ if $G$ is the union of $n$ copies of $K_n$, and hence this conjecture also holds whenever $k\geq\sqrt{n}$.
+
+In \cite{Er78} Erd\H{o}s asks for the smallest $m_k$ such that there exists an edge-disjoint union of $m_k$ copies of $K_n$ which has chromatic number at least $n+k$ (so that the original question is whether $m_1>n$). He writes 'at the moment I do not even have a plausible conjecture, but perhaps this will not be hard to find'.
+
+\bigskip
+\noindent\textbf{References:}
+
+[Al21] Alesandroni, Guillermo, The {E}rd\H{o}s-{F}aber-{L}ov\'{a}sz conjecture for weakly dense
+hypergraphs. Discrete Math. (2021), Paper No. 112401, 7.
+ 
+ [ArVa16] Araujo-Pardo, G. and V\'{a}zquez-\'Avila, A., A note on {E}rd\"os-{F}aber-{L}ov\'{a}sz conjecture and edge
+coloring of complete graphs. Ars Combin. (2016), 287--298.
+ 
+ [Er78] Erd\H{o}s, Paul, Problems and results in combinatorial analysis and combinatorial number theory. Proceedings of the Ninth Southeastern Conference on Combinatorics, Graph Theory, and Computing (Florida Atlantic Univ., Boca Raton, Fla., 1978) (1978), 29-40.
+ 
+ [Er81] Erd\H{o}s, P., On the combinatorial problems which I would most like to see solved. Combinatorica (1981), 25-42.
+ 
+ [Er93] Erd\H{o}s, Paul, Some of my favorite solved and unsolved problems in graph theory. Quaestiones Math. (1993), 333-350.
+ 
+ [Er97d] Erd\H{o}s, Paul, Some recent problems and results in graph theory. Discrete Math. (1997), 81-85.
+ 
+ [Hi81] Hindman, Neil, On a conjecture of {E}rd\H{o}s, {F}aber, and {L}ov\'{a}sz about
+{$n$}-colorings. Canadian J. Math. (1981), 563--570.
+ 
+ [HoTu90] Hor\'{a}k, Peter and Tuza, Z., A coloring problem related to the {E}rd\H
+os-{F}aber-{L}ov\'{a}sz conjecture. J. Combin. Theory Ser. B (1990), 321--322.
+ 
+ [KKKMO21] Kang, D. Y. and Kelly, T. and K\"{u}hn, D. and Methuku, A. and Osthus, D., A proof of the Erd\H{o}s-Faber-Lov\'{a}sz conjecture. arXiv:2101.04698 (2021).
+ 
+ [KKKMO24] Kang, Dong Yeap and Kelly, Tom and K\"uhn, Daniela and
+Methuku, Abhishek and Osthus, Deryk, Solution to a problem of {E}rd\H{o}s on the chromatic index of
+hypergraphs with bounded codegree. Proc. Lond. Math. Soc. (3) (2024), Paper No. e70011, 32.
+ 
+ [Ka92] Kahn, Jeff, Coloring nearly-disjoint hypergraphs with $n+o(n)$ colors. J. Combin. Theory Ser. A (1992), 31-39.
+ 
+ [RoSa07] Romero, David and S\'{a}nchez-Arroyo, Abd\'on, Adding evidence to the {E}rd\H{o}s-{F}aber-{L}ov\'{a}sz
+conjecture. Ars Combin. (2007), 71--84.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/19}}
+\end{document}

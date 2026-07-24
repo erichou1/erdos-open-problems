@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 901,
+  "raw_page": {
+    "path": "raw/pages/problem_901.html",
+    "sha256": "51e3be87668b7de461d732b982154f19d190fd528518575ab78af92b0b5af9ff"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "24e3f85f18e991006d85ac5d6775ed70e1480892071a950fd91a7548fae4703f",
+      "source_region": "div.problem-additional-text",
+      "text": "[Be77] Beck, J., On a combinatorial problem of {P}. {E}rd\\H{o}s and {L}.\n{L}ov\\'{a}sz. Discrete Math. (1977), 127--131.\n \n [Be78] Beck, J., On {$3$}-chromatic hypergraphs. Discrete Math. (1978), 127--137.\n \n [Er63b] Erd\\H{o}s, P., On a combinatorial problem. Nordisk Mat. Tidskr. (1963), 5--10, 40.\n \n [Er64e] Erd\\H{o}s, P., On a combinatorial problem. {II}. Acta Math. Acad. Sci. Hungar. (1964), 445--447.\n \n [ErLo75] Erd\\H{o}s, P. and Lov\\'{a}sz, L., Problems and results on {$3$}-chromatic hypergraphs and some\nrelated questions. (1975), 609--627.\n \n [Pl09] Pluh\\'{a}r, Andr\\'{a}s, Greedy colorings of uniform hypergraphs. Random Structures Algorithms (2009), 216--221.\n \n [RaSr00] Radhakrishnan, Jaikumar and Srinivasan, Aravind, Improved bounds and algorithms for hypergraph {$2$}-coloring. Random Structures Algorithms (2000), 4--32."
+    },
+    "remarks": {
+      "sha256": "9a59ead0eeb83c1601c4f3b4b80422736d2b0f8614e3cf8c0e25ed2dd4de9a78",
+      "source_region": "div.problem-additional-text",
+      "text": "In other words, the hypergraph does not have Property B. Property B means that there is a set $S$ which intersects all edges and yet does not contain any edge.\n\nIt is known that $m(2)=3$, $m(3)=7$, and $m(4)=23$. Erd\\H{o}s proved\\[2^n \\ll m(n) \\ll n^2 2^n\\](the lower bound in \\cite{Er63b} and the upper bound in \\cite{Er64e}). Erd\\H{o}s conjectured that $m(n)/2^n\\to \\infty$, which was proved by Beck \\cite{Be77}, who proved $m(n)\\gg (\\log n)2^n$, and later \\cite{Be78} improved this to\\[n^{1/3-o(1)}2^n \\ll m(n).\\]Radhakrishnan and Srinivasan \\cite{RaSr00} improved this to\\[\\sqrt{\\frac{n}{\\log n}}2^n \\ll m(n).\\]Pluhar \\cite{Pl09} gave a very short proof that $m(n) \\gg n^{1/4}2^n$.\n\nIn \\cite{ErLo75} Erd\\H{o}s and Lov\\'{a}sz speculate that $n2^n$ is the correct order of magnitude for $m(n)$."
+    },
+    "statement": {
+      "sha256": "31dab74e491e450aa9e8b90bc83eb706df9469da8687f19f86bd5d0cfeb24689",
+      "source_region": "div#content",
+      "text": "Let $m(n)$ be minimal such that there is an $n$-uniform hypergraph with $m(n)$ edges which is $3$-chromatic. Estimate $m(n)$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/901"
+}

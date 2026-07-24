@@ -1,0 +1,114 @@
+{
+"reviewer_role": "independent adversarial referee (global_synthesis)",
+"verdict": "fail",
+"claims_checked": 19,
+"claims_total": 19,
+"checked_claim_ids": [
+"DOMAIN_BIFURCATION",
+"SEMIDISCRETE_POSITIVE",
+"FIXED_LAYER_MONOTONICITY",
+"HALF_ROW_MONOTONICITY",
+"CENTRAL_GROWTH",
+"NORMALIZATION_FINITE",
+"FIBER_ORDERING",
+"LOW_MULTIPLICITIES",
+"DENSITY_LOW_MULTIPLICITIES",
+"T5_SPLIT",
+"DISPLACEMENT_IDENTITY",
+"SLOPE_AUDIT",
+"PELL_ADJACENT",
+"PELL_SEPARATION",
+"DIVISOR_INVARIANT",
+"LOW_LAYER_SYSTEM",
+"WORD_SYSTEM",
+"FINITE_CERTIFICATE",
+"TERMINAL_AUDIT"
+],
+"open_gaps": [
+"The immutable wording does not explicitly specify the domains of n and k, and the candidate itself demonstrates that coherent discrete and semidiscrete interpretations give different multiplicities.",
+"Under the intended discrete interpretation, the original universal statement is neither proved nor disproved.",
+"There is no proof or refutation that S_2 intersect S_3 intersect S_4 intersect S_k is empty for every k at least 5.",
+"There is no global theorem proving that two high-layer representations permit at most one further interior representation.",
+"The implication h(a) at least 2 implies mu(a) at most 3 remains unproved.",
+"No value with four interior representations is globally constructed or globally excluded.",
+"The displacement-word branch has neither a correctly displayed full polynomial system nor an effective decision bound.",
+"The Pell branch supplies only adjacent pairs; arbitrary compatible multi-lifts and uniform exactness remain absent.",
+"No construction realizes every exact interior multiplicity q at least 0.",
+"The validated ARITHMETIC_INVARIANTS subgoal is not discharged: factorial valuations or carries, numerator-block smoothness, upper-prime-shadow statements, and required counterexamples are omitted."
+],
+"unchecked_imports": [],
+"counterexample_searches": [
+{
+"target": "domain invariance",
+"test": "a=70",
+"result": "There are exactly two representations in the discrete domain, namely (70,1) and (8,4), but exactly four in the semidiscrete domain, one for each k=1,2,3,4. This confirms the domain ambiguity."
+},
+{
+"target": "slope orientation",
+"test": "The 3003 chain (78,2) to (15,5) to (14,6)",
+"result": "The intended slopes e/d are 1/21 and 1, so the asserted increasing orientation passes this test. The proof as written nevertheless omits essential formulas and comparison symbols."
+},
+{
+"target": "Pell recurrence",
+"test": "Starting from (X,Y)=(29,13)",
+"result": "The recurrence produces (199,89), corresponding to k=39 and n=104, and the equality C(104,39)=C(103,40) holds. No local counterexample was found."
+},
+{
+"target": "finite certificate",
+"test": "Exact rerun of the supplied integer enumeration through 10^30",
+"result": "The claimed totals 3014786 occurrences and 3014784 distinct values, the two repeated high-layer values, the three triangular high-layer hits, and the empty dangerous list were reproduced. This supports only the stated bounded conclusion."
+},
+{
+"target": "low multiplicities",
+"test": "a=2, 6, 120, and 3003",
+"result": "The exact multiplicities 1, 2, 3, and 4 survive direct layer-by-layer checking."
+}
+],
+"material_errors": [
+{
+"claim_id": "GLOBAL",
+"error": "The candidate explicitly reaches no terminal proof or disproof. Therefore the verified local pieces do not jointly imply the exact theorem required by the acceptance criteria."
+},
+{
+"claim_id": "DOMAIN_BIFURCATION",
+"error": "The displayed definition of D_Z is syntactically malformed and can be read as imposing both coordinates at least 2, which would contradict the subsequent use of k=1. The intended domain is inferable but is not formally stated as written."
+},
+{
+"claim_id": "T5_SPLIT",
+"error": "The definitions S_j={C(n,j)>=2j} and h(a)=#{k>=5 in S_k} do not define sets of coefficient values or a function of a. The intended membership notation is missing. In addition, the validated subgoal requested the split for mu(a)>=4, while the candidate states it only after assuming M(a)=5."
+},
+{
+"claim_id": "DISPLACEMENT_IDENTITY",
+"error": "The asserted identity is algebraically correct, but the displayed derivation is incomplete: it presents isolated factorial ratios without the equality from which cross-multiplication and cancellation are supposed to proceed."
+},
+{
+"claim_id": "SLOPE_AUDIT",
+"error": "The proof omits the U-sum and its summation range in the fundamental equality. It also omits the comparison signs in the reciprocal-slope statement and in the final ratio comparison. Under the instruction not to repair the proof, this claim is not fully established as written."
+},
+{
+"claim_id": "DIVISOR_INVARIANT",
+"error": "The crucial reduced identity is printed as p,a=q times a binomial coefficient rather than p a=q times that coefficient. The intended divisibility argument is valid after correction, but the exact displayed proof is malformed."
+},
+{
+"claim_id": "WORD_SYSTEM",
+"error": "The claimed polynomial system omits the entire left-hand side and equality sign of every displacement equation. Only the right-hand falling factorial is displayed, so no polynomial system is actually specified."
+},
+{
+"claim_id": "ARITHMETIC_INVARIANTS_DEPENDENCY",
+"error": "Claim 15 proves only one divisor condition, while later branches depend on a substantially broader validated arithmetic-invariants node. Those missing components cannot be treated as established dependencies."
+},
+{
+"claim_id": "FINITE_CERTIFICATE",
+"error": "The computation is a valid bounded exclusion after auditing, but it has no finite-to-infinite implication and cannot support either terminal route."
+}
+],
+"completeness_score": 57,
+"proof_confidence": 0,
+"adversarial_survival_score": 64,
+"statement_sha256": "b669094e22469ade57dcca529d2ce001ede0c9bee628c97121ad1d9a7ebfb01b",
+"notes": "The candidate contains a substantial collection of mostly correct conditional lemmas and a reproducible finite-range computation, but several numbered claims are formally incomplete and the exact global theorem remains unresolved. Input provenance only, not mathematical evidence: 
+
+Pasted text
+
+"
+}

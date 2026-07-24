@@ -1,0 +1,15 @@
+{
+  "problem_number": 302,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/302",
+  "retrieved_at": "2026-07-10T23:16:28.315104+00:00",
+  "page_title": "302 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "1e8c693746e3005b51e7aaee3a003309f09605664a050429e6072d2b1809e7f7",
+  "comment_count": 1,
+  "comments": [
+    {
+      "post_id": "7368",
+      "text": "One can slightly improve Cambie's construction using Stef's theorem on consecutive divisors. Namely,\\[ f(N)\\ge {5N\\over8}+{N\\over(\\log N)^{\\beta+o(1)}}, \\qquad \\beta=1-\\frac{1+\\log\\log3}{\\log3}=0.004154751497404\\ldots . \\]Let \\(A_0=\\{n\\le N/4:n\\ {\\rm odd}\\}\\cup[N/2,N]\\). The identity \\(1/a=1/b+1/c\\iff (b-a)(c-a)=a^2\\) shows that \\(A_0\\) is solution-free and \\(|A_0|=5N/8+O(1)\\). Call an odd integer \\(a\\) half-isolated if no divisor \\(d\\mid a^2\\) lies in \\([a/2,a)\\). If \\(E\\subset(N/4,N/2)\\) consists of half-isolated odd integers, then \\(A_0\\cup E\\) is still solution-free: any new solution has \\(a\\in E\\), so \\(b,c\\) are even and hence in \\([N/2,N]\\); then \\(d=\\min(b-a,c-a)\\) satisfies \\(d\\mid a^2\\), \\(d<a\\), and \\(d\\ge\\max(N/2-a,a^2/(N-a))\\ge a/2\\), contradiction. For ordered divisors \\(d_i(n)\\), put \\(r(n)=\\min_i d_{i+1}(n)/d_i(n)\\). Stef proved that \\(S(x,2):=\\#\\{n\\le x:r(n)\\ge2\\}\\ge x/(\\log x)^{\\beta+o(1)}\\), with the above \\(\\beta\\). Let \\(\\mathcal H=\\{m\\ {\\rm odd}:r(m)\\ge2\\}\\). Every \\(m\\in\\mathcal H\\) is half-isolated, since \\(d\\mid m^2\\) and \\(d/m\\in[1/2,1)\\) would give \\(d/m=u/v\\) with divisors \\(u<v\\le2u\\) of \\(m\\). The odd part of every integer counted by \\(S(x,2)\\) lies in \\(\\mathcal H\\), and a fixed odd part \\(m\\) occurs at most \\(1+\\log_2(x/m)\\) times. Thus, integrating against \\(dx/x^2\\),\\[ \\sum_{\\substack{m\\le X\\\\m\\in\\mathcal H}}{1\\over m}\\gg \\int_3^X {S(x,2)\\over x^2}\\,dx\\gg(\\log X)^{1-\\beta-o(1)}. \\tag{1} \\]Finally set \\(E_N=\\{mp:m\\in\\mathcal H,\\ m\\le N^{1/2}/10,\\ p\\ {\\rm prime},\\ N/(4m)<p<N/(2m)\\}\\). Then \\(E_N\\subset(N/4,N/2)\\), and since \\(p>2m\\), each \\(mp\\) is half-isolated whenever \\(m\\) is; also the representation \\(mp\\) is unique. Hence, by the prime number theorem and (1),\\[ |E_N|\\gg {N\\over\\log N}\\sum_{\\substack{m\\le N^{1/2}/10\\\\m\\in\\mathcal H}}{1\\over m}\\gg {N\\over(\\log N)^{\\beta+o(1)}}. \\]Therefore \\(A_0\\cup E_N\\) is solution-free, proving the claim.",
+      "meta": "SamKorsky — 21:11 on 05 Jul 2026 👍 1 📝 0 🤖 0"
+    }
+  ]
+}

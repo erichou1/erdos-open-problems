@@ -1,0 +1,35 @@
+{
+  "problem_number": 461,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/461",
+  "retrieved_at": "2026-07-10T23:17:17.008973+00:00",
+  "page_title": "461 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "e1821e95a5e5355d3cc747496b00409b48fc6bcb7ae2bc426b95f6c22ce412d7",
+  "comment_count": 5,
+  "comments": [
+    {
+      "post_id": "6948",
+      "text": "Here is a guess to Erdos #461: the bound $f(n,t)\\ge t/2$ cannot hold asymptotically. Let $s_t(m)$ denote the $t$-smooth component of $m$, and let $$ f(n,t)=|\\{s_t(n+1),\\ldots,s_t(n+t)\\}|. $$ For $y<t$, $$ f(n,t)\\le y+|\\{1\\le i\\le t:s_t(n+i)>y\\}|, $$ since at most $y$ distinct values can lie in $[1,y]$. Put $$ P_t=\\prod_{p<t}p,\\qquad Q=P_t\\operatorname{lcm}(1,\\ldots,y). $$ For each $u\\le y$, $u$ is automatically $t$-smooth, and $$ s_t(m)=u \\quad\\Longleftrightarrow\\quad m=ur,\\ (r,P_t)=1. $$ Thus, over one period modulo $Q$, $$ \\frac1Q|\\{m\\bmod Q:s_t(m)=u\\}| = \\frac1u\\prod_{p<t}\\left(1-\\frac1p\\right). $$ Averaging the truncation inequality over $n\\bmod Q$, and using that $n\\mapsto n+i$ permutes residue classes modulo $Q$, gives $$ \\inf_n f(n,t) \\le y+t\\left(1-\\prod_{p<t}\\left(1-\\frac1p\\right)H_y\\right), $$ where $H_y=\\sum_{u\\le y}1/u$. Taking $$ y\\sim \\frac{e^{-\\gamma}t}{\\log t} $$ and using Mertens’ theorem yields $$ \\inf_n f(n,t)\\le (1-e^{-\\gamma}+o(1))t. $$ Hence no universal lower bound $f(n,t)\\ge ct)$ can hold with $c>1-e^{-\\gamma}\\approx0.4385$; in particular, the $c=1/2$ strengthening is false. This does not settle Problem #461, which only asks whether $f(n,t)\\gg t$. Proof assisted by GPT 5.5 Pro and Claude Fable. Would be thankful for any proposals to amend.",
+      "meta": "Pr_Huang — 16:02 on 12 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7021",
+      "text": "Thanks, this does prove an upper bound for $f(n,t)$, although I'm not sure where you got the 'strengthened conjecture' that $f(n,t)\\geq t/2$ from? I expect that this observation is not new, being a fairly natural way to prove some kind of upper bound for $f(n,t)$, although I don't know if it's appeared in print before.",
+      "meta": "Thomas Bloom — 09:35 on 16 Jun 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7025",
+      "text": "I am guessing that the $t/2$ conjecture is from Woett's earlier comment, which proposes an idea (which doesn't work). Had the idea worked, it would give $f(n, t) \\ge \\lfloor t/2 \\rfloor$. Credit to GPT-5.5 Thinking for discussion.",
+      "meta": "Nat Sothanaphan — 17:30 on 16 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7029",
+      "text": "Thank you for your kind observations! I should clarify that the \\(t/2\\) threshold was not meant to be attributed to Erdős--Graham, and does not settle the original question \\(f(n,t)\\gg t\\). It came from Woett's idea from the comment below: if the proposed bipartite graph always had a matching covering \\(\\{1,\\ldots,\\lfloor t/2\\rfloor\\}\\), then one would get \\(f(n,t)\\ge\\lfloor t/2\\rfloor\\). Since Woett already showed that matching statement is false, I treated \\(t/2\\) only as a temporary strengthened guess suggested by the heuristic. The averaging argument only rules out that strengthened \\(1/2\\) guess, and more generally any lower bound \\(f(n,t)\\ge c t\\) with \\(c>1-e^{-\\gamma}\\). I also agree this is likely a standard first-moment/smooth-part calculation without novelty. The local density\\[ \\Pr(s_t(m)=u)=\\frac1u\\prod_{p<t}(1-1/p) \\]is the usual count for integers with a prescribed \\(t\\)-smooth part / largest smooth divisor, followed by Mertens' theorem. This reply is checked against GPT 5.5 pro and opus 4.8. Many thanks!",
+      "meta": "Pr_Huang — 20:44 on 16 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6287",
+      "text": "An idea I had that doesn't quite work as stated: for a given $n$ and $t$, consider the bipartite graph with left vertex set $\\mathcal{L} := \\{1, 2, \\ldots, \\lfloor t/2 \\rfloor\\}$, right vertex set $\\mathcal{R} := \\{s_t(n+1), \\ldots, s_t(n+t)\\}$, and where we draw an edge between $i \\in \\mathcal{L}$ and $s_t(m) \\in \\mathcal{R}$ if $i$ divides $s_t(m)$ (which in this case is equivalent to $i$ dividing $m$, as $i < t$). If there is a matching that covers all vertices of the left set, then we would be done. However, such a matching unfortunately does not always exist. ChatGPT managed to find the counterexample $n = 1407302$, $t = 38$. Here, with $$D := \\{13, 15, 16, 17, 18, 19\\} \\subset \\mathcal{L},$$the neighbourhood of $D$ in $\\mathcal{R}$ only contains the $5 < |D|$ integers $s_t(m)$ with $$m - n \\in \\{9, 10, 13, 26, 28\\}.$$",
+      "meta": "Woett — 09:42 on 06 May 2026 👍 2 📝 0 🤖 0"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "problem_number": 271,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/271",
+  "retrieved_at": "2026-07-10T23:16:20.679978+00:00",
+  "page_title": "271 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "476d82eb478f2c0260cde02134ca4de14d56df0e0b61d2998c717eb3e5311e61",
+  "comment_count": 7,
+  "comments": [
+    {
+      "post_id": "4541",
+      "text": "The first question has been answered for Stanley sequence $S(0)$ in \"Section C. Stanley Sequences\" of [MaGh20] (or can access here) by M. Majdzade and M. Gholami. (The site has been updated to address this comment.)",
+      "meta": "Alfaiz — 12:35 on 02 Mar 2026 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "5210",
+      "text": "That result is just the observation that $A(1)$ is the set of integers with no $2$ in their base $3$ expansion, which is already recorded here (and is an observation which long predates that 2020 paper).",
+      "meta": "Thomas Bloom — 18:56 on 02 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3010",
+      "text": "I have computed the sequence $A(4) = S(0,4)$ up to $k=2000$ to test the growth dichotomy numerically. Results: * $a_{2000} = 259,183$ * Ratio $a_k / (k^2/2) \\approx 0.13$ (Satisfies the unconditional upper bound) More importantly, the data supports the original Odlyzko-Stanley conjecture for Type 2 sequences ($a_k \\asymp k^2 / \\log k$). Specifically, the data fits the curve $a_k \\approx \\frac{k^2}{2 \\ln k}$ remarkably well: * Predicted value at $k=2000$ (using $\\frac{k^2}{2 \\ln k}$): $\\approx 262,880$ * Actual value: $259,183$ * Ratio: $0.986$ This provides strong evidence that $A(4)$ is indeed chaotic and does not approach the $k^{\\log_2 3}$ growth of regular sequences. OEIS Updates: I also suggest adding the following to the 'Related OEIS sequences' field to complement the existing entry (A005487): * A005836: $S(0,1)$, the canonical Type 1 (regular) case ($A(1)$ in the problem description). * A003278: The Szekeres sequence ($S(1)$), which is equivalent to $A(1)$ shifted by +1. (AI-assisted for analysis framework; computations independently verified with Python) This is my first post as user dbmcdonough, my login credentials are not showing my username, apologies in advance if this has caused an error. -Darby",
+      "meta": "None — 21:13 on 11 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3011",
+      "text": "If you go to your user profile you can set your own display name.",
+      "meta": "Thomas Bloom — 21:21 on 11 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "240",
+      "text": "I haven't fully checked the paper by Moy (even though it's short and elementary), but we can actually eliminate the $\\epsilon$ in their result and make the 'sufficiently large $k$' explicit. To see this, asssume $k > 2n$ and define $x = \\frac{1}{2}k^2$. Now assume by contradiction $a_k > x$, or equivalently in the notation of Moy, assume $S(\\{n\\}, x) \\le k-1$. Then their Lemma 2.4 gives $x \\le \\frac{1}{2}k(k-1) + n = x - \\frac{1}{2}k + n < x$; contradiction. We therefore deduce $S(\\{n\\}, x) \\ge k$. Translated back into the notation of this page, this gives $a_k \\le \\frac{1}{2}k^2$ for all $k > 2n$. (The site has been updated to address this comment.)",
+      "meta": "Woett — 16:54 on 29 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2143",
+      "text": "Slight correction: the $k$th element in this page’s notation is $a_{k-1}$, so actually $a_{k-1} \\leq k^2/2$ for $k \\geq 2n+1$, or $a_k \\leq (k+1)^2/2$ for $k \\geq 2n$. But actually we can “optimize” to the max as follows. In the proof of [Moy]’s Lemma 2.2, since $n = 2a_j - a_i \\geq a_j + 1$, we can replace “less than or equal to $x$” with “less than or equal to $x-1$”. This means the statement of Lemma 2.2 can replace $S(A,x)$ with $S(A,x-1)$. In the statement of Lemma 2.3, we can replace $\\max A$ with $(\\max A - |A| + 1)$ by simple counting. Then, in Lemma 2.4, if we assume further that $x$ is integer, we can get rid of the bound $\\lfloor x\\rfloor + 1 \\geq x$. Combined with the improved Lemma 2.2 and Lemma 2.3, the statement of Lemma 2.4 changes to: $$ x \\leq S(A,x-1)(S(A,x-1) - 1)/2 + S(A,x) + \\max A - |A| $$ for integer $x$. Now set $x = a_k$. Recall Moy’s notation: $S(A,y) = \\# \\{ a_i \\leq y \\}$. Here $A = \\{0, n\\}$. We arrive at the bound $$ a_k \\leq k(k-1)/2 + (k+1) + n - 2. $$ So unconditionally: $$ a_k \\leq (k-1)(k+2)/2 + n. $$ (Sanity check: $a_0 \\leq n-1$, $a_1 \\leq n$, $a_2 \\leq n+2$ all make sense and can be tight if $n = 1$.) (The site has been updated to address this comment.)",
+      "meta": "Nat Sothanaphan — 17:59 on 10 Dec 2025 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "351",
+      "text": "I wrote a little generator for the Stanley sequence $S(0,n)$, hopefully correct. It's checked against the OEIS prefix for $S(0,4)$ (A005487) and it matches the first 50 terms. Definition:\\[ a_0 = 0, \\quad a_1 = n, \\quad a_{k+1} = \\min\\{ m > a_k : \\{a_0,\\dots,a_k,m\\}\\ \\text{has no 3-term arithmetic progression}\\}. \\]Since $a_{k+1}$ is always the new maximum, the code just tests each candidate $m$ by checking whether\\[ 2y - m \\in S \\quad \\text{or} \\quad \\tfrac{m+y}{2} \\in S \\quad (m+y \\ \\text{even}), \\]for some $y \\in S$. Colab link: https://colab.research.google.com/drive/1WwAmvoVP8kzfR46h4oybmHXB6_BxANJ5?usp=sharing Hopefully this is useful to someone at some point if they want to experiment.",
+      "meta": "williamwkcook — 05:01 on 07 Sep 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

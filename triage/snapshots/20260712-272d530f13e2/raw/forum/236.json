@@ -1,0 +1,45 @@
+{
+  "problem_number": 236,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/236",
+  "retrieved_at": "2026-07-10T23:16:09.749829+00:00",
+  "page_title": "236 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "d9d43941f5475bc958dd9ffe3a591882355b2d22b3d2b25b0f8b9f05ee5aa71a",
+  "comment_count": 7,
+  "comments": [
+    {
+      "post_id": "1836",
+      "text": "Hooley in this paper has proved under the assumption of the extended Riemann Hypothesis, that integers $n$ such that for all $1<2^k<n$ the number $n-2^k$ is prime < $O(x^{1-\\lambda+\\epsilon})$ for any sufficiently small positive number $\\epsilon$, where $\\lambda = \\Pi_p (1- \\frac{1}{p(p-1)})$. This was further improved by Narkiewicz in this paper to $O(x^{1-\\lambda/\\log2 +\\epsilon})$ under the same assumption. P.S. Improving on the result of Mientka and Weitzenkamp, Uchiyama and Yorinaga have proved there are no other such $n\\leq 2^{77}$ in a two paper series - [1] and [2].",
+      "meta": "Alfaiz — 03:55 on 25 Nov 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1752",
+      "text": "Let $E_2(N)$ denote the number of natural numbers $n \\leq N$ for which $n - 2^k$ is a prime number for all $k$ with $1 \\leq k \\leq \\log_2 n$. Vaughan, in this paper, has showed that for some suitable positive number $c$ and for every sufficiently large $N$,\\[E_2(N) < N \\exp (- \\frac{c \\log N \\log \\log \\log N}{\\log \\log N})\\]Furthermore, Mientka and Weitzenkamp in this paper has verified that $7, 15, 21, 45, 75,$ and $105$ are the only values of $n$ for which $n - 2^k$ is a prime number for all $k$ with $1 \\leq k \\leq \\log_2 n$ for $n \\leq 2^{44}$. (The site has been updated to address this comment.)",
+      "meta": "Alfaiz — 11:10 on 18 Nov 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "764",
+      "text": "Standard probabilistic heuristics suggest that the answer to this question is true, but only barely, and proving this rigorously seems well out of reach of current technology.",
+      "meta": "TerenceTao — 03:21 on 29 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "773",
+      "text": "Why it suggests it barely? If $2^k<n<2^{k+1}$, then except for $n-2^k$, all values to check are of the form $n-2^i>2^{k-1}$. Hence the number of primes of the form $n-2^i$ is on average bounded by $3.$ Of course, there is some positive correlation on the chance, due to e.g. even vs odd, but so wondering which more detailed heuristical thoughts you had.",
+      "meta": "StijnC — 06:13 on 29 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "774",
+      "text": "For each $n$ in this range, there are $k$ values to check, each of which has about a $1/k$ chance of being prime, so the chance that they are all prime is about $1/k^k$... which dominates the total number of $n$ in this range, which is $2^k$ or so, but not by a huge margin... $\\exp(-k \\log k)$ versus $\\exp(k)$.",
+      "meta": "TerenceTao — 06:37 on 29 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "776",
+      "text": "Ok, the terms barely and huge margin are here maybe subjective. This reasoning could apply to the \"Erdos could not even prove...\" part as well. Since $\\exp(k) \\exp(-k \\log k) = \\exp(- \\Theta(k \\log k))$, the chance of having really large counterexamples is very small. But starting from $n>10^4$, it is indeed still a chance, and a formal proof for excluding that is far from obvious. One deduces similar formulas for the probability (e.g. using Poisson approximation) that it is above $c \\log k$, and since we are speaking about the limit, that should be the case.",
+      "meta": "StijnC — 07:06 on 29 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "783",
+      "text": "I guess for me \"barely\" is with regards to how optimal the bounds need to be in order to conclude the result. For instance if the heuristic prediction for density was $\\exp(-k \\log k)$ and one managed somehow to get an argument that gave an upper bound of the shape $\\exp(-k/\\log k)$, this would usually be considered extremely close to the optimal bound, but in this case would be insufficient to conclude (even heuristically) that there are only finitely many counterexamples.",
+      "meta": "TerenceTao — 15:17 on 29 Sep 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

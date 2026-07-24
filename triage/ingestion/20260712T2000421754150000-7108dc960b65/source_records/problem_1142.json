@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1142,
+  "raw_page": {
+    "path": "raw/pages/problem_1142.html",
+    "sha256": "beee3ec0af37136c4a8870f8298396bd23a5a7ba355e103f12f5b3bdf62422fd"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "18fe8b3ca6a4387b2a7d78d69c7a8840af2320e09337c1699368151e22626b82",
+      "source_region": "div.problem-additional-text",
+      "text": "[Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.\n \n [MiWe69] Mientka, Walter E. and Weitzenkamp, Roger C., On {$f$}-plentiful numbers. J. Combinatorial Theory (1969), 374--377.\n \n [Va73] Vaughan, R. C., Some applications of {M}ontgomery's sieve. J. Number Theory (1973), 64--79."
+    },
+    "remarks": {
+      "sha256": "ca51e4687ddc6d6204ff81d3fce6319b242890d42d7a3947896061c1ae512592",
+      "source_region": "div.problem-additional-text",
+      "text": "The only known such $n$ are\\[4,7,15,21,45,75,105.\\]This is A039669 in the OEIS.\n\nMientka and Weitzenkamp \\cite{MiWe69} have proved there are no other such $n\\leq 2^{44}$.\n\nVaughan \\cite{Va73} has proved that the number of $n\\leq N$ such that $n-2^k$ is prime for all $1<2^k<n$ is\\[< \\exp\\left(-c\\frac{\\log \\log \\log N}{\\log\\log N}\\log N\\right)N\\]for some constant $c>0$.\n\nThis is discussed in problem A19 of Guy's collection \\cite{Gu04}. There is also further discussion on the Prime Puzzles website.\n\nErd\\H{o}s made the stronger conjecture (see [236]) that that number of $1<2^k<n$ for which $n-2^k$ is prime is $o(\\log n)$."
+    },
+    "statement": {
+      "sha256": "603b7127e506b1faa5595784f129536b5440493e3e3ab6e7d4aaadc89ae311c6",
+      "source_region": "div#content",
+      "text": "Are there infinitely many $n$ (or any $n>105$) such that $n-2^k$ is prime for all $1<2^k<n$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1142"
+}

@@ -1,0 +1,56 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#1113}
+\date{Last updated: 2025-12-28}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, covering systems
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+A positive odd integer $m$ such that none of $2^km+1$ are prime for $k\geq 0$ is called a Sierpinski number. We say that a set of primes $P$ is a covering set for $m$ if every $2^km+1$ is divisible by some $p\in P$.
+
+Are there Sierpinski numbers with no finite covering set of primes?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Sierpinski \cite{Si60} proved that there are infinitely many Sierpinski numbers, using covering systems to construct suitable covering sets for any $m$ satisfying a certain congruence. This establishes that there is a positive density set of such $m$.
+
+The smallest Sierpinski number is believed to be $78557$, which was found by Selfridge.
+
+Erd\H{o}s and Graham \cite{ErGr80} asked whether there are Sierpinski numbers for which a covering system is not 'responsible', for which the best interpretation seems to be the above question. This is formulated precisely in problem F13 of Guy's collection \cite{Gu04}. Erd\H{o}s and Graham thought the answer is yes (in that there are such Sierpinski numbers), since otherwise this would imply there are infinitely many Fermat primes.
+
+There is now further evidence with a concrete example: an argument of Izotov \cite{Iz95}, given in more detail by Filaseta, Finch, and Kozek \cite{FFK08}, suggests that $m=734110615000775^4$ is a Sierpinski number without a covering set. (Izotov proved that this $m$ is indeed a Sierpinski number.)
+
+Filaseta, Finch, and Kozek \cite{FFK08} give a revised conjecture, suggesting that every Sierpinski number is either a perfect power or else has a finite covering set of primes. They also prove that for every $l\geq 1$ there is an $m$ such that $2^km^i+1$ is composite for all $1\leq i\leq l$ and $k\geq 0$.
+
+See also [203], and [276] for another problem in which the question is whether covering systems are always responsible.
+
+\bigskip
+\noindent\textbf{References:}
+
+[ErGr80] Erd\H{o}s, P. and Graham, R., Old and new problems and results in combinatorial number theory. Monographies de L'Enseignement Mathematique (1980).
+ 
+ [FFK08] Filaseta, Michael and Finch, Carrie and Kozek, Mark, On powers associated with Sierpi\'nski numbers, {R}iesel
+numbers and {P}olignac's conjecture. J. Number Theory (2008), 1916--1940.
+ 
+ [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.
+ 
+ [Iz95] Izotov, Anatoly S., A note on Sierpi\'nski numbers. Fibonacci Quart. (1995), 206--207.
+ 
+ [Si60] Sierpi\'nski, W., Sur un probl\`eme concernant les nombres {$k\cdot 2\sp{n}+1$}. Elem. Math. (1960), 73--74.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/1113}}
+\end{document}

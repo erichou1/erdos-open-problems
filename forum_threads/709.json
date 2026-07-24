@@ -1,0 +1,20 @@
+{
+  "problem_number": 709,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/709",
+  "retrieved_at": "2026-07-10T23:18:31.135311+00:00",
+  "page_title": "709 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "8bd2b3039d164a41a5184a636bd9bf42c53e9742968e4c50c54c46e175b670ff",
+  "comment_count": 2,
+  "comments": [
+    {
+      "post_id": "4783",
+      "text": "I do not know how to solve the problem completely, but there is a simple improvement $ f(n)\\gg {\\log n\\over \\log\\log n} $. Let $F(n,m)$ denote the least integer $L$ such that the interval $(m,m+L]$ contains distinct multiples of $1,2,\\dots,n$. For the set $A=\\{2,\\dots,n\\}$, the defining property of $f(n)$ implies $F(n,m)\\le f(n)n$ for every $m$. On the other hand, van Doorn proved that for all sufficiently large $n$ there exists $m=m(n)$ such that $ F(n,m)\\gg n{\\log n\\over \\log\\log n}.$ Combining the two inequalities gives the claim. It is natural to guess that the truth is much closer to the lower bound than to the upper bound. Disclosure statement :Based on @Prof Tao comment,I have used Chatgpt thinking 5.4 for help and for the above combination [ErPo80] P. Erdős and C. Pomerance, Matching the natural numbers up to $n$ with distinct multiples in another interval, Indag. Math. 42 (1980), 147–151. [vD26] W. van Doorn, On the length of an interval that contains distinct multiples of the first $n$ positive integers, arXiv:2601.16972, 2026.",
+      "meta": "Zeraoulia Rafik — 02:58 on 15 Mar 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4802",
+      "text": "The main points of the above remark can be summarized as follows: the lower bound of Erdős-Surányi proof (which gives $c = 1 - \\frac{1 + \\log \\log 2}{\\log 2} \\approx 0.086$) can be improved to $f(n) \\gg \\frac{\\log n}{\\log \\log n}$ by restricting to the special case $A = \\{2, 3, \\ldots, n+1\\}$ and using van Doorn's bound on #711. If one instead uses the results of [ErPo80], one already obtains the intermediate lower bound $f(n) \\gg \\sqrt{\\log n/\\log\\log n}$. (These observations were obtained from conversation with Wouter and GPT.) As a reminder, all use of AI tools need to be disclosed, and unnecessarily lengthy AI-generated text should be avoided in the comments to this forum; replacement with a shorter human-generated summary is strongly preferred. (I have already edited the original answer to condense it by about 75% without any significant loss of content.)",
+      "meta": "TerenceTao — 17:38 on 15 Mar 2026 👍 3 📝 0 🤖 0"
+    }
+  ]
+}

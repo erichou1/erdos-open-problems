@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1054,
+  "raw_page": {
+    "path": "raw/pages/problem_1054.html",
+    "sha256": "00e84e4735c5bf57cfc9c91080f05b36de0349165d57935965a12b340bedb099"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "bb21a755bb0b1af4b6df96150dcbf28aa1e922c6f1c9d93a7c06400275153e06",
+      "source_region": "div.problem-additional-text",
+      "text": "[Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437."
+    },
+    "remarks": {
+      "sha256": "13e6254259e5c280f6f01ed1fbb84989b80eb997d471c1171309150d7396afbb",
+      "source_region": "div.problem-additional-text",
+      "text": "A question of Erd\\H{o}s reported in problem B2 of Guy's collection \\cite{Gu04}. The function $f(n)$ is undefined for $n=2$ and $n=5$, but is likely well-defined for all $n\\geq 6$ (which would follow from a strong form of Goldbach's conjecture).\n\nThe sequence of values of $f(n)$ is given by A167485 in the OEIS.\n\nSee also [468].\n\nThe strong claim that $f(n)=o(n)$ was disproved by Tao in the comments to [468], in which he proves that the upper density of $\\{ n : f(n)\\leq \\delta n\\}$ is $\\ll \\delta^2$."
+    },
+    "statement": {
+      "sha256": "68bd7164462dda568f306a53f6e60f4395c46c8a5d9b0113222508fdb3817cac",
+      "source_region": "div#content",
+      "text": "Let $f(n)$ be the minimal integer $m$ such that $n$ is the sum of the $k$ smallest divisors of $m$ for some $k\\geq 1$.\n\nIs it true that $f(n)=o(n)$? Or is this true only for almost all $n$, and $\\limsup f(n)/n=\\infty$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1054"
+}

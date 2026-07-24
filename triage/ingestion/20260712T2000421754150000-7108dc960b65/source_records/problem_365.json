@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 365,
+  "raw_page": {
+    "path": "raw/pages/problem_365.html",
+    "sha256": "7c6224fa64f85cb22a79a167bcb75466822f992a430933b01cea86fbcc9dcd8a"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "eeac629b01ececefc2d5ec4d15bb9a00013e342be87ff108d303302176219e4f",
+      "source_region": "div.problem-additional-text",
+      "text": "[Go70] Golomb, S. W., Powerful numbers. Amer. Math. Monthly (1970), 848-855.\n \n [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.\n \n [Wa76] Walker, David T., Consecutive integer pairs of powerful numbers and related\nDiophantine equations. Fibonacci Quart. (1976), 111-116."
+    },
+    "remarks": {
+      "sha256": "48227c8c244e2300b2855cbafca047975e24dc64b3f6a5556cc463b76dcc7106",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s originally asked Mahler whether there are infinitely many pairs of consecutive powerful numbers, but Mahler immediately observed that the answer is yes from the infinitely many solutions to the Pell equation $x^2=2^3y^2+1$. \n\nThe list of $n$ such that $n$ and $n+1$ are both powerful is A060355 in the OEIS.\n\nThe answer to the first question is no: Golomb \\cite{Go70} observed that both $12167=23^3$ and $12168=2^33^213^2$ are powerful. Walker \\cite{Wa76} proved that the equation\\[7^3x^2=3^3y^2+1\\]has infinitely many solutions, giving infinitely many counterexamples.\n\nSee also [364].\n\nThis is discussed in problem B16 of Guy's collection \\cite{Gu04}."
+    },
+    "statement": {
+      "sha256": "cecb84c43ad4c75b0f895d9c8a4bbedab13ae5f64ef960588a0a0a3a72bcd300",
+      "source_region": "div#content",
+      "text": "Do all pairs of consecutive powerful numbers $n$ and $n+1$ come from solutions to Pell equations? In other words, must either $n$ or $n+1$ be a square?\n\nIs the number of such $n\\leq x$ bounded by $(\\log x)^{O(1)}$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/365"
+}

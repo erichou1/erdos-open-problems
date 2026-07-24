@@ -1,0 +1,20 @@
+{
+  "problem_number": 422,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/422",
+  "retrieved_at": "2026-07-10T23:17:07.385692+00:00",
+  "page_title": "422 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "e9a2b26a510c7849c05b0cfe7ed41aaf3a128444d65a9a0923a6bde3d710d9fd",
+  "comment_count": 2,
+  "comments": [
+    {
+      "post_id": "4421",
+      "text": "There's a lot of literature to this problem to arrange here, for this problem. Perhaps, one can start searching for all the literature on this one, from this paper of K. Pinn.",
+      "meta": "Alfaiz — 15:03 on 23 Feb 2026 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "4253",
+      "text": "I extended direct computation of Hofstadter's \\(Q\\)-sequence\\[ Q(1)=Q(2)=1,\\qquad Q(n)=Q(n-Q(n-1))+Q(n-Q(n-2)) \\]to \\(n\\le {110000000}\\) (iterative DP, no recursion). In this range the recurrence never attempts an invalid index: \\(n-Q(n-1)\\ge 2\\) and \\(n-Q(n-2)\\ge 2\\) for all \\(3\\le n\\le 110\\cdot 10^6\\) (so no ''death'' event observed). For reference, the initial segment I used to sanity-check is:\\[ \\begin{aligned} &1,1,2,3,3,4,5,5,6,6,6,8,8,8,10,9,10,11,11,12,12,12,14,14,14,16,16,16,18,17,\\\\ &18,19,19,20,20,21,21,21,23,23,23,25,25,25,27,27,27,29,28,29,30,30,31,31,31,\\\\ &33,33,33,35,35,35,37,36,37,38,38,39,39,39,41,41,41,43,43,43,45,45,45,47,46,\\\\ &47,48,48,49,49,49,51,51,51,53,53,53,55,\\dots \\end{aligned} \\]I also checked attainability of small values and found that the set of missing values in \\(\\{1,\\dots,200\\}\\) is unchanged from the known ''not reached'' list:\\[ \\begin{aligned} &7,13,15,18,27,29,34,36,49,51,59,67,70,74,81,89,95,97,98,99,102,103,117,126,\\\\ &127,131,134,141,142,145,150,158,163,166,181,183,189,191,195,197,198,199. \\end{aligned} \\]In particular, \\(7\\) does not occur among \\(\\{Q(1),\\dots,Q(110\\cdot 10^6)\\}\\). The ''missing in \\(\\{1,\\dots,2000\\}\\)'' count I observed is \\(302\\). As a crude density snapshot (tracking attained values \\(\\le {200000}\\) within this run), the missing fraction \\(m(K)/K\\) at \\(K=10^3,10^4,10^5,2\\cdot 10^5\\) is approximately \\(0.169,0.1397,0.13805,0.137135\\), suggesting stabilization near \\(\\sim 0.13\\) at these scales (purely empirical).",
+      "meta": "Zeraoulia Rafik — 15:00 on 10 Feb 2026 👍 1 📝 0 🤖 0"
+    }
+  ]
+}

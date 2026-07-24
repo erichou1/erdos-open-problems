@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 665,
+  "raw_page": {
+    "path": "raw/pages/problem_665.html",
+    "sha256": "5904a1b95bbf41b52123bf72ffbf2ad2f8767fd267caf15f68076747f2c3c4f4"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "d4ad470b46b991f685bfd0b7de0b03c22563df3c3f13a23d52a038276bc00ad3",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er97f] Erd\\H{o}s, Paul, Some unsolved problems. Combinatorics, geometry and probability (Cambridge, 1993) (1997), 1-10.\n \n [ErLa82] Erd\\H{o}s, P. and Larson, J., On pairwise balanced block designs with the sizes of blocks as uniform as possible. Annals of Discrete Mathematics (1982), 129-134.\n \n [ShSi85] S. S. Shrikhande and N. M. Singhi, On a problem of Erd\\H{o}s and Larson. Combinatorica (1985), 351-358."
+    },
+    "remarks": {
+      "sha256": "863daf100ce4caf18acbebe3ad7f2626baac1611c90e4a3c9274eb6488fdc32a",
+      "source_region": "div.problem-additional-text",
+      "text": "A problem of Erd\\H{o}s and Larson \\cite{ErLa82}. In general, as Erd\\H{o}s asks in \\cite{Er97f}, find the slowest growing function $h$ such that, for all large $n$, there exists a pairwise balanced design with\\[\\lvert A_i\\rvert > n^{1/2}-h(n)\\]for all $1\\leq i\\leq m$.\n\nThe problem above asks whether $h(n)\\ll 1$. Erd\\H{o}s and Larson prove that $h(n) \\ll n^{1/2-c}$ for some constant $c>0$, and note this can be improved to $h(n)\\ll (\\log n)^2$ assuming Cramer-type bounds on the difference between consecutive primes.\n\nShrikhande and Singhi \\cite{ShSi85} have proved that the answer is no conditional on the conjecture that the order of every projective plane is a prime power (see [723]), by proving that every pairwise balanced design on $n$ points in which each block is of size $\\geq n^{1/2}-c$ can be embedded in a projective plane of order $n+i$ for some $i\\leq c+2$, if $n$ is sufficiently large.\n\nIn general, if $H(n)$ is the largest prime gap $\\leq n$, then the above reuslts show that, assuming the prime power conjecture, $H(n)\\asymp h(n)$."
+    },
+    "statement": {
+      "sha256": "a7037bd96229e7fa7582e6e56f377f83d40a379f415581927d04cad286050d49",
+      "source_region": "div#content",
+      "text": "A pairwise balanced design for $\\{1,\\ldots,n\\}$ is a collection of sets $A_1,\\ldots,A_m\\subseteq \\{1,\\ldots,n\\}$ such that $2\\leq \\lvert A_i\\rvert <n$ and every pair of distinct elements $x,y\\in \\{1,\\ldots,n\\}$ is contained in exactly one $A_i$.\n\nIs there a constant $C>0$ and, for all large $n$, a pairwise balanced design such that\\[\\lvert A_i\\rvert > n^{1/2}-C\\]for all $1\\leq i\\leq m$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/665"
+}

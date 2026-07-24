@@ -1,0 +1,51 @@
+% corpus_supplement: Erdős problem #556
+% source: https://www.erdosproblems.com/latex/556
+% fetched_at: 2026-07-14T18:47:53Z
+% payload_sha256: 01292c942023308a5544da2bb9b461c12df9c3f240c97a77b42b650ce3665e4e
+% statement/remarks/references extracted by erdos_ingest.extract_source_page;
+% rendered by erdos_ingest.render_tex — do not edit
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#556}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory, ramsey theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $R_3(G)$ denote the minimal $m$ such that if the edges of $K_m$ are $3$-coloured then there must be a monochromatic copy of $G$. Show that\[R_3(C_n) \leq 4n-3.\]
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+A problem of Bondy and Erd\H{o}s. This inequality is best possible for odd $n$. 
+
+Luczak \cite{Lu99} has shown that $R_3(C_n)\leq (4+o(1))n$ for all $n$, and in fact $R_3(C_n)\leq 3n+o(n)$ for even $n$.
+
+Kohayakawa, Simonovits, and Skokan \cite{KSS05} proved this conjecture when $n$ is sufficiently large and odd. Benevides and Skokan \cite{BeSk09} proved that if $n$ is sufficiently large and even then $R_3(C_n)=2n$.
+
+This problem is #25 in Ramsey Theory in the graphs problem collection.
+
+\bigskip
+\noindent\textbf{References:}
+
+[BeSk09] Benevides, Fabricio Siqueira and Skokan, Jozef, The 3-colored Ramsey number of even cycles. J. Combin. Theory Ser. B (2009), 690-708.
+ 
+ [KSS05] Kohayakawa, Yoshiharu and Simonovits, Mikl\'{o}s and Skokan, Jozef, The 3-colored Ramsey number of odd cycles. Proceedings of {GRACO}2005 (2005), 397-402.
+ 
+ [Lu99] \L uczak, Tomasz, {$R(C_n,C_n,C_n)\leq(4+o(1))n$}. J. Combin. Theory Ser. B (1999), 174-187.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/556}}
+\end{document}

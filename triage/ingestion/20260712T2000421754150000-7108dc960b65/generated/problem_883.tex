@@ -1,0 +1,46 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#883}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, graph theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+For $A\subseteq \{1,\ldots,n\}$ let $G(A)$ be the graph with vertex set $A$, where two integers are joined by an edge if they are coprime.
+
+Is it true that if\[\lvert A\rvert >\lfloor\tfrac{n}{2}\rfloor+\lfloor\tfrac{n}{3}\rfloor-\lfloor\tfrac{n}{6}\rfloor\]then $G(A)$ contains all odd cycles of length $\leq \frac{n}{3}+1$?
+
+Is it true that, for every $\ell\geq 1$, if $n$ is sufficiently large and\[\lvert A\rvert >\lfloor\tfrac{n}{2}\rfloor+\lfloor\tfrac{n}{3}\rfloor-\lfloor\tfrac{n}{6}\rfloor\]then $G(A)$ must contain a complete $(1,\ell,\ell)$ triparite graph on $2\ell+1$ vertices?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+A problem of Erd\H{o}s and S\'{a}rk\H{o}zy \cite{ErSa97}, who prove that if\[\lvert A\rvert >\lfloor\tfrac{n}{2}\rfloor+\lfloor\tfrac{n}{3}\rfloor-\lfloor\tfrac{n}{6}\rfloor\]then $G(A)$ contains all odd cycles of length $\leq cn$ for some constant $c>0$.
+
+This threshold is the best possible, since one could take $A$ to be the set of $m\leq n$ which are divisible by either $2$ or $3$, in which case $G(A)$ contains no triangles. 
+
+The second question was solved by S\'{a}rk\"{o}zy \cite{Sa99} who proved that, for large $n$, if $\lvert A\rvert$ exceeds the given threshold then $G(A)$ contains a complete $(1,\ell,\ell)$ triparite graph with\[\ell \gg \frac{\log n}{\log\log n}.\]
+
+\bigskip
+\noindent\textbf{References:}
+
+[ErSa97] Erd\H{o}s, Paul and Sarkozy, Gabor N., On cycles in the coprime graph of integers. Electron. J. Combin. (1997), Research Paper 8, approx. 11.
+ 
+ [Sa99] S\'{a}rk\"ozy, G\'{a}bor N., Complete tripartite subgraphs in the coprime graph of
+integers. Discrete Math. (1999), 227--238.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/883}}
+\end{document}

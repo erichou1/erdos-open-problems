@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 778,
+  "raw_page": {
+    "path": "raw/pages/problem_778.html",
+    "sha256": "3a06630dac8881ee58edcd3a0f1f825bf1aaf18be387a9d4bd74b5faa76b8830"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "5f29d01e43b2c1e28f4b21bab1509e06b719d6dd3a6a76c14fbad9e31bc54ac3",
+      "source_region": "div.problem-additional-text",
+      "text": "[MaSp24] Malekshahian, A. and Spiro, S., On a clique-building game of Erd\\H{o}s. arXiv:2410.18304 (2024)."
+    },
+    "remarks": {
+      "sha256": "f31318f0eb0a3b0d0f6115c7a8743ce3a2c267678fe6463cffde5d242988b67e",
+      "source_region": "div.problem-additional-text",
+      "text": "Malekshahian and Spiro \\cite{MaSp24} have proved that, for the first game, the set of $n$ for which Bob wins has density at least $3/4$ - in fact they prove that if Alice wins at $n$ then Bob wins at $n+1,n+2,n+3$. \n\nSimilarly, for the third game they prove that the set of $n$ for which Bob wins has density at least $2/3$, and prove the stronger statement that if Alice wins at $n$ then Bob wins at $n+1,n+2$."
+    },
+    "statement": {
+      "sha256": "f7c1e00dd41947563f58aa32487c0daa99ece62e97212bf80ed910a53d604964",
+      "source_region": "div#content",
+      "text": "Alice and Bob play a game on the edges of $K_n$, alternating colouring edges by red (Alice) and blue (Bob). Alice goes first, and wins if at the end the largest red clique is larger than any of the blue cliques.\n\nDoes Bob have a winning strategy for $n\\geq 3$? (Erd\\H{o}s believed the answer is yes.)\n\nIf we change the game so that Bob colours two edges after each edge that Alice colours, but now require Bob's largest clique to be strictly larger than Alice's, then does Bob have a winning strategy for $n>3$?\n\nFinally, consider the game when Alice wins if the maximum degree of the red subgraph is larger than the maximum degree of the blue subgraph. Who wins?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/778"
+}

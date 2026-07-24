@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 20,
+  "raw_page": {
+    "path": "raw/pages/problem_20.html",
+    "sha256": "a1b6b460dbb39c91e0aabf75b52554b4d2be4ec2f2722eab351b8932762123ae"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "7e0cc665efc61e19bba37ea95346d8974ad1674970cb28d2eb7657b9eae17703",
+      "source_region": "div.problem-additional-text",
+      "text": "[ALWZ20] Alweiss, R. and Lovett, S. and Wu, K. and Zhang, J., Improved bounds for the sunflower lemma. (2020).\n \n [BCW21] Bell, T. and Chueluecha, S. and Warnke, L., Note on sunflowers. Discret. Math. (2021).\n \n [Er81] Erd\\H{o}s, P., On the combinatorial problems which I would most like to see solved. Combinatorica (1981), 25-42.\n \n [ErRa60] Erd\\H{o}s, P. and Rado, R., Intersection theorems for systems of sets. J. London Math. Soc. (1960), 85-90.\n \n [FKNP19] Frankston, K. and Kahn, J. and Narayanan, B. and Park, J., Thresholds versus fractional expectation-thresholds. CoRR (2019).\n \n [KRT99] Kostochka, A. V. and R\\\"{o}dl, V. and Talysheva, L. A., On systems of small sets with no large $\\Delta$-subsystems. Combin. Probab. Comput. (1999), 265-268.\n \n [Ko97] Kostochka, A., A bound on the cardinality of families not containing $\\Delta$-systems. (1997).\n \n [Ra20] Rao, A., Coding for sunflowers. Discrete Analysis (2020)."
+    },
+    "remarks": {
+      "sha256": "019d6b702014df512417a827abcf33694448f2ce1352809d99feeddda48188b0",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s and Rado \\cite{ErRa60} originally proved $f(n,k)\\leq (k-1)^nn!$. Kostochka \\cite{Ko97} improved this slightly (in particular establishing an upper bound of $o(n!)$, for which Erd\\H{o}s awarded him the consolation prize of \\$100), but the bound stood at $n^{(1+o(1))n}$ for a long time until Alweiss, Lovett, Wu, and Zhang \\cite{ALWZ20} proved\\[f(n,k) < (Ck\\log n\\log\\log n)^n\\]for some constant $C>1$. This was refined slightly, independently by Rao \\cite{Ra20}, Frankston, Kahn, Narayanan, and Park \\cite{FKNP19}, and Bell, Chueluecha, and Warnke \\cite{BCW21}, leading to the current record of\\[f(n,k) < (Ck\\log n)^n\\]for some constant $C>1$. This proof was streamlined by Hu. A constant of $C=64$ was achieved in the presentation by Stoeckl.\n\nIn \\cite{Er81} Erd\\H{o}s offered \\$1000 for a proof or disproof even just in the special case when $k=3$, which he expected 'contains the whole difficulty'. He also wrote 'I really do not see why this question is so difficult'.\n\nThe usual focus is on the regime where $k=O(1)$ is fixed (say $k=3$) and $n$ is large, although for the opposite regime Kostochka, R\\\"{o}dl, and Talysheva \\cite{KRT99} have shown\\[f(n,k)=(1+O_n(k^{-1/2^n}))k^n.\\]"
+    },
+    "statement": {
+      "sha256": "cb73b8743426aa36f2d8c693243736a489d0b8ffa49fd8cbb839726504e560e0",
+      "source_region": "div#content",
+      "text": "Let $f(n,k)$ be minimal such that every family $\\mathcal{F}$ of $n$-uniform sets with $\\lvert \\mathcal{F}\\rvert \\geq f(n,k)$ contains a $k$-sunflower. Is it true that\\[f(n,k) < c_k^n\\]for some constant $c_k>0$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/20"
+}

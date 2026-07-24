@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#683}
+\date{Last updated: 2025-09-04}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, primes, binomial coefficients
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Is it true that for every $1\leq k\leq n$ the largest prime divisor of $\binom{n}{k}$, say $P(\binom{n}{k})$, satisfies\[P\left(\binom{n}{k}\right)\geq \min(n-k+1, k^{1+c})\]for some constant $c>0$?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+A theorem of Sylvester and Schur (see \cite{Er34}) states that $P(\binom{n}{k})>k$ if $k\leq n/2$. Erd\H{o}s \cite{Er55d} proved that there exists some $c>0$ such that, whenever $k\leq n/2$,\[P\left(\binom{n}{k}\right)\gg k\log k.\]Erd\H{o}s \cite{Er79d} writes it 'seems certain' that this holds for every $c>0$, with only a finite number of exceptions (depending on $c$). Standard heuristics on prime gaps suggest that the largest prime divisor of $\binom{n}{k}$ is, for $k\leq n/2$, in fact\[>e^{c\sqrt{k}}\]for some constant $c>0$. 
+
+This is essentially equivalent to [961].
+
+\bigskip
+\noindent\textbf{References:}
+
+[Er34] Erd\H{o}s, Paul, A Theorem of Sylvester and Schur. J. London Math. Soc. (1934), 282--288.
+ 
+ [Er55d] Erd\H{o}s, P., On consecutive integers. Nieuw Arch. Wisk. (3) (1955), 124--128.
+ 
+ [Er79d] Erd\H{o}s, P., Some unconventional problems in number theory. Acta Math. Acad. Sci. Hungar. (1979), 71-80.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/683}}
+\end{document}

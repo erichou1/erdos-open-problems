@@ -1,0 +1,242 @@
+{
+"summary": {
+"status": "No proof or disproof is claimed. The exact immutable wording is presently blocked because it permits materially different interpretations, including trivial degenerate ones.",
+"input_reference": "The portfolio is based only on the supplied statement and scout artifacts. 
+
+Pasted text
+
+",
+"semantic_blocker": "The first question does not specify distinctness, ordering, or positivity of d; the second does not specify the number and domain of generators, nonzero directions, distinct vertices, or whether size means dimension, cardinality, or numerical magnitude. These omissions must be resolved before the acceptance criteria define a unique proposition.",
+"branch_ranking": [
+{
+"rank": 1,
+"branch": "A-negative: uniform linked-factor-chain bound for quasi-progressions",
+"fit": "Highest",
+"falsifiability": "High: every proposed monovariant can be tested against the exact recurrence and exhaustive finite chains",
+"information_gain": "Highest immediate gain because it attacks the moving baseline D directly",
+"main_obligation": "Control both decrement-descent blocks and repeated halving events independently of the initial scale"
+},
+{
+"rank": 2,
+"branch": "B-negative: integer complete-curvature and primitive-divisibility obstruction for square cubes",
+"fit": "High and substantively different from Branch A",
+"falsifiability": "High: all curvature identities and proposed p-adic descents are exact finite statements on Boolean faces",
+"information_gain": "High because any dimension bound also disproves nondegenerate quasi-progressions through the finite-word implication",
+"main_obligation": "Convert rapid growth and modular concentration into a height-independent dimension bound"
+},
+{
+"rank": 3,
+"branch": "A-positive: construct fixed-width compatible divisor chains",
+"fit": "Moderate",
+"falsifiability": "Very high: a proposed recursion must satisfy exact product, parity, and endpoint equations at every step",
+"information_gain": "High as an adversarial branch; even partial constructions can destroy candidate negative invariants",
+"main_obligation": "Keep one fixed width while allowing the baseline D and scale to vary"
+},
+{
+"rank": 4,
+"branch": "B-positive: dimension lifting by a common square translate",
+"fit": "Moderate to low",
+"falsifiability": "High: lifting a given cube requires one B such that every vertex plus B is a square",
+"information_gain": "High for understanding simultaneous difference-of-square compatibility",
+"main_obligation": "Find a parameterization solving exponentially many linked square equations"
+}
+],
+"selected_for_construction": [
+"A4",
+"B4"
+],
+"adversarial_construction_branches": [
+"A5",
+"B5"
+],
+"reconciled_conflicts": [
+"Modulo 4, the correct strong conclusion is that all but at most one generator are divisible by 4; the weaker 'at most two' report should not be used.",
+"The binary additive-cube computation, if independently certified, globally bounds width-one quasi-progressions by ten square vertices. Therefore width one, length five is useful only as a local test case, not the principal unresolved bottleneck.",
+"For a length-five width-one test, using the supplied prohibition of four square terms in arithmetic progression together with the reported modular eliminations leaves four patterns: 0010, 0100, 1011, and 1101.",
+"Different finite-search maxima are compatible because the reports used different root bounds, baseline bounds, and conventions. None supplies an unbounded conclusion.",
+"The finite-word implication requires a canonical choice of the lower-dimensional cube inside each repeated block; mere existence in two identical blocks is not by itself enough."
+],
+"discarded_as_primary": [
+"Pure finite-alphabet combinatorics, because long ternary additive-cube-free words survive.",
+"Divisor counting alone, because scale is unrestricted.",
+"Fixed-modulus obstruction alone, because scaling and unit-square bases absorb divisibility.",
+"Continuous approximation alone, because the relaxed trajectory has arbitrarily long solutions.",
+"Bounded computation as evidence of global nonexistence."
+]
+},
+"bottleneck_ids": [
+"B0",
+"A4",
+"B4",
+"D1"
+],
+"subgoals": [
+{
+"id": "B0",
+"claim": "Formally certify the semantic obstruction by listing the unresolved domains and nondegeneracy conditions and by exhibiting distinct literal interpretations that yield different propositions, including the constant-sequence and zero-generator degeneracies. Do not select a repaired interpretation without an explicit semantic ruling.",
+"dependencies": [],
+"centrality": 5,
+"falsifiable": true
+},
+{
+"id": "A1",
+"claim": "Conditional on an explicit ruling that the square sequence is strictly increasing, verify that the quasi-progression condition is equivalent to requiring the integer square gaps to have diameter at most W=floor(C), with W independent of k.",
+"dependencies": [
+"B0"
+],
+"centrality": 4,
+"falsifiable": true
+},
+{
+"id": "A2",
+"claim": "Derive and verify the exact linked-factor-chain formulation: D+e_i=h_i p_i, p_{i+1}=p_i+h_i+h_{i+1}, p_i>h_i>0, p_i congruent to h_i modulo 2, and 0<=e_i<=W. Prove both directions of the equivalence.",
+"dependencies": [
+"A1"
+],
+"centrality": 5,
+"falsifiable": true
+},
+{
+"id": "A3",
+"claim": "Verify the one-step and two-step decreasing-gap identities, then derive a complete transition classification in the large-gap regime. In particular, determine precisely when the next decrement must decrease and when a genuine halving event h_i>2h_{i+1} is possible.",
+"dependencies": [
+"A2"
+],
+"centrality": 5,
+"falsifiable": true
+},
+{
+"id": "A6",
+"claim": "Independently certify the finite additive-cube computation for binary error words and prove that every realizable error word avoids three consecutive equal-length blocks with equal sums. Record this only as a width-one theorem and as a pruning rule for larger widths.",
+"dependencies": [
+"A1"
+],
+"centrality": 3,
+"falsifiable": true
+},
+{
+"id": "A7",
+"claim": "Build an exact finite falsification harness for linked-factor chains, using the product, parity, endpoint, and bounded-error equations rather than a root cutoff alone. Use it to test every candidate monovariant and to search specifically for long alternations of decrement descent and halving.",
+"dependencies": [
+"A2",
+"A3"
+],
+"centrality": 3,
+"falsifiable": true
+},
+{
+"id": "A4",
+"claim": "Establish or refute the uniform-chain assertion: for every fixed W there is B(W) such that every linked-factor chain of width W has at most B(W) edges. The preferred construction is a lexicographic or weighted monovariant that decreases through both ordinary decrement-descent transitions and halving events and is bounded below independently of D.",
+"dependencies": [
+"A3",
+"A6",
+"A7"
+],
+"centrality": 5,
+"falsifiable": true
+},
+{
+"id": "A5",
+"claim": "As an adversarial positive branch, establish or refute the existence of one fixed W admitting compatible linked factor chains of arbitrary finite length. Any proposed recursion must explicitly construct D, e_i, h_i, and p_i and verify products, parity, positivity, adjacency, and the same width at every stage.",
+"dependencies": [
+"A2",
+"A7"
+],
+"centrality": 5,
+"falsifiable": true
+},
+{
+"id": "C1",
+"claim": "Give a fully rigorous finite-word proof that arbitrarily long increasing quasi-progressions with a fixed finite gap alphabet yield proper additive cubes of every dimension. Canonicalize the cube selected inside each repeated block and verify positivity and distinctness after the affine map to square values.",
+"dependencies": [
+"A1"
+],
+"centrality": 4,
+"falsifiable": true
+},
+{
+"id": "B1",
+"claim": "Conditional on an explicit proper-cube interpretation, verify primitive normalization and the strongest local congruence facts: gcd(a,b_1,...,b_r) is a square; all but at most one b_i are divisible by 4; and for every odd prime p, at most (p-1)/2 generators are nonzero modulo p.",
+"dependencies": [
+"B0"
+],
+"centrality": 4,
+"falsifiable": true
+},
+{
+"id": "B2",
+"claim": "Verify the complete integer-curvature hierarchy for the root function Y on the Boolean cube: kappa_T(S)=(-1)^{|T|-1} Delta_T Y(S) is a positive integer, satisfies kappa_{T union {j}}(S)=kappa_T(S)-kappa_T(S union {j}), and therefore obeys the survival lower bound determined by the remaining unused directions.",
+"dependencies": [
+"B1"
+],
+"centrality": 5,
+"falsifiable": true
+},
+{
+"id": "B3",
+"claim": "Verify the simultaneous representation pressure in every cube direction: the 2^{r-1} contexts give distinct positive marginal divisors of b_i, implying at least 2^{r-1} distinct difference-of-square representations and b_i>=4^{r-1}. Strengthen the divisor count when zero is excluded, but do not treat size growth alone as a contradiction.",
+"dependencies": [
+"B1",
+"B2"
+],
+"centrality": 4,
+"falsifiable": true
+},
+{
+"id": "B6",
+"claim": "Construct an exact recursive cube-search and identity-checking harness. Use the known proper three-dimensional examples as mandatory regression tests and search for four-dimensional configurations or counterexamples to proposed curvature and divisibility lemmas.",
+"dependencies": [
+"B1",
+"B2",
+"B3"
+],
+"centrality": 3,
+"falsifiable": true
+},
+{
+"id": "B4",
+"claim": "Establish or refute a height-independent dimension bound for primitive proper square cubes by combining complete curvature, divisor explosion, and modular concentration. The preferred target is a dichotomy: either a large subcube acquires a common square divisor and yields a primitive descent, or the surviving unit-square branch violates an exact curvature or face-defect inequality.",
+"dependencies": [
+"B2",
+"B3",
+"B6"
+],
+"centrality": 5,
+"falsifiable": true
+},
+{
+"id": "B5",
+"claim": "As an adversarial positive branch, establish or refute a dimension-lifting mechanism. Given a proper r-cube H of squares, seek B>0 such that every x in H and every x+B are squares, while proving that the new direction is independent of the old directions and all vertices remain distinct.",
+"dependencies": [
+"B1",
+"B2",
+"B6"
+],
+"centrality": 4,
+"falsifiable": true
+},
+{
+"id": "D1",
+"claim": "Compare the completed positive and negative branches without treating agreement among scouts or finite searches as proof. A proof of B4 transfers through C1 to the quasi-progression question; a proof of A5 transfers through C1 to the cube question; otherwise each question requires its own decisive branch.",
+"dependencies": [
+"A4",
+"A5",
+"C1",
+"B4",
+"B5"
+],
+"centrality": 5,
+"falsifiable": true
+},
+{
+"id": "GOAL",
+"claim": "After the semantic blocker B0 is explicitly resolved, prove or disprove both quantified questions exactly as thereby defined, with no additional hypotheses and with every nondegeneracy and boundary convention checked. Until then, retain the ambiguity certificate as a blocking defect rather than claiming a mathematical solution.",
+"dependencies": [
+"B0",
+"D1"
+],
+"centrality": 5,
+"falsifiable": true
+}
+]
+}

@@ -1,0 +1,40 @@
+{
+  "problem_number": 701,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/701",
+  "retrieved_at": "2026-07-10T23:18:29.009884+00:00",
+  "page_title": "701 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "197170e6280ff5f59bf1bf0daf54d3488cbf9f55965e4292fecd4003b5d8be88",
+  "comment_count": 6,
+  "comments": [
+    {
+      "post_id": "6577",
+      "text": "When formalising this statement in the Formal Conjectures repo, one has to make a decision about the finiteness of the ground set: I assume this is a silent assumption, but perhaps it is worth clarifying that the intention here is that all sets in $\\mathcal{F}$ are subset of a *finite* set? Otherwise one can construct a counterexample with family $\\mathcal{F}$ of subsets of $\\mathbb{N} \\times \\mathbb{N}$, see a formal proof of the counterexample here (assuming there is not another silent assumption missing or some other misformalisation happening). I assume that most literature is about the case with finite ground set, and didn't find a construction of a countable counter example in a quick search, but would be interested in any pointers, perhaps we can add it as a 'research solved' variant to the file in our repo.",
+      "meta": "Moritz Firsching — 20:32 on 21 May 2026 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "6589",
+      "text": "Small remark; Formal proof and formalised proof is different to me. But if I interpret correctly $(n+1, 0)$ is itself an element of the ground set, so your counterexample uses an intersecting family as the larger one. Also; not that if the counterexample has finite intersecting families, it reduces to the finite case (which is the intended one) For the infinite case, one should consider different cardinal numbers. Have no idea if that s a trivial or hard problem on its own.",
+      "meta": "StijnC — 07:23 on 22 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6590",
+      "text": "$\\textbf{potentially wrong}$ (it might be that one cannot pick an element which has the largest cardinality and so a counterexample is given on Math Overflow) The infinite case might be trivial: Assume $\\lvert \\mathcal{F}'\\rvert$ is infinite. If the largest cardinality a particular trivial intersecting set can have is $|B|$, and a largest set has cardinality $|A|,$ then $\\lvert \\mathcal{F}' \\rvert \\le |A| \\times |B| = \\max\\{ |A|, |B|\\}$. But there is an element belonging to $2^{|A|-1}$ many elements, which is a larger cardinality. So either $|B| \\ge \\lvert \\mathcal{F}'\\rvert$, or $2^{|A|-1}>\\lvert \\mathcal{F}'\\rvert$.",
+      "meta": "StijnC — 08:38 on 22 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6591",
+      "text": "Nice! That makes sense to me, thanks for taking a look! In other problems, like #1022, \"finite family of finite sets\" is explicitely mentioned or, like in #602, it is explicit that the sets in the family are of cardinality $\\aleph_0$. But of course your example makes it clear what is the intention here. See also mathoverflow question #432223 by Dominic van der Zypen.",
+      "meta": "Moritz Firsching — 09:02 on 22 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6475",
+      "text": "A minor detail note: I believe Frankl and Kupavskii have proven the case where $\\mathcal{F}'$ has covering number $2$, not $\\mathcal{F}$ (their paper uses $\\mathcal{G}$ and $\\mathcal{F}$ to denote the sets referred to here as $\\mathcal{F}$ and $\\mathcal{F}'$, respectively). This result also seems to have been proven in 1972 by Kleitman and Magnanti [KM72] (p. 9, Theorem 2), as referenced in [EGP18]. [KM72] D. J. Kleitman and T. L. Magnanti. On the Number of Latent Subsets of Intersecting Collections. Operations Research Center Working Papers (Oct. 1972). url: http://hdl.handle.net/1721.1/5343. [EGP18] Eifler, Leon, Ambros M. Gleixner, and Jonad Pulaj. Chvátal's Conjecture Holds for Ground Sets of Seven Elements. Zuse Institute Berlin, 2018.",
+      "meta": "JohnJennings — 18:11 on 15 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6348",
+      "text": "Here is the short proof in the special case where the rank of \\(\\mathcal F\\) is at most \\(2\\). using Chatgpt 5.5 Assume every member of \\(\\mathcal F\\) has size at most \\(2\\). Then the \\(2\\)-element members of \\(\\mathcal F\\) may be viewed as the edge set of a graph \\(G\\), and the \\(1\\)-element members as its vertices. Let \\(\\mathcal I\\subseteq \\mathcal F\\) be an intersecting subfamily. If \\(\\emptyset\\in\\mathcal I\\), then \\(\\mathcal I=\\{\\emptyset\\}\\), so the desired inequality is trivial as soon as \\(\\mathcal F\\) has a nonempty member. Thus assume \\(\\emptyset\\notin\\mathcal I\\). If \\(\\mathcal I\\) contains a singleton, say \\(\\{x\\}\\in\\mathcal I\\), then every member of \\(\\mathcal I\\) must contain \\(x\\). Hence\\[ \\mathcal I\\subseteq \\{A\\in\\mathcal F:x\\in A\\}, \\]and therefore\\[ |\\mathcal I|\\leq |\\{A\\in\\mathcal F:x\\in A\\}|. \\]It remains to consider the case in which all members of \\(\\mathcal I\\) have size \\(2\\). Then \\(\\mathcal I\\) is a pairwise intersecting family of edges in a graph. Such a family is either a star of edges with a common endpoint, or it contains a triangle. Indeed, if two edges \\(ab\\) and \\(ac\\) are in \\(\\mathcal I\\), then any further edge intersecting both is either incident with \\(a\\), or is the edge \\(bc\\). Thus either all edges share \\(a\\), or the only possible non-star configuration is the triangle \\(ab,ac,bc\\). In the star case, all edges in \\(\\mathcal I\\) contain some vertex \\(x\\), and hence\\[ \\mathcal I\\subseteq \\{A\\in\\mathcal F:x\\in A\\}. \\]So the desired inequality follows. In the triangle case, say\\[ \\mathcal I=\\{\\{a,b\\},\\{a,c\\},\\{b,c\\}\\}. \\]Since \\(\\mathcal F\\) is closed under taking subsets, it also contains \\(\\{a\\}\\). Hence the star at \\(a\\) contains at least\\[ \\{a\\},\\quad \\{a,b\\},\\quad \\{a,c\\}. \\]Therefore\\[ |\\{A\\in\\mathcal F:a\\in A\\}|\\geq 3=|\\mathcal I|. \\]Thus, in all cases, there is an element \\(x\\) such that\\[ |\\mathcal I|\\leq |\\{A\\in\\mathcal F:x\\in A\\}|. \\]This proves the conjecture for hereditary families of rank at most \\(2\\).",
+      "meta": "Zeraoulia Rafik — 15:39 on 09 May 2026 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

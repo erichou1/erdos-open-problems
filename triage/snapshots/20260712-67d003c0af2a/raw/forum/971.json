@@ -1,0 +1,25 @@
+{
+  "problem_number": 971,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/971",
+  "retrieved_at": "2026-07-10T23:19:45.786078+00:00",
+  "page_title": "971 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "7143736a7cc79c191e164e8ed4d1ee9b4a3c9991f34b8dcb30672b53b4873173",
+  "comment_count": 3,
+  "comments": [
+    {
+      "post_id": "4005",
+      "text": "I asked Claude for a literature review. For the larger quantity $\\max_a p(a,d)$ (where one only seeks $p(a,d)$ to be large for a single $a$ rather than a positive fraction of $a$), the problem is analogous to #4: Pomerance in 1980 got a lower bound of $(e^\\gamma-o(1)) \\phi(d) \\log d$, and Li-Shakan-Pratt has the improved lower bound $\\gg \\phi(k) \\log k \\log\\log k \\log\\log\\log\\log k / \\log\\log\\log k$, in parallel with #4, and conjectured that the true order of growth here is around $\\phi(k) \\log^2 k$. For the stated problem where one needs a positive density of $k$, Claude did not locate any literature, but reproduced (at least at a heuristic level) the Poisson statistic calculation that suggests the answer is positive assuming the prime tuples conjecture.",
+      "meta": "TerenceTao — 17:09 on 31 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3999",
+      "text": "This is true conditionally on Hardy-Littlewoods (\"Conditional Poisson law at the Linnik scale\"): Let $c>0$ be fixed, let $d\\to\\infty$, and set\\[ x:=(1+c)\\phi(d)\\log d,\\qquad N_a:=\\pi(x;d,a)=\\#\\{p\\le x:\\ p\\equiv a\\!\\!\\pmod d\\}\\quad((a,d)=1). \\]Assume the following uniform prime $r$-tuple asymptotic for every fixed $r\\ge1$: for all distinct integers $0\\le k_1,\\dots,k_r\\le \\lfloor x/d\\rfloor$, writing $h_i:=(k_i-k_1)d$,\\[ \\#\\{n\\in [1,d]:\\ n,\\ n+h_2,\\dots,n+h_r\\ \\text{are prime}\\} =\\Bigl(\\mathfrak S(\\mathbf h)+o(1)\\Bigr)\\frac{d}{(\\log x)^r}, \\]uniformly in $d$ (here $\\mathfrak S(\\mathbf h)$ is the usual singular series), and in addition the average singular series over such tuples has the expected value\\[ \\frac{1}{K^r}\\!\\!\\sum_{\\substack{0\\le k_1,\\dots,k_r\\le K\\\\ \\text{distinct}}}\\!\\!\\mathfrak S(\\mathbf h) =\\Bigl(\\frac{d}{\\phi(d)}\\Bigr)^{r-1}(1+o(1)),\\qquad K:=\\Bigl\\lfloor\\frac{x}{d}\\Bigr\\rfloor. \\]Then expanding factorial moments and averaging over $a\\in(\\mathbb Z/d\\mathbb Z)^\\times$ gives\\[ \\mathbb E[(N_a)_r]\\ :=\\ \\frac{1}{\\phi(d)}\\sum_{(a,d)=1} N_a(N_a-1)\\cdots(N_a-r+1) \\ \\sim\\ \\Bigl(\\frac{x}{\\phi(d)\\log x}\\Bigr)^r\\ =:\\ \\lambda^r. \\]Hence (method of moments) $N_a$ is asymptotically $\\mathrm{Poisson}(\\lambda)$ as $a$ varies, with\\[ \\lambda=\\frac{x}{\\phi(d)\\log x}\\sim 1+c. \\]In particular,\\[ \\#\\{a\\bmod d:\\ (a,d)=1,\\ N_a=0\\}=(e^{-\\lambda}+o(1))\\phi(d)\\sim e^{-(1+c)}\\phi(d), \\]equivalently for a positive proportion of reduced residue classes one has $p(a,d)>(1+c)\\phi(d)\\log d$. as wanted",
+      "meta": "Przemek Chojecki — 13:48 on 31 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "191",
+      "text": "write $q(a,d)$ to be the least $q>0$ so that $qd+a$ is prime. then we have that $p(a,d)=q(a,d)d+a$, unless $p(a,d)=a$. now heuristically we expect the values of $q(a,d)$ to distributed like samples from a geometric random variable with success probability $\\frac{d}{\\phi(d)}\\cdot \\frac{1}{\\log(d)}$. this has mean $\\mu = \\frac{1}{d}\\phi(d)\\log(d)$ whence it seems $p(a,d)$ should have expectation $\\approx d\\mu =\\phi(d)\\log(d)$. and we'd expect this conjecture to be true due to how geometric random variables fluctuate. you'd in fact expect that for each $C$, that $\\Omega_C(\\phi(d))$ values of $a$ have $p(a,d)>C\\phi(d)\\log(d)$, if I'm not mistaken.",
+      "meta": "zach hunter — 17:15 on 24 Aug 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "problem_number": 993,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/993",
+  "retrieved_at": "2026-07-10T23:24:12.439135+00:00",
+  "page_title": "993 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "edcdc8b11e1e039c1fc8876877ed1464edce922ab306d9deb780952878c7fcbf",
+  "comment_count": 4,
+  "comments": [
+    {
+      "post_id": "6859",
+      "text": "It seems there's been good progress on checking single trees (BrettRey and JakeMallen to $n=29$, PatternBoost up to 101). The \"or forest\" half is worth a look too, and it's easier to pin down. A forest's independence polynomial is the product of its components'. By Hoggar's theorem (Hoggar 1974) a product of log-concave sequences stays log-concave, so a forest can only be non-unimodal if one of its tree components is already non-log-concave. The smallest of those has 26 vertices (Kadrawi–Levit), so the non-log-concave trees are the only place a forest counterexample can hide. I generalized the Kadrawi–Levit families $T_{3,m,n}$, $T^*{3,m,n}$ to a class of rooted \"bush\" trees and pulled out 4,445 non-log-concave ones (up to 60 vertices, log-concavity defects down to ~ $-12$). Forests built from the 80 most extreme (all pairs and triples, powers to the 20th, products with paths $P_1$ through $P{16}$, 253,695 in total) are all unimodal. Code and witnesses: here. Polynomials computed exactly with the integer in/out DP, checked against brute force on trees up to 11 vertices. Used GPT 5.5 Pro and Claude for the code and search; the numbers come from the runs.",
+      "meta": "Will Blair — 18:07 on 05 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5592",
+      "text": "two references worth adding to this thread: Kadrawi and Levit (2023, arXiv:2305.01784, \"The independence polynomial of trees is not always log-concave starting from order 26\") is the original source for the log-concavity failures Brett's n=28 audit extends: they found exactly two trees on 26 vertices that are unimodal but not log-concave, plus infinite families of larger trees by standard graph operations. Ramos and Sun (Oct 2025, arXiv:2510.18826, \"An AI enhanced approach to the tree unimodality conjecture\") used the PatternBoost ML architecture to sample tens of thousands of additional LC counterexamples on trees in the 27 to 101 vertex range. every one of them is still unimodal.",
+      "meta": "mysticflounder — 20:20 on 18 Apr 2026 👍 1 📝 1 🤖 0"
+    },
+    {
+      "post_id": "4722",
+      "text": "A follow-up to the Jan. 7, 2026 comment: I have public code/result artifacts for the n <= 29 verification here: https://github.com/BrettRey/erdos-problem-993 In particular, the completed exhaustive runs record: - n = 28: 2,023,443,032 trees, 0 unimodality failures - n = 29: 5,469,566,585 trees, 0 unimodality failures I also completed a log-concavity / near-miss audit at n = 28: - 19 log-concavity failures, all at k = 14 - 0 non-unimodal trees - top near-miss ratio 0.8565665724120973 at k = 13 I have not yet completed the analogous LC / near-miss audit at n = 29. On the structural side, I also have a manuscript in preparation developing a subdivision-contraction identity I(T_e; x) = I(T; x) + x I(T/e; x), together with a reduction via Hub Exclusion + Transfer to the d_leaf <= 1 regime and a mean bound mu(T) < n/3 in that regime. I am not claiming a full solution at this stage; one closure route remains conditional on a separate mode-mean inequality, which I have verified computationally through n <= 23. Disclosure: AI assistance was used for computational exploration, code development, and proof-strategy exploration, but the numerical claims above come from executed computations recorded in the linked repository.",
+      "meta": "BrettRey — 14:42 on 12 Mar 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2853",
+      "text": "I verified computationally that the independent set sequence is unimodal for every tree with $n \\leq 29$ vertices, extending Radcliffe's $n \\leq 25$ verification cited in Basit and Galvin [arXiv:2006.12562]. Basit and Galvin also show that asymptotically almost surely ~49.5% of the sequence is increasing and ~38.8% of the sequence is decreasing, which may be worth adding to the problem's description.",
+      "meta": "JakeMallen — 18:13 on 07 Jan 2026 👍 4 📝 1 🤖 0"
+    }
+  ]
+}

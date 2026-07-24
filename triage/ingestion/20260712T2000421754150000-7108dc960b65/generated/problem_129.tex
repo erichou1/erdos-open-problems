@@ -1,0 +1,34 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#129}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory, ramsey theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $R(n;k,r)$ be the smallest $N$ such that if the edges of $K_N$ are $r$-coloured then there is a set of $n$ vertices which does not contain a copy of $K_k$ in at least one of the $r$ colours. Prove that there is a constant $C=C(r)>1$ such that\[R(n;3,r) < C^{\sqrt{n}}.\]
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Conjectured by Erd\H{o}s and Gy\'{a}rf\'{a}s, who proved the existence of some $C>1$ such that $R(n;3,r)>C^{\sqrt{n}}$. Note that when $r=k=2$ we recover the classic Ramsey numbers. Erd\H{o}s thought it likely that for all $r,k\geq 2$ there exists some $C_1,C_2>1$ (depending only on $r$) such that\[ C_1^{n^{1/k-1}}< R(n;k,r) < C_2^{n^{1/k-1}}.\]Antonio Girao has pointed out that this problem as written is easily disproved, and indeed $R(n;3,2) \geq C^{n}$:
+
+The obvious probabilistic construction (randomly colour the edges red/blue independently uniformly at random) yields a 2-colouring of the edges of $K_N$ such every set on $n$ vertices contains a red triangle and a blue triangle (using that every set of $n$ vertices contains $\gg n^2$ edge-disjoint triangles), provided $N \leq C^n$ for some absolute constant $C>1$. This implies $R(n;3,2) \geq C^{n}$, contradicting the conjecture. 
+
+Perhaps Erd\H{o}s had a different problem in mind, but it is not clear what that might be. It would presumably be one where the natural probabilistic argument would deliver a bound like $C^{\sqrt{n}}$ as Erd\H{o}s and Gy\'{a}rf\'{a}s claim to have achieved via the probabilistic method.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/129}}
+\end{document}

@@ -1,0 +1,15 @@
+{
+  "problem_number": 348,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/348",
+  "retrieved_at": "2026-07-10T23:16:44.273339+00:00",
+  "page_title": "348 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "95b526ec5868a72197891a450632366f7863ef852883762b968dec6e4ef2faab",
+  "comment_count": 1,
+  "comments": [
+    {
+      "post_id": "348",
+      "text": "If I understand correctly, the way this is formalised in Lean requires the multiset $A$ to have the property that the set $$P(A) = \\left \\{\\sum_{n \\in B} B \\subseteq A \\text{ finite} \\right\\}$$ contains all positive integers, and a lot of texts define completeness this way. In the book by Graham and Erdős however, it is only required that $P(A)$ contains all sufficiently large integers, which is also often taken as a definition of completeness. For what it is worth, with the former interpretation that is used in the Lean formalisation I can fully settle this problem, and show that no such multiset exists for any $m, n$ with $2 \\le m < n$. Assume $A = \\{a_1, a_2 \\ldots, \\}$ is such that $P(A \\setminus \\{a_i, a_j \\}) = \\mathbb{N}$ holds for all indices $i, j$. Set $s_1 = a_1$ and, for any $j \\ge 2$, $s_j = a_i$ where $i$ is such that $a_{i-1} > s_1 + \\ldots + s_{j-1}$. With the infinite set $S$ equal to $\\{s_1, s_2, \\ldots \\}$, one can then check that $P(A \\setminus S) = \\mathbb{N}$ holds as well. For a complete write-up, see here. Perhaps the argument can be adapted to settle the second (intended) interpretation as well. EDIT: Come to think of it, I don't think this argument can be easily adapted to the intended interpreation, because the sequence $a_n = F_n + (-1)^n$ with $F_n$ the $n$-th Fibonacci number has the property that $P(A \\setminus \\{a_i, a_j\\})$ contains all large enough integers for all $i, j$, but no infinite subset $S$ exists for which $P(A \\setminus S)$ contains all large enough integers. See #346 and references for more information. EDIT 25-09-2025: I have left a comment on the Lean forum and the formalisation has now been updated to reflect the intended meaning. (The site has been updated to address this comment.)",
+      "meta": "Woett — 22:21 on 06 Sep 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

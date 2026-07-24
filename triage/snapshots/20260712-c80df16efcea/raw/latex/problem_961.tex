@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#961}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $f(k)$ be the minimal $n$ such that every set of $n$ consecutive integers $&#62;k$ contains an integer divisible by a prime $&#62;k$. Estimate $f(k)$.
+
+
+
+
+In other words, how large can a consecutive set of $k$-smooth integers be? Sylvester and Schur (see \cite{Er34}) proved $f(k)\leq k$ and Erd\H{o}s \cite{Er55d} proved\[f(k)&lt;3\frac{k}{\log k}.\]Jutila \cite{Ju74} and Ramachandra, and Shorey \cite{RaSh73} proved\[f(k) \ll \frac{\log\log\log k}{\log \log k}\frac{k}{\log k}.\]It is likely that $f(k) \ll (\log k)^{O(1)}$. This is essentially equivalent to [683] .
+
+
+
+
+References
+
+[Er34] Erd\H{o}s, Paul, A Theorem of Sylvester and Schur . J. London Math. Soc. (1934), 282--288.
+
+[Er55d] Erd\H{o}s, P., On consecutive integers . Nieuw Arch. Wisk. (3) (1955), 124--128.
+
+[Ju74] Jutila, Matti, On numbers with a large prime factor. {II} . J. Indian Math. Soc. (N.S.) (1974), 125--130.
+
+[RaSh73] Ramachandra, K. and Shorey, T. N., On gaps between numbers with a large prime factor . Acta Arith. (1973), 99--111.
+
+\noindent\textbf{Related OEIS sequences:} A213253
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/961}}
+\end{document}

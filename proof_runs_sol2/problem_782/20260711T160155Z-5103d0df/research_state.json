@@ -1,0 +1,608 @@
+{
+  "statement_lock": {
+    "original_statement": "Do the squares contain arbitrarily long quasi-progressions? That is, does there exist some constant $C&#62;0$ such that, for any $k$, the squares contain a sequence $x_1,\\ldots,x_k$ where, for some $d$ and all $1\\leq i&#60;k$,\\[x_i+d\\leq x_{i+1}\\leq x_i+d+C.\\]Do the squares contain arbitrarily large cubes\\[a+\\left\\{ \\sum_i \\epsilon_ib_i : \\epsilon_i\\in \\{0,1\\}\\right\\}?\\]\n\n\n\n\nA question of Brown, Erd\\H{o}s, and Freedman \\cite{BEF90}. It is a classical fact that the squares do not contain arithmetic progressions of length $4$. An affirmative answer to the first question implies an affirmative answer to the second. Solymosi \\cite{So07} conjectured the answer to the second question is no. Cilleruelo and Granville \\cite{CiGr07} have observed that the answer to the second question is no conditional on the Bombieri-Lang conjecture .\n\n\n\n\nReferences\n\n[BEF90] Brown, T. C. and Erd\\H{o}s, P. and Freedman, A. R., Quasi-progressions and descending waves . J. Combin. Theory Ser. A (1990), 81-95.\n\n[CiGr07] Cilleruelo, Javier and Granville, Andrew, Lattice points on circles, squares in arithmetic progressions and sumsets of squares . (2007), 241-262.\n\n[So07] Solymosi, J\\'{o}zsef, Elementary additive combinatorics . (2007), 29-38.",
+    "sha256": "d23ff4ea91f0d915bd67a828cdec2f9acc9b33169e5e84e2e4f5660875187ca1",
+    "acceptance_criteria": [
+      "Prove or disprove the exact original statement without changing quantifiers.",
+      "Do not add hypotheses, restrict domains, weaken conclusions, or omit subproblems.",
+      "Resolve every boundary case and every explicitly numbered task.",
+      "Treat ambiguity as a blocking defect rather than choosing a convenient interpretation."
+    ]
+  },
+  "subgoal_graph": {
+    "summary": "{'statement_sha256': 'd23ff4ea91f0d915bd67a828cdec2f9acc9b33169e5e84e2e4f5660875187ca1', 'status': 'No solution is claimed. The immutable wording does not presently fix the distinctness, positivity, domain, zero-square, generator, or cube-size conventions needed for a unique nondegenerate proposition. B0 is therefore the first hard gate, and every later node is conditional on B0 yielding a unique semantics derivable from the immutable text. If B0 instead yields an ambiguity certificate, the exact task terminates there.', 'report_comparison': 'The scout reports independently converge on useful linked-factor, finite-word, Boolean-cube, congruence, divisor, and curvature formulations, but their agreement is not treated as proof. Their central unresolved obligations are also consistent: no scale-independent quasi-progression bound, no fixed-width construction, no height-independent cube-dimension bound, and no dimension-lifting construction has been obtained. Computations and explicit examples are retained only as falsification evidence.', 'priority_order': [{'rank': 1, 'branch': 'B0 semantic gate', 'reason': 'Highest centrality and immediate falsifiability. Unauthorized nondegeneracy conventions would invalidate every downstream result.'}, {'rank': 2, 'branch': 'QN scale-independent linked-chain invariant', 'reason': 'Best mathematical fit to the exact square-gap equations and highest information gain. It directly targets a uniform negative theorem rather than another height-dependent estimate.'}, {'rank': 3, 'branch': 'QP explicit fixed-width construction', 'reason': 'Substantively different and highly falsifiable. A successful recurrence or parametrized family would settle the first question positively.'}, {'rank': 4, 'branch': 'HP dimension-lifting construction', 'reason': 'Clean constructive route for square cubes, independent of quasi-progressions and testable on known three-dimensional examples.'}, {'rank': 5, 'branch': 'HN height-independent cube obstruction', 'reason': 'Potentially decisive for both questions through the proved one-way transfer, but it has the largest unresolved obligation: converting growth and divisibility into a dimension bound or descent.'}], 'dependency_policy': 'Finite searches, binary-word enumeration, and bounded no-example results are optional support nodes. They may become theorem prerequisites only if accompanied by replayable certificates and an explicit theorem reducing the unbounded problem to the certified finite range.'}",
+    "bottleneck_ids": [
+      "B0",
+      "QN",
+      "QP",
+      "QR",
+      "HN",
+      "HP",
+      "HR",
+      "D1"
+    ],
+    "subgoals": [
+      {
+        "id": "B0",
+        "claim": "Resolve the semantic gate using only the immutable wording: either derive one unique formal proposition, explicitly fixing all domains, distinctness conditions, positivity conditions, treatment of zero, the index set in the cube, and the meaning of arbitrarily large; or give a human-verifiable ambiguity certificate exhibiting inequivalent admissible readings. Under the ambiguity outcome, terminate without analyzing a repaired proposition.",
+        "dependencies": [],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "Q0",
+        "claim": "Conditional on the unique-semantics outcome of B0, separate k=1 before introducing gaps. For k>=2, prove from the recorded semantics the exact equivalence between the displayed inequalities and an integer gap-diameter bound W=floor(C), including the permitted domain of d and every boundary case.",
+        "dependencies": [
+          "B0"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "Q1",
+        "claim": "Derive the exact linked-factor-chain formulation. For each edge n_i^2 to n_{i+1}^2 define h_i=n_{i+1}-n_i and p_i=n_{i+1}+n_i, prove h_i p_i lies in one common interval of W+1 consecutive integers, and prove p_{i+1}=p_i+h_i+h_{i+1}. State parity and order conditions exactly, distinguishing p_i=h_i for an edge beginning at 0^2 from p_i>h_i when zero has been excluded.",
+        "dependencies": [
+          "Q0"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "Q2",
+        "claim": "Reprove the complete local transition calculus from Q1. Establish delta_i=2n_{i+1}(h_{i+1}-h_i)+h_i^2+h_{i+1}^2, then classify increases, plateaus, decreases, all threshold equalities, and the zero-root boundary. For consecutive decreases h_i=b+r, h_{i+1}=b, h_{i+2}=b-s, derive and check the exact relation 2b^2(s-r)+6brs+rs(r-s)-delta_i s+delta_{i+1} r=0. No descent-versus-halving corollary counts as completion unless every remaining transition type is covered.",
+        "dependencies": [
+          "Q1"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "QE",
+        "claim": "Independently verify and retain the contradictory finite evidence relevant to quasi-progressions: explicit short fixed-width witnesses, the failure of width zero beyond the supplied four-square obstruction, the width-one partial obstruction, and long ternary additive-cube-free words. Label every bounded search or symbolic-word result as partial and do not infer an unbounded conclusion.",
+        "dependencies": [
+          "Q0"
+        ],
+        "centrality": 3,
+        "falsifiable": true
+      },
+      {
+        "id": "Q3",
+        "claim": "Give a complete human-verifiable recursion or replayable certificate for the binary additive-cube statement: every binary word of length 10 contains three consecutive equal-length blocks having equal sums. Deduce only the correctly indexed partial consequence for square quasi-progressions of integer width at most one.",
+        "dependencies": [
+          "Q0"
+        ],
+        "centrality": 2,
+        "falsifiable": true
+      },
+      {
+        "id": "Q4",
+        "claim": "For a fixed admissible error word e_1,...,e_l, derive the simultaneous quadratic equations for its square realizations, including all initial-root and zero cases. Identify a concrete finite-pattern finiteness theorem whose proof would imply a uniform length bound; do not replace that theorem by modular sieving or bounded computation.",
+        "dependencies": [
+          "Q0"
+        ],
+        "centrality": 3,
+        "falsifiable": true
+      },
+      {
+        "id": "QH",
+        "claim": "Build an optional exact linked-factor-chain harness that enumerates all chains under stated finite bounds, records every parity and endpoint check, and emits independently checkable witnesses or certificates. The harness remains exploratory unless a separate theorem supplies a complete finite cutoff.",
+        "dependencies": [
+          "Q1"
+        ],
+        "centrality": 2,
+        "falsifiable": true
+      },
+      {
+        "id": "QN",
+        "claim": "Prove a scale-independent negative theorem: for every admissible fixed width W, there exists B(W) bounding the length of every linked-factor chain from Q1. The proof must control arbitrarily large initial h_i, decreasing triples, plateaus, increases, halving events, omitted or repeated products in the common interval, and all zero-boundary cases. Generator size, divisor growth, or a D-dependent bound is insufficient.",
+        "dependencies": [
+          "Q2",
+          "QE"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "QP",
+        "claim": "Construct a positive fixed-width family: exhibit one admissible W and, for every k, explicit parameters satisfying the exact linked-factor and parity equations of Q1 for a chain of length k-1. The construction must preserve the same W while its scale varies and must verify all quantifiers and boundary conditions directly.",
+        "dependencies": [
+          "Q1",
+          "QE"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "QR",
+        "claim": "Obtain a decisive resolution of the first question by completing either QN or QP as a theorem under the unique semantics fixed at B0. Both branches must be examined, but only a proved uniform bound or an explicit fixed-width family qualifies; partial obstructions and computations do not.",
+        "dependencies": [
+          "QN",
+          "QP"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "H0",
+        "claim": "Conditional on the unique-semantics outcome of B0, formalize the cube question exactly: specify the finite index set, the domains of a and b_i, whether zero and negative squares are included, what distinctness or properness is required, and whether arbitrarily large refers to dimension, cardinality, or numerical size. No conventional repair may be inserted.",
+        "dependencies": [
+          "B0"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "H1",
+        "claim": "Under H0, define Y(S) to be the nonnegative integer square root of each cube vertex and prove the Boolean formulation Y(S)^2=a+sum_{i in S} b_i. Derive the exact face equations, edge factorization identities, and strict marginal monotonicity with all zero-root and repeated-vertex boundaries handled according to H0.",
+        "dependencies": [
+          "H0"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "H2",
+        "claim": "Prove self-contained mixed finite-difference sign and integrality statements for Y, including the A_S=0 boundary, without importing an unproved singular integral or limiting assertion. Derive any curvature recursion and quantitative bounds only after their hypotheses and signs have been checked for every order used later.",
+        "dependencies": [
+          "H1"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "H3",
+        "claim": "Reprove primitive normalization, congruence compression, and direction-wise difference-of-squares multiplicity from H1. Record these only as necessary conditions. Explicitly show why large generator size, many divisors, or divisibility by many primes is not by itself a dimension obstruction.",
+        "dependencies": [
+          "H1"
+        ],
+        "centrality": 3,
+        "falsifiable": true
+      },
+      {
+        "id": "HE",
+        "claim": "Independently verify explicit proper square cubes through dimension three and preserve them as counterevidence against purely local face obstructions. Treat every bounded failure to find a four-dimensional cube as a finite statement only.",
+        "dependencies": [
+          "H0"
+        ],
+        "centrality": 3,
+        "falsifiable": true
+      },
+      {
+        "id": "HH",
+        "claim": "Build an optional recursive cube-search and identity-checking harness that outputs canonical cubes and exact certificates under finite height bounds. Do not use absence under a cutoff as a global theorem without an independent finite-cutoff result.",
+        "dependencies": [
+          "H1"
+        ],
+        "centrality": 2,
+        "falsifiable": true
+      },
+      {
+        "id": "HN",
+        "claim": "Prove a height-independent negative theorem bounding cube dimension under H0. The proof must convert the curvature, face-defect, congruence, and divisor constraints into either an absolute dimension bound or a dimension-preserving descent. Growth estimates without an independent upper bound, and descents that reduce dimension, do not qualify.",
+        "dependencies": [
+          "H2",
+          "H3",
+          "HE"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "HP",
+        "claim": "Construct cubes of unbounded admissible size under H0, preferably through an explicit dimension-lifting rule: from a verified r-cube H, produce B such that H and H+B are both square sets and form an admissible (r+1)-cube. Verify positivity, integrality, distinctness, and every convention fixed by H0 at each lift.",
+        "dependencies": [
+          "H1",
+          "HE"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "C1",
+        "claim": "Prove, under the exact semantics fixed by B0, the stated implication from arbitrarily long quasi-progressions to arbitrarily large cubes using a self-contained finite-word induction. Check positivity and distinctness of the new directions and vertices, and use the implication only in this proved direction.",
+        "dependencies": [
+          "Q0",
+          "H0"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "HR",
+        "claim": "Obtain a decisive resolution of the cube question by completing either HN or HP. C1 may transfer a completed positive quasi-progression result to the cube question, but it cannot transfer a negative result or replace an incomplete cube branch.",
+        "dependencies": [
+          "HN",
+          "HP",
+          "C1"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "D1",
+        "claim": "Perform final logical synthesis only if B0 yielded unique semantics and QR and HR each contain a complete decisive theorem. Audit every quantifier, k=1 and zero boundary, imported lemma hypothesis, and direction of implication. If B0 yielded ambiguity instead, replace this synthesis by the ambiguity certificate and terminate.",
+        "dependencies": [
+          "B0",
+          "QR",
+          "HR"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "GOAL",
+        "claim": "Prove or disprove both questions in the exact immutable statement without altered quantifiers or unstated conventions; otherwise issue only the formally established ambiguity certificate. No solution is presently claimed.",
+        "dependencies": [
+          "D1"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "candidate_outcome": "candidate_unclassified",
+      "candidate_sha256": "8deb1f360936b1f0fb2aacb14f395a4bf3231f2d09c20c7af4903014395c41ab",
+      "gate_status": "candidate_rejected",
+      "gate_reasons": [
+        "candidate has no proof or disproof claim",
+        "candidate result contract is incomplete or internally inconsistent",
+        "no trusted external or mechanical verification evidence",
+        "missing independent review roles: adjudicator, counterexample, global_synthesis, logic, mechanical_evidence, statement_integrity, structural_dependency, theorem_hypotheses",
+        "one or more reviews lack context provenance",
+        "review contexts are not unique",
+        "review statement_integrity-1 is not independent",
+        "review statement_integrity-1 did not pass",
+        "review statement_integrity-1 did not check every claim",
+        "review statement_integrity-1 used a claim count inconsistent with the candidate",
+        "review statement_integrity-1 reports material errors",
+        "review statement_integrity-1 did not attest to the immutable statement",
+        "review statement_integrity-1 completeness below 98",
+        "review statement_integrity-1 confidence below 95",
+        "review statement_integrity-1 adversarial survival below 95",
+        "review structural_dependency-1 is not independent",
+        "review structural_dependency-1 did not pass",
+        "review structural_dependency-1 did not check every claim",
+        "review structural_dependency-1 used a claim count inconsistent with the candidate",
+        "review structural_dependency-1 reports material errors",
+        "review structural_dependency-1 did not attest to the immutable statement",
+        "review structural_dependency-1 completeness below 98",
+        "review structural_dependency-1 confidence below 95",
+        "review structural_dependency-1 adversarial survival below 95",
+        "review logic-1 is not independent",
+        "review logic-1 did not pass",
+        "review logic-1 did not check every claim",
+        "review logic-1 used a claim count inconsistent with the candidate",
+        "review logic-1 reports material errors",
+        "review logic-1 did not attest to the immutable statement",
+        "review logic-1 completeness below 98",
+        "review logic-1 confidence below 95",
+        "review logic-1 adversarial survival below 95",
+        "review counterexample-1 is not independent",
+        "review counterexample-1 did not pass",
+        "review counterexample-1 did not check every claim",
+        "review counterexample-1 used a claim count inconsistent with the candidate",
+        "review counterexample-1 reports material errors",
+        "review counterexample-1 did not attest to the immutable statement",
+        "review counterexample-1 completeness below 98",
+        "review counterexample-1 confidence below 95",
+        "review counterexample-1 adversarial survival below 95",
+        "review theorem_hypotheses-1 is not independent",
+        "review theorem_hypotheses-1 did not pass",
+        "review theorem_hypotheses-1 did not check every claim",
+        "review theorem_hypotheses-1 used a claim count inconsistent with the candidate",
+        "review theorem_hypotheses-1 reports material errors",
+        "review theorem_hypotheses-1 did not attest to the immutable statement",
+        "review theorem_hypotheses-1 completeness below 98",
+        "review theorem_hypotheses-1 confidence below 95",
+        "review theorem_hypotheses-1 adversarial survival below 95",
+        "review mechanical_evidence-1 is not independent",
+        "review mechanical_evidence-1 did not pass",
+        "review mechanical_evidence-1 did not check every claim",
+        "review mechanical_evidence-1 used a claim count inconsistent with the candidate",
+        "review mechanical_evidence-1 reports material errors",
+        "review mechanical_evidence-1 did not attest to the immutable statement",
+        "review mechanical_evidence-1 completeness below 98",
+        "review mechanical_evidence-1 confidence below 95",
+        "review mechanical_evidence-1 adversarial survival below 95",
+        "review global_synthesis-1 is not independent",
+        "review global_synthesis-1 did not pass",
+        "review global_synthesis-1 did not check every claim",
+        "review global_synthesis-1 used a claim count inconsistent with the candidate",
+        "review global_synthesis-1 reports material errors",
+        "review global_synthesis-1 did not attest to the immutable statement",
+        "review global_synthesis-1 completeness below 98",
+        "review global_synthesis-1 confidence below 95",
+        "review global_synthesis-1 adversarial survival below 95",
+        "review adjudicator-1 is not independent",
+        "review adjudicator-1 did not pass",
+        "review adjudicator-1 used a claim count inconsistent with the candidate",
+        "review adjudicator-1 did not attest to the complete claim ledger",
+        "review adjudicator-1 reports open gaps",
+        "review adjudicator-1 reports unchecked imports",
+        "review adjudicator-1 reports material errors",
+        "review adjudicator-1 completeness below 98",
+        "review adjudicator-1 confidence below 95",
+        "review adjudicator-1 adversarial survival below 95",
+        "review adjudicator-1 outcome does not match the candidate"
+      ],
+      "regulator": {
+        "decision": "REVISE_PLAN",
+        "rationale": "The rejection is not caused by a merely local execution gap. The candidate adopts an unauthorized working interpretation, leaves every decisive positive and negative branch unresolved, omits required harness nodes, and contains defects in central intermediate claims. Patching C6, the k=1 case, and the endpoint argument in C12 would still not prove or disprove either quantified question. REWRITE would be unnecessarily destructive because several reductions and countertests remain reusable; the approach families have not been shown exhausted. The cheapest valid recovery is therefore to revise the dependency plan so that semantic resolution is a hard gate, boundary-sensitive reductions are correctly conditioned, and only theorem-producing bottlenecks\u2014not exploratory computations\u2014control access to D1 and GOAL. The reviewed artifact is identified here only as the rejected input. \n\nPasted text\n\n",
+        "broken_node_ids": [
+          "B0",
+          "A1",
+          "A2",
+          "A3",
+          "A6",
+          "A7",
+          "A4",
+          "A5",
+          "B2",
+          "B6",
+          "B4",
+          "B5",
+          "D1",
+          "GOAL"
+        ],
+        "new_constraints": [
+          "B0 must be resolved before any nondegenerate interpretation is used. No strict-increase, positivity, properness, distinctness, generator-domain, or cube-dimension convention may be introduced merely as a working assumption.",
+          "If the immutable wording is formally ruled ambiguous, the output must stop with an ambiguity certificate; it must not claim to have answered a repaired proposition.",
+          "Separate k=1 before defining square gaps, their minimum, their maximum, or the baseline D. All gap-chain equivalences apply only for k>=2.",
+          "A2 must distinguish the boundary p_i=h_i arising from an edge beginning at 0^2. The condition p_i>h_i is permitted only after an explicit ruling excluding zero as a square vertex.",
+          "Replace the phrase 'factorizations of W+1 consecutive integers' by the exact assertion that every product h_i p_i lies in one common interval of W+1 consecutive integers; values may be omitted or repeated.",
+          "A3 must be reproved from its hypotheses. The submitted quotient identity and inequality are invalid as written. Any repaired derivation must explicitly use the correct expression and must still provide the complete transition classification requested by A3.",
+          "Do not mark A3 complete from a conditional descent-versus-halving lemma alone; plateaus, increases, decreasing triples, and all threshold cases must be classified.",
+          "A6 requires a replayable finite certificate or a complete human-verifiable recursion. Independent reviewer confirmation may guide repair but cannot substitute for evidence contained in the proof artifact.",
+          "A7 and B6 are exploratory support nodes, not logical prerequisites for a theorem unless the final proof actually depends on certified exhaustive computation. Either supply exact reproducible harnesses and certificates or remove them from the mandatory dependency chains of A4 and B4.",
+          "B2 must define Y(S) as the nonnegative integer square root and give a self-contained proof of the mixed finite-difference sign and integrality statements, including the A_S=0 boundary, without an unproved singular-integral import.",
+          "No lower bound on generator size, divisor count, or curvature magnitude may be treated as a dimension obstruction unless paired with an independent upper bound or a dimension-preserving descent.",
+          "D1 may be reached only after at least one decisive branch for each required conclusion is complete: A4 or A5 for quasi-progressions, and B4 or B5 for cubes, with C1 used only in its proved direction.",
+          "Partial results such as the width-one bound, explicit halving examples, congruence compression, curvature growth, and the finite-word implication must be labeled as partial and cannot support a positive proof-confidence claim for GOAL.",
+          "The revised plan must prioritize one theorem-producing bottleneck at a time: first the semantic gate, then either a scale-independent linked-chain invariant or an explicit fixed-width construction; cube-dimension work should proceed independently unless a completed transfer settles it.",
+          "No completion or confidence metadata may claim that all nodes are checked while any decisive node, imported theorem hypothesis, boundary case, or written derivation remains unresolved."
+        ]
+      }
+    },
+    {
+      "attempt": 2,
+      "candidate_outcome": "candidate_unclassified",
+      "candidate_sha256": "ec159d44908cec93731cddd04e8eaafff7a0e5ac53121723fcc566450330316a",
+      "gate_status": "candidate_rejected",
+      "gate_reasons": [
+        "candidate has no proof or disproof claim",
+        "candidate result contract is incomplete or internally inconsistent",
+        "no trusted external or mechanical verification evidence",
+        "missing independent review roles: adjudicator, counterexample, global_synthesis, logic, mechanical_evidence, statement_integrity, structural_dependency, theorem_hypotheses",
+        "one or more reviews lack context provenance",
+        "review contexts are not unique",
+        "review statement_integrity-2 is not independent",
+        "review statement_integrity-2 did not pass",
+        "review statement_integrity-2 did not check every claim",
+        "review statement_integrity-2 used a claim count inconsistent with the candidate",
+        "review statement_integrity-2 reports material errors",
+        "review statement_integrity-2 did not attest to the immutable statement",
+        "review statement_integrity-2 completeness below 98",
+        "review statement_integrity-2 confidence below 95",
+        "review statement_integrity-2 adversarial survival below 95",
+        "review structural_dependency-2 is not independent",
+        "review structural_dependency-2 did not pass",
+        "review structural_dependency-2 did not check every claim",
+        "review structural_dependency-2 used a claim count inconsistent with the candidate",
+        "review structural_dependency-2 reports material errors",
+        "review structural_dependency-2 did not attest to the immutable statement",
+        "review structural_dependency-2 completeness below 98",
+        "review structural_dependency-2 confidence below 95",
+        "review structural_dependency-2 adversarial survival below 95",
+        "review logic-2 is not independent",
+        "review logic-2 did not pass",
+        "review logic-2 did not check every claim",
+        "review logic-2 used a claim count inconsistent with the candidate",
+        "review logic-2 reports material errors",
+        "review logic-2 did not attest to the immutable statement",
+        "review logic-2 completeness below 98",
+        "review logic-2 confidence below 95",
+        "review logic-2 adversarial survival below 95",
+        "review counterexample-2 is not independent",
+        "review counterexample-2 did not pass",
+        "review counterexample-2 did not check every claim",
+        "review counterexample-2 used a claim count inconsistent with the candidate",
+        "review counterexample-2 reports material errors",
+        "review counterexample-2 did not attest to the immutable statement",
+        "review counterexample-2 completeness below 98",
+        "review counterexample-2 confidence below 95",
+        "review counterexample-2 adversarial survival below 95",
+        "review theorem_hypotheses-2 is not independent",
+        "review theorem_hypotheses-2 did not pass",
+        "review theorem_hypotheses-2 did not check every claim",
+        "review theorem_hypotheses-2 used a claim count inconsistent with the candidate",
+        "review theorem_hypotheses-2 reports material errors",
+        "review theorem_hypotheses-2 did not attest to the immutable statement",
+        "review theorem_hypotheses-2 completeness below 98",
+        "review theorem_hypotheses-2 confidence below 95",
+        "review theorem_hypotheses-2 adversarial survival below 95",
+        "review mechanical_evidence-2 is not independent",
+        "review mechanical_evidence-2 did not pass",
+        "review mechanical_evidence-2 did not check every claim",
+        "review mechanical_evidence-2 used a claim count inconsistent with the candidate",
+        "review mechanical_evidence-2 reports material errors",
+        "review mechanical_evidence-2 did not attest to the immutable statement",
+        "review mechanical_evidence-2 completeness below 98",
+        "review mechanical_evidence-2 confidence below 95",
+        "review mechanical_evidence-2 adversarial survival below 95",
+        "review global_synthesis-2 is not independent",
+        "review global_synthesis-2 did not pass",
+        "review global_synthesis-2 did not check every claim",
+        "review global_synthesis-2 used a claim count inconsistent with the candidate",
+        "review global_synthesis-2 reports material errors",
+        "review global_synthesis-2 did not attest to the immutable statement",
+        "review global_synthesis-2 completeness below 98",
+        "review global_synthesis-2 confidence below 95",
+        "review global_synthesis-2 adversarial survival below 95",
+        "review adjudicator-2 is not independent",
+        "review adjudicator-2 used a claim count inconsistent with the candidate",
+        "review adjudicator-2 did not attest to the complete claim ledger",
+        "review adjudicator-2 outcome does not match the candidate"
+      ],
+      "regulator": {
+        "decision": "REVISE_PROOF",
+        "rationale": "The validated dependency graph and B0 termination policy are sound. The candidate correctly establishes a semantic ambiguity certificate using explicit constant-sequence and collapsed-cube witnesses, then terminates without adopting a repaired interpretation. No substantive mathematical claim or dependency is broken. Only local presentation and reporting defects require correction: the square set is written with malformed set-builder notation, positivity-versus-injectivity should be illustrated explicitly, and the outcome label RESOURCE_EXHAUSTED conflicts with successful termination at B0. Revising the plan or changing the approach family would be unnecessarily expensive and could reintroduce the previously rejected unauthorized interpretation.",
+        "broken_node_ids": [
+          "B0"
+        ],
+        "new_constraints": [
+          "Write the square set formally as {n^2 : n in Z}, or avoid introducing it and use only the explicit square witness 1.",
+          "State explicitly that positive generators do not imply injectivity, using the witness b_1=b_2=1.",
+          "Replace RESOURCE_EXHAUSTED with a status indicating successful semantic-gate termination, while keeping the substantive outcome unknown because no unique proposition is determined.",
+          "Do not continue to Q0, H0, or any downstream mathematical branch after the B0 ambiguity certificate.",
+          "Do not introduce distinctness, ordering, positivity, integrality, finite-index, injectivity, or cube-size conventions as repairs to the immutable statement.",
+          "Make clear that the certificate proves underdetermination of the formal proposition, not a yes-or-no answer to either intended nondegenerate question.",
+          "Retain the explicit separating witnesses and the k=1 vacuity check.",
+          "Use no imported theorems, computations, literature claims, or external evidence."
+        ]
+      }
+    },
+    {
+      "attempt": 3,
+      "candidate_outcome": "candidate_unclassified",
+      "candidate_sha256": "0fbc0fd25a824976a7d0a2322202970c1d9cf760938565943261da069443ed4b",
+      "gate_status": "candidate_rejected",
+      "gate_reasons": [
+        "candidate has no proof or disproof claim",
+        "candidate result contract is incomplete or internally inconsistent",
+        "no trusted external or mechanical verification evidence",
+        "missing independent review roles: counterexample, logic, statement_integrity, structural_dependency",
+        "one or more reviews lack context provenance",
+        "review contexts are not unique",
+        "review statement_integrity-3 is not independent",
+        "review statement_integrity-3 did not pass",
+        "review statement_integrity-3 did not check every claim",
+        "review statement_integrity-3 used a claim count inconsistent with the candidate",
+        "review statement_integrity-3 reports material errors",
+        "review statement_integrity-3 did not attest to the immutable statement",
+        "review statement_integrity-3 completeness below 98",
+        "review statement_integrity-3 confidence below 95",
+        "review statement_integrity-3 adversarial survival below 95",
+        "review structural_dependency-3 is not independent",
+        "review structural_dependency-3 did not pass",
+        "review structural_dependency-3 did not check every claim",
+        "review structural_dependency-3 used a claim count inconsistent with the candidate",
+        "review structural_dependency-3 reports material errors",
+        "review structural_dependency-3 did not attest to the immutable statement",
+        "review structural_dependency-3 completeness below 98",
+        "review structural_dependency-3 confidence below 95",
+        "review structural_dependency-3 adversarial survival below 95",
+        "review logic-3 is not independent",
+        "review logic-3 did not pass",
+        "review logic-3 did not check every claim",
+        "review logic-3 used a claim count inconsistent with the candidate",
+        "review logic-3 reports material errors",
+        "review logic-3 did not attest to the immutable statement",
+        "review logic-3 completeness below 98",
+        "review logic-3 confidence below 95",
+        "review logic-3 adversarial survival below 95",
+        "review counterexample-3 is not independent",
+        "review counterexample-3 did not pass",
+        "review counterexample-3 did not check every claim",
+        "review counterexample-3 used a claim count inconsistent with the candidate",
+        "review counterexample-3 reports material errors",
+        "review counterexample-3 did not attest to the immutable statement",
+        "review counterexample-3 completeness below 98",
+        "review counterexample-3 confidence below 95",
+        "review counterexample-3 adversarial survival below 95",
+        "review theorem_hypotheses-3 did not pass",
+        "review theorem_hypotheses-3 did not check every claim",
+        "review theorem_hypotheses-3 used a claim count inconsistent with the candidate",
+        "review theorem_hypotheses-3 reports material errors",
+        "review theorem_hypotheses-3 did not attest to the immutable statement",
+        "review theorem_hypotheses-3 completeness below 98",
+        "review theorem_hypotheses-3 confidence below 95",
+        "review theorem_hypotheses-3 adversarial survival below 95",
+        "review mechanical_evidence-3 did not pass",
+        "review mechanical_evidence-3 did not check every claim",
+        "review mechanical_evidence-3 used a claim count inconsistent with the candidate",
+        "review mechanical_evidence-3 reports material errors",
+        "review mechanical_evidence-3 did not attest to the immutable statement",
+        "review mechanical_evidence-3 completeness below 98",
+        "review mechanical_evidence-3 confidence below 95",
+        "review mechanical_evidence-3 adversarial survival below 95",
+        "review global_synthesis-3 did not pass",
+        "review global_synthesis-3 did not check every claim",
+        "review global_synthesis-3 used a claim count inconsistent with the candidate",
+        "review global_synthesis-3 reports material errors",
+        "review global_synthesis-3 did not attest to the immutable statement",
+        "review global_synthesis-3 completeness below 98",
+        "review global_synthesis-3 confidence below 95",
+        "review global_synthesis-3 adversarial survival below 95",
+        "review adjudicator-3 used a claim count inconsistent with the candidate",
+        "review adjudicator-3 did not attest to the complete claim ledger",
+        "review adjudicator-3 outcome does not match the candidate"
+      ]
+    }
+  ],
+  "verified_lemmas": [],
+  "failed_approaches": [
+    {
+      "attempt": 1,
+      "candidate_sha256": "8deb1f360936b1f0fb2aacb14f395a4bf3231f2d09c20c7af4903014395c41ab",
+      "obstructions": [
+        "A4 remains open: no scale-independent bound B(W) for fixed-width linked-factor chains is proved.",
+        "A5 remains open: no fixed width admitting arbitrarily long compatible linked-factor chains is constructed.",
+        "A7 is absent: no reproducible exact linked-factor-chain falsification harness is supplied.",
+        "B4 remains open: curvature, congruence, and divisor-growth estimates are not converted into a height-independent cube-dimension bound.",
+        "B5 remains open: no dimension-lifting construction producing proper square cubes in every dimension is supplied.",
+        "B6 is absent: no recursive cube-search and identity-checking harness is supplied.",
+        "C12 extends that formula to the singular boundary A_S=0 by an asserted convergent limiting interpretation without supplying the required limiting argument.",
+        "C12 invokes a repeated mixed finite-difference integral formula for the square-root function without fully proving the formula and its hypotheses.",
+        "C9 reports an exhaustive binary-word enumeration without including a replayable program, complete recursion tree, or independently checkable certificate in the candidate itself.",
+        "D1 and GOAL are therefore not discharged.",
+        "Neither quantified question is proved or disproved under the candidate's added strict-increase and proper-cube interpretation.",
+        "The k=1 boundary case is not separately treated in C2, where the minimum and maximum of the empty set of gaps are undefined.",
+        "The semantic blocker B0 is unresolved. The immutable wording does not specify the nondegeneracy conventions needed to define a unique proposition.",
+        "malformed reviewer output: reviewer role mismatch: expected counterexample, got independent adversarial referee (counterexample)",
+        "malformed reviewer output: reviewer role mismatch: expected global_synthesis, got independent adversarial referee (global_synthesis)",
+        "malformed reviewer output: reviewer role mismatch: expected logic, got independent adversarial referee (logic)",
+        "malformed reviewer output: reviewer role mismatch: expected mechanical_evidence, got independent adversarial referee (mechanical_evidence)",
+        "malformed reviewer output: reviewer role mismatch: expected statement_integrity, got independent adversarial referee (statement_integrity)",
+        "malformed reviewer output: reviewer role mismatch: expected structural_dependency, got independent adversarial referee (structural_dependency)",
+        "malformed reviewer output: reviewer role mismatch: expected theorem_hypotheses, got independent adversarial referee (theorem_hypotheses)",
+        "{'claim_id': 'C2', 'error': 'The claimed equivalence is not stated for k=1, despite the original quantifier covering every k. For k=1 there are no gaps and D, min G_i, and max G_i are undefined.'}",
+        "{'claim_id': 'C6', 'error': 'The displayed assertion rs/(r+s)=1/r+1/s is false, and rs/(r+s)<=2 is also false in general. Although the intended deduction could be repaired by using (r+s)/(rs)=1/r+1/s<=2, adjudication must assess the proof as written and may not insert that repair.'}",
+        "{'claim_id': 'DEPENDENCY_LEDGER', 'error': 'The ledger labels C6 as checked and says its inequality direction was corrected, while the actual proof still contains the false quotient identity and inequality.'}",
+        "{'claim_id': 'GLOBAL', 'error': 'The candidate replaces the immutable wording with a working interpretation and then explicitly leaves both substantive questions unresolved. This alone forces rejection under the acceptance criteria.'}",
+        "{'claim_id': 'RESULT_METADATA', 'error': 'The reported proof confidence of 95 and assertion that all fourteen claims are checked are incompatible with the invalid written derivation in C6, the unchecked analytic endpoint argument in C12, and the absence of any proof or disproof of the main questions.'}"
+      ],
+      "reusable_lesson": "Do not repeat this proof path without a new ingredient that resolves every listed obstruction."
+    },
+    {
+      "attempt": 2,
+      "candidate_sha256": "ec159d44908cec93731cddd04e8eaafff7a0e5ac53121723fcc566450330316a",
+      "obstructions": [
+        "malformed reviewer output: Expecting ',' delimiter: line 14 column 76 (char 289)",
+        "malformed reviewer output: Expecting ',' delimiter: line 52 column 315 (char 2664)",
+        "malformed reviewer output: Invalid \\escape: line 14 column 24 (char 235)",
+        "malformed reviewer output: Invalid \\escape: line 34 column 328 (char 2036)",
+        "malformed reviewer output: reviewer role mismatch: expected logic, got independent adversarial referee (logic)",
+        "malformed reviewer output: reviewer role mismatch: expected statement_integrity, got independent adversarial referee (statement_integrity)",
+        "malformed reviewer output: reviewer role mismatch: expected structural_dependency, got independent adversarial referee (structural_dependency)"
+      ],
+      "reusable_lesson": "Do not repeat this proof path without a new ingredient that resolves every listed obstruction."
+    },
+    {
+      "attempt": 3,
+      "candidate_sha256": "0fbc0fd25a824976a7d0a2322202970c1d9cf760938565943261da069443ed4b",
+      "obstructions": [
+        "malformed reviewer output: reviewer role mismatch: expected counterexample, got independent adversarial referee (counterexample)",
+        "malformed reviewer output: reviewer role mismatch: expected global_synthesis, got independent adversarial referee (global_synthesis)",
+        "malformed reviewer output: reviewer role mismatch: expected logic, got independent adversarial referee (logic)",
+        "malformed reviewer output: reviewer role mismatch: expected mechanical_evidence, got independent adversarial referee (mechanical_evidence)",
+        "malformed reviewer output: reviewer role mismatch: expected statement_integrity, got independent adversarial referee (statement_integrity)",
+        "malformed reviewer output: reviewer role mismatch: expected structural_dependency, got independent adversarial referee (structural_dependency)",
+        "malformed reviewer output: reviewer role mismatch: expected theorem_hypotheses, got independent adversarial referee (theorem_hypotheses)"
+      ],
+      "reusable_lesson": "Do not repeat this proof path without a new ingredient that resolves every listed obstruction."
+    }
+  ]
+}

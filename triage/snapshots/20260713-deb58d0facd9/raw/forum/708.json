@@ -1,0 +1,15 @@
+{
+  "problem_number": 708,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/708",
+  "retrieved_at": "2026-07-10T23:18:30.605923+00:00",
+  "page_title": "708 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "b2c4b65fefd6f9cc77f04ed0980af8a6988278ccf51ba2360064e61b49156a84",
+  "comment_count": 1,
+  "comments": [
+    {
+      "post_id": "6301",
+      "text": "GPT-5.5 Pro says the statement of Problem #708 appears to have a wording issue: the condition\\[ |B|=g(n) \\]should likely be\\[ |B|\\le g(n), \\]or equivalently \\(g(n)\\) should be defined as the worst-case minimum size of such a set \\(B\\). Evidence: take\\[ A=\\{2,3,\\ldots,n+1\\},\\qquad M=n+1,\\qquad I=\\{1,2,\\ldots,n+1\\}. \\]Then\\[ \\prod_{a\\in A}a=(n+1)! = \\prod_{b\\in I}b, \\]so \\(B=I\\) works. But every \\(B\\subseteq I\\) has\\[ |B|\\le |I|=n+1. \\]Thus, if the statement literally requires \\(|B|=g(n)\\) for every legal \\(A,I\\), then this example forces \\(g(n)\\le n+1\\). That conflicts with the statement that Erdős and Surányi proved\\[ g(n)\\ge (2-o(1))n. \\]So the intended formulation is presumably:\\[ g(n)=\\sup_{A,I}\\min\\left\\{|B|:B\\subseteq I,\\ \\prod_{a\\in A}a\\mid\\prod_{b\\in B}b\\right\\}, \\]or: there exists \\(B\\subseteq I\\) with \\(|B|\\le g(n)\\).",
+      "meta": "Lech Mazur — 22:28 on 06 May 2026 👍 0 📝 0 🤖 1"
+    }
+  ]
+}

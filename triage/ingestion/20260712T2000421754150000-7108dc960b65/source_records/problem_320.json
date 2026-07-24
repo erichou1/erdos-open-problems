@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 320,
+  "raw_page": {
+    "path": "raw/pages/problem_320.html",
+    "sha256": "0088d1cc2663344d8bf79a2558ec5b70066457a7e621165dd63a6933976e5b8b"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "c32313d5726a8bf47094ea2a6c0c18215dc20f67602559dcb45548e32e0d8745",
+      "source_region": "div.problem-additional-text",
+      "text": "[BGMS25] S. Bettin, L. Greni\\'{e}, G. Molteni, and C. Sanna, A lower bound for the number of Egyptian fractions. arXiv:2509.10030 (2025).\n \n [BlEr75] Bleicher, M. N. and Erd\\H{o}s, P., The number of distinct subsums of $\\sum \\sb{1}\\spN\\,1/i$. Math. Comp. (1975), 29-42.\n \n [BlEr76b] Bleicher, Michael N. and Erd\\H{o}s, Paul, Denominators of Egyptian fractions. II. Illinois J. Math. (1976), 598-613."
+    },
+    "remarks": {
+      "sha256": "a123bd005a566cf5bdb4e8c7e2b43546d7cc9ad43478ce132cfefaddc8c20cd3",
+      "source_region": "div.problem-additional-text",
+      "text": "Bleicher and Erd\\H{o}s \\cite{BlEr75} proved the lower bound\\[\\log S(N)\\geq \\frac{N}{\\log N}\\left(\\log 2\\prod_{i=3}^k\\log_iN\\right),\\]valid for $k\\geq 4$ and $\\log_kN\\geq k$, and also \\cite{BlEr76b} proved the upper bound\\[\\log S(N)\\leq \\frac{N}{\\log N}\\left(\\log_r N \\prod_{i=3}^r \\log_iN\\right),\\]valid for $r\\geq 1$ and $\\log_{2r}N\\geq 1$. (In these bounds $\\log_in$ denotes the $i$-fold iterated logarithm.)\n\nBettin, Greni\\'{e}, Molteni, and Sanna \\cite{BGMS25} improved the lower bound to\\[\\log S(N) \\geq \\frac{N}{\\log N}\\left(2\\log 2\\left(1-\\frac{3/2}{\\log_kN}\\right)\\prod_{i=3}^k\\log_iN\\right),\\]valid for $k\\geq 4$ and $\\log_kN\\geq 3/2$. (In particular this goes to infinity faster than the lower bound of Bleicher and Erd\\H{o}s.)\n\nSee also [321]."
+    },
+    "statement": {
+      "sha256": "7f7aebf9691ef5abe6b28c471ed5e878f8a67ddec2912ddc08b6b84653a2f1ff",
+      "source_region": "div#content",
+      "text": "Let $S(N)$ count the number of distinct sums of the form $\\sum_{n\\in A}\\frac{1}{n}$ for $A\\subseteq \\{1,\\ldots,N\\}$. Estimate $S(N)$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/320"
+}

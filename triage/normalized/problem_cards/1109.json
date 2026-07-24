@@ -1,0 +1,304 @@
+{
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.636
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-09-28",
+      "state": "no"
+    },
+    "references": [
+      "ErSa87",
+      "Gy01",
+      "Ko04",
+      "Sa92c"
+    ],
+    "source_last_update": "2025-12-03",
+    "source_problem_url": "https://www.erdosproblems.com/1109",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[ErSa87] Erd\\H{o}s, P. and S\\'{a}rk\\\"ozy, A., On divisibility properties of integers of the form {$a+a'$}. Acta Math. Hungar. (1987), 117--122.\n \n [Gy01] Gyarmati, Katalin, On divisibility properties of integers of the form {$ab+1$}. Period. Math. Hungar. (2001), 71--79.\n \n [Ko04] Konyagin, S. V., Problems of the set of square-free numbers. Izv. Ross. Akad. Nauk Ser. Mat. (2004), 63--90.\n \n [Sa92c] S\\'{a}rk\\\"ozy, G. N., On a problem of {P}. {E}rd\\H{o}s. Acta Math. Hungar. (1992), 271--282.",
+      "remarks": "First studied by Erd\\H{o}s and S\\'{a}rk\\\"{o}zy \\cite{ErSa87}, who proved\\[\\log N \\ll f(N) \\ll N^{3/4}\\log N,\\]and guessed the lower bound is nearer the truth. S\\'{a}rk\\\"{o}zy \\cite{Sa92c} extended this to consider the case of $A+B$ and also looking for sumsets which are $k$-power-free.\n\nGyarmati \\cite{Gy01} gave an alternative proof of $f(N)\\gg \\log N$, and also gave new bounds for the case of $A+B$. Konyagin \\cite{Ko04} improved this to\\[ \\log\\log N(\\log N)^2\\ll f(N) \\ll N^{11/15+o(1)}.\\]The infinite analogue of this problem is [1103]. (In particular upper bounds for this $f(N)$ directly imply lower bounds for the size of the $a_j$ considered there.)"
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.08,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.326819
+      ],
+      "probability": 0.147727
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 1.818,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.351351
+      ],
+      "probability": 0.153835
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.144533
+      ],
+      "probability": 0.04
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.067,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.406635
+      ],
+      "probability": 0.186747
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 0.7,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.175964
+      ],
+      "probability": 0.055118
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 0.9,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.203695
+      ],
+      "probability": 0.069767
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 40.0,
+      "credible_interval_approx": [
+        0.0,
+        0.071043
+      ],
+      "probability": 0.02439
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.436385
+      ],
+      "probability": 0.2
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "minor"
+    },
+    "literature": {
+      "comment_count": 2,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:20:36.913521+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "6a4203a716187e58099717157f7411d94eb91502aecfcfbbd1ff0ed02f5b6555"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "asymptotic_notation"
+      ],
+      "ambiguity_status": "minor",
+      "quantifier_signal_count": 0,
+      "question_count": 1,
+      "requires_source_audit": true,
+      "statement_characters": 220,
+      "statement_tokens_approx": 34
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove_or_disprove",
+      "multi_part": false,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-1109",
+  "problem_number": 1109,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove_or_disprove",
+    "multi_part": false,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_1109.html",
+      "raw_html_sha256": "b92436fe0560bb6dd1a65cb3250543b7c50467af1fd2f28d6a86d9f07d010a80",
+      "section_sha256": {
+        "references": "53b391a4ef0cfacf5b3423f25a24d1e7911f66996e1dec20c74d484ed96421a0",
+        "remarks": "d1ed6c34751e92783a9235985a75876a8fb1a5249e37c8f19007e04c0e78238a",
+        "statement": "e344624ae322f49650522413201b7795ce5f0951a926cb60a8874b6fca433d37"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_1109.json",
+      "source_record_sha256": "c973d4f876d5a9b8834353ef8e82e63162012fba7bf488306f823bc2e3410b0f",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_1109.tex",
+    "latex_sha256": "6864a33e9f57136b0d7dafc4ee99e1fbb28ad79133539c96062d0d9c66f8b37f",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "e344624ae322f49650522413201b7795ce5f0951a926cb60a8874b6fca433d37",
+    "recommended_attack_modes": [
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "f251fd7c96d8633f63f75610bd8cf224641ebf0921717ebed97d8013cbc2e45a",
+  "routes": [
+    "natural_language_research"
+  ],
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "f251fd7c96d8633f63f75610bd8cf224641ebf0921717ebed97d8013cbc2e45a",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "e344624ae322f49650522413201b7795ce5f0951a926cb60a8874b6fca433d37",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "d9644fcf73e4c142ec2cfb696e566c18b5f20802e91bafa624045d91383bf2fe",
+  "schema_version": 2,
+  "snapshot_id": "20260713-deb58d0facd9",
+  "statement": {
+    "ambiguity_status": "minor",
+    "intended": "Let $f(N)$ be the size of the largest subset $A\\subseteq \\{1,\\ldots,N\\}$ such that every $n\\in A+A$ is squarefree. Estimate $f(N)$. In particular, is it true that $f(N)\\leq N^{o(1)}$, or even $f(N) \\leq (\\log N)^{O(1)}$?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $f(N)$ be the size of the largest subset $A\\subseteq \\{1,\\ldots,N\\}$ such that every $n\\in A+A$ is squarefree. Estimate $f(N)$. In particular, is it true that $f(N)\\leq N^{o(1)}$, or even $f(N) \\leq (\\log N)^{O(1)}$?",
+    "original": "Let $f(N)$ be the size of the largest subset $A\\subseteq \\{1,\\ldots,N\\}$ such that every $n\\in A+A$ is squarefree. Estimate $f(N)$. In particular, is it true that $f(N)\\leq N^{o(1)}$, or even $f(N) \\leq (\\log N)^{O(1)}$?",
+    "statement_sha256": "e344624ae322f49650522413201b7795ce5f0951a926cb60a8874b6fca433d37"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

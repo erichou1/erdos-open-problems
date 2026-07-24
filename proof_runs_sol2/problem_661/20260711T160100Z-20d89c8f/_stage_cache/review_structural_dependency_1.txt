@@ -1,0 +1,71 @@
+{
+"reviewer_role": "independent adversarial referee (structural_dependency)",
+"verdict": "fail",
+"claims_checked": 21,
+"claims_total": 21,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14",
+"C15",
+"C16",
+"C17",
+"C18",
+"C19",
+"C20",
+"C21"
+],
+"open_gaps": [
+"The pairwise-distinct planar problem is not proved or disproved: no construction with K=o(n/sqrt(log n)) and no lower bound K=Omega(n/sqrt(log n)) is established.",
+"The internally-distinct, overlap-permitted planar convention is not resolved.",
+"ARITHMETIC_BENCHMARK is not discharged: C14 gives an exact checkerboard reduction but no upper and lower asymptotic count of represented norm values.",
+"COMPUTATIONAL_HARNESS is not discharged: the candidate proposes finite tests but does not build or execute the required exact harness.",
+"QUADRATIC_FORM_BRANCH is neither established nor refuted.",
+"ALGEBRAIC_NORM_BRANCH is neither established nor refuted.",
+"EUCLIDEAN_MATRIX_BRANCH is neither established nor refuted; C19 supplies only necessary rank constraints.",
+"BISECTOR_STRUCTURE_BRANCH is not discharged: no structural dichotomy or threshold-level bisector bound is proved.",
+"RADIAL_SUPPORT_BRANCH is not discharged: no multiscale radial-support theorem or sufficient energy estimate is proved.",
+"F_VS_f_BRANCH remains unresolved beyond the elementary inequality F_dis(n)<=f(2n) and two conditional implications.",
+"The final GOAL node is therefore not discharged."
+],
+"unchecked_imports": [],
+"counterexample_searches": [
+"Tested the repetition-allowed convention using two repeated locations; it indeed yields exactly one positive cross-distance.",
+"Tested K=1 under internal or pairwise distinctness; the two-anchor fiber bound excludes it for n>=3, while the square realizes n=2.",
+"Audited zero-distance pairs when X and Y overlap; internal distinctness limits them to at most n.",
+"Audited the fixed-radius incidence construction for coincident circles, radius zero, loops, and parallel arcs; positive fixed radius and distinct centers avoid circle coincidence, and edge multiplicity is at most four.",
+"Checked the crossing-lemma fraction ordering and resulting estimate; interpreted correctly, the argument gives cr(G)>=e^3/(64v^2) and supports C10.",
+"Checked sparse-subsequence interpolation; an unbounded size ratio would be a counterexample to the claimed interpolation principle, but C5 explicitly assumes a bounded ratio.",
+"Checked the checkerboard reduction in small even grids and the parity orientation issue; no counterexample to C14 was found.",
+"Checked low-rank distance matrices using the all-ones matrix; it confirms that centered rank at most two is not sufficient for Euclidean realization with distinct points.",
+"Checked rational-Gram high-rank boxes; the rational kernel produces an explicit eventual integer-box collision as claimed in C20."
+],
+"material_errors": [
+"The submission does not satisfy the primary acceptance criterion of proving or disproving the exact original planar statement.",
+"Most load-bearing branches in the validated subgoal DAG are only described as research directions and are not discharged.",
+"The F=o(f) subproblem and the internally-distinct overlap convention are explicitly left unresolved despite being required components.",
+"The claimed completeness score of 86 is structurally unsupported: the central GOAL and at least seven prerequisite branch nodes remain open.",
+"C9's proof silently requires n>=2 because it selects two distinct anchors. The n=1 boundary is true and is handled later, but the numbered proof does not state its needed hypothesis.",
+"C10 says the planar edge inequality is proved from Euler's formula 'below,' but no such derivation is actually supplied. This is not fatal under the permitted theorem-use rule because the relevant simple-planar-graph hypothesis is stated, but the dependency description is inaccurate."
+],
+"completeness_score": 43,
+"proof_confidence": 12,
+"adversarial_survival_score": 70,
+"statement_sha256": "1a1d20a3dee71f7bdc92834c48238b40d7d273fd322f3d71771e35966a2596cc",
+"notes": "The auxiliary claims C1-C21 are mostly mathematically sound after accounting for the fraction-rendering order, and the candidate correctly avoids claiming that the distinct planar problem has been solved. That honesty does not meet the locked acceptance criteria. The document is a useful partial survey and baseline ledger, not a proof or disproof of the requested statement. Reviewed supplied artifact: 
+
+Pasted text
+
+"
+}

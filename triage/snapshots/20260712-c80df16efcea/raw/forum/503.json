@@ -1,0 +1,90 @@
+{
+  "problem_number": 503,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/503",
+  "retrieved_at": "2026-07-10T23:17:27.115760+00:00",
+  "page_title": "503 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "f7a28b3a85eb86bdefc2ac77410e8953bc4b1095cbcc2e5f8d1bf0ef9ae848ea",
+  "comment_count": 16,
+  "comments": [
+    {
+      "post_id": "5691",
+      "text": "I've managed to get with GPT-5.4 Pro a very nice formula for the size. Here's a note and here's a formalization of it with Aristotle (EDIT: the new note is here). Let $f(d)$ be the largest size of a finite set $S\\subset \\mathbb R^d$ such that every three points of $S$ form an isosceles triangle. Let $g(d)$ be the largest size of a Euclidean $2$-distance set in $\\mathbb R^d$, let $s(d)$ be the largest size of a spherical $2$-distance set in $\\mathbb R^d$, and let $h(d)$ be the largest size of an isosceles set in $\\mathbb R^d$ with more than two distances. We prove that for every $d\\ge 2$,\\[ h(d)\\le \\max\\{s(d)+1,\\ s(d-1)+3\\}, \\]and\\[ f(d)=\\max\\{g(d),\\ s(d)+1,\\ s(d-1)+3\\}. \\]Thus the full Euclidean isosceles-set problem is reduced exactly to the Euclidean and spherical $2$-distance extremal problems. EDIT: as noted by Koizumi the above note misses one extremal case which is quite a bit of technical work. I've managed to fix the gap with GPT-5.5 Pro and here's the rewritten note.",
+      "meta": "Przemek Chojecki — 07:36 on 22 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5705",
+      "text": "Thanks! I ran standard check which found no issues for the notes. However, the Lean seems like it's still incomplete and omits some required proofs.",
+      "meta": "Nat Sothanaphan — 14:13 on 22 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5706",
+      "text": "Thank you for the checks! Interesting what happened to Aristotle here. It omits external/cited works by design though.",
+      "meta": "Przemek Chojecki — 14:14 on 22 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6675",
+      "text": "As discovered by Koizumi below, this proof is likely wrong. I check what happens to standard check here and it's very... interesting. Chojecki has the definition which has $$ |S_i| \\ge 3, |S_k| \\ge 1. $$ Ionin's actual definition in their paper is $$ |S_i| \\ge 2, |S_k| \\ge 1. $$ So it seems stupid that this passes the check. However, the chain of thought reveals the following. The text parsing of Ionin reads it as, I believe, $|S_i| > 2, |S_k| > 1$. Then the CoT *notices* that $|S_k| \\ge 1$ doesn't match with $|S_k| > 1$. It then renders Ionin and *confirms* that Ionin's is actually $|S_k| \\ge 1$, so they match. What it misses is that this would imply that the first condition which at first seems to match in fact doesn't match! But the CoT doesn't go back to check the first condition because that one already passes, which allows the error to slip through... This is very instructive because it is a very stupid mistake yet a precise combination of factors allows it to slip right through. The model here is GPT-5.4 Thinking, but I think that GPT-5.5 Thinking wouldn't escape this. (In fact even a human faced with this kind of thing is probably not guaranteed to escape it.)",
+      "meta": "Nat Sothanaphan — 15:39 on 27 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6681",
+      "text": "Just addressed that below Koizumi's comment and above in the edit. This is pretty much the same argument still, you just have to take care of an additional extremal case, which is a bit of technical work.",
+      "meta": "Przemek Chojecki — 18:24 on 27 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6660",
+      "text": "I am skeptical about this proof. In Ionin's definition of a complete decomposition, one only requires that $|S_i|\\geq 2$ for $1\\leq i\\leq k-1$, whereas the proof by GPT replaces this with the stronger assumption $|S_i|\\geq 3$. If one uses the correct definition without this \"cheat,\" then the case where $(S_1,S_2)$ is a complete decomposition and $|S_1|=2$ should remain as a corner case. In fact, Takahiro Ueoro and I tried to attack this problem last year using the same strategy, without AI, but we got stuck precisely because of this corner case.",
+      "meta": "J_Koizumi_144 — 21:00 on 26 May 2026 👍 3 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6676",
+      "text": "Thanks a lot! I have confirmed this is a major gap using GPT-5.5 Thinking.",
+      "meta": "Nat Sothanaphan — 15:41 on 27 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6679",
+      "text": "You are right - there's a missing extremal case. I've given an updated note in the main comment above. I managed to fix the gap with GPT-5.5 Pro. Basically Ionin's complete decomposition only gives\\[ |S_i|\\ge 2 \\]for non-last blocks, so a non-last block may consist of two points and have affine dimension \\(1\\). The argument can be repaired in all non-extremal cases. Suppose the first block is\\[ S_1=\\{p,q\\}. \\]All later points lie in the perpendicular bisector \\(H\\cong\\mathbb R^{d-1}\\) of \\(pq\\). If the remaining set is not a two-distance set, then induction in dimension \\(d-1\\) gives\\[ |S|\\le h(d-1)+2\\le \\max\\{s(d-1)+3,\\ s(d-2)+5\\}. \\]Since\\[ s(d-2)+5\\le U(d-2)+5\\le \\binom{d+1}{2}+1\\le s(d)+1 \\]for \\(d\\ge 3\\), this case is covered. It remains to consider\\[ S=\\{p,q\\}\\cup X, \\]where \\(X\\subset H\\) is a two-distance set. Let \\(\\Delta\\) be the set of distances occurring in \\(X\\), and put\\[ E=\\{x\\in X:\\ |p-x|\\notin\\Delta\\}. \\]Then \\(E\\) is spherical with center the midpoint of \\(pq\\), and every point of \\(X\\setminus E\\) is a center of a sphere containing \\(E\\). Hence, unless \\(E=\\varnothing\\) and \\(|X|=\\binom{d+1}{2}\\), the Blokhuis and Delsarte--Goethals--Seidel bounds give\\[ |S|\\le \\max\\{s(d)+1,\\ s(d-1)+3\\}. \\]Thus the only remaining case is the following extremal suspension case:\\[ E=\\varnothing,\\qquad |X|=\\binom{d+1}{2}. \\]Equivalently, \\(X\\cup\\{p\\}\\) is a two-distance set of size\\[ \\binom{d+1}{2}+1 \\]in \\(\\mathbb R^d\\), with \\(X\\) contained in a hyperplane. This last extremal case is the main new technical input in the new note above - see EDIT.",
+      "meta": "Przemek Chojecki — 18:16 on 27 May 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6709",
+      "text": "I checked the updated note and it looks correct to me!",
+      "meta": "RealBelgian — 17:52 on 28 May 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6733",
+      "text": "Thanks. Given that RealBelgian has vouched for the fix, I also ran standard check which found no issues as a complementary check.",
+      "meta": "Nat Sothanaphan — 15:55 on 29 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6707",
+      "text": "This implies that if $\\max\\{s(d)+1,s(d-1)+3\\}\\geq g(d)$, then $h(d)=\\max\\{s(d)+1,s(d-1)+3\\}$. It would be interesting to know whether this holds when $g(d)>\\max\\{s(d)+1,s(d-1)+3\\}$. As $s(d-1)+3\\leq h(d)\\leq \\max\\{s(d-1)+3,s(d)+1\\}$, this is equivalent to whether $h(d)\\geq s(d)+1$ for all $d$. By taking the simplex construction that lower bounds $g(d)$ and adding the centre of the sphere, we have that $h(d)\\geq \\frac{d(d+1)}{2}$ +1. From the results on spherical sets in Spherical two-distance sets by Oleg R Musin, $s(d)=\\frac{d(d+1)}{2}$ for $7\\leq d\\leq 39$, $d\\not =22,23$. As $g(d)\\leq \\max\\{s(d)+1,s(d-1)+3\\}$ for $1\\leq d\\leq 6$, this implies that $h(d)\\geq s(d)+1$ for $1\\leq d\\leq 39, d\\not = 22,23$ and so $h(d)=\\max\\{s(d)+1,s(d-1)+3\\}$.",
+      "meta": "Adenwalla — 16:18 on 28 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6708",
+      "text": "This implies that $g(d)\\leq f(d)\\leq g(d)+2$. This follows as $g(d)\\geq s(d)$ and $\\frac{d(d+1)}{2}\\leq s(d)\\leq \\frac{d(d+3)}{2}$ implies that $s(d)\\geq s(d-1)+1$. Therefore $g(d)+2\\geq s(d)+2\\geq s(d-1)+3$. This also implies that $h(d)\\leq g(d)+2$.",
+      "meta": "Adenwalla — 17:18 on 28 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6717",
+      "text": "Using New Maximal Two-Distance Sets by Petr Lisonêk for values of $g(d)$ and Spherical two-distance sets by Oleg R Musin for values of $s(d)$ for $1\\leq d\\leq 8$, the corresponding values of $f(d)$ are $3,6,8,11,17,28,30,45$.",
+      "meta": "Adenwalla — 23:07 on 28 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6728",
+      "text": "The problem-page remarks do not seem to mention this, but in dimension \\(22\\) one gets \\(f(22)=276\\). Musin records that the Delsarte--Goethals--Seidel bound for spherical two-distance sets is tight in dimension \\(22\\), so there is a spherical two-distance set in \\(\\mathbb R^{22}\\) of size \\(22(22+3)/2=275\\). Adding the centre gives an isosceles set of size \\(276\\). Blokhuis's general upper bound gives\\[ f(22)\\le \\binom{24}{2}=276. \\]Hence \\(f(22)=276\\). This is also noted as Corollary 6.4 in Chojecki's note; the argument itself does not use the proposed reduction formula. AI usage disclosure: This comment was prepared with assistance from Codex 5.5 using xhigh reasoning, and ChatGPT 5.5 Pro.",
+      "meta": "KentaKitamura — 06:37 on 29 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5724",
+      "text": "For the case when $d=4$, the maximum size is $11$ as shown by H. Kido in [Ki10]. Moreover, [Io09] by Y. J. Ionin is related.",
+      "meta": "Alfaiz — 08:31 on 23 Apr 2026 👍 1 📝 1 🤖 0"
+    },
+    {
+      "post_id": "7",
+      "text": "It's possible to improve Alweiss' construction by one; this can be done by adding the point whose coordinates are all $\\frac{2}{n+1}$. This is on the same hyperplane, and it's obvious that every triangle with this point is isosceles. This yields a lower bound of $\\binom{n+1}{2} + 1$. (The site has been updated to address this comment.)",
+      "meta": "DesmondWeisenberg — 13:38 on 09 Aug 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

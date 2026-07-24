@@ -1,0 +1,25 @@
+{
+  "problem_number": 1210,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/1210",
+  "retrieved_at": "2026-07-10T23:21:08.414257+00:00",
+  "page_title": "1210 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "2d261b81926cff4503879282da10884db79484bb9405d018b3557b8e505a6c3a",
+  "comment_count": 3,
+  "comments": [
+    {
+      "post_id": "6766",
+      "text": "This paper claims a few interesting results on this problem, but no full solution.",
+      "meta": "ebarschkis — 20:18 on 31 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5295",
+      "text": "GPT Pro suggests that this should be deducible fairly quickly from standard results in sieve theory. The key point is to prove that $\\lvert A\\cap [n-x,n)\\rvert\\leq \\pi(x)+O(x/(\\log x)^2)$ for all $x$, from which this follows by partial summation. The contribution from those $a\\in A\\cap [n-x,n)$ with a prime factor $<x$ is at most $\\pi(x)$, since any prime $p\\leq x$ can divide at most one such $a$. So it suffices to bound the number of $a$ which are $x$-rough, which it claims is $\\ll x/(\\log x)^2$. I haven't checked the details, so it may be being a little optimistic here, but it seems to perform such arguments well, so presumably this works out; I'll let others with more experience confirm this (or, even better, formalise this!) EDIT: Actually I am a little sceptical now, since $A$ may contain many primes in $[n-x,n)$, and it seems difficult to show there is not a large contribution from such primes. (cf. [855]).",
+      "meta": "Thomas Bloom — 14:50 on 08 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5296",
+      "text": "I also believe this doesn't work. That estimate would imply $\\pi(x+y) \\le \\pi(x) + \\pi(y) + O(y/(\\log y)^2)$, which is one of the conjectures in the description of [855]. So it doesn't seem like standard results can settle this. Credit to GPT-5.4 Thinking for discussion.",
+      "meta": "Nat Sothanaphan — 17:18 on 08 Apr 2026 👍 1 📝 0 🤖 0"
+    }
+  ]
+}

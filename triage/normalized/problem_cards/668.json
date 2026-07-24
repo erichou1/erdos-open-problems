@@ -1,0 +1,357 @@
+{
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.378
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "AMP25",
+      "EHSVZ25"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/668",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[AMP25] B. Alexeev, D. Mixon, and H. Parshall, The Erd\\H{o}s unit distance problem for small point sets. arXiv:2412.11914 (2025).\n \n [EHSVZ25] P. Engel, O. Hammond-Lee, Y. Su, D. Varga, and P. Zs\\'{a}mboki, Diverse beam search to find densest-known planar unit distance graphs. arXiv:2406.15317 (2025).",
+      "remarks": "In fact this is $=1$ also for $n=4$, the unique example given by two equilateral triangles joined by an edge. \n\nComputational evidence of Engel, Hammond-Lee, Su, Varga, and Zs\\'{a}mboki \\cite{EHSVZ25} and Alexeev, Mixon, and Parshall \\cite{AMP25} suggests that this count is $=1$ for various other $5\\leq n\\leq 21$ (although these calculations were checking only up to graph isomorphism, rather than congruency). \n\nThe actual maximal number of unit distances is the subject of [90]."
+    },
+    "source_state": "open",
+    "tags": [
+      "geometry",
+      "distances"
+    ]
+  },
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.62,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.284884
+      ],
+      "probability": 0.118943
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 2.396,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.0,
+        0.36425
+      ],
+      "probability": 0.172419
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.117512
+      ],
+      "probability": 0.032258
+    },
+    "p_high_mathematical_value": {
+      "alpha": 3.067,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.018074,
+        0.490214
+      ],
+      "probability": 0.254144
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 0.7,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.143576
+      ],
+      "probability": 0.044586
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.6,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.0,
+        0.256307
+      ],
+      "probability": 0.10596
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.063431
+      ],
+      "probability": 0.021739
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.0,
+        0.384039
+      ],
+      "probability": 0.173913
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 3,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:18:16.640936+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "48ff231fba7b1cfba8d90100a1c12d015921cb8d95b231966871dbf74684816c"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 0,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 186,
+      "statement_tokens_approx": 32
+    },
+    "structure": {
+      "asymptotic": true,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove_or_disprove",
+      "multi_part": true,
+      "primary_domain": "geometry"
+    }
+  },
+  "problem_id": "erdos-668",
+  "problem_number": 668,
+  "problem_type": {
+    "asymptotic": true,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove_or_disprove",
+    "multi_part": true,
+    "primary_domain": "geometry"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_668.html",
+      "raw_html_sha256": "5919ea9bf7befe60fbe0948077ef4a3d467ef53bb7ac6d08f6fb43e4fcb536f6",
+      "section_sha256": {
+        "references": "9224fb4fcc2108e6743b37c7e630122f29e9efe536c5f458e41c8e9f1b275019",
+        "remarks": "bb25fb7dc4c384078924aeabcac8b71133ea806a472e951da156daf47af3e2ec",
+        "statement": "2de3588d13dd558a63a44a0f3e00f28a881a23b3fee1e91abfe1cc46597cf0ad"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_668.json",
+      "source_record_sha256": "4609cc612f2bb935b663546b46843505f05b63b041eea16072a5917348869702",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_668.tex",
+    "latex_sha256": "56049128c2ed687d5557e7e4d19b78fbdf5f1fa153fc2d2632d6a79b9d459f6b",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "2de3588d13dd558a63a44a0f3e00f28a881a23b3fee1e91abfe1cc46597cf0ad",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "subproblem_decomposition",
+      "shared_infrastructure_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Is it true that the number of incongruent sets of $n$ points in $\\mathbb{R}^2$ which maximise the number of unit distances tends to infinity as $n\\to\\infty$?",
+        "focus_question_sha256": "d8ac30b0e852979b12562cad7a698fbb50e4fb79864e6ee0c6e8dff5e43c684a",
+        "parent_statement_sha256": "2de3588d13dd558a63a44a0f3e00f28a881a23b3fee1e91abfe1cc46597cf0ad",
+        "part_index": 1,
+        "subproblem_contract_sha256": "814cf550a1cf0465880a0705c62ff5da0d7c28cf2bfe39ca6a7f67fbc9b1dfdb",
+        "subproblem_id": "erdos-668-part-01-814cf550"
+      },
+      {
+        "focus_question": "Is it always $>1$ for $n>3$?",
+        "focus_question_sha256": "6255c6e7fcf4778f3b773b426b4c17ae5a729bc8310043b1dd570e596b01498e",
+        "parent_statement_sha256": "2de3588d13dd558a63a44a0f3e00f28a881a23b3fee1e91abfe1cc46597cf0ad",
+        "part_index": 2,
+        "subproblem_contract_sha256": "7d6335a31b0978f5c94e501bd58f4de12f1860fd5756bbcc2b22d984e55fb6d8",
+        "subproblem_id": "erdos-668-part-02-7d6335a3"
+      }
+    ]
+  },
+  "research_directive_sha256": "b58cfce82ef71e68c42f5cebbf659f2c8f9ec547544aac0cf01c98b5b80db451",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "subproblem_decomposition",
+    "shared_infrastructure_search"
+  ],
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "b58cfce82ef71e68c42f5cebbf659f2c8f9ec547544aac0cf01c98b5b80db451",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "2de3588d13dd558a63a44a0f3e00f28a881a23b3fee1e91abfe1cc46597cf0ad",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "192b369ab66cbb39d146fea65105a76c0ee0fd6a9becce25fc7ed5ee788c9b5c",
+  "schema_version": 2,
+  "snapshot_id": "20260713-deb58d0facd9",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Is it true that the number of incongruent sets of $n$ points in $\\mathbb{R}^2$ which maximise the number of unit distances tends to infinity as $n\\to\\infty$? Is it always $>1$ for $n>3$?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Is it true that the number of incongruent sets of $n$ points in $\\mathbb{R}^2$ which maximise the number of unit distances tends to infinity as $n\\to\\infty$? Is it always $>1$ for $n>3$?",
+    "original": "Is it true that the number of incongruent sets of $n$ points in $\\mathbb{R}^2$ which maximise the number of unit distances tends to infinity as $n\\to\\infty$? Is it always $>1$ for $n>3$?",
+    "statement_sha256": "2de3588d13dd558a63a44a0f3e00f28a881a23b3fee1e91abfe1cc46597cf0ad"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-668",
+      "part_index": 1,
+      "run_contract_id": "66cc1d02f0d32e19a7c7ea1b5ce7bb3d12d603048a3ddba3d65df2a1a8e20264",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Is it true that the number of incongruent sets of $n$ points in $\\mathbb{R}^2$ which maximise the number of unit distances tends to infinity as $n\\to\\infty$?",
+        "focus_question_sha256": "d8ac30b0e852979b12562cad7a698fbb50e4fb79864e6ee0c6e8dff5e43c684a",
+        "normalized": "Is it true that the number of incongruent sets of $n$ points in $\\mathbb{R}^2$ which maximise the number of unit distances tends to infinity as $n\\to\\infty$? Is it always $>1$ for $n>3$?",
+        "original": "Is it true that the number of incongruent sets of $n$ points in $\\mathbb{R}^2$ which maximise the number of unit distances tends to infinity as $n\\to\\infty$? Is it always $>1$ for $n>3$?",
+        "statement_sha256": "2de3588d13dd558a63a44a0f3e00f28a881a23b3fee1e91abfe1cc46597cf0ad"
+      },
+      "subproblem_contract_sha256": "814cf550a1cf0465880a0705c62ff5da0d7c28cf2bfe39ca6a7f67fbc9b1dfdb",
+      "subproblem_id": "erdos-668-part-01-814cf550"
+    },
+    {
+      "parent_problem_id": "erdos-668",
+      "part_index": 2,
+      "run_contract_id": "40aa26b0c6728473a47c09c95dd418517cfae6b2ae51613cd39c827c4ea061e5",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Is it always $>1$ for $n>3$?",
+        "focus_question_sha256": "6255c6e7fcf4778f3b773b426b4c17ae5a729bc8310043b1dd570e596b01498e",
+        "normalized": "Is it true that the number of incongruent sets of $n$ points in $\\mathbb{R}^2$ which maximise the number of unit distances tends to infinity as $n\\to\\infty$? Is it always $>1$ for $n>3$?",
+        "original": "Is it true that the number of incongruent sets of $n$ points in $\\mathbb{R}^2$ which maximise the number of unit distances tends to infinity as $n\\to\\infty$? Is it always $>1$ for $n>3$?",
+        "statement_sha256": "2de3588d13dd558a63a44a0f3e00f28a881a23b3fee1e91abfe1cc46597cf0ad"
+      },
+      "subproblem_contract_sha256": "7d6335a31b0978f5c94e501bd58f4de12f1860fd5756bbcc2b22d984e55fb6d8",
+      "subproblem_id": "erdos-668-part-02-7d6335a3"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

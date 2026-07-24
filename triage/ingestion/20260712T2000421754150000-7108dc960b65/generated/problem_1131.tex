@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#1131}
+\date{Last updated: 2026-01-01}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} analysis, polynomials
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+For $x_1,\ldots,x_n\in [-1,1]$ let\[l_k(x)=\frac{\prod_{i\neq k}(x-x_i)}{\prod_{i\neq k}(x_k-x_i)},\]which are such that $l_k(x_k)=1$ and $l_k(x_i)=0$ for $i\neq k$.
+
+What is the minimal value of\[I(x_1,\ldots,x_n)=\int_{-1}^1 \sum_k \lvert l_k(x)\rvert^2\mathrm{d}x?\]In particular, is it true that\[\min I =2-(1+o(1))\frac{1}{n}?\]
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Erd\H{o}s first conjectured this minimum was achieved by taking the $x_i$ to be the roots of the integral of the Legendre polynomial, since Fejer \cite{Fe32} had earlier shown these to be minimisers of\[\max_{x\in [-1,1]}\sum_k \lvert l_k(x)\rvert^2.\]This was disproved by Szabados \cite{Sz66} for every $n>3$. 
+
+Erd\H{o}s, Szabados, Varma, and V\'{e}rtesi \cite{ESVV94} proved that\[2-O\left(\frac{(\log n)^2}{n}\right)\leq \min I\leq 2-\frac{2}{2n-1}\]where the upper bound is witnessed by the roots of the integral of the Legendre polynomial as above.
+
+\bigskip
+\noindent\textbf{References:}
+
+[ESVV94] Erd\H{o}s, P. and Szabados, J. and Varma, A. K. and V\'{e}rtesi,
+P., On an interpolation theoretical extremal problem. Studia Sci. Math. Hungar. (1994), 55--60.
+ 
+ [Fe32] Fej\'{e}r, Leopold, Bestimmung derjenigen {A}bszissen eines Intervalles, f\"ur
+welche die {Q}uadratsumme der {G}rundfunktionen der
+{L}agrangeschen Interpolation im Intervalle ein
+{M}\"oglichst kleines {M}aximum {B}esitzt. Ann. Scuola Norm. Super. Pisa Cl. Sci. (2) (1932), 263--276.
+ 
+ [Sz66] Szabados, J., On a problem of {P}. {E}rd\H{o}s. Acta Math. Acad. Sci. Hungar. (1966), 155--157.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/1131}}
+\end{document}

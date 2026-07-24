@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1063,
+  "raw_page": {
+    "path": "raw/pages/problem_1063.html",
+    "sha256": "c8da7f5728dc025f457c7983ba788c6070330d19a5aded6bab8f2a4c14f781d6"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "2bbc18f16233f1d235e3c79c68a366d28daece4b67423a8d5e73afaf2a27e9d8",
+      "source_region": "div.problem-additional-text",
+      "text": "[ErSe83] Erdos, P. and Selfridge, J. L., Problem 6447. Amer. Math. Monthly (1983), 710.\n \n [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.\n \n [Mo85] Monier, Jean-Marie, Problems and Solutions: Solutions of {A}dvanced {P}roblems: 6447. Amer. Math. Monthly (1985), 435--436."
+    },
+    "remarks": {
+      "sha256": "48b415f59fb071f2735e42dbede3f24d5424c57d1491404d663af99ba7c67961",
+      "source_region": "div.problem-additional-text",
+      "text": "A problem of Erd\\H{o}s and Selfridge posed in \\cite{ErSe83}. Erd\\H{o}s and Selfridge noted (and a proof can be found in \\cite{Mo85}) that if $n\\geq 2k$ then there must exist at least one $0\\leq i<k$ such that $n-i$ does not divide $\\binom{n}{k}$. \n\nWe have $n_2=4$, $n_3=6$, $n_4=9$, and $n_5=12$. Monier \\cite{Mo85} observed that $n_k\\leq k!$ for $k\\geq 3$, since $\\binom{k!}{k}$ is divisible by $k!-i$ for $1\\leq i<k$. Cambie observes in the comments that this can be improved to\\[n_k\\leq k[2,3,\\ldots,k-1]\\leq e^{(1+o(1))k},\\]where $[\\cdots]$ is the least common multiple.\n\nThis is discussed in problem B31 of Guy's collection \\cite{Gu04}."
+    },
+    "statement": {
+      "sha256": "12b7190c398dc78e7957a9dcd85b7907e0b14c9eac4bd8f7ca9933b783594be6",
+      "source_region": "div#content",
+      "text": "Let $k\\geq 2$ and define $n_k\\geq 2k$ to be the least value of $n$ such that $n-i$ divides $\\binom{n}{k}$ for all but one $0\\leq i<k$. Estimate $n_k$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1063"
+}

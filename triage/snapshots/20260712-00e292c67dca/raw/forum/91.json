@@ -1,0 +1,45 @@
+{
+  "problem_number": 91,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/91",
+  "retrieved_at": "2026-07-10T23:15:30.516810+00:00",
+  "page_title": "91 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "d534fe224573a393d2dea3d171bb4b7f612941b018c45a292646192094610b5e",
+  "comment_count": 7,
+  "comments": [
+    {
+      "post_id": "6455",
+      "text": "I present a clean unconditional partial result showing that for almost all $n$, there exist at least two non-similar configurations that minimize $D(A)$. Let $f(n) = \\min_{|A|=n} D(A)$ and let $M(k) = \\sup \\{ |X| : D(X) \\le k \\}$. Fix $n$ and set $k = f(n)$. Suppose there exists a set $X$ with $|X| = N \\ge n+3$ such that $D(X) \\le k$. Because $k$ is the minimum for size $n$, every $n$-element subset $Y \\subset X$ must satisfy $D(Y) \\ge k$. However, since $D$ is monotonic, $D(Y) \\le D(X) \\le k$. Thus, every subset $Y$ of size $n$ satisfies $D(Y) = k$, meaning $X$ generates $\\binom{N}{n}$ minimizers of size $n$. We now bound the number of subsets within $X$ that can be similar to one another. A similarity transformation in the plane is uniquely determined by the images of two distinct points and an orientation. Thus, for any fixed pattern $P$, the number of subsets of $X$ similar to $P$ is at most $2N(N-1)$. We compare the total number of $n$-element subsets to this bound. Since $\\binom{N}{n} = \\binom{N}{N-n}$, if we assume $N-n \\ge 3$, we have: $$\\binom{N}{n} \\ge \\binom{N}{3} = \\frac{N(N-1)(N-2)}{6}$$ For sufficiently large $N$ (specifically $N \\ge 15$), we have $\\frac{N(N-1)(N-2)}{6} > 2N(N-1)$. This implies that a single similarity class cannot account for all $\\binom{N}{n}$ subsets. Therefore, there must be at least two non-similar minimizing configurations. This argument holds for all $n$ except those near the thresholds of the plateaus of $f(n)$. The values of $n$ for which $f(n) = k$ constitute the interval $M(k-1) < n \\le M(k)$. The argument above fails only if $M(k) - n \\le 2$. Consequently, there are at most three exceptional values of $n$ for each value of $k$ in the range of $f$. Up to a limit $N_0$, the total number of exceptional integers $n$ is at most $3f(N_0)$. Using standard constructions (such as square grids) and the Landau-Ramanujan theorem, we have: $$f(N_0) \\ll \\frac{N_0}{\\sqrt{\\log N_0}} = o(N_0)$$ Since the number of exceptional $n$ is $o(N_0)$, the set of integers $n$ for which there are at least two non-similar minimizers has natural density 1. This reduces the problem for \"all sufficiently large $n$\" to the specific cases where $n$ is very close to the maximum possible size for a given minimum diameter, i.e., $M(f(n)) \\in \\{n, n+1, n+2\\}$. Note: I originally noticed the key counting idea via AI assistance, and then I checked the details carefully myself.",
+      "meta": "FlaredRain — 08:39 on 14 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4681",
+      "text": "Small typo: \"sufficently\" should be \"sufficiently\". (The site has been updated to address this comment.)",
+      "meta": "Dogmachine — 13:40 on 08 Mar 2026 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "3242",
+      "text": "Clarifying that \"large n\" means \"all sufficiently large n\" rather than \"for infinitely many (arbitrarily large) n\"? Otherwise I'm guessing the problem would be too simple (via a plateau argument).",
+      "meta": "Neel Somani — 00:03 on 16 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3245",
+      "text": "The wording in [Er87b, p.121] clearly uses the \"all sufficiently large $n$\" interpretation. (But note that $A$ should be viewed as dependent on $n$, so the \"for large $n$\" in the problem statement above may be more accurately placed at the beginning of the problem rather than in the middle.) (The site has been updated to address this comment.)",
+      "meta": "TerenceTao — 01:43 on 16 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1939",
+      "text": "Thanks, I was indeed looking at the wrong paper. (Feel free to delete those comments...)",
+      "meta": "Moritz Firsching — 10:06 on 01 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1935",
+      "text": "Regarding \"In [Er87b] Erdős says that there are at least two non-similar examples for $6\\le n\\le 9$\": Where does it say that in [Er87b]? I only see a general statement \"for some $n \\ge 6$ for large $n$; this probably will not be easy \" on page 150. Might the claim about $6\\le n \\le9$ come from some other paper?",
+      "meta": "Moritz Firsching — 08:33 on 01 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1936",
+      "text": "This is given on p. 171 - he says for $n=6,7,8$ \"it is easy to see that there is no uniqueness here\", and mentions for $n=9$ the examples of a regular nonagon and the six vertices of a regular hexagon, its centre, and the mirror images of the centre with respect to the two neighbouring sides (the latter example given by Hegyi). There is in fact no page 150 in [Er87b], so perhaps you're looking at the wrong paper?",
+      "meta": "Thomas Bloom — 09:00 on 01 Dec 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

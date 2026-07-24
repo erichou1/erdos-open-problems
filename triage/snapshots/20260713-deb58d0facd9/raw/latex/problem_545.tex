@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#545}
+\date{Last updated: 2025-12-02}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory, ramsey theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $G$ be a graph with $m$ edges and no isolated vertices. Is the Ramsey number $R(G)$ maximised when $G$ is 'as complete as possible'? That is, if $m=\binom{n}{2}+t$ edges with $0\leq t&#60;n$ then is\[R(G)\leq R(H),\]where $H$ is the graph formed by connecting a new vertex to $t$ of the vertices of $K_n$?
+
+
+
+
+A question of Erd\H{o}s and Graham. The weaker question of whether\[R(G) \leq 2^{O(m^{1/2})}\]is the subject of [546] . (This is true, and was proved by Sudakov \cite{Su11}.) LouisD in the comments has noted this fails for small $m$ (in particular for $2\leq m\leq 5$ and $7\leq m\leq 9$). This problem is #10 in Ramsey Theory in the graphs problem collection.
+
+
+
+
+References
+
+[Su11] Sudakov, Benny, A conjecture of Erd\H{o}s on graph Ramsey numbers . Adv. Math. (2011), 601-609.
+
+\noindent\textbf{Related OEIS sequences:} A059442, possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/545}}
+\end{document}

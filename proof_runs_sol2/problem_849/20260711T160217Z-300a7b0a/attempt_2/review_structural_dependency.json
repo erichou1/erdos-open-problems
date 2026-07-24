@@ -1,0 +1,94 @@
+{
+"reviewer_role": "independent adversarial referee (structural_dependency)",
+"verdict": "fail",
+"claims_checked": 19,
+"claims_total": 19,
+"checked_claim_ids": [
+"DOMAIN_BIFURCATION",
+"SEMIDISCRETE_POSITIVE",
+"FIXED_LAYER_MONOTONICITY",
+"HALF_ROW_MONOTONICITY",
+"CENTRAL_GROWTH",
+"NORMALIZATION_FINITE",
+"FIBER_ORDERING",
+"LOW_MULTIPLICITIES",
+"DENSITY_LOW_MULTIPLICITIES",
+"T5_SPLIT",
+"DISPLACEMENT_IDENTITY",
+"SLOPE_AUDIT",
+"PELL_ADJACENT",
+"PELL_SEPARATION",
+"DIVISOR_INVARIANT",
+"LOW_LAYER_SYSTEM",
+"WORD_SYSTEM",
+"FINITE_CERTIFICATE",
+"TERMINAL_AUDIT"
+],
+"open_gaps": [
+"The immutable statement is not proved or disproved. DOMAIN remains unresolved under the stipulated ambiguity rule.",
+"LOW_HIGH_EXCLUSION is entirely open: no proof or refutation is given for simultaneous membership in layers 2, 3, 4, and any layer k at least 5.",
+"GLOBAL_COMPATIBILITY is absent. No theorem compares all representations of one value simultaneously.",
+"HIGH_EXTENSION_BOUND is absent. The implication h(a) at least 2 implies mu(a) at most 3 is not established.",
+"NEGATIVE_T5, NEGATIVE_RESOLUTION, and the negative terminal route are therefore not discharged.",
+"WORD_DECISION_BOUND is absent; the candidate itself exhibits an unbounded one-edge Pell system.",
+"WORD_ENUMERATION, WORD_COLLISION, WORD_EXACTNESS, WORD_SCALING, and POSITIVE_BY_WORD are absent.",
+"EXACTNESS_FRAMEWORK is absent. The per-value logarithmic layer bound is not a uniform exclusion theorem for an infinite family.",
+"PELL_DOUBLE_LIFT, PELL_MULTI_LIFT, PELL_EXACTNESS, PELL_SCALING, and POSITIVE_BY_PELL are absent.",
+"POSITIVE_SCALING, POSITIVE_RESOLUTION, and GOAL are not discharged.",
+"The validated ARITHMETIC_INVARIANTS node requests valuation/carry, smoothness, prime-shadow, and failed-injectivity analyses; the candidate supplies only one reduced-denominator divisibility lemma.",
+"The finite certificate covers only a at most 10^30 and has no finite-to-infinite extension."
+],
+"unchecked_imports": [],
+"counterexample_searches": [
+{
+"target": "DOMAIN_BIFURCATION",
+"search": "Checked a = 70 under the two candidate domains.",
+"result": "The discrete domain gives exactly the representations (70,1) and (8,4), while the semidiscrete domain gives one solution in each layer k = 1,2,3,4. This supports the claimed dependence on domain choice."
+},
+{
+"target": "LOW_MULTIPLICITIES",
+"search": "Checked all displayed representations and neighboring omitted-layer coefficients.",
+"result": "The multiplicities for 2, 6, 120, and 3003 are correct under the discrete interpretation."
+},
+{
+"target": "SLOPE_AUDIT",
+"search": "Tested the intended orientation on the 3003 chain (78,2) to (15,5) to (14,6).",
+"result": "The intended ratios 1/21 and 1 are increasing, but the written proof is incomplete and cannot be accepted without reconstructing omitted formulas."
+},
+{
+"target": "PELL_ADJACENT",
+"search": "Checked the first two recurrence outputs and their binomial equalities.",
+"result": "The blocks (15,5),(14,6) and (104,39),(103,40) are valid adjacent-layer collisions with the stated common values."
+},
+{
+"target": "FINITE_CERTIFICATE",
+"search": "Executed the supplied exact-integer enumeration independently.",
+"result": "The reported counts, repeated values, layer-2 hits, and empty dangerous list were reproduced exactly. The bounded conclusion M(a) at most 4 for integer a at most 10^30 is supported."
+},
+{
+"target": "WORD_SYSTEM",
+"search": "Inspected the purported defining equations for a general displacement word.",
+"result": "The defining equality is absent: only its right-hand falling-factor expression is displayed. Thus no actual polynomial system is specified."
+}
+],
+"material_errors": [
+"T5_SPLIT does not discharge the validated T5_CASE_SPLIT node. It proves the dichotomy only under M(a) = 5, equivalently mu(a) = 4, whereas the node requires it for every mu(a) at least 4.",
+"The definitions of S_j and h(a) in T5_SPLIT are syntactically malformed. The displayed S_j is not a set of coefficient values, and h(a) omits the condition a in S_k.",
+"SLOPE_AUDIT omits the entire left-hand logarithmic sum, never defines which U-terms are averaged, and omits the comparison symbols in two decisive displays. Accepting the intended proof would require repairing the candidate.",
+"WORD_SYSTEM omits the left-hand side and equality in every edge equation. It also fails to state the full integrality, initial positivity, and domain conditions demanded by the validated node.",
+"The derivation in DISPLACEMENT_IDENTITY contains an incomplete sentence and isolated factorial fraction rather than the claimed equivalence, although the final identity itself is algebraically correct.",
+"DIVISOR_INVARIANT writes the critical equation as 'p,a = ...' rather than p times a equals the stated quantity. The intended divisibility argument is recognizable but not correctly written.",
+"FIBER_ORDERING is mathematically valid by a simpler argument, but it does not validate the prescribed dependency/method statement requiring the two named cases and row-maximum growth.",
+"The candidate counts its partial divisor lemma as the arithmetic branch, but most load-bearing components of ARITHMETIC_INVARIANTS are not addressed.",
+"No terminal node is discharged. TERMINAL_AUDIT correctly acknowledges this, but acknowledgment of incompleteness is not a proof or disproof satisfying the acceptance criteria."
+],
+"completeness_score": 43,
+"proof_confidence": 0,
+"adversarial_survival_score": 51,
+"statement_sha256": "b669094e22469ade57dcca529d2ce001ede0c9bee628c97121ad1d9a7ebfb01b",
+"notes": "Most elementary monotonicity, normalization, low-multiplicity, Pell-family, low-layer algebra, and bounded-computation claims survive checking. The exact finite computation was independently reproduced. Nevertheless, several purported formal claims are missing essential equations or quantifiers, major validated dependencies are only partially covered, and neither terminal route resolves the immutable statement. Input provenance only, not mathematical evidence: 
+
+Pasted text
+
+"
+}

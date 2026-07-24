@@ -1,0 +1,72 @@
+% corpus_supplement: Erdős problem #672
+% source: https://www.erdosproblems.com/latex/672
+% fetched_at: 2026-07-14T18:48:02Z
+% payload_sha256: 6efb6d3e679f3fca71c1050bf6b9cb2cbc35d35d1365c72f80cc670fd5b571b0
+% statement/remarks/references extracted by erdos_ingest.extract_source_page;
+% rendered by erdos_ingest.render_tex — do not edit
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#672}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Can the product of an arithmetic progression of positive integers $n,n+d,\ldots,n+(k-1)d$ of length $k\geq 4$ (with $(n,d)=1$) be a perfect power?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Erd\H{o}s believed not. Erd\H{o}s and Selfridge \cite{ErSe75} proved that the product of consecutive integers is never a perfect power.
+
+The theory of Pell equations implies that there are infinitely many pairs $n,d$ with $(n,d)=1$ such that $n(n+d)(n+2d)$ is a square.
+
+Considering the question of whether the product of an arithmetic progression of length $k$ can be equal to an $\ell$th power:
+{UL}
+{LI}Euler proved this is impossible when $k=4$ and $\ell=2$,{/LI}
+{LI}Obl\'{a}th \cite{Ob51} proved this is impossible when $(k,l)=(5,2),(3,3),(3,4),(3,5)$.{/LI}
+{LI}Marszalek \cite{Ma85} proved that this is only possible for $k\ll_d 1$, where $d$ is the common difference of the arithmetic progression.{/LI}
+{LI}Gy\"{o}ry, Hajdu, and Saradha \cite{GHS04} proved this is impossible for $4\leq k\leq 5$.
+{LI}Bennett, Bruin, Gy\"{o}ry, and Hajdu \cite{BBGH06} proved this is impossible for $4\leq k\leq 11$, and also impossible for $k$ sufficiently large depending only on the number of prime divisors of $d$.{/LI}
+{LI} Gy\"{o}ry, Hajdu, and Pint\'{e}r \cite{GHP09} have proved this is impossible for $4\leq k\leq 34$.{/LI}
+{LI} Bennett and Siksek \cite{BeSi20} have proved that this is impossible for all $k$ sufficiently large and $\ell > e^{10^k}$ prime.{/LI}
+{/UL}
+Jakob F\"{u}hrer has observed this is possible for integers in general, for example $(-6)\cdot(-1)\cdot 4\cdot 9=6^3$.
+
+\bigskip
+\noindent\textbf{References:}
+
+[BBGH06] Bennett, M. A. and Bruin, N. and Gy\H ory, K. and Hajdu, L., Powers from products of consecutive terms in arithmetic
+progression. Proc. London Math. Soc. (3) (2006), 273--306.
+ 
+ [BeSi20] Bennett, Michael A. and Siksek, Samir, A conjecture of {E}rd\H os, supersingular primes and short
+character sums. Ann. of Math. (2) (2020), 355--392.
+ 
+ [ErSe75] Erd\H{o}s, P. and Selfridge, J. L., The product of consecutive integers is never a power. Illinois J. Math. (1975), 292-301.
+ 
+ [GHP09] Gy\H ory, K. and Hajdu, L. and Pint\'er, \'A., Perfect powers from products of consecutive terms in
+arithmetic progression. Compos. Math. (2009), 845--864.
+ 
+ [GHS04] Gy\H ory, K. and Hajdu, L. and Saradha, N., On the {D}iophantine equation {$n(n+d)\cdots(n+(k-1)d)=by^l$}. Canad. Math. Bull. (2004), 373--388.
+ 
+ [Ma85] Marsza\l ek, R., On the product of consecutive elements of an arithmetic
+progression. Monatsh. Math. (1985), 215-222.
+ 
+ [Ob51] Oblath, Richard, Eine Bemerkung \"{u}ber Produkte aufeinander folgender
+Zahlen. J. Indian Math. Soc. (N.S.) (1951), 135-139.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/672}}
+\end{document}

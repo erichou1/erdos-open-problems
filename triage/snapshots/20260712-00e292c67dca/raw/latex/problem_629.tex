@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#629}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory, chromatic number
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+The list chromatic number $\chi_L(G)$ is defined to be the minimal $k$ such that for any assignment of a list of $k$ colours to each vertex of $G$ (perhaps different lists for different vertices) a colouring of each vertex by a colour on its list can be chosen such that adjacent vertices receive distinct colours. Determine the minimal number of vertices $n(k)$ of a bipartite graph $G$ such that $\chi_L(G)&#62;k$.
+
+
+
+
+A problem of Erd\H{o}s, Rubin, and Taylor \cite{ERT80}, who proved that\[2^{k-1}&lt;n(k) &lt;k^22^{k+2}.\]They also prove that if $m(k)$ is the size of the smallest family of $k$-sets without property B (i.e. the smallest number of $k$-sets in a graph with chromatic number $3$) then $m(k)\leq n(k)\leq m(k+1)$. Bounds on $m(k)$ are the subject of [901] . The lower bounds on $m(k)$ by Radhakrishnan and Srinivasan \cite{RaSr00} imply that\[2^k \left(\frac{k}{\log k}\right)^{1/2}\ll n(k).\]Erd\H{o}s, Rubin, and Taylor \cite{ERT80} proved $n(2)=6$ and Hanson, MacGillivray, and Toft \cite{HMT96} proved $n(3)=14$ and\[n(k) \leq kn(k-2)+2^k.\]See also the entry in the graphs problem collection .
+
+
+
+
+References
+
+[ERT80] Erd\H{o}s, Paul and Rubin, Arthur L. and Taylor, Herbert, Choosability in graphs . (1980), 125-157.
+
+[HMT96] Hanson, Denis and MacGillivray, Gary and Toft, Bjarne, Choosability of bipartite graphs . Ars Combin. (1996), 183-192.
+
+[RaSr00] Radhakrishnan, Jaikumar and Srinivasan, Aravind, Improved bounds and algorithms for hypergraph {$2$}-coloring . Random Structures Algorithms (2000), 4--32.
+
+\noindent\textbf{Related OEIS sequences:} possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/629}}
+\end{document}

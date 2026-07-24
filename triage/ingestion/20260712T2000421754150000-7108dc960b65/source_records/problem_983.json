@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 983,
+  "raw_page": {
+    "path": "raw/pages/problem_983.html",
+    "sha256": "6487f2675d3c6c762b7288a6907a45c4f9de40322781a243a2d9e0a22353b976"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "b316d406e51bb9750674bfb16c7ae0c5c14d44b32bd43fcd3ee193489076a778",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er70b] Erd\\H{o}s, P., Some applications of graph theory to number theory. Proc. Second Chapel Hill Conf. on Combinatorial Mathematics and its Applications (Univ. North Carolina, Chapel Hill, N.C., 1970) (1970), 136-145."
+    },
+    "remarks": {
+      "sha256": "c93c6104cb9aad36bc7894a419c7d507164190a2a84c7c839c50a65b30eff702",
+      "source_region": "div.problem-additional-text",
+      "text": "It is trivial that $f(k,n)\\leq \\pi(n)$. Erd\\H{o}s and Straus \\cite{Er70b} proved that\\[f(\\pi(n)+1,n)=2\\pi(n^{1/2})+o_A\\left(\\frac{n^{1/2}}{(\\log n)^A}\\right)\\]for any $A>0$ and, for any constant $1>c>0$,\\[f(cn,n)=\\log\\log n+(c_1+o(1))\\sqrt{2\\log\\log n},\\]where\\[c=\\frac{1}{\\sqrt{2\\pi}}\\int_{-\\infty}^{c_1}e^{-x^2/2}\\mathrm{d}x.\\]"
+    },
+    "statement": {
+      "sha256": "d4adc37890809236778d97c143cdf7d70b9bea64634ae22724c904e1bddb2c6d",
+      "source_region": "div#content",
+      "text": "Let $n\\geq 2$ and $\\pi(n)<k\\leq n$. Let $f(k,n)$ be the smallest integer $r$ such that in any $A\\subseteq \\{1,\\ldots,n\\}$ of size $\\lvert A\\rvert=k$ there exist primes $p_1,\\ldots,p_r$ such that $>r$ many $a\\in A$ are only divisible by primes from $\\{p_1,\\ldots,p_r\\}$. \n\nIs it true that\\[2\\pi(n^{1/2})-f(\\pi(n)+1,n)\\to \\infty\\]as $n\\to \\infty$?\n\nIn general, estimate $f(k,n)$, particularly when $\\pi(n)+1<k=o(n)$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/983"
+}

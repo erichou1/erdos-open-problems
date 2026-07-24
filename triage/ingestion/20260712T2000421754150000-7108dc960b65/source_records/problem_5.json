@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 5,
+  "raw_page": {
+    "path": "raw/pages/problem_5.html",
+    "sha256": "5f47da6adffbea013ad811cb4006ee452e4d0611b30dbe86a1659f85cd9af903"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "7c50c48386a6919144e3afe7169a46259495bb2e00ab36dc13c6508c707292b3",
+      "source_region": "div.problem-additional-text",
+      "text": "[BFM16] Banks, William D. and Freiberg, Tristan and Maynard, James, On limit points of the sequence of normalized prime gaps. Proc. Lond. Math. Soc. (3) (2016), 515-539.\n \n [Er55] Erd\\H{o}s, Paul, Some remarks on number theory. Riveon Lematematika (1955), 45-48.\n \n [Er65b] Erd\\H{o}s, Paul, Some recent advances and current problems in number theory. Lectures on Modern Mathematics, Vol. III (1965), 196-244.\n \n [Er85c] Erd\\H{o}s, P., On some of my problems in number theory I would most like to see solved. Number theory (Ootacamund, 1984) (1985), 74-84.\n \n [Er97c] Erd\\H{o}s, Paul, Some of my favorite problems and results. The mathematics of Paul Erd\\H{o}s, I (1997), 47-67.\n \n [GPY09] Goldston, Daniel A. and Pintz, J\\'{a}nos and Y\\i ld\\i r\\i m, Cem Y., Primes in tuples. I. Ann. of Math. (2) (2009), 819-862.\n \n [HiMa88] Hildebrand, Adolf and Maier, Helmut, Gaps between prime numbers. Proc. Amer. Math. Soc. (1988), 1-9.\n \n [Me20] Merikoski, Jori, Limit points of normalized prime gaps. J. Lond. Math. Soc. (2) (2020), 99-124.\n \n [Pi16] Pintz, J\\'{a}nos, Polignac numbers, conjectures of Erd\\H{o}s on gaps between primes, arithmetic progressions in primes, and the bounded gap conjecture. From arithmetic to zeta-functions (2016), 367-384.\n \n [Ri56] Ricci, Giovanni, Recherches sur l'allure de la suite $\\{p_{n+1}-p_n/\\log p_n\\}$. Colloque sur la Th\\'{e}orie des Nombres, Bruxelles, 1955 (1956), 93-106.\n \n [We31] Westzynthius, E., \\\"{U}ber die Verteilung der Zahlen, die zu den n ersten Primzahlen teilerfremd sind. Commentat. Phys. Math. (1931), 1-37."
+    },
+    "remarks": {
+      "sha256": "834eeb7b0025f809c1eb0476c5756b99718edff1a2688181256f9673d672c240",
+      "source_region": "div.problem-additional-text",
+      "text": "Let $S$ be the set of limit points of $(p_{n+1}-p_n)/\\log n$. This problem asks whether $S=[0,\\infty]$. Although this conjecture remains unproven, a lot is known about $S$. Some highlights:\n{UL}\n{LI}$\\infty\\in S$ by Westzynthius' result \\cite{We31} on large prime gaps,{/LI}\n{LI}$0\\in S$ by the work of Goldston, Pintz, and Yildirim \\cite{GPY09} on small prime gaps,{/LI}\n{LI}Erd\\H{o}s \\cite{Er55} and Ricci \\cite{Ri56} independently showed that $S$ has positive Lebesgue measure,{/LI}\n{LI} Hildebrand and Maier \\cite{HiMa88} showed that $S$ contains arbitrarily large (finite) numbers,{/LI}\n{LI} Pintz \\cite{Pi16} showed that there exists some small constant $c>0$ such that $[0,c]\\subset S$,{/LI}\n{LI} Banks, Freiberg, and Maynard \\cite{BFM16} showed that at least $12.5\\%$ of $[0,\\infty)$ belongs to $S$,{/LI}\n{LI} Merikoski \\cite{Me20} showed that at least $1/3$ of $[0,\\infty)$ belongs to $S$, and that $S$ has bounded gaps.{/LI}\n{/UL}\nIn \\cite{Er65b}, \\cite{Er85c}, and \\cite{Er97c} Erd\\H{o}s asks whether $S$ is everywhere dense (but Weisenberg notes that clearly $S$ is closed so this is equivalent to asking whether $S=[0,\\infty]$).\n\nSee also [234]."
+    },
+    "statement": {
+      "sha256": "7afec478b525df4271b3bb5c4dc3e798b8abfbbfc373f3d4f93741566a055722",
+      "source_region": "div#content",
+      "text": "Let $C\\geq 0$. Is there an infinite sequence of $n_i$ such that\\[\\lim_{i\\to \\infty}\\frac{p_{n_i+1}-p_{n_i}}{\\log n_i}=C?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/5"
+}

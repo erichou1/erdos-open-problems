@@ -1,0 +1,15 @@
+{
+  "problem_number": 667,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/667",
+  "retrieved_at": "2026-07-10T23:18:16.123737+00:00",
+  "page_title": "667 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "1f016250a9df690c20f4bb3fea9b8bd3c71feeadb11003f28ee5e3df1050053d",
+  "comment_count": 1,
+  "comments": [
+    {
+      "post_id": "5581",
+      "text": "Some comments on this problem: That $c(p,q)$ is nondecreasing in $q$ for fixed $p$ is a straightforward consequence of the definitions. The estimate $c(p,\\binom{p-1}{2})\\le1/2$ appears incorrect. If $k\\ge3$, then we can show that $H(n;2k,\\binom{2k-1}{2})\\ge c_kn^{1-1/k}$ , so that $c(2k,\\binom{2k-1}{2})\\ge1-1/k>1/2$. Indeed, given an $n$-vertex graph $G$ in which every set of $2k$ vertices spans at least $\\binom{2k-1}{2}$ edges, every set of $2k$ vertices of $\\overline G$ spans at most $2k-1$ edges, so $\\overline G$ is $C_{2k}$-free. Then $e(\\overline G)\\le b_kn^{1+1/k}$ by Bondy–Simonovits, so $\\omega(G)=\\alpha(\\overline G)\\ge n^2/(2e(\\overline G)+n)\\ge c_kn^{1-1/k}$. We do however have $c(p,\\binom{p-1}{2})\\le2p/(2p+1)$, since Erdős proved that if $h(k,l)$ denotes the least $N$ such that every $N$-vertex graph contains either a cycle of length $\\le k$ or an independent set of size $l$, then $h(k,l)>l^{1+1/(2k)}$ for fixed $k$ and all sufficiently large $l$; taking $k=p$ and $l=\\lceil n^{2p/(2p+1)}\\rceil$ gives, for all large $n$, an $n$-vertex graph $F$ of girth $>p$ with $\\alpha(F)<l$, so every $p$ vertices of $F$ span at most $p-1$ edges, and hence $\\overline F$ has every $p$-set spanning at least $\\binom{p-1}{2}$ edges while $\\omega(\\overline F)=\\alpha(F)<\\lceil n^{2p/(2p+1)}\\rceil$. (https://www.renyi.hu/~p_erdos/1959-06.pdf) We also have $c(p,\\binom{p-2}{2}+1)\\ge1/2$ for $p\\ge4$; this follows from showing that every $n$-vertex graph $F$ such that every set of $p$ vertices spans at most $2p-4$ edges has independence number at least $\\sqrt{n/(p-2)}-1/(p-2)$ for $p\\ge4$. And $c(4,2)=1/2$ by known estimates on $r(3,t)$; the $p=4$ question then reduces to asking if $n$-vertex $\\{C_3,C_4\\}$-free graphs always satisfy $\\alpha\\ge n^{1/2+\\varepsilon}$ for some absolute $\\varepsilon>0$, or if one can get $\\alpha=n^{1/2+o(1)}$.",
+      "meta": "ho boon suan — 08:26 on 18 Apr 2026 👍 1 📝 1 🤖 0"
+    }
+  ]
+}

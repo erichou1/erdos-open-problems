@@ -1,0 +1,83 @@
+{
+"reviewer_role": "independent adversarial referee (global_synthesis)",
+"verdict": "fail",
+"claims_checked": 14,
+"claims_total": 14,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14"
+],
+"open_gaps": [
+"The immutable wording still lacks a binding interpretation of distinctness, positivity and domain of d, admissible generators, properness, and the meaning of arbitrarily large cubes.",
+"No uniform bound B(W) for linked-factor chains is proved, and no fixed width W with arbitrarily long compatible chains is constructed.",
+"The descent-versus-halving classification does not provide a scale-independent bound on the large-root-gap phase.",
+"The curvature, congruence, and divisor-growth lemmas do not yield a height-independent upper bound on cube dimension.",
+"No dimension-lifting construction produces proper square cubes of every dimension.",
+"The comparison step D1 and the final GOAL remain unresolved because neither the positive nor negative decisive branches are completed."
+],
+"unchecked_imports": [],
+"counterexample_searches": [
+{
+"target": "Permissive literal reading of the quasi-progression question",
+"result": "The constant sequence x_i=1 with d=0 satisfies the displayed inequalities for every k and every C>0."
+},
+{
+"target": "Permissive nominal-dimension reading of the cube question",
+"result": "Taking a=1 and every generator b_i=0 produces collapsed cubes of arbitrary nominal dimension."
+},
+{
+"target": "C9 binary additive-cube enumeration",
+"result": "Independent exhaustive enumeration confirms the counts 1,2,4,6,10,16,18,12,10,6,0 for lengths 0 through 10, the six listed length-nine survivors, and the absence of any length-ten survivor."
+},
+{
+"target": "C14 ternary avoidance word",
+"result": "The stated length-thirty word was checked over every possible starting position and block length; no three consecutive equal-length blocks have equal sums."
+},
+{
+"target": "C14 quasi-progression examples",
+"result": "The square gaps 176,175,176; 999,1001,1000; and 1680,1683,1677,1683, together with the claimed root-gap transitions, are arithmetically correct."
+},
+{
+"target": "C14 proper three-dimensional cube",
+"result": "All eight subset sums of 4 with generators 4485,7392,20160 are distinct and equal respectively to 2^2,67^2,86^2,109^2,142^2,157^2,166^2,179^2."
+},
+{
+"target": "C12 curvature assertions on the explicit three-cube",
+"result": "The computed curvature spectra are positive, integral, and distinct in every fixed direction set, so the supplied example does not refute C12."
+},
+{
+"target": "C5-C6 algebraic identities",
+"result": "Direct symbolic elimination confirms the decreasing-step equation and the stated two-step recurrence; no algebraic counterexample was found."
+}
+],
+"material_errors": [
+"The candidate does not prove or disprove either quantified question. It explicitly terminates with the decisive problems still open, so it cannot satisfy the acceptance criteria.",
+"The substantive conclusions are conditional on a working interpretation that adds strict increase, positive generators, and properness. Those conclusions therefore do not resolve the immutable statement before the semantic blocker is ruled upon.",
+"C1 establishes that different readings give different propositions, but an ambiguity certificate is not itself a proof or disproof of all interpretations of the two questions.",
+"C9 settles only widths W<=1, equivalently constants C<2 under the strict-increase interpretation; it gives no conclusion for the existential quantifier over arbitrary C>0.",
+"C10 proves only the one-way implication from arbitrarily long finite-gap square sequences to cubes of every dimension. It cannot decide either question without a completed quasi-progression or cube branch.",
+"C11-C13 provide lower bounds and concentration phenomena that remain compatible with unbounded parameter size; they do not imply nonexistence in any dimension.",
+"No numbered claim is shown to be locally false after independent checking, but the verified claims do not jointly imply the exact final theorem."
+],
+"completeness_score": 46,
+"proof_confidence": 0,
+"adversarial_survival_score": 68,
+"statement_sha256": "d23ff4ea91f0d915bd67a828cdec2f9acc9b33169e5e84e2e4f5660875187ca1",
+"notes": "The report is a substantial and mostly internally consistent partial-analysis portfolio, not a solution. Its most important valid global contributions are the semantic ambiguity certificate, the exact width-one bound, and the finite-word implication from quasi-progressions to proper cubes. None closes A4, A5, B4, or B5, so D1 and GOAL remain unavailable. The uploaded artifact was treated only as untrusted input provenance: 
+
+Pasted text
+
+"
+}

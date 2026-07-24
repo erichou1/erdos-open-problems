@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1151,
+  "raw_page": {
+    "path": "raw/pages/problem_1151.html",
+    "sha256": "bc90108f3ca1566770425f334cf4ccba1b0003519b2d101f54f0155321e60b3d"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "b6778b5d6d609022c39c83bd77e032bf7cf8d794f0e605770c52d78e12eee53d",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er41] Erd\\H{o}s, P., On divergence properties of the {L}agrange interpolation\nparabolas. Ann. of Math. (2) (1941), 309--315.\n \n [Er43] Erd\\H{o}s, P., A note on {F}arey series. Quart. J. Math. Oxford Ser. (1943), 82--85.\n \n [Va99] Various, Some of Paul's favorite problems. Booklet produced for the conference \"Paul Erd\\H{o}s and his mathematics\", Budapest, July 1999 (1999)."
+    },
+    "remarks": {
+      "sha256": "3c94a9bb5cefd914659cec7af23deb14257bde549507ea61a32d0d01ba084e6d",
+      "source_region": "div.problem-additional-text",
+      "text": "This is as the problem is given in \\cite{Va99}, but I am unclear exactly what is intended here - is this meant for fixed, arbitrary, $x\\in [-1,1]$?\n\nErd\\H{o}s \\cite{Er41} proved that, if $x=\\cos(\\pi p/q)$ for some odd integers $p,q\\geq 1$, then there is a continuous function $f$ such that\\[\\lim_{n\\to \\infty}\\mathcal{L}^nf(x)=\\infty,\\]where the limit is taken over the sequence of Chebyshev nodes as $n\\to \\infty$. In \\cite{Er43} he claims (without proof) that for any closed set $A$ there exists a continuous $f$ such that the limit points of $\\mathcal{L}^nf(x)$ is $A$ (for specific $x$ of this shape)."
+    },
+    "statement": {
+      "sha256": "40ec695ab31665a0537b1a49b616546ee97ad275d90eaee73ee8b4129a59f290",
+      "source_region": "div#content",
+      "text": "Given $a_1,\\ldots,a_n\\in [-1,1]$ let\\[\\mathcal{L}^nf(x) = \\sum_{1\\leq i\\leq n}f(a_i)\\ell_i(x)\\]be the unique polynomial of degree $n-1$ which agrees with $f$ on $a_i$ for $1\\leq i\\leq n$ (that is, the Lagrange interpolation polynomial).\n\nLet $a_i$ be the set of Chebyshev nodes. Prove that, for any closed $A\\subseteq [-1,1]$, there exists a continuous function $f$ such that $A$ is the set of limit points of $\\mathcal{L}^nf(x)$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1151"
+}

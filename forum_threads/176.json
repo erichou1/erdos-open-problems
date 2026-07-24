@@ -1,0 +1,70 @@
+{
+  "problem_number": 176,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/176",
+  "retrieved_at": "2026-07-10T23:15:56.831584+00:00",
+  "page_title": "176 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "eb3e739e5634c1a6a6e29084087a15eaf76e9de68a7d45280123eb6cef4357c4",
+  "comment_count": 12,
+  "comments": [
+    {
+      "post_id": "7150",
+      "text": "I made an attempt at a Lean formalization of a proposed polynomial upper bound for the Problem 176 quantity $N(k,\\sqrt{k})$. The formalized bound is the following: For every $k \\ge 2$, $N(k,\\sqrt{k}) \\le \\left\\lfloor {4 \\over 3}(k^2-k+1)(k-1)(k(k-1)+1) \\right\\rfloor + 1$. In particular, $N(k,\\sqrt{k}) = O(k^5)$, so this gives a direct exponential-type bound $N(k,\\sqrt{k}) \\le C^k$ for a suitable absolute constant $C$. Lean4web: https://live.lean-lang.org/#url=https%3A%2F%2Fraw.githubusercontent.com%2FKitaKen1%2Ferdos176-nksqrtk-polynomial-bound-lean%2Fmain%2Ferdos176_sqrt_lean4web.lean GitHub: https://github.com/KitaKen1/erdos176-nksqrtk-polynomial-bound-lean The local Lean checks currently pass with no sorry, admit, axiom, or unsafe in the project Lean files. The Lean file includes #check and #print axioms lines for the final theorem. The reported axioms are the standard Lean/Mathlib foundation set: [propext, Classical.choice, Quot.sound] The case $k=1$ is trivial: every one-term arithmetic progression has signed sum $\\pm 1$, so $|S|=1=\\sqrt{1}$ and $N(1,\\sqrt{1})=1$. AI usage disclosure: This Lean formalization and comment were prepared with assistance from Codex 5.5 using xhigh reasoning, and ChatGPT 5.5 Pro.",
+      "meta": "KentaKitamura — 09:48 on 23 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7112",
+      "text": "I made an attempt at a Lean formalization of a proposed polynomial upper bound for the Problem 176 quantity $N(k,2)$. The Lean-checked final target is, for every $k \\ge 5$, $N(k,2) \\le \\left\\lfloor \\dfrac{2(k^2-1)(k-1)(2k+1)}{k-3} \\right\\rfloor + 1$. GitHub: https://github.com/KitaKen1/erdos176-nk2-polynomial-bound-lean Lean4web: Lean4web live check The Lean file includes #check and #print axioms lines for the final theorem. The reported axioms are the standard Lean/Mathlib foundation set: [propext, Classical.choice, Quot.sound]. The small cases are handled separately: for $k=1$ there is no finite $N(1,2)$ in this AP-sum formulation, and for $k=2,3,4$ the finite Boolean checks give $N(2,2)=3$, $N(3,2)=9$, and $N(4,2)=13$. The corresponding Lean files and Lean4web links are in the GitHub README appendix. In particular, this gives the original $C^k$-type upper-bound statement for the finite-valued range $k \\ge 2$: the Lean theorem gives an $O(k^3)$ bound for $k \\ge 5$, and any fixed polynomial is eventually bounded by $C^k$ for some constant $C > 1$; the remaining finite cases $k=2,3,4$ can be absorbed by increasing $C$ once. This Lean formalization was developed with reference to the discussion in this thread. AI usage disclosure: This Lean formalization and comment were prepared with assistance from Codex 5.5 using xhigh reasoning, and ChatGPT 5.5 Pro.",
+      "meta": "KentaKitamura — 12:21 on 21 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7116",
+      "text": "I have run a screening check. I believe this to be correct. Do you have a human-readable informal version as well? In some sense we also want to understand the ideas behind the proof apart from the correctness. Now this is a delicate thing - it's not so simple to make such a version and I understand if you don't have a good way to do so. Also, asking AI to summarize in a \"cheap\" sense is unlikely to produce a very useful artifact, so I wouldn't encourage to make it just so that it exists. (In fact doing it just to tick off requirements is probably counterproductive, and what you're doing is already better.) One thing that you can definitely do though: the Lean seems to contain some outdated/unused parts, or otherwise be in an obviously unoptimized state. While not affecting correctness, it impacts readability e.g. by other AI, and it can even mislead. So some \"cleanup\" is definitely beneficial and very doable. On the proof itself: this appears to be a short proof using Fourier/Fejer ideas. In the check, second-to-last message, you can find an attempted informal writeup of it; note that I haven't checked it manually. However, what's interesting is that Zach Hunter claimed a proof of $N(k, c \\sqrt{k}) = O(k^3)$ for some $c > 0$ by a simple argument in the Apr 1 comment. Your argument, in the attempted reconstructed form, naturally also generalizes to this result. Hence, it is plausible you've discovered Hunter's argument independently. Since you said you directly fed the AI with this thread, Hunter seems to be a provenance for this result as well.",
+      "meta": "Nat Sothanaphan — 17:14 on 21 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7078",
+      "text": "Building on Adenwalla's parity observation above (that N(k,2) = N(k,1) for even k), we compute the first exact values of N(k,2) for odd k ≤ 11 by exhaustive enumeration (k ≤ 9) and SAT solver (k = 11): N(3,2) = 9, N(5,2) = 22, N(7,2) = 49, N(9,2) = 65, N(11,2) = 112. All satisfy N(k,2) ≤ k². We conjecture this holds for all k ≥ 2, which would answer Erdős's question N(k,2) ≤ C^k with a polynomial bound. Per-position entropy H_k(N) = log_2 c_k(N) / N of the feasible coloring set is monotonically non-increasing for every tested odd k from N = k+1 onward, suggesting an entropy-decrement route to N(k,2) = O(k²). Full paper with proofs and DIMACS files: https://doi.org/10.5281/zenodo.20763838",
+      "meta": "quantiterate — 15:24 on 19 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5201",
+      "text": "Another observation is that $N(k+1, l-1) < \\frac{k}{k-1} N(k,l)$ as there is some $k$ term progression $P$ in $[1,N(k, l)]$ such that summing along $P$ has absolute value $\\geq l$. Then the $k+1$-th term of $P$ is at most $\\frac{k}{k-1}N(k, l)$ and reduces the absolute value by at most $1$. Based on my earlier comment, if $k\\equiv l\\mod 2$ then $N(k+1, l-1) < \\frac{k}{k-1} N(k,l)=\\frac{k}{k-1} N(k,l-1)$.",
+      "meta": "Adenwalla — 12:25 on 02 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4896",
+      "text": "If $P$ is a $k$-term arithmetic progression, then $|\\sum_{n\\in P}f(n)|\\equiv k\\pmod 2$. Therefore, if $k\\not\\equiv l\\pmod 2$ and $|\\sum_{n\\in P}f(n)|\\geq l$, then $|\\sum_{n\\in P}f(n)|\\geq l+1$. It follows that if $k\\not\\equiv l\\pmod 2$ then $N(k,l+1)=N(k,l)$. EDIT: Therefore for even $k=2^tm$, we have $N(k,2)=N(k,1)= 2^t(k-1)+1$.",
+      "meta": "Adenwalla — 19:38 on 19 Mar 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4905",
+      "text": "Additionally, it seems likely that $W(\\frac{k+l}{2})$ upper bounds $N(k,l)$ in general as if there exists an arithmetic progression, $P$, of $\\frac{k+l}{2}$ $1$s, then any progression of length $k$ that contains $P$ will have a sum that is $\\geq l$. The only issue is if the common difference of $P$ is greater than (roughly) $\\frac{W(\\frac{k+l}{2})}{k}$, as then it is not possible to contain $P$ in a large enough progression.",
+      "meta": "Adenwalla — 00:27 on 20 Mar 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5188",
+      "text": "this latter idea has a hole, it's not this easy. imagine we are periodic modulo $k$, and it starts with $k/2$ 1s followed by $k/2$ -1s. you have these monochromatic progressions of length $k/2$ with common difference 1, but any $k$-AP containing such progressions has discrepancy 0. of course, this feels rather absurd... one way which *would* suffice to lower bound $N(k,l)$, is to find some $(k+l)$-AP, where the first $l$ integers receive '$1$' while the last $l$ integers receive '$-1$'. at some point I saw a way to do this and started writing this up, but later with others discovered a simpler argument showing $N(k,c\\sqrt{k})=O(k^3)$ for some $c>0$. this should appear in a note some time soon...",
+      "meta": "zach hunter — 19:17 on 01 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5190",
+      "text": "The example you give is of $k/2$ $1$s which would correspond to $l=0$.",
+      "meta": "Adenwalla — 20:52 on 01 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5198",
+      "text": "oh I see! I misread. okay so definitely $N(k,l)\\le kW(\\frac{k+l}{2})$. nice!",
+      "meta": "zach hunter — 10:33 on 02 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5200",
+      "text": "Seeing as $P$ has $\\frac{k+l}{2}$ terms and lies in $[1,W(\\frac{k+l}{2})]$, its common difference is at most about $\\frac{2W(\\frac{k+l}{2})}{k+l}$. Therefore we can contain $P$ in a $k$ term progression whose largest term is about $\\frac{2kW(\\frac{k+l}{2})}{k+l}$ or $\\frac{2W(\\frac{k+l}{2})}{1+\\frac{l}{k}}$.",
+      "meta": "Adenwalla — 12:01 on 02 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "78",
+      "text": "This bound from [Er63d] is out-dated. An application of the local lemma will show that $N(k,ck) \\gg \\frac{2^k}{k^{O(1)} \\sum_{i\\ge (1/2+c/2)k}\\binom{k}{i}}$. Thus $\\alpha_c\\to 1$ as $c\\to 1$ (the intuition is while there are $N^2$ progressions to worry about, there are only $k^{O(1)}N$ progressions containing any integer). Any improvement beyond these simple random bounds would be interesting (and have applications!). One thing I have begun to wonder about is if you take $N$ to be prime, $s:=k/100$ (say), and then have the two color classes be $\\{x: x^s \\in [N/2]+N\\cdot \\mathbb{Z}\\}$ and its complement. (The site has been updated to address this comment.)",
+      "meta": "zach hunter — 12:27 on 12 Aug 2025 👍 0 📝 1 🤖 0"
+    }
+  ]
+}

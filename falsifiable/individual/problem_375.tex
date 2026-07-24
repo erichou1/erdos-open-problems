@@ -1,0 +1,44 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#375}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} FALSIFIABLE \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Is it true that for any $n,k\geq 1$, if $n+1,\ldots,n+k$ are all composite then there are distinct primes $p_1,\ldots,p_k$ such that $p_i\mid n+i$ for $1\leq i\leq k$?
+
+
+
+
+Note this is trivial when $k\leq 2$. Originally conjectured by Grimm \cite{Gr69}. This is a very difficult problem, since it in particular implies $p_{n+1}-p_n &lt;p_n^{1/2-c}$ for some constant $c&gt;0$, in particular resolving Legendre's conjecture . Grimm proved that this is true if $k\ll \log n/\log\log n$. Erd\H{o}s and Selfridge improved this to $k\leq (1+o(1))\log n$. Ramachandra, Shorey, and Tijdeman \cite{RST75} have improved this to\[k\ll\left(\frac{\log n}{\log\log n}\right)^3.\]Laishram and Shorey \cite{LaSh06} have verified this is true, for all $k\geq 1$, for all $n\leq 1.9\times 10^{10}$. This is problem B32 in Guy's collection \cite{Gu04}. See also [860] .
+
+
+
+
+References
+
+[Gr69] Grimm, C. A., A conjecture on consecutive composite numbers . Amer. Math. Monthly (1969), 1126--1128.
+
+[Gu04] Guy, Richard K., Unsolved problems in number theory . (2004), xviii+437.
+
+[LaSh06] Laishram, Shanta and Shorey, T. N., Grimm's conjecture on consecutive integers . Int. J. Number Theory (2006), 207--211.
+
+[RST75] Ramachandra, K. and Shorey, T. N. and Tijdeman, R., On Grimm's problem relating to factorisation of a block of consecutive integers . J. Reine Angew. Math. (1975), 109-124.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/375}}
+\end{document}

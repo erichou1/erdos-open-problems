@@ -1,0 +1,49 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#80}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory, ramsey theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $c>0$ and let $f_c(n)$ be the maximal $m$ such that every graph $G$ with $n$ vertices and at least $cn^2$ edges, where each edge is contained in at least one triangle, must contain a book of size $m$, that is, an edge shared by at least $m$ different triangles. 
+
+Estimate $f_c(n)$. In particular, is it true that $f_c(n)>n^{\epsilon}$ for some $\epsilon>0$? Or $f_c(n)\gg \log n$?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+A problem of Erd\H{o}s and Rothschild. Alon and Trotter showed that, provided $c<1/4$, $f_c(n)\ll_c n^{1/2}$. Szemer\'{e}di observed that his regularity lemma implies that $f_c(n)\to \infty$.
+
+Edwards (unpublished) and Khadzhiivanov and Nikiforov \cite{KhNi79} proved independently that $f_c(n) \geq n/6$ when $c>1/4$ (see [905]).
+
+Fox and Loh \cite{FoLo12} proved that\[f_c(n) \leq n^{O(1/\log\log n)}\]for all $c<1/4$, disproving the first conjecture of Erd\H{o}s.
+
+The best known lower bounds for $f_c(n)$ are those from Szemer\'{e}di's regularity lemma, and as such remain very poor.
+
+See also [600] and the entry in the graphs problem collection.
+
+\bigskip
+\noindent\textbf{References:}
+
+[FoLo12] Fox, Jacob and Loh, Po-Shen, On a problem of Erd\H{o}s and {R}othschild on edges in
+triangles. Combinatorica (2012), 619--628.
+ 
+ [KhNi79] Khadzhiivanov, N. G. and Nikiforov, S. V., Solution of a problem of {P}. Erd\H{o}s about the maximum
+number of triangles with a common edge in a graph. C. R. Acad. Bulgare Sci. (1979), 1315--1318.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/80}}
+\end{document}

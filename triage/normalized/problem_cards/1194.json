@@ -1,0 +1,306 @@
+{
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.596
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2026-04-04",
+      "state": "no"
+    },
+    "references": [
+      "CiNa08",
+      "Er80",
+      "HaRo66",
+      "Le04"
+    ],
+    "source_last_update": "2026-04-04",
+    "source_problem_url": "https://www.erdosproblems.com/1194",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[CiNa08] Cilleruelo, Javier and Nathanson, Melvyn B., Perfect difference sets constructed from Sidon sets. Combinatorica (2008), 401--414.\n \n [Er80] Erd\\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.\n \n [HaRo66] Halberstam, H. and Roth, K. F., Sequences. {V}ol. I. (1966), xx+291.\n \n [Le04] Lev, Vsevolod F., Reconstructing integer sets from their representation\nfunctions. Electron. J. Combin. (2004), Research Paper 78, 6.",
+      "remarks": "Such a set is called a perfect difference set; they can be constructed, for example, by a greedy approach (as detailed by Lev \\cite{Le04}). The greedy construction achieves $a_n\\ll n^3$.\n\nErd\\H{o}s \\cite{Er80} wrote it is 'easy to see' that\\[\\limsup_{n\\to \\infty}\\frac{a_n}{n}=\\infty.\\]Indeed, since $A$ must be a Sidon set, if $a_n \\leq f(n)n$ for all $n$, then all differences in $[1,x/f(x)]$ can be realised by differences from $A\\cap [1,x]$, and hence $\\lvert A\\cap [1,x]\\rvert^2 \\gg x/f(x)$. Erd\\H{o}s (see for example \\cite{HaRo66}) proved that for infinitely many $x$ $\\lvert A\\cap [1,x]\\rvert \\ll (x/\\log x)^{1/2}$, which is a contradiction for a suitable choice of $f$.\n\nThis argument proves that $a_n\\gg n\\log n$ for infinitely many $n$.\n\nCilleruelo and Nathanson \\cite{CiNa08} describe a method for construction dense perfect difference sets from dense Sidon sets, allowing many of the results for the latter to transfer to the former.\n\nGPT-5.4 Pro (see the comments) has given an argument which proves that $a_n\\gg n^{2-o(1)}$ infinitely often; in fact $a_n \\gg n^2/f(n)$ infinitely often for any function $f$ such that $\\sum \\frac{1}{nf(n)}$ diverges."
+    },
+    "source_state": "open",
+    "tags": [
+      "additive combinatorics",
+      "additive basis",
+      "sidon sets"
+    ]
+  },
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 3.82,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.036936,
+        0.445997
+      ],
+      "probability": 0.241466
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 0.946,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.245807
+      ],
+      "probability": 0.086446
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.6,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.282916
+      ],
+      "probability": 0.117647
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.433,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.440344
+      ],
+      "probability": 0.212828
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.767,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.298919
+      ],
+      "probability": 0.128329
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.1,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.228734
+      ],
+      "probability": 0.083969
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 39.0,
+      "credible_interval_approx": [
+        0.0,
+        0.07279
+      ],
+      "probability": 0.025
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.436385
+      ],
+      "probability": 0.2
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "clear"
+    },
+    "literature": {
+      "comment_count": 8,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:21:02.404859+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "e70188d1b14ef94f066fba4cf8863abeb444a57b7d874114a7aa022568083678"
+    },
+    "statement": {
+      "ambiguity_markers": [],
+      "ambiguity_status": "clear",
+      "quantifier_signal_count": 1,
+      "question_count": 1,
+      "requires_source_audit": false,
+      "statement_characters": 155,
+      "statement_tokens_approx": 24
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "prove",
+      "multi_part": false,
+      "primary_domain": "additive combinatorics"
+    }
+  },
+  "problem_id": "erdos-1194",
+  "problem_number": 1194,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "prove",
+    "multi_part": false,
+    "primary_domain": "additive combinatorics"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_1194.html",
+      "raw_html_sha256": "3fedeaad9c4b532f67c619ab779c78f754ce1de57f1f91e764207dc4ed552b5b",
+      "section_sha256": {
+        "references": "7f8f645bc5edb27b1227813aa22f8feb0aaad1317ed14f76c582f54de13b170e",
+        "remarks": "5761c216eb86125f67325e5be4040e1caa8013f08a8b873526ce9568266b4887",
+        "statement": "1ee485bf92718fa80d77d4a0ef8a56c6ba7ead0f69a66d083c8f2d616bc6fda7"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_1194.json",
+      "source_record_sha256": "be8a731ba95100124c088f8bbdefdacab6b2016af8ab31fd7e56cf8238f344e8",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_1194.tex",
+    "latex_sha256": "7d359df59ce1c8cf49ba498098433ea503a14b5f7ce77b90e2f4319256c830d2",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "1ee485bf92718fa80d77d4a0ef8a56c6ba7ead0f69a66d083c8f2d616bc6fda7",
+    "recommended_attack_modes": [
+      "literature_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "1a1fb66323ca654412b040ae7d0f2b5c616458eaf295ba4023878a56e55d4290",
+  "routes": [
+    "literature_search",
+    "natural_language_research"
+  ],
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "1a1fb66323ca654412b040ae7d0f2b5c616458eaf295ba4023878a56e55d4290",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "1ee485bf92718fa80d77d4a0ef8a56c6ba7ead0f69a66d083c8f2d616bc6fda7",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "332fef0898b2fd9bfd7ae5556c0ffa2e4e19c65b0367c6e07eb87dd30065af34",
+  "schema_version": 2,
+  "snapshot_id": "20260713-deb58d0facd9",
+  "statement": {
+    "ambiguity_status": "clear",
+    "intended": "Let $A\\subset\\mathbb{N}$ be such that every integer $n\\geq 1$ can be written uniquely as $a_n-b_n$ for some $a_n,b_n\\in A$. How fast must $a_n/n$ increase?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $A\\subset\\mathbb{N}$ be such that every integer $n\\geq 1$ can be written uniquely as $a_n-b_n$ for some $a_n,b_n\\in A$. How fast must $a_n/n$ increase?",
+    "original": "Let $A\\subset\\mathbb{N}$ be such that every integer $n\\geq 1$ can be written uniquely as $a_n-b_n$ for some $a_n,b_n\\in A$. How fast must $a_n/n$ increase?",
+    "statement_sha256": "1ee485bf92718fa80d77d4a0ef8a56c6ba7ead0f69a66d083c8f2d616bc6fda7"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

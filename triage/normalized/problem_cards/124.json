@@ -1,0 +1,364 @@
+{
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.848
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-11-12",
+      "state": "yes"
+    },
+    "references": [
+      "BEGL96",
+      "Er97",
+      "Er97e",
+      "Me04"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/124",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[BEGL96] Burr, S. A. and Erd\\H{o}s, P. and Graham, R. L. and Li, W. Wen-Ching, Complete sequences of sets of integer powers. Acta Arith. (1996), 133-138.\n \n [Er97] Erd\\H{o}s, Paul, Problems in number theory. New Zealand J. Math. (1997), 155-160.\n \n [Er97e] Erd\\H{o}s, Paul, Some of my favourite unsolved problems. Math. Japon. (1997), 527-537.\n \n [Me04] Melfi, Giuseppe, On certain positive integer sequences. Riv. Mat. Univ. Parma (7) (2004), 253--260.",
+      "remarks": "The second question was conjectured by Burr, Erd\\H{o}s, Graham, and Li \\cite{BEGL96}, who proved it for $\\{3,4,7\\}$.\n\nThe first question was asked separately by Erd\\H{o}s in \\cite{Er97} and \\cite{Er97e} (although there is some ambiguity over whether he intended $P(d,0)$ or $P(d,1)$ - certainly he mentions no gcd condition). A simple positive proof of the first question was provided (and formalised in Lean) by Aristotle thanks to Alexeev; see the comments for details.\n\nIn \\cite{BEGL96} they record that Pomerance observed that the condition $\\sum 1/(d_i-1)\\geq 1$ is necessary (for both questions), but give no details. Tao has sketched an explanation in the comments. It is trivial that $\\mathrm{gcd}(d_1,\\ldots,d_r)=1$ is a necessary condition in the second question. \n\nMelfi \\cite{Me04} gives a construction, for any $\\epsilon>0$, of an infinite set of $d_i$ for which every sufficiently large integer can be written as a finite sum of the shape $\\sum_i c_ia_i$ where $c_i\\in \\{0,1\\}$ and $a_i\\in P(d_i,0)$ and yet $\\sum_{i}\\frac{1}{d_i-1}<\\epsilon$.\n\nSee also [125]."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory",
+      "base representations"
+    ]
+  },
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 4.06,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.046561,
+        0.459043
+      ],
+      "probability": 0.252802
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.718,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.035174,
+        0.453415
+      ],
+      "probability": 0.244295
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.3,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.207417
+      ],
+      "probability": 0.079755
+    },
+    "p_high_mathematical_value": {
+      "alpha": 4.1,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.070936,
+        0.555018
+      ],
+      "probability": 0.312977
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.833,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.026339,
+        0.38074
+      ],
+      "probability": 0.20354
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 3.8,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.029964,
+        0.409343
+      ],
+      "probability": 0.219653
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.092979
+      ],
+      "probability": 0.038462
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.002288,
+        0.452997
+      ],
+      "probability": 0.227642
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 14,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:15:40.081296+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "608c1e88f67975b04df69561f9f286df44c62012d79c4c00039f3d6f996c868c"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "sufficiently_large",
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 2,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 566,
+      "statement_tokens_approx": 87
+    },
+    "structure": {
+      "asymptotic": true,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "prove",
+      "multi_part": true,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-124",
+  "problem_number": 124,
+  "problem_type": {
+    "asymptotic": true,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "prove",
+    "multi_part": true,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_124.html",
+      "raw_html_sha256": "b3d8ceb7ab972a30412558b00ddfa9519fd4f6bffb53db27244e14feb3a5a7f4",
+      "section_sha256": {
+        "references": "9e55b7aa0a38b0940e03a147611df8273bdb591d7c06cd2b6e4a17e0a5742cff",
+        "remarks": "a1dbe48aec6c5fdb68c0b770af62bd3f2af8f597cde2397dcd378b02823fff90",
+        "statement": "6eadca3688823f0eaf94669fd8dea237c4668087911dcb06e36c6a3a8c2c3501"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_124.json",
+      "source_record_sha256": "772860b6bfca12be00e5dfa144dd9b66c0724af28493d03bb30f29c95753b103",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_124.tex",
+    "latex_sha256": "201f32a27f4f3588a62e91ae31610baaaad258a2b92da79ed322a16db2adb026",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "6eadca3688823f0eaf94669fd8dea237c4668087911dcb06e36c6a3a8c2c3501",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "formal_search",
+      "subproblem_decomposition",
+      "shared_infrastructure_search",
+      "literature_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "For any $d\\geq 1$ and $k\\geq 0$ let $P(d,k)$ be the set of integers which are the sum of distinct powers $d^i$ with $i\\geq k$. Let $3\\leq d_1<d_2<\\cdots <d_r$ be integers such that\\[\\sum_{1\\leq i\\leq r}\\frac{1}{d_r-1}\\geq 1.\\]Can all sufficiently large integers be written as a sum of the shape $\\sum_i c_ia_i$ where $c_i\\in \\{0,1\\}$ and $a_i\\in P(d_i,0)$?",
+        "focus_question_sha256": "de709cee7f7c9fb32865d0d4f0c403fbddb92c23038d10800f8576a8fcae3798",
+        "parent_statement_sha256": "6eadca3688823f0eaf94669fd8dea237c4668087911dcb06e36c6a3a8c2c3501",
+        "part_index": 1,
+        "subproblem_contract_sha256": "23061b2e84697b95c0e4ef563d055eb15aed9849504853264570ac863b4bea86",
+        "subproblem_id": "erdos-124-part-01-23061b2e"
+      },
+      {
+        "focus_question": "If we further have $\\mathrm{gcd}(d_1,\\ldots,d_r)=1$ then, for any $k\\geq 1$, can all sufficiently large integers be written as a sum of the shape $\\sum_i c_ia_i$ where $c_i\\in \\{0,1\\}$ and $a_i\\in P(d_i,k)$?",
+        "focus_question_sha256": "17d6796199accb9c45cbf505c3b91314d1d4cf9da81197c21853a2a4f7b45204",
+        "parent_statement_sha256": "6eadca3688823f0eaf94669fd8dea237c4668087911dcb06e36c6a3a8c2c3501",
+        "part_index": 2,
+        "subproblem_contract_sha256": "c563035a9719e3ca67cde4d25590f58c1b620520bd7c647aea503fa6e27c1de0",
+        "subproblem_id": "erdos-124-part-02-c563035a"
+      }
+    ]
+  },
+  "research_directive_sha256": "ce79b2ceb6929a45ff612c2f55f19e1d3b589d7a74d881933dacf2e215d6df0f",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "formal_search",
+    "subproblem_decomposition",
+    "shared_infrastructure_search",
+    "literature_search"
+  ],
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "ce79b2ceb6929a45ff612c2f55f19e1d3b589d7a74d881933dacf2e215d6df0f",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "6eadca3688823f0eaf94669fd8dea237c4668087911dcb06e36c6a3a8c2c3501",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "9f64ee8544434e0da0f5c2b832752e5eaf0775d39d8a81154d37cc13efaf319b",
+  "schema_version": 2,
+  "snapshot_id": "20260713-deb58d0facd9",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "For any $d\\geq 1$ and $k\\geq 0$ let $P(d,k)$ be the set of integers which are the sum of distinct powers $d^i$ with $i\\geq k$. Let $3\\leq d_1<d_2<\\cdots <d_r$ be integers such that\\[\\sum_{1\\leq i\\leq r}\\frac{1}{d_r-1}\\geq 1.\\]Can all sufficiently large integers be written as a sum of the shape $\\sum_i c_ia_i$ where $c_i\\in \\{0,1\\}$ and $a_i\\in P(d_i,0)$? \n\nIf we further have $\\mathrm{gcd}(d_1,\\ldots,d_r)=1$ then, for any $k\\geq 1$, can all sufficiently large integers be written as a sum of the shape $\\sum_i c_ia_i$ where $c_i\\in \\{0,1\\}$ and $a_i\\in P(d_i,k)$?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "For any $d\\geq 1$ and $k\\geq 0$ let $P(d,k)$ be the set of integers which are the sum of distinct powers $d^i$ with $i\\geq k$. Let $3\\leq d_1<d_2<\\cdots <d_r$ be integers such that\\[\\sum_{1\\leq i\\leq r}\\frac{1}{d_r-1}\\geq 1.\\]Can all sufficiently large integers be written as a sum of the shape $\\sum_i c_ia_i$ where $c_i\\in \\{0,1\\}$ and $a_i\\in P(d_i,0)$? If we further have $\\mathrm{gcd}(d_1,\\ldots,d_r)=1$ then, for any $k\\geq 1$, can all sufficiently large integers be written as a sum of the shape $\\sum_i c_ia_i$ where $c_i\\in \\{0,1\\}$ and $a_i\\in P(d_i,k)$?",
+    "original": "For any $d\\geq 1$ and $k\\geq 0$ let $P(d,k)$ be the set of integers which are the sum of distinct powers $d^i$ with $i\\geq k$. Let $3\\leq d_1<d_2<\\cdots <d_r$ be integers such that\\[\\sum_{1\\leq i\\leq r}\\frac{1}{d_r-1}\\geq 1.\\]Can all sufficiently large integers be written as a sum of the shape $\\sum_i c_ia_i$ where $c_i\\in \\{0,1\\}$ and $a_i\\in P(d_i,0)$? \n\nIf we further have $\\mathrm{gcd}(d_1,\\ldots,d_r)=1$ then, for any $k\\geq 1$, can all sufficiently large integers be written as a sum of the shape $\\sum_i c_ia_i$ where $c_i\\in \\{0,1\\}$ and $a_i\\in P(d_i,k)$?",
+    "statement_sha256": "6eadca3688823f0eaf94669fd8dea237c4668087911dcb06e36c6a3a8c2c3501"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-124",
+      "part_index": 1,
+      "run_contract_id": "a16a314d682b033a55c668583e9d2de707cc9c1cef4b579b54a4ef241dd1ec00",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "For any $d\\geq 1$ and $k\\geq 0$ let $P(d,k)$ be the set of integers which are the sum of distinct powers $d^i$ with $i\\geq k$. Let $3\\leq d_1<d_2<\\cdots <d_r$ be integers such that\\[\\sum_{1\\leq i\\leq r}\\frac{1}{d_r-1}\\geq 1.\\]Can all sufficiently large integers be written as a sum of the shape $\\sum_i c_ia_i$ where $c_i\\in \\{0,1\\}$ and $a_i\\in P(d_i,0)$?",
+        "focus_question_sha256": "de709cee7f7c9fb32865d0d4f0c403fbddb92c23038d10800f8576a8fcae3798",
+        "normalized": "For any $d\\geq 1$ and $k\\geq 0$ let $P(d,k)$ be the set of integers which are the sum of distinct powers $d^i$ with $i\\geq k$. Let $3\\leq d_1<d_2<\\cdots <d_r$ be integers such that\\[\\sum_{1\\leq i\\leq r}\\frac{1}{d_r-1}\\geq 1.\\]Can all sufficiently large integers be written as a sum of the shape $\\sum_i c_ia_i$ where $c_i\\in \\{0,1\\}$ and $a_i\\in P(d_i,0)$? If we further have $\\mathrm{gcd}(d_1,\\ldots,d_r)=1$ then, for any $k\\geq 1$, can all sufficiently large integers be written as a sum of the shape $\\sum_i c_ia_i$ where $c_i\\in \\{0,1\\}$ and $a_i\\in P(d_i,k)$?",
+        "original": "For any $d\\geq 1$ and $k\\geq 0$ let $P(d,k)$ be the set of integers which are the sum of distinct powers $d^i$ with $i\\geq k$. Let $3\\leq d_1<d_2<\\cdots <d_r$ be integers such that\\[\\sum_{1\\leq i\\leq r}\\frac{1}{d_r-1}\\geq 1.\\]Can all sufficiently large integers be written as a sum of the shape $\\sum_i c_ia_i$ where $c_i\\in \\{0,1\\}$ and $a_i\\in P(d_i,0)$? \n\nIf we further have $\\mathrm{gcd}(d_1,\\ldots,d_r)=1$ then, for any $k\\geq 1$, can all sufficiently large integers be written as a sum of the shape $\\sum_i c_ia_i$ where $c_i\\in \\{0,1\\}$ and $a_i\\in P(d_i,k)$?",
+        "statement_sha256": "6eadca3688823f0eaf94669fd8dea237c4668087911dcb06e36c6a3a8c2c3501"
+      },
+      "subproblem_contract_sha256": "23061b2e84697b95c0e4ef563d055eb15aed9849504853264570ac863b4bea86",
+      "subproblem_id": "erdos-124-part-01-23061b2e"
+    },
+    {
+      "parent_problem_id": "erdos-124",
+      "part_index": 2,
+      "run_contract_id": "55d8bc912c2a244b7bf801dbbd366ac12463c2210f611e0d94dfb926878513f5",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "If we further have $\\mathrm{gcd}(d_1,\\ldots,d_r)=1$ then, for any $k\\geq 1$, can all sufficiently large integers be written as a sum of the shape $\\sum_i c_ia_i$ where $c_i\\in \\{0,1\\}$ and $a_i\\in P(d_i,k)$?",
+        "focus_question_sha256": "17d6796199accb9c45cbf505c3b91314d1d4cf9da81197c21853a2a4f7b45204",
+        "normalized": "For any $d\\geq 1$ and $k\\geq 0$ let $P(d,k)$ be the set of integers which are the sum of distinct powers $d^i$ with $i\\geq k$. Let $3\\leq d_1<d_2<\\cdots <d_r$ be integers such that\\[\\sum_{1\\leq i\\leq r}\\frac{1}{d_r-1}\\geq 1.\\]Can all sufficiently large integers be written as a sum of the shape $\\sum_i c_ia_i$ where $c_i\\in \\{0,1\\}$ and $a_i\\in P(d_i,0)$? If we further have $\\mathrm{gcd}(d_1,\\ldots,d_r)=1$ then, for any $k\\geq 1$, can all sufficiently large integers be written as a sum of the shape $\\sum_i c_ia_i$ where $c_i\\in \\{0,1\\}$ and $a_i\\in P(d_i,k)$?",
+        "original": "For any $d\\geq 1$ and $k\\geq 0$ let $P(d,k)$ be the set of integers which are the sum of distinct powers $d^i$ with $i\\geq k$. Let $3\\leq d_1<d_2<\\cdots <d_r$ be integers such that\\[\\sum_{1\\leq i\\leq r}\\frac{1}{d_r-1}\\geq 1.\\]Can all sufficiently large integers be written as a sum of the shape $\\sum_i c_ia_i$ where $c_i\\in \\{0,1\\}$ and $a_i\\in P(d_i,0)$? \n\nIf we further have $\\mathrm{gcd}(d_1,\\ldots,d_r)=1$ then, for any $k\\geq 1$, can all sufficiently large integers be written as a sum of the shape $\\sum_i c_ia_i$ where $c_i\\in \\{0,1\\}$ and $a_i\\in P(d_i,k)$?",
+        "statement_sha256": "6eadca3688823f0eaf94669fd8dea237c4668087911dcb06e36c6a3a8c2c3501"
+      },
+      "subproblem_contract_sha256": "c563035a9719e3ca67cde4d25590f58c1b620520bd7c647aea503fa6e27c1de0",
+      "subproblem_id": "erdos-124-part-02-c563035a"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

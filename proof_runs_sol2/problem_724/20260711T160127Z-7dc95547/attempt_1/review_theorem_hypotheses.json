@@ -1,0 +1,90 @@
+{
+"reviewer_role": "independent adversarial referee (theorem_hypotheses)",
+"verdict": "fail",
+"claims_checked": 18,
+"claims_total": 18,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14",
+"C15",
+"C16",
+"C17",
+"C18"
+],
+"open_gaps": [
+"The immutable statement has no determinate truth condition because ≫ is undefined. The candidate adopts one interpretation instead of resolving the blocking ambiguity.",
+"No proof of the critical PBD theorem G1 is supplied.",
+"No uniform ITD construction G2 is supplied.",
+"No perfect-matching theorem for the orthogonal-array hypergraph G3 is supplied.",
+"No universal arithmetic upper bound G4 is supplied.",
+"C16 is not established by the displayed data.",
+"C14 requires additional hypotheses concerning the existence and inclusion of the order-q core.",
+"C17 requires boundary restrictions, at least r≥3 for its codegree formula."
+],
+"unchecked_imports": [
+"Section 3.3 invokes the direct-product construction f(mn)≥min{f(m),f(n)} without stating or proving the construction and its hypotheses.",
+"The term pairwise balanced design is not formally defined, including the permitted block sizes, repeated blocks, and singleton-block convention, although C7-C10 depend on these conventions."
+],
+"counterexample_searches": [
+"Verified the sparse-palette obstruction for K={32,64,243}, v=1026: Fisher gives B≥1026; a 243-block makes the pair count too large, while without one the pair count is divisible by 16 although C(1026,2)≡1 mod 16.",
+"Verified the analogous obstruction for K={32,64,81,243}.",
+"Verified the even-order cyclic Latin square has no transversal using the modular sum argument.",
+"Verified the even-order obstruction for two translation-type squares L_pi(x,y)=pi(x)+y.",
+"Checked all six difference sets in C15; the q=3 frame satisfies the stated condition.",
+"Directly checked C16. With the displayed matrix interpreted conventionally by rows, the pair 01 gives differences 9,0,12 modulo 13, not 4,12,3. The zero violates the frame condition. The printed difference triples correspond to the transpose of the displayed matrix.",
+"Checked the boundary r=2 in C17: the claimed maximum codegree n^(r-3)=n^(-1) is impossible; the actual common-edge codegree for distinct vertices is zero or the maximum is over an empty compatible set."
+],
+"material_errors": [
+{
+"claim_id": "GOAL",
+"error": "The candidate neither proves nor disproves the exact immutable statement. It explicitly leaves all four terminal routes open."
+},
+{
+"claim_id": "C1",
+"error": "C1 is only conditional on an adopted interpretation of ≫. The acceptance criteria require ambiguity to be treated as blocking, not resolved by selecting a convenient convention."
+},
+{
+"claim_id": "C14",
+"error": "The theorem statement does not assume q is a prime power or otherwise assume an order-q core OA(q^2,q+1,q,2). The shifts construct only the outside rows; old-old pairs require a separately supplied core. A dependency label is not a theorem hypothesis."
+},
+{
+"claim_id": "C16",
+"error": "The displayed matrix does not have the listed difference triples. For coordinates 0 and 1, the admissible rows i=2,3,4 produce 9,0,12 modulo 13. Therefore C14 cannot be applied to the matrix as written."
+},
+{
+"claim_id": "C17",
+"error": "The claim is quantified merely 'for integers r,n'. Its maximum-codegree formula fails at r=2 and the construction is not meaningfully specified for arbitrary nonpositive integers. The formula is valid only after suitable restrictions such as r≥3 and n≥1."
+},
+{
+"claim_id": "RESULT",
+"error": "The declaration UNCHECKED_IMPORTS: NONE is false because the direct-product MOLS construction is invoked without statement or proof."
+}
+],
+"completeness_score": 61,
+"proof_confidence": 0,
+"adversarial_survival_score": 54,
+"statement_sha256": "3c9f2d219321365a80825b0cb65a244b298b263a6a3d9a43b4b4c3c7a4331a06",
+"notes": [
+"C2-C13 are substantially correct under their stated or evident domains, with C10 explicitly conditional.",
+"C15 survives direct finite verification.",
+"C18 correctly gives f(n)=1+max_L rho(L) for n>1.",
+"The failure is decisive even apart from C14, C16, and C17: the candidate reports RESOURCE_EXHAUSTED and supplies no terminal resolution of the original question.",
+"Reviewed artifact: 
+
+Pasted text
+
+"
+]
+}

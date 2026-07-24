@@ -1,0 +1,35 @@
+{
+  "problem_number": 260,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/260",
+  "retrieved_at": "2026-07-10T23:16:16.573270+00:00",
+  "page_title": "260 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "e6f836d9bdc7d547a80b49ad6ed40f8d432fb01df0ec5ec57bbdd07982d81cf4",
+  "comment_count": 5,
+  "comments": [
+    {
+      "post_id": "7203",
+      "text": "This problem is claimed to have been resolved by H. Wang and J. M. Grau Ribas in [WaGr26].",
+      "meta": "Alfaiz — 03:00 on 25 Jun 2026 👍 0 📝 1 🤖 2"
+    },
+    {
+      "post_id": "7402",
+      "text": "A standard audit with GPT-5.5 Pro finds this proof to be insufficient, though I am not sure whether this is the right way for me to provide such a comment: The full GPT-5.5 pro analysis, details, and step by step disproof can be found here. I have also provided a small attempt at completing the argument according to its standards, however this was also not easily completable. At the very least, I think the argument is worth looking over carefully. I have scarcely noticed GPT-5.5 pro incorrectly flag incomplete proofs for non-trivialities, but it remains quite possible nonetheless. In a small (human made) summary, it is to my understanding: Lemma B.6 does not support Theorem 6.1, Theorem 6.4, and OldRes sufficiently, as the covered bin ranges by these theorems are greater than the supported bin ranges by Lemma B.6 The unsufficiently proven route found by GPT-5.5 pro is thus as follows: Lemma B.6->Definition 4.5->Theorem 6.1->Theorem 6.4->Theorem 2.1",
+      "meta": "Tomodovodoo — 15:03 on 08 Jul 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7200",
+      "text": "I have posted a preprint whose main theorem implies an affirmative answer to this problem: Han Wang and José María Grau Ribas, \"Positive dyadic density for rational weighted binary expansions\", arXiv:2606.24972. https://arxiv.org/abs/2606.24972 The main theorem proves a density statement for rational weighted binary expansions. If $$ \\sum_{n\\ge 1} n d_n 2^{-n}=P/Q,\\qquad d_n\\in\\{0,1\\}, $$ has infinite support $S=\\{n:d_n=1\\}$, then there is a constant $c_Q>0$, depending only on $Q$, such that for every sufficiently large dyadic $X$, $$ A_S(2X)-A_S(X)\\ge c_Q X, \\qquad A_S(X)=\\#(S\\cap[1,X]). $$ Applying this to $S=\\{a_1,a_2,\\ldots\\}$, the assumption $a_n/n\\to\\infty$ gives $A_S(X)=o(X)$, hence also $A_S(2X)-A_S(X)=o(X)$. This contradicts the positive dyadic density forced by rationality. Therefore $$ \\sum_{n\\ge1} \\frac{a_n}{2^{a_n}} $$ is irrational. The proof uses the integral carry recurrence forced by rationality, $$ R_{N+1}=2R_N-Q(N+1)d_{N+1},\\qquad 0\\le R_N\\le Q(N+2), $$ together with a pressure lower bound on sparse dyadic blocks and a weighted stopping-time upper bound.",
+      "meta": "HanWang — 01:50 on 25 Jun 2026 👍 0 📝 0 🤖 2"
+    },
+    {
+      "post_id": "83",
+      "text": "For people interested in this problem and other irrationality problems about the subseries $\\sum_{n\\in A}\\frac{n}{2^n}$, an old reference is a paper by Borwein and Loring from 1990, who called these $\\ast$-binary representations. However, the actual problem is still open (both questions), as far as I know.",
+      "meta": "Vjeko_Kovac — 20:54 on 12 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "82",
+      "text": "If $a \\in \\mathbb{N}$, $b \\in \\mathbb{Z}_{\\geq 0}$, and $A$ is the set of all numbers of the form $am + b$ (with $m$ a positive integer), then \\begin{equation*} \\sum_{n \\in A} \\frac{n}{2^n} = \\sum_m \\frac{am + b}{2^{am + b}} = \\left(\\frac{1}{2^b}\\right)\\left(\\frac{a2^a}{(2^a - 1)^2}\\right) + \\left(\\frac{b}{2^b}\\right)\\left(\\frac{1}{2^a - 1}\\right). \\end{equation*} In particular, this number is rational. To see this, first observe that \\begin{equation*} \\sum_m \\frac{am + b}{2^{am + b}} = \\frac{1}{2^b}\\sum_m \\frac{am + b}{2^{am}} \\end{equation*} \\begin{equation*} = \\frac{1}{2^b}\\sum_m \\frac{am}{2^{am}} + \\frac{1}{2^b}\\sum_m \\frac{b}{2^{am}} \\end{equation*} \\begin{equation*} = \\left(\\frac{1}{2^b}\\right)\\sum_m \\frac{am}{2^{am}} + \\left(\\frac{b}{2^b}\\right)\\left(\\frac{1}{2^a - 1}\\right). \\end{equation*} Now all that remains is to prove that \\begin{equation*} \\sum_m \\frac{am}{2^{am}} = \\frac{a2^a}{(2^a - 1)^2}. \\end{equation*} To see this, recall that \\begin{equation*} \\frac{1}{1 - x^a} = \\sum_m x^{am} \\end{equation*} for all $x \\in (-1, 1)$. The desired result is obtained by differentiating with respect to $x$, multiplying by $x$, and then setting $x = \\frac{1}{2}$. (Note that this argument for $A = \\mathbb{N}$ is already well-known; see, for example, this StackExchange post.)",
+      "meta": "DesmondWeisenberg — 20:25 on 12 Aug 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

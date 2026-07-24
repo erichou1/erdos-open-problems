@@ -1,0 +1,60 @@
+{
+"reviewer_role": "independent adversarial referee (logic)",
+"verdict": "fail",
+"claims_checked": 19,
+"claims_total": 19,
+"checked_claim_ids": [
+"DOMAIN_BIFURCATION",
+"SEMIDISCRETE_POSITIVE",
+"FIXED_LAYER_MONOTONICITY",
+"HALF_ROW_MONOTONICITY",
+"CENTRAL_GROWTH",
+"NORMALIZATION_FINITE",
+"FIBER_ORDERING",
+"LOW_MULTIPLICITIES",
+"DENSITY_LOW_MULTIPLICITIES",
+"T5_SPLIT",
+"DISPLACEMENT_IDENTITY",
+"SLOPE_AUDIT",
+"PELL_ADJACENT",
+"PELL_SEPARATION",
+"DIVISOR_INVARIANT",
+"LOW_LAYER_SYSTEM",
+"WORD_SYSTEM",
+"FINITE_CERTIFICATE",
+"TERMINAL_AUDIT"
+],
+"open_gaps": [
+"The immutable statement's domain for n and k is not uniquely specified, so the discrete and semidiscrete interpretations give different answers.",
+"Under the intended discrete interpretation, no proof or disproof of the universal assertion is supplied.",
+"There is no global proof that S_2 intersect S_3 intersect S_4 intersect S_k is empty for every k at least 5.",
+"There is no proof that two or more high-layer representations force total interior multiplicity at most three.",
+"There is no construction producing exactly q interior representations for every q at least zero.",
+"Neither the Pell branch nor the displacement-word branch provides arbitrary compatible multi-lifts.",
+"No uniform method excludes unintended representations in an infinite constructed family.",
+"No effective bound or complete decision procedure is supplied for the unbounded integer systems associated with scalable displacement words.",
+"The finite computation stops at 10^30 and has no proved finite-to-infinite extension."
+],
+"unchecked_imports": [],
+"counterexample_searches": [
+"Checked a=70 under the two proposed domains: it has two discrete solutions and four semidiscrete solutions, confirming the stated domain dependence.",
+"Checked the claimed exact multiplicities for 2, 6, 120, and 3003 by layer monotonicity and central lower bounds; these claims survive.",
+"Checked the 3003 collision chain (78,2) to (15,5) to (14,6); its edge ratios are 1/21 and 1, consistent with the intended slope theorem.",
+"Checked the first two adjacent Pell blocks: (15,5) to (14,6) and (104,39) to (103,40), including the recurrence, congruence, and admissibility conditions.",
+"Re-executed the exact-integer enumeration through 10^30. The reported totals, repeated high-layer values, low-layer hits, and empty dangerous list were reproduced."
+],
+"material_errors": [
+"The candidate explicitly reaches no terminal conclusion, so it fails the acceptance criterion requiring a proof or disproof of the exact original statement.",
+"Claim 17 does not actually display its asserted polynomial equations: the entire left-hand side of each displacement identity is missing. As written, WORD_SYSTEM is not a defined system and cannot support later decision or enumeration claims.",
+"The displayed definition of D_Z in Claim 1 is malformed. If read as requiring both coordinates to be at least two, it excludes the k=1 solutions used throughout Claims 1, 6, and 8.",
+"The definitions of S_j and h(a) in Claim 10 are ill-typed as written: S_j is not properly displayed as a set of coefficient values, and h(a) is written as though integers k belonged to S_k rather than a belonging to S_k.",
+"Claim 12 contains missing mathematical content in its displayed derivation and reciprocal-ratio chain. The intended averaging argument can be reconstructed and appears valid, but the written proof is not locally complete without that reconstruction.",
+"Claim 15 contains a malformed equation where the required identity is p times a equals q times C(n-1,k-1). The subsequent divisibility argument relies on this repaired reading.",
+"The finite certificate is valid only as a bounded computation and cannot discharge either global branch."
+],
+"completeness_score": 57,
+"proof_confidence": 0,
+"adversarial_survival_score": 82,
+"statement_sha256": "b669094e22469ade57dcca529d2ce001ede0c9bee628c97121ad1d9a7ebfb01b",
+"notes": "Most elementary conditional claims survive after repairing several transcription defects: fixed-layer and half-row monotonicity, central growth, normalization, fiber ordering, low multiplicities, density for multiplicities one and two, the displacement identity, the intended slope comparison, the adjacent Pell family, Pell-block separation, the divisor invariant, and the reversible low-layer equations. The bounded enumeration was independently reproduced. These results form a useful conditional structural package, but they neither settle the domain ambiguity nor prove either the negative t=5 route or a positive exact-multiplicity construction. Therefore the candidate cannot pass."
+}

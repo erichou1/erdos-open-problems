@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#243}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $1\leq a_1&#60;a_2&#60;\cdots$ be a sequence of integers such that\[\lim_{n\to \infty}\frac{a_n}{a_{n-1}^2}=1\]and $\sum\frac{1}{a_n}\in \mathbb{Q}$. Then, for all sufficiently large $n\geq 1$,\[ a_n = a_{n-1}^2-a_{n-1}+1.\]
+
+
+
+
+Erd\H{o}s and Straus \cite{ErSt64} proved that if $\lim a_n/a_{n-1}^2=1$ and $\sum \frac{1}{a_n}$ is rational, and $a_n$ does not satisfy the recurrence, then\[\limsup_{n\to \infty} \frac{[a_1,\ldots,a_n]}{a_{n+1}}\left(\frac{a_n^2}{a_{n+1}}-1\right)&gt;0.\]A sequence satisfying the reucrrence $a_n = a_{n-1}^2-a_{n-1}+1$ is known as Sylvester's sequence . Duverney \cite{Du01} proved a weaker version of this problem: if\[\sum_{n\geq 0}\left(\frac{a_{n+1}}{a_n^2}-1\right)\]converges then $\sum \frac{1}{a_n}$ is rational if and only if\[a_{n}=a_{n-1}^2-a_{n-1}+1\]for all large $n$.
+
+
+
+
+References
+
+[Du01] Duverney, Daniel, Irrationality of fast converging series of rational numbers . J. Math. Sci. Univ. Tokyo (2001), 275--316.
+
+[ErSt64] Erd\H{o}s, P. and Straus, E. G., On the irrationality of certain {A}hmes series . J. Indian Math. Soc. (N.S.) (1964), 129--133.
+
+\noindent\textbf{Related OEIS sequences:} A000058
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/243}}
+\end{document}

@@ -1,0 +1,2223 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+
+<title>939 Discussion Thread | Erdős Problems</title>
+<meta property="og:title" content="939 Discussion Thread | Erdős Problems">
+<link rel="icon" href="/static/favicon.ico">
+<link rel="stylesheet" href="/static/style.css?v=733265cf">
+
+<script>
+document.addEventListener('click', (e) => {
+  // Toggle reply form
+  const toggle = e.target.closest('.reply-toggle');
+  if (toggle) {
+    const id = toggle.getAttribute('data-target');
+    const form = document.getElementById(id);
+    if (form) form.classList.toggle('hidden');
+  }
+  // Reply with quote
+  const quoteBtn = e.target.closest('.reply-quote');
+  if (quoteBtn) {
+    const id = quoteBtn.getAttribute('data-target');
+    const form = document.getElementById(id);
+    if (!form) return;
+    const ta = form.querySelector('textarea');
+    const raw = quoteBtn.getAttribute('data-raw') || '';
+    const quoted = raw.split('\n').map(l => '> ' + l).join('\n') + '\n\n';
+    ta.value = quoted;
+    form.classList.remove('hidden');
+    ta.focus();
+    const len = ta.value.length;
+    ta.setSelectionRange(len, len);
+  }
+});
+</script>
+
+<!-- This creates the reference in the bibliography box. -->
+
+<script>
+function addNewBox(key, problem_id, shouldScroll = false) {
+  const local_id = 'bib-container' + String(problem_id);
+  const container = document.getElementById(local_id);
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  fetch(`/bibs/${encodeURIComponent(key)}`)
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.text();
+    })
+    .then(html => {
+      container.innerHTML = html;
+
+      if (shouldScroll) {
+        requestAnimationFrame(() => {
+          container.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+        });
+      }
+    })
+    .catch(err => {
+      console.error("Failed to load bib:", err);
+      container.textContent = "Unable to load reference.";
+
+      if (shouldScroll) {
+        container.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+    });
+}
+</script>
+
+<script>
+const filledSVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" class="fav-icon">
+  <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+</svg>
+                `;
+const outlineSVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="black" fill="white" class="fav-icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.610l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.840-.610l1.285-5.386a.563.563 0 0 0-.182-.557L3.041 10.385a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+</svg>
+                `;
+
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest(".fav-btn");
+  if (!btn) return;
+
+  e.preventDefault();
+  const problemId = btn.dataset.problemId;
+
+  try {
+    const res = await fetch(`/forum/toggle_favourite/${problemId}`, { method: "POST" });
+    const data = await res.json();
+
+    btn.dataset.favourited = data.favourited ? "true" : "false";
+    btn.innerHTML = data.favourited ? filledSVG : outlineSVG;
+  } catch (err) {
+    console.error("Toggle failed:", err);
+  }
+});
+</script>
+
+    
+<script>
+function addImageBox(X, problem_id, shouldScroll = true) {
+  const local_id = 'image-container' + String(problem_id);
+  const container = document.getElementById(local_id);
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  const newBox = document.createElement("div");
+
+  const img = document.createElement("img");
+  img.src = `/static/${encodeURIComponent(X)}.png`;
+  img.className = "responsive-image";
+  img.alt = String(X);
+
+  newBox.appendChild(img);
+  container.appendChild(newBox);
+
+  if (shouldScroll) {
+    requestAnimationFrame(() => {
+      container.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+  }
+}
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('searchForm');
+  if (!form) return;
+  form.addEventListener('submit', function (e) {
+    const input = form.querySelector('.searchTerm');
+    if (!input) return;
+    const value = input.value.trim();
+    if (!value) return;
+    const path = '/search/' + encodeURIComponent(value);
+    const inDual = window.location.pathname.startsWith("/dual");
+    if (inDual) {
+      e.preventDefault(); 
+      const selected = document.querySelector('input[name="targetPanel"]:checked');
+      const panel = selected ? selected.value : "left";
+      const iframe = document.getElementById(`iframe-${panel}`);
+      if (iframe) {
+        const url = path.includes("?") ? path + "&embed=1" : path + "?embed=1";
+        iframe.src = url;
+        const box = document.querySelector(`#panel-${panel} input`);
+        if (box) box.value = path;
+      } else {
+        window.location.href = path;
+      }
+    } else {
+      form.action = path;
+      form.method = "GET";
+    }
+  });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.location.pathname.startsWith("/dual")) return;
+
+  var form = document.getElementById('idsearchForm');
+  if (!form) return;
+
+  form.onsubmit = function() {
+    var input = document.querySelector('.idsearchTerm').value.trim();
+    var searchUrl;
+
+    if (/^\d+$/.test(input)) {
+        searchUrl = '/' + encodeURIComponent(input);
+    } else if (/^((\d+|end)(-(\d+|end))?\s*)+(open|solved|yes|no)?$/.test(input.toLowerCase())) {
+        let parts = input.split(/\s+/).filter(Boolean);
+        searchUrl = '/range/' + parts.map(encodeURIComponent).join('/');
+    } else {
+        alert("Enter either a single integer or a space-separated list of numbers/ranges...");
+        return false;
+    }
+    window.location.href = searchUrl;
+    return false;
+  };
+});
+</script>
+
+<script>
+  window.CURRENT_USERNAME = "";
+</script>
+
+
+<script>
+document.addEventListener("click", async (ev) => {
+  const btn = ev.target.closest(".reaction-btn");
+  if (!btn) return;
+  const you = window.CURRENT_USERNAME || "";
+  const bar = btn.closest(".reaction-bar");
+  const postId = bar?.dataset.postId;
+  const rtype = btn.dataset.type;
+  const reactUrl = bar?.dataset.reactUrl; 
+  if (!postId || !rtype || !reactUrl) return;
+
+  try {
+    const res = await fetch(reactUrl, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({type: rtype})
+    });
+    const data = await res.json();
+    if (!data.ok) {
+      alert(data.error || "Could not update reaction.");
+      return;
+    }
+    const summary = data.summary;
+    
+    bar.querySelectorAll(".reaction-btn").forEach(b => {
+      const t = b.dataset.type;
+      const countSpan = bar.querySelector(`.reaction-count[data-type="${t}"]`);
+      if (countSpan && summary[t]) {
+        countSpan.textContent = summary[t].count;
+    const desc = b.dataset.desc || "";
+    const usersTitle = summary[t].users_title || "No one yet.";
+    b.title = `${desc}\n\n${usersTitle}`;
+      }
+        const iReacted = you && (summary[t].users_title || "").includes(you);
+  b.classList.toggle("active", !!iReacted);
+  b.setAttribute("aria-pressed", iReacted ? "true" : "false");
+    });
+  } catch (e) {
+    console.error(e);
+    alert("Only registered users with 5+ posts can react.");
+  }
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.body.addEventListener("click", function (e) {
+    const link = e.target.closest(".problem-reaction-link");
+    if (!link) return;
+
+    e.preventDefault();
+
+    const row = link.closest(".problem-reaction-row");
+    if (!row) return;
+
+    const form = row.querySelector(".problem-reaction-form");
+    if (!form) return;
+
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+      method: "POST",
+      body: formData,
+      headers: {
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    })
+      .then(resp => resp.json())
+      .then(data => {
+        if (!data.ok) {
+          console.error(data.error || "Problem reaction update failed");
+          return;
+        }
+
+        const summary = data.summary;
+
+        // Update users text for each reaction type
+        for (const [type, info] of Object.entries(summary)) {
+          const r = document.querySelector(
+            `.problem-reaction-row[data-reaction-type="${type}"]`
+          );
+          if (!r) continue;
+
+          const usersCell = r.querySelector(".problem-reaction-users");
+          if (usersCell) {
+            usersCell.textContent = info.users_title || "None yet";
+          }
+        }
+        link.classList.toggle("active");
+        if (link.classList.contains("active")) {
+          link.textContent = "(no)";
+        } else {
+          link.textContent = "(yes)";
+        }
+      })
+      .catch(err => {
+        console.error("Problem reaction AJAX error", err);
+      });
+  });
+});
+</script>
+
+
+
+
+
+
+</head>
+
+<body>
+
+<div class="topnav">
+
+  <div class="left">
+    <div class="logo">
+      <a class="dual-aware" href="/"><img src="/static/EPLogo.png" alt="Logo" height="50"></a>
+    </div>
+    <div class="links dual-aware desktop-nav">
+      <a href="/forum">Forum</a>
+      <a href="/dm">Inbox</a> 
+      <a href="/favourites">Favourites</a>
+      <a href="/tags">Tags</a> 
+      <div class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">More</a>
+        <div class="dropdown-content">
+          <a href="/faq">FAQ</a>
+          <a href="/prizes">Prizes</a>
+          <a href="/lists">Problem Lists</a>
+          <a href="/definitions">Definitions</a>
+          <a href="/links">Links</a>
+        </div>
+      </div> 
+    </div>
+    <div class="mobile-nav">
+    
+        <a class="forumlink" href="/forum">Forum</a>
+    <div class="dropdown">
+      <button class="dropbtn" id="mobileMenuButton">Menu</button>
+      <div class="dropdown-content">
+        <a href="/dm">Inbox</a> 
+        <a href="/favourites">Favourites</a>
+        <a href="/tags">Tags</a>  
+        <a href="/faq">FAQ</a>
+        <a href="/prizes">Prizes</a>
+        <a href="/lists">Problem Lists</a>
+        <a href="/definitions">Definitions</a>
+        <a href="/links">Links</a>
+      </div>
+     </div>
+    </div>
+  </div>
+
+  <div class = "middle">
+    <div class="button-container" style="max-width: 50%;">
+      <form id="idsearchForm">
+        <input required type="text" name="query" class="idsearchTerm" placeholder="# (or range #-#)" title="Enter either a single integer or a space-separated list of numbers/ranges, optionally ending with 'open' or 'solved'.">
+        <button type="submit" class="searchButton">Go</button>
+      </form>
+    </div>
+    <div class="button-container" style="max-width: 50%;">
+      <form id="searchForm">
+        <input required type="text" name="query" class="searchTerm" placeholder="Search" title="Search all problems.">
+        <button type="submit" class="searchButton">Go</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="right">
+    <a href="#" id="dualViewLink" class="split_all">Dual View</a>
+    <a href="/random_solved" class="split_solved dual-aware">Random Solved</a>
+    <a href="/random_open" class="split_open dual-aware">Random Open</a>
+  </div>
+
+</div>
+
+<div id="notifications-slot"></div>
+
+
+
+
+<div class="container">
+<div class="problem-box">
+
+        
+
+                    <div class="problem-text" id="open">  
+<div id="prize">
+
+<span class="tooltip">
+  OPEN
+  <span class="tooltiptext">
+    This is open, and cannot be resolved with a finite computation.
+  </span>
+</span>
+
+</div>
+
+                        <div id="content">Let $r\geq 2$. An $r$-powerful number $n$ is one such that if $p\mid n$ then $p^r\mid n$.<br><br>If $r\geq 4$ then can the sum of $r-2$ coprime $r$-powerful numbers ever be itself $r$-powerful? Are there at most finitely many such solutions?<br><br>Are there infinitely many triples of coprime $3$-powerful numbers $a,b,c$ such that $a+b=c$?</div>
+                        <div id="problem_id"><a href="/939">#939</a>: <a href="#bib-container939" onclick="event.preventDefault();addNewBox('Er76d', '939', true);return false;">[Er76d]</a></div>
+                         
+                            <div id="tags">
+                            
+  <a href="/tags/number theory">number theory</a> | 
+
+  <a href="/tags/powerful">powerful</a>
+
+                            </div>
+                        
+                    </div>  
+                    
+                    <div class="problem-text" id="disclaimer">  
+The open status of this problem reflects the current belief of the owner of this website. There may be literature on this problem that I am unaware of, which may partially or completely solve the stated problem. Please do your own literature search before expending significant effort on solving this problem. If you find any relevant literature not mentioned here, please add this in a comment.
+                    <div
+  class="problem-status-widget"
+  data-problem-id="939"
+  data-set-url="/problem-status/939"
+  data-current-status="open"
+  data-can-edit="0"
+  style="--status-progress: 0.0; --status-count: 3;"s
+>
+                      <div class="problem-status-heading">Comment activity that has not yet been incorporated into the remarks</div>
+
+  <div class="problem-status-scale" role="radiogroup" aria-label="Problem status">
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option is-active"
+        data-status="open"
+        data-label="None"
+        data-description="There are no solutions, partial or complete, claimed in the comments."
+        data-progress="0.0"
+        role="radio"
+        aria-checked="true"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">None</span>
+      </button>
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option"
+        data-status="partial"
+        data-label="Partial"
+        data-description="There are claims of partial results and/or a path to a solution in the comments."
+        data-progress="0.5"
+        role="radio"
+        aria-checked="false"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">Partial</span>
+      </button>
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option"
+        data-status="claimed"
+        data-label="Solution"
+        data-description="A claimed solution has been posted in the comments."
+        data-progress="1.0"
+        role="radio"
+        aria-checked="false"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">Solution</span>
+      </button>
+    
+  </div>
+
+  <div class="problem-status-explanation">
+    <span class="js-problem-status-description">
+      There are no solutions, partial or complete, claimed in the comments.
+    </span>
+  </div>
+  </div>
+  
+                    </div>
+                    
+                    
+
+
+                    
+
+                        <div class="problem-additional-text"> 
+                    
+                           The answer to the third question is yes: Nitaj <a href="#bib-container939" onclick="event.preventDefault();addNewBox('Ni95', '939', true);return false;">[Ni95]</a> has proved that there are infinitely many triples of coprime $3$-powerful numbers $a,b,c$ such that $a+b=c$, such as\[2^3\cdot 3^5\cdot 73^3+271^3 = 919^3.\]In Nitaj's construction at least two of $a,b,c$ are perfect cubes. Cohn <a href="#bib-container939" onclick="event.preventDefault();addNewBox('Co98', '939', true);return false;">[Co98]</a> constructed infinitely many such triples, none of which are perfect cubes. An alternative construction was given by Walsh <a href="#bib-container939" onclick="event.preventDefault();addNewBox('Wa24', '939', true);return false;">[Wa24]</a>.<br><br>Euler had conjectured that the sum of $k-1$ many $k$th powers is never a $k$th power, but this is false for $k=5$, as Lander and Parkin <a href="#bib-container939" onclick="event.preventDefault();addNewBox('LaPa67', '939', true);return false;">[LaPa67]</a> found\[27^5+84^5+110^5+133^5=144^5.\]Cambie has found several examples of the sum of $r-2$ coprime $r$-powerful numbers being itself $r$-powerful. For example when $r=5$\[3^761^5=2^83^{10}5^7+2^{12}23^6+11^513^5.\](Kitamura has given another example in the comments.) Cambie has also found solutions when $r=7$ or $r=8$ (the latter even with the sum of $5$ $8$-powerful numbers being $8$-powerful).<br><br>GPT-5.5. Pro (prompted by Price) has given a simple construction in the comments that shows for $r\geq 6$ there are infinitely many $r$-powerful numbers which are the sum of $(r-2)$ (in fact $\lceil r/2\rceil+1$) many coprime $r$-powerful numbers.
+                           
+                    
+                    
+<p style="text-align: center; font-family: 'Courier New', monospace; font-size: 90%;">
+  <a href="/latex/939">View the LaTeX source</a>
+</p>
+<p style="text-align: center; font-family: 'Courier New', monospace; font-size: 90%;">
+  
+ This page was last edited 28 May 2026. <a href="/history/939">View history</a>
+</p>
+                    <div class="image-container" id="image-container939"></div>
+                        </div>
+
+                        <div class="problem-additional-text" style="text-align:center;"> 
+</div>
+
+                <div id="bib-container939"></div>
+  <div class="external">External data from <a href="https://github.com/teorth/erdosproblems">the database</a> - you can help update this</a>                
+
+
+  <br>
+  Formalised statement? 
+    
+      <a href="https://github.com/google-deepmind/formal-conjectures/blob/main/FormalConjectures/ErdosProblems/939.lean">Yes</a>
+    
+  
+    <br>
+    Related OEIS sequences:   
+    
+      Possible
+    
+  
+  
+  
+  <br>
+  
+  </div>
+
+
+<div class="problem-reactions">
+
+<div class="comment-count">
+  <a style="color: inherit;" href="/forum/discuss/939">
+    9 comments on this problem
+  </a>
+</div>
+
+<table class="problem-reactions-table">
+  <tbody>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="like">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Likes this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    
+      <a href="/forum/user/KStar" style="color:inherit; text-decoration: none;">KStar</a>
+    
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="collab">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Interested in collaborating</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="working_on">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Currently working on this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="hard">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>This problem looks difficult</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="easy">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>This problem looks tractable</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="formalisable">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>The results on this problem could be formalisable</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="working_form">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>I am working on formalising the results on this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+</div>
+<br>
+
+                <div class="citationbox"> <div id="content">
+                                    
+                           <b>Additional thanks to</b>: Alfaiz, Stijn Cambie, Kenta Kitamura, and Liam Price          <br> <br>
+                    
+When referring to this problem, please use the original sources of Erd&#337;s. If you wish to acknowledge this website, the recommended citation format is:
+<br><br>
+T. F. Bloom, Erd&#337;s Problem #939, https://www.erdosproblems.com/939, accessed 2026-07-10</div>
+</div>
+
+               
+
+
+<div class="problem-additional-text"> 
+
+
+
+
+<div class="thread-sort">
+Order by
+  <a href="/forum/thread/939?order=oldest"
+     class="order ">oldest first</a> or
+  <a href="/forum/thread/939?order=newest"
+     class="order active">newest first</a>. (The most recent comments are highlighted in a red border.)
+</div>
+
+
+
+
+<ul class="post-list">
+  
+    
+    
+
+
+
+
+
+
+<li id="post-6655"
+    class="post depth-0
+           recent recent-1
+           even">
+    <div class="post-body" id="post-6655">
+    
+
+
+
+      
+      <p>Walsh paper has arxiv identifier 2404.03970<br>(comment to be removed once corrected)</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/StijnC">StijnC</a></strong>
+      
+      — <a href="/forum/thread/939#post-6655">11:36 on 26 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6655" data-react-url="/forum/post/6655/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: Woett"
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-6641"
+    class="post depth-0
+           
+           odd">
+    <div class="post-body" id="post-6641">
+    
+
+
+
+      
+      <p>For \(r=5\), I found the following example which I did not see listed on the page:\[<br>2^5 17^6 + 7^{11} + 2^5 3^6 7^8 = 3^7 13^7.<br>\]Numerically,\[<br>772402208 + 1977326743 + 134481277728 = 137231006679.<br>\]All four numbers are \(5\)-powerful, and the three summands have joint gcd \(1\). They are not pairwise coprime: the first and third summands share \(2\), and the second and third summands share \(7\).<br>Equivalently,\[<br>17\cdot 34^5 + 7\cdot 49^5 + 1029\cdot 42^5 = 1521\cdot 39^5.<br>\]I am not claiming that this example is new; it may already be among unpublished examples. Also, please feel free to point out any mistake, especially regarding the interpretation of “coprime” here.<br><br>I put a short reproducible verification here:<a href="https://github.com/KitaKen1/erdos-939" rel="nofollow noopener noreferrer ugc" target="_blank">KitaKen1 GitHub verification repository</a><br><br>Since this example appears to be smaller than the displayed \(r=5\) example, it might be worth adding to the page as a smaller explicit \(r=5\) instance.<br><br>AI usage disclosure: the numerical search and verification were carried out with assistance from Codex 5.5 using xhigh reasoning.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/KentaKitamura">KentaKitamura</a></strong>
+      
+      — <a href="/forum/thread/939#post-6641">01:50 on 25 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6641" data-react-url="/forum/post/6641/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-6654"
+    class="post depth-1
+           recent recent-2
+           even">
+    <div class="post-body" id="post-6654">
+    
+
+
+
+      
+      <p>Correct.<br>As the previous search was not exhaustive, it indeed did not generate the smallest example.<br><br>For $r=4$, an exhaustive algorithm verified that if $a+b=c$ with $a,b,c$ $4$-powerful coprime, then $\max(a,b)&#62;10^{14}$.<br><br>It might be there are no solutions in this case. The latter being a strengthening of Fermat for exponent $4$.<br><br>For $r=5$, I even do not dare to guess if there is a finite or infinite number of solutions.<br>Having updated the algorithm (using the meet in the middle method), it is deduced that if $a+b+c=d$ has a solution where $d&lt;10^{16}$ then it is either one of the two earlier found solutions, or $\gcd(a,b),\gcd(b,c),\gcd(a,c)&gt;1$ while $\gcd(a,b,c)=1$.<br>The two solutions found do not immediately indicate how to construct a general family.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/StijnC">StijnC</a></strong>
+      
+      — <a href="/forum/thread/939#post-6654">09:40 on 26 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6654" data-react-url="/forum/post/6654/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: KentaKitamura"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-6640"
+    class="post depth-0
+           
+           even">
+    <div class="post-body" id="post-6640">
+    
+
+
+
+      
+      <p>We can at least show there are infinitely many such representations for $r\geq 6$. The idea is the following:<br>Firstly, via binomial expansion, we may write $$(X+Y)^r=(X-Y)^r+\sum_{\substack{1\leq j\leq r\\ j\text{ odd}}}2\binom{r}{j}X^{r-j}Y^j.$$ This is a sum of positive terms when $X&gt;Y&gt;0$. The number of odd indices $j$ is $\lceil r/2\rceil$, but we need exactly $r-2$ summands, so since $r\geq 6$, we can split the $j=3$ term. Put $t:= r-2-\lceil r/2\rceil=\lfloor r/2\rfloor-2\geq 1$. Choose distinct positive integers $v_1,\,\dots,\,v_t$ with $$v_i=i\quad(1\leq i&lt;t),\qquad v_t=2\binom{r}{3}-\binom{t}{2},$$ such that $\sum_{\ell=1}^{t}v_{\ell}=2\binom{r}{3}$, then $$(X+Y)^r=(X-Y)^r+\sum_{\substack{1\leq j\leq r\\ j\neq 3\text{ odd}}}2\binom{r}{j}X^{r-j}Y^j + \sum_{\ell=1}^{t}v_{\ell}X^{r-3}Y^3$$ has exactly $r-2$ positive summands on the RHS, namely $$(X-Y)^r,\qquad 2\binom{r}{j}X^{r-j} Y^j\quad (1\leq j\neq 3\leq r \text{ odd}),\qquad v_{\ell}X^{r-3}Y^3.$$ We can now force each summand to be $r$-powerful by choosing $X=q^r$, $Y=B^r$, where $B$ is divisible by every prime appearing in the coefficients $v_{\ell}$ and $2\binom{r}{j}$ for $j\neq 3$, and where $q&gt;B$ is a prime not dividing $B$. With this choice, $X&gt;Y&gt;0$ and $\gcd(X,Y)=1$. Moreover, every non-first summand has the form $cX^a Y^b$, $b\geq 1$, and every prime divisor of $c$ already divides $B$. Hence, all coefficient primes appear with exponent at least $r$ through $Y=B^r$, while $q$ appears only through powers of $X=q^r$. Therefore, all summands are $r$-powerful. The total sum $(X+Y)^r$ is also an $r$-th power, hence $r$-powerful.<br>Now, joint coprimality comes from separating the first summand. All non-first summands have prime divisors only from $XY$, whereas the first summand is $(X-Y)^r$. Since $\gcd(X,Y)=1$, we have $\gcd(X-Y,XY)=1$. Thus, no prime can divide all $r-2$ summands. Finally, there are infinitely many possible primes $q&gt;B$. Varying $q$ gives infinitely many distinct such identities.<br><br>This argument came from GPT-5.5 Pro, and can be read in greater detail <a href="https://www.overleaf.com/read/vjtdssgrgdkk#12a637" rel="nofollow noopener noreferrer ugc" target="_blank">here</a>. I have also gotten Aristotle to autoformalise GPT's argument into Lean <a href="https://live.lean-lang.org/#project=mathlib-v4.28.0&amp;codez=JYWwDg9gTgLgBAWQIYwBYBtgCMBQOD0AtAIQ4DEcAkgHYBmw1wMApnFIQAoQDuzUtAV3RwAygJABnPADFocZgDc%2BATzgMWAcz5s4gUyI4ANgA0cXnADGEahJhQB5%2BA3qMW6VSCTVVwACbNqMEzAzBJq1KaowOaocEhwEuJwELRsgEhEAEw4AFYQ6m4WEGBQoKzskLz8QnCQEkFKYZp8ocChSBpIDGyE5XyC6AB0OIT4eIX%2BcNIMEszwAHIocABCwBoA8mB8KNBSBISEcACC1RC1gfXqzFpQcAAG1DdqoTdQN908vVXAKYoq1cUgrB8wAULTkNzAD2St3uODgcPiKBa9BCtzAcAAejpAMREcHu%2FTgwxwfhSlAkXAqfTgAAprgAuOCAVEIAJTU8L05lwekcKCFTkAXlhcEAAETVTmMkxgfrckpwQBJhKKceF5WjMddFXh0MwQB5HuSPugAPrlal0xksqlss1i0l6yrCa4WjFsFm0vlwLDKQXqHmisBonxgADc7uUBvMSGmoRi9PCboADHAADyBgB88VAYANSHQwgA1H5zL5WABteYwKX%2FZj9HwKHwGr60A3UCAwMOFSsAXUFAHaLBGUddk2mkCFCj35AAPJAOY7cA01uvlA3Jee16l%2B6u15eNhdGnjryW7htNlttoolfrga4Bpksg0arU6lq2vrL6isGlijn0m3vO06ABGfkQy9AIfTRVAIKBBRg1QJB6ldOAy36TVt1XHxqQ9OACyLFlUGg4MLigBRszDftQjRIc4FsYFgGzB9tTiZ8%2F1fEAqgAb2uOIsC%2FABfak4OtMkWKqLjzVQHif2EilRPdF1BThX8ZPtak4gAKjk4CPVA2wIFFSC4FQYMoHDSN5AAR2XKAm1YOIEyokzyIsqybPdOB7NTdNwCzHM4HzZhCz8OBi0Mw8tzY4QOzgQNBUcsyYm4JgYipQy4AAH1SlkqJC5gpxnXcIrQ3dNVoeAUsEiCILgO9g1y6d4AKoQiq3YoNFQMrDJ4yrMrgA04C7HBNUYqgAn6DRzDrBIsANQrmEsqxWHYgANOAAE0xUAEkJ%2BKpaMRvLcaMJW9a3QA%2BT4T2saJupFb9lW80Vo0u64BOrTPThWpvOzPMcKC4saH2iaDTmpsUAOLAJBMf7%2BmoUHwZmoQTGQyxzwBeHDWPVr2q7OFLGsWx7BgOQHOYZxmAAciQlB%2BmRytmp8Cn7zhXtvT0gBrQz2dQVnAECCDnACCCWD4NYRDkN3A7%2BepCRUH3dmcShmGYDB0IqSe2geRAOAAH4DSZYMRwkMdzqgbhgsABMILoVgBhCNWwXKKFjU4MPszL6%2FJ%2Bktdymg1MZgbG4GZsC2Y5jnea5gXDKF4DRa3cWqSlmW4Dl0aFaVuAVrViANe1vDWfD52fO%2BgKiwUtgTeLc35ZQa2bHQ%2B34EdryXd8%2FzAo9rcvZK328CIfYABVUFYaZ4ChCAfAwhggXMFFOhudiAJMfpF5MKBeIeXLzHQAQgWoDQ4AAZnxQliSSMeaEnkJZggPeTS%2FF0JimGZGX5QUqSpSZrBmfpKHMcw4CAqAmT9HoOgFgDpBDhCyM9NMqwx5wEgYAciI4FwEAAZE%2B9bzdz2HAfug9H5QldqPce1Bz7NHCLPOMC8l5sFXofEYx8CFnyiCiT87I77vyHk%2FV0L834P3LFATwWgb65j%2FreIBwAQHaCpOApBfJoGwKyOg3YfcB64nEFgbQUIJBgEwPAUBkgaFEhJvELRTBLYQAEAEG%2BLCvzAWuPgOA6QCT2IYjqBIIBvb8OYAaBIP8DSYBsKyW%2BnIS6vwADItF4R43EgCPBokkeYtQUCElCNOoA1xz1cRwA0o6ZJLI7EOMQtpOESA%2FT5GQsDaCaFZqWR9phVQ7sxQONQXGJkoEfAE2AFYDJiU0CCgygALz4HpGRjdenxHsL%2FcIwAYgyJLnCY2wUwk2H6HwnenjvHmBMIs8sMSsx%2Bn8D4TZ4T%2BiuN2RsIhftzrOySNQfIxYtmXmKV4hgGhNSE2oIcpZJzag71eVYC58J5nFkKkgMeJgpn%2FLmc85xcRogQBOJ4mA3AIAGi0F48ZASrE7UtAAFjgIAEyIolinCMk%2FFuJqbS3hfY16sUSYMFYMhVCE92mdM1lgfsWsbDMDROEVA1BxzNigG46giRSxU1hfCv2AddIZN5WoVAJdAXxxNtk4R5K4XTCpW6agarKVASEdq8VGqHGFPOo3OIAhvm7yRhS6YaKfHrIyQBf5gLrXqs8Qtb2KwsYl0zpcJA0L4jmQEEgKAniQEGkRciw1CLUCho%2FJaDkWKxQGFJdQO%2B4QNLhETFSzNOqNXXwKW9NgtL3yU3LIyohzLwisvZZrTl3LDJ8qZriaAQqRWuoleOFmMrJnyqNmXJVAScl5tYNfLVI6qX6ondfE1lyMzmstWWkddrzAroyekf5cF6jtSRcBaNEakUorWei8IVIsK%2BvaC086NyGAhqSgG%2BhRDGESCBpZUAbQPymm%2FD60%2BT6p6hGuG6bhH8ImrOpJ%2BHJcA8kiPfQIuJ4R2bDIcRpdmkHC2ClyvALIgorlWFuY%2B4hJg2GfwBG44BoCiM8MvFqdxqzKMgeo242DzA%2Fa4xsHYBw0BxzFEDnAQAF%2BSoCyCAkwfHWbL1oOgQAl%2BSSZLnVGcomTDnoBO0RTqgL1IBk82nj0qFMc3E1J2TeV4B8aU36kTYmQxsGedJh9v7iFkSgBhZhVp6RUgI8%2B501MQ0YSA9cSDeTqVzLLu5%2F9r76weC0H7QFxHyzhkc%2BFj9aEGBZACmcFj45nZdt49xQyJdoiROQ7EPyf90mFZ4iShYfb4TqYDZYcxrZXEeCIcrL94lTQpoJQAoJ509XUhCxfK%2Bnm4sYSEZo7Rpj6s6DdNcfY%2BS3Qmq3awdqsbmCeNI2Ka%2BgAIIhPj4Bh%2F6dDobneAa5%2BG7PPvo0PRjBpyN8AuyRmjKzIuGfqvx0zKnLMCrbSATTEdt3Nj3q%2BsU%2FWJCX2voBvrZ39sAP6JsfNgX4SYbgSXXDNzVDFmB6DkwwO7vbJozdqAOOrvfw2bM%2B%2BDHSNAz4dMQnFPHvpfOmx%2FGnGoAl17Npn0fGBNZBqCYQTmpJO85yKCwyWR3w%2FfOnJ4zgn3yIypuG9Z9ZaC0EvEUEXmpBcEPF%2F7KzvGucy7VzADXY8tdwkl%2FxvjMCfD9BqCLghsvy0NfGYr5Xx2%2BcwAF7b4X0vmA%2FcW4ZYbJ4C0Q923%2BgbYPAHDfSRB4RUGqX7CAodgFZdeVX1fYTgPsP3WNnW8tuNM0tRY8hyEBzPg%2FbmNoBAdAGExsmLMQEWKyeA%2F%2Fb9n71AcF0CNjSa5vzMeAtCNsZqg782i1zNMiiMpShqAuQITobpMRdP8Ck%2BlfjFnF%2BSaTJ5GrcIauDUfExaS%2Bo2wk0bEUUecBOIWCKzxRYcANbsl4sEiSYogIEqwOJGmMp6TIVMSjVgGtFhXrwg7S%2Fz0gihojsgSgVgyjKiJyX4wE4gAHdbwhKT6g6BUi%2FwaQayYifgaRIAsgaQ37YHXAaRv4ujD46TgShSCgehkTxRgAgEKgWDjhm5SJ9TDKNSGgri7g1JUi7i2CeDKxLi7hLhcFrjAH6SVTmB3iAHnRUhCFbjGh9RnqqA3owzFBoC3h3jjg0Fj5RhgB36MEgCs4hi0EoiCT0hxDxgb5pj5yuwtxFjBTAoSAGwbJLrSgAibh1gRQQra7dpGS%2FbCxujRx1jiyQQaw7RhR1iiGLj7ioC6yxCjhgCk69gsHxJsFpgcF0yeptRlSZHRG%2BIky5Fbj8HWCk6yHyExFzjRGhQaw6zrg8DoR7gmyMymqtFUgMprZNQrg1DZHtS9TUjIQ9ErjvgGgDI%2BhwSaHSG9TGF%2BGCwIRuiQSeFowq6GROwZgFxuxFy%2FTITuFVgcE%2BFm55E7gtRepFF1glGCENHCENHRFlECSRFZHGg7TLKjjoBKAFGlTUggDwCLG7j5HGhhGaG9QyGmpyFXEKH7hKGDrXCdaZJuRYSqF3oaG3jTG77DS0D1TQDAB9KIhWBGi0wSDhiajnF8AazsTmSX435cRuT36P4Un0jmRQEAjv5ii%2FxNLiTmQMEAA1cAFJOIUhAkN%2B9IN%2B7JAk5kQpcAPJfJSwZ0QBGB1IFJqoLImI6k1IhBzoTob%2BQCmJxQOJgQnSFJ02cJcQieLqVMGJzO2JuJU%2B3h3GZcyEFphMup1paM%2FybO9p5pOpVp%2BpU%2B5Q9u2plpepHSvpPAPhre5g9JFgAZTp3pwZvJ6SCYierRZp5YjpWJQZeJwMYxyKDYPhpuRmcAqwUA%2FQDADoRZJZNyhknJIJcIreiwkZiw0Z6Z1p8ZVhSZpqKZTZzpPpYW2ZzueZk4L25ZpZ1Iw5lZqA4pNZjcwUqAEZvO9ZvOjJaZ3ZwZXizAHe%2FphUlg2obpg5M4s5xhZuS4Ix2Z%2FRYJc4J5gy%2FRE50Mni2ZgBKRBZhUl54xv855NkoxV5Shx5d5X5VZt5n5PI6CzaR5DRL5ek35YFv5PofUqAABAaWADAmcdEnBY89YfgAQTAqgVIE4cAqg9IG05oCaspcIOFxWygypGS%2BwZF%2BwFFTosYJchWgAiERILbbAaXZ05DrCKAL47UhSKQLDKW5wJMhGCk6ACJhBaBOvInCbhdgeEPsNJRpKoJiJAonq3kDBOGAJ4BhK5rhUInRZiLGHACxZAttjFsspEiqqdKJW0R2hqhAptPgXALJQEgpU5cpUgvAsErhbRZRUZSZXAGZVRpxVZSJaTu0WKjaqwA5QRU5S5Y6G5XCVSIQAZUgu2WbiZqoICiCnWNuSACYDlU0R2HrKuovqpqXMFF7MDIVe%2BBoAVWhXlfVZUcVbEKVRJr7pHKgG2CAIhaWq5gFUFQxiFcSsIv6dGhkpAhpPFfJcJXCR5dJYQOFQNWThxZZSNdZUuuNQ5VNU6AlbNVkilZRdJQKK0cteZbxfBtIrIhhNJexZ%2FMNcVikjZa0ZtVFRNTJbtTNYpXhU6JNVSu2YCubOZV8gINNECOxtgITicvjs6mXEDVRicrjBoNcIvi1SzBIE7MYq2F8KEFRLYc3PUsWJbreRoEVcZFCu9OsXYYTVuZnPlStSRk1Gkn1CzQNEQMQHAGQBQNgk%2FEoFALUJ0lCGgKwL1chdmGoBhYEDAKoISLsDgDQOKBEOMCtPoKtK5ktLmHdOiODlSEtIQFrT3sxQaOxJAgQvxJbDSEYN9UtOiDSIQN9atOiNhoSENDqKLSAChcuGhQrNdGtIEs5omqgEtOtPSOtASktCRb7UIk9KqFHjdGtJRYbXCctcDmwM9UbFJXCStEQY4g7b9fDupaZPAK5rrcVk9LFU6DNuBvHeXXAIRZXaVsnaxdSOZSFT3ikqIuImAvEgJddcJSYBFbFm9dcKpXXU5dnTfIlY9Pne2bjHzfAO7Z7QQuhf4FLdhWnJtNVH7dcBas8n%2FDFJTZ9ATVsSWGMtNMDMeNVcLqncVYKJ9rQfAJVg%2FQfRVSFF1UXU1d1RrGzSQJzRQCIFjYEDvNRMolkHyNfLogSCMIolgsos4OLZYMflEMEBYp0MLdUMUnwGTKEDXsPCkOgzcAJfvA8LovosfOgDbKYsfpYi5hwidTmmwNOo4q%2FLgxNhYlXadHCaw3XvAAPukC0jAzzVpRsFANg9hOEgwDOIg0rsg6vU8AoNzBQv0CYAoBGg8Lg0A7vDcIVjSNOkyDcGQ4Ytw8fi1oEvSFsnQy%2FPciFdw5NhwyIjEnxfEsAIki45BrmEIsWBQzYFQ0rmwD%2FTgDzd4%2FANI%2FQIWKvY8McKcMCKwBXijXoIYIMC7XvnAME74yficDQ4He1qSl1vSPZKk5QxANQ3SOQXCOXpXhhGk8U0roKK3q2JqGKLY%2Bw7k%2FDuU3QJU0YuNjwz6spv6rWZ1TAB0IaKhBIJGXHFjWw7w44pwxpM09MwFrCRpKUyBBLgWYPdWMCAUWuR3v0TrP0BceFchIVKhBFOBshB3KwCzYAhcYZA08wHhPc4AWbhc6DXuC%2BiuCAgJEM2Its2Mwcysi%2Bl83HEGiGmGq2JGmGFFRGitqUIZAAgI67XEPM74g00U9QwHW1smrk5HfMzoNmtUyU%2FDhU1XoUz4zU7QIKK8tRMBHiyzgM9ujADbvk0mDS%2B2VcsWIbl07XvVv8lvgEXcwUWKPALCeyxmMFFy%2FM3y303U4M8M1mGhaM%2BM1SPAPHk5fANBsViKzoMs20wK%2B1PK4065qqzHhpBq1SgSiqzM%2Bq1HFTBUqM%2BuSkCzXltmOYOFSa7MzS33jS5ax6za0IsXUEVTIVahIVTUga7840zAKTmwTS2a3q%2BdK3g6vSB649ekoG0ul7IVeGNQFPMIO1DUHcYieoVVudH1Es0Pkuic50fm%2Fc4K5qLK9uicl88a9a3Ceaw4gG6y4VsWeNQWvQ7WT84aCG2soyRcai5LKC6GqiwelGtC2gHGjoLGoAYqtLCbHS%2Bm5ZqjQ3sFNm3TXXIZM29G%2FmS9gyo7tNCuCGz8UewGsY0rkC%2F4BoGgFk1i%2FSB1hqbSMEne7QABoApqDvM%2B26Bu2pYM8y%2B5Ky8B2U%2FCCS9XpMz0%2BdPyxy9%2BxIH7C81TFmw1Z4Hm3c4W2iS4nByY2iuEa1gJDk51pHRM90yY55mkm6D20w4njB9yzAOk6EIS7U0FgskcicsUmcgcnAPcl8s8r8u8mMm4nTiur4uEi3qB5kyy9mpB6s9Bx06S%2FM7036ju6KuWBh7lVh%2BuThycDJ9uka5LHB3Y223M2Zy04sww7229f20pwy0tnW%2FSBu6K1B%2BdEx2p60fyyezOK%2FKLFsw67s9cwCwIUc1TNW2jOc%2Bh28406F7c%2B1AUY88lzc4C%2BFahJ82VGM8GtO%2BGpC%2Fugu6tkuwi5p8hIVV7J80tpqANEi8x6x%2B8y%2B6R9i%2BR0gXCCKL%2FNtsh2neB9miAVB92r%2FAeYfWiMWMhwe8N2wLof7qYElPxsALzgt2wO1cvhgDbOOPy72M7HEMWGtzYFFLvcA%2BxxkwBvC7ewR%2FeyeG0rEiRztGRx%2B1%2Bxdz%2B55pfNd8Syp7B1R%2Fe4KLx%2FkPcq9wIJKLx%2Fsswes%2Fcs2Nd7RloNEsUrUqTt2jlqW%2FCPlmBnECSvNmm5VqTupg%2BSMs2t2rhagITyPtOZViT1NP4hOMjuK5VlT0bNN0T7N8%2B3xkt5ELzsE1rq3sAEK%2FSG4yVgS%2Bi34ys7OvCK3i20kiVgShu%2FHq9EkDK60a3h4J0IhCi%2BGsdyV9j%2FL9VjK3LTzbg2J0kPg6A%2BA9RKSZ%2B7IdL6a3AH0sVur8Qdb43cs0wxpH0kMCMHV7gwaFkNfJi812%2Bzi9SDb1Yub0AZR7XtR9Do45db%2FMMvKX0iIrR7Z87w76aWXIJ%2BIDNI8oVD7H7Nt3AId7vEjVAAcFALvJdbGGmBmtb%2BaMh0RyVwI%2BzX%2FXAAACIBSZw1BBCC0pCp2y1EA4Cp3g4Y6DbXCABUROfnvPxNwAPOENcPoAYG73h3EMDvOG38dr73dy1w9wh0Xqd26EP2DnAGP%2BxBP%2FDojthiNydmjtjjtntmHjTnjmIhRgzbjuJx4vf24sTunc%2F1duYsGe%2F08j8hmB%2FJBQjODjE6SyzSpBMCqBnpAjnz8Y%2Bcx6H%2BEbh8Cc9OqQmYWEgnc5Lp5cTuBsCsQQEroS4OhJyKgCDxEM94h5AsmOWuCkDKBQ5YsgwGECc4qQxNG3IJgIQiU1cPuZAbzj3g%2FYpU4xc%2FgChgFM8YgKea%2BBlEXx0D5MZ7STngKvCNor4%2FQACP0HSC85%2Fsqg5QVrkfIvZMqcvMzB9lbRNhxAMmOWtfBaAtpHA4QffmwAX51ciuniZsNjSnw2Dfe9Ia%2BIAEgiG%2FqHhBzD93uFeUlvvz1iJEYouwDmlzVgZ%2F4Og4QAsO3xOCd9wgdXXvotR5qsxmAdSVfh3x9L0g4mYyJgEgCwCNN6aN%2BOAbP0MAmB0GwqHqhIhADa1isiwbWkyG1outwgaibCJkPhSEJCYXQBxDkDyCqAP8AILoD0H%2FBZCYmYnJrD4AkBJN3eKTKACMNfCxDwA8Qn0k1w37%2B9WuVIf%2FLfEfwGECmIAcSBKQKaIEdoIACUt%2FnbAyh%2F84kEAE%2BwlI35s0Bw3Yb%2FjFAgAmSDzQUk%2BwTz88ZSj%2BUJqEFALN0bBBOYUKKAgKMEqQ9HcatJXgK%2FDZCqAfXoCM671cKWAGEwGAS%2FAShYCv8WEYgRD5whAAwERwAUg9Id%2BJPXsQsh5QDIL%2FqRRFBLcCmKQYACyC8ptE6RkMA%2FP%2BDARqAUSLI01CxSW6Mio8WBHQEInVJdZY6vI2QhiPBGShdicoOAESKW48k5CsBRkTyNJzSBzEDgYMl%2FGoApZtR9QEkVB0wQiBH4K0N0LUJBHHQlg2tfEKYjxhgCQGrAPxPABCSG8ehuIFAAID4TCAqhaifmiH3YQrREIwo%2BlvEEfgh03QYonDI%2FDdHmNwkdDYKKXVuiJ0ooHjcDMCNSTQAyovYAlN2Acaw9LqvdJPtCKzq7Uq6edFSiyHTFh8WOqIzzFHykQx80w8pCep%2BH2B7wnK60TEJ2Jfqt4QkjXQEbhW2whITABTXCmK2Oy5gBkQzVviAjiAOxgwVIBVCWnJj8ZZwjXFKK82mhDFGwwLJdEuHDSHjCihkW4TABvwpQsImANQnNxZB3jeoJgPqOvnJrZZqQ64rIILn0xwB18GUPjBYF5yuFF834renjSprH1W4L9ECgWTsqeIbcl41QNeKRIxAQo5lCnMThWIpRUJD%2FLuvgMgRpQUwygrelFF1jSD4AtfG3DQOuBDcpCjbJbAOIWFVAhxgVATuyJfCyQJxHnactOJmBIA5xQzWIPXCXErjSYFMP8cxGUhNEdABoR8d%2BJLgI8I40AkgXEDgFUg%2BMH4kXPph%2FH8ZXCs5TSSRPOi9g56fARwByNfChN8SZ%2BFKIOhfxIIM4GsQYicDQjgU3xWEdnHpEXy1QCyBQhII5jfFYSyMj%2FPgLhPSgET0ghE80IYMFTGCNY94vCGcLfFSI0QsFMANBESSzl6xkCQTBIVSksgC%2B%2B9UnICjgDmwlwEUEwMVIaJnNb6BkgoNQHnq6gRIhocyaficzxA12kvfeJFK%2Bxb0Wa%2BfRdABEgnI8rAyNDmv1NJxF8RpA0nGFYDqlAS8po01okZNgAbizmPUvqHNMmlsAWwKAMNIUQ2mS5QgIURYLzjOEmBEp15FKcCDSn69qJ2U4EOVR4y7wOwgBfsXX3MbHJEgQGFaNHUTp6tMEiwDIc4ASHuiAAJCEmBkmAzAObScFpSIRqAYAODcQIMETadUBxJyXKDDJ0oCd3pGsT6Y4hjoijjKQInfqDh65Qi3qf1NsRWK7H50hELDJ7r%2BweSxImxiSVseWMcSdi4S3YtBKkkSDtkL%2B3E2ceuX4mLjqQpOdSiIwML3IOApJYPLf18Hh4DmEACxq%2FEzHHJsx1IXMf7BRJ8yEcBZKWaSWOTKBtQksbMUaFJIRolZCYtzMTOH4sgpEuFVQMMlwoEoKKpOLQO%2BB9HYlYJPIZIK0EEmizWiyNCeH5HMiYA8CIJd2ZsEwADILJvsgSZkiEnnQ%2FpqgReqRGXoKwIZS2SOKXW%2Bl1DcZKYuoUIiNom1mJA%2Fc2pbWtq212ADtJ2kjNF6dUDQ7tL2nWB9rq0y6P0%2FOQnQbpFym6plbwcQh652c3USCDSJTNzrUyVKCbWICUhTlIUPaac72igE8mnsqYx4poh8R%2BJnjGyjTKAANNbzg1R6zfFoH0IsTWyQ8xCEmV1ipDH9%2BIpInhC5k4mcdiw5lA%2BbkACAACXkQAqfDn1Jxm4HBJ4Zwc3LlmXyS4SbDPjPnxGgkU6O%2FQeZnVHlsyp6ftKsXcThBAZoF5859JfOXhwKN6OdRBVzPkQoL4Q%2FeZPmPI7ETyOpOswFMvyWFohKJUNDPr%2F06T4Rj5PhTLOdGpYiBAAAQTAR0FwC4ftgtLHwK8F%2B1JBUjg4WPwRAvMRCHwp8FYKSx5MssSIsrHiL4Q1LIPm6DIVoJOZToCgcjKbYZ9CS2YYWHcUKzcL0kUiqeSjluTcKTAUinwtFioyFRXEPhX7qoGBoZ8i%2By3dAPD14yZShBRsCmsj1dak4Qk2MuOnjJ%2BlCJLFtM2saxwbGFjmZsfOEvHx5l35H5SeGcqjIz7oztKA5axWjikUmA%2BkA5LxQBDuJm4i%2BJfXeOn3CL3IdkRfDedSGEAq96ZGpZQkQsG7%2B4iFD04CqaljbJiu5sdaJbzB7lO8%2B2KSqeU%2FM97e8Su1vHwgMprpRKGGVIcxSQomUu8yCjnDsnDUPaGKiS9OF6g9JjYRLvpDdHWU%2FK6pNz05KAXnCcgIT5LxWeGQpVwuKUDkHp0UZ6SjLPCVgxQYBf0nKLRDygiRw4liZKTRA4gOJ2y7tJVCIGhgGemYCpMHTFAQqN6t0Aab2EwSUAUg%2FoWiH4FCA10Kh0%2FUUDmycHiMQQQUTwGpmFrXBIGnQMJWLM6qZgnB84LZi2AHimgRQfc4ESYC5IqicQZM4eRTIQWiKCFWykXudG7T%2BK7ireZlaeAqQGE%2BVqKg4VMvhB%2BF9CRC2VaytUYSlUVQpDJQryZXaqDQuq2AmKNVULTppxkpdJ7FBpvjriJsMIi5IQm3oS2Yoa4E0i3p4REVWzZFXNOiiv1M2bzL2NMF2ZWS2p5qglKGOJHqwDxDRVCMeM%2BKoAt5KEK5kRKIVwhI5nsmOafjjkizlxL1U1Gbl%2BJbh%2FisRH1TqqnLnQs12YL2bHOe75qiFaHcsLsWhjyrS1paAyOVDOGXQ6wwMBaHAEAAdpDapjhXQnVkEY1Tfj6WGrt0cq22FswlJKqzV4qknq0VmICsRYdrUdS1MHTKqY1mcLWH1DwhrEj6hcVuMFCXQ%2F5Kw%2FpK9ReAOhhYB1UUDafoqWwVqZoKK2AtGouWmpFpcwLdXWByqhRjVyK8qNbn3Dhr9wHq8DleNdW3it6%2Fq4yGXCDXTRs2enYQBBpNiRrb8DdOyXGrnAJr41J45NXcNTX9EWQA5TNf4Cjl1rc1Da%2F2QWsLV7kfiDxMtY6rfVPDC1Na6Od7LhR0aE5Acl6vjTPUOEQoOxSsEsUqnPqmN64v8X%2BKkTTI0wE6llRUgeEZR0p1HfxaKETAZQjijRTuKlGknEj4kCmoDcpoXVJg1N%2FwpBFlMog6bwoXRY4nWHDb9EPc3xN8SWqiKObJJWUDKG5vKgsavNxob1QAuNUaxXNHUDzY8X3A%2Bbb8EWgLY0SC2mb5V5myTFOS400afZfGhuAxpfVJb51qjdldoHpBEjuVNssHLyv5UKKhVSi8kSoukrfqMqf8cqmbn8nXZApxZBQX%2BNa3oTOtlmRCSW3Kr9a5uHuLCO7HKr1IPcSm5LQVppX88MoWEFrU4uwmgIVc1wLrUto%2F4%2FxVt64mDTeLQCDbYNz7EbRkNbjjaT6wEk3HAHS05rMtfs%2FjTluqxYAfm4QP8epMEyKMRcfMYCYhCm35blwNK4MBalYCCrKUwq7AjoAUpb1p6KlE9U3GE1%2BA9peso5BTmB5EImlShATsjpoyo6nNpxM8pjqWQU4Yk2217f%2FwNhLSUogARuBgIDILeilE1m9gWQ%2BE1QSLg%2B1AT1894wMLeAxXSa%2Fxhm%2Bpdjr2Ro79NGOgXW4hx3o63xYu05Pskl0pRpdlqETjsydZerqoJgPzaFCWKsat6E6pFetA6rboBxEPQHmKDCUA9wCnE6lvQH5owBe4MsxCIMvxlhi4Q1Ld2nbsFQAiCd8AWnZwjaJnz%2BFCs8nTmNJT5iYeSRQtUWMSQg6NUYO2rRQsIUSKyJWNd3ZIFN0JifdA7IAt10j6JL4kzYy%2FMIvJEczodaCUBZ1SFTtq6wi67DQgVtblhlNpak7mhC%2BZwVTxdwsvdumXKNy551IUeoHVHqlaMF%2F6S%2BZHVkLR7WAse9saKt%2Bo8UvSGZcIDjJ1Zx6p54ZMDgU3H1pUDV0mwqDbkhaFtGNAxSKm6k3G7akJwUbrVtrX6tb8cuEwBE6mnX1zt0G8YulVtB2st0l2ytZi9nDRVdm9ZUDonTEMgXj1N97azZAj6jcEJMKJYjeeLGlWqlpy5WMniV%2FxeIDlJJQVAqWAgqr0CwEDfbdX1VwjGNzCabOaBNJGlEqZ6YCNJWTW%2F4iFGzEYiuCfb%2B4ag5oZCA3s83vM%2F9zBzJrORARVqgCbBrPCih%2BKIFk1IW3cDfjmkd6lsXe%2FXjgcxSzlWSzE7PaPrlI1ap9xesRZ2K7JIGF96Se3hoZXWMqn9a%2B1lv1xRGEcKJ8LS%2FJN1y28GX9v8R4aqrNw%2F69xQh4FgAeqKt6do10mbhAZahQG4p7ey1bVOtWIH59%2BJEoKgeMXoHwi9JC0eaHMMCkqQBB%2BCgfuIPtKyDEO7RZQcQgcyaDlYOg4IbQhMHZyLBw%2FfXsr1oRdxE7Mozwef38HSKxRxgyIbiniGtwkhvqdIc6hzyruJu%2BkG7tJLTDzdVip5ajmCiDGPdrimeS3QRqmzjdsSTMRrJD0FjMwVgXxdKk02cxOYc0Yw0tiyDrZ6Qg%2BgPZWzuov8vE6sqkNTsQiJoGdIiICFAJnVLZWYhxuAOzG2zAjgIZxq7EHupDXG3QtxlY3fo5h7HDIFpPdENOL6l8nG4QCvmSnCMtkVVA8cyGNLghgZIRcJIeW%2FsL1T66ts%2BwMoieeh3EMT4yt6uzBxNV1WYFCqkzofn3YbKsFpAqcni73u0wDpGXnCyZ73bHSME3Rk08a4FihIEWA742hMv2xJr97W3CaRjv2AJMg%2FJrmCZ3ZjCmL95gDCRKZwmu4XjWoGU6oNBMIjQac0d1bnX0OOJ2Ym67ZE1E7hkRc2%2BnZQvoPaBigCmXWVAHydNS%2Bd9WnvBY002T1DH%2BgIxnWQUsqo%2BmpjpONxaZy%2B4%2Fs%2BjdC%2BFmHrfAbGfQN0jCPhEMi7H5TfSUw9mi0WaGuZDnCVbrJew77Mm75OCUuDYG1EpixZos6WZ4M346iOsPU3NApj0h5SpdERdmd0Usg3QGELJFmYoUczv1efIFE1AjAuEDui6ZE7%2FOgmRcmoPsa09h1QDpmeDjZ7oxJF6Oe9X56gMUJMb0RHyJAJ8pPdohT0AiMlBPQyMT1JyBniw25iGF7quwxIJudPU1JedwZHmPk5x%2B8%2FHNQCrqpuJA3CnALUmfjvFl2uKGYVUD%2FmdJOkuaJdtbwHGtQgp0uWVtOOtbfjVxmneaDuPAnHjpqVvOCcQhVLoT5fRJNqgROrCkTc0Q2dqFROWU8D6hqmToqrG0nCTme2QqzLbN9n8TMZOkxrAZPTgmTM5Tk82A1j%2BL2TYJnUl4ixo2HzAvJ3i%2FKdFwYDIEqCBziKeW1BTXcsFg4ZoLlPYW0BJnIU0hY20Gget4pgyzfrUvSnlBspvU1NENP0gKxJpjsXXsvCWnCic52029hNK9cNSLpmS26a15Od4WIQVsF6dczXm%2FIo2YM5IEAT%2BnmLPRwS1Gf6A47D2WNKM7FczjiXtErKvc2%2FOPaP6lsq0L4c%2FlZaRjP90m1wzOyq5AGCrHSwtZedWgDlm1qa5XZJLtPqYjTopNI7lbBPAAbdPyqIyHUvWXChh1umwCnr9o6zW8yKr%2FFTFvVDCjoqqy80tBMB1W7iefPKcmsbLGgUaepkzmHQ3oDmxjtyRa2tHqtTnywa8xNZvJI07zJzL2ALmKkGvHppooatw0ms1CynDIwdQBBddsF2HhrrYUNDXA3MWJ6QxYP6yno7D9Bdz%2B5zCHPKPNhXmOR5ow2ut4yE9zzrRS8wruE5fyHzF50GpTz1OrQFwYodaDiDBv26t9IF0INLpx34CwLc3Vc%2BEDU24MyYdxLbgdbRzXm3zd54pBN16o9KGevVUQfxje1va%2Frr6S7f2jNhdWerc0Cjfq3UvwWPjiFlZspbcQoX%2FjVoKkBhcIlYXC1MFjM5vsLJjwwNysdUytrMvanNB5Sg%2FYcXs2cEvNPBB1crr9r0GhDpR7nCcBRItFWibN47M8qDOHmhjXNonTzc%2FPM3%2BbJA5m0Lb4wQWOT3VmuFBZ6W7KXT8d1sLLabUFldN3BPHbwQhJzhnrLt0bedvcEoJ3IXtgm3NG%2BHWiE8QbcsP2oYNebBhZhMW03YNDrRUAhNtcJAZ8U%2Bc%2FLFgNE3BlBup3wb8N0K%2BmJfNDGoro8QHs9n87g9p7mYRXV%2FOJHD3SSgCRKythrhemU7PVgG%2FOqyvqBBQ12njXmvo20TDIA4%2F9k%2B12hhKr7gHbI3Nm2VXIBZvEoWQuLPuS2xu9MgogBxiCUSqpg00I0tLqzvzGs2lU7rGl6l70gIL4jQMQEAJW6xQZIqffw3lEZ6jNkyRJGEq0DGYlup%2Bt1c%2FIYAlkgWjgDsD9lDQiT%2BMtAEwNrBoeGbaHh6uh%2FwIaA%2BhgA1PP2%2BMdBv%2FJi19EzJkoXuQ4P88GsN0SzwO17bkJ78YhxO2ABkPce3aNh0djRD%2B2uHs9n4rw%2BUhnkBHMwIRwJ3m5iOz9hD7VC0GkeyOMs7N4KLQH%2BS%2FqL7dfKQ9Wqo3ZqT7WW4SXSgpiNKQ0u8fh0ckwxHp4A1zawlxMJqoBL7j7NAJKhYd6RYVCHJ7dEP4wThecE4D7UTz5jr4ftA4puxIR9QxPOgojwyMAFSduhpdx4HB%2FgMSclwgdejyzEHKIRa59YhsXwrxhcaZTgAAS6cso8sefmWnJcalsABcZ3zwgt90J9GDdC5P8Hc3Qx1I6%2BYyOtc1LLIKPTJGDPf7wEAC31sO0SOiHxjr5lkDIcrmcHpusaI%2FF6fpJsHj8OZ8BEiCtOuefTtQC4zdBnOHd%2F3Bewc%2BcFZBncNjhY9Eggg4OVzJEFpTc%2F6C%2FP0kczgF%2BLTwuQnqlMJ5ykg%2FpWpqlnTskF%2BgDwi9PVHZOGHBODKhYRBzvTkwHM7HN71UAvzhRI3wiE35co4SUILkOYDTg%2F7UDDBPsCOAJB8hhQ1gDfl%2BcCBYmcgKl9EDYD0hmpBMd0a7FDSagSIFiUJrIwCDTDaXzYXNu3wEBDNmX7QlIKEwvEkd2Qz8UiqrOamQvixeBpynEvrHQ5mptWClosE3G3dIHGwj9p5eVeVsTUFDulLfiahwTzKzUxrvxRFyJJs4h60HgWadeZM99RZ16sfrgmrPxHF6lUxhO%2F4U5TLEEPCQRKAjkavVPrmcA5JfTHhwK22qkPcldfOTqrpqPwtmRuspuqYDd4Q%2BGfD6XcrDkDhMAucGQshF8CiOrsq6PygG3BJcLlQhaH1h4eu0oxWqipJOMNoRlIxgja%2BF5FpUiDlGzdhDRDsFiigLad%2FarttZF9NmEqjMIR5AcH1ssFSBHeGqjGvj8pr7rm2%2FOgddlDbSkEb2%2BpEjv5RqK0d6fwLLMzFD3UWd%2BcXnddqs7JxHItSHuTruz8s5aQhgnCHc1lESvcIMLWgBwXZa4H0NBrCcAMAmAnieYQ1KI6mMFD93PJiXFNHlgaAgMlgOflmDWIMoBTAj4ghQKcikIcASUfCCJEkiyc5I1B1SJpFAE2RnltUZR%2BJMseyPlILkUyOZF3F%2BRp0hJEEXY8R7L3kBOUcCrUAVbUVaovj4Ws1G5sfSuo%2FUWlmJG3yoO9r0tFh4rK4fPEl9CcOS%2BEPbbtYL9btAgBfqYJLYb1YGYsGBnUQ9IbQuIBFECBaJWAeCXyEK8UCeAQmFLcV%2FDLrkQBsnL2o6UAdScKilgmIzyzfkQRUgO3Strt%2FLJ7dgi%2B3sBAd1iZj3Du9VzI6kKe667nv0RyXq97e5vfLq9WjW0dyYGbdVuQRzbqzTV5NfpWK3z3a4JJj7GdVFgBV%2BkEBGzQEGReivOC1187cnGx3Rb%2BAGbdUuq4%2BMEbzre5fKrqZjt7Q07ZZndioCn9NTYQ98O6%2Bv6NUNdkq52X3Qeof5vdjTl%2FpnBlXzvS2aRht4qONWvDjZICDtEbJhSgIDxrd9hACOIvACgX57fxnMiLktAi5X%2FAU6XRkubAabugPB5YCRGAQysDwLhRSOPVzQCARH18u3SLAQEDZVlvEe2V%2B5EIqEW5hs1OZIAJwTShH5BipDI%2BckeEcyFoHU7tBz7qABABj7FDI%2Fs02Pvr5HDx8Ip53hPtbMT96JlQb85Pyn9xSrK0%2BEOWvVvJyUKDnDprD1%2BMr15J5m4do5kX%2FNTAevO52jPgd6%2FQaqPdFHJWXIAzrfR8wBzIqPpbLMCfbI%2F6QrPzA8Moi9KlzlnE1vFAD6o6BPVhae0%2F006sTltm5kU0BSQJSKlK2AB565JNjSloUTdh%2F33815nxlY6Qf7uQ75D9y5PEYbPHc6zsPNtYJ%2B4Bkkn6w1Uhg%2FPeMUT9N92mpQ%2FjrcP674%2FBF%2F6hldEEsWqZ%2Bm%2Bwu1gIVir79%2FFkCfE5ayKM0RmJds%2FTRPpZp7XF8ZDNo%2Fx8Y%2BMm2W%2BYACAZh2MJBDS1k3JktiYaE2vTEoJL2JDxJNoUrC4ylEhX1WTV9sD7vVZZGDfjgrM%2BJyLwuCgVbgpW2jfYUzIDAyOAwBAejTPmgLWsFG9WAuMDeLvSsD4ghwBg7ainSDcDIOVdAx6MgNwDgD%2BAlgPipOi1EG%2F6sANwFSBIAH2oABkBAVTG07AOkC8Q%2BjIYwpAAAOJwoPgL3BIBawr3BigwGPR7DuHIAADrtDNyC8gZfrF5Senlr3CESTIiJ45ebAVx6yQVIBwFAQvHtwFUgAnlgicBnZuIEOIvIgUwcB0gYKB8BKkHIEiBYntUDvC8ooqK8qqKoIHci3AQp4gB2qDQAqe4woIF0uEwB0BoAlIHEweAfiC2RQgNwAACiAAJx7wTgQaAcAIaIEDZgBzLlA3AOQpy580qgM8AJMBgDcBEqfALZChoOAHB4uA65O4BUqiAa55PAqARgFYBnEIQC4BiMPozui8%2FtFReiPogjLcuaAAsDC0OAGA7NYsQLDI3AswA8BgstwC8BvAykOEETC4DrECwI3QtUFhBlQRhDNgfwDKDQQRYFICuw5QVML6I0HnBYxBCHt7AMShoCciv%2BSQWsIWuhgAHyQK2njh6Q%2Bi0JQGuY4AY4iQB9AU%2FAZQxAaPBkBrnjoC9w6nkpwbwI5lED0QLupIpigWHomLsQBHmq5EerLCR5UApkrJAkeJcDR7Qup6BAG0BTHqwH0irLGx5UetIrwFfBKkJIjcicnnyJsBgosJ4QhPAeAR9u6gZJ5KiMnroEoh%2BgUp5GBqWOMK0AD%2BP5aoAIgA8G6iunsBCTBUPlv6H4riBA5hii2JQDWgEPrEGiA5ziICKyaKE9rKAGwFSyPw0aCcEmc5IfKA7Bs2LQHAQUiAR7DIlsN4y1ARJBOizA1uDyAiM0tJpYChOiBADChGAqKGzGAIbsG0BLIAwHoO0oYkjoEUVDqFIQiMBZYM%2ByWEg5ai%2BIXqKEh9QITBWh7ZN2hHA5%2FgcCLAKLmIC8hGwGi5lQ%2BFrvBMBVuBICwyqAD6Hm%2BhkAABKkSPSBrBbIQh7Ug2npxRuhSAVsraeNIYh4eISWM6EGiS2Mlg0opMHGEeIl4FYB6Q2sBQR6QlAagC9wsUAzyUB%2F5rMCaSjYU5DKhp%2BGqF02zPKgCzAPOIZD9hPALzgOBBnmD4G6S2AAwBQwEHKHXBiofuiaI04agCjh5Lu2HxQU4b%2FD%2FmkECcC84fpHsr006UmACLceoj9gZU24Tebbh3AHcriAvOEOEXhQ4VeH%2B4hQMeFZApgmQDngFiMT4dIqejmHTByHnMFIBEgEAA" rel="nofollow noopener noreferrer ugc" target="_blank">here</a>.</p>
+      
+      
+      <div class="fixed-post">
+(The site has been updated to address this comment.)
+      </div>
+
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Leeham">Liam Price</a></strong>
+      
+      — <a href="/forum/thread/939#post-6640">23:17 on 24 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6640" data-react-url="/forum/post/6640/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: StijnC, Adenwalla, marinov, Kevin Barreto, KentaKitamura"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">5</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: StijnC, Kevin Barreto"
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">2</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-6650"
+    class="post depth-1
+           recent recent-3
+           odd">
+    <div class="post-body" id="post-6650">
+    
+
+
+
+      
+      <p>Nice argument :) !</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/StijnC">StijnC</a></strong>
+      
+      — <a href="/forum/thread/939#post-6650">19:59 on 25 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6650" data-react-url="/forum/post/6650/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Liam Price"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-1039"
+    class="post depth-0
+           
+           odd">
+    <div class="post-body" id="post-1039">
+    
+
+
+
+      
+      <p>The third question has been solved by P.G. Walsh in his preprint "A question of Erdös on 3-powerful numbers and an elliptic curve analogue of the Ankeny-Artin-Chowla conjecture". One can look it here: https://arxiv.org/html/2404.03970v1</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Alfaiz">Alfaiz</a></strong>
+      
+      — <a href="/forum/thread/939#post-1039">05:32 on 13 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="1039" data-react-url="/forum/post/1039/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-1045"
+    class="post depth-1
+           
+           even">
+    <div class="post-body" id="post-1045">
+    
+
+
+
+      
+      <p>Notice that that paper refers to Nitaj and Cohn itself, but also concludes the same result indeed.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/StijnC">StijnC</a></strong>
+      
+      — <a href="/forum/thread/939#post-1045">11:54 on 13 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="1045" data-react-url="/forum/post/1045/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-1046"
+    class="post depth-2
+           
+           odd">
+    <div class="post-body" id="post-1046">
+    
+
+
+
+      
+      <p>Cambie, do you think the finitude of solutions in the second question could be deduced by the n conjecture, that is, the abc conjecture for more than three terms?</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Dogmachine">Dogmachine</a></strong>
+      
+      — <a href="/forum/thread/939#post-1046">12:13 on 13 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="1046" data-react-url="/forum/post/1046/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-1047"
+    class="post depth-3
+           
+           even">
+    <div class="post-body" id="post-1047">
+    
+
+
+
+      
+      <p>At firt sight, no.<br><br>More exactly:<br>If Ramaekers's variant would have been true, the answer would have been yes.<br>Since then $a_1+ \ldots +a_{s}=x$ for coprime $r$-powerful numbers $a_i, 1 \le i \le s\le r-2$ and $x$ implies that <br>$\lvert x \rvert \le \lvert x \rvert^{(1+o(1))(s+1)/r}$, and thus $x$ is bounded.<br><br>But by HKS25, we know that one is false, and the bounds are too weak to conclude.<br>(or one needs additional things, like while the $a_i$ are coprime, they have pairwise large gcd's, for which I do not see any particular reason)<br><br><br>For reference on the state of the art on the n conjecture, I had a look at <br><a href="https://www.cambridge.org/core/journals/journal-of-the-australian-mathematical-society/article/improved-lower-bounds-for-strong-nconjectures/881532D8B69924BBFA5C76A32A52063A" rel="nofollow noopener noreferrer ugc" target="_blank">[HKS25]</a>.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/StijnC">StijnC</a></strong>
+      
+      — <a href="/forum/thread/939#post-1047">13:00 on 13 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="1047" data-react-url="/forum/post/1047/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+</ul>
+
+
+
+
+
+<p>
+                        <div style="text-align:center;">
+<strong>All comments are the responsibility of the user. Comments appearing on this page are not verified for correctness. Please keep posts mathematical and on topic.</strong>
+</div>
+<p>
+
+
+<div style="text-align:center; margin: 1em">
+
+
+  <p><a href="/forum/login?next=%2Fforum%2Fthread%2F939">Log in</a> to add a comment.</p>
+
+
+    </div>
+<p><div style="text-align: center; margin: 1em 0;">
+<a href="/forum/">Back to the forum</a>
+</div>
+                </div>
+            </div>
+            
+
+<script>
+document.addEventListener("submit", (e) => {
+  const form = e.target.closest(".reply-form");
+  if (!form) return;
+  const btn = form.querySelector('button[type="submit"]');
+  if (btn?.dataset.submitting === "1") {
+    e.preventDefault(); // already submitted
+    return;
+  }
+  if (btn) {
+    btn.dataset.submitting = "1";
+    btn.disabled = true;
+    btn.textContent = "Posting…";
+  }
+});
+</script>
+
+<script>
+document.addEventListener("click", (ev) => {
+  const a = ev.target.closest(".thread-sort .order");
+  if (!a) return;
+});
+</script>
+
+<script>
+document.addEventListener("submit", (e) => {
+  const form = e.target.closest(".comment-form");
+  if (!form) return;
+
+  const btn = form.querySelector('button[type="submit"]');
+  if (!btn) return;
+
+  // Already submitting? Block.
+  if (btn.dataset.submitting === "1") {
+    e.preventDefault();
+    return;
+  }
+
+  // First submit: lock UI
+  btn.dataset.submitting = "1";
+  btn.disabled = true;
+  const original = btn.textContent;
+  btn.dataset.originalText = original;
+  btn.textContent = "Posting…";
+});
+</script>
+           
+
+
+
+
+<script>
+window.MathJax = {
+  output: {
+    font: 'mathjax-tex'
+  },
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+};
+</script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@4.1.2/tex-chtml-nofont.js"></script>
+
+
+<!-- Previewing forum posts -->
+<!-- Previewing forum posts -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, m => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[m]);
+  }
+
+  function normalizeHref(href) {
+    href = href.trim();
+    if (!/^https?:\/\//i.test(href) && !href.startsWith("/")) {
+      href = "https://" + href;
+    }
+
+    return href;
+  }
+
+  let mathJaxQueue = Promise.resolve();
+
+  function clearMathJax(element) {
+    if (window.MathJax && MathJax.typesetClear) {
+      MathJax.typesetClear([element]);
+    }
+  }
+
+  function typesetMath(element) {
+    if (!window.MathJax) return;
+
+    if (MathJax.typesetPromise) {
+      mathJaxQueue = mathJaxQueue
+        .then(() => {
+          if (MathJax.startup && MathJax.startup.promise) {
+            return MathJax.startup.promise;
+          }
+        })
+        .then(() => MathJax.typesetPromise([element]))
+        .catch(err => {
+          console.error("MathJax typeset failed:", err);
+        });
+
+      return;
+    }
+
+    if (MathJax.Hub) {
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, element]);
+    }
+  }
+
+  function renderPreview(textarea, preview, label) {
+    let raw = textarea.value;
+    const anchors = [];
+    let idx = 0;
+
+    raw = raw.replace(
+      /<a\s+href=("(?:[^"]*)"|'(?:[^']*)')\s*>([\s\S]*?)<\/a>/gi,
+      (match, qHref, labelText) => {
+        const href = qHref.slice(1, -1);
+        const token = `__A_TAG_${idx++}__`;
+
+        anchors.push({
+          token,
+          href: normalizeHref(href),
+          label: labelText
+        });
+
+        return token;
+      }
+    );
+
+    let safe = escapeHtml(raw);
+
+    anchors.forEach(a => {
+      const html = `<a href="${escapeHtml(a.href)}">${escapeHtml(a.label)}</a>`;
+      safe = safe.replace(a.token, html);
+    });
+
+    safe = safe.replace(/\{PROBLEM=(.+?)\}/g, (_, p1) =>
+      `<a href="/${escapeHtml(p1)}">[${escapeHtml(p1)}]</a>`
+    );
+
+    safe = safe.replace(/\n/g, "<br>");
+    clearMathJax(preview);
+
+    if (!safe.trim()) {
+      preview.innerHTML = "";
+      preview.classList.add("hidden");
+      label.classList.add("hidden");
+      return;
+    }
+
+    preview.innerHTML = safe;
+    preview.classList.remove("hidden");
+    label.classList.remove("hidden");
+
+    typesetMath(preview);
+  }
+
+  document.querySelectorAll("form textarea").forEach(textarea => {
+    const form = textarea.closest("form");
+    const preview = form && form.querySelector(".post-preview");
+    const label = form && form.querySelector(".preview-label");
+
+    if (preview && label) {
+      textarea.addEventListener("input", () => renderPreview(textarea, preview, label));
+      renderPreview(textarea, preview, label);
+    }
+  });
+});
+</script>
+
+<!-- To handle the search bar -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function setFilterLink(linkId, newFilter) {
+        const link = document.getElementById(linkId);
+        if (!link) return;
+        const pathParts = window.location.pathname.split("/");
+        // Expect: /<section>/<entry> or /<section>/<entry>/<filter>
+        if (pathParts.length >= 3) {
+            const section = pathParts[1];
+            const entry = pathParts[2];
+            // Construct base: /tags/additive, /sources_bib/BL09, etc.
+            const baseUrl = "/" + section + "/" + entry;
+            link.href = baseUrl + "/" + newFilter;
+        }
+    }
+    setFilterLink("solvedLink", "solved");
+    setFilterLink("openLink", "open");
+    setFilterLink("yesLink", "yes");
+    setFilterLink("noLink", "no");
+});
+</script>
+
+<!-- Handle the dual view link -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const dualLink = document.getElementById("dualViewLink");
+  if (!dualLink) return;
+
+  const isInDualView = window.location.pathname.startsWith("/dual");
+  dualLink.textContent = isInDualView ? "Exit Dual View" : "Dual View";
+  dualLink.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    if (isInDualView) {
+      try {
+        const leftIframe = document.getElementById("iframe-left");
+        const src = leftIframe?.src || "/";
+        let clean = src.replace(window.location.origin, "");
+        clean = clean.replace(/[?&]embed=1/, "");
+
+        window.location.href = clean;
+      } catch (err) {
+        window.location.href = "/";
+      }
+    } else {
+      const currentPath = window.location.pathname + window.location.search;
+      const rightPanelDefault = "/";
+      const hash = `#left:${encodeURIComponent(currentPath)}&right:${encodeURIComponent(rightPanelDefault)}`;
+      window.location.href = `/dual${hash}`;
+    }
+  });
+});
+</script>
+
+<!-- Redirect links and searches when in dual view mode -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  if (!window.location.pathname.startsWith("/dual")) return;
+
+  function getTargetPanel() {
+    const selected = document.querySelector('input[name="targetPanel"]:checked');
+    return selected ? selected.value : "left";
+  }
+
+  function loadInPanel(panel, path) {
+    if (!path) return;
+    const iframe = document.getElementById(`iframe-${panel}`);
+    if (!iframe) return;
+    const url = path.includes("?") ? path + "&embed=1" : path + "?embed=1";
+    iframe.src = url;
+    const inputBox = document.querySelector(`#panel-${panel} input`);
+    if (inputBox) inputBox.value = path;
+    console.log(`Loaded "${url}" into panel "${panel}"`);
+  }
+  
+  document.querySelectorAll(".dual-aware a[href^='/'], a.dual-aware[href^='/']").forEach(link => {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      const path = this.getAttribute("href");
+      loadInPanel(getTargetPanel(), path);
+    });
+  });
+
+  const idForm = document.getElementById("idsearchForm");
+  if (idForm) {
+    idForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const input = idForm.querySelector(".idsearchTerm").value.trim();
+      if (!input) return;
+
+      let path = null;
+
+      if (/^\d+$/.test(input)) {
+        path = "/go_to/" + encodeURIComponent(input);
+      } else if (/^((\d+|end)(-(\d+|end))?\s*)+(open|solved|yes|no)?$/i.test(input)) {
+        const parts = input.split(/\s+/).filter(Boolean);
+        path = "/range/" + parts.map(encodeURIComponent).join("/");
+      } else {
+        alert("Invalid input format.");
+        return;
+      }
+
+      loadInPanel(getTargetPanel(), path);
+    });
+  }
+
+  const searchForm = document.getElementById("searchForm");
+  if (searchForm) {
+    searchForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const input = searchForm.querySelector(".searchTerm").value.trim();
+      if (!input) return;
+
+      const path = "/search/" + encodeURIComponent(input);
+      loadInPanel(getTargetPanel(), path);
+    });
+  }
+});
+</script>
+
+<!-- Different menu on mobile -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const button = document.getElementById("mobileMenuButton");
+  const dropdown = document.getElementById("mobileDropdown");
+
+  if (button && dropdown) {
+    button.addEventListener("click", function () {
+      dropdown.classList.toggle("show");
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+      }
+    });
+  }
+});
+</script>
+
+<!-- For expanding threads -->
+
+<script>
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('#toggle-posts');
+  if (!link) return;
+  e.preventDefault(); 
+
+  const box = document.getElementById('more-posts');
+  const isHidden = box.classList.toggle('hidden');
+  const expanded = !isHidden;
+
+  link.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  box.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+
+  link.textContent = expanded
+    ? 'Show only the top five comments'
+    : `Show ${link.dataset.remaining} more comments`;
+});
+</script>
+
+
+<script>
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('.toggle-replies');
+  if (!link) return;
+  e.preventDefault();
+
+  const pid = link.dataset.postId;
+  const box = document.getElementById(`more-replies-${pid}`);
+  if (!box) return;
+
+  const isHidden = box.classList.toggle('hidden');
+  const expanded = !isHidden;
+
+  link.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  box.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+
+  link.textContent = expanded
+    ? 'Hide replies'
+    : `Show ${link.dataset.remaining} more replies`;
+});
+</script>
+
+
+<script>
+document.addEventListener("click", async function (event) {
+    const button = event.target.closest(".problem-status-option");
+    if (!button) return;
+
+    const widget = button.closest(".problem-status-widget");
+    if (!widget) return;
+
+    if (widget.dataset.canEdit !== "1") return;
+
+    const status = button.dataset.status;
+    const url = widget.dataset.setUrl;
+
+    widget.classList.add("is-saving");
+
+    const buttons = widget.querySelectorAll(".problem-status-option");
+    buttons.forEach(btn => btn.disabled = true);
+
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "X-Requested-With": "fetch"
+            },
+            body: JSON.stringify({ status: status })
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok || !data.ok) {
+            throw new Error(data.error || "Could not update problem status.");
+        }
+
+        widget.dataset.currentStatus = data.status;
+
+        buttons.forEach(btn => {
+            const active = btn.dataset.status === data.status;
+            btn.classList.toggle("is-active", active);
+            btn.setAttribute("aria-checked", active ? "true" : "false");
+        });
+
+        const label = widget.querySelector(".js-problem-status-label");
+        const description = widget.querySelector(".js-problem-status-description");
+
+        if (label) label.textContent = data.label || button.dataset.label;
+        if (description) description.textContent = data.description || button.dataset.description;
+          widget.style.setProperty("--status-progress", button.dataset.progress);
+
+    } catch (err) {
+        alert(err.message || "Could not update problem status.");
+    } finally {
+        widget.classList.remove("is-saving");
+
+        if (widget.dataset.canEdit === "1") {
+            buttons.forEach(btn => btn.disabled = false);
+        }
+    }
+});
+</script>
+  
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1934b3e5efde8d8',t:'MTc4MzcyNTU3Mg=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

@@ -1,0 +1,39 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#749}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} additive combinatorics
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $\epsilon&#62;0$. Does there exist $A\subseteq \mathbb{N}$ such that the lower density of $A+A$ is at least $1-\epsilon$ and yet $1_A\ast 1_A(n) \ll_\epsilon 1$ for all $n$?
+
+
+
+
+It is unclear from \cite{Er94b} whether Erd\H{o}s believed the answer to this should be yes or no. He also asked a similar question for upper density, for which he seemed more certain the answer should be yes. He wrote that both he and S\'{a}rk\"{o}zy believed that if $1_A\ast 1-A(n)\leq C$ for all $n$ then the upper density of $A+A$ is at most $1-\epsilon_C$, where $\epsilon_C&gt;0$ may depend on $C$. The upper density variant has been resolved by Bhalla , with the assistance of GPT 5.4. Bhalla constructs, for any $\epsilon&gt;0$, a set $A$ for which the upper density of $A+A$ is at least $1-\epsilon$ and yet $1_A\ast 1_A(n)\ll \epsilon^{-1}$ for all $n$. See also [28] .
+
+
+
+
+References
+
+[Er94b] Erd\H{o}s, Paul, Some problems in number theory, combinatorics and combinatorial geometry . Math. Pannon. (1994), 261-269.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/749}}
+\end{document}

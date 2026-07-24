@@ -1,0 +1,46 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#774}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+We call $A\subset \mathbb{N}$ dissociated if $\sum_{n\in X}n\neq \sum_{m\in Y}m$ for all finite $X,Y\subset A$ with $X\neq Y$. 
+
+Let $A\subset \mathbb{N}$ be an infinite set. We call $A$ proportionately dissociated if every finite $B\subset A$ contains a dissociated set of size $\gg \lvert B\rvert$.
+
+Is every proportionately dissociated set the union of a finite number of dissociated sets?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+This question appears in a paper of Alon and Erd\H{o}s \cite{AlEr85}, although the general topic was first considered by Pisier \cite{Pi83}, who observed that the converse holds, and proved that being proportionately dissociated is equivalent to being a 'Sidon set' in the harmonic analysis sense; that is, whenever $f:A\to \mathbb{C}$ there exists some $\theta\in [0,1]$ such that\[\| f\|_1 \ll \left\lvert\sum_{n\in A} f(n)e(n\theta)\right\rvert,\]where $e(x)=e^{2\pi ix}$. 
+
+Alon and Erd\H{o}s write that it 'seems unlikely that [this] is also sufficient'. They also point out the same question can be asked replacing dissociated with Sidon (in the additive combinatorial sense) (see [328]). This latter question was resolved in the negative by Ne\v{s}et\v{r}il, R\"{o}dl, and Sales \cite{NRS24}.
+
+\bigskip
+\noindent\textbf{References:}
+
+[AlEr85] Alon, Noga and Erd\H{o}s, P., An application of graph theory to additive number theory. European J. Combin. (1985), 201-203.
+ 
+ [NRS24] Ne\v set\v ril, Jaroslav and R\"odl, Vojt\v ech and Sales,
+Marcelo, On {P}isier type theorems. Combinatorica (2024), 1211--1232.
+ 
+ [Pi83] Pisier, Gilles, Arithmetic characterizations of Sidon sets. Bull. Amer. Math. Soc. (N.S.) (1983), 87-89.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/774}}
+\end{document}

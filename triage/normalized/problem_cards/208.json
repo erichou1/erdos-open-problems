@@ -1,0 +1,363 @@
+{
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.733
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "yes"
+    },
+    "references": [
+      "Er51",
+      "Er79",
+      "FiTr92",
+      "Gr98",
+      "Pa24"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/208",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Er51] Erd\\H{o}s, P., Some problems and results in elementary number theory. Publ. Math. Debrecen (1951), 103-109.\n \n [Er79] Erd\\H{o}s, Paul, Some unconventional problems in number theory. Math. Mag. (1979), 67-70.\n \n [FiTr92] Filaseta, M. and Trifonov, O., On gaps between squarefree numbers II. J. London Math. Soc. (1992), 215-221.\n \n [Gr98] Granville, Andrew, {$ABC$} allows us to count squarefrees. Internat. Math. Res. Notices (1998), 991--1009.\n \n [Pa24] Pandey, M., Squarefree numbers in short intervals. arXiv:2401.13981 (2024).",
+      "remarks": "Erd\\H{o}s \\cite{Er51} showed that there are infinitely many $n$ such that\\[s_{n+1}-s_n > (1+o(1))\\frac{\\pi^2}{6}\\frac{\\log s_n}{\\log\\log s_n},\\]so this bound would be the best possible. \n\nIn \\cite{Er79} Erd\\H{o}s says perhaps $s_{n+1}-s_n \\ll \\log s_n$, but he is 'very doubtful'.\n\nFilaseta and Trifonov \\cite{FiTr92} proved an upper bound of $s_n^{1/5+o(1)}$. Pandey \\cite{Pa24} has improved this exponent to $1/5-c$ for some constant $c>0$.\n\nGranville \\cite{Gr98} showed that $s_{n+1}-s_n\\ll_\\epsilon s_n^\\epsilon$ for all $\\epsilon>0$ follows from the ABC conjecture.\n\nSee also [489] and [145]. A more general form of this problem is given in [1101]."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.04,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.323402
+      ],
+      "probability": 0.145299
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.681,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.033651,
+        0.451304
+      ],
+      "probability": 0.242477
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.117512
+      ],
+      "probability": 0.032258
+    },
+    "p_high_mathematical_value": {
+      "alpha": 3.5,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.040484,
+        0.519516
+      ],
+      "probability": 0.28
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.367,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.01098,
+        0.355626
+      ],
+      "probability": 0.183303
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 3.6,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.022708,
+        0.398345
+      ],
+      "probability": 0.210526
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.092979
+      ],
+      "probability": 0.038462
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.002288,
+        0.452997
+      ],
+      "probability": 0.227642
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 1,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:16:05.071562+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "91829b35506496b7340a3d260195877cd62a062d19def905dce61bdfdcfaeb62"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "asymptotic_notation",
+        "multiple_questions",
+        "implicit_convention"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 1,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 245,
+      "statement_tokens_approx": 27
+    },
+    "structure": {
+      "asymptotic": true,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove_or_disprove",
+      "multi_part": true,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-208",
+  "problem_number": 208,
+  "problem_type": {
+    "asymptotic": true,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove_or_disprove",
+    "multi_part": true,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_208.html",
+      "raw_html_sha256": "6d3650832fb537f34ae2e657998f280ed8015771840e01093e25c6003feb0c3c",
+      "section_sha256": {
+        "references": "080ff8f71babd59670e2783943cc48c855fa1f2f262c72ce7688f38cb4fbad2a",
+        "remarks": "22a68148edb976cf9dedbfd292e73a67422943dc94a5cae488fbb96a675ee2b4",
+        "statement": "76f2a2fad09a95a8eb956f4dc0f0cad7cc6eea8b5c984900f1b697cec11637b2"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_208.json",
+      "source_record_sha256": "90857a7ef083a2bf30ab066cb95c2df482e7b09dba23afa6d40a85b5121a2c4c",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_208.tex",
+    "latex_sha256": "442838c7738f8a962f516a7d318a50caa3bb006ce90e455d21729ec8e485104a",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "76f2a2fad09a95a8eb956f4dc0f0cad7cc6eea8b5c984900f1b697cec11637b2",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "formal_search",
+      "subproblem_decomposition",
+      "shared_infrastructure_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Let $s_1<s_2<\\cdots$ be the sequence of squarefree numbers. Is it true that, for any $\\epsilon>0$ and large $n$,\\[s_{n+1}-s_n \\ll_\\epsilon s_n^{\\epsilon}?",
+        "focus_question_sha256": "80256ce083ad784746adc44c71fe5704e231bba3a416def2fe9b4e60ba4e0c54",
+        "parent_statement_sha256": "76f2a2fad09a95a8eb956f4dc0f0cad7cc6eea8b5c984900f1b697cec11637b2",
+        "part_index": 1,
+        "subproblem_contract_sha256": "50cf6cb069b2c0c59dfb067bec085454b8ed98d5d4b12401009101288a0d22a8",
+        "subproblem_id": "erdos-208-part-01-50cf6cb0"
+      },
+      {
+        "focus_question": "\\]Is it true that\\[s_{n+1}-s_n \\leq (1+o(1))\\frac{\\pi^2}{6}\\frac{\\log s_n}{\\log\\log s_n}?",
+        "focus_question_sha256": "b5d91d75bd97370311010e7c766b8a19359c9e1c485977a26d8ac20575257c1d",
+        "parent_statement_sha256": "76f2a2fad09a95a8eb956f4dc0f0cad7cc6eea8b5c984900f1b697cec11637b2",
+        "part_index": 2,
+        "subproblem_contract_sha256": "17b2de8bb163159278c338c51f617c6a9a4f49bb951bf844d93cdc7a640e92a6",
+        "subproblem_id": "erdos-208-part-02-17b2de8b"
+      }
+    ]
+  },
+  "research_directive_sha256": "8e0307313d39496f183357597a597e51a391b63c6c77c8476833f9776a63b4d0",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "formal_search",
+    "subproblem_decomposition",
+    "shared_infrastructure_search"
+  ],
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "8e0307313d39496f183357597a597e51a391b63c6c77c8476833f9776a63b4d0",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "76f2a2fad09a95a8eb956f4dc0f0cad7cc6eea8b5c984900f1b697cec11637b2",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "164447545758f1bfe8333ccebfd01562619644e1bcf4b57092729dd55af4c5dd",
+  "schema_version": 2,
+  "snapshot_id": "20260713-deb58d0facd9",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Let $s_1<s_2<\\cdots$ be the sequence of squarefree numbers. Is it true that, for any $\\epsilon>0$ and large $n$,\\[s_{n+1}-s_n \\ll_\\epsilon s_n^{\\epsilon}?\\]Is it true that\\[s_{n+1}-s_n \\leq (1+o(1))\\frac{\\pi^2}{6}\\frac{\\log s_n}{\\log\\log s_n}?\\]",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $s_1<s_2<\\cdots$ be the sequence of squarefree numbers. Is it true that, for any $\\epsilon>0$ and large $n$,\\[s_{n+1}-s_n \\ll_\\epsilon s_n^{\\epsilon}?\\]Is it true that\\[s_{n+1}-s_n \\leq (1+o(1))\\frac{\\pi^2}{6}\\frac{\\log s_n}{\\log\\log s_n}?\\]",
+    "original": "Let $s_1<s_2<\\cdots$ be the sequence of squarefree numbers. Is it true that, for any $\\epsilon>0$ and large $n$,\\[s_{n+1}-s_n \\ll_\\epsilon s_n^{\\epsilon}?\\]Is it true that\\[s_{n+1}-s_n \\leq (1+o(1))\\frac{\\pi^2}{6}\\frac{\\log s_n}{\\log\\log s_n}?\\]",
+    "statement_sha256": "76f2a2fad09a95a8eb956f4dc0f0cad7cc6eea8b5c984900f1b697cec11637b2"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-208",
+      "part_index": 1,
+      "run_contract_id": "070f527d7791b3261f33ffc4706b6a7a2fb37f715c287a679adcfa663df71110",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Let $s_1<s_2<\\cdots$ be the sequence of squarefree numbers. Is it true that, for any $\\epsilon>0$ and large $n$,\\[s_{n+1}-s_n \\ll_\\epsilon s_n^{\\epsilon}?",
+        "focus_question_sha256": "80256ce083ad784746adc44c71fe5704e231bba3a416def2fe9b4e60ba4e0c54",
+        "normalized": "Let $s_1<s_2<\\cdots$ be the sequence of squarefree numbers. Is it true that, for any $\\epsilon>0$ and large $n$,\\[s_{n+1}-s_n \\ll_\\epsilon s_n^{\\epsilon}?\\]Is it true that\\[s_{n+1}-s_n \\leq (1+o(1))\\frac{\\pi^2}{6}\\frac{\\log s_n}{\\log\\log s_n}?\\]",
+        "original": "Let $s_1<s_2<\\cdots$ be the sequence of squarefree numbers. Is it true that, for any $\\epsilon>0$ and large $n$,\\[s_{n+1}-s_n \\ll_\\epsilon s_n^{\\epsilon}?\\]Is it true that\\[s_{n+1}-s_n \\leq (1+o(1))\\frac{\\pi^2}{6}\\frac{\\log s_n}{\\log\\log s_n}?\\]",
+        "statement_sha256": "76f2a2fad09a95a8eb956f4dc0f0cad7cc6eea8b5c984900f1b697cec11637b2"
+      },
+      "subproblem_contract_sha256": "50cf6cb069b2c0c59dfb067bec085454b8ed98d5d4b12401009101288a0d22a8",
+      "subproblem_id": "erdos-208-part-01-50cf6cb0"
+    },
+    {
+      "parent_problem_id": "erdos-208",
+      "part_index": 2,
+      "run_contract_id": "0ec69bca372b775e288b442d97c47863e55d6d51952449e8ad570b1e219e72f3",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "\\]Is it true that\\[s_{n+1}-s_n \\leq (1+o(1))\\frac{\\pi^2}{6}\\frac{\\log s_n}{\\log\\log s_n}?",
+        "focus_question_sha256": "b5d91d75bd97370311010e7c766b8a19359c9e1c485977a26d8ac20575257c1d",
+        "normalized": "Let $s_1<s_2<\\cdots$ be the sequence of squarefree numbers. Is it true that, for any $\\epsilon>0$ and large $n$,\\[s_{n+1}-s_n \\ll_\\epsilon s_n^{\\epsilon}?\\]Is it true that\\[s_{n+1}-s_n \\leq (1+o(1))\\frac{\\pi^2}{6}\\frac{\\log s_n}{\\log\\log s_n}?\\]",
+        "original": "Let $s_1<s_2<\\cdots$ be the sequence of squarefree numbers. Is it true that, for any $\\epsilon>0$ and large $n$,\\[s_{n+1}-s_n \\ll_\\epsilon s_n^{\\epsilon}?\\]Is it true that\\[s_{n+1}-s_n \\leq (1+o(1))\\frac{\\pi^2}{6}\\frac{\\log s_n}{\\log\\log s_n}?\\]",
+        "statement_sha256": "76f2a2fad09a95a8eb956f4dc0f0cad7cc6eea8b5c984900f1b697cec11637b2"
+      },
+      "subproblem_contract_sha256": "17b2de8bb163159278c338c51f617c6a9a4f49bb951bf844d93cdc7a640e92a6",
+      "subproblem_id": "erdos-208-part-02-17b2de8b"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

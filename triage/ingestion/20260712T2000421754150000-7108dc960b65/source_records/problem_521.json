@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 521,
+  "raw_page": {
+    "path": "raw/pages/problem_521.html",
+    "sha256": "b2de2dd9e7a7fa628d4401d5fa5b81b60da5111da361547c921311a2490d5bc6"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "dc71445f9baa45b83afaf572d9962dfeb0140de4fbda8bb3dbc1008cc9b0809f",
+      "source_region": "div.problem-additional-text",
+      "text": "[Do24] Y. Do, A strong law of large numbers for real roots of random polynomials. arXiv:2403.06353 (2024).\n \n [EO56] Erd\\H{o}s, Paul and Offord, A. C., On the number of real roots of a random algebraic equation. Proc. London Math. Soc. (3) (1956), 139-160.\n \n [Er61] Erd\\H{o}s, Paul, Some unsolved problems. Magyar Tud. Akad. Mat. Kutat\\'{o} Int. K\\\"{o}zl. (1961), 221-254."
+    },
+    "remarks": {
+      "sha256": "190f7c1ae1cd4f15df9edaf0d815300723ee13b8adffed539c2c13709581a6c9",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s and Offord \\cite{EO56} showed that the number of real roots of a random degree $n$ polynomial with $\\pm 1$ coefficients is $(\\frac{2}{\\pi}+o(1))\\log n$.\n\nIt is ambiguous in \\cite{Er61} whether Erd\\H{o}s intended the coefficients to be uniformly chosen from $\\{-1,1\\}$ or $\\{0,1\\}$. In the latter case, the constant $\\frac{2}{\\pi}$ should be $\\frac{1}{\\pi}$ (see the discussion in the comments).\n\nIn the case of $\\{-1,1\\}$ Do \\cite{Do24} proved that, if $R_n[-1,1]$ counts the number of roots in $[-1,1]$, then, almost surely,\\[\\lim_{n\\to \\infty}\\frac{R_n[-1,1]}{\\log n}=\\frac{1}{\\pi}.\\]See also [522]."
+    },
+    "statement": {
+      "sha256": "45db3fb6efed425106c85d53717ea5be3bdd8cc56ab8c25ddf9b82b2c64b54bc",
+      "source_region": "div#content",
+      "text": "Let $(\\epsilon_k)_{k\\geq 0}$ be independently uniformly chosen at random from $\\{-1,1\\}$. If $R_n$ counts the number of real roots of $f_n(z)=\\sum_{0\\leq k\\leq n}\\epsilon_k z^k$ then is it true that, almost surely,\\[\\lim_{n\\to \\infty}\\frac{R_n}{\\log n}=\\frac{2}{\\pi}?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/521"
+}

@@ -1,0 +1,40 @@
+{
+  "problem_number": 263,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/263",
+  "retrieved_at": "2026-07-10T23:16:17.748092+00:00",
+  "page_title": "263 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "cc2710a33d9f05e30e154a515be537c28fe9eb3fdc45650225b680def9f22260",
+  "comment_count": 6,
+  "comments": [
+    {
+      "post_id": "6338",
+      "text": "GPT-5.5 Pro disproves the second question here. The argument has been auto-formalised in Lean with Aristotle and cleaned up with Claude Opus 4.7.",
+      "meta": "Liam Price — 01:10 on 09 May 2026 👍 4 📝 1 🤖 0"
+    },
+    {
+      "post_id": "6351",
+      "text": "Congrats! Standard check found no issues and the Lean matched paper correctly.",
+      "meta": "Nat Sothanaphan — 17:25 on 09 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6354",
+      "text": "Here's the key idea. The argument is quite simple. We are concatenating blocks of consecutive numbers $[M_k, M_k + L_k)$. That is, the sequence $(a_n)$ is $$ M_1, M_1 + 1, \\dots, M_1 + L_1 - 1, \\quad M_2, M_2 + 1, \\dots, M_2 + L_2 - 1, \\quad \\dots. $$ To meet the irrationality condition, it suffices to get sufficiently fast decay in the sense that $L_k/M_k \\le f_k(M_1, L_1, \\dots, M_{k-1}, L_{k-1})$, where $f_k > 0$ is some function that can be explicitly worked out. To falsify the growth condition, it suffices to do, say, $L_k/\\log M_k \\to \\infty$ and $L_k$ growing sufficiently fast. The observation is that these are not contradictory: if we recursively choose $M_k$ large, it is easy to make $L_k/\\log M_k$ large while $L_k/M_k$ small, which gives the problem. Credit to GPT-5.5 Thinking for discussion.",
+      "meta": "Nat Sothanaphan — 18:01 on 09 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4521",
+      "text": "Our DeepMind prover agent has falsified the second question in Lean. The proof was found fully autonomously; the only problem-specific human input was the formal problem statement, drawn from Formal Conjectures. The proof (compilable with Lean 4.22) is available here (theorem erdos_263.parts.ii). Here's an informal summary of the proof (due to Adam Zsolt Wagner): Let $a_n = 2^{3^n}$, except on a very sparse subset of indices where we set $a_n = 2^n$. For this sequence, the limit of $a_n ^ {1/n}$ does not exist, but standard arguments show that for every sequence $(b_n)$ as above, $\\sum 1/b_n$ is irrational. Looking at the proof and the problem more closely, we realized that Erdos’s original problem statement (https://renyi.hu/~p_erdos/1988-22.pdf; p.105) required $a_n$ to be increasing. Assuming you agree, it would be good to correct the statement. That said, the counterexample still seems somewhat interesting, so we thought we would share it with the community. (The site has been updated to address this comment.)",
+      "meta": "SwaratChaudhuri — 17:55 on 27 Feb 2026 👍 2 📝 1 🤖 0"
+    },
+    {
+      "post_id": "4526",
+      "text": "It seems that, in all these irrationality problems on the \"Ahmes series\" $\\sum_n 1/a_n$, Erdős always wanted the sequence $(a_n)$ to be increasing (likely strictly increasing, but sometimes he wrote non-decreasing). I commented on that under [265]. Besides here, in [263], this assumption should also be added to problems [264] and [266] (even if there is no real danger there). Regardless, the example that you described does seem interesting!",
+      "meta": "Vjeko_Kovac — 09:07 on 28 Feb 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "63",
+      "text": "Junnosuke Koizumi showed some \"endpoint\" results in the other direction, such as that $a_n=\\lfloor \\alpha^{2^n}\\rfloor$ is an irrationality sequence of this type for all but countably many $\\alpha>1$. (The site has been updated to address this comment.)",
+      "meta": "Vjeko_Kovac — 16:15 on 11 Aug 2025 👍 0 📝 1 🤖 0"
+    }
+  ]
+}

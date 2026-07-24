@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#213}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} geometry, distances
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $n\geq 4$. Are there $n$ points in $\mathbb{R}^2$, no three on a line and no four on a circle, such that all pairwise distances are integers?
+
+
+
+
+Anning and Erd\H{o}s \cite{AnEr45} proved there cannot exist an infinite such set. Harborth constructed such a set when $n=5$. The best construction to date, due to Kreisel and Kurz \cite{KK08}, has $n=7$. Ascher, Braune, and Turchet \cite{ABT20} have shown that there is a uniform upper bound on the size of such a set, conditional on the Bombieri-Lang conjecture. Greenfeld, Iliopoulou, and Peluse \cite{GIP24} have shown (unconditionally) that any such set must be very sparse, in that if $S\subseteq [-N,N]^2$ has no three on a line and no four on a circle, and all pairwise distances integers, then\[\lvert S\rvert \ll (\log N)^{O(1)}.\]See also [130] .
+
+
+
+
+References
+
+[ABT20] Ascher, K. and Braune, L. and Turchet, A., The Erd\H{o}s-Ulam problem, Lang's conjecture, and uniformity . arXiv:1901.02616 (2020).
+
+[AnEr45] Anning, Norman H. and Erd\H{o}s, Paul, Integral distances . Bull. Amer. Math. Soc. (1945), 598-600.
+
+[GIP24] Greenfeld, R. and Iliopoulou, M. and Peluse, S., On integer distance sets . arXiv:2401.10821 (2024).
+
+[KK08] Kreisel, Tobias and Kurz, Sascha, There are integral heptagons, no three points on a line, on four on a circle . Discrete Comput. Geom. (2008), 786-790.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/213}}
+\end{document}

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 460,
+  "raw_page": {
+    "path": "raw/pages/problem_460.html",
+    "sha256": "f330296a58224d25834fe0ed17ac33bc114d6bd222a84c51ff7034704886f0d4"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "3182c538b7d4ac14fc798466e25cc26fb995303140846392b4336809703f4411",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er77c] Erd\\H{o}s, Paul, Problems and results on combinatorial number theory. III. Number theory day (Proc. Conf., Rockefeller Univ.,\nNew York, 1976) (1977), 43-72.\n \n [ErGr80] Erd\\H{o}s, P. and Graham, R., Old and new problems and results in combinatorial number theory. Monographies de L'Enseignement Mathematique (1980)."
+    },
+    "remarks": {
+      "sha256": "327ea4db4bc968ef5e96566137bb7897243d60127436420c0ad9c65274fcbe7d",
+      "source_region": "div.problem-additional-text",
+      "text": "This question arose in work of Eggleton, Erd\\H{o}s, and Selfridge, who could prove that $a_k <k^{2+o(1)}$ for $k$ large enough depending on $n$, but conjectured that in fact $a_k\\ll k\\log k$ is true.\n\nThe problem above is from \\cite{Er77c}. This question is stated slightly differently in \\cite{ErGr80}, which has $a_0=n$ instead of $a_0=0$ and $1\\leq i<k$ instead of $0\\leq i<k$. The material difference this makes is that the main formulation above has $(a_k,n)=1$ for all $k\\geq 1$, which is not imposed in the second formulation. Furthermore, in both \\cite{Er77c} and \\cite{ErGr80} this is stated without the restriction to $a_k<n$ in the sum, although perhaps this was implicitly intended. Without this condition the sum is infinite since the sequence of $a_k$ contains $n+p$ for all primes $p>n$ (this observation was made by Svyable using ChatGPT).\n\nUnfortunately, although both sources mention a forthcoming paper of Eggleton, Erd\\H{o}s, and Selfridge, I cannot find a candidate paper of theirs with this problem in, and hence the motivation behind this problem, and what the precise problem intended was, is unclear.\n\nChojecki has noted in the comments that a positive solution to the main problem would follow if\\[f(n) = \\sum_{a<n}1_{P^-(n-a)>a}\\frac{1}{a}\\to \\infty,\\]where $P^-(\\cdot)$ is the least prime factor. Standard estimates on rough numbers show that $\\frac{1}{N}\\sum_{n\\leq N}f(n)\\gg \\log\\log N$, so $f(n)$ does diverge on average, but it is unclear whether $f(n)\\to \\infty$ for all $n$."
+    },
+    "statement": {
+      "sha256": "053d198681fb3b63af69f98914f1f783e2adf34c02b0453d5ff708917d29b4ca",
+      "source_region": "div#content",
+      "text": "Let $a_0=0$ and $a_1=1$, and in general define $a_k$ to be the least integer $>a_{k-1}$ for which $(n-a_k,n-a_i)=1$ for all $0\\leq i<k$. Does\\[\\sum_{0<a_i< n}\\frac{1}{a_i}\\to \\infty\\]as $n\\to \\infty$? What about if we restrict the sum to those $i$ such that $n-a_j$ is divisible by some prime $\\leq a_j$, or the complement of such $i$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/460"
+}

@@ -1,0 +1,100 @@
+{
+  "problem_number": 856,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/856",
+  "retrieved_at": "2026-07-10T23:19:08.285680+00:00",
+  "page_title": "856 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "2620d49e701dea519557a4fc755ba2ce2dcbca2297d85008392d15c73f1c4923",
+  "comment_count": 18,
+  "comments": [
+    {
+      "post_id": "5422",
+      "text": "With GPT-5.4 Pro I've developped a weighted version of the Tang-Zhang sunflower-capacity argument that gives the exact estimate. The written note is here. The starting point is the same mass-transport idea that Liam Price emphasized in his recent Markov-chain discussion of [1196]: after truncating to squarefree multipliers $q\\le N$, one chooses $q$ with probability proportional to $z^{\\omega(q)}/q$, so that the harmonic weight $1/a$ is transported to the endpoint $m=aq$ with density proportional to $1/m$. The admissible multiplier histories landing at a fixed endpoint form a $k$-sunflower-free family, and this yields a weighted upper bound involving the partition function $W_k(n;z)$.",
+      "meta": "Przemek Chojecki — 15:02 on 15 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5424",
+      "text": "This note requires a little bit of effort to parse, and I recommend it be rewritten (by a human). After unpacking the notation somewhat, it claims a proof that\\[f_k(N)=(\\log N)^{\\gamma_k+o(1)}\\]where $\\gamma_k$ can be (if I'm parsing things correctly) defined as $\\inf_{z>0}(\\gamma_k(z)-z)$, where $\\gamma_k(z)$ is minimal such that\\[ \\sum_{S\\in \\mathcal{F}}z^{\\lvert S\\rvert}\\leq \\gamma_k(z)^{(1+o(1))n}\\]for all families $\\mathcal{F}\\subseteq 2^{[n]}$ which contain no $k$-sunflowers. (Note, for example, that $0\\leq \\gamma_k\\leq 1$ always; the determination of the value of $\\gamma_k$ is still open.) This is a generalisation of the sunflower capacity that appears in the work of Tang and Zhang - in particular $\\gamma_k(1)=\\mu_k^S$, the sunflower capacity that appears in their exponent. I have not checked any of the details here, I just wanted to try and understand what the main claim was. Hopefully this is within the capabilities of auto-formalisation tools.",
+      "meta": "Thomas Bloom — 15:23 on 15 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5432",
+      "text": "Thank you for the comment, I'll try to formalize it and see what happens.",
+      "meta": "Przemek Chojecki — 18:21 on 15 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7297",
+      "text": "After some back and forth with Aristotle, it seems possible to formalize this argument in Lean, but there are two obstacles- the modern uniform sunflower lemma is not available in mathlib, and it just seems hard to prove the lower capacity bound https://aristotle.harmonic.fun/dashboard/requests/59824d11-e5bd-42cf-9bc7-54bdd06a9bae",
+      "meta": "dlebedinsky — 17:18 on 01 Jul 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5429",
+      "text": "Very interesting. I ran standard check which found no issues, and quick literature search did not turn up this result or approach either. Would love for others to chime in, in particular with regard to how the Markov chain enables to prove that an asymptotic logarithmic exponent must exist.",
+      "meta": "Nat Sothanaphan — 17:54 on 15 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5435",
+      "text": "Interesting indeed, thank you for the checks!",
+      "meta": "Przemek Chojecki — 18:42 on 15 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2388",
+      "text": "In joint work with Shengtong, we wrote a paper on this problem (arXiv:2512.20055) and make precise its connection to [857]. Summary: Define the Erdős-Szemerédi $k$-sunflower-free capacity by \\(\\mu_k^{\\mathrm S}:=\\limsup_{n\\to\\infty} F_k(n)^{1/n}\\), where $F_k(n)$ denotes the maximum size of a $k$-sunflower-free family of subsets of $[n]$. [857] (the Erdős-Szemerédi sunflower conjecture) asserts that $\\mu_k^{\\mathrm S}<2$ for every $k\\ge 3$. Our main results are: (1) Equivalence. For each fixed $k\\ge 3$, \\( \\mu_k^{\\mathrm S}=2\\) iff \\( f_k(N)=(\\log N)^{1-o(1)}.\\) (2) Lower bounds. $f_k(N)\\ge (\\log N)^{b_k-o(1)}$, where $b_k:=\\max\\{c_k, \\log\\mu_k^{\\mathrm S}\\}$ and $c_k:=\\frac{k-2}{e((k-2)!)^{1/(k-2)}}.$ (3) Upper bound. $f_k(N)\\ll (\\log N)^{\\mu_k^{\\mathrm S}-1+o(1)}.$ As an illustration, when $k=3$ one has $\\mu_3^{\\mathrm S}\\ge 1.551$ (a construction of Deuber--Erdős--Gunderson--Kostochka--Meyer) and $\\mu_3^{\\mathrm S}\\le 3/2^{2/3}$ (Naslund--Sawin), hence\\[ (\\log N)^{\\log(1.551)-o(1)} \\ \\le\\ f_3(N)\\ \\ll\\ (\\log N)^{\\frac{3}{2^{2/3}}-1+o(1)}. \\]Numerically, $\\log(1.551)\\approx 0.4389$ and $\\frac{3}{2^{2/3}}-1\\approx 0.8899$. (The site has been updated to address this comment.)",
+      "meta": "Quanyu Tang — 02:51 on 24 Dec 2025 👍 1 📝 1 🤖 0"
+    },
+    {
+      "post_id": "2126",
+      "text": "EDIT: This comment originally contained a full proof that $f_3(N) \\gg (\\log\\log N)^2$, based on products of two primes in different residue classes. Since the argument is rather long and technical, I have written it up carefully in a separate note, available on my GitHub page (here). The proof now appears as Appendix A of that note.",
+      "meta": "Quanyu Tang — 15:18 on 09 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2127",
+      "text": "EDIT: This comment originally contained a lengthy proof that for every integer \\(t\\ge 1\\) one has \\(f_3(N) \\gg_t (\\log\\log N)^t\\), by considering products of \\(t\\) primes from distinct congruence classes. Since the argument is rather long and technical, I have written it up carefully in a separate note, available on my GitHub page (here). The proof now appears as Appendix B of that note.",
+      "meta": "Quanyu Tang — 15:30 on 09 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2128",
+      "text": "Nice. Choosing t to be a small multiple of loglogN should, using Dirchlet's quantitative lower bound for the Mertens sum, give a lower bound a power of logN I think.",
+      "meta": "Thomas Bloom — 17:24 on 09 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2131",
+      "text": "EDIT: Thanks to Bloom for the very helpful heuristic comment (17:24 on 09 Dec 2025). This comment originally sketched a construction showing that \\(f_3(N) \\gg_c (\\log N)^c\\) for some absolute constant \\(c>0\\). Since the argument is rather long and technical, I have written it up carefully in a separate note, available on my GitHub page (here). The proof now appears as Appendix C of that note.",
+      "meta": "Quanyu Tang — 19:59 on 09 Dec 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2133",
+      "text": "A quick AlphaEvolve run shows that by taking $B=e$ and $\\gamma$ arbitrarily close to zero one can get $c$ arbitrarily close to $\\frac{1}{16e} = 0.0229924651\\dots$. This may be the limit of the current method (in fact I think some standard undergraduate calculus shows it is genuinely the optimum), but if there is some other argument with some variable parameters and an explicit formula for the exponent arising at the end, I can try to optimize it.",
+      "meta": "TerenceTao — 23:00 on 09 Dec 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2134",
+      "text": "Thanks a lot for this optimisation and for running AlphaEvolve on the construction! Motivated by your comment, I went back and slightly modified my previous argument. I think I can now show that\\[ f_3(N) \\gg (\\log N)^{1/e - o(1)}. \\]Since the rigorous proof is rather long and technical, I have written it up carefully in a separate note, available on my GitHub page (here). The proof now appears as Theorem 2.1 in that note.",
+      "meta": "Quanyu Tang — 08:19 on 10 Dec 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2135",
+      "text": "Thanks! These long proofs can be quite difficult to follow here, especially when spread out over multiple nested replies. Can I suggest that you write this up as a short PDF that I can link to?",
+      "meta": "Thomas Bloom — 09:39 on 10 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2139",
+      "text": "Thanks for the suggestion! I’ve now shortened my long comments, and I’ve collected the full proofs into a PDF (together with the LaTeX source). Both are available on my GitHub page (here).",
+      "meta": "Quanyu Tang — 11:55 on 10 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2136",
+      "text": "I bravely conjecture that answer is $(\\log n)^{1 - o(1)}$ if and only if the $k$-sunflower conjecture fails. Feel free to prove me wrong.",
+      "meta": "KoishiChan — 09:42 on 10 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2122",
+      "text": "It is actually possible to improve this bound: for each $\\ell$, note that for each $n$ the number of solutions to $$n = a p_1 \\cdots p_{\\ell}$$ where $p_i$ are distinct primes and $a \\in A$ is $O(k \\log(\\ell k))^{\\ell}$. This is because, if we associate the set $\\{p_1, \\cdots, p_{\\ell}\\}$ with such a solution, then the set system cannot contain a $k$-sunflower. The best bound on the sunflower lemma yields this result. Thus, we have $$\\sum_{a \\in A} \\frac{1}{a}\\sum_{n \\leq N: \\omega(n) = \\Omega(n) = \\ell} \\frac{1}{n} \\ll O(k \\log(\\ell k))^{\\ell} \\log N.$$ I think when $\\ell = o(\\log\\log N)$ we have $$\\sum_{n \\leq N: \\omega(n) = \\Omega(n) = \\ell} \\frac{1}{n} \\geq \\frac{1}{\\ell!} \\Omega(\\log\\log N)^{\\ell}.$$ Hence the best choice of $\\ell$ should be something like $$\\ell = \\epsilon_k \\frac{\\log\\log N}{\\log\\log\\log N}$$ which yields $$\\sum_{a \\in A} \\frac{1}{a} \\leq \\log N \\cdot \\exp\\left(-\\epsilon_k \\frac{\\log\\log N}{\\log\\log\\log N}\\right)$$ where $\\epsilon_k > 0$ is some constant depending on $k$.",
+      "meta": "KoishiChan — 10:42 on 09 Dec 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2124",
+      "text": "Looks good to me, thanks. The conjectured bounds on the sunflower problem (see [20]) would improve this upper bound to $(\\log N)^{1-c_k}$ for some $c_k>0$. What about lower bounds? For example, for $k=3$ the set of primes is an easy example, so $f_3(N)\\gg \\log\\log N$. I feel like a better lower bound like $\\gg (\\log N)^c$ should be achievable via an inductive approach, where we have $a=pn$ with $p$ a large prime and $n$ an element of a smaller good set via induction.",
+      "meta": "Thomas Bloom — 12:38 on 09 Dec 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

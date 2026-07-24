@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1133,
+  "raw_page": {
+    "path": "raw/pages/problem_1133.html",
+    "sha256": "2ffd6a19109039adde69361da4a091916ac0cabde91f9fdb3a59222b051e155b"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "033e98f7d6a25ad1dde30f2ae467d0bf405a8b343ac9cccb514879b9532bc665",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er67] Erd\\H{o}s, P., Problems and results on the convergence and divergence properties of the Lagrange interpolation polynomials and some extremal problems. Mathematica (Cluj) (1967), 65-73."
+    },
+    "remarks": {
+      "sha256": "978e2cc160daf477c65da4ce4fa3392a2e9a41292f0ebea9d87739cf8cd83452",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s proved that, for any $C>0$, there exists $\\epsilon>0$ such that if $n$ is sufficiently large and $m=\\lfloor (1+\\epsilon)n\\rfloor$ then for any $x_1,\\ldots,x_m\\in [-1,1]$ there is a polynomial $P$ of degree $n$ such that $\\lvert P(x_i)\\rvert\\leq 1$ for $1\\leq i\\leq m$ and\\[\\max_{x\\in [-1,1]}\\lvert P(x)\\rvert>C.\\]The conjectured statement would also imply this, but Erd\\H{o}s in \\cite{Er67} says he could not even prove it for $m=n$."
+    },
+    "statement": {
+      "sha256": "a96a666561c3dbefadd7cfeebe45d8be8c31573d59b197d0768703ad2e1888d0",
+      "source_region": "div#content",
+      "text": "Let $C>0$. There exists $\\epsilon>0$ such that if $n$ is sufficiently large the following holds.\n\nFor any $x_1,\\ldots,x_n\\in [-1,1]$ there exist $y_1,\\ldots,y_n\\in [-1,1]$ such that, if $P$ is a polynomial of degree $m<(1+\\epsilon)n$ with $P(x_i)=y_i$ for at least $(1-\\epsilon)n$ many $1\\leq i\\leq n$, then\\[\\max_{x\\in [-1,1]}\\lvert P(x)\\rvert >C.\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1133"
+}

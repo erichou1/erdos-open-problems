@@ -1,0 +1,60 @@
+{
+  "problem_number": 398,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/398",
+  "retrieved_at": "2026-07-10T23:22:31.769813+00:00",
+  "page_title": "398 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "715f4fe2387b9ae4027482fcac1ee0e4887a25864fd820de10414ae36686ec50",
+  "comment_count": 10,
+  "comments": [
+    {
+      "post_id": "5593",
+      "text": "quick note: the computational bound in the current note says $10^9$; the actual range checked is now $10^{15}$. Matson (2017) pushed it to $n \\leq 4 \\cdot 10^{11}$ using quadratic residues and Legendre symbols against large test primes. Epstein and Glickman (2020) extended that to $n \\leq 10^{15}$ with an optimized C++ implementation, code at https://github.com/jhg023/brocard. Wikipedia (https://en.wikipedia.org/wiki/Brocard%27s_problem) reflects the $10^{15}$ figure",
+      "meta": "mysticflounder — 20:28 on 18 Apr 2026 👍 2 📝 2 🤖 0"
+    },
+    {
+      "post_id": "5077",
+      "text": "Each solution corresponds to a number $n$ such that the radical of $n(n+1)$ is equal to a primorial. From the known ones, we get the values $n=2,5,35$. Numbers $n$ with this property are tracked by OEIS sequence A141399. Note that any proof that this sequence is finite would settle the Brocard- Ramanujan equation. One might want to link this OEIS sequence here aswell. (The site has been updated to address this comment.)",
+      "meta": "Dogmachine — 23:32 on 28 Mar 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4690",
+      "text": "A. M. Naciri in [Na25] has proved that for any integer $k \\geq 2$, this equation has only finitely many integer solutions, assuming $x ± 1$ is a $k$-free integer or a prime power. (The site has been updated to address this comment.)",
+      "meta": "Alfaiz — 21:35 on 08 Mar 2026 👍 1 📝 1 🤖 0"
+    },
+    {
+      "post_id": "4694",
+      "text": "The second part is definitely a trivial statement. For any prime $p$, $v_p(n!)$ is bounded by $n/(p-1)$. Now $\\sqrt[p-1]{p} \\le 2$ and $n!\\gg 4^n$ for $n$ large. The first part is not trivial, but again easy. It is again since $n!$ is much larger than the square of a divisor which is $k$-free.",
+      "meta": "StijnC — 09:04 on 09 Mar 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1241",
+      "text": "The paper \"A short solution for Brocard-Ramanujans’ problem (Erd˝os’ conjecture) and its generalization\" by Ahmad Sabihi claims to solve this conjecture. Here it is: researchgate.net/profile/Ahmad-Sabihi/publication/313677604_A_short_solution_for_Brocard-Ramanujans'_problem_Erd_os'_conjecture_and_its_generalization/links/58a2d1a3aca272046ab36a68/A-short-solution-for-Brocard-Ramanujans-problem-Erd-os-conjecture-and-its-generalization.pdf I am very skeptical of the paper itself, but I believe a professional needs to look into this to see if it's true or not.",
+      "meta": "Alfaiz — 06:16 on 19 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1242",
+      "text": "I am also very sceptical - especially for problems that feel as difficult as this one, the burden of proof is quite high. This paper has not been published in any peer-reviewed journal it seems. I had a quick scan through, and it looks like the methods are elementary and some case analysis. One can never say for certain that this can't be proved that way, but it does feel unlikely that there is a proof which doesn't use any deeper machinery. It's also annoying to carefully track through long elementary proofs like that to find exactly where the error is.",
+      "meta": "Thomas Bloom — 06:21 on 19 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1743",
+      "text": "I asked the author. He has not submitted it anywhere and didn't know about mistakes in the proof. Since there are no references so far, it might be no one has confirmed it either. Since AI can check a long paper quickly than humans; [quick opinion by ChatGPT]. I have asked the author to comment on this. Possibly after all these years, pinpointing to some shortcomings may go quicker.",
+      "meta": "StijnC — 20:15 on 17 Nov 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1745",
+      "text": "If It does not hold up even by gpt standards, then it is pretty telling.",
+      "meta": "Dogmachine — 20:49 on 17 Nov 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1744",
+      "text": "I just had a look myself and some further observations: 4.28) has multiple solutions for $c$ ($2^{\\pi^{-1}(p)}-2$ many) and thus the appendix was not as powerful as the author may have hoped. Top of page 14: if $A$ itself is a prime, there are many examples, e.g. $n=32$ and $A=17$. So here is there a mistake for which a clear example is made. (the fact that $p^2 \\le n!$ had nothing to do with the divisibility, so this is a clear mistake and indeed many similar ones may be spread over the paper)",
+      "meta": "StijnC — 20:48 on 17 Nov 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "19",
+      "text": "With Mochizuki's work on ABC conjecture still not being conclusive, this type of problem is likely to remain open for a while.",
+      "meta": "Dogmachine — 17:59 on 09 Aug 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

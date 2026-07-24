@@ -1,0 +1,62 @@
+{
+"reviewer_role": "independent adversarial referee (theorem_hypotheses)",
+"verdict": "fail",
+"claims_checked": 14,
+"claims_total": 14,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14"
+],
+"open_gaps": [
+"The immutable statement remains semantically unresolved: distinctness and ordering of the quasi-progression and properness, generator domains, and dimension of the cube are unspecified.",
+"Under the candidate's working interpretation, no fixed width W is shown either to admit arbitrarily long linked-factor chains or to have a uniform length bound.",
+"The descent-versus-halving classification does not supply a scale-independent termination argument.",
+"No height-independent upper bound on the dimension of primitive proper square cubes is proved.",
+"No construction of proper square cubes in every dimension is provided.",
+"The candidate establishes only the implication from arbitrarily long proper finite-gap square sequences to proper cubes of every fixed dimension, not either converse or either main assertion.",
+"The k=1 boundary is omitted from C2 and C3 because the minimum and maximum of the empty collection of gaps are undefined."
+],
+"unchecked_imports": [
+"C12 invokes the repeated mixed finite-difference integral formula for f(x)=sqrt(x) without stating and proving the underlying multivariable finite-difference theorem or fully justifying the singular endpoint limit when A_S=0.",
+"C9 asserts an exhaustive binary-word computation without including a replayable program, complete case tree, or independently checkable certificate. Independent finite enumeration confirms the reported counts, but the candidate's declaration UNCHECKED_IMPORTS: NONE is not justified by its own text."
+],
+"counterexample_searches": [
+"The constant sequence x_i=1 with d=0 verifies the first literal degeneracy.",
+"The collapsed construction a=1 and b_i=0 verifies the nominal-dimension cube degeneracy.",
+"The width-one example 49,225,400,576 was arithmetically verified.",
+"The halving examples with roots 5,32,45,55 and 1,41,58,71,82 were arithmetically verified.",
+"All binary words through length 10 were independently enumerated; the reported counts 1,2,4,6,10,16,18,12,10,6,0 and the six length-nine survivors are correct.",
+"The stated ternary word of length 30 was checked against every possible adjacent three-block equal-sum pattern and survives.",
+"The stated proper two-dimensional and three-dimensional square cubes were checked vertex by vertex.",
+"The algebraic identities in C5 and C6 were independently expanded; no algebraic counterexample was found."
+],
+"material_errors": [
+"The candidate fails the acceptance criteria because it neither proves nor disproves either exact quantified question. It explicitly replaces the immutable wording with a working interpretation and leaves the decisive branches open.",
+"The reported outcome RESOURCE_EXHAUSTED is compatible with an unfinished investigation, but it cannot receive a passing proof verdict.",
+"C2 and C3 are stated without separating the trivial k=1 case from the k>=2 normalization where D=min_i G_i is defined.",
+"C12's dependency ledger says only that the proper-cube convention is needed, but the argument also depends on a nontrivial analytic finite-difference identity and an endpoint limiting argument that are not proved under the required theorem-hypothesis standard.",
+"The assertion UNCHECKED_IMPORTS: NONE is false under the special mandate, even though the principal intermediate formulas appear mathematically correct.",
+"The semantic discussion overstates the importance of whether d is integral and whether 0 is counted as a square: after strict increase is imposed, integrality of d is immaterial to C2, and adding or removing 0 cannot affect the existence of arbitrarily long sequences. The distinctness, ordering, and cube-properness omissions remain genuine blockers."
+],
+"completeness_score": 61,
+"proof_confidence": 6,
+"adversarial_survival_score": 78,
+"statement_sha256": "d23ff4ea91f0d915bd67a828cdec2f9acc9b33169e5e84e2e4f5660875187ca1",
+"notes": "Most of C1-C14 survive direct algebraic and finite countertesting, so the principal failure is not a discovered counterexample to the intermediate structure but the complete absence of a decisive argument for either main question. The file citation identifies the reviewed artifact only and is not used as mathematical evidence: 
+
+Pasted text
+
+"
+}

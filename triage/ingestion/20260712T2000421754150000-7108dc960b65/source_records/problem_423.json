@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 423,
+  "raw_page": {
+    "path": "raw/pages/problem_423.html",
+    "sha256": "8db7c585d89205f5e81fdb23b28c941a47807c57dd723fe7245d2c7e28381be7"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "d532201c8860296c30fd35564ce56df3c5e9a85462d30a75239d732a60388ad8",
+      "source_region": "div.problem-additional-text",
+      "text": "[Cu25] A. Cushman, A Note on the Sum-Product Problem and the Convex Sumset Problem. arXiv:2512.13849 (2025).\n \n [Er77c] Erd\\H{o}s, Paul, Problems and results on combinatorial number theory. III. Number theory day (Proc. Conf., Rockefeller Univ.,\nNew York, 1976) (1977), 43-72.\n \n [Ta26] Q. Tang, The Hofstadter consecutive-sum sequence omits infinitely many positive integers. arXiv:2603.09939 (2026)."
+    },
+    "remarks": {
+      "sha256": "60667c496d70a8d60a4d746a659f1b256be4a60a87431d1a18ca120adedea0c8",
+      "source_region": "div.problem-additional-text",
+      "text": "Asked by Hofstadter (in \\cite{Er77c} Erd\\H{o}s says Hofstadter was inspired by a similar question of Ulam). The sequence begins\\[1,2,3,5,6,8,10,11,\\ldots\\]and is A005243 in the OEIS.\n\nBolan and Tang \\cite{Ta26} have independently proved that there are infinitely many integers which do not appear in this sequence. In fact, the sequence $a_n-n$ is nondecreasing and unbounded.\n\nTang \\cite{Ta26} further proved that $a_n \\ll n^{\\frac{1}{c-1}+o(1)}$, where $c$ is any exponent such that $\\lvert A-A\\rvert \\geq \\lvert A\\rvert^{c-o(1)}$ for all convex sets $A$. In particular, the latest bounds of Cushman \\cite{Cu25} yield\\[a_n \\ll n^{\\frac{688}{413}+o(1)}\\leq n^{1.6659+o(1)},\\]and the conjecture of Erd\\H{o}s and Hegyv\\'{a}ri that one can take $c=2$ in the convex set problem would imply $a_n\\leq n^{1+o(1)}$. It seems likely that $a_n=n+o(n)$ is the truth.\n\nTang has further proved an improved lower bound of\\[a_n=n+\\Omega(\\log\\log n).\\]"
+    },
+    "statement": {
+      "sha256": "a3e1cdfcded57341787c7e1b45307782aa66f44adf0da2181d69598b45774e42",
+      "source_region": "div#content",
+      "text": "Let $a_1=1$ and $a_2=2$ and for $k\\geq 3$ choose $a_k$ to be the least integer $>a_{k-1}$ which is the sum of at least two consecutive terms of the sequence. What is the asymptotic behaviour of this sequence?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/423"
+}

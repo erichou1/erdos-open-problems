@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#634}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{Prize: \$25}
+
+\noindent\textbf{Tags:} geometry
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Find all $n$ such that there is at least one triangle which can be cut into $n$ congruent triangles.
+
+
+
+
+Erd\H{o}s' question was reported by Soifer \cite{So09c}. It is easy to see that all square numbers have this property (in fact for square numbers any triangle will do). Soifer \cite{So09c} has shown that numbers of the form $2n^2,3n^2,6n^2,n^2+m^2$ also have this property. Beeson has shown (see the slides below) that $7$ and $11$ do not have this property. It is possible that any prime of the form $4n+3$ does not have this property. In particular, it is not known if $19$ has this property (i.e. are there $19$ congruent triangles which can be assembled into a triangle?). For more on this problem see these slides from a talk by Michael Beeson. As a demonstration of this problem we include {IMAGE=634Triangle,a picture} of a cutting of an equilateral triangle into $27$ congruent triangles from these slides. Soifer proved \cite{So09} that if we relax congruence to similarity then every triangle can be cut into $N$ similar triangles when $N\neq 2,3,5$. If one requires the smaller triangles to be similar to the larger triangle then the only possible values of $N$ are $n^2,n^2+m^2,3n^2$, proved by Snover, Waiveris, and Williams \cite{SWW91}. Zhang \cite{Zh25}, among other results, has proved that for any integers $a \geq b$, if\[n\geq 3\left\lceil \frac{a^2+b^2+ab-a-b}{ab}\right\rceil\]then $n^2ab$ has this property (indeed, they explicitly show that an equilateral triangle can be tiled with $n^2ab$ many triangles of side lengths $a,b,\sqrt{a^2+b^2+2+ab}$). See also [633] .
+
+
+
+
+References
+
+[SWW91] Snover, S. and Waiveris, C. and Williams, J., Rep-tiling for triangles . Discrete Math. (1991), 193-200.
+
+[So09] Soifer, Alexander, How Does One Cut a Triangle? I . (2009), 15-23.
+
+[So09c] Soifer, Alexander, Is there anything beyond the solution? . (2009), 47-50.
+
+[Zh25] Y. Zhang, Tiling Triangles With $2\pi/3$ Angles . arXiv:2512.22696 (2025).
+
+\noindent\textbf{Related OEIS sequences:} possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/634}}
+\end{document}

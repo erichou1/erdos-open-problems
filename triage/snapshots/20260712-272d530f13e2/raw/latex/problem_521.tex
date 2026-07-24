@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#521}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} analysis, polynomials, probability
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $(\epsilon_k)_{k\geq 0}$ be independently uniformly chosen at random from $\{-1,1\}$. If $R_n$ counts the number of real roots of $f_n(z)=\sum_{0\leq k\leq n}\epsilon_k z^k$ then is it true that, almost surely,\[\lim_{n\to \infty}\frac{R_n}{\log n}=\frac{2}{\pi}?\]
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Erd\H{o}s and Offord \cite{EO56} showed that the number of real roots of a random degree $n$ polynomial with $\pm 1$ coefficients is $(\frac{2}{\pi}+o(1))\log n$.
+
+It is ambiguous in \cite{Er61} whether Erd\H{o}s intended the coefficients to be uniformly chosen from $\{-1,1\}$ or $\{0,1\}$. In the latter case, the constant $\frac{2}{\pi}$ should be $\frac{1}{\pi}$ (see the discussion in the comments).
+
+In the case of $\{-1,1\}$ Do \cite{Do24} proved that, if $R_n[-1,1]$ counts the number of roots in $[-1,1]$, then, almost surely,\[\lim_{n\to \infty}\frac{R_n[-1,1]}{\log n}=\frac{1}{\pi}.\]See also [522].
+
+\bigskip
+\noindent\textbf{References:}
+
+[Do24] Y. Do, A strong law of large numbers for real roots of random polynomials. arXiv:2403.06353 (2024).
+ 
+ [EO56] Erd\H{o}s, Paul and Offord, A. C., On the number of real roots of a random algebraic equation. Proc. London Math. Soc. (3) (1956), 139-160.
+ 
+ [Er61] Erd\H{o}s, Paul, Some unsolved problems. Magyar Tud. Akad. Mat. Kutat\'{o} Int. K\"{o}zl. (1961), 221-254.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/521}}
+\end{document}

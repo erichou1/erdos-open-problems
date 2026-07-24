@@ -1,0 +1,30 @@
+{
+  "problem_number": 584,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/584",
+  "retrieved_at": "2026-07-10T23:17:51.405756+00:00",
+  "page_title": "584 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "dc262060d0cf5796827293aa99fc1063b71ff76d261c322b2f4cd2cc90bbca48",
+  "comment_count": 4,
+  "comments": [
+    {
+      "post_id": "6916",
+      "text": "I have posted a preprint giving partial results at the one-third threshold and clarifying the witness-convention issue in this problem: Eric Li, \"On the Duke--Erdős--Rödl Problem at the One-Third Threshold\", arXiv:2606.06522. https://arxiv.org/abs/2606.06522 Write $\\rho=e(G)/n^2$. The positive result is that if $\\rho\\geq n^{-1/3}$, equivalently if $e(G)\\geq n^2/k$ with $k\\leq n^{1/3}$, then $G$ contains subgraphs $H_6,H_8$ such that\\[ e(H_6)=\\Omega(\\rho^3 n^2),\\qquad e(H_8)=\\Omega(\\rho^2 n^2), \\]where every two distinct edges of $H_6$ lie together on a cycle of length at most $6$ contained in $H_6$, and every two distinct edges of $H_8$ lie together on a cycle of length at most $8$ contained in $H_8$. Thus the $C_{\\leq 8}$ statement is proved in the polynomial range $\\rho\\geq n^{-1/3}$, improving the previously recorded range $\\rho>n^{-1/5}$ for that part. The same argument also gives an internal $C_{\\leq 6}$ core of the expected size $\\Omega(\\rho^3n^2)$ in this range, but this $C_{\\leq6}$ result does not impose the extra adjacent-edge $C_4$ condition from the strongest formulation of the problem. There is also an ambient strong $C_6$ companion result. If $e(G)\\geq n^2/k$ with $k=o(n^{1/2})$, then $G$ contains an edge set $F$ with\\[ |F|=\\Omega(n^2/k^3) \\]such that every two distinct edges of $F$ are witnessed by a cycle of length at most $6$ in the ambient graph $G$, and adjacent pairs are witnessed by ambient $C_4$'s. Here the witness cycles are allowed to use edges outside $F$. The preprint also gives a negative result showing that the adjacent-edge $C_4$ condition is genuinely convention-sensitive. Under the internal strong $C_6$ convention, where the witnessing cycles must lie inside the subgraph and adjacent pairs must lie on $C_4$'s inside the subgraph, the bound $\\Omega(\\rho^3n^2)$ cannot hold at fixed polynomial densities $\\rho=\\Theta(n^{-\\beta})$ for $\\beta\\in[1/3,1/2)$. More precisely, for every fixed $\\beta\\in[1/3,1/2)$ there are bipartite graphs $G$ with\\[ e(G)=\\Theta_\\beta(n^{2-\\beta}),\\qquad \\rho(G)=\\Theta_\\beta(n^{-\\beta}), \\]such that every internally strongly $C_6$-connected subgraph $H\\subseteq G$ has only\\[ e(H)=O_\\beta\\left(\\frac{\\rho(G)^3n^2}{(\\log n)^2}\\right) \\]edges. So the upshot is: 1. the $C_{\\leq8}$ statement is proved up to the one-third threshold $\\rho\\geq n^{-1/3}$; 2. an internal $C_{\\leq6}$ core of the expected size is also proved up to this threshold, but without the adjacent-edge $C_4$ requirement; 3. the internal strong $C_6$ version with adjacent-edge $C_4$ witnesses has a random-lift obstruction starting at the same one-third threshold.",
+      "meta": "Eric Li — 10:26 on 10 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5665",
+      "text": "Looks like GPT-5.4 Pro can construct a counterexample to the second statement if there's no additional conditions on sparsity. Have a look here for discussion and references.",
+      "meta": "Przemek Chojecki — 10:04 on 21 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5667",
+      "text": "Thanks! I ran standard check which claimed 2 minor issues, both in Proposition 4 which did not affect Theorem 1 which proved the main counterexample.",
+      "meta": "Nat Sothanaphan — 11:12 on 21 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1816",
+      "text": "[DuEr83] is unable to load any reference. (The site has been updated to address this comment.)",
+      "meta": "Alfaiz — 12:06 on 24 Nov 2025 👍 0 📝 1 🤖 0"
+    }
+  ]
+}

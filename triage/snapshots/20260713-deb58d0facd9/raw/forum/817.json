@@ -1,0 +1,40 @@
+{
+  "problem_number": 817,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/817",
+  "retrieved_at": "2026-07-10T23:18:56.062588+00:00",
+  "page_title": "817 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "a739cf3f47b63c481be071eae2455e5d8c75839895b4665c6db330009661a563",
+  "comment_count": 6,
+  "comments": [
+    {
+      "post_id": "7170",
+      "text": "[Post deleted]",
+      "meta": "Unknown — 00:19 on 24 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7173",
+      "text": "I don't think so? If $N$ works, then $N+1$ works as well, so there's no maximum.",
+      "meta": "Woett — 00:34 on 24 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7176",
+      "text": "I see.",
+      "meta": "Adenwalla — 02:49 on 24 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7143",
+      "text": "I have a short preprint on arXiv: https://arxiv.org/abs/2606.24139 proving some lower and upper bounds for this problem. For $k=3$, I prove the finite bound $$ g_3(n)\\ge \\frac{T_n-1}{2}+\\sum_{j=0}^{n-1}T_j,\\qquad T_m=[x^m](1+x+x^2)^m. $$ Thus $$ g_3(n)\\ge \\left(\\frac{\\sqrt3}{2\\sqrt\\pi}+o(1)\\right)\\frac{3^n}{\\sqrt n}, $$ improving the earlier $3^n/n$ lower bound of Erdős and Sárközy. The proof uses the equivalence between 3AP-freeness of $H(A)$ and injectivity of all ternary sums $\\sum_i\\varepsilon_i a_i$, $\\varepsilon_i\\in{0,1,2}$, together with the exact bandwidth of the ternary grid. Note that it is also easy to get a lower bound of the order $\\Omega(3^n/\\sqrt{n})$ (with worse constant than the more involved argument above) with the classic second moment argument that analogously attains a $\\Omega(2^n/\\sqrt{n})$ bound for the distinct subset sum problem. This would already beat the Erdős and Sárközy $\\Omega(3^n/n)$ bound. For fixed $k\\ge4$, I prove $$ g_k(n)\\gg_k \\left(\\frac{k-1}{k-2}\\right)^n n^{-\\log_2((k-1)/(k-2))}. $$ The local chain step in the proof also gives an improvement for Hilbert cubes in $k$-AP-free sets, replacing the Dietmann--Elsholtz growth base $k/(k-1)$ by $(k-1)/(k-2)$. The polynomial factor above comes from an additional averaging argument using the distinctness of the subset-sum generators. There is also a complementary construction using the standard idea of digit-restricted sets in base $p$ (for $p$ prime) showing $$ \\limsup_{n\\to\\infty}g_k(n)^{1/n}\\le \\min_{p\\ge3\\ \\mathrm{prime}}p^{2/(\\min{p,k}-1)}. $$",
+      "meta": "SamKorsky — 04:27 on 23 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7148",
+      "text": "Thanks, although I note that Erdős did not report what exponent they achieved in the $O(1)$ notation (in particular he never claimed a lower bound of $3^n/n$ as you say). It is entirely possible (although since this is unpublished we can not know for sure) that they were already aware of the bound $\\gg 3^n/\\sqrt{n}$ (indeed this seems likely, since Erdős was of course very familiar with the method that achieved $2^n/\\sqrt{n}$ for [1], which basically works here also as you say). I believe that the real problem Erdős had in mind is whether $g_3(n)\\gg 3^n$ (and so he probably didn't spend too much time thinking about how to optimise the constant).",
+      "meta": "Thomas Bloom — 08:19 on 23 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7163",
+      "text": "Thank you for the response (and for running this wonderful site)! Understood; as you say, it's not surprising that Erdős would have been aware of the improved bounds and didn't take the time to optimize. My claim came from looking here: https://www.sciencedirect.com/science/article/pii/0012365X9290119Z?via%3Dihub on pg. 261, where Erdős and Sárközy use the simple argument that the $3^n$ distinct ternary sums must occupy an interval of length $nN$. Hopefully my contribution of the general-$k$ bounds is still somewhat interesting!",
+      "meta": "SamKorsky — 16:59 on 23 Jun 2026 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

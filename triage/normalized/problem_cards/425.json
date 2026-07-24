@@ -1,0 +1,365 @@
+{
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.954
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "Er38",
+      "Er68",
+      "Er73",
+      "Er77c",
+      "Er80",
+      "ErGr80"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/425",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Er38] P. Erd\\H{o}s, On sequences of integers no one of which divides the product of two others and on related problems. Tomsk. Gos. Univ. Ucen Zap. (1938), 74-82.\n \n [Er68] Erd\\H{o}s, P., On some applications of graph theory to number theoretic problems. Publ. Ramanujan Inst. (1968/69), 131-136.\n \n [Er73] Erd\\H{o}s, P., Problems and results on combinatorial number theory. A survey of combinatorial theory (Proc. Internat. Sympos., Colorado State Univ., Fort Collins, Colo., 1971) (1973), 117-138.\n \n [Er77c] Erd\\H{o}s, Paul, Problems and results on combinatorial number theory. III. Number theory day (Proc. Conf., Rockefeller Univ.,\nNew York, 1976) (1977), 43-72.\n \n [Er80] Erd\\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.\n \n [ErGr80] Erd\\H{o}s, P. and Graham, R., Old and new problems and results in combinatorial number theory. Monographies de L'Enseignement Mathematique (1980).",
+      "remarks": "Erd\\H{o}s \\cite{Er68} proved that there exist some constants $0<c_1\\leq c_2$ such that\\[\\pi(n)+c_1 n^{3/4}(\\log n)^{-3/2}\\leq F(n)\\leq \\pi(n)+c_2 n^{3/4}(\\log n)^{-3/2}.\\](The lower bound was proved earlier in \\cite{Er38}.)\n\nThis problem can also be considered in the real numbers: that is, what is the size of the the largest $A\\subset [1,x]$ such that for any distinct $a,b,c,d\\in A$ we have $\\lvert ab-cd\\rvert \\geq 1$? Erd\\H{o}s had conjectured (see \\cite{Er73} and \\cite{Er77c}) that $\\lvert A\\rvert=o(x)$.\n\nIn \\cite{ErGr80} Erd\\H{o}s and Graham report that Alexander had given a construction disproving this conjecture, establishing that $\\lvert A\\rvert\\gg x$ is possible. Alexander's construction is given in \\cite{Er80}, and we sketch a simplified version. Let $B\\subseteq [1,X^2]$ be a Sidon set of integers of size $\\gg X$ and\\[A=\\{ X e^{b/X^2} : b\\in B\\}.\\]It is easy to check that\\[\\lvert ab-cd\\rvert \\geq X^2\\lvert 1-e^{1/X^2}\\rvert \\gg 1\\]for distinct $a,b,c,d\\in A$, and (after rescaling $A$ by some constant factor) this produces a set of size $\\gg X$ with the desired property in the interval $[X,O(X)]$. Furthermore, a simple modification allows for $A$ to also be $1$-separated.\n\nIn \\cite{Er77c} Erd\\H{o}s considers a similar generalisation for sets of complex numbers or complex integers.\n\nSee also [490], [793], and [796]."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory",
+      "sidon sets"
+    ]
+  },
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 3.78,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.035328,
+        0.44376
+      ],
+      "probability": 0.239544
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.31,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.018127,
+        0.428821
+      ],
+      "probability": 0.223474
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 13.0,
+      "credible_interval_approx": [
+        0.0,
+        0.134243
+      ],
+      "probability": 0.037037
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.9,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.009418,
+        0.477977
+      ],
+      "probability": 0.243697
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 0.867,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.163071
+      ],
+      "probability": 0.054622
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.8,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.0,
+        0.27406
+      ],
+      "probability": 0.117647
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.063431
+      ],
+      "probability": 0.021739
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.0,
+        0.384039
+      ],
+      "probability": 0.173913
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 7,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:17:08.985751+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "930c1a408c44d2fbbda7d9e409139d11adf70cf97dd97b544ec63ef0f7124fd8"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "unspecified_constant",
+        "asymptotic_notation",
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 1,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 396,
+      "statement_tokens_approx": 51
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove_or_disprove",
+      "multi_part": true,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-425",
+  "problem_number": 425,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove_or_disprove",
+    "multi_part": true,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_425.html",
+      "raw_html_sha256": "75030c174e13462e945a07f7e318ee0c82a7882599d473d7bccc7d78d29e24ca",
+      "section_sha256": {
+        "references": "cda514a169b3a0f668b543de1d3c22e162845e14a36a004260669249cec5bc9c",
+        "remarks": "0fc5b7444c1e7970c0b73f4802a243350a5cc639810ca4f7a4c40233d63c29c0",
+        "statement": "7e5138264802013ab69ae92a2e000db74e215bc5055344da5d1354b80bae48c5"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_425.json",
+      "source_record_sha256": "f60fee8d3d5a924d7004010756f22624634edf719506042f9ec859a889253a8f",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_425.tex",
+    "latex_sha256": "56617c04f576fc6295f813972ae9a2a9cf2b84c4700588729f6e7853ae45502a",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "7e5138264802013ab69ae92a2e000db74e215bc5055344da5d1354b80bae48c5",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "subproblem_decomposition",
+      "shared_infrastructure_search",
+      "literature_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Let $F(n)$ be the maximum possible size of a subset $A\\subseteq\\{1,\\ldots,N\\}$ such that the products $ab$ are distinct for all $a<b$. Is there a constant $c$ such that\\[F(n)=\\pi(n)+(c+o(1))n^{3/4}(\\log n)^{-3/2}?",
+        "focus_question_sha256": "52f2549699101995ce8243f8e1801dbe5507719ef767415238c28fb48a941435",
+        "parent_statement_sha256": "7e5138264802013ab69ae92a2e000db74e215bc5055344da5d1354b80bae48c5",
+        "part_index": 1,
+        "subproblem_contract_sha256": "c35d0f009495fea4859b53b48adab441b4791dcf94aae313025af869fbe14ccc",
+        "subproblem_id": "erdos-425-part-01-c35d0f00"
+      },
+      {
+        "focus_question": "\\]If $A\\subseteq \\{1,\\ldots,n\\}$ is such that all products $a_1\\cdots a_r$ are distinct for $a_1<\\cdots <a_r$ then is it true that\\[\\lvert A\\rvert \\leq \\pi(n)+O(n^{\\frac{r+1}{2r}})?",
+        "focus_question_sha256": "584b6ebc2ece3eff419d64b83ca75be944cbef50d3e757a5c5ba008786ba2330",
+        "parent_statement_sha256": "7e5138264802013ab69ae92a2e000db74e215bc5055344da5d1354b80bae48c5",
+        "part_index": 2,
+        "subproblem_contract_sha256": "957b4fbaf6696885ab8dbc249ba7652b822d6ef3a12ad4d038ab8286bd59696e",
+        "subproblem_id": "erdos-425-part-02-957b4fba"
+      }
+    ]
+  },
+  "research_directive_sha256": "12dc059bac066a2b33345d220ca19d1fc03035cf8eb54e4f11e13d41d325e190",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "subproblem_decomposition",
+    "shared_infrastructure_search",
+    "literature_search"
+  ],
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "12dc059bac066a2b33345d220ca19d1fc03035cf8eb54e4f11e13d41d325e190",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "7e5138264802013ab69ae92a2e000db74e215bc5055344da5d1354b80bae48c5",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "7de09b5d2807a17a3d8b42eafd98e625f3165efa8c763ee3620e759c830ce475",
+  "schema_version": 2,
+  "snapshot_id": "20260713-deb58d0facd9",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Let $F(n)$ be the maximum possible size of a subset $A\\subseteq\\{1,\\ldots,N\\}$ such that the products $ab$ are distinct for all $a<b$. Is there a constant $c$ such that\\[F(n)=\\pi(n)+(c+o(1))n^{3/4}(\\log n)^{-3/2}?\\]If $A\\subseteq \\{1,\\ldots,n\\}$ is such that all products $a_1\\cdots a_r$ are distinct for $a_1<\\cdots <a_r$ then is it true that\\[\\lvert A\\rvert \\leq \\pi(n)+O(n^{\\frac{r+1}{2r}})?\\]",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $F(n)$ be the maximum possible size of a subset $A\\subseteq\\{1,\\ldots,N\\}$ such that the products $ab$ are distinct for all $a<b$. Is there a constant $c$ such that\\[F(n)=\\pi(n)+(c+o(1))n^{3/4}(\\log n)^{-3/2}?\\]If $A\\subseteq \\{1,\\ldots,n\\}$ is such that all products $a_1\\cdots a_r$ are distinct for $a_1<\\cdots <a_r$ then is it true that\\[\\lvert A\\rvert \\leq \\pi(n)+O(n^{\\frac{r+1}{2r}})?\\]",
+    "original": "Let $F(n)$ be the maximum possible size of a subset $A\\subseteq\\{1,\\ldots,N\\}$ such that the products $ab$ are distinct for all $a<b$. Is there a constant $c$ such that\\[F(n)=\\pi(n)+(c+o(1))n^{3/4}(\\log n)^{-3/2}?\\]If $A\\subseteq \\{1,\\ldots,n\\}$ is such that all products $a_1\\cdots a_r$ are distinct for $a_1<\\cdots <a_r$ then is it true that\\[\\lvert A\\rvert \\leq \\pi(n)+O(n^{\\frac{r+1}{2r}})?\\]",
+    "statement_sha256": "7e5138264802013ab69ae92a2e000db74e215bc5055344da5d1354b80bae48c5"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-425",
+      "part_index": 1,
+      "run_contract_id": "6e95af0f77838d633fd9e39163c32689e26204eeed0fb463cc054984c0017233",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Let $F(n)$ be the maximum possible size of a subset $A\\subseteq\\{1,\\ldots,N\\}$ such that the products $ab$ are distinct for all $a<b$. Is there a constant $c$ such that\\[F(n)=\\pi(n)+(c+o(1))n^{3/4}(\\log n)^{-3/2}?",
+        "focus_question_sha256": "52f2549699101995ce8243f8e1801dbe5507719ef767415238c28fb48a941435",
+        "normalized": "Let $F(n)$ be the maximum possible size of a subset $A\\subseteq\\{1,\\ldots,N\\}$ such that the products $ab$ are distinct for all $a<b$. Is there a constant $c$ such that\\[F(n)=\\pi(n)+(c+o(1))n^{3/4}(\\log n)^{-3/2}?\\]If $A\\subseteq \\{1,\\ldots,n\\}$ is such that all products $a_1\\cdots a_r$ are distinct for $a_1<\\cdots <a_r$ then is it true that\\[\\lvert A\\rvert \\leq \\pi(n)+O(n^{\\frac{r+1}{2r}})?\\]",
+        "original": "Let $F(n)$ be the maximum possible size of a subset $A\\subseteq\\{1,\\ldots,N\\}$ such that the products $ab$ are distinct for all $a<b$. Is there a constant $c$ such that\\[F(n)=\\pi(n)+(c+o(1))n^{3/4}(\\log n)^{-3/2}?\\]If $A\\subseteq \\{1,\\ldots,n\\}$ is such that all products $a_1\\cdots a_r$ are distinct for $a_1<\\cdots <a_r$ then is it true that\\[\\lvert A\\rvert \\leq \\pi(n)+O(n^{\\frac{r+1}{2r}})?\\]",
+        "statement_sha256": "7e5138264802013ab69ae92a2e000db74e215bc5055344da5d1354b80bae48c5"
+      },
+      "subproblem_contract_sha256": "c35d0f009495fea4859b53b48adab441b4791dcf94aae313025af869fbe14ccc",
+      "subproblem_id": "erdos-425-part-01-c35d0f00"
+    },
+    {
+      "parent_problem_id": "erdos-425",
+      "part_index": 2,
+      "run_contract_id": "63f8e77d6b478f6d881c8f4e5a462cd6a7fe629dfabbdc02533a7fc24bf4f8d3",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "\\]If $A\\subseteq \\{1,\\ldots,n\\}$ is such that all products $a_1\\cdots a_r$ are distinct for $a_1<\\cdots <a_r$ then is it true that\\[\\lvert A\\rvert \\leq \\pi(n)+O(n^{\\frac{r+1}{2r}})?",
+        "focus_question_sha256": "584b6ebc2ece3eff419d64b83ca75be944cbef50d3e757a5c5ba008786ba2330",
+        "normalized": "Let $F(n)$ be the maximum possible size of a subset $A\\subseteq\\{1,\\ldots,N\\}$ such that the products $ab$ are distinct for all $a<b$. Is there a constant $c$ such that\\[F(n)=\\pi(n)+(c+o(1))n^{3/4}(\\log n)^{-3/2}?\\]If $A\\subseteq \\{1,\\ldots,n\\}$ is such that all products $a_1\\cdots a_r$ are distinct for $a_1<\\cdots <a_r$ then is it true that\\[\\lvert A\\rvert \\leq \\pi(n)+O(n^{\\frac{r+1}{2r}})?\\]",
+        "original": "Let $F(n)$ be the maximum possible size of a subset $A\\subseteq\\{1,\\ldots,N\\}$ such that the products $ab$ are distinct for all $a<b$. Is there a constant $c$ such that\\[F(n)=\\pi(n)+(c+o(1))n^{3/4}(\\log n)^{-3/2}?\\]If $A\\subseteq \\{1,\\ldots,n\\}$ is such that all products $a_1\\cdots a_r$ are distinct for $a_1<\\cdots <a_r$ then is it true that\\[\\lvert A\\rvert \\leq \\pi(n)+O(n^{\\frac{r+1}{2r}})?\\]",
+        "statement_sha256": "7e5138264802013ab69ae92a2e000db74e215bc5055344da5d1354b80bae48c5"
+      },
+      "subproblem_contract_sha256": "957b4fbaf6696885ab8dbc249ba7652b822d6ef3a12ad4d038ab8286bd59696e",
+      "subproblem_id": "erdos-425-part-02-957b4fba"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

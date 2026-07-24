@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 951,
+  "raw_page": {
+    "path": "raw/pages/problem_951.html",
+    "sha256": "10c62244c58b5575d67da4d19cc8ecefe3cf5ed0fa2dd7517d07d1910ea8ac83"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "b3220e5583280e844007c8c8542951050d786a0a998bdc90765ec6aca8bc323f",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er69] Erd\\H{o}s, Paul, Some applications of graph theory to number theory. The Many Facets of Graph Theory (Proc. Conf.,\nWestern Mich. Univ., Kalamazoo, Mich., 1968) (1969), 77-82.\n \n [Er77c] Erd\\H{o}s, Paul, Problems and results on combinatorial number theory. III. Number theory day (Proc. Conf., Rockefeller Univ.,\nNew York, 1976) (1977), 43-72.\n \n [Er80] Erd\\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115."
+    },
+    "remarks": {
+      "sha256": "8bfbbf07bfac3967d0d4667199ee6e2e9a0b6fcd03b7dcbd041a12c7e8cce5d3",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s \\cite{Er77c} said this question was asked 'during [his] lecture at Queens College [by] one member of the audience (perhaps S. Shapiro)'. (Although in \\cite{Er80} he seems sure it was Shapiro, but also recalled that he had himself asked this in \\cite{Er69}.) In \\cite{Er80} he further asks whether equality holds if and only if the $a_i$ are the set of primes.\n\nSuch a sequence of $a_i$ is sometimes called a set of Beurling prime numbers (and the sequence of products called the associated generalised integers).\n\nBeurling conjectured that if the number of reals in $[1,x]$ of the form $\\prod a_i^{k_i}$ is $x+o(\\log x)$ then the $a_i$ must be the sequence of primes.\n\nIt is unclear whether this is intended to hold for all $x$ or just all sufficiently large $x$. The former question can be disproved by finite calculation (since any finite sequence of $a_i$ can be extended to a suitable infinite sequence via a greedy algorithm). A finite counterexample for $x=10$ was found by ChatGPT-5.2 Pro (prompted by Leeham)."
+    },
+    "statement": {
+      "sha256": "4497c032d9810e83086871b3d5ba68ecaadb6f145a9582ff7b1e5608090962d9",
+      "source_region": "div#content",
+      "text": "Let $1<a_1<\\cdots$ be a sequence of real numbers such that\\[\\left\\lvert \\prod_i a_i^{k_i}-\\prod_j a_j^{\\ell_j}\\right\\rvert \\geq 1\\]for every distinct pair of non-negative finitely supported integer tuples $k_i,\\ell_j\\geq 0$. Is it true that\\[\\#\\{ a_i \\leq x\\} \\leq \\pi(x)?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/951"
+}

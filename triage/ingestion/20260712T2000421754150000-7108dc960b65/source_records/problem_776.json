@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 776,
+  "raw_page": {
+    "path": "raw/pages/problem_776.html",
+    "sha256": "d4d7aeaf20e7af8470b1819bda0cc08edeca7291e487dd6beed6d59f153ed286"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "c0f10adc77a6dcc391ba0a84e74333905f7def25b44091311373d4b4fb8fc7c6",
+      "source_region": "div.problem-additional-text",
+      "text": "[HeTa26b] Y. He and Q. Tang, An Erd\\H{o}s--Trotter problem on antichains with multiplicity r on each occurring level. arXiv:2602.09803 (2026)."
+    },
+    "remarks": {
+      "sha256": "80562b29fff2d7679fcefb6c1b9b4699c2c69b87f5bdcf365240cf8fd0e0e4b6",
+      "source_region": "div.problem-additional-text",
+      "text": "A problem of Erd\\H{o}s and Trotter. For $r=1$ and $n>3$ the maximum possible is $n-2$. For $r>1$ and $n$ sufficiently large $n-3$ is achievable, but $n-2$ is never achievable.\n\nLet $n_0(r)$ be such that whenever $n>n_0(r)$ there exists such a family with $n-3$ distinct set sizes. He and Tang \\cite{HeTa26b} (with ChatGPT) have proved that $n_0(2)=3$, $n_0(3)=8$, and for all $r\\geq 4$\\[2r+2\\leq n_0(r)\\leq 2r+2\\log_2r+O(\\log\\log r),\\]and hence $n_0(r)\\sim 2r$ as $r\\to \\infty$."
+    },
+    "statement": {
+      "sha256": "db5f8c737af3149e6f6ed029a75627577a4bbb1477d002425ebff0558e8ea8a6",
+      "source_region": "div#content",
+      "text": "Let $r\\geq 2$ and $A_1,\\ldots,A_m\\subseteq \\{1,\\ldots,n\\}$ be such that $A_i\\not\\subseteq A_j$ for all $i\\neq j$ and for any $t$ if there exists some $i$ with $\\lvert A_i\\rvert=t$ then there must exist at least $r$ sets of that size.\n\nHow large must $n$ be (as a function of $r$) to ensure that there is such a family which achieves $n-3$ distinct sizes of sets?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/776"
+}

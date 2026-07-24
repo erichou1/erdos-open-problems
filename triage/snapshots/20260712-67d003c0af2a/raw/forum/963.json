@@ -1,0 +1,100 @@
+{
+  "problem_number": 963,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/963",
+  "retrieved_at": "2026-07-10T23:19:43.663785+00:00",
+  "page_title": "963 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "28c2df2b85e9af48ff749179f345811c5c3aa1b52648ae6c704dd808130a965a",
+  "comment_count": 18,
+  "comments": [
+    {
+      "post_id": "2027",
+      "text": "I think I can show that Main Claim: Let $A$ be a set of size $n$. Then $A$ contains a disassociated subset of size $(1 - o(1))\\log_2 n$. A standard reduction shows that we may assume $A$ is a subset of the integers. We further assume that elements of $A$ are positive integers. Throughout assume $n$ is large. Let $d_d(A)$ be the size of the largest disassociated subset of $A$, and let $$f(n) = \\min_{|A| = n, A \\subset \\mathbb{Z}_+} d_d(A).$$ We are going to establish a recursive bound of the form $$f(n) \\geq \\frac{1}{12} \\log_2 n + f\\left(\\frac{n^{11/12}}{\\log^4 n}\\right).$$ Our strategy is as follows. Fix a prime number $p \\in [n^{1/12} / 2, n^{1/12}]$. Suppose for a moment that the elements of $A$ are equi-distributed modulo $p$. Let $A_p$ be the subset of $A$ with elements divisible by $p$, and let $a_i$ be an element of $A$ with residue $i$ modulo $A$. If we let $\\Gamma = \\{1, 2, \\cdots, 2^{\\lfloor{\\log_2 p\\rfloor} - 1}\\}$ be a disassociated set modulo $p$ of order $\\lfloor{\\log_2 p\\rfloor}$, and $D'$ be a disassociated subset of $A_p$, then the set $$D = D' \\sqcup \\{a_i: i\\in \\Gamma\\}$$ must be disassociated. Therefore, we have $$d_d(A) \\geq \\lfloor{\\log_2 p\\rfloor} + d_d(A_p) \\geq \\lfloor{\\log_2 p\\rfloor} + f\\left(\\frac{n}{p}\\right)$$ precisely what we want. In general, we do not have this \"equi-distributed modulo $p$\" condition. However, we will ensure this condition by using an old trick of Erdős: take a sufficiently large prime $q$ greater than all elements of $A$, pick $r \\in (\\mathbb{Z} / q \\mathbb{Z})^*$ uniformly at random, and replace $A$ with $A' = (r \\cdot A) \\mod{q}$. Our hope is that when cast back to the integers, $A'$ will be uniformly distributed modulo $p$, and we can proceed with the previous argument. The remaining proof is devoted to justifying this hope. First, note that if a set of positive integers is disassociated modulo $q$, and $q$ is greater than all elements in the set, then the set is disassociated over $\\mathbb{Z}$. Let $A \\subset \\mathbb{Z}_+$ be such that $d_d(A) = f(n)$. Let $k = d_d(A) + 1$, and WLOG assume $k \\leq \\log_2 n$ (for otherwise $f(n) \\geq \\log_2 n - 1$ as desired). Let $q$ be as above. For each $i \\in [0, p - 1]$, we define the following subset of $(\\mathbb{Z} / q \\mathbb{Z})^*$ $$B_{p, i} = \\{px + i: x \\in \\{1, 2, \\cdots, \\lfloor{\\frac{q - 1}{pk}\\rfloor}\\}\\}.$$ We want to find an $r \\in (\\mathbb{Z} / q \\mathbb{Z})^*$ such that most $rA \\cap B_{p, i}$ are large. This follows from the key lemma below. Lemma: Let $q$ be a prime, and $L$ be a parameter. Let $A \\subset (\\mathbb{Z} / q\\mathbb{Z})^*$ be a set of size at least $L^{10}$, and let $B$ be an arithmetic progression in $(\\mathbb{Z} / q\\mathbb{Z})^*$ of size at least $\\frac{q}{L}$. Then, for a uniformly random $r \\in (\\mathbb{Z} / q\\mathbb{Z})^*$, we have $$\\mathbb{P}\\left(|r \\cdot A \\cap B| \\leq \\frac{|A||B|}{2(q - 1)}\\right) \\ll \\frac{1}{L^3}.$$ Proof: We use the second moment bound. We want to compute $$\\mathbb{E}_{r} |r \\cdot A \\cap B|^2.$$ Using Fourier analysis, we have $$|r \\cdot A \\cap B| = \\frac{1}{q - 1}\\sum_{a \\in A, b \\in B} \\sum_{\\chi} \\chi(ra b^{-1})$$ where $\\chi$ goes over all Dirichlet characters of $(\\mathbb{Z} / q \\mathbb{Z})^*$. Hence, we have $$|r \\cdot A \\cap B|^2 = \\frac{1}{(q - 1)^2}\\sum_{a, a' \\in A, b, b' \\in B} \\sum_{\\chi, \\chi'} \\chi(ra b^{-1}) \\chi'(ra' b'^{-1}).$$ Summing over $r$, all contributions from $\\chi' \\neq \\bar{\\chi}$ vanish, giving $$\\mathbb{E}_r |r \\cdot A \\cap B|^2 = \\frac{1}{(q - 1)^2}\\sum_{a, a' \\in A, b, b' \\in B} \\sum_{\\chi} \\chi(a b^{-1}) \\bar{\\chi}(a' b'^{-1}).$$ Thus we obtain $$\\mathbb{E}_r |r \\cdot A \\cap B|^2 = \\frac{1}{(q - 1)^2} \\sum_{\\chi} |\\sum_{a \\in A} \\chi(a)|^2 |\\sum_{b \\in B} \\chi(b)|^2.$$ Isolating the trivial character, we obtain $$\\mathbb{E}_r |r \\cdot A \\cap B|^2 = \\frac{|A|^2 |B|^2}{(q - 1)^2} + \\frac{1}{(q - 1)^2}\\sum_{\\chi \\neq \\chi_0} |\\sum_{a \\in A} \\chi(a)|^2 |\\sum_{b \\in B} \\chi(b)|^2.$$ We now use the fact that $B$ is an AP. If we consider the quantity $$M(\\chi) = \\sup_{r} |\\sum_{i = 1}^r \\chi(i)|$$ then we have $$|\\sum_{b \\in B} \\chi(b)| \\leq 2 M(\\chi).$$ A theorem of Montgomery and Vaughen, \"MEAN VALUES OF CHARACTER SUMS\" (1979), states that $$\\sum_{\\chi \\neq \\chi_0} M(\\chi)^4 \\ll q^3.$$ So we have $$\\sum_{\\chi \\neq \\chi_0} |\\sum_{a \\in A} \\chi(a)|^2 |\\sum_{b \\in B} \\chi(b)|^2 \\leq \\left(\\sum_{\\chi \\neq \\chi_0}|\\sum_{a \\in A} \\chi(a)|^4\\right)^{1/2} \\left(\\sum_{\\chi \\neq \\chi_0}|\\sum_{b \\in B} \\chi(b)|^4\\right)^{1/2}$$ where $$\\sum_{\\chi \\neq \\chi_0}|\\sum_{b \\in B} \\chi(b)|^4 \\ll q^3$$ and $$\\sum_{\\chi \\neq \\chi_0}|\\sum_{a \\in A} \\chi(a)|^4 \\leq |A|^2 \\sum_{\\chi \\neq \\chi_0}|\\sum_{a \\in A} \\chi(a)|^2 \\leq q|A|^3.$$ So we conclude that $$\\sum_{\\chi \\neq \\chi_0} |\\sum_{a \\in A} \\chi(a)|^2 |\\sum_{b \\in B} \\chi(b)|^2 \\ll q^{2} |A|^{3/2}.$$ Substituting back, we have $$\\mathbb{E}_r |r \\cdot A \\cap B|^2 = \\frac{|A|^2 |B|^2}{(q - 1)^2} + O\\left(|A|^{3/2}\\right).$$ As we also have $$\\mathbb{E}_r |r \\cdot A \\cap B| = \\frac{|A| |B|}{(q - 1)}$$ we obtain by Chebyshev's inequality that $$\\mathbb{P}\\left(|r \\cdot A \\cap B| \\leq \\frac{|A||B|}{2(q - 1)}\\right) \\ll \\frac{(q - 1)^2}{|A|^{1/2}|B|^2}.$$ Substituting $|A| \\geq L^{10}, |B| = \\frac{q}{L}$, we obtain $$\\mathbb{P}\\left(|r \\cdot A \\cap B| \\leq \\frac{|A||B|}{2(q - 1)}\\right) \\ll \\frac{1}{L^3}$$ as desired. QED. Use this lemma on $B = B_{p, i}$, $A = A$, and $L = pk + 1$, and make a union bound over $i$. We conclude that there exists $r \\in (\\mathbb{Z} / q\\mathbb{Z})^*$ such that $$|r \\cdot A \\cap B_{p, i}| \\geq \\frac{|A||B_{p, i}|}{2(q - 1)} \\geq \\frac{|A|}{2(pk + 1)}$$ for all $i$. Finally, let $A_{p, i}'$ denote the lift of $r \\cdot A \\cap B_{p, i}$ back to the integers. Recall our definition of $\\Gamma$ as a large disassociated set of size $\\mathbb{Z} / p\\mathbb{Z}$. Take any $a_i \\in A_{p, i}'$ for $i \\in \\Gamma$, and let $D'$ be a disassociated subset of $A_{p, 0}'$ of maximum size. Now we show that $$k = d_d(A) + 1 \\geq |D'| + |\\Gamma| + 1.$$ Suppose the contrary. 1) Analyzing mod $p$, we see that $D' \\cup \\{a_i: i \\in \\Gamma\\}$ is disassociated over $\\mathbb{Z}$. Let $D''$ be any subset of $D' \\cup \\{a_i: i \\in \\Gamma\\}$ with size $k$. 2) As each element of $D''$ lies in $\\sqcup_i B_{p, i}$, each element of $D''$ lies in $\\left[1, \\frac{q}{k}\\right]$. As $|D''| = k$, we see that $D''$ is disassociated in $\\mathbb{Z} / q\\mathbb{Z}$. 3) Thus, $r^{-1}D'' \\subset A$ is disassociated in $\\mathbb{Z} / q\\mathbb{Z}$, hence disassociated when lifted back to $A \\subset \\mathbb{Z}$. So $A$ contains a disassociated subset of size $k > d_d(A)$, contradiction! Therefore, we conclude that $$d_d(A) \\geq |\\Gamma| + |D'| \\geq \\lfloor{\\log_2 p\\rfloor} + f\\left(|A'_{p, 0}|\\right) \\geq \\lfloor{\\log_2 p\\rfloor} + f\\left(\\frac{|A|}{2(pk + 1)}\\right).$$ As $p \\in [n^{1/12} / 2, n^{1/12}]$ and $k \\leq \\log_2 n$ by assumption, we obtain that for sufficiently large $n$, we have. $$f(n) \\geq \\min\\left(\\log_2 n - 1, \\frac{1}{12} \\log_2 n - O(1) + f\\left(\\frac{n^{11/12}}{4 \\log_2 n}\\right)\\right).$$ Iterating, we obtain $f(n) \\geq (1 - o(1)) \\log_2 n$, as desired.",
+      "meta": "KoishiChan — 00:21 on 05 Dec 2025 👍 4 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2030",
+      "text": "Nice! For the purpose of optimizing the bounds, it may be worth removing the hypothesis that $p$ is prime (which may not even be used at all in the argument). In particular, making it close to a power of 2 may be more efficient. The hypothesis that $q$ is prime is used a little bit more strongly, but is less impactful on the bounds (one could maybe relax it to $q$ being an almost prime, though the calculations become a little fiddly as a consequence).",
+      "meta": "TerenceTao — 07:01 on 05 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2033",
+      "text": "I have a question about one step in your argument. In the last part (\"Suppose the contrary\"), in Step 2) you write that\\[ \\text{as each element of } D'' \\text{ lies in } \\bigsqcup_i B_{p,i}, \\text{ each element of } D'' \\text{ lies in } [1,q/k]. \\]I do not see why this holds. Since \\(B_{p,i} = \\{ p x + i : x \\in \\{1,2,\\dots,\\lfloor (q-1)/(pk) \\rfloor\\} \\}\\), the largest element of \\(B_{p,i}\\) is \\(p\\left\\lfloor \\frac{q-1}{pk} \\right\\rfloor + i\\), and this number does not necessarily satisfy\\[ p \\left\\lfloor \\frac{q-1}{pk} \\right\\rfloor + i \\le \\frac{q}{k}. \\]Am I missing something here?",
+      "meta": "Quanyu Tang — 09:00 on 05 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2046",
+      "text": "Sorry, it's an off-by-one error that can be easily fixed (e.g. decrease upper bound on $x$ by $1$).",
+      "meta": "KoishiChan — 16:52 on 05 Dec 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2047",
+      "text": "Thanks, that makes sense.",
+      "meta": "Quanyu Tang — 17:37 on 05 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2049",
+      "text": "As an experiment, I ran this argument through ChatGPT Pro, who pointed out some minor issues and possibly one semi-major issue (which seems to basically be the one Quanyu already pointed out). Given the length of the argument, it might be worth writing it up properly on some other site and linking a PDF (or github link, etc.) here to the most current version.",
+      "meta": "TerenceTao — 18:27 on 05 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3664",
+      "text": "Since this argument looks good to me, and nobody has raised any serious issues, I think I'll mark this problem as solved. (Of course, if a problem is later discovered, this can be changed.) KoishiChan, it would be good if you could write this up into a more formal PDF note at some point (and perhaps this could be auto-formalised, using the Montgomery-Vaughan mean value estimate as an axiom).",
+      "meta": "Thomas Bloom — 07:32 on 23 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6885",
+      "text": "Was there something in the argument found to be wrong? Or are you waiting on a formal write up before updating the problem to be sure of its veracity?",
+      "meta": "Adenwalla — 01:13 on 08 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4198",
+      "text": "Shouldn't the problem description be updated to include this?",
+      "meta": "Adenwalla — 18:43 on 05 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4189",
+      "text": "this question was also asked in Oberwolfach, I believe.",
+      "meta": "zach hunter — 07:52 on 05 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4192",
+      "text": "Do you have a reason/reference for this? I did look through the Oberwolfach problem books when I was there back in November and found only these ones by Erdős.",
+      "meta": "Thomas Bloom — 09:04 on 05 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4204",
+      "text": "unfortunately I cannot provide a reference at the moment. me and Carl Schildkraut had a discussion about this problem during an Oberwolfach in January. a few hours later, he showed me this question in one of the books (I had forgotten this was a problem of Erdos).",
+      "meta": "zach hunter — 20:48 on 05 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4206",
+      "text": "Ah, perhaps it was asked by someone other than Erdős at Oberwolfach, in which case my search through the books would have skipped over it.",
+      "meta": "Thomas Bloom — 21:25 on 05 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4216",
+      "text": "my memory says that his signature was on the problem, but perhaps I am misremembering...",
+      "meta": "zach hunter — 12:49 on 06 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3658",
+      "text": "\\textbf{Solution to Erdős Problem 963/ AI Gemino Pro 3.5 used} \\textbf{Answer:} Yes, the estimate $f(n) \\ge \\lfloor \\log_2 n \\rfloor$ holds. \\textbf{Reasoning:} Let $f(n)$ denote the maximal size $k$ such that any set $A \\subset \\mathbb{R}$ of size $n$ contains a dissociated subset of size $k$. A subset $B$ is dissociated if all subset sums $\\sum_{b \\in S} b$ (for $S \\subseteq B$) are distinct. This is analogous to linear independence over the field $\\mathbb{F}_2$ but in the context of integer addition. To estimate $f(n)$, we consider the \"worst-case\" scenario, which minimizes the size of the largest dissociated subset. This occurs when the set $A$ has a high degree of additive structure (redundancy). Consider the set of the first $n$ integers:\\[ A = \\{1, 2, 3, \\dots, n\\} \\]In this set, we can construct a dissociated subset $B$ by selecting powers of 2:\\[ B = \\{2^0, 2^1, 2^2, \\dots, 2^m\\} \\]such that $2^m \\le n$. The sums of subsets of $B$ correspond to the binary representations of integers up to $\\sum B$, which are unique by the properties of the binary numeral system. The largest power of 2 less than or equal to $n$ is $2^{\\lfloor \\log_2 n \\rfloor}$. Thus, the size of this subset is $|B| = \\lfloor \\log_2 n \\rfloor + 1$. Since the set $\\{1, \\dots, n\\}$ represents the structure with maximal additive dependencies (minimizing potential dissociated subsets), and even here we find a subset of size $\\approx \\log_2 n$, it follows that for any arbitrary set $A$ of size $n$, we can find a dissociated subset of at least size $\\lfloor \\log_2 n \\rfloor$. \\textbf{Conclusion:}\\[ f(n) \\ge \\lfloor \\log_2 n \\rfloor \\]The lower bound is established.",
+      "meta": "utahisnotastate — 00:06 on 23 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3662",
+      "text": "The claim that $\\{1,\\dots,n\\}$ is the \"worst-case\" is unjustified (and while not implausible, does not appear to have any obvious proof). See also this ChatGPT Pro review of this argument. You may find the advice given in the wiki on purely AI-generated solutions to be helpful.",
+      "meta": "TerenceTao — 05:28 on 23 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3671",
+      "text": "Gemini Pro 3.5 does not exist as of current public access. I assume this is Gemini 3 Pro? (I updated the wiki to this for now.)",
+      "meta": "Nat Sothanaphan — 10:35 on 23 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1593",
+      "text": "Literature check: both searching through Google Scholar and using ChatGPT, it turns out the status of this problem is open. One of the more recent papers on [researchgate] mentioning the problem, didn't state any results on it either.",
+      "meta": "StijnC — 12:42 on 30 Oct 2025 👍 1 📝 0 🤖 0"
+    }
+  ]
+}

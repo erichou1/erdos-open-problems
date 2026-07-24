@@ -1,0 +1,3151 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+
+<title>352 Discussion Thread | Erdős Problems</title>
+<meta property="og:title" content="352 Discussion Thread | Erdős Problems">
+<link rel="icon" href="/static/favicon.ico">
+<link rel="stylesheet" href="/static/style.css?v=733265cf">
+
+<script>
+document.addEventListener('click', (e) => {
+  // Toggle reply form
+  const toggle = e.target.closest('.reply-toggle');
+  if (toggle) {
+    const id = toggle.getAttribute('data-target');
+    const form = document.getElementById(id);
+    if (form) form.classList.toggle('hidden');
+  }
+  // Reply with quote
+  const quoteBtn = e.target.closest('.reply-quote');
+  if (quoteBtn) {
+    const id = quoteBtn.getAttribute('data-target');
+    const form = document.getElementById(id);
+    if (!form) return;
+    const ta = form.querySelector('textarea');
+    const raw = quoteBtn.getAttribute('data-raw') || '';
+    const quoted = raw.split('\n').map(l => '> ' + l).join('\n') + '\n\n';
+    ta.value = quoted;
+    form.classList.remove('hidden');
+    ta.focus();
+    const len = ta.value.length;
+    ta.setSelectionRange(len, len);
+  }
+});
+</script>
+
+<!-- This creates the reference in the bibliography box. -->
+
+<script>
+function addNewBox(key, problem_id, shouldScroll = false) {
+  const local_id = 'bib-container' + String(problem_id);
+  const container = document.getElementById(local_id);
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  fetch(`/bibs/${encodeURIComponent(key)}`)
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.text();
+    })
+    .then(html => {
+      container.innerHTML = html;
+
+      if (shouldScroll) {
+        requestAnimationFrame(() => {
+          container.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+        });
+      }
+    })
+    .catch(err => {
+      console.error("Failed to load bib:", err);
+      container.textContent = "Unable to load reference.";
+
+      if (shouldScroll) {
+        container.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+    });
+}
+</script>
+
+<script>
+const filledSVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" class="fav-icon">
+  <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+</svg>
+                `;
+const outlineSVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="black" fill="white" class="fav-icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.610l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.840-.610l1.285-5.386a.563.563 0 0 0-.182-.557L3.041 10.385a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+</svg>
+                `;
+
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest(".fav-btn");
+  if (!btn) return;
+
+  e.preventDefault();
+  const problemId = btn.dataset.problemId;
+
+  try {
+    const res = await fetch(`/forum/toggle_favourite/${problemId}`, { method: "POST" });
+    const data = await res.json();
+
+    btn.dataset.favourited = data.favourited ? "true" : "false";
+    btn.innerHTML = data.favourited ? filledSVG : outlineSVG;
+  } catch (err) {
+    console.error("Toggle failed:", err);
+  }
+});
+</script>
+
+    
+<script>
+function addImageBox(X, problem_id, shouldScroll = true) {
+  const local_id = 'image-container' + String(problem_id);
+  const container = document.getElementById(local_id);
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  const newBox = document.createElement("div");
+
+  const img = document.createElement("img");
+  img.src = `/static/${encodeURIComponent(X)}.png`;
+  img.className = "responsive-image";
+  img.alt = String(X);
+
+  newBox.appendChild(img);
+  container.appendChild(newBox);
+
+  if (shouldScroll) {
+    requestAnimationFrame(() => {
+      container.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+  }
+}
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('searchForm');
+  if (!form) return;
+  form.addEventListener('submit', function (e) {
+    const input = form.querySelector('.searchTerm');
+    if (!input) return;
+    const value = input.value.trim();
+    if (!value) return;
+    const path = '/search/' + encodeURIComponent(value);
+    const inDual = window.location.pathname.startsWith("/dual");
+    if (inDual) {
+      e.preventDefault(); 
+      const selected = document.querySelector('input[name="targetPanel"]:checked');
+      const panel = selected ? selected.value : "left";
+      const iframe = document.getElementById(`iframe-${panel}`);
+      if (iframe) {
+        const url = path.includes("?") ? path + "&embed=1" : path + "?embed=1";
+        iframe.src = url;
+        const box = document.querySelector(`#panel-${panel} input`);
+        if (box) box.value = path;
+      } else {
+        window.location.href = path;
+      }
+    } else {
+      form.action = path;
+      form.method = "GET";
+    }
+  });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.location.pathname.startsWith("/dual")) return;
+
+  var form = document.getElementById('idsearchForm');
+  if (!form) return;
+
+  form.onsubmit = function() {
+    var input = document.querySelector('.idsearchTerm').value.trim();
+    var searchUrl;
+
+    if (/^\d+$/.test(input)) {
+        searchUrl = '/' + encodeURIComponent(input);
+    } else if (/^((\d+|end)(-(\d+|end))?\s*)+(open|solved|yes|no)?$/.test(input.toLowerCase())) {
+        let parts = input.split(/\s+/).filter(Boolean);
+        searchUrl = '/range/' + parts.map(encodeURIComponent).join('/');
+    } else {
+        alert("Enter either a single integer or a space-separated list of numbers/ranges...");
+        return false;
+    }
+    window.location.href = searchUrl;
+    return false;
+  };
+});
+</script>
+
+<script>
+  window.CURRENT_USERNAME = "";
+</script>
+
+
+<script>
+document.addEventListener("click", async (ev) => {
+  const btn = ev.target.closest(".reaction-btn");
+  if (!btn) return;
+  const you = window.CURRENT_USERNAME || "";
+  const bar = btn.closest(".reaction-bar");
+  const postId = bar?.dataset.postId;
+  const rtype = btn.dataset.type;
+  const reactUrl = bar?.dataset.reactUrl; 
+  if (!postId || !rtype || !reactUrl) return;
+
+  try {
+    const res = await fetch(reactUrl, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({type: rtype})
+    });
+    const data = await res.json();
+    if (!data.ok) {
+      alert(data.error || "Could not update reaction.");
+      return;
+    }
+    const summary = data.summary;
+    
+    bar.querySelectorAll(".reaction-btn").forEach(b => {
+      const t = b.dataset.type;
+      const countSpan = bar.querySelector(`.reaction-count[data-type="${t}"]`);
+      if (countSpan && summary[t]) {
+        countSpan.textContent = summary[t].count;
+    const desc = b.dataset.desc || "";
+    const usersTitle = summary[t].users_title || "No one yet.";
+    b.title = `${desc}\n\n${usersTitle}`;
+      }
+        const iReacted = you && (summary[t].users_title || "").includes(you);
+  b.classList.toggle("active", !!iReacted);
+  b.setAttribute("aria-pressed", iReacted ? "true" : "false");
+    });
+  } catch (e) {
+    console.error(e);
+    alert("Only registered users with 5+ posts can react.");
+  }
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.body.addEventListener("click", function (e) {
+    const link = e.target.closest(".problem-reaction-link");
+    if (!link) return;
+
+    e.preventDefault();
+
+    const row = link.closest(".problem-reaction-row");
+    if (!row) return;
+
+    const form = row.querySelector(".problem-reaction-form");
+    if (!form) return;
+
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+      method: "POST",
+      body: formData,
+      headers: {
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    })
+      .then(resp => resp.json())
+      .then(data => {
+        if (!data.ok) {
+          console.error(data.error || "Problem reaction update failed");
+          return;
+        }
+
+        const summary = data.summary;
+
+        // Update users text for each reaction type
+        for (const [type, info] of Object.entries(summary)) {
+          const r = document.querySelector(
+            `.problem-reaction-row[data-reaction-type="${type}"]`
+          );
+          if (!r) continue;
+
+          const usersCell = r.querySelector(".problem-reaction-users");
+          if (usersCell) {
+            usersCell.textContent = info.users_title || "None yet";
+          }
+        }
+        link.classList.toggle("active");
+        if (link.classList.contains("active")) {
+          link.textContent = "(no)";
+        } else {
+          link.textContent = "(yes)";
+        }
+      })
+      .catch(err => {
+        console.error("Problem reaction AJAX error", err);
+      });
+  });
+});
+</script>
+
+
+
+
+
+
+</head>
+
+<body>
+
+<div class="topnav">
+
+  <div class="left">
+    <div class="logo">
+      <a class="dual-aware" href="/"><img src="/static/EPLogo.png" alt="Logo" height="50"></a>
+    </div>
+    <div class="links dual-aware desktop-nav">
+      <a href="/forum">Forum</a>
+      <a href="/dm">Inbox</a> 
+      <a href="/favourites">Favourites</a>
+      <a href="/tags">Tags</a> 
+      <div class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">More</a>
+        <div class="dropdown-content">
+          <a href="/faq">FAQ</a>
+          <a href="/prizes">Prizes</a>
+          <a href="/lists">Problem Lists</a>
+          <a href="/definitions">Definitions</a>
+          <a href="/links">Links</a>
+        </div>
+      </div> 
+    </div>
+    <div class="mobile-nav">
+    
+        <a class="forumlink" href="/forum">Forum</a>
+    <div class="dropdown">
+      <button class="dropbtn" id="mobileMenuButton">Menu</button>
+      <div class="dropdown-content">
+        <a href="/dm">Inbox</a> 
+        <a href="/favourites">Favourites</a>
+        <a href="/tags">Tags</a>  
+        <a href="/faq">FAQ</a>
+        <a href="/prizes">Prizes</a>
+        <a href="/lists">Problem Lists</a>
+        <a href="/definitions">Definitions</a>
+        <a href="/links">Links</a>
+      </div>
+     </div>
+    </div>
+  </div>
+
+  <div class = "middle">
+    <div class="button-container" style="max-width: 50%;">
+      <form id="idsearchForm">
+        <input required type="text" name="query" class="idsearchTerm" placeholder="# (or range #-#)" title="Enter either a single integer or a space-separated list of numbers/ranges, optionally ending with 'open' or 'solved'.">
+        <button type="submit" class="searchButton">Go</button>
+      </form>
+    </div>
+    <div class="button-container" style="max-width: 50%;">
+      <form id="searchForm">
+        <input required type="text" name="query" class="searchTerm" placeholder="Search" title="Search all problems.">
+        <button type="submit" class="searchButton">Go</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="right">
+    <a href="#" id="dualViewLink" class="split_all">Dual View</a>
+    <a href="/random_solved" class="split_solved dual-aware">Random Solved</a>
+    <a href="/random_open" class="split_open dual-aware">Random Open</a>
+  </div>
+
+</div>
+
+<div id="notifications-slot"></div>
+
+
+
+
+<div class="container">
+<div class="problem-box">
+
+        
+
+                    <div class="problem-text" id="open">  
+<div id="prize">
+
+<span class="tooltip">
+  OPEN
+  <span class="tooltiptext">
+    This is open, and cannot be resolved with a finite computation.
+  </span>
+</span>
+
+</div>
+
+                        <div id="content">Is there some $c&#62;0$ such that every measurable $A\subseteq \mathbb{R}^2$ of measure $\geq c$ contains the vertices of a triangle of area 1?</div>
+                        <div id="problem_id"><a href="/352">#352</a>: <a href="#bib-container352" onclick="event.preventDefault();addNewBox('Er78d', '352', true);return false;">[Er78d,p.122]</a><a href="#bib-container352" onclick="event.preventDefault();addNewBox('Er81b', '352', true);return false;">[Er81b,p.30]</a><a href="#bib-container352" onclick="event.preventDefault();addNewBox('Er83d', '352', true);return false;">[Er83d,p.323]</a><a href="#bib-container352" onclick="event.preventDefault();addNewBox('Va99', '352', true);return false;">[Va99,2.47]</a></div>
+                         
+                            <div id="tags">
+                            
+  <a href="/tags/geometry">geometry</a>
+
+                            </div>
+                        
+                    </div>  
+                    
+                    <div class="problem-text" id="disclaimer">  
+The open status of this problem reflects the current belief of the owner of this website. There may be literature on this problem that I am unaware of, which may partially or completely solve the stated problem. Please do your own literature search before expending significant effort on solving this problem. If you find any relevant literature not mentioned here, please add this in a comment.
+                    <div
+  class="problem-status-widget"
+  data-problem-id="352"
+  data-set-url="/problem-status/352"
+  data-current-status="open"
+  data-can-edit="0"
+  style="--status-progress: 0.0; --status-count: 3;"s
+>
+                      <div class="problem-status-heading">Comment activity that has not yet been incorporated into the remarks</div>
+
+  <div class="problem-status-scale" role="radiogroup" aria-label="Problem status">
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option is-active"
+        data-status="open"
+        data-label="None"
+        data-description="There are no solutions, partial or complete, claimed in the comments."
+        data-progress="0.0"
+        role="radio"
+        aria-checked="true"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">None</span>
+      </button>
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option"
+        data-status="partial"
+        data-label="Partial"
+        data-description="There are claims of partial results and/or a path to a solution in the comments."
+        data-progress="0.5"
+        role="radio"
+        aria-checked="false"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">Partial</span>
+      </button>
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option"
+        data-status="claimed"
+        data-label="Solution"
+        data-description="A claimed solution has been posted in the comments."
+        data-progress="1.0"
+        role="radio"
+        aria-checked="false"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">Solution</span>
+      </button>
+    
+  </div>
+
+  <div class="problem-status-explanation">
+    <span class="js-problem-status-description">
+      There are no solutions, partial or complete, claimed in the comments.
+    </span>
+  </div>
+  </div>
+  
+                    </div>
+                    
+                    
+
+
+                    
+
+                        <div class="problem-additional-text"> 
+                    
+                           Erdős (unpublished) proved that this is true if $A$ has infinite measure, or if $A$ is an unbounded set of positive measure (stating in <a href="#bib-container352" onclick="event.preventDefault();addNewBox('Er78d', '352', true);return false;">[Er78d]</a> and <a href="#bib-container352" onclick="event.preventDefault();addNewBox('Er83d', '352', true);return false;">[Er83d]</a> it 'follows easily from the Lebesgue density theorem'). <br><br>In <a href="#bib-container352" onclick="event.preventDefault();addNewBox('Er78d', '352', true);return false;">[Er78d]</a> and <a href="#bib-container352" onclick="event.preventDefault();addNewBox('Er83d', '352', true);return false;">[Er83d]</a> he speculated that perhaps $C=4\pi/\sqrt{27}\approx 2.418$ works, which would be the best possible, as witnessed by a circle of radius $&lt;2\cdot 3^{-3/4}$.<br><br>Further evidence for this is given by a result of Freiling and Mauldin <a href="#bib-container352" onclick="event.preventDefault();addNewBox('Ma02', '352', true);return false;">[Ma02]</a>, who proved that if $A$ has outer measure $&gt;4\pi/\sqrt{27}$ then $A$ contains the vertices of a triangle with area $&gt;1$. This also proves the same threshold for the original problem under the assumption that $A$ is a compact convex set. <br><br>Mauldin also discusses this problem in <a href="#bib-container352" onclick="event.preventDefault();addNewBox('Ma13', '352', true);return false;">[Ma13]</a>, in which he notes that it suffices to prove this under the assumption that $A$ is the union of the interiors of $n&lt;\infty$ many compact convex sets. Freiling and Mauldin (see <a href="#bib-container352" onclick="event.preventDefault();addNewBox('Ma13', '352', true);return false;">[Ma13]</a>) have proved this conjecture if $1\leq n\leq 3$.
+                           
+                    
+                    
+<p style="text-align: center; font-family: 'Courier New', monospace; font-size: 90%;">
+  <a href="/latex/352">View the LaTeX source</a>
+</p>
+<p style="text-align: center; font-family: 'Courier New', monospace; font-size: 90%;">
+  
+ This page was last edited 23 January 2026. <a href="/history/352">View history</a>
+</p>
+                    <div class="image-container" id="image-container352"></div>
+                        </div>
+
+                        <div class="problem-additional-text" style="text-align:center;"> 
+</div>
+
+                <div id="bib-container352"></div>
+  <div class="external">External data from <a href="https://github.com/teorth/erdosproblems">the database</a> - you can help update this</a>                
+
+
+  <br>
+  Formalised statement? 
+    
+      <a href="https://github.com/google-deepmind/formal-conjectures/blob/main/FormalConjectures/ErdosProblems/352.lean">Yes</a>
+    
+  
+  
+  
+  <br>
+  
+  </div>
+
+
+<div class="problem-reactions">
+
+<div class="comment-count">
+  <a style="color: inherit;" href="/forum/discuss/352">
+    17 comments on this problem
+  </a>
+</div>
+
+<table class="problem-reactions-table">
+  <tbody>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="like">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Likes this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    
+      <a href="/forum/user/JineonBaek" style="color:inherit; text-decoration: none;">JineonBaek</a>, 
+    
+      <a href="/forum/user/JeewonKim" style="color:inherit; text-decoration: none;">JeewonKim</a>, 
+    
+      <a href="/forum/user/J_Koizumi_144" style="color:inherit; text-decoration: none;">J_Koizumi_144</a>, 
+    
+      <a href="/forum/user/BorisAlexeev" style="color:inherit; text-decoration: none;">BorisAlexeev</a>, 
+    
+      <a href="/forum/user/Dogmachine" style="color:inherit; text-decoration: none;">Dogmachine</a>
+    
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="collab">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Interested in collaborating</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    
+      <a href="/forum/user/Vjeko_Kovac" style="color:inherit; text-decoration: none;">Vjeko_Kovac</a>, 
+    
+      <a href="/forum/user/JineonBaek" style="color:inherit; text-decoration: none;">JineonBaek</a>, 
+    
+      <a href="/forum/user/J_Koizumi_144" style="color:inherit; text-decoration: none;">J_Koizumi_144</a>
+    
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="working_on">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Currently working on this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    
+      <a href="/forum/user/Vjeko_Kovac" style="color:inherit; text-decoration: none;">Vjeko_Kovac</a>
+    
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="hard">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>This problem looks difficult</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    
+      <a href="/forum/user/JineonBaek" style="color:inherit; text-decoration: none;">JineonBaek</a>, 
+    
+      <a href="/forum/user/Vjeko_Kovac" style="color:inherit; text-decoration: none;">Vjeko_Kovac</a>
+    
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="easy">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>This problem looks tractable</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    
+      <a href="/forum/user/JeewonKim" style="color:inherit; text-decoration: none;">JeewonKim</a>
+    
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="formalisable">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>The results on this problem could be formalisable</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="working_form">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>I am working on formalising the results on this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+</div>
+<br>
+
+                <div class="citationbox"> <div id="content">
+                                    
+                           <b>Additional thanks to</b>: Boris Alexeev and Vjekoslav Kovac          <br> <br>
+                    
+When referring to this problem, please use the original sources of Erd&#337;s. If you wish to acknowledge this website, the recommended citation format is:
+<br><br>
+T. F. Bloom, Erd&#337;s Problem #352, https://www.erdosproblems.com/352, accessed 2026-07-10</div>
+</div>
+
+               
+
+
+<div class="problem-additional-text"> 
+
+
+
+
+<div class="thread-sort">
+Order by
+  <a href="/forum/thread/352?order=oldest"
+     class="order ">oldest first</a> or
+  <a href="/forum/thread/352?order=newest"
+     class="order active">newest first</a>. (The most recent comments are highlighted in a red border.)
+</div>
+
+
+
+
+<ul class="post-list">
+  
+    
+    
+
+
+
+
+
+
+<li id="post-2381"
+    class="post depth-0
+           
+           even">
+    <div class="post-body" id="post-2381">
+    
+
+
+
+      
+      <p>I thought I'd remark that Erdős asked this problem at least a couple more times before the stated reference [Er83d, p. 323]: <a href="https://www.renyi.hu/~p_erdos/1978-40.pdf" rel="nofollow noopener noreferrer ugc" target="_blank">here</a> (p. 122-123) in 1978-79 and <a href="https://link.springer.com/chapter/10.1007/978-3-319-22897-6_4" rel="nofollow noopener noreferrer ugc" target="_blank">here</a> (p. 30) in 1981. Also, R. Daniel Mauldin wrote about the problem in <a href="https://www.researchgate.net/profile/R-Mauldin-2/publication/2363356_Some_Problems_in_Set_Theory_Analysis_and_Geometry/links/0c96052951f2fa7f84000000/Some-Problems-in-Set-Theory-Analysis-and-Geometry.pdf" rel="nofollow noopener noreferrer ugc" target="_blank">this paper</a> from 2001 (Section 1) and <a href="https://link.springer.com/content/pdf/10.1007/978-3-642-39286-3_13.pdf" rel="nofollow noopener noreferrer ugc" target="_blank">this paper</a> from 2013 (Section 5). However, the problem still seems to be open.</p>
+      
+      
+      <div class="fixed-post">
+(The site has been updated to address this comment.)
+      </div>
+
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Vjeko_Kovac">Vjeko_Kovac</a></strong>
+      
+      — <a href="/forum/thread/352#post-2381">14:38 on 23 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2381" data-react-url="/forum/post/2381/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: Vjeko_Kovac, Alfaiz, MalekZ"
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">3</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2386"
+    class="post depth-1
+           
+           odd">
+    <div class="post-body" id="post-2386">
+    
+
+
+
+      
+      <p>One useful fact stated in Mauldin's paper is the following: this problem is equivalent to the one in which we restrict attention to sets $A$ that are unions of finitely many closed disks of equal radius. Indeed, by the inner regularity of the Lebesgue measure, it suffices to consider only compact sets $A$. After covering $A$ by $\varepsilon$-disks centered at points of $A$, one can apply Besicovitch's covering theorem to obtain the desired equivalence.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/J_Koizumi_144">J_Koizumi_144</a></strong>
+      
+      — <a href="/forum/thread/352#post-2386">18:27 on 23 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2386" data-react-url="/forum/post/2386/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Vjeko_Kovac"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2391"
+    class="post depth-2
+           
+           even">
+    <div class="post-body" id="post-2391">
+    
+
+
+
+      
+      <p>Even slightly better, a further reduction is easy to see: one can assume that $A$ is a finite union of congruent dyadic squares, which are sets of the form\[ \big[2^{-n}k,2^{-n}(k+1)\big) \times\big[2^{-n}l,2^{-n}(l+1)\big) \]for $k,l,n\in\mathbb{Z}$. They are better because they are disjoint and correspond to the integer lattice $\mathbb{Z}^2$.<br>After scaling by $2^n$, one can essentially think about the corresponding discrete problem: can one find $\omega(4^n)$ points inside the grid $[4^n]\times[4^n]$ such that no three of them form a triangle of area $\approx \alpha$ for some fixed $\alpha$ of the order $4^n$.<br>I'm not being precise here, I'm just saying that constructions of such large discrete sets would lead to the counterexample to the main problem and vice versa. Some careless discrete reformulations can go wrong, of course, e.g., if one targets the precise area $\alpha$ which is an odd number, while $A$ consists of points with both even coordinates.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Vjeko_Kovac">Vjeko_Kovac</a></strong>
+      
+      — <a href="/forum/thread/352#post-2391">08:48 on 24 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2391" data-react-url="/forum/post/2391/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2395"
+    class="post depth-3
+           
+           odd">
+    <div class="post-body" id="post-2395">
+    
+
+
+
+      
+      <p>Nice reduction! Based on your idea, I formulated a precise translation into a discrete problem. For an integer $N&gt;0$, we say that a set of lattice points $S\subset \mathbb{Z}^2$ is $N$-avoiding if for every $q_1,q_2,q_3\in S$ we have\[<br>\bigl\lvert \mu(\triangle q_1q_2q_3) - N \bigr\rvert &gt; \mathrm{diam}(\triangle q_1q_2q_3).<br>\]Let $f(N)$ denote the largest possible size of an $N$-avoiding set. Then the original question is equivalent to asking whether $f(N)=O(N)$ holds. For a proof of the equivalence, please see <a href="https://jkoizumi144.com/notes/erdos352.pdf" rel="nofollow noopener noreferrer ugc" target="_blank">here</a>.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/J_Koizumi_144">J_Koizumi_144</a></strong>
+      
+      — <a href="/forum/thread/352#post-2395">17:37 on 24 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2395" data-react-url="/forum/post/2395/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Vjeko_Kovac, KentaKitamura"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">2</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2429"
+    class="post depth-4
+           
+           even">
+    <div class="post-body" id="post-2429">
+    
+
+
+
+      
+      <p>This is very nice and worth writing down. However, your discrete reformulation is combinatorially complicated and I still find it beneficial to play with simplified discrete models to gain intuition about the problem.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Vjeko_Kovac">Vjeko_Kovac</a></strong>
+      
+      — <a href="/forum/thread/352#post-2429">14:02 on 26 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2429" data-react-url="/forum/post/2429/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2505"
+    class="post depth-4
+           
+           odd">
+    <div class="post-body" id="post-2505">
+    
+
+
+
+      
+      <p>Here are results from optimizing this up to $N=27$.  The format is $N$, $f(N)$, and then a witness.<br><br>1 1 0,0<br>2 4 0,0 1,1 1,0 0,1<br>3 4 0,0 2,1 1,1 1,0<br>4 7 0,0 2,2 2,1 1,2 1,1 1,0 0,1<br>5 9 0,0 2,2 2,1 2,0 1,2 1,1 1,0 0,2 0,1<br>6 10 0,0 3,2 3,1 2,2 2,1 2,0 1,2 1,1 1,0 0,1<br>7 12 0,0 3,2 3,1 3,0 2,2 2,1 2,0 1,2 1,1 1,0 0,2 0,1<br>8 14 0,0 3,3 3,2 3,1 2,3 2,2 2,1 2,0 1,3 1,2 1,1 1,0 0,2 0,1<br>9 16 0,0 4,1 4,0 3,2 3,1 3,0 3,-1 2,2 2,1 2,0 2,-1 1,2 1,1 1,0 1,-1 0,1<br>10 18 0,0 4,3 4,2 4,1 3,3 3,2 3,1 3,0 2,3 2,2 2,1 2,0 1,3 1,2 1,1 1,0 0,2 0,1<br>11 21 0,0 4,2 4,1 4,0 3,3 3,2 3,1 3,0 3,-1 2,3 2,2 2,1 2,0 2,-1 1,3 1,2 1,1 1,0 1,-1 0,2 0,1<br>12 23 0,0 4,4 4,3 4,2 4,1 3,4 3,3 3,2 3,1 3,0 2,4 2,3 2,2 2,1 2,0 1,4 1,3 1,2 1,1 1,0 0,3 0,2 0,1<br>13 24 0,0 6,1 6,0 5,2 5,1 5,0 5,-1 4,2 4,1 4,0 4,-1 3,2 3,1 3,0 3,-1 2,2 2,1 2,0 2,-1 1,2 1,1 1,0 1,-1 0,1<br>14 26 0,0 5,3 5,2 5,1 4,4 4,3 4,2 4,1 4,0 3,4 3,3 3,2 3,1 3,0 3,-1 2,3 2,2 2,1 2,0 2,-1 1,3 1,2 1,1 1,0 1,-1 0,1<br>15 28 0,0 5,4 5,3 5,2 5,1 4,4 4,3 4,2 4,1 4,0 3,4 3,3 3,2 3,1 3,0 2,4 2,3 2,2 2,1 2,0 1,4 1,3 1,2 1,1 1,0 0,3 0,2 0,1<br>16 32 0,0 5,3 5,2 5,1 5,0 4,4 4,3 4,2 4,1 4,0 4,-1 3,4 3,3 3,2 3,1 3,0 3,-1 2,4 2,3 2,2 2,1 2,0 2,-1 1,4 1,3 1,2 1,1 1,0 1,-1 0,3 0,2 0,1<br>17 32 0,0 6,3 6,2 6,1 5,4 5,3 5,2 5,1 5,0 4,4 4,3 4,2 4,1 4,0 4,-1 3,4 3,3 3,2 3,1 3,0 3,-1 2,3 2,2 2,1 2,0 2,-1 1,3 1,2 1,1 1,0 1,-1 0,1<br>18 34 0,0 7,2 7,1 7,0 6,3 6,2 6,1 6,0 5,3 5,2 5,1 5,0 5,-1 4,3 4,2 4,1 4,0 4,-1 3,3 3,2 3,1 3,0 3,-1 2,3 2,2 2,1 2,0 2,-1 1,3 1,2 1,1 1,0 0,2 0,1<br>19 38 0,0 6,3 6,2 6,1 6,0 5,4 5,3 5,2 5,1 5,0 5,-1 4,4 4,3 4,2 4,1 4,0 4,-1 3,4 3,3 3,2 3,1 3,0 3,-1 2,4 2,3 2,2 2,1 2,0 2,-1 1,4 1,3 1,2 1,1 1,0 1,-1 0,3 0,2 0,1<br>20 39 0,0 6,4 6,3 6,2 6,1 5,5 5,4 5,3 5,2 5,1 5,0 4,5 4,4 4,3 4,2 4,1 4,0 4,-1 3,5 3,4 3,3 3,2 3,1 3,0 3,-1 2,4 2,3 2,2 2,1 2,0 2,-1 1,4 1,3 1,2 1,1 1,0 1,-1 0,2 0,1<br>21 41 0,0 6,4 6,3 6,2 6,1 5,5 5,4 5,3 5,2 5,1 5,0 4,5 4,4 4,3 4,2 4,1 4,0 4,-1 3,5 3,4 3,3 3,2 3,1 3,0 3,-1 2,5 2,4 2,3 2,2 2,1 2,0 2,-1 1,5 1,4 1,3 1,2 1,1 1,0 0,3 0,2 0,1<br>22 44 0,0 7,2 7,1 7,0 6,3 6,2 6,1 6,0 6,-1 5,4 5,3 5,2 5,1 5,0 5,-1 5,-2 4,4 4,3 4,2 4,1 4,0 4,-1 4,-2 3,4 3,3 3,2 3,1 3,0 3,-1 3,-2 2,4 2,3 2,2 2,1 2,0 2,-1 2,-2 1,3 1,2 1,1 1,0 1,-1 0,2 0,1<br>23 45 0,0 6,4 6,3 6,2 6,1 6,0 5,5 5,4 5,3 5,2 5,1 5,0 5,-1 4,5 4,4 4,3 4,2 4,1 4,0 4,-1 3,5 3,4 3,3 3,2 3,1 3,0 3,-1 2,5 2,4 2,3 2,2 2,1 2,0 2,-1 1,5 1,4 1,3 1,2 1,1 1,0 1,-1 0,4 0,3 0,2 0,1<br>24 48 0,0 7,4 7,3 7,2 7,1 6,5 6,4 6,3 6,2 6,1 6,0 5,5 5,4 5,3 5,2 5,1 5,0 5,-1 4,5 4,4 4,3 4,2 4,1 4,0 4,-1 3,5 3,4 3,3 3,2 3,1 3,0 3,-1 2,5 2,4 2,3 2,2 2,1 2,0 2,-1 1,4 1,3 1,2 1,1 1,0 1,-1 0,3 0,2 0,1<br>25 52 0,0 7,3 7,2 7,1 7,0 6,4 6,3 6,2 6,1 6,0 6,-1 5,5 5,4 5,3 5,2 5,1 5,0 5,-1 5,-2 4,5 4,4 4,3 4,2 4,1 4,0 4,-1 4,-2 3,5 3,4 3,3 3,2 3,1 3,0 3,-1 3,-2 2,5 2,4 2,3 2,2 2,1 2,0 2,-1 2,-2 1,4 1,3 1,2 1,1 1,0 1,-1 0,3 0,2 0,1<br>26 52 0,0 7,4 7,3 7,2 7,1 7,0 6,5 6,4 6,3 6,2 6,1 6,0 6,-1 5,5 5,4 5,3 5,2 5,1 5,0 5,-1 4,5 4,4 4,3 4,2 4,1 4,0 4,-1 4,-2 3,5 3,4 3,3 3,2 3,1 3,0 3,-1 3,-2 2,5 2,4 2,3 2,2 2,1 2,0 2,-1 2,-2 1,4 1,3 1,2 1,1 1,0 1,-1 0,2 0,1<br>27 54 0,0 8,3 8,2 8,1 7,4 7,3 7,2 7,1 7,0 6,5 6,4 6,3 6,2 6,1 6,0 6,-1 5,5 5,4 5,3 5,2 5,1 5,0 5,-1 5,-2 4,5 4,4 4,3 4,2 4,1 4,0 4,-1 4,-2 3,5 3,4 3,3 3,2 3,1 3,0 3,-1 3,-2 2,4 2,3 2,2 2,1 2,0 2,-1 2,-2 1,3 1,2 1,1 1,0 1,-1 0,2 0,1<br><br>If you plot the points, you see that they're just nearly perfectly circular.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/BorisAlexeev">BorisAlexeev</a></strong>
+      
+      — <a href="/forum/thread/352#post-2505">03:17 on 28 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2505" data-react-url="/forum/post/2505/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Vjeko_Kovac, J_Koizumi_144, KentaKitamura"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">3</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-6754"
+    class="post depth-5
+           recent recent-2
+           even">
+    <div class="post-body" id="post-6754">
+    
+
+
+
+      
+      <p>I prepared a public repository of verified lower-bound witnesses for $N=1,\dots,40$ in Koizumi's discrete $N$-avoiding model related to Erdős Problem #352.<br>Repository: <a href="https://github.com/KitaKen1/erdos352-koizumi-n-avoiding-witness-table" rel="nofollow noopener noreferrer ugc" target="_blank">erdos352-koizumi-n-avoiding-witness-table</a><br>Interactive viewer: <a href="https://kitaken1.github.io/erdos352-koizumi-n-avoiding-witness-table/" rel="nofollow noopener noreferrer ugc" target="_blank">open the HTML witness viewer</a><br><br>The entries $N=1,\dots,27$ are based on BorisAlexeev's posted witnesses in this thread, converted into a uniform JSON format and reverified. The entries $N=28,\dots,40$ are additional witnesses found by my search program. All witnesses are checked by an exact integer verifier included in the repository.<br><br>Current lower bounds:<br>N=1..10:<br>1, 4, 4, 7, 9, 10, 12, 14, 16, 18<br>N=11..20:<br>21, 23, 24, 26, 28, 32, 32, 34, 38, 39<br>N=21..30:<br>41, 44, 45, 48, 52, 52, 54, 56, 60, 61<br>N=31..40:<br>63, 65, 69, 69, 72, 74, 76, 78, 80, 82<br><br>Corrections, independent checks, or better witnesses are very welcome.<br>AI usage disclosure: This comment was prepared with assistance from Codex 5.5 using xhigh reasoning, and ChatGPT 5.5 Pro.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/KentaKitamura">KentaKitamura</a></strong>
+      
+      — <a href="/forum/thread/352#post-6754">07:43 on 31 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6754" data-react-url="/forum/post/6754/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Vjeko_Kovac, BorisAlexeev, old-bielefelder"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">3</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-6750"
+    class="post depth-4
+           recent recent-3
+           even">
+    <div class="post-body" id="post-6750">
+    
+
+
+
+      
+      <p>Following Koizumi's discrete $N$-avoiding lattice formulation above, I want to record a small observation about the low-side subproblem.<br><br>The theorem I want to state is the following. Let $S$ be a finite subset of $\mathbb{Z}^2$. I will say that $S$ is low-side for $N$ if every triple $a,b,c\in S$ satisfies $\operatorname{area}(\triangle abc)+\operatorname{diam}(\triangle abc)&lt;N$. Let $F_{\mathrm{low}}(N)$ be the maximum possible size of such a set. Then $F_{\mathrm{low}}(N)=(4\pi/\sqrt{27})N+O(\sqrt{N})$.<br>Thus, in the low-side part of Koizumi's model, the disk constant $4\pi/\sqrt{27}$ is the sharp asymptotic constant.<br><br>The lower bound is the disk construction. If $S$ consists of lattice points in a disk of radius $r$, then every triangle has area at most $(3\sqrt{3}/4)r^2$ and diameter at most $2r$. Choosing $r$ so that $(3\sqrt{3}/4)r^2+2r&lt;N$ gives $|S|=(4\pi/\sqrt{27})N-O(\sqrt{N})$.<br><br>For the upper bound, let $K=\operatorname{conv}(S)$, let $D=\operatorname{diam}(K)$, and choose a diameter pair $a,b\in S$. Let $W$ be the width of $K$ perpendicular to $ab$. Degenerate collinear cases are immediate, so assume $K$ has positive area.<br>Low-side applied to triangles $abv$, where $v$ is a vertex of $K$, gives $Dh(v)/2+D&lt;N$, where $h(v)$ is the distance from $v$ to the line $ab$. In particular $D&lt;N$ by taking a vertex with positive height, and the same inequalities give $W&lt;4(N-D)/D$. Also $W\le D$.<br>Let $T$ be the maximum area of a triangle in $K$, and let $d$ be the diameter of such a maximum triangle. Since $K$ is a lattice polygon, this maximum triangle may be chosen with vertices in $S$. The triangle lies in a strip of width $W$, so $T\le dW/2$. Low-side gives $T+d&lt;N$, hence $T&lt;N/(1+2/W)$.<br>Now we use the first external theorem. The Blaschke--Sas theorem [1,2] says that every planar convex body $K$ contains a triangle of area at least $(3\sqrt{3}/(4\pi))\operatorname{area}(K)$. Since $T$ is the largest triangle area in $K$, $T\ge (3\sqrt{3}/(4\pi))\operatorname{area}(K)$, i.e. $\operatorname{area}(K)\le (4\pi/\sqrt{27})T$.<br>Next we use Pick's theorem. Let $I$ be the number of lattice points in the interior of $K$, and $B$ the number of lattice points on the boundary of $K$. Pick's theorem [3] gives $\operatorname{area}(K)=I+B/2-1$, so $|K\cap\mathbb{Z}^2|=I+B=\operatorname{area}(K)+B/2+1$. Since $B\le \operatorname{perim}(K)$, and $S\subset K\cap\mathbb{Z}^2$, we get $|S|\le \operatorname{area}(K)+\operatorname{perim}(K)/2+1$. Also $K$ is contained in a $D$ by $W$ rectangle, so $\operatorname{perim}(K)\le 2D+2W$ and hence $\operatorname{perim}(K)/2\le D+W$. Therefore $|S|\le (4\pi/\sqrt{27})N/(1+2/W)+D+W+O(1)$.<br><br>It remains to split into two cases. Write $c=4\pi/\sqrt{27}$.<br>If $D\le 2\sqrt{N}$, then $W\le D\le 2\sqrt{N}$ and $cN/(1+2/W)\le cN$, so $|S|\le cN+D+W+O(1)\le cN+O(\sqrt{N})$.<br><br>If $D&gt;2\sqrt{N}$, put $W_0=4(N-D)/D$. Then $W&lt;W_0&lt;4N/D&lt;2\sqrt{N}$, so $W=O(\sqrt{N})$. It remains to show $cN/(1+2/W)+D\le cN$. Since $cN/(1+2/W)=cNW/(W+2)$ is increasing in $W$, $\frac{cN}{1+2/W}+D\le \frac{cN}{1+2/W_0}+D=cN\frac{2(N-D)}{2N-D}+D=cN-\frac{cND}{2N-D}+D$.<br>As noted above, $D&lt;N$. Also $c&gt;2$, so $cN&#62;2N&#62;2N-D$, and hence $cND/(2N-D)\ge D$. Therefore the last displayed quantity is at most $cN$, and $|S|\le cN+W+O(1)\le cN+O(\sqrt{N})$.<br><br>References.<br>[1] Sas, E.  Über eine Extremumeigenschaft der Ellipsen. Compositio Mathematica 6 (1939), 468--470. https://numdam.org/item/CM_1939__6__468_0/<br>[2] Balko, M.; Jelinek, V.; Valtr, P.; Walczak, B.On the Beer Index of Convexity and Its Variants.<br>Discrete &amp; Computational Geometry 57 (2017), 179--214 https://link.springer.com/article/10.1007/s00454-016-9821-3<br>[3] Pick, G.  Geometrisches zur Zahlenlehre. Lotos - Zeitschrift fuer Naturwissenschaften 47,<br>Neue Folge XIX (1899), 311--319. https://www.zobodat.at/pdf/Lotos_47_0311-0319.pdf<br><br>AI usage disclosure: This comment was prepared with assistance from Codex 5.5 using xhigh reasoning, and ChatGPT 5.5 Pro.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/KentaKitamura">KentaKitamura</a></strong>
+      
+      — <a href="/forum/thread/352#post-6750">04:03 on 31 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6750" data-react-url="/forum/post/6750/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-6806"
+    class="post depth-4
+           recent recent-1
+           odd">
+    <div class="post-body" id="post-6806">
+    
+
+
+
+      
+      <p>I made an attempt at a finite upper-bound scheme for $f(N)$ in Koizumi's discrete $N$-avoiding lattice model for Erdős #352.<br><br>Start with an arbitrary $N$-avoiding set $S$ and choose a diameter pair in $S$.  After translation and symmetry, write it as $A=(0,0)$ and $B=(a,b)$, and put $D=|A-B|$.  For this fixed diameter vector $B$, the remaining candidates $q$ are finite.<br>The first test is the triangle $A,B,q$.  A point $q$ survives only if $|\operatorname{area}(A,B,q)-N|&#62;D$. So each surviving $q$ is classified as follows: low if $\operatorname{area}(A,B,q)&lt;N-D$, high if $\operatorname{area}(A,B,q)&gt;N+D$. Points with $N-D\le\operatorname{area}(A,B,q)\le N+D$ are discarded.<br><br>The compatibility graph is built as follows.  Its vertices are the remaining candidates $q$.  An edge $q_iq_j$ means that $q_i$ and $q_j$ are still allowed to be chosen together with the fixed points.<br><br>In the no-high branch the fixed points are $A,B$, so the pair $q_i,q_j$ is tested together with $A$ and with $B$, for example by checking the triples $A,q_i,q_j$ and $B,q_i,q_j$.  In the high-side branch the fixed points are $A,B,h$, so the triple $h,q_i,q_j$ is also checked.<br><br>For this $B$, I calculate two branch bounds:<br>no-high branch: let $G_B^0$ be the compatibility graph on the low candidates.  This branch gives $2+\chi(G_B^0)$.<br>high-side branch: after fixing one high point $h$, let $G_{B,h}$ be the compatibility graph on the remaining survivors.  This branch gives $3+\chi(G_{B,h})$.<br><br>This graph calculation is intentionally relaxed: it does not check every triple $q_i,q_j,q_k$ made only from unfixed candidates.  Therefore the color count is not claimed to be the exact maximum size of an avoiding set.  It is only an upper bound.  The reason it is still valid is that every actual avoiding choice gives a clique in the compatibility graph, and $\omega(G)\le\chi(G)$.<br><br>The case bound for this $B$ is the larger of the no-high bound and all high-side bounds.  Finally, the global upper bound for $f(N)$ is the maximum over all normalized diameter vectors $B$.<br><br>I checked the implementation for $N=1,\ldots,7$:<br>N:    1  2  3  4  5  6  7<br>upper bound: 1  4  4  7  9 10 12<br>These match the known lower-bound witnesses in these small cases.<br>For $N&#62;7$, the current readable implementation became too slow for me to complete the full runs, so I am reporting only these completed checks.<br><br>GitHub: https://github.com/KitaKen1/erdos352-koizumi-fn-upper-bound<br><br>AI usage disclosure: the code and writeup were prepared with assistance from Codex 5.5 and ChatGPT 5.5 Pro.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/KentaKitamura">KentaKitamura</a></strong>
+      
+      — <a href="/forum/thread/352#post-6806">11:53 on 03 Jun 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6806" data-react-url="/forum/post/6806/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2394"
+    class="post depth-2
+           
+           odd">
+    <div class="post-body" id="post-2394">
+    
+
+
+
+      
+      <p>Related to the above discretization, I can perhaps suggest the following discrete toy-problem, which, I believe, captures the essence of the original question:<br>Let $f(N)$ be cardinality of the largest set $A\subseteq[N]\times[N]$ such that no three points from $A$ span the triangle of area $\in[0.99N,1.01N]$. Is $f(N)=O(N)$?<br>This, at least in theory, leaves room for computer experimentation, to perhaps try to find the "worst" arrangements, or to investigate all "types" of possible behaviors.<br><br>There is some superficial similarity with the <a href="https://en.wikipedia.org/wiki/No-three-in-line_problem" rel="nofollow noopener noreferrer ugc" target="_blank">No-three-in-line problem</a>, which could be considered as the search for triangles of area 0. However, $f(N)\leq2N$ is obvious there, unlike in this problem.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Vjeko_Kovac">Vjeko_Kovac</a></strong>
+      
+      — <a href="/forum/thread/352#post-2394">16:15 on 24 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2394" data-react-url="/forum/post/2394/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: old-bielefelder"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2430"
+    class="post depth-3
+           
+           even">
+    <div class="post-body" id="post-2430">
+    
+
+
+
+      
+      <p>It's not much of an idea, but it might be useful to first play with triangles which have one side parallel to the $x$-axis. Namely, either in continuous or discrete setting, if $A$ does not contain such a triple of points spanning a triangle of area $1$ and if $B$ is its projection onto the $y$-axis, then each (one-dimensional) horizontal section $A_y := A \cap (\mathbb{R}\times\{y\})$ (viewed as a subset of $\mathbb{R}$) only has to avoid certain differences (determined by $B$ and $y$).<br><br>Inside the grid $[N]\times [N]$ this leads to a more effective algorithm for finding the largest allowed $A\subseteq[N]\times[N]$, of complexity $O(2^{2N})$, rather than $O(2^{N^2})$. Using this, I computed, for example, sizes of the largest $A\subseteq[N]\times[N]$ avoiding, say, areas $(N-1)/2$, $N/2$, $(N+1)/2$:<br><br>grid 2x2,  forbidden areas = {1/2,1,3/2},  maximum points = 2,<br>grid 3x3,  forbidden areas = {1,3/2,2},  maximum points = 4,<br>grid 4x4,  forbidden areas = {3/2,2,5/2},  maximum points = 7,<br>grid 5x5,  forbidden areas = {2,5/2,3},  maximum points = 8,<br>grid 6x6,  forbidden areas = {5/2,3,7/2},  maximum points = 12,<br>grid 7x7,  forbidden areas = {3,7/2,4},  maximum points = 16,<br>grid 8x8,  forbidden areas = {7/2,4,9/2},  maximum points = 22,<br>grid 9x9,  forbidden areas = {4,9/2,5},  maximum points = 25,<br>grid 10x10,  forbidden areas = {9/2,5,11/2},  maximum points = 38.<br><br>These experimental results still don't say much, since this discrete problem is too sensitive on divisibility issues. For instance, there is no way that a triangle with vertices in $[10]\times[10]$ can have area $11/2$, so this condition is not restricting anything.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Vjeko_Kovac">Vjeko_Kovac</a></strong>
+      
+      — <a href="/forum/thread/352#post-2430">14:16 on 26 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2430" data-react-url="/forum/post/2430/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-6727"
+    class="post depth-0
+           
+           odd">
+    <div class="post-body" id="post-6727">
+    
+
+
+
+      
+      <p>Aleksandar Bulj and I made partial progress on this problem of a different nature in <a href="https://arxiv.org/abs/2605.30033" rel="nofollow noopener noreferrer ugc" target="_blank">this preprint</a>. One can ask for an upper bound on the measure of every set $A$ contained in a large square $[0,R]^2$ that avoids every triple of points spanning a triangle of area 1. Erdős's conjecture is, of course, that it can be $O(1)$, i.e., uniform in $R$. However, while this is still open, one can still concentrate on upper bounds in terms of $R\to\infty$, i.e., prove the so-called "density theorem" in this context, anything better than the trivial $O(R^2)$. Aleksandar and I showed an upper bound of the form\[ O\Big( R^2 \Big(\frac{\log\log R}{\log R}\Big)^{1/2} \Big). \]Namely, we couldn't find any concrete upper bound in the literature. There is only a very weak $o(R^2)$ that can be deduced from a brief discrete comment by Graham, which we also deciphered in our Appendix B.<br><br>Our proof uses quite a lot of tools from harmonic analysis (trilinear smoothing, induction on scales, etc.). It would be interesting to see if a better upper bound can be shown using other ideas. Our paper would survive even if the full Erdős problem was solved, because we were also concerned with a more rigid configuration, where $O(1)$ is not possible (and we get a slightly worse upper bound).<br><br>Was AI used? Yes, ChatGPT 5.5 Pro helped us increase the exponent, from 1/3 to 1/2. It also helped us decipher Graham's comment.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Vjeko_Kovac">Vjeko_Kovac</a></strong>
+      
+      — <a href="/forum/thread/352#post-6727">05:43 on 29 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6727" data-react-url="/forum/post/6727/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: J_Koizumi_144, old-bielefelder, Nat Sothanaphan"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">3</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-6732"
+    class="post depth-1
+           
+           even">
+    <div class="post-body" id="post-6732">
+    
+
+
+
+      
+      <p>Congrats!</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/352#post-6732">14:57 on 29 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6732" data-react-url="/forum/post/6732/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Vjeko_Kovac"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-2476"
+    class="post depth-0
+           
+           even">
+    <div class="post-body" id="post-2476">
+    
+
+
+
+      
+      <p>To ask an obvious question: can someone give a set that is larger than the appropriately-sized circle (open disk)?<br><br>I calculate the radius of that circle as $r=\frac{2}{3^{3/4}}$ and its area as $c=\frac{4\pi}{\sqrt{27}} \approx 2.418$.<br><br>(I was not able to access [Er83d].)</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/BorisAlexeev">BorisAlexeev</a></strong>
+      
+      — <a href="/forum/thread/352#post-2476">15:22 on 27 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2476" data-react-url="/forum/post/2476/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2477"
+    class="post depth-1
+           
+           odd">
+    <div class="post-body" id="post-2477">
+    
+
+
+
+      
+      <p>Indeed, Erd&#337;s himself in [Er83d] guessed that perhaps $C=4\pi/\sqrt{27}$ works for the same reason. (He also said that 'if true this conjecture should perhaps not be difficult to prove'.)</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TFBloom">Thomas Bloom</a></strong>
+      
+      — <a href="/forum/thread/352#post-2477">15:36 on 27 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2477" data-react-url="/forum/post/2477/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2485"
+    class="post depth-1
+           
+           even">
+    <div class="post-body" id="post-2485">
+    
+
+
+
+      
+      <p>In the first comment above, I linked to two sources older than [Er83d]: they are both freely accessible. In the first one, from 1978, Erdős already mentions precisely that constant as potentially working. (Mauldin, see above, also played with this stronger version of the conjecture.) I don't remember seeing that even this value of $c$ has been disproved somewhere.<br><br>However, one must be aware that there are numerous "local extremizers" for the problem: there is a sequence of area-1-triangle-avoiding sets $(A_N)_{N=1}^{\infty}$ with areas $\gg1$ but arbitrarily large diameters. For instance, for each $(m,n)\in[N]\times[N]$ take a disk around $(2m,2n)$ of radius $\frac{1}{100N}$ and let $A_N$ be the union of all these disks.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Vjeko_Kovac">Vjeko_Kovac</a></strong>
+      
+      — <a href="/forum/thread/352#post-2485">16:23 on 27 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2485" data-react-url="/forum/post/2485/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2491"
+    class="post depth-1
+           
+           odd">
+    <div class="post-body" id="post-2491">
+    
+
+
+
+      
+      <p>FWIW, <a href="https://eudml.org/doc/88724" rel="nofollow noopener noreferrer ugc" target="_blank">Sas’s theorem</a> implies that any convex set of area greater than $c = 4\pi/\sqrt{27}$ contains a triangle of area $1$. Moreover, Mauldin's 2013 article mentioned in Vjeko's comment shows that the same constant $c$ is optimal even for unions of at most three convex sets.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/J_Koizumi_144">J_Koizumi_144</a></strong>
+      
+      — <a href="/forum/thread/352#post-2491">17:04 on 27 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2491" data-react-url="/forum/post/2491/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Vjeko_Kovac"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+</ul>
+
+
+
+
+
+<p>
+                        <div style="text-align:center;">
+<strong>All comments are the responsibility of the user. Comments appearing on this page are not verified for correctness. Please keep posts mathematical and on topic.</strong>
+</div>
+<p>
+
+
+<div style="text-align:center; margin: 1em">
+
+
+  <p><a href="/forum/login?next=%2Fforum%2Fthread%2F352">Log in</a> to add a comment.</p>
+
+
+    </div>
+<p><div style="text-align: center; margin: 1em 0;">
+<a href="/forum/">Back to the forum</a>
+</div>
+                </div>
+            </div>
+            
+
+<script>
+document.addEventListener("submit", (e) => {
+  const form = e.target.closest(".reply-form");
+  if (!form) return;
+  const btn = form.querySelector('button[type="submit"]');
+  if (btn?.dataset.submitting === "1") {
+    e.preventDefault(); // already submitted
+    return;
+  }
+  if (btn) {
+    btn.dataset.submitting = "1";
+    btn.disabled = true;
+    btn.textContent = "Posting…";
+  }
+});
+</script>
+
+<script>
+document.addEventListener("click", (ev) => {
+  const a = ev.target.closest(".thread-sort .order");
+  if (!a) return;
+});
+</script>
+
+<script>
+document.addEventListener("submit", (e) => {
+  const form = e.target.closest(".comment-form");
+  if (!form) return;
+
+  const btn = form.querySelector('button[type="submit"]');
+  if (!btn) return;
+
+  // Already submitting? Block.
+  if (btn.dataset.submitting === "1") {
+    e.preventDefault();
+    return;
+  }
+
+  // First submit: lock UI
+  btn.dataset.submitting = "1";
+  btn.disabled = true;
+  const original = btn.textContent;
+  btn.dataset.originalText = original;
+  btn.textContent = "Posting…";
+});
+</script>
+           
+
+
+
+
+<script>
+window.MathJax = {
+  output: {
+    font: 'mathjax-tex'
+  },
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+};
+</script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@4.1.2/tex-chtml-nofont.js"></script>
+
+
+<!-- Previewing forum posts -->
+<!-- Previewing forum posts -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, m => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[m]);
+  }
+
+  function normalizeHref(href) {
+    href = href.trim();
+    if (!/^https?:\/\//i.test(href) && !href.startsWith("/")) {
+      href = "https://" + href;
+    }
+
+    return href;
+  }
+
+  let mathJaxQueue = Promise.resolve();
+
+  function clearMathJax(element) {
+    if (window.MathJax && MathJax.typesetClear) {
+      MathJax.typesetClear([element]);
+    }
+  }
+
+  function typesetMath(element) {
+    if (!window.MathJax) return;
+
+    if (MathJax.typesetPromise) {
+      mathJaxQueue = mathJaxQueue
+        .then(() => {
+          if (MathJax.startup && MathJax.startup.promise) {
+            return MathJax.startup.promise;
+          }
+        })
+        .then(() => MathJax.typesetPromise([element]))
+        .catch(err => {
+          console.error("MathJax typeset failed:", err);
+        });
+
+      return;
+    }
+
+    if (MathJax.Hub) {
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, element]);
+    }
+  }
+
+  function renderPreview(textarea, preview, label) {
+    let raw = textarea.value;
+    const anchors = [];
+    let idx = 0;
+
+    raw = raw.replace(
+      /<a\s+href=("(?:[^"]*)"|'(?:[^']*)')\s*>([\s\S]*?)<\/a>/gi,
+      (match, qHref, labelText) => {
+        const href = qHref.slice(1, -1);
+        const token = `__A_TAG_${idx++}__`;
+
+        anchors.push({
+          token,
+          href: normalizeHref(href),
+          label: labelText
+        });
+
+        return token;
+      }
+    );
+
+    let safe = escapeHtml(raw);
+
+    anchors.forEach(a => {
+      const html = `<a href="${escapeHtml(a.href)}">${escapeHtml(a.label)}</a>`;
+      safe = safe.replace(a.token, html);
+    });
+
+    safe = safe.replace(/\{PROBLEM=(.+?)\}/g, (_, p1) =>
+      `<a href="/${escapeHtml(p1)}">[${escapeHtml(p1)}]</a>`
+    );
+
+    safe = safe.replace(/\n/g, "<br>");
+    clearMathJax(preview);
+
+    if (!safe.trim()) {
+      preview.innerHTML = "";
+      preview.classList.add("hidden");
+      label.classList.add("hidden");
+      return;
+    }
+
+    preview.innerHTML = safe;
+    preview.classList.remove("hidden");
+    label.classList.remove("hidden");
+
+    typesetMath(preview);
+  }
+
+  document.querySelectorAll("form textarea").forEach(textarea => {
+    const form = textarea.closest("form");
+    const preview = form && form.querySelector(".post-preview");
+    const label = form && form.querySelector(".preview-label");
+
+    if (preview && label) {
+      textarea.addEventListener("input", () => renderPreview(textarea, preview, label));
+      renderPreview(textarea, preview, label);
+    }
+  });
+});
+</script>
+
+<!-- To handle the search bar -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function setFilterLink(linkId, newFilter) {
+        const link = document.getElementById(linkId);
+        if (!link) return;
+        const pathParts = window.location.pathname.split("/");
+        // Expect: /<section>/<entry> or /<section>/<entry>/<filter>
+        if (pathParts.length >= 3) {
+            const section = pathParts[1];
+            const entry = pathParts[2];
+            // Construct base: /tags/additive, /sources_bib/BL09, etc.
+            const baseUrl = "/" + section + "/" + entry;
+            link.href = baseUrl + "/" + newFilter;
+        }
+    }
+    setFilterLink("solvedLink", "solved");
+    setFilterLink("openLink", "open");
+    setFilterLink("yesLink", "yes");
+    setFilterLink("noLink", "no");
+});
+</script>
+
+<!-- Handle the dual view link -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const dualLink = document.getElementById("dualViewLink");
+  if (!dualLink) return;
+
+  const isInDualView = window.location.pathname.startsWith("/dual");
+  dualLink.textContent = isInDualView ? "Exit Dual View" : "Dual View";
+  dualLink.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    if (isInDualView) {
+      try {
+        const leftIframe = document.getElementById("iframe-left");
+        const src = leftIframe?.src || "/";
+        let clean = src.replace(window.location.origin, "");
+        clean = clean.replace(/[?&]embed=1/, "");
+
+        window.location.href = clean;
+      } catch (err) {
+        window.location.href = "/";
+      }
+    } else {
+      const currentPath = window.location.pathname + window.location.search;
+      const rightPanelDefault = "/";
+      const hash = `#left:${encodeURIComponent(currentPath)}&right:${encodeURIComponent(rightPanelDefault)}`;
+      window.location.href = `/dual${hash}`;
+    }
+  });
+});
+</script>
+
+<!-- Redirect links and searches when in dual view mode -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  if (!window.location.pathname.startsWith("/dual")) return;
+
+  function getTargetPanel() {
+    const selected = document.querySelector('input[name="targetPanel"]:checked');
+    return selected ? selected.value : "left";
+  }
+
+  function loadInPanel(panel, path) {
+    if (!path) return;
+    const iframe = document.getElementById(`iframe-${panel}`);
+    if (!iframe) return;
+    const url = path.includes("?") ? path + "&embed=1" : path + "?embed=1";
+    iframe.src = url;
+    const inputBox = document.querySelector(`#panel-${panel} input`);
+    if (inputBox) inputBox.value = path;
+    console.log(`Loaded "${url}" into panel "${panel}"`);
+  }
+  
+  document.querySelectorAll(".dual-aware a[href^='/'], a.dual-aware[href^='/']").forEach(link => {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      const path = this.getAttribute("href");
+      loadInPanel(getTargetPanel(), path);
+    });
+  });
+
+  const idForm = document.getElementById("idsearchForm");
+  if (idForm) {
+    idForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const input = idForm.querySelector(".idsearchTerm").value.trim();
+      if (!input) return;
+
+      let path = null;
+
+      if (/^\d+$/.test(input)) {
+        path = "/go_to/" + encodeURIComponent(input);
+      } else if (/^((\d+|end)(-(\d+|end))?\s*)+(open|solved|yes|no)?$/i.test(input)) {
+        const parts = input.split(/\s+/).filter(Boolean);
+        path = "/range/" + parts.map(encodeURIComponent).join("/");
+      } else {
+        alert("Invalid input format.");
+        return;
+      }
+
+      loadInPanel(getTargetPanel(), path);
+    });
+  }
+
+  const searchForm = document.getElementById("searchForm");
+  if (searchForm) {
+    searchForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const input = searchForm.querySelector(".searchTerm").value.trim();
+      if (!input) return;
+
+      const path = "/search/" + encodeURIComponent(input);
+      loadInPanel(getTargetPanel(), path);
+    });
+  }
+});
+</script>
+
+<!-- Different menu on mobile -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const button = document.getElementById("mobileMenuButton");
+  const dropdown = document.getElementById("mobileDropdown");
+
+  if (button && dropdown) {
+    button.addEventListener("click", function () {
+      dropdown.classList.toggle("show");
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+      }
+    });
+  }
+});
+</script>
+
+<!-- For expanding threads -->
+
+<script>
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('#toggle-posts');
+  if (!link) return;
+  e.preventDefault(); 
+
+  const box = document.getElementById('more-posts');
+  const isHidden = box.classList.toggle('hidden');
+  const expanded = !isHidden;
+
+  link.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  box.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+
+  link.textContent = expanded
+    ? 'Show only the top five comments'
+    : `Show ${link.dataset.remaining} more comments`;
+});
+</script>
+
+
+<script>
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('.toggle-replies');
+  if (!link) return;
+  e.preventDefault();
+
+  const pid = link.dataset.postId;
+  const box = document.getElementById(`more-replies-${pid}`);
+  if (!box) return;
+
+  const isHidden = box.classList.toggle('hidden');
+  const expanded = !isHidden;
+
+  link.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  box.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+
+  link.textContent = expanded
+    ? 'Hide replies'
+    : `Show ${link.dataset.remaining} more replies`;
+});
+</script>
+
+
+<script>
+document.addEventListener("click", async function (event) {
+    const button = event.target.closest(".problem-status-option");
+    if (!button) return;
+
+    const widget = button.closest(".problem-status-widget");
+    if (!widget) return;
+
+    if (widget.dataset.canEdit !== "1") return;
+
+    const status = button.dataset.status;
+    const url = widget.dataset.setUrl;
+
+    widget.classList.add("is-saving");
+
+    const buttons = widget.querySelectorAll(".problem-status-option");
+    buttons.forEach(btn => btn.disabled = true);
+
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "X-Requested-With": "fetch"
+            },
+            body: JSON.stringify({ status: status })
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok || !data.ok) {
+            throw new Error(data.error || "Could not update problem status.");
+        }
+
+        widget.dataset.currentStatus = data.status;
+
+        buttons.forEach(btn => {
+            const active = btn.dataset.status === data.status;
+            btn.classList.toggle("is-active", active);
+            btn.setAttribute("aria-checked", active ? "true" : "false");
+        });
+
+        const label = widget.querySelector(".js-problem-status-label");
+        const description = widget.querySelector(".js-problem-status-description");
+
+        if (label) label.textContent = data.label || button.dataset.label;
+        if (description) description.textContent = data.description || button.dataset.description;
+          widget.style.setProperty("--status-progress", button.dataset.progress);
+
+    } catch (err) {
+        alert(err.message || "Could not update problem status.");
+    } finally {
+        widget.classList.remove("is-saving");
+
+        if (widget.dataset.canEdit === "1") {
+            buttons.forEach(btn => btn.disabled = false);
+        }
+    }
+});
+</script>
+  
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1934726b8e0e8d8',t:'MTc4MzcyNTQwNQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

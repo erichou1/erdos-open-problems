@@ -1,0 +1,35 @@
+{
+  "problem_number": 1188,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/1188",
+  "retrieved_at": "2026-07-10T23:21:00.268150+00:00",
+  "page_title": "1188 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "5cb103ea41553160019b6c0a85dc9c63afcf291a67fcfb6e39db76b75969aaed",
+  "comment_count": 5,
+  "comments": [
+    {
+      "post_id": "5518",
+      "text": "You do not need Hough's theorem to conclude that $F(x)$ goes to infinity with $x$. Instead, we can start with $$\\{0 \\pmod{2}, 0 \\pmod{3}, 1 \\pmod{4}, 5 \\pmod{6}, 7 \\pmod{12}\\}.$$This is a minimal covering system, and we furthermore note that any integer congruent to $7 \\pmod{12}$ can only be covered by the final congruence class. Now iteratively replace the final congruence class $a \\pmod{m}$ by the six congruence classes $$\\{a \\pmod{2m}, a \\pmod{3m}, a+m \\pmod{4m}, a+5m \\pmod{6m}, a+7m \\pmod{12m} \\}.$$One can check that this maintains minimality and gives the crappy bound of $F(x) \\ge \\lfloor \\log_{12} x \\rfloor$.",
+      "meta": "Woett — 21:08 on 16 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5531",
+      "text": "Thanks! (Yes, Hough's theorem was slight overkill...)",
+      "meta": "Thomas Bloom — 07:09 on 17 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5533",
+      "text": "Actually, now that I'm checking [Er80, p. 95], he actually asks a different question! He asks for the maximum number of covering systems in $[1, x]$ where all moduli are distinct, even across covering systems. So with this definition, Hough's theorem is not necessarily overkill, and does answer the question (but in the opposite direction!); $F(x)$ is uniformly bounded. That being said, I do like your interpretation as well, and I'm sure Erdős would have approved.",
+      "meta": "Woett — 07:21 on 17 Apr 2026 👍 1 📝 1 🤖 0"
+    },
+    {
+      "post_id": "5535",
+      "text": "Huh, so he does! (I think this question just felt so natural to me that I misread slightly what Erdős wrote.) This question seems so natural that it feels a shame to remove it from the site and replace it with a short 'trivially no by Hough', and I'm sure that Erdős must have asked this actual question somewhere as well. In the worst case I'll modify it to be about just irreducible covering systems, as already mentioned in the comments, which he definitely did ask in [Er80], and probably captures the spirit of the question.",
+      "meta": "Thomas Bloom — 07:41 on 17 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5511",
+      "text": "Typo: the paper of Hough solves #2, not #3. (The site has been updated to address this comment.)",
+      "meta": "Dogmachine — 19:15 on 16 Apr 2026 👍 0 📝 1 🤖 0"
+    }
+  ]
+}

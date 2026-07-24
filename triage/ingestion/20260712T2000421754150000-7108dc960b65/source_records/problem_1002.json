@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1002,
+  "raw_page": {
+    "path": "raw/pages/problem_1002.html",
+    "sha256": "7cd433c2b7381bbb13b9ff29fb47c1024a5d3704e456b32897c1b92cc71781d1"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "b50ffc584136ef9bb825e2e60908b4fad4662357b4b58790a62c56ab5c0d7e50",
+      "source_region": "div.problem-additional-text",
+      "text": "[Ke60] Kesten, Harry, Uniform distribution {${\\rm mod}\\,1$}. Ann. of Math. (2) (1960), 445--471."
+    },
+    "remarks": {
+      "sha256": "42e41e9fdc54252d9e66606b4d3531e0252ee850fbb65a8cf31b34ca6979b31b",
+      "source_region": "div.problem-additional-text",
+      "text": "Kesten \\cite{Ke60} proved that if\\[f(\\alpha,\\beta,n)=\\frac{1}{\\log n}\\sum_{1\\leq k\\leq n}(\\tfrac{1}{2}-\\{\\beta+\\alpha k\\})\\]then $f(\\alpha,\\beta,n)$ has asymptotic distribution function\\[g(c)=\\frac{1}{\\pi}\\int_{-\\infty}^{\\rho c}\\frac{1}{1+t^2}\\mathrm{d}t,\\]where $\\rho>0$ is an explicit constant."
+    },
+    "statement": {
+      "sha256": "b4bdc239ca6fe9ccd991355c70281d8e6731295333992092875ff5c1faf81e80",
+      "source_region": "div#content",
+      "text": "For any $0<\\alpha<1$, let\\[f(\\alpha,n)=\\frac{1}{\\log n}\\sum_{1\\leq k\\leq n}(\\tfrac{1}{2}-\\{ \\alpha k\\}).\\]Does $f(\\alpha,n)$ have an asymptotic distribution function?\n\nIn other words, is there a non-decreasing function $g$ such that $g(-\\infty)=0$, $g(\\infty)=1$,\nand\\[\\lim_{n\\to \\infty}\\lvert \\{ \\alpha\\in (0,1): f(\\alpha,n)\\leq c\\}\\rvert=g(c)?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1002"
+}

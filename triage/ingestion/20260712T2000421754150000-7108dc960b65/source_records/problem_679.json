@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 679,
+  "raw_page": {
+    "path": "raw/pages/problem_679.html",
+    "sha256": "ac4ce1ccba4e26bf757e6e0cd5336357bcaec992cca0cccc68f69e2118b6f385"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "923ec0dd26a50847b91ce5b3dc1bbf126bcbf38840d302f8c28ecbd4e5a36b5e",
+      "source_region": "div.problem-additional-text",
+      "text": "[La26] C. F. Lau, On the number of prime factors of consecutive integers. arXiv:2604.15042 (2026)."
+    },
+    "remarks": {
+      "sha256": "5b582d930e50884219e1aef8f8cf644bb00e31793916c428a7c6e01d715b8d65",
+      "source_region": "div.problem-additional-text",
+      "text": "One can ask similar questions for $\\Omega$, the number of prime factors with multiplicity, where $\\log k/\\log\\log k$ is replaced by $\\log_2k$.\n\nIn the comments DottedCalculator has disproved the second stronger version, proving that in fact for all large $n$ there exists $k<n$ such that\\[\\omega(n-k)\\geq \\frac{\\log k}{\\log\\log k} + c\\frac{\\log k}{(\\log\\log k)^2}\\]for some constant $c>0$.\n\nLau \\cite{La26} has proved that there exists a constant $C>0$ such that, for infinitely many $n$,\\[\\omega(n-k) \\leq \\Omega(n-k)\\leq C\\log k\\]for all $1<k<n$. Lau conjectures that, for $\\omega$, this can only be improved in the constant factor, and thus the original question has a negative answer.\n\nSee also [248], [413], and [1203]."
+    },
+    "statement": {
+      "sha256": "bb3463943fdf3cb7e43d80debba95b63b60901288c73b7b980a91b2a6153aad7",
+      "source_region": "div#content",
+      "text": "Let $\\epsilon>0$ and $\\omega(n)$ count the number of distinct prime factors of $n$. Are there infinitely many values of $n$ such that\\[\\omega(n-k) < (1+\\epsilon)\\frac{\\log k}{\\log\\log k}\\]for all $k<n$ which are sufficiently large depending on $\\epsilon$ only?\n\nCan one show the stronger version with\\[\\omega(n-k) < \\frac{\\log k}{\\log\\log k}+O(1)\\]is false?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/679"
+}

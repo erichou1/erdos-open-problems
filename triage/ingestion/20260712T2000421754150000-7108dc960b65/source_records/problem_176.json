@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 176,
+  "raw_page": {
+    "path": "raw/pages/problem_176.html",
+    "sha256": "5a1ce449c465ccc28ddbb6952cca5b48fd0fb4fe64031f867abb6288305ea484"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "4419fd46c0b175d466663c40015b701ff5330bbab929b713188520e3e0f6ba77",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er63d] Erd\\H{o}s, P\\'{a}l, On combinatorial questions connected with a theorem of\n{R}amsey and van der {W}aerden. Mat. Lapok (1963), 29--37.\n \n [Sp73] J. Spencer, Problems 185. Bull. Canad. Math. Soc. (1973), 185."
+    },
+    "remarks": {
+      "sha256": "e9dd5d47f464faa1aa3649369586da866ef676fca258e0beb41401cceb17eec9",
+      "source_region": "div.problem-additional-text",
+      "text": "When $\\ell=k$ this is the van der Waerden number $W(k)$ (see [138]). Spencer \\cite{Sp73} has proved that if $k=2^tm$ with $m$ odd then\\[N(k,1)=2^t(k-1)+1.\\]Erd\\H{o}s and Graham write that 'no decent bound' is known even for $N(k,2)$.\n\nErd\\H{o}s \\cite{Er63d} proved that, for every $c>0$,\\[N(k,ck)> (1+\\alpha_c)^k\\]where $\\alpha_c\\to 0$ as $c\\to 0$ and $\\alpha_c\\to \\sqrt{2}-1$ as $c\\to 1$. \n\nHunter in the comment section observes that the local lemma implies an improved bound of\\[N(k,ck) \\gg \\frac{2^k}{k^{O(1)}\\sum_{i>\\frac{1+c}{2}k}\\binom{k}{i}},\\]so that in particular as $c\\to 1$ we have, for all large $k$, $N(k,ck)\\geq (2-o(1))^k$ (where the $o(1)$ term $\\to 0$ as $c\\to 1$)."
+    },
+    "statement": {
+      "sha256": "e9b97fd75792c938c95ed6899823c19673a695be70fc7f4fa7b6f397a74ca484",
+      "source_region": "div#content",
+      "text": "Let $N(k,\\ell)$ be the minimal $N$ such that for any $f:\\{1,\\ldots,N\\}\\to\\{-1,1\\}$ there must exist a $k$-term arithmetic progression $P$ such that\\[ \\left\\lvert \\sum_{n\\in P}f(n)\\right\\rvert\\geq \\ell.\\]Find good upper bounds for $N(k,\\ell)$. Is it true that for any $c>0$ there exists some $C>1$ such that\\[N(k,ck)\\leq C^k?\\]What about\\[N(k,2)\\leq C^k\\]or\\[N(k,\\sqrt{k})\\leq C^k?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/176"
+}

@@ -1,0 +1,33 @@
+{
+"decision": "REVISE_PLAN",
+"rationale": "The rejection is not repairable by local proof edits alone. The current DAG contains an omitted DOMAIN dependency, an unvalidated slope node, a false finite-decidability inference for bounded displacement words, an uncertified computational node with an incorrectly printed recurrence, an under-specified high-extension theorem, a missing Pell-family dependency, and two conjunctive dependency lists that should be disjunctive. Nevertheless, the conditional normalization, exact multiplicities for t=1,2,3,4, fiber ordering, displacement identity, adjacent-layer Pell family, and bounded exclusion through 10^30 can be retained after rechecking. Thus the approach family is not exhausted, making REVISE_PLAN cheaper than REWRITE. The uploaded candidate is identified only as the audited artifact, not as mathematical evidence: 
+
+Pasted text
+
+",
+"broken_node_ids": [
+"NORMALIZATION",
+"SLOPE_AUDIT",
+"SEARCH_CERT",
+"HIGH_EXTENSION_BOUND",
+"WORD_ENUMERATION",
+"WORD_COLLISION",
+"PELL_DOUBLE_LIFT",
+"POSITIVE_SCALING",
+"GOAL"
+],
+"new_constraints": [
+"Make DOMAIN a hard prerequisite of every discrete mathematical node. Under the immutable acceptance criterion, conditional work with integer n and k must be explicitly quarantined and cannot discharge GOAL.",
+"Add explicit nodes for fixed-layer monotonicity, half-row monotonicity, central-binomial growth, fiber ordering, and the adjacent-layer Pell family; attach all claims that use them to those dependencies.",
+"Reset SLOPE_AUDIT to unproved. Any replacement proof must consistently establish d_i/e_i strictly decreasing, equivalently e_i/d_i strictly increasing, and must check the 3003 chain where the ratios are 21,1 and 1/21,1 respectively.",
+"Delete the assertion that finitely many displacement words imply finite exact decidability. WORD_ENUMERATION may be restored only after proving an effective bound on n and k for each word class or supplying a complete applicable decision procedure.",
+"Do not allow WORD_COLLISION to depend on WORD_ENUMERATION until that enumeration node is repaired; polynomial equations must also include admissibility, positivity, ordering, and distinctness constraints.",
+"For SEARCH_CERT use the correct recurrence binom(n+1,k)=binom(n,k)(n+1)/(n+1-k), impose n>=2k in every low-layer membership test, and require reproducible code or a complete certificate. Treat the result as finite-range evidence only.",
+"Do not infer any global exclusion from the computation through 10^30.",
+"Treat LOW_HIGH_EXCLUSION and HIGH_EXTENSION_BOUND as separate major bottlenecks. SLOPE_AUDIT alone is not an adequate dependency for HIGH_EXTENSION_BOUND; a new global compatibility ingredient is required.",
+"Add a proved PELL_ADJACENT_FAMILY node before PELL_DOUBLE_LIFT. No lifting or exactness claim may assume that family implicitly.",
+"Represent alternative branches explicitly: POSITIVE_SCALING follows from WORD_SCALING OR PELL_SCALING, and final resolution requires DOMAIN together with NEGATIVE_T5 OR POSITIVE_SCALING.",
+"A value of multiplicity five, or unbounded multiplicity, is not sufficient for the positive universal statement; exact multiplicity must be constructed for every positive integer t.",
+"Do not reuse the candidate's displayed quotient, slope, or recurrence formulas without fresh derivation and boundary checks."
+]
+}

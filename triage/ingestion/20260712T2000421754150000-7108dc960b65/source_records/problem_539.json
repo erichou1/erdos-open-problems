@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 539,
+  "raw_page": {
+    "path": "raw/pages/problem_539.html",
+    "sha256": "0ca4d8edae1c7b49f9f5814a1f290dbc8033599d85707a7f356eb538fa3ede17"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "8d7aa8b7288ad01096abfe39690f35f08849765486bd4cdb8e71cacc7d74659f",
+      "source_region": "div.problem-additional-text",
+      "text": "[GrRo99] Granville, Andrew and Roesler, Friedrich, The set of differences of a given set. Amer. Math. Monthly (1999), 338--344."
+    },
+    "remarks": {
+      "sha256": "ff071a2df95f580e0f220eebf80e81673cff8929f171aa6ba2aa3e208e40d537",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s and Szemer\\'{e}di proved that\\[n^{1/2} \\ll h(n) \\ll n^{1-c}\\]for some constant $c>0$. The upper bound has been improved to $h(n)\\ll n^{2/3}$ by Freiman and Lev. A proof of these bounds can be found in a paper of Granville and Roesler \\cite{GrRo99}.\n\nGranville and Roesler also reformulate this problem as one in combinatorial geometry: given $A\\subseteq \\mathbb{Z}^d$ of size $n$ what is the minimum size possible of\\[\\{ \\delta(\\mathbf{a},\\mathbf{b}) : \\mathbf{a},\\mathbf{b}\\in A\\}\\]where $\\delta(\\mathbf{a},\\mathbf{b})$ has $i$th coordinate $\\max(0,a_i-b_i)$. Using this formulation they obtained improved lower bounds in fixed small dimension $d$.\n\nUsing this reformulation, ProofCouncil has proved that\\[h(n) \\leq e^{O(\\sqrt{\\log n})} n^{1/2},\\]and hence $h(n)=n^{1/2+o(1)}$."
+    },
+    "statement": {
+      "sha256": "d3142a6e1fa4949f947f9e8f923323905d99b1afd3e1062a51a7700a2a81a0e7",
+      "source_region": "div#content",
+      "text": "Let $h(n)$ be such that, for any set $A\\subseteq \\mathbb{N}$ of size $n$, the set\\[\\left\\{ \\frac{a}{(a,b)}: a,b\\in A\\right\\}\\]has size at least $h(n)$. Estimate $h(n)$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/539"
+}

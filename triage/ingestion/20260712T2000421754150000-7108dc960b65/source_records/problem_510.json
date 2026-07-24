@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 510,
+  "raw_page": {
+    "path": "raw/pages/problem_510.html",
+    "sha256": "b6608f539c8e4b8af43e58aac4a549a2871efd8a91c67c1494fc5e06b374ff8d"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "5dcaed22eb8c61b24677e7e5aef564d0345d67dac0b69ce3f0a102819474f786",
+      "source_region": "div.problem-additional-text",
+      "text": "[Be25c] B. Bedert, Polynomial bounds for the Chowla Cosine Problem. arXiv:2509.05260 (2025).\n \n [Bo86] Bourgain, J., Sur le minimum d'une somme de cosinus. Acta Arith. (1986), 381-389.\n \n [JMTZ25] Z. Jin, A. Milojevi\\'{c}, I. Tomon, and S. Zhang, From small eigenvalues to large cuts, and Chowla's cosine problem. arXiv:2509.03490 (2025).\n \n [Ru04] Ruzsa, Imre Z., Negative values of cosine sums. Acta Arith. (2004), 179-186."
+    },
+    "remarks": {
+      "sha256": "7f51b85969a80e48f51e8adc4b212b941a6990422f194b5b9cf0017447826de1",
+      "source_region": "div.problem-additional-text",
+      "text": "Chowla's cosine problem. Ruzsa \\cite{Ru04} (improving on an earlier result of Bourgain \\cite{Bo86}), proved an upper bound of\\[-\\exp(O(\\sqrt{\\log N})).\\]Polynomial bounds were proved independently by Bedert \\cite{Be25c} and Jin, Milojevi\\'{c}, Tomon, and Zhang \\cite{JMTZ25}. The best bound follows from the method of Bedert \\cite{Be25c}, which proved the existence of some $c>0$ such that, for all $A$ of size $N$,\\[\\sum_{n\\in A}\\cos(n\\theta) < -cN^{1/7}.\\]The example $A=B-B$, where $B$ is a Sidon set, shows that $N^{1/2}$ would be the best possible here.\n\nThis problem is Problem 81 on Green's open problems list.\n\nThis is related to [256]."
+    },
+    "statement": {
+      "sha256": "4e42fa5c95588c517ebf4f4b1aa76ffaf6aee2ec1ee6095dc37d8e9405db5d9e",
+      "source_region": "div#content",
+      "text": "If $A\\subset \\mathbb{Z}$ is a finite set of size $N$ then is there some absolute constant $c>0$ and $\\theta$ such that\\[\\sum_{n\\in A}\\cos(n\\theta) < -cN^{1/2}?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/510"
+}

@@ -1,0 +1,200 @@
+{
+  "summary": "{'status': 'No proof or disproof is obtained. The mathematically secure common core is the discrete normalization, exact realization of t=1,2,3,4, and reduction of the first possible failure to t=5. Agreement among scouts is not treated as proof.', 'source': '\\n\\nPasted text\\n\\n', 'domain_gate': 'The immutable wording does not explicitly quantify n and k as integers. Under the stated acceptance criterion, this is a formal blocking defect. All subsequent mathematical branches are conditional on the standard discrete interpretation n,k in Z with 1 <= k <= floor(n/2).', 'validated_core': ['For a >= 2 there is always the representation (a,1), and each fixed lower index k contributes at most one row.', 'Every fiber is finite because a representation implies 2^k <= a.', 'The exact examples M(2)=1, M(6)=2, M(120)=3, and M(3003)=4 are directly certifiable.', 'An exact t=5 witness is equivalent to exactly four interior representations with distinct increasing lower indices and strictly decreasing row indices.'], 'ranked_branches': [{'rank': 1, 'name': 'Two-case negative resolution at t=5', 'assessment': 'Best mathematical fit and decisiveness. Split a hypothetical four-interior fiber according to whether it contains one or at least two indices k>=5. The branch reduces disproof to two explicit compatibility theorems and would settle the original statement as soon as t=5 is excluded.'}, {'rank': 2, 'name': 'Corrected displacement-word algebra', 'assessment': 'Highest immediate information gain. Prescribing three displacement vectors converts a four-point collision into explicit polynomial equations. Small words are finitely falsifiable, and a successful word would produce a concrete t=5 candidate. The reported slope invariant must first be corrected and proved.'}, {'rank': 3, 'name': 'Pell-collision lifting construction', 'assessment': 'Concrete and substantively different from displacement-word search. It starts from an infinite adjacent-column collision family and seeks two independent lifts, such as a triangular representation and another unrelated column. Its main weaknesses are rarity of lifts, exclusion of accidental representations, and lack of a route to arbitrary t.'}, {'rank': 4, 'name': 'Certified exact computation', 'assessment': 'Strong falsification and discovery tool but not a global proof. The strongest scout claim excludes multiplicity at least five through 10^30, yet the reports do not provide a complete independently auditable certificate. Reproduction should guide which algebraic configurations deserve proof effort.'}, {'rank': 5, 'name': 'Uniform arithmetic or geometric bound', 'assessment': 'Potentially decisive but presently least falsifiable. Reduced-denominator divisors, factorial smoothness, carry profiles, prime shadows, and level-chain curvature remain a collection of necessary conditions rather than an absolute multiplicity bound.'}, {'rank': 6, 'name': 'General positive construction for every t', 'assessment': 'Logically indispensable for a positive answer but currently unsupported. Constructing t=5 alone would not prove the original universal statement; a scalable mechanism and uniform exactness control would still be required.'}], 'contradictory_evidence': ['The slope statements in Scouts 2 and 4 are internally inconsistent with their own 3003 example. For the chain (78,2),(15,5),(14,6), row-gap divided by column-gap is 21 then 1, whereas the reciprocal is 1/21 then 1. Any slope-based argument must be rederived before use.', 'Finite-search bounds range from 10^12 to 10^30 and use different enumeration summaries. These are compatible as claims but remain untrusted until one implementation and certificate are independently checked.', 'The Pell construction proves infinitely many pair collisions, but no scout establishes that infinitely many resulting values have an exact fixed multiplicity or admit additional independent lifts.'], 'decision_rule': 'For a negative answer, it is enough to prove that no integer has exactly four interior representations, preferably through the two-case t=5 split. For a positive answer, one must construct exact multiplicity t for every t, not merely produce one t=5 example or prove unbounded multiplicity.'}",
+  "bottleneck_ids": [
+    "DOMAIN",
+    "SLOPE_AUDIT",
+    "SEARCH_CERT",
+    "LOW_HIGH_EXCLUSION",
+    "HIGH_EXTENSION_BOUND",
+    "WORD_EXACTNESS",
+    "PELL_EXACTNESS",
+    "POSITIVE_SCALING"
+  ],
+  "subgoals": [
+    {
+      "id": "DOMAIN",
+      "claim": "The immutable statement is formally ambiguous because it does not explicitly quantify n and k as integers; under the acceptance criterion, resolution of the exact wording is blocked unless the intended discrete domain is regarded as part of the notation.",
+      "dependencies": [],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "NORMALIZATION",
+      "claim": "Under the discrete interpretation, M(a)=0 for a<=1 and, for a>=2, M(a)=1 plus the number of indices k>=2 for which binom(n,k)=a has an admissible row n; each such k contributes at most one row and only k<=floor(log_2 a) need be checked.",
+      "dependencies": [],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "BASE_CASES",
+      "claim": "Under the discrete interpretation, M(2)=1, M(6)=2, M(120)=3, and M(3003)=4, with every omitted lower index excluded by monotonicity and the central-binomial lower bound.",
+      "dependencies": [
+        "NORMALIZATION"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "T5_GATE",
+      "claim": "The first possible failure is t=5, and an exact t=5 witness must have exactly four interior representations whose lower indices strictly increase while their row indices strictly decrease.",
+      "dependencies": [
+        "BASE_CASES"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "SLOPE_AUDIT",
+      "claim": "For consecutive points in an equal-value chain, the correct candidate invariant is that row-drop divided by column-increase strictly decreases; equivalently, column-increase divided by row-drop strictly increases. This orientation must be proved directly, since the opposite orientation appearing in the reports is contradicted by the 3003 chain.",
+      "dependencies": [
+        "NORMALIZATION"
+      ],
+      "centrality": 4,
+      "falsifiable": true
+    },
+    {
+      "id": "SEARCH_CERT",
+      "claim": "The claimed exhaustive exclusion of multiplicity at least five through a=10^30 can be reproduced using exact integer arithmetic, with a complete description of the searched index ranges, recurrence, collision grouping, low-index membership tests, and a verifiable output certificate.",
+      "dependencies": [
+        "NORMALIZATION"
+      ],
+      "centrality": 3,
+      "falsifiable": true
+    },
+    {
+      "id": "T5_CASE_SPLIT",
+      "claim": "Writing h(a) for the number of interior representations with k>=5, every exact t=5 witness satisfies either h(a)=1 and has all three low indices 2,3,4, or h(a)>=2 and has enough additional low indices to bring the total interior multiplicity to four.",
+      "dependencies": [
+        "T5_GATE"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "DENOMINATOR_INJECTIVITY",
+      "claim": "If two admissible representations of the same value have the same reduced denominator n/gcd(n,k), then the two representations are identical.",
+      "dependencies": [
+        "NORMALIZATION"
+      ],
+      "centrality": 2,
+      "falsifiable": true
+    },
+    {
+      "id": "LOW_HIGH_EXCLUSION",
+      "claim": "No integer belongs simultaneously to the four layers S_2, S_3, S_4, and S_k for any k>=5.",
+      "dependencies": [
+        "T5_CASE_SPLIT"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "HIGH_EXTENSION_BOUND",
+      "claim": "Any integer represented on at least two layers with k>=5 has at most three interior representations in total.",
+      "dependencies": [
+        "T5_CASE_SPLIT",
+        "SLOPE_AUDIT"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "NEGATIVE_T5",
+      "claim": "LOW_HIGH_EXCLUSION and HIGH_EXTENSION_BOUND together rule out exactly four interior representations and therefore disprove the original universal assertion at t=5 under the discrete interpretation.",
+      "dependencies": [
+        "LOW_HIGH_EXCLUSION",
+        "HIGH_EXTENSION_BOUND"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "WORD_ENUMERATION",
+      "claim": "For every declared displacement-cost bound B, all three-edge words compatible with admissibility and the corrected slope order can be enumerated, converted into three explicit polynomial equations in the initial row and lower index, and decided for integral solutions within that bounded word set.",
+      "dependencies": [
+        "T5_GATE",
+        "SLOPE_AUDIT"
+      ],
+      "centrality": 4,
+      "falsifiable": true
+    },
+    {
+      "id": "WORD_COLLISION",
+      "claim": "Some admissible three-edge displacement word has an integral solution producing four distinct interior representations of one binomial coefficient.",
+      "dependencies": [
+        "WORD_ENUMERATION"
+      ],
+      "centrality": 4,
+      "falsifiable": false
+    },
+    {
+      "id": "WORD_EXACTNESS",
+      "claim": "A candidate produced by WORD_COLLISION has no representations on any unlisted layer k<=floor(log_2 a), and therefore has total multiplicity exactly five.",
+      "dependencies": [
+        "WORD_COLLISION",
+        "NORMALIZATION"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "PELL_DOUBLE_LIFT",
+      "claim": "Some value in the adjacent-column Pell collision family is also represented on k=2 and on a further independent layer q not among the two Pell layers, thereby producing at least four interior representations.",
+      "dependencies": [
+        "T5_GATE",
+        "NORMALIZATION"
+      ],
+      "centrality": 4,
+      "falsifiable": false
+    },
+    {
+      "id": "PELL_EXACTNESS",
+      "claim": "A candidate produced by PELL_DOUBLE_LIFT has no additional representations beyond the four intended interior layers and the automatic k=1 layer, so its total multiplicity is exactly five.",
+      "dependencies": [
+        "PELL_DOUBLE_LIFT",
+        "NORMALIZATION"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "WORD_SCALING",
+      "claim": "The displacement-word mechanism can be parameterized to produce, for every q>=0, a value with exactly q interior representations.",
+      "dependencies": [
+        "WORD_EXACTNESS"
+      ],
+      "centrality": 5,
+      "falsifiable": false
+    },
+    {
+      "id": "PELL_SCALING",
+      "claim": "The Pell-lifting mechanism can be extended to supply arbitrarily many independently controlled representation layers while uniformly excluding all unintended layers.",
+      "dependencies": [
+        "PELL_EXACTNESS"
+      ],
+      "centrality": 5,
+      "falsifiable": false
+    },
+    {
+      "id": "POSITIVE_SCALING",
+      "claim": "At least one construction branch establishes exact interior multiplicity q for every nonnegative integer q, and hence exact total multiplicity t=q+1 for every t>=1 under the discrete interpretation.",
+      "dependencies": [
+        "WORD_SCALING",
+        "PELL_SCALING"
+      ],
+      "centrality": 5,
+      "falsifiable": false
+    },
+    {
+      "id": "GOAL",
+      "claim": "Resolve the immutable original statement only after addressing DOMAIN and completing either the negative terminal branch NEGATIVE_T5 or the universal constructive terminal branch POSITIVE_SCALING; no such terminal branch is currently complete.",
+      "dependencies": [
+        "DOMAIN",
+        "NEGATIVE_T5",
+        "POSITIVE_SCALING"
+      ],
+      "centrality": 5,
+      "falsifiable": false
+    }
+  ]
+}

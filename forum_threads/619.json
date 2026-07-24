@@ -1,0 +1,30 @@
+{
+  "problem_number": 619,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/619",
+  "retrieved_at": "2026-07-10T23:18:02.633424+00:00",
+  "page_title": "619 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "0b391128374559df054bc05f21f25feaf742b0dbff1738610a4bacd3ea0ca731",
+  "comment_count": 4,
+  "comments": [
+    {
+      "post_id": "6986",
+      "text": "This was disproved on June 9 by Claude Fable 5 and formalized by Codex with GPT 5.5 following close guidance of Fable. The original repo is here, and the formal proof has since been integrated into the Formal Conjectures project. The disproof is obtained by constructing a family of counterexamples. A rough summary follows: For a given $\\eta > 0$, we will exhibit a (triangle-free, connected) graph $G$ on $n$ vertices satisfying $h_4(G) > (1 - \\eta)n$. One can use a first-moment argument to find a triangle-free graph $H$ with $m$ vertices and max-degree $d$ and whose independence number $\\alpha(H)$ satisfies $$\\alpha(H) \\leq O(m/d \\log d ).$$ We construct $G$ from $H$ by attaching a number of $s =\\lceil4/\\eta\\rceil$ leaf vertices to each vertex of $H$ (call these pendants, and $H$ the core). Then $G$ has $n = (s+1)m$ vertices. The numbers $d$ and $m$ are chosen based on $\\eta$ (in this order) to satisfy some bounds appearing below to. For such a suitable choice we get $h_4(G) > (1-\\eta) n$. To see this, let $G'$ be a triangle-free supergraph of $G$ with diameter $\\leq 4$ with $t$ added edges. Consider the full subgraph of $G'$ on only the pendants, and let $C_P$ denote the set of components of this subgraph, which have no edge in $G' - G $ connecting them to the core. Then, by considering a maximal spanning forest of the pendant-subgraph of $G'$: $$t > \\#(\\mbox{pendants}) - \\#C_P = n - m - \\#C_P.$$ One needs to show that $\\#C_P$ is sufficiently small. The point is that each pair of components in $C_P$ needs to be connected through a path that passes through the core. This implies $$ \\#C_P ^2 \\leq s^2\\cdot \\#(\\mbox{pairs of core vertices of distance} \\leq 2).$$ Now, by the assumptions on $H$, one can show that by adding at most $n$ edges, one can get at most $O(m^2/d \\log d)$ core pairs of distance $\\leq 2$, with constants depending on $\\eta$. Choosing $d$ large enough, we obtain $\\#C_P \\leq \\eta\\cdot n/4$. Putting everything together, this suffices to show the desired bound $$t > (1-\\eta) n .$$ (The site has been updated to address this comment.)",
+      "meta": "Nick Kuhn — 22:13 on 14 Jun 2026 👍 2 📝 1 🤖 0"
+    },
+    {
+      "post_id": "6994",
+      "text": "Can you explain the final step? It looks like adding just $m$ edges (everything connected to one central vertex) one can ensure that all (so $\\asymp m^2$) pairs of vertices in $H$ are distance $\\leq 2$, which breaks your argument. How does $H$ being triangle-free, with small maximum degree and independence number, prevent this? EDIT: Aha, never mind, I missed the fact that the expanded graph must still be triangle-free.",
+      "meta": "Thomas Bloom — 09:13 on 15 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6995",
+      "text": "Thanks! The construction of a graph on $m$ vertices with maximum degree $d$ and independence number $\\ll \\log d\\frac{m}{d}$ is of course standard, and should be cited appropriately (the details are given by Pontiveros, Griffiths, and Morris in this paper, for example). I believe that, optimising parameters, this construction proves that\\[h_4(G)\\geq n-O(n^{8/9}(\\log n)^{2/9})\\]for infinitely many connected graphs $G$ on $n$ vertices. It would of course be interesting to determine the finer scale behaviour of $h_4$. I sketch the appropriate optimisation below. Let $H$ be a graph with independence number $k$ and max-degree $d$, with $k \\ll \\frac{m}{d}\\log d$. The number of pairs distance $\\leq 2$ in $H$ to begin with is $\\ll m d^2$, and when adding a new edge (while preserving being triangle-free) we create $O(k)$ many new pairs distance $\\leq 2$, so the total number of pairs distance $\\leq 2$ apart after adding $\\leq n$ new edges is $\\ll md^2+nk$. Arguing as in your comment, we have a graph $G$ with $n\\asymp sm$ vertices such that if it can be made triangle-free with diameter $\\leq 4$ by adding $t$ new edges then\\[n-t \\ll m+ s(md^2+nk)^{1/2}\\ll m+sm^{1/2}d+s^{3/2}m(\\tfrac{\\log d}{d})^{1/2}.\\]We therefore choose $d\\asymp (n\\log n)^{1/3}$ and $m\\asymp n^{8/9}(\\log n)^{2/9}$ and $s\\asymp n^{1/9}(\\log n)^{-2/9}$, yielding the claim above.",
+      "meta": "Thomas Bloom — 11:07 on 15 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6052",
+      "text": "I think there is a typo in the statement. The phrase “has diameter \\(r\\)” should be “has diameter at most \\(r\\)”. In the original paper [EGR98], \\(h_d(G)\\) is defined using diameter at most \\(d\\), not diameter exactly \\(d\\). Also, the final question should probably say “connected triangle-free graph” rather than just “connected graph”.",
+      "meta": "Quanyu Tang — 18:12 on 29 Apr 2026 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

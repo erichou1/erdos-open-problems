@@ -1,0 +1,25 @@
+{
+  "problem_number": 413,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/413",
+  "retrieved_at": "2026-07-10T23:17:03.569427+00:00",
+  "page_title": "413 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "fe2bb6d1906f35e2fca954d8b4230af04ebe12dbe2d611b759d0b96035e2c8dd",
+  "comment_count": 3,
+  "comments": [
+    {
+      "post_id": "5525",
+      "text": "A weaker version of this conjecture has been proved by C. F. Lau in [La26]. (The site has been updated to address this comment.)",
+      "meta": "Alfaiz — 03:57 on 17 Apr 2026 👍 1 📝 1 🤖 0"
+    },
+    {
+      "post_id": "2840",
+      "text": "Looks like the numerical simulation for the problem according to the OEIS sequence terminated quite early so with the help of Codex, I built a fast Rust scanner for this problem: https://github.com/conglu1997/erdos_413_computation Computations: - Scanned all barriers for ε=1 up to n = 100,000,000. - Found 200,211 barriers in this range. - Full list is in data/barriers_100m.txt (one n per line). - This extends OEIS A005236 well beyond the current table; should we submit an update? Density: - Empirical density at 10^8 is about 0.002. - Fitting the cumulative density to C / (log n)^α over the 100M dataset gives C ≈ 115.7, α ≈ 3.76 (see plots/density_fit.png). The decay looks consistent with that form over this range. Scripts to reproduce all included, and the saved data/plots are committed in the repo.",
+      "meta": "Cong — 01:35 on 07 Jan 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2844",
+      "text": "Also, seems like reducing ε greatly increases the number of barriers. For the same sweep up to 10^8, - ε = 1/2: - Barriers: 23,125,636 (density 0.2313) - ε = 1/3: - Barriers: 63,211,408 (density 0.6321) - ε = 1/4: - Barriers: 89,077,411 (density 0.8908) - ε = 1/5: - Barriers: 98,428,704 (density 0.9843)",
+      "meta": "Cong — 02:56 on 07 Jan 2026 👍 3 📝 0 🤖 0"
+    }
+  ]
+}

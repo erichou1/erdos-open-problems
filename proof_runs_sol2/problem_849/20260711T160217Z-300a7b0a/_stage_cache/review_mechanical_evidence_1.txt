@@ -1,0 +1,77 @@
+{
+"reviewer_role": "independent adversarial referee (mechanical_evidence)",
+"verdict": "fail",
+"claims_checked": 16,
+"claims_total": 16,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14",
+"C15",
+"C16"
+],
+"open_gaps": [
+"DOMAIN remains blocking under the immutable acceptance criteria: the candidate chooses the standard integer interpretation for n and k but does not resolve the exact wording without that added interpretation.",
+"No terminal argument proves or disproves the universal assertion. In particular, exact multiplicity five is neither constructed nor globally excluded.",
+"LOW_HIGH_EXCLUSION remains unproved: simultaneous membership in S_2, S_3, S_4, and some S_k with k at least 5 is not ruled out globally.",
+"HIGH_EXTENSION_BOUND remains unproved: no argument shows that a value occurring on at least two layers k at least 5 has at most three interior representations.",
+"No admissible four-point collision is constructed with all unintended layers excluded, and no theorem excludes every such collision.",
+"The Pell family supplies controlled pairs only; the required additional independent lifts and exactness exclusions are absent.",
+"No scalable construction realizes every nonnegative interior multiplicity, so the positive universal branch is entirely incomplete.",
+"C10 supplies correct displacement equations but no effective bound or decision argument for the unbounded integer variables associated with a fixed bounded displacement word."
+],
+"unchecked_imports": [],
+"counterexample_searches": [
+{
+"target": "Slope orientation",
+"method": "Exact evaluation of the 3003 fiber (78,2), (15,5), (14,6)",
+"result": "The row-drop/column-rise ratios are 63/3=21 and 1/1=1, while the reciprocal ratios are 1/21 and 1. This confirms the intended strict decrease of d/e and strict increase of e/d, and falsifies the opposite orientation."
+},
+{
+"target": "Base multiplicities",
+"method": "Exact integer evaluation and monotonic exclusion of omitted layers",
+"result": "M(2)=1, M(6)=2, M(120)=3, and M(3003)=4 were confirmed."
+},
+{
+"target": "Adjacent-layer Pell construction",
+"method": "Exact recurrence arithmetic",
+"result": "The recurrence generates (n,k)=(15,5), (104,39), and (714,272); the first two common values and the stated admissibility inequalities were confirmed exactly."
+},
+{
+"target": "C16 finite exclusion",
+"method": "Independent arbitrary-precision enumeration of every pair with 5<=k<=51, n>=2k, and binomial(n,k)<=10^30, followed by exact S_2, S_3, and S_4 membership tests",
+"result": "The computation reproduced 3,014,786 high-layer occurrences and 3,014,784 distinct values. The only repeated values were 3003 and 61218182743304701891431482520, each occurring twice. Among all distinct high-layer values, 3,014,781 met none of the three low-layer tests and exactly three values, 3003, 11628, and 24310, met only the S_2 test. None met all three low-layer tests. The deterministic occurrence stream serialized as k,n,a followed by a newline had SHA-256 074a7548460337a18a981babcd12880d620dd3d9dcdb7fd0a54c7dcec48d2572."
+}
+],
+"material_errors": [
+"The candidate does not meet the acceptance criterion requiring a proof or disproof of the exact quantified statement; its final conclusion is only a collection of conditional and finite partial results.",
+"C10 incorrectly treats the existence of a finite polynomial Diophantine system as sufficient, by itself, to justify a finite exact search. The variables n and k remain unbounded, and no effective bound, zero-dimensionality proof, resultant argument, or other decision procedure is supplied.",
+"C10's claimed equivalence also requires the admissibility, positivity, ordering, and distinctness inequalities in addition to the three polynomial equations; equations alone can include irrelevant nonadmissible solutions.",
+"The dependency ledger is incomplete: C8 uses the ordering theorem C4; C13 uses C2 for the automatic k=1 representation; and C15 uses the half-row monotonicity from C3 when asserting binomial(n,k)>=binomial(n,2).",
+"C16 is a finite theorem only. Its independently verified computation gives no implication for values exceeding 10^30 and therefore cannot close either global terminal branch."
+],
+"completeness_score": 57,
+"proof_confidence": 0,
+"adversarial_survival_score": 86,
+"statement_sha256": "b669094e22469ade57dcca529d2ce001ede0c9bee628c97121ad1d9a7ebfb01b",
+"notes": [
+"The structural normalization, finiteness argument, base examples, density result, corrected slope theorem, Pell recurrence, divisor invariant, and finite exclusion survive the audit under the adopted discrete interpretation.",
+"The numerical assertions in C16 were not accepted from presentation alone; they were independently reproduced using exact integer arithmetic.",
+"The reviewed candidate is the supplied artifact 
+
+Pasted text
+
+; this citation identifies the input and is not external mathematical evidence."
+]
+}

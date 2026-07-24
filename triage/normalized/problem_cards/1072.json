@@ -1,0 +1,358 @@
+{
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.269
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-12-17",
+      "state": "yes"
+    },
+    "references": [
+      "HaSu02"
+    ],
+    "source_last_update": "2025-10-05",
+    "source_problem_url": "https://www.erdosproblems.com/1072",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[HaSu02] Hardy, G. E. and Subbarao, M. V., A modified problem of Pillai and some related questions. Amer. Math. Monthly (2002), 554--559.",
+      "remarks": "Questions formulated by Erd\\H{o}s, Hardy, and Subbarao \\cite{HaSu02}, who believed that the number of $p\\leq x$ for which $f(p)=p-1$ is $o(x/\\log x)$. \n\nThese are mentioned in problem A2 of Guy's collection."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.29,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.250563
+      ],
+      "probability": 0.097065
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.681,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.033651,
+        0.451304
+      ],
+      "probability": 0.242477
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 2.0,
+      "beta": 13.0,
+      "credible_interval_approx": [
+        0.0,
+        0.299901
+      ],
+      "probability": 0.133333
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.033,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.40336
+      ],
+      "probability": 0.18429
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.667,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.020836,
+        0.372021
+      ],
+      "probability": 0.196429
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 3.6,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.022708,
+        0.398345
+      ],
+      "probability": 0.210526
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.092979
+      ],
+      "probability": 0.038462
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.002288,
+        0.452997
+      ],
+      "probability": 0.227642
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 1,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:20:25.271135+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "1a100feadf0cc0cd52f2720dfaa46b2b7c7773a4aacab5a49c9d6f3db89c15ee"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "which_objects",
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 1,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 206,
+      "statement_tokens_approx": 36
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "classify",
+      "multi_part": true,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-1072",
+  "problem_number": 1072,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "classify",
+    "multi_part": true,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_1072.html",
+      "raw_html_sha256": "0eb2022335906eba8de2a31087a043125396842291b42598ea46d0cedcc5a4b6",
+      "section_sha256": {
+        "references": "17fd799c29bdff915976c67a92946437009d4847d598fe41026b954b37e36770",
+        "remarks": "e5b7a879f3d83d526fea6b1356cc48b675e89e77dbf8f9eb08453853d0913b57",
+        "statement": "82bb6c98bdb00be80c7f58f5bce9d4820979f0393a7edaac91e30d11d5333bbc"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_1072.json",
+      "source_record_sha256": "93ee0fe26921af21cedd0124eaef06696c51287526ff1b7e930ef0262298a5ca",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_1072.tex",
+    "latex_sha256": "c6a8d4575b5487e9a8e1a6c90bfd1730d0129ed33df1897f7d0b879fa079dabd",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "82bb6c98bdb00be80c7f58f5bce9d4820979f0393a7edaac91e30d11d5333bbc",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "formal_search",
+      "subproblem_decomposition",
+      "shared_infrastructure_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "For any prime $p$, let $f(p)$ be the least integer such that $f(p)!+1\\equiv 0\\pmod{p}$. Is it true that there are infinitely many $p$ for which $f(p)=p-1$?",
+        "focus_question_sha256": "2e67ae1381841deb6a5fa451e858e8d2ece9678189ed5e96d0594d73f880be8f",
+        "parent_statement_sha256": "82bb6c98bdb00be80c7f58f5bce9d4820979f0393a7edaac91e30d11d5333bbc",
+        "part_index": 1,
+        "subproblem_contract_sha256": "cdf0c6f456dfb4724fbfff72ce0f142486e011e8405134fae676610cbd175cab",
+        "subproblem_id": "erdos-1072-part-01-cdf0c6f4"
+      },
+      {
+        "focus_question": "Is it true that $f(p)/p\\to 0$ for almost all $p$?",
+        "focus_question_sha256": "09c96cc4671d086bae3511956e1a9af9755f5970ff7e832887a9fdc5881be703",
+        "parent_statement_sha256": "82bb6c98bdb00be80c7f58f5bce9d4820979f0393a7edaac91e30d11d5333bbc",
+        "part_index": 2,
+        "subproblem_contract_sha256": "c34105f38da49e8c54eb2c29767d2ab19fbccb6b036e23b742f09ac94943615f",
+        "subproblem_id": "erdos-1072-part-02-c34105f3"
+      }
+    ]
+  },
+  "research_directive_sha256": "dc13c2ccacdfc9a65720da3b24e1ac5acf7d3164154f52eb62d82a87d97bfddb",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "formal_search",
+    "subproblem_decomposition",
+    "shared_infrastructure_search"
+  ],
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "dc13c2ccacdfc9a65720da3b24e1ac5acf7d3164154f52eb62d82a87d97bfddb",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "82bb6c98bdb00be80c7f58f5bce9d4820979f0393a7edaac91e30d11d5333bbc",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "ae02c5d5f516fdd7e6c2c55c57692fbdd24b1522ff0bec8dfeb4f102d76bd93d",
+  "schema_version": 2,
+  "snapshot_id": "20260713-deb58d0facd9",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "For any prime $p$, let $f(p)$ be the least integer such that $f(p)!+1\\equiv 0\\pmod{p}$.\n\nIs it true that there are infinitely many $p$ for which $f(p)=p-1$?\nIs it true that $f(p)/p\\to 0$ for almost all $p$?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "For any prime $p$, let $f(p)$ be the least integer such that $f(p)!+1\\equiv 0\\pmod{p}$. Is it true that there are infinitely many $p$ for which $f(p)=p-1$? Is it true that $f(p)/p\\to 0$ for almost all $p$?",
+    "original": "For any prime $p$, let $f(p)$ be the least integer such that $f(p)!+1\\equiv 0\\pmod{p}$.\n\nIs it true that there are infinitely many $p$ for which $f(p)=p-1$?\nIs it true that $f(p)/p\\to 0$ for almost all $p$?",
+    "statement_sha256": "82bb6c98bdb00be80c7f58f5bce9d4820979f0393a7edaac91e30d11d5333bbc"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-1072",
+      "part_index": 1,
+      "run_contract_id": "ecc65f71729272f190fbc8a3fd8b2812dd3efee67f937dc8ad350ae230df5cf3",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "For any prime $p$, let $f(p)$ be the least integer such that $f(p)!+1\\equiv 0\\pmod{p}$. Is it true that there are infinitely many $p$ for which $f(p)=p-1$?",
+        "focus_question_sha256": "2e67ae1381841deb6a5fa451e858e8d2ece9678189ed5e96d0594d73f880be8f",
+        "normalized": "For any prime $p$, let $f(p)$ be the least integer such that $f(p)!+1\\equiv 0\\pmod{p}$. Is it true that there are infinitely many $p$ for which $f(p)=p-1$? Is it true that $f(p)/p\\to 0$ for almost all $p$?",
+        "original": "For any prime $p$, let $f(p)$ be the least integer such that $f(p)!+1\\equiv 0\\pmod{p}$.\n\nIs it true that there are infinitely many $p$ for which $f(p)=p-1$?\nIs it true that $f(p)/p\\to 0$ for almost all $p$?",
+        "statement_sha256": "82bb6c98bdb00be80c7f58f5bce9d4820979f0393a7edaac91e30d11d5333bbc"
+      },
+      "subproblem_contract_sha256": "cdf0c6f456dfb4724fbfff72ce0f142486e011e8405134fae676610cbd175cab",
+      "subproblem_id": "erdos-1072-part-01-cdf0c6f4"
+    },
+    {
+      "parent_problem_id": "erdos-1072",
+      "part_index": 2,
+      "run_contract_id": "da67388293efd404bd75ee89a3c54e4724b4141bed150fde897b7bd03c27dfd9",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Is it true that $f(p)/p\\to 0$ for almost all $p$?",
+        "focus_question_sha256": "09c96cc4671d086bae3511956e1a9af9755f5970ff7e832887a9fdc5881be703",
+        "normalized": "For any prime $p$, let $f(p)$ be the least integer such that $f(p)!+1\\equiv 0\\pmod{p}$. Is it true that there are infinitely many $p$ for which $f(p)=p-1$? Is it true that $f(p)/p\\to 0$ for almost all $p$?",
+        "original": "For any prime $p$, let $f(p)$ be the least integer such that $f(p)!+1\\equiv 0\\pmod{p}$.\n\nIs it true that there are infinitely many $p$ for which $f(p)=p-1$?\nIs it true that $f(p)/p\\to 0$ for almost all $p$?",
+        "statement_sha256": "82bb6c98bdb00be80c7f58f5bce9d4820979f0393a7edaac91e30d11d5333bbc"
+      },
+      "subproblem_contract_sha256": "c34105f38da49e8c54eb2c29767d2ab19fbccb6b036e23b742f09ac94943615f",
+      "subproblem_id": "erdos-1072-part-02-c34105f3"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

@@ -1,0 +1,55 @@
+{
+  "problem_number": 168,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/168",
+  "retrieved_at": "2026-07-10T23:15:53.566620+00:00",
+  "page_title": "168 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "4b72771db30269c64c935937ecda88c1756af85f9e1a3540dc3ac5efe2144091",
+  "comment_count": 9,
+  "comments": [
+    {
+      "post_id": "548",
+      "text": "The formula in [GrSpWi77] mentioned by Terry is very natural and one can fairly easily discover it for oneself. It starts with the observation that the problem naturally splits into a large number of disjoint subproblems, one for each number $x \\le N$ divisible by neither $2$ nor $3$. It is also extremely practical for making rigorous estimates for the limit density (in particular, the limit density is computable). It reduces to doing some integer programming to find the values of $f(k)$. Using this approach I found that the limit density is $0.8009655909371?$ (where $?$ indicates that only the last digit is uncertain). (The site has been updated to address this comment.)",
+      "meta": "Sean Eberhard — 10:30 on 15 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "549",
+      "text": "The wrong upper bound quoted by StijnC is likely the result of [ChErGr02] miscalculating $f(45)$, the first counterexample to their \"$f(k)=g(k)$\" conjecture.",
+      "meta": "Sean Eberhard — 10:48 on 15 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "557",
+      "text": "Very nice, thanks Sean! This (the decimal expansion of the limit you've calculated) would be a good addition to OEIS.",
+      "meta": "Thomas Bloom — 12:41 on 15 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "701",
+      "text": "I had a minor bug in my program. The correct density is $0.80096575500655898909042032638808241...$ (corrected from the 7th decimal place onwards). It will appear in the OEIS here: https://oeis.org/A386439. (The site has been updated to address this comment.)",
+      "meta": "Sean Eberhard — 08:38 on 24 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "333",
+      "text": "The following elementary bounds can be proven easily: $$\\frac 45 \\le \\lim_{ N \\to \\infty} \\frac{F(n)}{N} \\le \\frac 56$$ Take the complement of the integers in $$C=\\cup_{i=1}^{\\infty} ]N/6^i, 2N/6^i]$$ then every set of the form $\\{n,2n,3n\\}$ where $1\\le n \\le \\frac N3$ has exactly one element in $C$, since $2N/6^i<n<3n \\le N/6^{i-1}$ is impossible (which would be the only way to avoid the elements in $C$). In the other direction, as an improvement on the upper bound; the sets $\\{n,2n,3n\\}$ for n in $B=\\cup_{i=1}^{\\infty} ]N/6^i, 2N/6^i] \\setminus \\left( \\cup_{i=1}^{\\infty} ]N/6^i, 4N/(3*6^i)] \\cap 2\\mathbb Z \\right)$ are disjoint. If two sets intersect, $\\{n,2n,3n\\} \\cap \\{n',2n',3n'\\} \\not= \\emptyset$ for $n,n' \\in B$, then $n,n' \\in ]N/6^i, 2N/6^i]$ for some $i$ and $3n=2n'$, so $n$ is even and bounded by $2/3*2N/6^i.$ So this could not happen, so we had approximately $N/6$ disjoint triples.",
+      "meta": "StijnC — 17:05 on 05 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "394",
+      "text": "The paper https://mathweb.ucsd.edu/~fan/wp/linear.pdf shows the limit is not $4/5$. The nested $[1/6^k,2/6^k)$ construction is mentioned explicitly (as the optimal answer for the same problem maximizing measure within $[0,1]$).",
+      "meta": "BorisAlexeev — 20:35 on 08 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "395",
+      "text": "Thanks. So in summary: Theorem $2$ and $3$ in that reference thus imply the improvement $$0.8003194838 \\le \\lim_{ N \\to \\infty} \\frac{F(n)}{N} \\le 0.8009611$$ and conditionally on a conjecture the lower bound is approximately sharp.",
+      "meta": "StijnC — 21:05 on 08 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "399",
+      "text": "To add some amusing color: the conjecture \"$f(k)=g(k)$ for all $k$\" is false, with the first counterexample being $k=45$. Confusingly, they say they computed $f(k)$ for $k\\le 50$; unfortunately, \"Table 2\" only includes the values for $k\\le 25$. The function $g(k)$ is very simple to compute (much simpler than $f(k)$), doable even by hand or in like a Google spreadsheet. I claim that $g(45)=15$ (\"perfectly balanced\" between the three classes). Meanwhile, $f(45)=14$, which can be checked at https://oeis.org/A094708 or by manually subtracting computing from https://oeis.org/A057561 . There is definitely room for someone to write a modern version of the paper with much tighter bounds on $\\lim_{N\\to\\infty} \\frac{F(n)}{N}$ given the improvements in computational power. But I don't personally see it determining the value in any concrete sense, nor determining whether it is rational.",
+      "meta": "BorisAlexeev — 22:45 on 08 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "302",
+      "text": "In [GrSpWi77] the limit is shown to equal $\\frac{1}{3} \\sum_{k \\in K} \\frac{1}{d_k}$, where $d_1 < d_2 <\\dots$ are the $3$-smooth numbers, $K$ is the set of $k$ for which $f(k) > f(k-1)$ (OEIS A004059), and $f(k)$ is the largest subset of $\\{d_1,\\dots,d_k\\}$ that avoids $n,2n,3n$ (OEIS A057561). The authors speculate that $f(k) = 1 + \\lfloor 2k/3 \\rfloor$ if $k \\neq 0 \\hbox{ mod } 3$, and that an extremizer for $f(k)$ can always be chosen to be in a coset of $\\langle 2^3, 2 \\times 3 \\rangle$ (this could be a typo, it seems more reasonable to conjecture that the extremizer *avoids* such a coset). (The site has been updated to address this comment.)",
+      "meta": "TerenceTao — 05:44 on 04 Sep 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

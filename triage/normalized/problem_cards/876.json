@@ -1,0 +1,362 @@
+{
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.862
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "DEM99",
+      "Er62c",
+      "Er75b",
+      "Er77c",
+      "Er98",
+      "LuSc00"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/876",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[DEM99] Deshouillers, Jean-Marc and Erd\\H{o}s, Paul and Melfi,\nGiuseppe, On a question about sum-free sequences. Discrete Math. (1999), 49--54.\n \n [Er62c] Erd\\H{o}s, P\\'{a}l, Some remarks on number theory. {III}. Mat. Lapok (1962), 28--38.\n \n [Er75b] Erd\\H{o}s, Paul, Problems and results in combinatorial number theory. Journ\\'{e}es Arithm\\'{e}tiques de Bordeaux (Conf., Univ. Bordeaux, Bordeaux, 1974) (1975), 295-310.\n \n [Er77c] Erd\\H{o}s, Paul, Problems and results on combinatorial number theory. III. Number theory day (Proc. Conf., Rockefeller Univ.,\nNew York, 1976) (1977), 43-72.\n \n [Er98] Erd\\H{o}s, Paul, Some of my new and almost new problems and results in combinatorial number theory. Number theory (Eger, 1996) (1998), 169-180.\n \n [LuSc00] \\L uczak, Tomasz and Schoen, Tomasz, On the maximal density of sum-free sets. Acta Arith. (2000), 225--229.",
+      "remarks": "Erd\\H{o}s \\cite{Er98} writes that Graham 'recently proved' that there is such a sequence for which $a_{n+1}-a_n<n^{1+o(1)}$, and that Melfi proved a somewhat weaker result.\n\nErd\\H{o}s \\cite{Er62c} proved that a sum-free set has density zero. Deshouillers, Erd\\H{o}s, and Melfi \\cite{DEM99} constructed a sum-free set that grows like $a_n\\sim n^{3+o(1)}$.\n\nLuczak and Schoen \\cite{LuSc00} have proved that, for all large $N$,\\[\\lvert A\\cap [1,N]\\rvert\\ll (N\\log N)^{1/2},\\]and that there exists a sum-free set $B$ such that\\[\\lvert B\\cap [1,N]\\rvert \\gg \\frac{N^{1/2}}{(\\log N)^{1/2+o(1)}}\\]for all large $N$.\n\nIn \\cite{Er75b} and \\cite{Er77c} Erd\\H{o}s asks to determine the maximum possible value of $\\sum_{n\\in A}\\frac{1}{n}$. Erd\\H{o}s had proved this is $<100$, and Sullivan had shown that this is $<4$, and Sullivan conjectured the maximum is slightly larger than $2$.\n\nSee also [790]."
+    },
+    "source_state": "open",
+    "tags": [
+      "additive combinatorics"
+    ]
+  },
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 3.54,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.02567,
+        0.429929
+      ],
+      "probability": 0.227799
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 2.334,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.0,
+        0.359314
+      ],
+      "probability": 0.168729
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.3,
+      "beta": 13.0,
+      "credible_interval_approx": [
+        0.0,
+        0.234961
+      ],
+      "probability": 0.090909
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.533,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.448864
+      ],
+      "probability": 0.219653
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.0,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.177569
+      ],
+      "probability": 0.0625
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.6,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.0,
+        0.256307
+      ],
+      "probability": 0.10596
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.063431
+      ],
+      "probability": 0.021739
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.0,
+        0.384039
+      ],
+      "probability": 0.173913
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 1,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:19:14.850836+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "a6d8cbeb71dec210035e9a9b51eb2d4b5ac5585321ab56e08e1e2cfb50b8e64f"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 0,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 227,
+      "statement_tokens_approx": 28
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "prove",
+      "multi_part": true,
+      "primary_domain": "additive combinatorics"
+    }
+  },
+  "problem_id": "erdos-876",
+  "problem_number": 876,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "prove",
+    "multi_part": true,
+    "primary_domain": "additive combinatorics"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_876.html",
+      "raw_html_sha256": "6a9a366faab21bd9b6f62b9c45d9fa37c328f1ef5992b112c05f3ae140443cb9",
+      "section_sha256": {
+        "references": "f0a447d199b4c917515f0408097def12873928dee576ee92029b99a6e594625a",
+        "remarks": "284364477702de021b4e9966a7be000b1db403160e51bf6b1fab3b5ef1d710e4",
+        "statement": "13f004280d358d40f67f7bc9e2e868603922edd3d95f930ae4813e0eb9501fcb"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_876.json",
+      "source_record_sha256": "2f8583e844bb9ab479d11cf7c48f749e80bfcfb0b60d5bf47a471a22cd64ae20",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_876.tex",
+    "latex_sha256": "59830b864199f23179a113fd7b0bc66f6fad1be49c25eb8e049de42a5bf323a2",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "13f004280d358d40f67f7bc9e2e868603922edd3d95f930ae4813e0eb9501fcb",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "subproblem_decomposition",
+      "shared_infrastructure_search",
+      "literature_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Let $A=\\{a_1<a_2<\\cdots\\}\\subset \\mathbb{N}$ be an infinite sum-free set - that is, there are no solutions to\\[a=b_1+\\cdots+b_r\\]with $b_1<\\cdots<b_r<a\\in A$. How small can $a_{n+1}-a_n$ be?",
+        "focus_question_sha256": "d71cebe203c92ec4cddaac2a963ae1a07da1260f3764cb8c6c1dfa981e17af7b",
+        "parent_statement_sha256": "13f004280d358d40f67f7bc9e2e868603922edd3d95f930ae4813e0eb9501fcb",
+        "part_index": 1,
+        "subproblem_contract_sha256": "d7b37776a22615515177fcabfe84d68aeb6dbbf12a189b52b78618bbc42098a0",
+        "subproblem_id": "erdos-876-part-01-d7b37776"
+      },
+      {
+        "focus_question": "Is it possible that $a_{n+1}-a_n<n$?",
+        "focus_question_sha256": "eb721a0897a740d2e85b05c6df417b29211bce7200730ce55e9f44a7a4bec1b4",
+        "parent_statement_sha256": "13f004280d358d40f67f7bc9e2e868603922edd3d95f930ae4813e0eb9501fcb",
+        "part_index": 2,
+        "subproblem_contract_sha256": "90641c93492081cdeaefb51f3e5cd552eae244b07e82865a7f242e5b06ad8dc5",
+        "subproblem_id": "erdos-876-part-02-90641c93"
+      }
+    ]
+  },
+  "research_directive_sha256": "869ff04803f47b97787092e765a924e5ce8ad01ef545375feffdc71963a95e6b",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "subproblem_decomposition",
+    "shared_infrastructure_search",
+    "literature_search"
+  ],
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "869ff04803f47b97787092e765a924e5ce8ad01ef545375feffdc71963a95e6b",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "13f004280d358d40f67f7bc9e2e868603922edd3d95f930ae4813e0eb9501fcb",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "b02c96d1df920ffd817f79e958a80411be7e7eb6edf84349381749266345d086",
+  "schema_version": 2,
+  "snapshot_id": "20260713-deb58d0facd9",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Let $A=\\{a_1<a_2<\\cdots\\}\\subset \\mathbb{N}$ be an infinite sum-free set - that is, there are no solutions to\\[a=b_1+\\cdots+b_r\\]with $b_1<\\cdots<b_r<a\\in A$. How small can $a_{n+1}-a_n$ be? Is it possible that $a_{n+1}-a_n<n$?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $A=\\{a_1<a_2<\\cdots\\}\\subset \\mathbb{N}$ be an infinite sum-free set - that is, there are no solutions to\\[a=b_1+\\cdots+b_r\\]with $b_1<\\cdots<b_r<a\\in A$. How small can $a_{n+1}-a_n$ be? Is it possible that $a_{n+1}-a_n<n$?",
+    "original": "Let $A=\\{a_1<a_2<\\cdots\\}\\subset \\mathbb{N}$ be an infinite sum-free set - that is, there are no solutions to\\[a=b_1+\\cdots+b_r\\]with $b_1<\\cdots<b_r<a\\in A$. How small can $a_{n+1}-a_n$ be? Is it possible that $a_{n+1}-a_n<n$?",
+    "statement_sha256": "13f004280d358d40f67f7bc9e2e868603922edd3d95f930ae4813e0eb9501fcb"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-876",
+      "part_index": 1,
+      "run_contract_id": "f98c70b5da41d984170b4f8c9559f751b480e63962da08bdd25df5328394d55d",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Let $A=\\{a_1<a_2<\\cdots\\}\\subset \\mathbb{N}$ be an infinite sum-free set - that is, there are no solutions to\\[a=b_1+\\cdots+b_r\\]with $b_1<\\cdots<b_r<a\\in A$. How small can $a_{n+1}-a_n$ be?",
+        "focus_question_sha256": "d71cebe203c92ec4cddaac2a963ae1a07da1260f3764cb8c6c1dfa981e17af7b",
+        "normalized": "Let $A=\\{a_1<a_2<\\cdots\\}\\subset \\mathbb{N}$ be an infinite sum-free set - that is, there are no solutions to\\[a=b_1+\\cdots+b_r\\]with $b_1<\\cdots<b_r<a\\in A$. How small can $a_{n+1}-a_n$ be? Is it possible that $a_{n+1}-a_n<n$?",
+        "original": "Let $A=\\{a_1<a_2<\\cdots\\}\\subset \\mathbb{N}$ be an infinite sum-free set - that is, there are no solutions to\\[a=b_1+\\cdots+b_r\\]with $b_1<\\cdots<b_r<a\\in A$. How small can $a_{n+1}-a_n$ be? Is it possible that $a_{n+1}-a_n<n$?",
+        "statement_sha256": "13f004280d358d40f67f7bc9e2e868603922edd3d95f930ae4813e0eb9501fcb"
+      },
+      "subproblem_contract_sha256": "d7b37776a22615515177fcabfe84d68aeb6dbbf12a189b52b78618bbc42098a0",
+      "subproblem_id": "erdos-876-part-01-d7b37776"
+    },
+    {
+      "parent_problem_id": "erdos-876",
+      "part_index": 2,
+      "run_contract_id": "74365d58c55615a281bc466ab218124aecd43e5f58ab664246e3fe2abf02fddd",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Is it possible that $a_{n+1}-a_n<n$?",
+        "focus_question_sha256": "eb721a0897a740d2e85b05c6df417b29211bce7200730ce55e9f44a7a4bec1b4",
+        "normalized": "Let $A=\\{a_1<a_2<\\cdots\\}\\subset \\mathbb{N}$ be an infinite sum-free set - that is, there are no solutions to\\[a=b_1+\\cdots+b_r\\]with $b_1<\\cdots<b_r<a\\in A$. How small can $a_{n+1}-a_n$ be? Is it possible that $a_{n+1}-a_n<n$?",
+        "original": "Let $A=\\{a_1<a_2<\\cdots\\}\\subset \\mathbb{N}$ be an infinite sum-free set - that is, there are no solutions to\\[a=b_1+\\cdots+b_r\\]with $b_1<\\cdots<b_r<a\\in A$. How small can $a_{n+1}-a_n$ be? Is it possible that $a_{n+1}-a_n<n$?",
+        "statement_sha256": "13f004280d358d40f67f7bc9e2e868603922edd3d95f930ae4813e0eb9501fcb"
+      },
+      "subproblem_contract_sha256": "90641c93492081cdeaefb51f3e5cd552eae244b07e82865a7f242e5b06ad8dc5",
+      "subproblem_id": "erdos-876-part-02-90641c93"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

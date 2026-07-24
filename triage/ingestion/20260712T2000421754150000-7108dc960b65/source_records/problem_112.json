@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 112,
+  "raw_page": {
+    "path": "raw/pages/problem_112.html",
+    "sha256": "9bf5548f98c57c70c5f7a5f3d5b0f6799977301edb65a8b521ab92f363d12ba0"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "39b251669bf396fa94a52b8ece20de32206f54cf1fbe062da33424bffa85de3a",
+      "source_region": "div.problem-additional-text",
+      "text": "[ErRa67] Erd\\H{o}s, P. and Rado, R., Partition relations and transitivity domains of binary\nrelations. J. London Math. Soc. (1967), 624-633.\n \n [LaMi97] Larson, Jean A. and Mitchell, William J., On a problem of Erd\\H{o}s and Rado. Ann. Comb. (1997), 245-252."
+    },
+    "remarks": {
+      "sha256": "df4999663ebe1a7becf5293b25fe3c975a5c0cedbc81dcfa17e4ac66357eb091",
+      "source_region": "div.problem-additional-text",
+      "text": "A problem of Erd\\H{o}s and Rado \\cite{ErRa67}, who showed $k(n,m) \\ll_m n^{m-1}$, or more precisely,\\[k(n,m) \\leq \\frac{2^{m-1}(n-1)^m+n-2}{2n-3}.\\]Larson and Mitchell \\cite{LaMi97} improved the dependence on $m$, establishing in particular that $k(n,3)\\leq n^{2}$. Zach Hunter has observed that\\[R(n,m) \\leq k(n,m)\\leq R(n,m,m),\\]which in particular proves the upper bound $k(n,m)\\leq 3^{n+2m}$.\n\nSee also the entry in the graphs problem collection - on this site the problem replaces transitive tournament with directed path, but Zach Hunter and Raphael Steiner have a simple argument that proves, for this alternative definition, that $k(n,m)=(n-1)(m-1)$."
+    },
+    "statement": {
+      "sha256": "3b0bdbc025a2c593b1fe9c809b2904cdd34f9a76ddfc2c98da3b2d97683d41f8",
+      "source_region": "div#content",
+      "text": "Let $k=k(n,m)$ be minimal such that any directed graph on $k$ vertices must contain either an independent set of size $n$ or a transitive tournament of size $m$. Determine $k(n,m)$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/112"
+}

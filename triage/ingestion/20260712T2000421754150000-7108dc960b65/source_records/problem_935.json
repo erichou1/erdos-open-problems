@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 935,
+  "raw_page": {
+    "path": "raw/pages/problem_935.html",
+    "sha256": "29d40ba13ef254a7f33a2bb296cd9d85f38f0b415c31a64a4ab29e192c87c527"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "1dbf07b26b7f1c542514637aceed71e8b93aefb7f9ae5f11b77d30b6bff001fa",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er76d] Erd\\H{o}s, P., Problems and results on number theoretic properties of consecutive integers and related questions. Proceedings of the Fifth Manitoba Conference on Numerical Mathematics (Univ. Manitoba, Winnipeg, Man., 1975) (1976), 25-44.\n \n [Fe26] T. Feng et al, Semi-Autonomous Mathematics Discovery with Gemini: A Case Study on the Erd\\H{o}s Problems. arXiv:2601.22401 (2026)."
+    },
+    "remarks": {
+      "sha256": "22bc227e3fac2ca181dc4e1a9f0f216a3a2ce041c93ff590e4e631615d5ee538",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s \\cite{Er76d} writes that if this is true then it 'seems very difficult to prove'. \n\nA result of Mahler implies, for every $\\ell\\geq 1$,\\[\\limsup_{n\\to \\infty}\\frac{Q_2(n(n+1)\\cdots(n+\\ell))}{n^2}\\geq 1.\\]All these questions can be asked replacing $Q_2$ by $Q_r$ for $r>2$, only keeping those prime powers with exponent $\\geq r$.\n\nThe second part of this problem is essentially the same (up to constants) as [367]. The construction given there by van Doorn (also given by Aletheia \\cite{Fe26}) proves the second part in the affirmative, since a construction via solutions to the Pell equation $x^2-8y^2=1$ implies\\[\\limsup_{n\\to \\infty}\\frac{Q_2(n(n+1)(n+2))}{n^2}=\\infty.\\]In \\cite{Fe26} it is similarly noted that the ABC conjecture implies a positive answer to the third question."
+    },
+    "statement": {
+      "sha256": "f68ab0c83d73de76982cb2fefa0f908ea1af414beae0957280b5ae6ff246b138",
+      "source_region": "div#content",
+      "text": "For any integer $n=\\prod p^{k_p}$ let $Q_2(n)$ be the powerful part of $n$, so that\\[Q_2(n) = \\prod_{\\substack{p\\\\ k_p\\geq 2}}p^{k_p}.\\]Is it true that, for every $\\epsilon>0$ and $\\ell\\geq 1$, if $n$ is sufficiently large then\\[Q_2(n(n+1)\\cdots(n+\\ell))<n^{2+\\epsilon}?\\]If $\\ell\\geq 2$ then is\\[\\limsup_{n\\to \\infty}\\frac{Q_2(n(n+1)\\cdots(n+\\ell))}{n^2}\\]infinite? \n\nIf $\\ell\\geq 2$ then is\\[\\lim_{n\\to \\infty}\\frac{Q_2(n(n+1)\\cdots(n+\\ell))}{n^{\\ell+1}}=0?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/935"
+}

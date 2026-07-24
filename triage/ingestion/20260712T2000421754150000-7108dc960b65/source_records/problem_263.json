@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 263,
+  "raw_page": {
+    "path": "raw/pages/problem_263.html",
+    "sha256": "2556b1c34c3daeb3f42cacab29280eec933f545932acade6d8fa630ae5e31037"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "c35feb38bd595f4c8ad80c09e242bcc5a7cffa9cc0f275b7edb30d95351aca27",
+      "source_region": "div.problem-additional-text",
+      "text": "[Ko25c] J. Koizumi, Irrationality of the reciprocal sum of doubly exponential sequences. arXiv:2504.05933 (2025).\n \n [KoTa24] Kova\\vC, V. and Tao T., On several irrationality problems for Ahmes series. arXiv:2406.17593 (2024)."
+    },
+    "remarks": {
+      "sha256": "9d133d8f9d7bf3a227cd1e0dbd779a5575ba310af645a3565c2e0344e0f8e308",
+      "source_region": "div.problem-additional-text",
+      "text": "One possible definition of an 'irrationality sequence' (see also [262] and [264]). A folklore result states that $\\sum \\frac{1}{a_n}$ is irrational whenever $\\lim a_n^{1/2^n}=\\infty$.\n\nKova\\v{c} and Tao \\cite{KoTa24} have proved that any strictly increasing sequence such that $\\sum \\frac{1}{a_n}$ converges and $\\lim a_{n+1}/a_n^2=0$ is not such an irrationality sequence. On the other hand, if\\[\\liminf \\frac{a_{n+1}}{a_n^{2+\\epsilon}}>0\\]for some $\\epsilon>0$ then the above folklore result implies that $a_n$ is such an irrationality sequence.\n\nThis problem was originally wrongly stated without the assumption that the sequence be increasing; DeepMind has given a counterexample without this assumption (see the comments).\n\nKoizumi \\cite{Ko25c} has proved that $a_n=\\lfloor \\alpha^{2^n}\\rfloor$ is an irrationality sequence of this type for all but countably many $\\alpha>1$."
+    },
+    "statement": {
+      "sha256": "f7f897fcd26925dc255ab18180f76c9a226368264cbf896822a6f33358d6ca6e",
+      "source_region": "div#content",
+      "text": "Let $a_n$ be an increasing sequence of positive integers such that for every sequence of positive integers $b_n$ with $b_n/a_n\\to 1$ the sum\\[\\sum\\frac{1}{b_n}\\]is irrational. Is $a_n=2^{2^n}$ such a sequence? Must such a sequence satisfy $a_n^{1/n}\\to \\infty$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/263"
+}

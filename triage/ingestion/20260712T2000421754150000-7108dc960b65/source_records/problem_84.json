@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 84,
+  "raw_page": {
+    "path": "raw/pages/problem_84.html",
+    "sha256": "8bc49a00b07718164791b3ea93a53dc1ee24435e0024b8039ac8915776386afb"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "bdad9091cc444cca45671c5526d7dc079ef759d066f1c31400ae3bcac3d37536",
+      "source_region": "div.problem-additional-text",
+      "text": "[Ne25] R. Nenadov, Improved bound on the number of cycle sets. arXiv:2501.09904 (2025).\n \n [Ve04] Verstra\\\"{e}te, Jacques, On the number of sets of cycle lengths. Combinatorica (2004), 719-730."
+    },
+    "remarks": {
+      "sha256": "15975b272eceaf5ba8cba4b8acf49dc58d7025745b259dbbcb2c973a1f4145db",
+      "source_region": "div.problem-additional-text",
+      "text": "Conjectured by Erd\\H{o}s and Faudree, who showed that $2^{n/2}<f(n) \\leq 2^{n-2}$. The first problem was solved by Verstra\\\"{e}te \\cite{Ve04}, who proved\\[f(n)\\ll 2^{n-n^{1/10}}.\\]This was improved by Nenadov \\cite{Ne25} to\\[f(n) \\ll 2^{n-n^{1/2-o(1)}}.\\]One can also ask about the existence and value of $\\lim f(n)^{1/n}$."
+    },
+    "statement": {
+      "sha256": "04930b6ee38488c467e4e896323b509076b1623f9a079a766e7a38b86094ad23",
+      "source_region": "div#content",
+      "text": "The cycle set of a graph $G$ on $n$ vertices is a set $A\\subseteq \\{3,\\ldots,n\\}$ such that there is a cycle in $G$ of length $\\ell$ if and only if $\\ell \\in A$. Let $f(n)$ count the number of possible such $A$. \n\nProve that $f(n)=o(2^n)$.\n\nProve that $f(n)/2^{n/2}\\to \\infty$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/84"
+}

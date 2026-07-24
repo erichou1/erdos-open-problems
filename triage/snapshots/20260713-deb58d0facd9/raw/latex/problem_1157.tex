@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#1157}
+\date{Last updated: 2026-01-23}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} hypergraphs, turan number
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $t,k,r\geq 2$. Let $\mathcal{F}$ be the family of all $r$-uniform hypergraphs with $k$ vertices and $s$ edges. Determine\[\mathrm{ex}_r(n,\mathcal{F}).\]
+
+
+
+
+This is a very difficult and general question, and many partial results are known. The paper of Brown, Erd\H{o}s, and S\'{o}s \cite{BES73} contains many of them, in particular the general lower bound, for all $k&gt;r$ and $s&gt;1$,\[\mathrm{ex}_r(n,\mathcal{F})\gg_{k,s} n^{\frac{rs-k}{s-1}}.\]A general conjecture of Brown, Erd\H{o}s, and S\'{o}s is that, for all $r&gt;t\geq 2$ and $s\geq 3$,\[\mathrm{ex}_t(n,\mathcal{F})=o(n^t)\]whenever $k\geq (r-t)s+t+1$. The case $t=2$ is the subject of [1178] . The case $s=r=3$ and $k=6$ is the subject of [716] . The case of $r=3$ and $k=s+2$ is the subject of [1076] .
+
+
+
+
+References
+
+[BES73] Brown, W. G. and Erd\H{o}s, P. and S\'os, V. T., Some extremal problems on {$r$}-graphs . (1973), 53--63.
+
+\noindent\textbf{Related OEIS sequences:} possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/1157}}
+\end{document}

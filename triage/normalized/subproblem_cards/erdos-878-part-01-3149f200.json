@@ -1,0 +1,30 @@
+{
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "model_portfolio": "chatgpt-5.6",
+  "parent_problem_id": "erdos-878",
+  "parent_run_contract_id": "27eb6512514736dd837bf9a3d0dfadb142506e47fe223977d15b8710fc78d7c9",
+  "part_index": 1,
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+  "priority_score": 0.043478,
+  "problem_number": 878,
+  "rank": 323,
+  "recommended_attack_modes": [
+    "statement_audit",
+    "human_clarification",
+    "subproblem_decomposition",
+    "shared_infrastructure_search",
+    "literature_search"
+  ],
+  "run_contract_id": "c4529702186ed2914dcae27d4db0d367e4b0bb8b97f47761b08b0b6a22268f81",
+  "schema_version": 2,
+  "snapshot_id": "20260713-deb58d0facd9",
+  "statement": {
+    "focus_question": "If $n=\\prod_{1\\leq i\\leq t} p_i^{k_i}$ is the factorisation of $n$ into distinct primes then let\\[f(n)=\\sum p_i^{\\ell_i},\\]where $\\ell_i$ is chosen such that $n\\in [p_i^{\\ell_i},p_i^{\\ell_i+1})$. Furthermore, let\\[F(n)=\\max \\sum_{i} a_i\\]where the maximum is taken over all distinct $a_1,\\ldots,a_k\\leq n$ such that $(a_i,a_j)=1$ for $i\\neq j$ and all prime factors of each $a_i$ are prime factors of $n$. Is it true that, for almost all $n$,\\[f(n)=o(n\\log\\log n)\\]and\\[F(n) \\gg n\\log\\log n?",
+    "focus_question_sha256": "811e97677e6525c559c02871c35b80f2a1f509d027a9b49ba2a78232b9e8d0f7",
+    "normalized": "If $n=\\prod_{1\\leq i\\leq t} p_i^{k_i}$ is the factorisation of $n$ into distinct primes then let\\[f(n)=\\sum p_i^{\\ell_i},\\]where $\\ell_i$ is chosen such that $n\\in [p_i^{\\ell_i},p_i^{\\ell_i+1})$. Furthermore, let\\[F(n)=\\max \\sum_{i} a_i\\]where the maximum is taken over all distinct $a_1,\\ldots,a_k\\leq n$ such that $(a_i,a_j)=1$ for $i\\neq j$ and all prime factors of each $a_i$ are prime factors of $n$. Is it true that, for almost all $n$,\\[f(n)=o(n\\log\\log n)\\]and\\[F(n) \\gg n\\log\\log n?\\]Is it true that\\[\\max_{n\\leq x}f(n)\\sim \\frac{x\\log x}{\\log\\log x}?\\]Is it true that (for all $x$, or perhaps just for all large $x$)\\[\\max_{n\\leq x}f(n)=\\max_{n\\leq x}F(n)?\\]Find an asymptotic formula for the number of $n<x$ such that $f(n)=F(n)$. Find an asymptotic formula for\\[H(x)=\\sum_{n<x}\\frac{f(n)}{n}.\\]Is it true that\\[H(x) \\ll x\\log\\log\\log\\log x?\\]",
+    "original": "If $n=\\prod_{1\\leq i\\leq t} p_i^{k_i}$ is the factorisation of $n$ into distinct primes then let\\[f(n)=\\sum p_i^{\\ell_i},\\]where $\\ell_i$ is chosen such that $n\\in [p_i^{\\ell_i},p_i^{\\ell_i+1})$. Furthermore, let\\[F(n)=\\max \\sum_{i} a_i\\]where the maximum is taken over all distinct $a_1,\\ldots,a_k\\leq n$ such that $(a_i,a_j)=1$ for $i\\neq j$ and all prime factors of each $a_i$ are prime factors of $n$.\n\nIs it true that, for almost all $n$,\\[f(n)=o(n\\log\\log n)\\]and\\[F(n) \\gg n\\log\\log n?\\]Is it true that\\[\\max_{n\\leq x}f(n)\\sim \\frac{x\\log x}{\\log\\log x}?\\]Is it true that (for all $x$, or perhaps just for all large $x$)\\[\\max_{n\\leq x}f(n)=\\max_{n\\leq x}F(n)?\\]Find an asymptotic formula for the number of $n<x$ such that $f(n)=F(n)$. Find an asymptotic formula for\\[H(x)=\\sum_{n<x}\\frac{f(n)}{n}.\\]Is it true that\\[H(x) \\ll x\\log\\log\\log\\log x?\\]",
+    "statement_sha256": "1188c9c6a00731e8bbb24695bd8231a724acf92a459068224ec27a62aae0bfc6"
+  },
+  "subproblem_contract_sha256": "3149f20081083c10e7891d8928a1ff3a99dd1a724ab864c903dbcfb60ab695d0",
+  "subproblem_id": "erdos-878-part-01-3149f200"
+}

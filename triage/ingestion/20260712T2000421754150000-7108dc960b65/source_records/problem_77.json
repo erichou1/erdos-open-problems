@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 77,
+  "raw_page": {
+    "path": "raw/pages/problem_77.html",
+    "sha256": "1d7e5a07d3f1a4dea657a1284c93c4e012634eb637d2a552ec7d17778d9e1800"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "831980dc5509dabc70e7dd6f767fa8d76afe0681cc1e5519be34a99d9b8725f7",
+      "source_region": "div.problem-additional-text",
+      "text": "[BBCGHMST24] Balister, P. and Bollob\\'{a}s, B. and Campos, M. and Griffiths, S. and Hurley, E. \nand Morris, R. and Sahasrabudhe, J. and Tiba, M., Upper bounds for multicolour Ramsey numbers. arXiv:2410.17197 (2024).\n \n [CGMS23] Campos, Marcelo and Griffiths, Simon and Morris, Robert and Sahasrabudhe, Julian, An exponential improvement for diagonal Ramsey. arXiv:2303.09521 (2023).\n \n [Er88] Erd\\H{o}s, P, Problems and results in combinatorial analysis and graph theory. Discrete Math. (1988), 81-92.\n \n [Er93] Erd\\H{o}s, Paul, Some of my favorite solved and unsolved problems in graph theory. Quaestiones Math. (1993), 333-350.\n \n [GNNW24] Gupta, P. and Ndiaye, N. and Norin, S. and Wei, L., Optimizing the CGMS upper bound on Ramsey numbers. arXiv:2407.19026 (2024)."
+    },
+    "remarks": {
+      "sha256": "049bf131acb49251261734220f500482707f36a8eba85158092fc229f8dbeaae",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s offered \\$100 for just a proof of the existence of this constant, without determining its value. He also offered \\$1000 for a proof that the limit does not exist, but says 'this is really a joke as [it] certainly exists'. (In \\cite{Er88} he raises this prize to \\$10000). Erd\\H{o}s proved\\[\\sqrt{2}\\leq \\liminf_{k\\to \\infty}R(k)^{1/k}\\leq \\limsup_{k\\to \\infty}R(k)^{1/k}\\leq 4.\\]The upper bound has been improved to $4-\\tfrac{1}{128}$ by Campos, Griffiths, Morris, and Sahasrabudhe \\cite{CGMS23}. This was improved to $3.7992\\cdots$ by Gupta, Ndiaye, Norin, and Wei \\cite{GNNW24}.\n\nA shorter and simpler proof of an upper bound of the strength $4-c$ for some constant $c>0$ (and a generalisation to the case of more than two colours) was given by Balister, Bollob\\'{a}s, Campos, Griffiths, Hurley, Morris, Sahasrabudhe, and Tiba \\cite{BBCGHMST24}.\n\nIn \\cite{Er93} Erd\\H{o}s writes 'I have no idea what the value of $\\lim R(k)^{1/k}$ should be, perhaps it is $2$ but we have no real evidence for this.'\n\nThis problem is #3 in Ramsey Theory in the graphs problem collection.\n\nSee also [1029] for a problem concerning a lower bound for $R(k)$ and discussion of lower bounds in general. The limit in this question is closely related to the limit in [627].\n\nA famous quote of Erd\\H{o}s concerns the difficulty of finding exact values for $R(k)$. This is often repeated in the words of Spencer, who phrased it as an alien attacking race. The earliest such quote in a paper of Erd\\H{o}s I have found is in \\cite{Er93}, where he writes:\n\n'Sometime ago, I made the following joke. If an evil spirit would appear and say \"unless you give me the value of $R(5)$ within a year, I will exterminate humanity\", then our best bet would be perhaps to get all our computers working on $R(5)$ and we probably would get its value in a year. \n\nIf he would ask for $R(6)$, the best strategy probably would be to destroy it before it can destroy us. If we would be so clever that we could give the answer by mathematics, we would just tell him: \"if you try to do something you will see what will happent to you...\". I think we are strong enugh now and the only evil spirit we have to feel is the one which is in ourselves (quoting somebody: I have seen the enemy and them are us). Now enough of the idle talk and back to Mathematics.'"
+    },
+    "statement": {
+      "sha256": "51ec0cd9904149f67d14c24584eb2e85c4f4ea41853e02ee22d48e63446a64a9",
+      "source_region": "div#content",
+      "text": "If $R(k)$ is the Ramsey number for $K_k$, the minimal $n$ such that every $2$-colouring of the edges of $K_n$ contains a monochromatic copy of $K_k$, then find the value of\\[\\lim_{k\\to \\infty}R(k)^{1/k}.\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/77"
+}

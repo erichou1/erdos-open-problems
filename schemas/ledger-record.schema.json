@@ -1,0 +1,152 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/erdos/ledger-record.schema.json",
+  "title": "Attempt or Outcome Ledger Record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version", "recorded_at", "problem_id", "problem_number", "execution_id",
+    "run_contract_id", "run_context_id", "snapshot_id", "source_snapshot_sha256",
+    "statement_sha256", "pipeline_version", "model_portfolio",
+    "toolset_version", "budget", "budget_config", "status",
+    "gate_status", "candidate_outcome", "learning_eligible",
+    "event_id", "event_sequence"
+  ],
+  "properties": {
+    "schema_version": {"const": 3},
+    "recorded_at": {"type": "string", "format": "date-time"},
+    "problem_id": {"type": "string", "pattern": "^erdos-[0-9]+$"},
+    "problem_number": {"type": "integer", "minimum": 1},
+    "execution_id": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:-]{2,127}$"
+    },
+    "run_contract_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "run_context_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "snapshot_id": {"type": "string", "pattern": "^[!-~]{3,128}$"},
+    "source_snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "statement_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "candidate_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "pipeline_version": {"type": "string", "pattern": "^[!-~]{3,128}$"},
+    "model_portfolio": {"type": "string", "pattern": "^[!-~]{3,128}$"},
+    "toolset_version": {"type": "string", "pattern": "^[!-~]{3,128}$"},
+    "budget": {"type": "string", "minLength": 1},
+    "budget_config": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "browser_channel", "browser_headless", "initial_backoff_s",
+        "max_backoff_s", "max_revisions", "profile_capability",
+        "max_attempts", "rate_limit_policy", "request_spacing_s",
+        "review_roles_per_attempt", "scout_contexts",
+        "stage_timeout_s"
+      ],
+      "properties": {
+        "browser_channel": {"const": "playwright-chromium"},
+        "browser_headless": {"type": "boolean"},
+        "initial_backoff_s": {"type": "number", "minimum": 0},
+        "max_backoff_s": {"type": "number", "minimum": 0, "maximum": 120},
+        "max_attempts": {"type": "integer", "minimum": 1},
+        "max_revisions": {"type": "integer", "minimum": 0},
+        "rate_limit_policy": {"const": "shared-host-tempdir-v1"},
+        "profile_capability": {"const": "persistent-authenticated-user-profile-v1"},
+        "request_spacing_s": {"type": "number", "minimum": 0, "maximum": 120},
+        "review_roles_per_attempt": {"const": 8},
+        "scout_contexts": {"const": 4},
+        "stage_timeout_s": {"type": "number", "exclusiveMinimum": 0}
+      }
+    },
+    "status": {
+      "enum": [
+        "verified_novel_resolution", "verified_partial_progress",
+        "verified_novelty_pending", "independent_rediscovery",
+        "literature_identification", "wrong_interpretation", "statement_defect",
+        "formalization_mismatch", "fundamentally_flawed_candidate",
+        "no_progress_within_budget", "censored_attempt", "operational_failure",
+        "awaiting_external_evidence"
+      ]
+    },
+    "evidence_certificate_ids": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "uniqueItems": true
+    },
+    "event_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "event_sequence": {"type": "integer", "minimum": 1},
+    "supersedes_event_id": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "gate_status": {
+      "enum": [
+        "verified_proved", "verified_disproved", "candidate_rejected",
+        "awaiting_external_evidence", "unknown"
+      ]
+    },
+    "candidate_outcome": {
+      "enum": [
+        "candidate_proved", "candidate_disproved", "candidate_unclassified",
+        "resource_exhausted", "unknown"
+      ]
+    },
+    "learning_eligible": {"const": false},
+    "duration_seconds": {"type": "number", "minimum": 0},
+    "cost": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "input_tokens": {"type": "number", "minimum": 0},
+        "output_tokens": {"type": "number", "minimum": 0},
+        "total_tokens": {"type": "number", "minimum": 0},
+        "requests": {"type": "number", "minimum": 0},
+        "estimated_usd": {"type": "number", "minimum": 0},
+        "compute_seconds": {"type": "number", "minimum": 0},
+        "relative_compute_units": {"type": "number", "minimum": 0}
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "wrong_interpretation", "statement_defect", "formalization_mismatch",
+              "fundamentally_flawed_candidate", "no_progress_within_budget"
+            ]
+          }
+        }
+      },
+      "then": {"properties": {"learning_eligible": {"const": false}}},
+      "else": {"properties": {"learning_eligible": {"const": false}}}
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "enum": [
+              "verified_novel_resolution", "verified_partial_progress",
+              "verified_novelty_pending", "independent_rediscovery",
+              "literature_identification"
+            ]
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "gate_status": {"enum": ["verified_proved", "verified_disproved"]},
+          "candidate_outcome": {"enum": ["candidate_proved", "candidate_disproved"]}
+        }
+      }
+    },
+    {
+      "if": {"properties": {"status": {"const": "no_progress_within_budget"}}},
+      "then": {
+        "properties": {
+          "gate_status": {"const": "candidate_rejected"},
+          "candidate_outcome": {"const": "resource_exhausted"}
+        }
+      }
+    }
+  ]
+}

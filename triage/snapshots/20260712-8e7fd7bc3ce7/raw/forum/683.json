@@ -1,0 +1,40 @@
+{
+  "problem_number": 683,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/683",
+  "retrieved_at": "2026-07-10T23:18:22.402933+00:00",
+  "page_title": "683 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "0d767696a88357073f318a63d6076cd43f3d683edc3b6c47e29c1428fd652378",
+  "comment_count": 6,
+  "comments": [
+    {
+      "post_id": "2848",
+      "text": "For the second result from [Er55d] $P(n, k) \\gg k \\log k$, what is the role of $c$ there? Also, I couldn't locate this problem (or [961]) in [Er79]; probably I'm missing something.",
+      "meta": "seewoo5 — 13:34 on 07 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2849",
+      "text": "I think you misread the reference, it's [Er79d] not [Er79] (it is on p.74 of [Er79d]). The $c$ is just a typo on my part, I'll remove it.",
+      "meta": "Thomas Bloom — 14:27 on 07 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2615",
+      "text": "Minor point, but we may restrict to $1 \\le k \\le n-1$, since $P(1)$ is not well-defined? (The site has been updated to address this comment.)",
+      "meta": "seewoo5 — 05:36 on 31 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1990",
+      "text": "It seems easy to construct a counterexample to the main problem. Take $n=2^t$ and $k=n-1$ $(t\\geq2)$. Then $\\binom{n}{k}=\\binom{2^t}{1}=2^t$, so $P\\!\\left(\\binom{n}{k}\\right)=2$. Moreover $\\min(n-k+1,\\;k^{1+c})=\\min(2,(2^t-1)^{1+c})=2$. Hence $P\\!\\left(\\binom{n}{k}\\right)=2\\not>2$, so $(n,k)=(2^t,2^t-1)$ is a counterexample for every $c>0$. It seems as an infinite series of counterexamples to the main problem? Or I've missed/misunderstood something. (The site has been updated to address this comment.)",
+      "meta": "Alfaiz — 04:43 on 03 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1994",
+      "text": "Given the Sylvester-Schur theorem and the symmetry $\\binom{n}{k} = \\binom{n}{n-k}$, it seems likely here that Erdos intended to write $\\geq \\min(n-k+1, \\dots)$ here instead of $> \\min(n-k,\\dots)$ (or alternatively, to drop the \"+1\").",
+      "meta": "TerenceTao — 06:24 on 03 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1996",
+      "text": "As Tao points out, this is just a typo - really the annoying $n-k+1$ term is just to handle $n/2<k\\leq n$ in a non-trivial way. One should really view these problems as restricted to $k\\leq n/2$. As mentioned, this is just the same as [961] (which is stated without binomial coefficients). Including both was an oversight on my part, but it feels like it would mess up too much to remove this one now.",
+      "meta": "Thomas Bloom — 08:26 on 03 Dec 2025 👍 1 📝 0 🤖 0"
+    }
+  ]
+}

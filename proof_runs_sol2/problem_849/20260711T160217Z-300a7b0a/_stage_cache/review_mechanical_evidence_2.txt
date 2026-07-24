@@ -1,0 +1,126 @@
+{
+"reviewer_role": "independent adversarial referee (mechanical_evidence)",
+"verdict": "fail",
+"claims_checked": 19,
+"claims_total": 19,
+"checked_claim_ids": [
+"DOMAIN_BIFURCATION",
+"SEMIDISCRETE_POSITIVE",
+"FIXED_LAYER_MONOTONICITY",
+"HALF_ROW_MONOTONICITY",
+"CENTRAL_GROWTH",
+"NORMALIZATION_FINITE",
+"FIBER_ORDERING",
+"LOW_MULTIPLICITIES",
+"DENSITY_LOW_MULTIPLICITIES",
+"T5_SPLIT",
+"DISPLACEMENT_IDENTITY",
+"SLOPE_AUDIT",
+"PELL_ADJACENT",
+"PELL_SEPARATION",
+"DIVISOR_INVARIANT",
+"LOW_LAYER_SYSTEM",
+"WORD_SYSTEM",
+"FINITE_CERTIFICATE",
+"TERMINAL_AUDIT"
+],
+"open_gaps": [
+"The immutable statement is not proved or disproved.",
+"The intended domain of n and k is not formally settled.",
+"No global proof excludes S_2 intersect S_3 intersect S_4 intersect S_k for every k at least 5.",
+"No global theorem proves that h(a) at least 2 forces mu(a) at most 3.",
+"No construction realizes every exact interior multiplicity.",
+"No effective decision bound or complete decision procedure is supplied for scalable displacement-word systems.",
+"No uniform method excludes unintended representations in an infinite Pell or word family.",
+"The finite computation only covers a at most 10^30 and supplies no finite-to-infinite implication."
+],
+"unchecked_imports": [],
+"counterexample_searches": [
+{
+"target": "DOMAIN_BIFURCATION",
+"method": "Exact layer-by-layer calculation for a=70.",
+"result": "Under the intended discrete domain the only representations are (70,1) and (8,4). Under the semidiscrete real-row interpretation, monotonicity gives one solution in each layer k=1,2,3,4 and none for k at least 5. The claimed count bifurcation is correct."
+},
+{
+"target": "LOW_MULTIPLICITIES",
+"method": "Exact integer search using fixed-layer monotonicity and binary search.",
+"result": "Verified representations: 2 has [(2,1)]; 6 has [(6,1),(4,2)]; 120 has [(120,1),(16,2),(10,3)]; 3003 has [(3003,1),(78,2),(15,5),(14,6)]."
+},
+{
+"target": "SLOPE_AUDIT",
+"method": "Enumerated every admissible pair with n at most 1500 and grouped equal coefficients.",
+"result": "Found 86 repeated coefficient values and no violation of the asserted increasing e_i/d_i slopes. This finite search is corroborative only and cannot replace the incomplete displayed proof."
+},
+{
+"target": "PELL_ADJACENT",
+"method": "Exact recurrence execution and binomial equality checks.",
+"result": "Verified the first four generated blocks: (15,5), (104,39), (714,272), and (4895,1869), each satisfying C(n,k)=C(n-1,k+1) and both half-row constraints."
+},
+{
+"target": "FINITE_CERTIFICATE",
+"method": "Executed the supplied Python program with exact arbitrary-precision integer arithmetic.",
+"result": "Reproduced exactly: occurrences=3014786, distinct=3014784, repeated values 3003 and 61218182743304701891431482520, low-layer-2 hits [3003,11628,24310], and dangerous=[]. Also verified that k=51 is the largest initialized layer. The bounded conclusion M(a) at most 4 for a at most 10^30 is mechanically supported."
+},
+{
+"target": "CENTRAL_GROWTH boundary",
+"method": "Checked the unqualified definition R_n=C(n,floor(n/2)) at the smallest nonnegative rows.",
+"result": "R_0=R_1=1, so strict growth is false if n=0 is included. The supplied proof establishes the relevant transitions only from n=2 onward and does not state the needed domain qualification."
+}
+],
+"material_errors": [
+{
+"claim_id": "GOAL/TERMINAL_AUDIT",
+"severity": "fatal",
+"issue": "The candidate explicitly reaches no proof or disproof. It therefore fails the acceptance criterion regardless of the correctness of its local lemmas or bounded computation."
+},
+{
+"claim_id": "DOMAIN_BIFURCATION",
+"severity": "major",
+"issue": "The displayed discrete domain '(n,k) in Z^2 greater than or equal to 2, 1 less than or equal to k less than or equal to n/2' is malformed. A coordinatewise reading excludes k=1, contradicting Claims 1, 6, 8, and the normalization M(a)=1+mu(a)."
+},
+{
+"claim_id": "CENTRAL_GROWTH",
+"severity": "moderate",
+"issue": "The assertion that R_n strictly increases with n is unqualified and is false across n=0 to n=1. The argument also omits the n=1 to n=2 boundary, although the intended statement for n at least 2 is correct."
+},
+{
+"claim_id": "T5_SPLIT",
+"severity": "major",
+"issue": "The definitions of S_j and h(a) are syntactically ill-formed: S_j is not given a valid set-builder variable and h(a) writes k as belonging to S_k rather than a belonging to S_k. The intended decomposition is elementary and correct after repair, but it is not formally stated as written."
+},
+{
+"claim_id": "DISPLACEMENT_IDENTITY",
+"severity": "moderate",
+"issue": "The displayed identity is correct, but the purported derivation omits an equation and presents two isolated factorial ratios. The equivalence is therefore not actually demonstrated in the submitted artifact."
+},
+{
+"claim_id": "SLOPE_AUDIT",
+"severity": "major",
+"issue": "The crucial logarithmic equality is missing its entire left-hand sum, the reciprocal inequality chain has lost its comparison signs, and the final strict comparison is also absent. The theorem can be reconstructed, and finite testing found no counterexample, but reconstruction would repair rather than verify the submitted proof."
+},
+{
+"claim_id": "DIVISOR_INVARIANT",
+"severity": "moderate",
+"issue": "The central equation is malformed as 'p,a=q...' rather than pa=q times the binomial coefficient. The divisibility conclusion is valid only after supplying that missing multiplication identity."
+},
+{
+"claim_id": "WORD_SYSTEM",
+"severity": "major",
+"issue": "The central polynomial equation is absent entirely: only the right-hand falling factorial is displayed. Consequently the claim that the full word system has been derived is false as written."
+},
+{
+"claim_id": "FINITE_CERTIFICATE",
+"severity": "none for the bounded claim",
+"issue": "The code and reported output survived exact rerunning. Its only limitation is logical scope: it proves nothing for a greater than 10^30 and cannot support the global terminal conclusion."
+}
+],
+"completeness_score": 54,
+"proof_confidence": 0,
+"adversarial_survival_score": 62,
+"statement_sha256": "b669094e22469ade57dcca529d2ce001ede0c9bee628c97121ad1d9a7ebfb01b",
+"notes": "Most elementary local claims and the finite certificate are substantively correct, but several key displayed formulas are missing or malformed, and no terminal route is completed. Input provenance only, not mathematical evidence: 
+
+Pasted text
+
+"
+}

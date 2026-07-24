@@ -1,0 +1,15 @@
+{
+  "problem_number": 472,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/472",
+  "retrieved_at": "2026-07-10T23:17:21.166515+00:00",
+  "page_title": "472 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "1bd470c61a180dd3ee6c578f5625033af212e0642d3123ee4da77f9cb8b4e439",
+  "comment_count": 1,
+  "comments": [
+    {
+      "post_id": "177",
+      "text": "That sequence should work indeed. Heuristically reasons: $q_n+q_i-1$ is odd, and residues are not fixed modulo an odd prime. The probability that a number of the order $x$ is prime is roughly $1/ \\log x$. Thus on average $q_{n+1}=q_n+\\log(q_n)^{2+o(1)}$ and the expectation of failing should be small (we estimate $q_n=n^{1+o(1)}$ and probability of failing $(1-1/\\log q_n)^n=exp(-n^{1-o(1)})$. An easy check shows that the list continues at least a million steps, and $\\sum_{n=10^6}^{\\infty} \\exp(-n^{1-o(1)})$ will be very small.",
+      "meta": "StijnC — 06:18 on 24 Aug 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

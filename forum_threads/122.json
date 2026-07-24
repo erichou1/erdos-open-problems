@@ -1,0 +1,25 @@
+{
+  "problem_number": 122,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/122",
+  "retrieved_at": "2026-07-10T23:15:38.710103+00:00",
+  "page_title": "122 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "e62a068a5248ef80ada799df5bfd8bc19fbf78517e4d8724352f3e37bd3b4b36",
+  "comment_count": 3,
+  "comments": [
+    {
+      "post_id": "5034",
+      "text": "I think I made a counterexample to this. A short counterexample to the current online formulation of Problem #122. Let\\[ R(x):=\\frac{\\#\\{n\\in \\mathbb{N}: n+f(n)\\in (x,x+F(x))\\}}{F(x)}. \\]I am only addressing the current online version of problem#122 as written above. I am not claiming to have resolved the historical original problem behind Problem #122. Assume throughout that\\[ f:\\mathbb{N}\\to [0,\\infty). \\]I claim that for every such nonnegative function \\(f\\), there exists an integer-valued function \\(F:\\mathbb{N}\\to\\mathbb{N}\\) such that\\[ \\frac{f(n)}{F(n)}\\to 0 \\qquad (n\\to\\infty), \\]but at the same time\\[ R(x)<2 \\qquad \\text{for every }x\\in\\mathbb{N}. \\]This shows that the current online formulation is false under any natural interpretation in which the displayed ratio is supposed to become arbitrarily large as \\(x\\) varies. Indeed, define\\[ F(n):=1+\\left\\lceil n^2+f(n)^2\\right\\rceil \\qquad (n\\in\\mathbb{N}). \\]Then \\(F(n)\\in\\mathbb{N}\\) and\\[ F(n)\\ge 1+n^2+f(n)^2. \\]Hence\\[ 0\\le \\frac{f(n)}{F(n)}\\le \\frac{f(n)}{n^2+f(n)^2}. \\]By the elementary inequality\\[ n^2+f(n)^2\\ge 2nf(n), \\]we get\\[ \\frac{f(n)}{n^2+f(n)^2}\\le \\frac{1}{2n}. \\]Therefore\\[ 0\\le \\frac{f(n)}{F(n)}\\le \\frac{1}{2n}\\to 0. \\]Now fix \\(x\\in\\mathbb{N}\\), and let\\[ A_x:=\\{n\\in\\mathbb{N}: n+f(n)\\in (x,x+F(x))\\}. \\]If \\(n\\in A_x\\), then\\[ n+f(n)<x+F(x). \\]Since \\(f(n)\\ge 0\\), it follows that\\[ n\\le n+f(n)<x+F(x). \\]Thus every element of \\(A_x\\) is a natural number strictly smaller than \\(x+F(x)\\). Consequently,\\[ \\#A_x\\le x+F(x). \\]Dividing by \\(F(x)\\), we obtain\\[ R(x)=\\frac{\\#A_x}{F(x)}\\le 1+\\frac{x}{F(x)}. \\]But\\[ F(x)\\ge 1+x^2+f(x)^2\\ge 1+x^2, \\]so\\[ R(x)\\le 1+\\frac{x}{x^2+1}<2. \\]Hence\\[ \\frac{\\#\\{n\\in \\mathbb{N}: n+f(n)\\in (x,x+F(x))\\}}{F(x)}<2 \\qquad \\text{for all }x\\in\\mathbb{N}. \\]",
+      "meta": "SkyYang — 00:47 on 26 Mar 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5057",
+      "text": "I agree that the problem is incorrectly stated, as we could simply take $F(x)$ sufficiently fast growing, say $F(x) = x$. So my guess is that we should actually require $F(n)/f(n)$ to go to $0$ for almost all $n$, instead of the other way around. If that's not the fix, then surely we need at least some growth condition on $F$. (The site has been updated to address this comment.)",
+      "meta": "Woett — 12:06 on 27 Mar 2026 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "5061",
+      "text": "Yes, I think this is the correct interpretation: in [Er97] and [Er97e] there was just a typo (reproduced here) writing $f/F$ where they meant $F/f$. (Although this is more than just a typo in [Er97], since he explicitly states that the width of the interval (here denoted $F(x)$) 'tends to infinity faster than does [the normal order of $f$]'. Further evidence is looking at what [EPS97] actually prove - they don't state it as a main result, but their methods prove (implicitly) that there is an interval $I\\subset [1,O(x)]$ of width\\[\\asymp \\left(\\frac{\\log x}{\\log\\log x}\\right)^{1/2}\\]such that if $n\\in I$ then $n+\\omega(n)$ is in $J$, where $J$ is an interval of width $O((\\log\\log x)^{1/2})$ (and the normal order of $\\omega$ is $\\log\\log x$). The motivation for this sort of problem is to generalise results like 'there are infinitely many $m$ such that $n+\\omega(n)=m$ has many solutions'. In this formulation we replace $m$ with a short interval instead, and want many values of $n+\\omega(n)$ in this interval. As is the case with many of the problems stated in [Er97] and [Er97e] there are definitely some errors here; also in the description of the results obtained (which don't really appear in [EPS97]). I'll email Pomerance to see if he can clarify and/or provide other references.",
+      "meta": "Thomas Bloom — 14:28 on 27 Mar 2026 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

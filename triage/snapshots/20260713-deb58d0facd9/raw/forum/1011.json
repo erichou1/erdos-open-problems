@@ -1,0 +1,55 @@
+{
+  "problem_number": 1011,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/1011",
+  "retrieved_at": "2026-07-10T23:19:54.572261+00:00",
+  "page_title": "1011 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "d8cb8c001172434050b9679a35572b8979cc3c40450855a04e8e20955c37a725",
+  "comment_count": 9,
+  "comments": [
+    {
+      "post_id": "1494",
+      "text": "The penultimate inequality should read $(1/2-o(1))r^2\\log r\\leq g(r)\\leq (2+o(1))r^2\\log r$. It is currently missing the $g(r)$ in the middle and so is just the observation that $1/2\\leq 2$ ! (The site has been updated to address this comment.)",
+      "meta": "Adenwalla — 17:58 on 26 Oct 2025 👍 1 📝 2 🤖 0"
+    },
+    {
+      "post_id": "1444",
+      "text": "I think the upper bound for $g(r)$ can be improved. observe that $g(r)\\le \\min\\{R(3,k)-2k: R(3,k)/k>r-1\\}$. consequently, $g(r)\\le (1+o(1))r^2\\log(r)$. (The site has been updated to address this comment.)",
+      "meta": "zach hunter — 11:18 on 25 Oct 2025 👍 1 📝 1 🤖 0"
+    },
+    {
+      "post_id": "1451",
+      "text": "Tom, the upper bound for $g$ follows from the nice construction from a couple days ago. presumably Shearer's bound will imply a lower bound on $g$. but I'm on vacation at the moment, so I will think more about that Monday.",
+      "meta": "zach hunter — 16:15 on 25 Oct 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1452",
+      "text": "Argh sorry, too many bounds flying around! I'm away from my laptop now but will update soon. Although doesn't that mean the upper bound is actually more like $2r^2\\log r$?",
+      "meta": "Thomas Bloom — 16:18 on 25 Oct 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1454",
+      "text": "no, because their construction has $n$ vertices and no independent set of size $h_\\epsilon(n):=(1+\\epsilon)\\sqrt{n\\log n}$ for all $n>n_0(\\epsilon)$ (see Theorem 1.3 of https://arxiv.org/abs/2510.19718). and we have that $\\frac{r^2\\log(r)}{h_\\epsilon(r^2\\log(r))}= (1+\\Theta(\\epsilon))r$, I believe. but I could be flipping something incorrectly too.",
+      "meta": "zach hunter — 16:32 on 25 Oct 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1468",
+      "text": "for the other direction, observe that $g(r)\\ge \\min\\{n: \\text{ there exists an $n$-vertex triangle-free graph with chromatic number } r-2\\}$. then Raphael Steiner shared this paper https://epubs.siam.org/doi/10.1137/21M1437573 to me, which implies that $g(r)\\ge (1/4-o(1))r^2 \\log r$ (this improves upon a more standard application of Shearer's by a factor of two). hopefully I did not messup converting constants. (The site has been updated to address this comment.)",
+      "meta": "zach hunter — 20:11 on 25 Oct 2025 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "1472",
+      "text": "The result in the linked paper of Davies and Illingworth gives $r-2\\leq (2+o(1)) \\sqrt{n/ \\log n}$ for every triangle-free graph with $n$ vertices and chromatic number $r-2$. I believe it even implies $g(r)=n\\geq (1/2-o(1)) r^2 \\log r$. Also: I get that $\\frac{r^2 \\log (r)}{h_\\epsilon(r^2 \\log(r))}$ is of the order $(\\frac{1}{\\sqrt{2}}+\\Theta(\\epsilon)) r$ rather than $(1+\\Theta(\\epsilon))r$, so maybe TFBlooms remark still stands that the upper bound argument actually leads to $g(r)\\leq (2+o(1))(\\log r) r^2$? Probably I'm messing up constants too.. Will check it again in the morning.",
+      "meta": "Wouter CvB — 22:07 on 25 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1478",
+      "text": "ah yes, $\\log(r^2\\log(r)) \\sim 2 \\log(r)$... I forgot how logarithms work.",
+      "meta": "zach hunter — 05:46 on 26 Oct 2025 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1055",
+      "text": "In Theorem 2.7 of \"Extremal graph problems with symmetrical extremal graphs. Additional chromatic conditions\" (Discrete Math. 7 (1974), 349–376), Simonovits states the answer is $n^2/4 -g_3(t)n/2 + O(1)$ for an explicit function $g_3(t)$. He attributes this result to his PhD thesis, \"On the structure-of extremal graphs\". For $t=4$, the preprint \"Extremal triangle-free graphs with chromatic number at least four\" by Ren-Wang-Wang-Yang gives the exact answer $\\lfloor \\frac{(n-3)^2}{4}\\rfloor+6$ for $n\\geq 150$. (These references were located by GPT-5.) (The site has been updated to address this comment.)",
+      "meta": "msellke — 17:55 on 13 Oct 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

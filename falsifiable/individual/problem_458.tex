@@ -1,0 +1,33 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#458}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} FALSIFIABLE \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, primes
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $[1,\ldots,n]$ denote the least common multiple of $\{1,\ldots,n\}$. Is it true that, for all $k\geq 1$,\[[1,\ldots,p_{k+1}-1]&#60; p_k[1,\ldots,p_k]?\]
+
+
+
+
+Erd\H{o}s and Graham write this is 'almost certainly' true, but the proof is beyond our ability, for (at least) two reasons: {UL} {LI}Firstly, one has to rule out the possibility of many primes $q$ such that $p_k&lt;q^2&lt;p_{k+1}$. There should be at most one such $q$, which would follow from $p_{k+1}-p_k&lt;p_k^{1/2}$, which is essentially the notorious Legendre's conjecture .{/LI} {LI} The small primes also cause trouble.{/LI} {/UL}
+
+\noindent\textbf{Related OEIS sequences:} A056604
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/458}}
+\end{document}

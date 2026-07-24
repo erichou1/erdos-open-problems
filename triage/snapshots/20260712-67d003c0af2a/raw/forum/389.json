@@ -1,0 +1,50 @@
+{
+  "problem_number": 389,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/389",
+  "retrieved_at": "2026-07-10T23:16:56.181333+00:00",
+  "page_title": "389 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "d8c41ccefd3fd846495857ad6d7c82c37fae014bc1080721fccb375b8a66fea8",
+  "comment_count": 8,
+  "comments": [
+    {
+      "post_id": "5127",
+      "text": "The similarity with #396 has already been noted. If one makes the change of variables $(n',k') = (n+k-1, n)$, the similarity becomes more obvious: removing the primes, the question now asks whether, for every $k$, there exists $n$ such that $$ \\prod_{i=0}^k (2n-i) | (k-1)! \\binom{2n}{n}.$$",
+      "meta": "TerenceTao — 03:25 on 31 Mar 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4185",
+      "text": "Computational note for [389]. For $n=25$, I searched for a $k\\ge 1$ such that\\[ 25\\cdot 26\\cdots (25+k-1)\\ \\mid\\ (25+k)(25+k+1)\\cdots (25+2k-1). \\]I checked all $1\\le k\\le 12{,}000{,}000$ and found no solution in this range, hence\\[ k_{\\min}(25) > 12{,}000{,}000. \\](Of course this does \\emph{not} prove nonexistence of such a $k$ for $n=25$; it is only a lower bound.) Method: track prime-adic valuation differences\\[ d_p(k)=v_p\\!\\Big(\\prod_{j=0}^{k-1}(n+k+j)\\Big)-v_p\\!\\Big(\\prod_{j=0}^{k-1}(n+j)\\Big), \\]and update incrementally via\\[ d_p(k+1)=d_p(k)+v_p(n+2k)+v_p(n+2k+1)-2v_p(n+k), \\]factoring each integer using a precomputed smallest-prime-factor table up to $n+2k_{\\max}+1$. As a sanity check, the implementation reproduces the sample solutions $n=2\\Rightarrow k=5$ and $n=3\\Rightarrow k=4$, and agrees with the known value $n=4\\Rightarrow k=207$ (consistent with OEIS A375071, noting the index shift).",
+      "meta": "Zeraoulia Rafik — 01:13 on 05 Feb 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4187",
+      "text": "This was to be expected. Look at https://oeis.org/A375071/b375071.txt It would be \"normal\" if the smallest k für n=25 has about 16 decimals.",
+      "meta": "old-bielefelder — 07:00 on 05 Feb 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5099",
+      "text": "I can confirm $n = 25$ has minimal $k$ as $k = 1070858041561$. Structurally there are a lot of similarities between this problem and [396]. As such, I have written a similar program that has grinded this sequence out till $25$ now (taking about 50 minutes to compute all).",
+      "meta": "Sharvil Kesarwani — 10:23 on 30 Mar 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4188",
+      "text": "The problem seems to be hard. How much easier does the task become if $n(n+1)...(n+k-1)$ and $(n+k)(n+k+1)...(n+2k-1)(n+2k)$ are compared? So, here the second product gets additional factor $(n+2k)$ \"for free\". The sequence of minimal $k$ should grow slower. Much slower?! And one more question: Has someone for small $n$ computed what the second smallest $k$ with the property asked by Erdos and Straus ist? How does that sequence develop?",
+      "meta": "old-bielefelder — 07:44 on 05 Feb 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2276",
+      "text": "Let us call a pair (n,k) ES-nice if the divisibility condition holds for it. Looking at A375071 and doing some numerical computations leads me to the conjecture: (2m+1,k) is ES-nice, if (2m,k+1) is ES-nice. If this is true, the restricted version of problem 389 to odd numbers n = 2m+1 might be somewhat simpler than 389 itself. The converse direction holds often but not always. ES-nice pairs (n,k) I checked: (2,k) is ES-nice for k = 5, 14, 27, 41, 44, 65, 90, 109, 125, 139, (3,k) is ES-nice for k = 4, 13, 18, 26, 40, 43, 64, 75, 86, 89, 102, 108, 124, 138, (4,k) is ES-nice for k = 207, 457, (5,k) is ES-nice for k = 206, 456,",
+      "meta": "old-bielefelder — 09:40 on 19 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2277",
+      "text": "I didnot see any reason why this conjecture should be true. You have divisibilities with a lot of common terms, so it is not surprising that it often works. Basically one wants that $2m+2k+1$ has a crucial prime factor of $\\prod_{i=1}^k (2m+i)$, where crucial means that it did not appear in $\\prod_{i=1}^k (2m+k+i)$ with sufficiently high multiplicity. That happens rarely, but there are cases. E.g. when $n=4$ and $k=987$ or $3993$, or $n=6$ and $k=19500$. So conjecture refuted.",
+      "meta": "StijnC — 10:29 on 19 Dec 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2250",
+      "text": "This is equivalent to asking whether for every $n$, there exists a $k$ such that $$\\binom{n+k-1}{k}\\big|\\binom{n+2k-1}{k},$$ but perhaps this was where the problem came from.",
+      "meta": "Adenwalla — 15:40 on 18 Dec 2025 👍 2 📝 0 🤖 0"
+    }
+  ]
+}

@@ -1,0 +1,80 @@
+{
+  "problem_number": 203,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/203",
+  "retrieved_at": "2026-07-10T23:16:04.541458+00:00",
+  "page_title": "203 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "1a497eb2b2bf3a6fd69c61401c6d83049ba9fd6b6b48fc4c6bba5d3225cc14a9",
+  "comment_count": 14,
+  "comments": [
+    {
+      "post_id": "7109",
+      "text": "I have been studying the \\(r=2\\) case of this problem: whether there exists \\(m\\geq 1\\), with \\(\\gcd(m,6)=1\\), such that\\[ 2^k3^\\ell m+1 \\]is composite for every \\(k,\\ell\\geq 0\\). I am not claiming a solution. The existence question remains open. My claim is a partial result: a general density obstruction for finite 2D covering sets, plus some computationally bounded exclusions. For each prime \\(p\\nmid 6\\), define\\[ H_p=\\langle 2,3\\rangle\\subseteq(\\mathbb Z/p\\mathbb Z)^\\times . \\]I prove\\[ |H_p|=\\operatorname{lcm}(\\operatorname{ord}_p(2),\\operatorname{ord}_p(3)). \\]It follows that if a finite set of primes \\(P\\) gives a covering proof for some \\(m\\), i.e. if for every \\(k,\\ell\\geq 0\\) some \\(p\\in P\\) divides\\[ 2^k3^\\ell m+1, \\]then necessarily\\[ \\sum_{p\\in P}\\frac{1}{|H_p|}\\geq 1. \\]Using this density condition, I rule out several possible covering regimes, including the four-prime set \\(\\{5,11,23,13\\}\\), all linear primes with \\(\\operatorname{ord}_p(2)\\leq 60\\), and linear-prime coverings with\\[ \\operatorname{lcm}(\\operatorname{ord}_p(2))\\leq 720720. \\]The strongest current computational exclusion is: among primes \\(p\\leq 50{,}000{,}000\\), no covering set \\(P\\) with\\[ \\operatorname{lcm}(|H_p|:p\\in P)<5040 \\]can exist, since the corresponding density sum is still \\(<1\\). This is a computational theorem within that prime bound, not an unconditional theorem over all primes. I also checked natural candidate families at moduli \\(5040\\) and \\(10080\\). No covering was found; the best coverage stayed around \\(71\\%-72\\%\\). This is computational evidence only, not a proof of nonexistence. A useful structural observation is that any such 2D Sierpiński number would also be a classical 1D Sierpiński number, by setting \\(\\ell=0\\). The natural candidate \\(m=78557\\) does not work, since\\[ 2^1\\cdot 3^2\\cdot 78557+1=1414027 \\]is prime. So the exact status is: - Proved: the subgroup formula for \\(|H_p|\\). - Proved: the density necessary condition for finite 2D covering sets. - Proved/computed within scope: no covering with \\(\\operatorname{lcm}(|H_p|)<5040\\) using primes \\(p\\leq 50{,}000{,}000\\). - Not proved: existence of \\(m\\). - Not proved: nonexistence of \\(m\\). - Therefore the original \\(r=2\\) problem remains open. The WIT file is written in a semi-formal proof language: sierpinski-generalized-v2.wit The PDF report is here: PDF report",
+      "meta": "AnimishSharma — 07:36 on 21 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "229",
+      "text": "Any such number, If It exists, would have to be massive. It is all but confirmed that It has to be at least ten billion, a humble lower bound.",
+      "meta": "Dogmachine — 18:45 on 28 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2843",
+      "text": "I agree with it having to be massive, but how do you know its confirmed to be at least ten billion? Anything helps, but if it was just heuristics/computation that's okay, too.",
+      "meta": "uona — 02:46 on 07 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3775",
+      "text": "Heuristics. The smallest Sierpinski number has five digits, and any number sought here should satisfy at least double the ammount of constraints, meaning I expect a number with at least double the number of digits of 78557 would be required and in fact even more than that, so at least $10^{10}$, or ten billion. Does this makes some Sense?",
+      "meta": "Dogmachine — 23:35 on 25 Jan 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3770",
+      "text": "Note that the question regarding the primes $q$ is equivalent to asking for an even positive integer $m$ such that the quadratic form $g(x,y)=mx^2+my^2+1$ is free of primes whenever $x,y$ are coprime positive integers and $x+y$ odd. If we remove such restrictions and simply allows any Integers as $x,y$, such $m$ does not exist by classical results of Iwaniec (see H. Iwaniec, Primes representes by quadratic polynomials in two variables, Acta Arith. 24 (1974), 435-459), since the form $g$ obeys some caveats, including being genuinely a function of two variables, that force It to contain primes. Perhaps someone well acquainted with the analytic theory can prove such $g$ will have primes even with the aforementioned restrictions on $x,y$?",
+      "meta": "Dogmachine — 19:04 on 25 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2613",
+      "text": "I have been trying at this although most sieving methods aren't very helpful. My intuition tells me such an m shouldn't exist, as it would be crt frankenstein. How would I go about uploading progress/proof to the website that I am able to get - if any?",
+      "meta": "uona — 03:42 on 31 Dec 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2621",
+      "text": "This site isn't suitable for hosting full preprints, the comment section is intended for informal discussions. If you have a full proof I suggest writing it up as a paper in the traditional fashion, which can be uploaded to arxiv, and you can share a link here. If you have some partial progress or relevant data you can share this here in a comment.",
+      "meta": "Thomas Bloom — 07:14 on 31 Dec 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2583",
+      "text": "If someone could explain what is meant in the problem with the primes $q$, that would be appreciated. As It stands, $m=1$ is a trivial solution.",
+      "meta": "Dogmachine — 18:01 on 29 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2584",
+      "text": "This seems to be how the question was literally posed in [ErGr80, p. 27], but perhaps requiring $m$ to be even here would exclude the trivial examples?",
+      "meta": "TerenceTao — 18:15 on 29 Dec 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1822",
+      "text": "The belief Dogmachine alludes to was made explicit in this paper by Filaseta, Finch and Kozek. They conjecture the following: Conjecture. If $m$ is such that $2^km + 1$ is composite for all $k \\ge 1$, then either $m$ is a perfect power, or the smallest prime factor of $2^km + 1$ remains bounded as $k$ tends to infinity. They furthermore show the following result, which is somewhat related to the problem at hand: Theorem. For every $l \\in \\mathbb{N}$ there is an $m$ such that $2^km^i+1$ is composite for all $1 \\le i \\le l$ and all $k \\in \\mathbb{N}$. (The site has been updated to address this comment.)",
+      "meta": "Woett — 16:28 on 24 Nov 2025 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "2523",
+      "text": "On further reflection, the separate problem about Sierpinski numbers and covering systems is worthy of a separate entry, now at [1113], which includes these remarks.",
+      "meta": "Thomas Bloom — 09:21 on 28 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1912",
+      "text": "Did a shallow search from 10 billion to 100 billion - No matches ¯\\_(ツ)_/¯",
+      "meta": "emil467q — 18:55 on 30 Nov 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1293",
+      "text": "For what it is worth, neither Gemini nor ChatGPT found any new references on this problem, although ChatGPT provided some links to work on Sierpinski numbers and their relation to covering congruences, while also relying heavily on this very web page as an authoritative source. Gemini hallucinated that they could solve this question with covering congruences, but then failed (twice) to construct such a system, admitting defeat halfway through in each instance when it found that the congruences it stated did not, in fact, cover all integers, but without amending the previous portion of the report (perhaps an artefact of the next token prediction architecture). My understanding is that for various technical reasons, Gemini DeepResearch is not able to use powerful models such as Gemini DeepThink, and so seems to be tripped up by hallucinations a little more often than some other models.",
+      "meta": "TerenceTao — 20:45 on 19 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "230",
+      "text": "The remark about Sierpinski numbers became outdated in 1993. In a note on Sierpinski numbers, Anatoly Isotov gave examples that do not entirely use coverings. Nowadays, It is believed that all Sierpinski numbers either come from covering systems, or are perfect powers. (The site has been updated to address this comment.)",
+      "meta": "Dogmachine — 19:16 on 28 Aug 2025 👍 0 📝 1 🤖 0"
+    }
+  ]
+}

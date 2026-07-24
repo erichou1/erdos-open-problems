@@ -1,0 +1,305 @@
+{
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.128
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-11-21",
+      "state": "yes"
+    },
+    "references": [],
+    "source_last_update": "2026-03-14",
+    "source_problem_url": "https://www.erdosproblems.com/85",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "",
+      "remarks": "The function $f(n)$ is a reformulation of the Ramsey number $R(C_4,K_{1,n})$, in that\\[R(C_4,K_{1,n})=\\min\\{ m : f(m)\\leq m-n\\}\\]and\\[f(n)=\\min\\{ m : m\\geq R(C_4, K_{1,n-m})\\}.\\]The behaviour of this Ramsey number more generally is [552].\n\nA weaker version of the conjecture asks for some constant $c$ such that $f(m)>f(n)-c$ for all $m>n$. This question can be asked for other graphs than $C_4$.\n\nThe bounds in [552] imply in particular that $f(n)<\\sqrt{n}+1$ and\\[f(n)=(1+o(1))\\sqrt{n}.\\]It is easy to check that $f(4)=2$."
+    },
+    "source_state": "open",
+    "tags": [
+      "graph theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.54,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.363478
+      ],
+      "probability": 0.174691
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 2.475,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.411297
+      ],
+      "probability": 0.198373
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.3,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.251666
+      ],
+      "probability": 0.097744
+    },
+    "p_high_mathematical_value": {
+      "alpha": 1.2,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.306341
+      ],
+      "probability": 0.117647
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.367,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.018694,
+        0.419484
+      ],
+      "probability": 0.219089
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.9,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        2.3e-05,
+        0.389239
+      ],
+      "probability": 0.194631
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 40.0,
+      "credible_interval_approx": [
+        0.0,
+        0.103879
+      ],
+      "probability": 0.043062
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.009216,
+        0.509303
+      ],
+      "probability": 0.259259
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "minor"
+    },
+    "literature": {
+      "comment_count": 1,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:15:28.303506+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "1c931524e73dd9b321f798611605c01f6278423a4fc52276976a4602ac8598f0"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "implicit_convention"
+      ],
+      "ambiguity_status": "minor",
+      "quantifier_signal_count": 1,
+      "question_count": 1,
+      "requires_source_audit": true,
+      "statement_characters": 178,
+      "statement_tokens_approx": 32
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "prove_or_disprove",
+      "multi_part": false,
+      "primary_domain": "graph theory"
+    }
+  },
+  "problem_id": "erdos-85",
+  "problem_number": 85,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "prove_or_disprove",
+    "multi_part": false,
+    "primary_domain": "graph theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_85.html",
+      "raw_html_sha256": "137fd5dd39af43f7794c9e6939e8c8fd605fd791e048419e5646c0405e541f84",
+      "section_sha256": {
+        "references": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "remarks": "4829e9230c319f95280494a420edb2cb71409e18f5253d3b75bb3bbbc8d97eb2",
+        "statement": "dcc44223ff4526dd425ef5d0743c4c475b85121077dad444dec04172956eb3e5"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_85.json",
+      "source_record_sha256": "771424c2bf67a5b011548a1853dfa6332816ccc59e52df08f6b951548851de96",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_85.tex",
+    "latex_sha256": "7f24131d6aea8aadaa57899f3c9edd63b78ac6f38b34e2d1b4a7bd0f22824183",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "dcc44223ff4526dd425ef5d0743c4c475b85121077dad444dec04172956eb3e5",
+    "recommended_attack_modes": [
+      "formal_search",
+      "shared_infrastructure_search",
+      "literature_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "5be5672a3e07c2c88105721e186648a4cd1220668a7857059b986e5f8c5b10f9",
+  "routes": [
+    "formal_search",
+    "shared_infrastructure_search",
+    "literature_search",
+    "natural_language_research"
+  ],
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "5be5672a3e07c2c88105721e186648a4cd1220668a7857059b986e5f8c5b10f9",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "dcc44223ff4526dd425ef5d0743c4c475b85121077dad444dec04172956eb3e5",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "840063ca3ba52ba11eb33d899a6ed6c34d1478e9805e36cb9233de2c61a11964",
+  "schema_version": 2,
+  "snapshot_id": "20260713-deb58d0facd9",
+  "statement": {
+    "ambiguity_status": "minor",
+    "intended": "Let $n\\geq 4$ and $f(n)$ be minimal such that every graph on $n$ vertices with minimal degree $\\geq f(n)$ contains a $C_4$. Is it true that, for all large $n$, $f(n+1)\\geq f(n)$?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $n\\geq 4$ and $f(n)$ be minimal such that every graph on $n$ vertices with minimal degree $\\geq f(n)$ contains a $C_4$. Is it true that, for all large $n$, $f(n+1)\\geq f(n)$?",
+    "original": "Let $n\\geq 4$ and $f(n)$ be minimal such that every graph on $n$ vertices with minimal degree $\\geq f(n)$ contains a $C_4$. Is it true that, for all large $n$, $f(n+1)\\geq f(n)$?",
+    "statement_sha256": "dcc44223ff4526dd425ef5d0743c4c475b85121077dad444dec04172956eb3e5"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

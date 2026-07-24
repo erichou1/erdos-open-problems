@@ -1,0 +1,34 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#950}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, primes
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let\[f(n) = \sum_{p<n}\frac{1}{n-p}.\]Is it true that\[\liminf f(n)=1\]and\[\limsup f(n)=\infty?\]Is it true that $f(n)=o(\log\log n)$ for all $n$?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+This function was considered by de Bruijn, Erd\H{o}s, and Tur\'{a}n, who showed that\[\sum_{n<x}f(n)\sim \sum_{n<x}f(n)^2\sim x.\]They give no proofs, but a proof of the (harder) second claim is given by Gorodetsky here. The existence of some $c>0$ such that there are $\gg n^c/\log n$ many primes in $[n,n+n^c]$ implies that $\liminf f(n)>0$. 
+
+Erd\H{o}s writes that a 'weaker conjecture which is perhaps not quite inaccessible' is that, for every $\epsilon>0$, if $x$ is sufficiently large there exists $y<x$ such that\[\pi(x)< \pi(y)+\epsilon \pi(x-y).\](Compare this to [855].) He notes that if\[\pi(x)< \pi(y)+O\left(\frac{x-y}{\log x}\right)\]for all $y<x-(\log x)^C$ for some constant $C>0$ then $f(n)\ll \log\log\log n$.
+
+The study of $f(p)$ is even harder, and Erd\H{o}s could not prove that\[\sum_{p<x}f(p)^2\sim \pi(x).\]See also [1210].
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/950}}
+\end{document}

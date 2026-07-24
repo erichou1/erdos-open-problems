@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 61,
+  "raw_page": {
+    "path": "raw/pages/problem_61.html",
+    "sha256": "6bf6c848c4c19d73e1798841edd1d408003f6c2f583d4b92e9670be3ffd9bd36"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "73843a0599c4dd6db9d3611906f1c8a0e349d86a84dcddd96ef52de846ca493b",
+      "source_region": "div.problem-additional-text",
+      "text": "[APS01] Alon, Noga and Pach, J\\'{a}nos and Solymosi, J\\'ozsef, Ramsey-type theorems with forbidden subgraphs. Combinatorica (2001), 155--170.\n \n [BNSS23] Buci\\'C, M. and Nguyen, T. and Scott, A. and Seymour, P., A loglog step towards Erdos-Hajnal. arXiv:2301.10147 (2023).\n \n [CSSS23] Chudnovsky, Maria and Scott, Alex and Seymour, Paul and\nSpirkl, Sophie, Erd\\H{o}s-{H}ajnal for graphs with no 5-hole. Proc. Lond. Math. Soc. (3) (2023), 997--1014.\n \n [ChSa08] Chudnovsky, Maria and Safra, Shmuel, The {E}rd\\H os-{H}ajnal conjecture for bull-free graphs. J. Combin. Theory Ser. B (2008), 1301--1310.\n \n [ErHa89] Erd\\H{o}s, P. and Hajnal, A., Ramsey-type theorems. Discrete Appl. Math. (1989), 37-52.\n \n [NSS24] Nguyen, Tung and Scott, Alex and Seymour, Paul, On a problem of {E}l-{Z}ahar and {E}rd\\H{o}s. J. Combin. Theory Ser. B (2024), 211--222.\n \n [NSS26] Nguyen, Tung and Scott, Alex and Seymour, Paul, Induced subgraph density. {VII}. The five-vertex path. Proc. Lond. Math. Soc. (3) (2026), Paper No. e70133."
+    },
+    "remarks": {
+      "sha256": "8753e70b3acc65ff29fad55b0659504c1eedcb55032ae913b85a2c21ec147912",
+      "source_region": "div.problem-additional-text",
+      "text": "Conjectured by Erd\\H{o}s and Hajnal \\cite{ErHa89}, who proved that a complete graph or independent set must exist on\\[\\geq \\exp(c_H\\sqrt{\\log n})\\]many vertices, where $c_H>0$ is some constant. This was improved by Buci\\'{c}, Nguyen, Scott, and Seymour \\cite{BNSS23} to\\[\\geq \\exp(c_H\\sqrt{\\log n\\log\\log n}).\\]The conjecture has been proved:\n{UL}\n{LI} for $H$ with $\\leq 4$ vertices by Erd\\H{o}s and Hajnal \\cite{ErHa89}.{/LI}\n{LI} for the 'bull' graph on $5$ vertices (a $P_4$ with a new vertex adjacent to the two middle vertices) by Chudnovsky and Safra \\cite{ChSa08}.{/LI}\n{LI} for $C_5$ by Chudnovsky, Scott, Seymour, and Spirkl \\cite{CSSS23}.{/LI}\n{LI} for $P_5$ by Nguyen, Scott, and Seymour \\cite{NSS26}.{/LI}\n{/UL}\nAlon, Pach, and Solymosi \\cite{APS01} have proved that the family of $H$ for which the conjecture holds is closed under vertex substitution; together with the three final results above this means the conjecture is now known for all $H$ on $5$ vertices.\n\nNguyen, Scott, and Seymour \\cite{NSS24} have proved that if $H$ is a path then all $H$-free graphs on $n$ vertices contain either a complete graph or independent set on\\[\\geq 2^{(\\log n)^{1-o(1)}}\\]many vertices.\n\nA detailed account of this problem, including the proof of some special cases, is given in the PhD thesis of Nguyen. \n\nThis problem is #80 in Extremal Graph Theory in the graphs problem collection."
+    },
+    "statement": {
+      "sha256": "dc8f7b016146abdc66ec08b50680a17e75c64b2cad004eeb7e569e48d10e115e",
+      "source_region": "div#content",
+      "text": "For any graph $H$ is there some $c=c(H)>0$ such that every graph $G$ on $n$ vertices that does not contain $H$ as an induced subgraph contains either a complete graph or independent set on $\\geq n^c$ vertices?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/61"
+}

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 15,
+  "raw_page": {
+    "path": "raw/pages/problem_15.html",
+    "sha256": "d03cad7748f45888a85d2489708456ba570555c60dd6a3b7b5f87c99659c6a82"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "2452f6697f646a0c18a9eb0ed9f04522269f1d26e0e2cf4aff994447c387c5ab",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er98] Erd\\H{o}s, Paul, Some of my new and almost new problems and results in combinatorial number theory. Number theory (Eger, 1996) (1998), 169-180.\n \n [Ta23] Tao, T., The convergence of an alternating series of Erd\\H{o}s, assuming the Hardy-Littlewood prime tuples conjecture. arXiv:2308.07205 (2023).\n \n [Zh14] Zhang, Yitang, Bounded gaps between primes. Ann. of Math. (2) (2014), 1121--1174."
+    },
+    "remarks": {
+      "sha256": "49c0713695194f1b384443eb9262d47af5bdf8a539c592707aa6207c892861f2",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s suggested that a computer could be used to explore this, and did not see any other method to attack this.\n\nTao \\cite{Ta23} has proved that this series does converge assuming a strong form of the Hardy-Littlewood prime tuples conjecture.\n\nIn \\cite{Er98} Erd\\H{o}s further conjectures that\\[\\sum_{n=1}^\\infty (-1)^n \\frac{1}{n(p_{n+1}-p_n)}\\]converges and\\[\\sum_{n=1}^\\infty (-1)^n \\frac{1}{p_{n+1}-p_n}\\]diverges. Weisenberg notes that the existence of infinitely many bounded gaps between primes (as proved by Zhang \\cite{Zh14}) implies the latter series does not converge. Weisenberg also has an argument which shows that, assuming the Hardy-Littlewood prime $k$-tuples conjecture, the series is unbounded in at least one direction (positive or negative).\n\nErd\\H{o}s further conjectured that\\[\\sum_{n=1}^\\infty (-1)^n \\frac{1}{n(p_{n+1}-p_n)(\\log\\log n)^c}\\]converges for every $c>0$, and reports that he and Nathanson can prove that this series converges absolutely for $c>2$ (and can show, conditional on 'hopeless' conjectures about the primes, that this sum does not converge absolutely for $c=2$).\n\nSawhney has provided the following proof that this series converges absolutely for $c>2$: note that, whenever $c>1$, the contribution to the sum from gaps $p_{n+1}-p_n\\geq \\log n$ is convergent, so it suffices to consider only small gaps. The number of $n\\leq X$ such that $p_{n+1}-p_n\\in [\\epsilon\\log n,2\\epsilon \\log n)$ is bounded above by $\\ll \\epsilon X$ (this can be proved via the Selberg sieve). In particular, applying this bound for $\\frac{1}{\\log n}\\leq \\epsilon \\leq 1$ of the shape $2^{-j}$ (of which there are at most $\\log\\log n$ possibilities) shows the desired convergence, since\\[\\sum \\frac{1}{n(\\log n)(\\log\\log n)^{c-1}}\\]converges."
+    },
+    "statement": {
+      "sha256": "42ad1f2a08d26e7c6cedcb05cab8623115171065a9a06644b7ab86ba3cda4449",
+      "source_region": "div#content",
+      "text": "Is it true that\\[\\sum_{n=1}^\\infty(-1)^n\\frac{n}{p_n}\\]converges, where $p_n$ is the sequence of primes?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/15"
+}

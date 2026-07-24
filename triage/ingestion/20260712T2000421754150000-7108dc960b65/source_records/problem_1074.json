@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1074,
+  "raw_page": {
+    "path": "raw/pages/problem_1074.html",
+    "sha256": "89aa38981b609f71bf59e651864a0c22f47c0df150136d7f6a9725b497bf8aa6"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "6abd07701427dfa16b7d79fc182f0e30855c2482bd1a08090323b2e7a2b67404",
+      "source_region": "div.problem-additional-text",
+      "text": "[Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.\n \n [Pi30] S. S. Pillai, Question 1490. J. Indian Math. Soc. (1930), 230."
+    },
+    "remarks": {
+      "sha256": "4005176af1f292b7d61796c5d387ed3022cdb67bb90e25b9e293ab3ea9d07ebf",
+      "source_region": "div.problem-additional-text",
+      "text": "Questions raised by Erd\\H{o}s, Hardy, and Subbarao, who called the set $S$ 'EHS numbers' and the set $P$ 'Pillai primes', and proved that both $S$ and $P$ are infinite. Pillai \\cite{Pi30} raised the question of whether there exist any primes in $P$. This was answered by Chowla, who noted that, for example,\\[14!+1\\equiv 18!+1\\equiv 0\\pmod{23}.\\]The sequence $S$ begins\\[8,9,13,14,15,16,17,\\ldots\\]and is A064164 in the OEIS. The sequence $P$ begins\\[23,29,59,61,67,71,\\ldots\\]and is A063980 in the OEIS.\n\nRegarding the first question, Hardy and Subbarao computed all EHS numbers up to $2^{10}$, and write '...if this trend conditions we expect [the limit] to be around $0.5$, if it exists. The frequency with which the EHS numbers occur - most often in long sequences of consecutive integers - makes us believe that their asymptotic density exists and is unity. Erd\\H{o}s, though initially hesitant, later agreed with this view.'\n\nRegarding the second question, they write '[from the data] it would appear that if the limit exists, it is perhaps between $0.5$ and $0.6$. But then there seems to be no reason why the ratio should not tend to $1$, even though very slowly and certainly not monotonically.'\n\nThis is discussed in problem A2 of Guy's collection \\cite{Gu04}."
+    },
+    "statement": {
+      "sha256": "a722d9c0120cd5ad933d671716ebc6af52e096886a9eaf5abb52c4387b3b2827",
+      "source_region": "div#content",
+      "text": "Let $S$ be the set of all $m\\geq 1$ such that there exists a prime $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$. Does\\[\\lim \\frac{\\lvert S\\cap [1,x]\\rvert}{x}\\]exist? What is it?\n\nSimilarly, if $P$ is the set of all primes $p$ such that there exists an $m$ with $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$, then does\\[\\lim \\frac{\\lvert P\\cap [1,x]\\rvert}{\\pi(x)}\\]exist? What is it?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1074"
+}

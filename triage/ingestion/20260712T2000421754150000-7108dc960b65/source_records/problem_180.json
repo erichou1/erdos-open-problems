@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 180,
+  "raw_page": {
+    "path": "raw/pages/problem_180.html",
+    "sha256": "23d9faba698d998fb2b96945552de0ba744dc718e9dcb4f44460ddaeedbf0dcc"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_region": "div.problem-additional-text",
+      "text": ""
+    },
+    "remarks": {
+      "sha256": "5f8028529d28b0c27390344338928b037e453081a77877b92f9093d1036210e6",
+      "source_region": "div.problem-additional-text",
+      "text": "A problem of Erd\\H{o}s and Simonovits.\n\nThis is trivially true if $\\mathcal{F}$ does not contain any bipartite graphs, since by the Erd\\H{o}s-Stone theorem if $H\\in\\mathcal{F}$ has minimal chromatic number $r\\geq 2$ then\\[\\mathrm{ex}(n;H)=\\mathrm{ex}(n;\\mathcal{F})=\\left(\\frac{r-2}{r-1}+o(1)\\right)\\binom{n}{2}.\\]Erd\\H{o}s and Simonovits observe that this is false for infinite families $\\mathcal{F}$, e.g. the family of all cycles.\n\nHunter has provided the following 'folklore counterexample': if $\\mathcal{F}=\\{H_1,H_2\\}$ where $H_1$ is a star and $H_2$ is a matching, both with at least two edges, then $\\mathrm{ex}(n;\\mathcal{F})\\ll 1$, but $\\mathrm{ex}(n;H_i)\\asymp n$ for $1\\leq i\\leq 2$. This conjecture may still hold for all other $\\mathcal{F}$. \n\nSee also [575].\n\nThis problem is #47 in Extremal Graph Theory in the graphs problem collection."
+    },
+    "statement": {
+      "sha256": "690e8816cdcc8a80a7847f5ae5391aba4bea4d6d449083bb8aa31d099e807c79",
+      "source_region": "div#content",
+      "text": "If $\\mathcal{F}$ is a finite set of finite graphs then $\\mathrm{ex}(n;\\mathcal{F})$ is the maximum number of edges a graph on $n$ vertices can have without containing any subgraphs from $\\mathcal{F}$. Note that it is trivial that $\\mathrm{ex}(n;\\mathcal{F})\\leq \\mathrm{ex}(n;G)$ for every $G\\in\\mathcal{F}$. \n\nIs it true that, for every $\\mathcal{F}$, there exists $G\\in\\mathcal{F}$ such that\\[\\mathrm{ex}(n;G)\\ll_{\\mathcal{F}}\\mathrm{ex}(n;\\mathcal{F})?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/180"
+}

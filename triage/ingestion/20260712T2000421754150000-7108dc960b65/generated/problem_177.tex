@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#177}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} discrepancy, arithmetic progressions
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Find the smallest $h(d)$ such that the following holds. There exists a function $f:\mathbb{N}\to\{-1,1\}$ such that, for every $d\geq 1$,\[\max_{P_d}\left\lvert \sum_{n\in P_d}f(n)\right\rvert\leq h(d),\]where $P_d$ ranges over all finite arithmetic progressions with common difference $d$.
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Cantor, Erd\H{o}s, Schreiber, and Straus \cite{Er66} proved that $h(d)\ll d!$ is possible. Van der Waerden's theorem implies that $h(d)\to \infty$. Beck \cite{Be17} has shown that $h(d) \leq d^{8+\epsilon}$ is possible for every $\epsilon>0$. Roth's famous discrepancy lower bound \cite{Ro64} implies that $h(d)\gg d^{1/2}$.
+
+\bigskip
+\noindent\textbf{References:}
+
+[Be17] Beck, J\'{o}zsef, A discrepancy problem: balancing infinite dimensional vectors. Number theory-Diophantine problems, uniform distribution
+and applications (2017), 61-82.
+ 
+ [Er66] Erd\H{o}s, P\'{a}l, Remarks on number theory. {V}. {E}xtremal problems in number
+theory. {II}. Mat. Lapok (1966), 135--155.
+ 
+ [Ro64] Roth, K. F., Remark concerning integer sequences. Acta Arith. (1964), 257-260.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/177}}
+\end{document}

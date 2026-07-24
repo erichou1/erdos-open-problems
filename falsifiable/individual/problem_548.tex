@@ -1,0 +1,48 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#548}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} FALSIFIABLE \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $n\geq k+1$. Every graph on $n$ vertices with at least $\frac{k-1}{2}n+1$ edges contains every tree on $k+1$ vertices.
+
+
+
+
+A problem of Erd\H{o}s and S\'{o}s, who also conjectured that every graph with at least\[\max\left( \binom{2k-1}{2}+1, (k-1)n-(k-1)^2+\binom{k-1}{2}+1\right)\]many edges contains every forest with $k$ edges. (Erd\H{o}s and Gallai \cite{ErGa59} proved that this is the threshold which guarantees containing $k$ independent edges.) In \cite{Er78} Erd\H{o}s says this is trivial for a star, and he and Gallai had proved it for a path. It can be easily proved by induction that every graph on $n$ vertices with at least $n(k-1)+1$ edges contains every tree on $k+1$ vertices. Brandt and Dobson \cite{BrDo96} have proved this for graphs of girth at least $5$. Wang, Li, and Liu \cite{WLL00} have proved this for graphs whose complements have girth at least $5$. Sacl\'{e} and Woznik \cite{SaWo97} have proved this for graphs which contain no cycles of length $4$. Yi and Li \cite{YiLi04} have proved this for graphs whose complements contain no cycles of length $4$. Implies [547] and [557] . See also the entry in the graphs problem collection .
+
+
+
+
+References
+
+[BrDo96] Brandt, Stephan and Dobson, Edward, The Erd\H{o}s-S\'{o}s conjecture for graphs of girth {$5$} . Discrete Math. (1996), 411-414.
+
+[Er78] Erd\H{o}s, Paul, Problems and results in combinatorial analysis and combinatorial number theory . Proceedings of the Ninth Southeastern Conference on Combinatorics, Graph Theory, and Computing (Florida Atlantic Univ., Boca Raton, Fla., 1978) (1978), 29-40.
+
+[ErGa59] Erd\H{o}s, P. and Gallai, T., On maximal paths and circuits of graphs . Acta Math. Acad. Sci. Hungar. (1959), 337-356 (unbound insert).
+
+[SaWo97] Sacl\'{e}, Jean-Fran\cCois and Wo\'{z}niak, Mariusz, The Erd\H{o}s-S\'{o}s conjecture for graphs without {$C_4$} . J. Combin. Theory Ser. B (1997), 367-372.
+
+[WLL00] Wang, Min and Li, Guo-jun and Liu, Ai-de, A result of Erd\H{o}s-S\'{o}s conjecture . Ars Combin. (2000), 123-127.
+
+[YiLi04] Yin, Jian-hua and Li, Jiong-sheng, The Erd\H{o}s-S\'{o}s conjecture for graphs whose complements contain no {$C_4$} . Acta Math. Appl. Sin. Engl. Ser. (2004), 397-400.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/548}}
+\end{document}
