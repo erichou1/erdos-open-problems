@@ -1,0 +1,25 @@
+{
+  "problem_number": 293,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/293",
+  "retrieved_at": "2026-07-10T23:16:26.769793+00:00",
+  "page_title": "293 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "c344c73fb95a7f84434fb656f0d6f7d1bcf4be0c30f0eabbbd7204e3420b8d01",
+  "comment_count": 3,
+  "comments": [
+    {
+      "post_id": "2551",
+      "text": "In joint work with Wouter, we wrote a paper on this problem (arXiv:2512.22083). We obtain a new lower bound for \\(v(k)\\) and uncover a connection to [304]. Summary: 1. We prove an improved lower bound\\[v(k)\\ge \\exp(c k^2)\\]for some absolute constant \\(c>0\\). 2. Any further improvement on the lower bound for \\(v(k)\\) in [293] would yield an improved upper bound for \\(N(b-1,b)\\) in [304]. Conversely, any improved upper bound for \\(N(b-1,b)\\) in [304] could likely be fed back into our method to produce a better lower bound for \\(v(k)\\) in [293]. (The site has been updated to address this comment.)",
+      "meta": "Quanyu Tang — 02:35 on 29 Dec 2025 👍 3 📝 1 🤖 0"
+    },
+    {
+      "post_id": "2107",
+      "text": "A small remark on the upper bound for $v(k)$. The usual estimate $v(k) ≤ k c_0^{2^k}$ can be slightly sharpened to \\( v(k) \\le c_0^{2^k} +\\frac{1}{2}\\), where $c_0 = 1.26408\\ldots$ is Vardi’s constant. Let \\((s_j)_{j\\ge1}\\) be Sylvester's sequence defined by \\(s_1=2,\\ s_{j+1}=s_j(s_j-1)+1\\). Now take any representation \\( 1 = \\frac{1}{n_1} + \\dots + \\frac{1}{n_k}\\), \\(1 \\le n_1 < \\dots < n_k\\), and set \\(q := \\sum_{i=1}^{k-1} 1/n_i\\). It is well known that Sylvester's sequence gives the best $n$-term Egyptian underapproximation of $1$ for every positive integer $n$ (see, for example, [Soundararajan]; see also [Nathanson] and [Chu] for further generalisations), hence \\(q=\\sum_{i=1}^{k-1} \\frac{1}{n_i} \\le \\sum_{j=1}^{k-1} \\frac{1}{s_j} = 1 - \\frac{1}{s_{k}-1}\\). Thus \\( \\frac{1}{n_k} = 1 - q \\ge \\frac{1}{s_{k}-1}\\), so \\(n_k \\le s_{k}-1\\). In particular every denominator occurring in a $k$-term representation of $1$ is at most \\(s_{k}-1\\), and therefore\\( v(k) \\le (s_{k}-1) + 1=s_{k}\\). Since \\(s_k = \\lfloor c_0^{2^k} +\\frac{1}{2} \\rfloor\\), this yields \\(v(k) \\le c_0^{2^k} +\\frac{1}{2}\\).",
+      "meta": "Quanyu Tang — 16:53 on 08 Dec 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2113",
+      "text": "In fact, $$v(k) \\le kF(k) + 2 \\le c_0^{(\\frac{1}{5} + o(1))2^k}$$with $F(k)$ defined as in #148, by the upper bound in [ElPl21] mentioned there. Unrelated small remark on the definition of $v(k)$: we are interested in the smallest integer larger than 1 that does not appear as some $n_i$. (The site has been updated to address this comment.)",
+      "meta": "Woett — 22:34 on 08 Dec 2025 👍 1 📝 1 🤖 0"
+    }
+  ]
+}

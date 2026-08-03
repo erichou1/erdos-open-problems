@@ -1,0 +1,65 @@
+{
+"reviewer_role": "independent adversarial referee (statement_integrity)",
+"verdict": "fail",
+"claims_checked": 21,
+"claims_total": 21,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14",
+"C15",
+"C16",
+"C17",
+"C18",
+"C19",
+"C20",
+"C21"
+],
+"open_gaps": [
+"The pairwise-distinct planar problem is not proved or disproved.",
+"The internally-distinct but overlapping planar convention is not proved or disproved.",
+"The ambiguity between repetitions, internal distinctness, and pairwise distinctness remains blocking under the acceptance criteria.",
+"The explicitly posed comparison F=o(f) is not resolved.",
+"No variable quadratic-form construction below the n/sqrt(log n) scale is established.",
+"No radial-support, bisector, or energy bound at the n/sqrt(log n) threshold is established."
+],
+"unchecked_imports": [],
+"counterexample_searches": [
+"Tested the repetition-allowed convention using two constant tuples; it validly yields one positive cross-distance.",
+"Tested K=1 under internal distinctness using two anchors; it is impossible for n>=3.",
+"Checked pairwise-distinct boundary cases n=1,2,3,4 against the regular-polygon and two-anchor arguments.",
+"Checked the zero-distance case when X and Y overlap; at most n ordered cross-pairs have distance zero.",
+"Checked whether equal-radius circles in C10 can coincide; distinct centers prevent coincidence.",
+"Checked parallel-edge multiplicity in the circle-arc construction; each vertex pair supports at most four arcs.",
+"Tested centered-rank conditions using the all-ones distance matrix; this confirms that the rank conditions are not sufficient.",
+"Checked the rational-Gram construction for integer kernel relations; sufficiently large coefficient boxes necessarily lose injectivity.",
+"Checked the all-large-n quantifier against sparse-subsequence constructions; bounded successive-size ratio is required by the stated interpolation route."
+],
+"material_errors": [
+"The candidate does not satisfy the primary acceptance criterion: it neither proves nor disproves the exact locked planar statement under the blocking distinctness ambiguity.",
+"The candidate explicitly leaves the pairwise-distinct planar case unresolved, even though that is the convention motivated by the definition of f(2n).",
+"The candidate explicitly leaves the F=o(f) question unresolved, although it is an explicit component of the immutable statement.",
+"The definition of F_C(n) is formally inconsistent with the repetition-allowed convention: it is written using sets X,Y of cardinality n, which already forces internal distinctness, while C3 subsequently treats F_rep as a tuple-based minimum.",
+"The final 'RESOURCE_EXHAUSTED' adjudication is a partial-results report, not a proof or disproof of every locked component."
+],
+"completeness_score": 55,
+"proof_confidence": 18,
+"adversarial_survival_score": 76,
+"statement_sha256": "1a1d20a3dee71f7bdc92834c48238b40d7d273fd322f3d71771e35966a2596cc",
+"notes": "Most numbered local claims survive direct checking, including the repeated-point witness, the three-dimensional lattice construction, the two-anchor bound, the fixed-radius incidence argument, the threshold ledger, and the matrix and Gram obstructions. The decisive failure is statement integrity and completeness rather than a counterexample to most auxiliary claims. Source artifact: 
+
+Pasted text
+
+"
+}

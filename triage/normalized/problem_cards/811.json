@@ -1,0 +1,306 @@
+{
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.905
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "AxCl24",
+      "ClWa23",
+      "Er91",
+      "Er96",
+      "ErTu93"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/811",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[AxCl24] Axenovich, Maria and Clemen, Felix C., Rainbow subgraphs in edge-colored complete graphs: answering\ntwo questions by {E}rd\\H{o}s and Tuza. J. Graph Theory (2024), 57--66.\n \n [ClWa23] Clemen, Felix Christian and Wagner, Adam Zsolt, Balanced edge-colorings avoiding rainbow cliques of size four. Electron. J. Combin. (2023), Paper No. 3.17, 3.\n \n [Er91] Erd\\H{o}s, P., Problems and results in combinatorial analysis and combinatorial number theory. Graph theory, combinatorics, and applications, Vol. 1 (Kalamazoo, MI, 1988) (1991), 397-406.\n \n [Er96] Erd\\H{o}s, Paul, Some of my favourite problems on cycles and colourings. Tatra Mt. Math. Publ. (1996), 7-9.\n \n [ErTu93] Erd\\H{o}s, Paul and Tuza, Zsolt, Rainbow subgraphs in edge-colorings of complete graphs. (1993), 81--88.",
+      "remarks": "In \\cite{Er91} Erd\\H{o}s credits this problem to himself, Pyber, and Tuza. This problem was explored in a paper of Erd\\H{o}s and Tuza \\cite{ErTu93}. In \\cite{Er96} Erd\\H{o}s seems to suggest that this might be true for every graph $G$, and specifically asks specific challenge posed in \\cite{Er91} and \\cite{Er96} is whether, in any balanced edge-colouring of $K_{6n+1}$ by $6$ colours there must exist a rainbow $C_6$ and $K_4$.\n\nIn general, one can ask for a quantitative version, defining $d_G(n)$ to be minimal (if it exists) such that if $n$ is sufficiently large and the edges of $K_n$ are coloured with $e(G)$ many colours such that the minimum degree of each colour class is $\\geq d_G(n)$ then there is a rainbow copy of $G$. Erd\\H{o}s and Tuza \\cite{ErTu93} proved that\\[\\lfloor n/6\\rfloor \\leq d_{C_4}(n) \\leq \\left(\\frac{1}{4}-c\\right)n\\]for some constant $c>0$.\n\nAxenovich and Clemen \\cite{AxCl24} have proved that there exist infinitely many graphs without this property. In particular, they show that for any odd $\\ell \\geq 3$ and $m=\\lfloor \\sqrt{\\ell}+3.5\\rfloor$ there exist arbitrarily large $n$ such that $K_n$ has a balanced edge-colouring using $\\ell$ colours which contains no rainbow $K_m$. They conjecture that $K_m$ lacks this property for all $m\\geq 4$.\n\nClemen and Wagner \\cite{ClWa23} proved that $K_4$ does lack this property."
+    },
+    "source_state": "open",
+    "tags": [
+      "graph theory",
+      "ramsey theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.04,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.323402
+      ],
+      "probability": 0.145299
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 1.232,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.284812
+      ],
+      "probability": 0.109685
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.2,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.240436
+      ],
+      "probability": 0.090909
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.2,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.41937
+      ],
+      "probability": 0.196429
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.167,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.23659
+      ],
+      "probability": 0.088608
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.1,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.228734
+      ],
+      "probability": 0.083969
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 40.0,
+      "credible_interval_approx": [
+        0.0,
+        0.071043
+      ],
+      "probability": 0.02439
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.436385
+      ],
+      "probability": 0.2
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "minor"
+    },
+    "literature": {
+      "comment_count": 1,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:18:54.413067+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "a2d2557b3237606d09946c60258f3c3a64ce64f25371e546abfd93e7d2b20f8f"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "which_objects"
+      ],
+      "ambiguity_status": "minor",
+      "quantifier_signal_count": 1,
+      "question_count": 1,
+      "requires_source_audit": true,
+      "statement_characters": 436,
+      "statement_tokens_approx": 70
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "classify",
+      "multi_part": false,
+      "primary_domain": "graph theory"
+    }
+  },
+  "problem_id": "erdos-811",
+  "problem_number": 811,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "classify",
+    "multi_part": false,
+    "primary_domain": "graph theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_811.html",
+      "raw_html_sha256": "e86606a847bf926db0a79aa361bda324851a6a81dcfc1fccbab1a8ae5240dbea",
+      "section_sha256": {
+        "references": "28f6b9af0577e334c79b7661143458fe88219d81169008dd1a004cc34841b36c",
+        "remarks": "ed3df1a29774b3498fa6fcf028f57fb5e8f2572abef30ed16e024795ba35f59f",
+        "statement": "c7f09fac868b9355fda5b2ec1fb1b699d7b2810fd6b1f0ebe590a0bad280e462"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_811.json",
+      "source_record_sha256": "604d7373115f9891b42896a28928195906ab977e74413255123d8cb001af8859",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_811.tex",
+    "latex_sha256": "623ad3a0bc79d21d00f17c54682d0f11b93b24c0812bdaab6f948c4f9695e44c",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "c7f09fac868b9355fda5b2ec1fb1b699d7b2810fd6b1f0ebe590a0bad280e462",
+    "recommended_attack_modes": [
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "e40b8d63dbf56a60962d8a5e86120017fd433c60a3b244152c598d2e0b662512",
+  "routes": [
+    "natural_language_research"
+  ],
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "e40b8d63dbf56a60962d8a5e86120017fd433c60a3b244152c598d2e0b662512",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "c7f09fac868b9355fda5b2ec1fb1b699d7b2810fd6b1f0ebe590a0bad280e462",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "1a5d3de7490e424646cb5cc62ae5d5c4f2abac001a2f93f82192f1e7691c5f3e",
+  "schema_version": 2,
+  "snapshot_id": "20260713-deb58d0facd9",
+  "statement": {
+    "ambiguity_status": "minor",
+    "intended": "Suppose $n\\equiv 1\\pmod{m}$. We say that an edge-colouring of $K_n$ using $m$ colours is balanced if every vertex sees exactly $\\lfloor n/m\\rfloor$ many edges of each colours. \n\nFor which graphs $G$ is it true that, if $m=e(G)$, for all large $n\\equiv 1\\pmod{m}$, every balanced edge-colouring of $K_n$ with $m$ colours contains a rainbow copy of $G$? (That is, a subgraph isomorphic to $G$ where each edge receives a different colour.)",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Suppose $n\\equiv 1\\pmod{m}$. We say that an edge-colouring of $K_n$ using $m$ colours is balanced if every vertex sees exactly $\\lfloor n/m\\rfloor$ many edges of each colours. For which graphs $G$ is it true that, if $m=e(G)$, for all large $n\\equiv 1\\pmod{m}$, every balanced edge-colouring of $K_n$ with $m$ colours contains a rainbow copy of $G$? (That is, a subgraph isomorphic to $G$ where each edge receives a different colour.)",
+    "original": "Suppose $n\\equiv 1\\pmod{m}$. We say that an edge-colouring of $K_n$ using $m$ colours is balanced if every vertex sees exactly $\\lfloor n/m\\rfloor$ many edges of each colours. \n\nFor which graphs $G$ is it true that, if $m=e(G)$, for all large $n\\equiv 1\\pmod{m}$, every balanced edge-colouring of $K_n$ with $m$ colours contains a rainbow copy of $G$? (That is, a subgraph isomorphic to $G$ where each edge receives a different colour.)",
+    "statement_sha256": "c7f09fac868b9355fda5b2ec1fb1b699d7b2810fd6b1f0ebe590a0bad280e462"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

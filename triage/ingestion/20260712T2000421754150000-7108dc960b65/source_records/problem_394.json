@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 394,
+  "raw_page": {
+    "path": "raw/pages/problem_394.html",
+    "sha256": "1613b4e3088e65836500fbd9b77a2d4107857283b01feba5ee4fcd811f96b599"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "fa9cc87513709245d2a7a2bcdce280e8519d7099d313725a2a1628842542da53",
+      "source_region": "div.problem-additional-text",
+      "text": "[ErGr80] Erd\\H{o}s, P. and Graham, R., Old and new problems and results in combinatorial number theory. Monographies de L'Enseignement Mathematique (1980).\n \n [ErHa78] Erd\\H{o}s, P. and Hall, R. R., On some unconventional problems on the divisors of integers. J. Austral. Math. Soc. Ser. A (1978), 479--485."
+    },
+    "remarks": {
+      "sha256": "281018343cfb81d44add06dd252801183019e9d050a86af15863bc7d12835001",
+      "source_region": "div.problem-additional-text",
+      "text": "In \\cite{ErGr80} they mention a conjecture of Erd\\H{o}s that the sum is $o(x^2)$. This was proved by Erd\\H{o}s and Hall \\cite{ErHa78}, who proved that in fact\\[\\sum_{n\\leq x}t_2(n)\\ll \\frac{\\log\\log\\log x}{\\log\\log x}x^2.\\]Erd\\H{o}s and Hall conjecture that the sum is $o(x^2/(\\log x)^c)$ for any $c<\\log 2$.\n\nSince $t_2(p)=p-1$ for prime $p$ it is trivial that\\[\\sum_{n\\leq x}t_2(n)\\gg \\frac{x^2}{\\log x}.\\]Erd\\H{o}s and Hall \\cite{ErHa78} also note that $t_{n-1}(n!)=2$ and $t_{n-2}(n!)\\ll n$, which $n=2^r$ shows is the best possible. They ask about the behaviour of $t_{n-3}(n!)$ and also ask ask whether, for infinitely many $n$,\\[t_k(n!)< t_{k-1}(n!)-1\\]for all $1\\leq k<n$. They proved (with Selfridge) that this holds for $n=10$."
+    },
+    "statement": {
+      "sha256": "7d287ee5a08082120a9c86ee23cc1fd1662267c7e24734795b50672ab71ab333",
+      "source_region": "div#content",
+      "text": "Let $t_k(n)$ denote the least $m$ such that\\[n\\mid m(m+1)(m+2)\\cdots (m+k-1).\\]Is it true that\\[\\sum_{n\\leq x}t_2(n)\\ll \\frac{x^2}{(\\log x)^c}\\]for some $c>0$?\n\nIs it true that, for $k\\geq 2$,\\[\\sum_{n\\leq x}t_{k+1}(n) =o\\left(\\sum_{n\\leq x}t_k(n)\\right)?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/394"
+}

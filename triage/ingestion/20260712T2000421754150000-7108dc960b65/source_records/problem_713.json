@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 713,
+  "raw_page": {
+    "path": "raw/pages/problem_713.html",
+    "sha256": "699130c1855041f973bc5ccaabda83f9fcb076fdea1e3d1c5d647963d04a2286"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "7519b91e83a5132b7903db0c765d48f3c035a58eef3d7e10086f62e1a9efdddd",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er67d] Erd\\H{o}s, P., Some recent results on extremal problems in graph theory.\n{R}esults. (1967), 117--123 (English); pp. 124--130 (French).\n \n [ErSi70] Erd\\H{o}s, P. and Simonovits, M., Some extremal problems in graph theory. Combinatorial theory and its applications, I-III (Proc. Colloq., Balatonf\\\"{u}red, 1969) (1970), 377-390.\n \n [FrFu87] Frankl, P. and F\\\"uredi, Z., Exact solution of some Tur\\'{a}n-type problems. J. Combin. Theory Ser. A (1987), 226--262.\n \n [FuGe21] F\\\"uredi, Zolt\\'{a}n and Gerbner, D\\'{a}niel, Hypergraphs without exponents. J. Combin. Theory Ser. A (2021), Paper No. 105517, 9."
+    },
+    "remarks": {
+      "sha256": "65ae237d02daad747995e842ea4e2eadade5ed614eb5f048a649fb7d10d6494a",
+      "source_region": "div.problem-additional-text",
+      "text": "A problem of Erd\\H{o}s and Simonovits. Erd\\H{o}s sometimes asked this in the weaker version with just\\[\\mathrm{ex}(n;G)\\asymp n^{\\alpha}.\\]Erd\\H{o}s \\cite{Er67d} had initially conjectured that, for any bipartite graph $G$, $\\mathrm{ex}(n;G)\\sim cn^{\\alpha}$ for some constant $c>0$ and $\\alpha$ of the shape $1+\\frac{1}{k}$ or $2-\\frac{1}{k}$ for some integer $k\\geq 2$. This was disproved by Erd\\H{o}s and Simonovits \\cite{ErSi70}.\n\nThe analogous statement is not true for hypergraphs, as shown by Frankl and F\\\"{u}redi \\cite{FrFu87}, who proved that if $G$ is the $5$-uniform hypergraph on $8$ vertices with edges $\\{12346,12457,12358\\}$ then $\\mathrm{ex}(n;G)=o(n^5)$ but $\\mathrm{ex}(n;G)\\neq O(n^c)$ for any $c<5$.\n\nA simplified proof was given by F\\\"{u}redi and Gerbner \\cite{FuGe21}, who extended it to a counterexample for all $k\\geq 5$. It remains open whether it is true for $k=3$ and $k=4$ (though F\\\"{u}redi and Gerbner conjecture it is not).\n\nSee also [571]."
+    },
+    "statement": {
+      "sha256": "bcbbf233d4ba1bd402d4eeb06359d3fbb8764a229e2b58e26efab9782c3edbae",
+      "source_region": "div#content",
+      "text": "Is it true that, for every bipartite graph $G$, there exists some $\\alpha\\in [1,2)$ and $c>0$ such that\\[\\mathrm{ex}(n;G)\\sim cn^\\alpha?\\]Must $\\alpha$ be rational?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/713"
+}

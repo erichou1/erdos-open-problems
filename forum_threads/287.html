@@ -1,0 +1,3275 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+
+<title>287 Discussion Thread | Erdős Problems</title>
+<meta property="og:title" content="287 Discussion Thread | Erdős Problems">
+<link rel="icon" href="/static/favicon.ico">
+<link rel="stylesheet" href="/static/style.css?v=733265cf">
+
+<script>
+document.addEventListener('click', (e) => {
+  // Toggle reply form
+  const toggle = e.target.closest('.reply-toggle');
+  if (toggle) {
+    const id = toggle.getAttribute('data-target');
+    const form = document.getElementById(id);
+    if (form) form.classList.toggle('hidden');
+  }
+  // Reply with quote
+  const quoteBtn = e.target.closest('.reply-quote');
+  if (quoteBtn) {
+    const id = quoteBtn.getAttribute('data-target');
+    const form = document.getElementById(id);
+    if (!form) return;
+    const ta = form.querySelector('textarea');
+    const raw = quoteBtn.getAttribute('data-raw') || '';
+    const quoted = raw.split('\n').map(l => '> ' + l).join('\n') + '\n\n';
+    ta.value = quoted;
+    form.classList.remove('hidden');
+    ta.focus();
+    const len = ta.value.length;
+    ta.setSelectionRange(len, len);
+  }
+});
+</script>
+
+<!-- This creates the reference in the bibliography box. -->
+
+<script>
+function addNewBox(key, problem_id, shouldScroll = false) {
+  const local_id = 'bib-container' + String(problem_id);
+  const container = document.getElementById(local_id);
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  fetch(`/bibs/${encodeURIComponent(key)}`)
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.text();
+    })
+    .then(html => {
+      container.innerHTML = html;
+
+      if (shouldScroll) {
+        requestAnimationFrame(() => {
+          container.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+        });
+      }
+    })
+    .catch(err => {
+      console.error("Failed to load bib:", err);
+      container.textContent = "Unable to load reference.";
+
+      if (shouldScroll) {
+        container.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+    });
+}
+</script>
+
+<script>
+const filledSVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" class="fav-icon">
+  <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+</svg>
+                `;
+const outlineSVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="black" fill="white" class="fav-icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.610l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.840-.610l1.285-5.386a.563.563 0 0 0-.182-.557L3.041 10.385a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+</svg>
+                `;
+
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest(".fav-btn");
+  if (!btn) return;
+
+  e.preventDefault();
+  const problemId = btn.dataset.problemId;
+
+  try {
+    const res = await fetch(`/forum/toggle_favourite/${problemId}`, { method: "POST" });
+    const data = await res.json();
+
+    btn.dataset.favourited = data.favourited ? "true" : "false";
+    btn.innerHTML = data.favourited ? filledSVG : outlineSVG;
+  } catch (err) {
+    console.error("Toggle failed:", err);
+  }
+});
+</script>
+
+    
+<script>
+function addImageBox(X, problem_id, shouldScroll = true) {
+  const local_id = 'image-container' + String(problem_id);
+  const container = document.getElementById(local_id);
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  const newBox = document.createElement("div");
+
+  const img = document.createElement("img");
+  img.src = `/static/${encodeURIComponent(X)}.png`;
+  img.className = "responsive-image";
+  img.alt = String(X);
+
+  newBox.appendChild(img);
+  container.appendChild(newBox);
+
+  if (shouldScroll) {
+    requestAnimationFrame(() => {
+      container.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+  }
+}
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('searchForm');
+  if (!form) return;
+  form.addEventListener('submit', function (e) {
+    const input = form.querySelector('.searchTerm');
+    if (!input) return;
+    const value = input.value.trim();
+    if (!value) return;
+    const path = '/search/' + encodeURIComponent(value);
+    const inDual = window.location.pathname.startsWith("/dual");
+    if (inDual) {
+      e.preventDefault(); 
+      const selected = document.querySelector('input[name="targetPanel"]:checked');
+      const panel = selected ? selected.value : "left";
+      const iframe = document.getElementById(`iframe-${panel}`);
+      if (iframe) {
+        const url = path.includes("?") ? path + "&embed=1" : path + "?embed=1";
+        iframe.src = url;
+        const box = document.querySelector(`#panel-${panel} input`);
+        if (box) box.value = path;
+      } else {
+        window.location.href = path;
+      }
+    } else {
+      form.action = path;
+      form.method = "GET";
+    }
+  });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.location.pathname.startsWith("/dual")) return;
+
+  var form = document.getElementById('idsearchForm');
+  if (!form) return;
+
+  form.onsubmit = function() {
+    var input = document.querySelector('.idsearchTerm').value.trim();
+    var searchUrl;
+
+    if (/^\d+$/.test(input)) {
+        searchUrl = '/' + encodeURIComponent(input);
+    } else if (/^((\d+|end)(-(\d+|end))?\s*)+(open|solved|yes|no)?$/.test(input.toLowerCase())) {
+        let parts = input.split(/\s+/).filter(Boolean);
+        searchUrl = '/range/' + parts.map(encodeURIComponent).join('/');
+    } else {
+        alert("Enter either a single integer or a space-separated list of numbers/ranges...");
+        return false;
+    }
+    window.location.href = searchUrl;
+    return false;
+  };
+});
+</script>
+
+<script>
+  window.CURRENT_USERNAME = "";
+</script>
+
+
+<script>
+document.addEventListener("click", async (ev) => {
+  const btn = ev.target.closest(".reaction-btn");
+  if (!btn) return;
+  const you = window.CURRENT_USERNAME || "";
+  const bar = btn.closest(".reaction-bar");
+  const postId = bar?.dataset.postId;
+  const rtype = btn.dataset.type;
+  const reactUrl = bar?.dataset.reactUrl; 
+  if (!postId || !rtype || !reactUrl) return;
+
+  try {
+    const res = await fetch(reactUrl, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({type: rtype})
+    });
+    const data = await res.json();
+    if (!data.ok) {
+      alert(data.error || "Could not update reaction.");
+      return;
+    }
+    const summary = data.summary;
+    
+    bar.querySelectorAll(".reaction-btn").forEach(b => {
+      const t = b.dataset.type;
+      const countSpan = bar.querySelector(`.reaction-count[data-type="${t}"]`);
+      if (countSpan && summary[t]) {
+        countSpan.textContent = summary[t].count;
+    const desc = b.dataset.desc || "";
+    const usersTitle = summary[t].users_title || "No one yet.";
+    b.title = `${desc}\n\n${usersTitle}`;
+      }
+        const iReacted = you && (summary[t].users_title || "").includes(you);
+  b.classList.toggle("active", !!iReacted);
+  b.setAttribute("aria-pressed", iReacted ? "true" : "false");
+    });
+  } catch (e) {
+    console.error(e);
+    alert("Only registered users with 5+ posts can react.");
+  }
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.body.addEventListener("click", function (e) {
+    const link = e.target.closest(".problem-reaction-link");
+    if (!link) return;
+
+    e.preventDefault();
+
+    const row = link.closest(".problem-reaction-row");
+    if (!row) return;
+
+    const form = row.querySelector(".problem-reaction-form");
+    if (!form) return;
+
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+      method: "POST",
+      body: formData,
+      headers: {
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    })
+      .then(resp => resp.json())
+      .then(data => {
+        if (!data.ok) {
+          console.error(data.error || "Problem reaction update failed");
+          return;
+        }
+
+        const summary = data.summary;
+
+        // Update users text for each reaction type
+        for (const [type, info] of Object.entries(summary)) {
+          const r = document.querySelector(
+            `.problem-reaction-row[data-reaction-type="${type}"]`
+          );
+          if (!r) continue;
+
+          const usersCell = r.querySelector(".problem-reaction-users");
+          if (usersCell) {
+            usersCell.textContent = info.users_title || "None yet";
+          }
+        }
+        link.classList.toggle("active");
+        if (link.classList.contains("active")) {
+          link.textContent = "(no)";
+        } else {
+          link.textContent = "(yes)";
+        }
+      })
+      .catch(err => {
+        console.error("Problem reaction AJAX error", err);
+      });
+  });
+});
+</script>
+
+
+
+
+
+
+</head>
+
+<body>
+
+<div class="topnav">
+
+  <div class="left">
+    <div class="logo">
+      <a class="dual-aware" href="/"><img src="/static/EPLogo.png" alt="Logo" height="50"></a>
+    </div>
+    <div class="links dual-aware desktop-nav">
+      <a href="/forum">Forum</a>
+      <a href="/dm">Inbox</a> 
+      <a href="/favourites">Favourites</a>
+      <a href="/tags">Tags</a> 
+      <div class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">More</a>
+        <div class="dropdown-content">
+          <a href="/faq">FAQ</a>
+          <a href="/prizes">Prizes</a>
+          <a href="/lists">Problem Lists</a>
+          <a href="/definitions">Definitions</a>
+          <a href="/links">Links</a>
+        </div>
+      </div> 
+    </div>
+    <div class="mobile-nav">
+    
+        <a class="forumlink" href="/forum">Forum</a>
+    <div class="dropdown">
+      <button class="dropbtn" id="mobileMenuButton">Menu</button>
+      <div class="dropdown-content">
+        <a href="/dm">Inbox</a> 
+        <a href="/favourites">Favourites</a>
+        <a href="/tags">Tags</a>  
+        <a href="/faq">FAQ</a>
+        <a href="/prizes">Prizes</a>
+        <a href="/lists">Problem Lists</a>
+        <a href="/definitions">Definitions</a>
+        <a href="/links">Links</a>
+      </div>
+     </div>
+    </div>
+  </div>
+
+  <div class = "middle">
+    <div class="button-container" style="max-width: 50%;">
+      <form id="idsearchForm">
+        <input required type="text" name="query" class="idsearchTerm" placeholder="# (or range #-#)" title="Enter either a single integer or a space-separated list of numbers/ranges, optionally ending with 'open' or 'solved'.">
+        <button type="submit" class="searchButton">Go</button>
+      </form>
+    </div>
+    <div class="button-container" style="max-width: 50%;">
+      <form id="searchForm">
+        <input required type="text" name="query" class="searchTerm" placeholder="Search" title="Search all problems.">
+        <button type="submit" class="searchButton">Go</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="right">
+    <a href="#" id="dualViewLink" class="split_all">Dual View</a>
+    <a href="/random_solved" class="split_solved dual-aware">Random Solved</a>
+    <a href="/random_open" class="split_open dual-aware">Random Open</a>
+  </div>
+
+</div>
+
+<div id="notifications-slot"></div>
+
+
+
+
+<div class="container">
+<div class="problem-box">
+
+        
+
+                    <div class="problem-text" id="open">  
+<div id="prize">
+
+<span class="tooltip">
+  FALSIFIABLE
+  <span class="tooltiptext">
+    Open, but could be disproved with a finite counterexample.
+  </span>
+</span>
+
+</div>
+
+                        <div id="content">Let $k\geq 2$. Is it true that, for any distinct integers $1&#60;n_1&#60;\cdots &#60;n_k$ such that\[1=\frac{1}{n_1}+\cdots+\frac{1}{n_k}\]we must have $\max(n_{i+1}-n_i)\geq 3$?</div>
+                        <div id="problem_id"><a href="/287">#287</a>: <a href="#bib-container287" onclick="event.preventDefault();addNewBox('ErGr80', '287', true);return false;">[ErGr80,p.33]</a><a href="#bib-container287" onclick="event.preventDefault();addNewBox('Va99', '287', true);return false;">[Va99,1.15]</a></div>
+                         
+                            <div id="tags">
+                            
+  <a href="/tags/number theory">number theory</a> | 
+
+  <a href="/tags/unit fractions">unit fractions</a>
+
+                            </div>
+                        
+                    </div>  
+                    
+                    <div class="problem-text" id="disclaimer">  
+The open status of this problem reflects the current belief of the owner of this website. There may be literature on this problem that I am unaware of, which may partially or completely solve the stated problem. Please do your own literature search before expending significant effort on solving this problem. If you find any relevant literature not mentioned here, please add this in a comment.
+                    <div
+  class="problem-status-widget"
+  data-problem-id="287"
+  data-set-url="/problem-status/287"
+  data-current-status="open"
+  data-can-edit="0"
+  style="--status-progress: 0.0; --status-count: 3;"s
+>
+                      <div class="problem-status-heading">Comment activity that has not yet been incorporated into the remarks</div>
+
+  <div class="problem-status-scale" role="radiogroup" aria-label="Problem status">
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option is-active"
+        data-status="open"
+        data-label="None"
+        data-description="There are no solutions, partial or complete, claimed in the comments."
+        data-progress="0.0"
+        role="radio"
+        aria-checked="true"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">None</span>
+      </button>
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option"
+        data-status="partial"
+        data-label="Partial"
+        data-description="There are claims of partial results and/or a path to a solution in the comments."
+        data-progress="0.5"
+        role="radio"
+        aria-checked="false"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">Partial</span>
+      </button>
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option"
+        data-status="claimed"
+        data-label="Solution"
+        data-description="A claimed solution has been posted in the comments."
+        data-progress="1.0"
+        role="radio"
+        aria-checked="false"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">Solution</span>
+      </button>
+    
+  </div>
+
+  <div class="problem-status-explanation">
+    <span class="js-problem-status-description">
+      There are no solutions, partial or complete, claimed in the comments.
+    </span>
+  </div>
+  </div>
+  
+                    </div>
+                    
+                    
+
+
+                    
+
+                        <div class="problem-additional-text"> 
+                    
+                           The example $1=\frac{1}{2}+\frac{1}{3}+\frac{1}{6}$ shows that $3$ would be best possible here. The lower bound of $\geq 2$ is equivalent to saying that $1$ is not the sum of reciprocals of consecutive integers, proved by Erdős <a href="#bib-container287" onclick="event.preventDefault();addNewBox('Er32', '287', true);return false;">[Er32]</a>. <br><br>This conjecture would follow for all but at most finitely many exceptions if it were known that, for all large $N$, there exists a prime $p\in [N,2N]$ such that $\frac{p+1}{2}$ is also prime.
+                           
+                    
+                    
+<p style="text-align: center; font-family: 'Courier New', monospace; font-size: 90%;">
+  <a href="/latex/287">View the LaTeX source</a>
+</p>
+<p style="text-align: center; font-family: 'Courier New', monospace; font-size: 90%;">
+  
+ This page was last edited 23 January 2026. <a href="/history/287">View history</a>
+</p>
+                    <div class="image-container" id="image-container287"></div>
+                        </div>
+
+                        <div class="problem-additional-text" style="text-align:center;"> 
+</div>
+
+                <div id="bib-container287"></div>
+  <div class="external">External data from <a href="https://github.com/teorth/erdosproblems">the database</a> - you can help update this</a>                
+
+
+  <br>
+  Formalised statement? 
+    
+      <a href="https://github.com/google-deepmind/formal-conjectures/blob/main/FormalConjectures/ErdosProblems/287.lean">Yes</a>
+    
+  
+  
+  
+  <br>
+  
+  </div>
+
+
+<div class="problem-reactions">
+
+<div class="comment-count">
+  <a style="color: inherit;" href="/forum/discuss/287">
+    18 comments on this problem
+  </a>
+</div>
+
+<table class="problem-reactions-table">
+  <tbody>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="like">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Likes this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    
+      <a href="/forum/user/Dogmachine" style="color:inherit; text-decoration: none;">Dogmachine</a>
+    
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="collab">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Interested in collaborating</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="working_on">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Currently working on this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="hard">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>This problem looks difficult</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="easy">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>This problem looks tractable</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="formalisable">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>The results on this problem could be formalisable</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="working_form">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>I am working on formalising the results on this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+</div>
+<br>
+
+                <div class="citationbox"> <div id="content">
+                                    
+                           <b>Additional thanks to</b>: Gusarich and Terence Tao          <br> <br>
+                    
+When referring to this problem, please use the original sources of Erd&#337;s. If you wish to acknowledge this website, the recommended citation format is:
+<br><br>
+T. F. Bloom, Erd&#337;s Problem #287, https://www.erdosproblems.com/287, accessed 2026-07-10</div>
+</div>
+
+               
+
+
+<div class="problem-additional-text"> 
+
+
+
+
+<div class="thread-sort">
+Order by
+  <a href="/forum/thread/287?order=oldest"
+     class="order ">oldest first</a> or
+  <a href="/forum/thread/287?order=newest"
+     class="order active">newest first</a>. (The most recent comments are highlighted in a red border.)
+</div>
+
+
+
+
+<ul class="post-list">
+  
+    
+    
+
+
+
+
+
+
+<li id="post-6702"
+    class="post depth-0
+           
+           even">
+    <div class="post-body" id="post-6702">
+    
+
+
+
+      
+      <p>A small harmonic-sum corollary of the good-prime-chain certificate posted by catsflowers5544 at 09:30 on 27 May 2026: <br>Assuming the certificate, any counterexample must have $k\ge 704390616921701072$.<br><br>Let $B=409938931585744826$. The certificate gives $n_1&#62;B$ for any counterexample. Since $1&lt;n_1&lt;\cdots&lt;n_k$ and the $n_i$ are integers, we have $n_i\ge B+i$ for every $1\le i\le k$. Hence<br>$$<br>1=\sum_{i=1}^k\frac1{n_i}\le \sum_{i=1}^k\frac1{B+i}&lt;\int_B^{B+k}\frac{dx}{x}=\log\left(1+\frac{k}{B}\right).<br>$$<br>Therefore $\log(1+k/B)&gt;1$, so $k&#62;(e-1)B$. Since $(e-1)B=704390616921701071.6939\ldots$, we get $k\ge 704390616921701072$.<br><br>AI assistance disclosure: GPT-5.5 Pro was used in drafting this comment and checking the arithmetic; the argument above is just the elementary harmonic-sum bound.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/KentaKitamura">KentaKitamura</a></strong>
+      
+      — <a href="/forum/thread/287#post-6702">14:26 on 28 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6702" data-react-url="/forum/post/6702/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-6703"
+    class="post depth-1
+           recent recent-3
+           odd">
+    <div class="post-body" id="post-6703">
+    
+
+
+
+      
+      <p>A question out of curiosity: <br><br>In your previous posting you wrote that counterexample would need k &#62;= 23.<br>Now you write about this much higher threshold, k &#62;= 70........072 (many digits). <br><br>Did "your" ChatGPT Pro achieve that jump in one step or in several intermediate <br>steps of progress?<br>Can we hope for even larger k-bounds?</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/old-bielefelder">old-bielefelder</a></strong>
+      
+      — <a href="/forum/thread/287#post-6703">14:37 on 28 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6703" data-react-url="/forum/post/6703/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: KentaKitamura"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-6720"
+    class="post depth-2
+           recent recent-1
+           even">
+    <div class="post-body" id="post-6720">
+    
+
+
+
+      
+      <p>Thanks. It was a few-step process, not a single one-shot answer from ChatGPT.<br>After the $k\ge 23$ comment, I felt that the argument was using only $n_1$ in a rather wasteful way. I first suggested to ChatGPT-5.5 Pro that $n_2$ should also be usable; that led to a finite divisor-pair idea, giving $k\ge 46$.<br>Then I suggested that one should really try to use information up to $n_k$. This led to the harmonic lower-bound argument, which I posted at 14:26 on 28 May 2026:<br>$k\ge 704390616921701072$.<br>So the progress was interactive: I was trying to point the AI toward unused information in the denominator sequence, and GPT/Codex helped with the algebra, arithmetic, drafting, and verifier/search code.<br><br>The further finite strengthening, posted at 23:46 on 28 May 2026, improves two additional pieces: the conversion from chain coverage to an $n_1$-bound, and the endpoint $p_m$ of the good-prime chain. This gives<br>$k\ge 68634921076157089631$.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/KentaKitamura">KentaKitamura</a></strong>
+      
+      — <a href="/forum/thread/287#post-6720">00:06 on 29 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6720" data-react-url="/forum/post/6720/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: old-bielefelder"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-6718"
+    class="post depth-0
+           recent recent-2
+           odd">
+    <div class="post-body" id="post-6718">
+    
+
+
+
+      
+      <p>A finite strengthening of the good-prime-chain certificate posted by catsflowers5544 at 09:30 on 27 May 2026:<br>$\text{any counterexample must have } k \ge 68634921076157089631.$<br><br>This follows from two small improvements to the certificate.<br><br>1. First, the conversion from chain coverage to an $n_1$ lower bound can be sharpened. Let $M=n_k$. Since the gaps are at most $2$, we have $n_i \le n_1+2(i-1)$, hence $1=\sum_i {1\over n_i}\ge \sum_{i=0}^{k-1}{1\over n_1+2i}\gt {1\over 2}\log\left(1+{2k\over n_1}\right).$<br>Since $M\le n_1+2(k-1)$, this gives $M+2\lt e^2n_1$. Thus a good-prime chain covering all integer $M\le 2p_m-3$ rules out<br>$n_1 \le \left\lfloor {2p_m\over e^2}\right\rfloor.$<br>For the existing endpoint in catsflowers5544's certificate, $p_m=1639755726342979307,$ this already gives<br>$n_1\gt 443833611326969352$ and $k\ge 762631229202486109.$<br><br>2. Second, I found a certified extension of the good-prime chain. The chain first extends below $2^{64}$ by $3279511452685958219$, $6559022905371915361$, $13118045810743829821$, $18446744073709550147$.<br>Then it extends further by three safe-prime/Pocklington-certified primes: $36893488147419100019$, $73786976294837987927$, $147573952589666836319$.<br>With these, the last prime is $p_m=147573952589666836319$, giving<br>$n_1\gt 39943925344138028689$ and $k\ge 68634921076157089631.$<br><br>I put a short verifier/search script for the primality/good-prime/chain checks, the Pocklington steps, and the numerical $e^2$ conversion here: <a href="https://github.com/KitaKen1/erdos-287-good-prime-chain" rel="nofollow noopener noreferrer ugc" target="_blank">GitHub verifier/search scripts</a>.<br>AI usage disclosure: The solution and code were made with assistance from Codex 5.5 using xhigh reasoning, and ChatGPT 5.5 pro.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/KentaKitamura">KentaKitamura</a></strong>
+      
+      — <a href="/forum/thread/287#post-6718">23:46 on 28 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6718" data-react-url="/forum/post/6718/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: old-bielefelder"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-6693"
+    class="post depth-0
+           
+           even">
+    <div class="post-body" id="post-6693">
+    
+
+
+
+      
+      <p>A small corollary of the good-prime-chain certificate posted by catsflowers5544 at 09:30 on 27 May 2026 and Woett's prime-power observation posted at 21:35 on 27 May 2026. <br>Assuming both comments, any counterexample must have k &#62;= 23.<br><br>The certificate of catsflowers5544 gives n_1 &#62; 409938931585744826. <br>Woett's observation says that, in any counterexample, every prime power p^m appearing in a denominator must satisfy p^m &lt;= 2(k-1). In particular, every prime power dividing n_1 is at most 2(k-1), hence n_1 | lcm(1,...,2k-2).<br><br>If k &lt;= 22, then n_1 &lt;= lcm(1,...,42) = 219060189739591200, contradicting the certificate n_1 &gt; 409938931585744826. Therefore, any counterexample must have k &#62;= 23.<br><br>It rules out k = 19,20,21,22 by a route different from the Lean verification of k &#60;= 18 reported by catsflowers5544 at 20:56 on 27 May 2026.<br><br>AI usage disclosure: I came to this observation through a conversation with Codex 5.5 using xhigh reasoning.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/KentaKitamura">KentaKitamura</a></strong>
+      
+      — <a href="/forum/thread/287#post-6693">06:57 on 28 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6693" data-react-url="/forum/post/6693/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-6684"
+    class="post depth-0
+           
+           odd">
+    <div class="post-body" id="post-6684">
+    
+
+
+
+      
+      <p>I have completed a Lean formal verification of Erdős Problem 287 for all cases up to **k = 18**.<br><br>Since the forum does not appear to support file uploads, I cannot attach the full archive directly here, but I can provide the '287.lean' file or the project archive separately on request.<br><br>## Statement<br><br>Erdős Problem 287 concerns Egyptian fraction representations of 1 using distinct increasing denominators. In the notation of the problem, suppose\[<br>1 &#60; n_1 &#60; n_2 &#60; \cdots &#60; n_k<br>\]and\[<br>\sum_{i=1}^{k} \frac{1}{n_i} = 1.<br>\]The conjectured conclusion is that at least one consecutive gap must be at least 3:\[<br>\max_{1 \le i &#60; k} (n_{i+1}-n_i) \ge 3.<br>\]Equivalently, there should be no representation of 1 by reciprocals of distinct increasing integers in which every consecutive gap is only 1 or 2.<br><br>The Lean development verifies this conjecture for every fixed value\[<br>2 \le k \le 18.<br>\]The range\[<br>k \ge 19<br>\]remains open in the file.<br><br>## Main idea of the formalization<br><br>The proof reduces the problem to a finite computational search, together with a formal tail bound.<br><br>If every consecutive gap is less than 3, then because the denominators are strictly increasing integers, every gap is exactly 1 or 2. Thus any possible counterexample is determined by two pieces of data:<br><br>1. the initial denominator \(n_1\), and  <br>2. a binary gap pattern of length \(k-1\), where each entry chooses whether the next gap is 1 or 2.<br><br>For example, for fixed \(k\), every small-gap candidate sequence has the form\[<br>n_1,\quad n_1+d_1,\quad n_1+d_1+d_2,\quad \ldots<br>\]where each \(d_i \in \{1,2\}\).<br><br>The Lean file makes this reduction explicit by defining computable sequence constructors:<br><br>- 'Erdos287.mkSeqD'<br>- 'Erdos287.seqSumD'<br><br>Here 'mkSeqD' builds the denominator sequence from a starting denominator and a binary gap pattern, while 'seqSumD' computes the corresponding rational reciprocal sum.<br><br>## Bridge from arbitrary sequences to computable candidates<br><br>A key part of the proof is not just the computation, but the formal justification that the computation covers every possible counterexample.<br><br>The file proves bridge lemmas including:<br><br>- 'extractGapsD'<br>- 'extractGapsD_spec'<br>- 'sum_eq_seqSumD'<br><br>These lemmas show that any strictly increasing denominator sequence whose consecutive gaps are all less than 3 can be encoded by one of the binary gap patterns used by the decision procedure.<br><br>In other words, the computational search is not merely heuristic. Lean proves that every possible small-gap counterexample is represented inside the finite search space.<br><br>## Decision theorem<br><br>The main reusable theorem is:<br><br>- 'erdos_287_decide'<br><br>This theorem combines two ingredients.<br><br>First, it performs a finite exhaustive check over all relevant small starting denominators and all binary gap patterns.<br><br>Second, it uses a tail estimate to show that once the initial denominator is sufficiently large, the reciprocal sum is automatically less than 1, so no counterexample can occur there.<br><br>Thus, for each fixed \(k\), the infinite problem over all increasing integer sequences is reduced to a finite Boolean computation over explicitly generated rational sums.<br><br>The finite checks are discharged using 'native_decide'.<br><br>## Verified range<br><br>The file contains fully verified theorems for all cases up to \(k = 18\), including named results for the individual denominator counts and a combined theorem dispatching the verified range.<br><br>The largest verified case is \(k = 18\). In this case the computation checks\[<br>10 \times 2^{17} = 1,310,720<br>\]candidate cases: 10 possible starting-denominator values in the finite range, and \(2^{17}\) binary gap patterns.<br><br>Across the verified values \(2 \le k \le 18\), the development checks approximately 2.5 million gap-pattern cases.<br><br>## Current status of the Lean file<br><br>The results for \(k \le 18\) are fully verified without 'sorry'.<br><br>The remaining range \(k \ge 19\) is still left as 'sorry', since the current decision procedure has not yet been pushed beyond \(k = 18\).<br><br>The project also has a separate build-system issue caused by numeric module filenames such as '287.lean', since numeric Lean module names are not valid Lean identifiers. This affects the project layout generally, not just this file. The file itself is accepted by the Lean Language Server when opened directly.<br><br>The reported axioms are the standard ones expected from Lean/mathlib/native computation:<br><br>- 'propext'<br>- 'Classical.choice'<br>- 'Lean.ofReduceBool'<br>- 'Lean.trustCompiler'<br>- 'Quot.sound'<br><br>## What would be useful next<br><br>The most useful next step would be an independent review of the file, especially:<br><br>1. the statement of 'erdos_287_decide',<br>2. the bridge lemmas proving that every small-gap sequence is represented by a binary gap pattern,<br>3. the rational-sum computation in 'seqSumD',<br>4. the finite bound on starting denominators,<br>5. the 'native_decide' checks for the cases up to \(k = 18\).<br><br>After that, the natural mathematical and computational question is whether the method can be strengthened enough to handle \(k \ge 19\), or whether a sharper structural argument is needed.<br><br>## Disclaimer<br><br>This formalization was developed with assistance from Codex 5.5 at xhigh reasoning settings and Aristotle AI. I reviewed and integrated the generated Lean code, and the final claims above refer to what the Lean environment verifies in the submitted file.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/catsflowers5544">catsflowers5544</a></strong>
+      
+      — <a href="/forum/thread/287#post-6684">20:56 on 27 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6684" data-react-url="/forum/post/6684/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-6685"
+    class="post depth-1
+           
+           even">
+    <div class="post-body" id="post-6685">
+    
+
+
+
+      
+      <p>If we assume the existence of a counterexample, then $n_k \le n_1+2(k-1)$. In particular, any prime power $p^m$ that occurs as a divisor of one of the $n_i$ must be at most $2(k-1)$; otherwise there is only one denominator divisible by $p^m$, which makes the sum unequal to $1$. <br><br>Now, since $n_1$ is divisible by a prime power $p^m \gg \log n_1$ by basic prime bounds, any lower bound on $n_1$ (which we already established) immediately implies a lower bound on $k$ which is at worst logarithmic in $n_1$ (and which can probably be improved further with some effort). So bruteforcing isn't required here either.<br><br>EDIT: wait, I'm being silly. We trivially have $k \ge n_1$ as otherwise the sum is smaller than $1$.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Woett">Woett</a></strong>
+      
+      — <a href="/forum/thread/287#post-6685">21:35 on 27 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6685" data-react-url="/forum/post/6685/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-6512"
+    class="post depth-0
+           
+           even">
+    <div class="post-body" id="post-6512">
+    
+
+
+
+      
+      <p>Following Woett’s comment, I tried to push the good-prime certificate a bit further.<br><br>I think the following finite certificate gives the slightly stronger bound<br><br>    n_1 &#62; 390,948,230,429<br><br>for any possible counterexample, assuming the positive-denominator convention and using the existing exact check for n_1 &lt;= 12.<br><br>Let M = n_k. For n_1 &gt;= 12, Woett’s argument gives<br><br>    2 n_1 &lt;= M &lt;= 8 n_1.<br><br>Also, if for a given M there is a prime<br><br>    p in (M/2 + 1, M)<br><br>such that either (p-1)/2 or (p+1)/2 is prime, then the gap condition forces one of p-1, p, p+1 to occur as a denominator. The case where p itself occurs is ruled out by the usual p-adic denominator obstruction. If p is absent, then both p-1 and p+1 must occur; one of these is 2q with q prime, and the same q-adic obstruction rules this out, except for the small q &lt;= 11 cases, which are excluded once n_1 &gt;= 12.<br><br>Here is the good-prime chain I checked:<br><br>13, 23, 37, 61, 107, 193, 383, 757, 1487, 2963, 5879,<br>11701, 23399, 46679, 93287, 186481, 372901, 745753,<br>1491493, 2982899, 5965643, 11930987, 23861687, 47723279,<br>95446487, 190892903, 381785617, 763571173, 1527142237,<br>3054283703, 6108566567, 12217132813, 24434264783,<br>48868528993, 97737057793, 195474115453, 390948230557,<br>781896460979, 1563792921721.<br><br>Each listed p is prime, and for each p at least one of (p-1)/2 or (p+1)/2 is prime. I also checked that consecutive entries satisfy<br><br>    p_{j+1} &lt;= 2p_j - 3.<br><br>This slightly sharper inequality is useful because a good prime p covers all integer M satisfying<br><br>    p + 1 &lt;= M &lt;= 2p - 3,<br><br>since this is exactly the integer form of p in (M/2 + 1, M). Therefore the above chain covers every integer M from 14 up to<br><br>    2 * 1563792921721 - 3 = 3127585843439.<br><br>For n_1 &gt;= 12 we have M &#62;= 24, so this covers all possible M as long as<br><br>    8 n_1 &lt;= 3127585843439.<br><br>Thus the certificate rules out<br><br>    n_1 &lt;= floor((2 * 1563792921721 - 3)/8)<br>         = 390948230429.<br><br>Together with the exact finite check for n_1 &lt;= 12, this would mean that any counterexample must have<br><br>    n_1 &gt; 390,948,230,429.<br><br>This is not a solution of the full problem, only a finite certificate extending the previously mentioned good-prime-chain idea. I used GPT-5.5 Pro as an assistant to find and check the chain and to formulate the interval-cover argument. I can share the verification script/logs if useful.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/robertboy18">robertboy18</a></strong>
+      
+      — <a href="/forum/thread/287#post-6512">18:14 on 18 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6512" data-react-url="/forum/post/6512/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-6669"
+    class="post depth-1
+           
+           odd">
+    <div class="post-body" id="post-6669">
+    
+
+
+
+      
+      <p>Following the good-prime-chain idea above, I tried extending the finite certificate substantially further.<br><br>Using the same positive-denominator convention, and using the existing exact check for small n_1, I get the following stronger finite consequence:<br><br>any counterexample must have<br><br>n_1 &#62; 409,938,931,585,744,826.<br><br>Here is the certificate.<br><br>Let M = n_k. For n_1 &#62;= 12, Woett’s argument gives<br><br>2 n_1 &lt;= M &lt;= 8 n_1.<br><br>Call a prime p “good” if at least one of (p-1)/2 and (p+1)/2 is prime. If, for a given M, there is a good prime<br><br>p in (M/2 + 1, M),<br><br>then the gap condition max(n_{i+1}-n_i) &lt;= 2 forces one of p-1, p, p+1 to occur as a denominator.<br><br>If p itself occurs, then p is the only denominator divisible by p, since p &gt; M/2. This gives the usual p-adic denominator obstruction, so the reciprocal sum cannot be equal to 1.<br><br>If p is absent, then the gap condition forces both p-1 and p+1 to occur. One of these is 2q with q prime, where q = (p-1)/2 or q = (p+1)/2. Since p &#62; M/2, the only possible q-divisible denominators are among q, 2q, 3q. The denominator 2q definitely occurs. The q-part of the reciprocal sum is therefore a nonempty sub-sum of<br><br>1/q, 1/(2q), 1/(3q).<br><br>After multiplying by q, this has numerator a nonzero subset-sum of 6,3,2 over denominator 6. For q &#62; 11 this numerator is between 1 and 11, hence not divisible by q, so the q-adic denominator cannot cancel. For the small q = 7 or q = 11 cases arising at the beginning of this chain, the assumption n_1 &#62;= 12 excludes the denominator q itself, and the possible numerator is only one of 3,2,5, again not divisible by q. Thus these cases are also ruled out.<br><br>So each good prime p rules out all integer M satisfying<br><br>p + 1 &lt;= M &lt;= 2p - 3,<br><br>which is the integer form of p in (M/2 + 1, M).<br><br>I checked the following good-prime chain:<br><br>13, 23, 37, 61, 107, 193, 383, 757, 1487, 2963, 5879,<br>11701, 23399, 46679, 93287, 186481, 372901, 745753,<br>1491493, 2982899, 5965643, 11930987, 23861687, 47723279,<br>95446487, 190892903, 381785617, 763571173, 1527142237,<br>3054283703, 6108566567, 12217132813, 24434264783,<br>48868528993, 97737057793, 195474115453, 390948230557,<br>781896460979, 1563792921721, 3127585843007, 6255171685921,<br>12510343371563, 25020686743033, 50041373485547,<br>100082746969523, 200165493939001, 400330987877123,<br>800661975753803, 1601323951507417, 3202647903014447,<br>6405295806027973, 12810591612055513, 25621183224110701,<br>51242366448219263, 102484732896437053, 204969465792873143,<br>409938931585745593, 819877863171490597, 1639755726342979307.<br><br>Each listed p is prime, and for each p at least one of (p-1)/2 or (p+1)/2 is prime. I also checked that consecutive entries satisfy<br><br>p_{j+1} &lt;= 2p_j - 3.<br><br>Therefore the chain covers every integer M from 14 up to<br><br>2 * 1639755726342979307 - 3<br>= 3279511452685958611.<br><br>For n_1 &gt;= 12, we have M &#62;= 24, so this covers all possible M as long as<br><br>8 n_1 &lt;= 3279511452685958611.<br><br>Thus this certificate rules out<br><br>n_1 &lt;= floor(3279511452685958611 / 8)<br>= 409938931585744826.<br><br>Together with the existing exact finite check for small n_1, this gives the finite lower bound<br><br>n_1 &gt; 409,938,931,585,744,826<br><br>for any possible counterexample.<br><br>This is still not a proof of the full problem. It is only a finite certificate extending the good-prime-chain method. I used a deterministic Miller-Rabin verifier for integers &#60; 2^64 to check the primality and chain conditions; all numbers above are below 2^64. I can share the verification script/log if useful.<br><br>AI assistance disclosure: Codex 5.5 xhigh was used to help search the chain, check the arithmetic, and draft the verifier/comment.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/catsflowers5544">catsflowers5544</a></strong>
+      
+      — <a href="/forum/thread/287#post-6669">09:30 on 27 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6669" data-react-url="/forum/post/6669/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+</ul>
+
+
+  <div id="more-posts" class="post-list hidden" aria-hidden="true">
+    <ul class="post-list">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-6276"
+    class="post depth-0
+           
+           odd">
+    <div class="post-body" id="post-6276">
+    
+
+
+
+      
+      <p>I ran a small computational check for Problem #287, using the clarified convention that all denominators are positive, i.e. n_i &#62;= 2.<br><br>The search considered gap-restricted sequences<br><br>    1 &lt; n_1 &lt; n_2 &lt; ... &lt; n_k,<br><br>with every consecutive gap n_{i+1} - n_i in {1,2}. For each starting denominator n_1 = 2,...,12, all branches were explored until the partial reciprocal sum either hit 1 exactly or exceeded 1.<br><br>No exact representation of 1 was found in this range.<br><br>The computation used exact rational arithmetic throughout. The largest case checked was n_1 = 12, with 287,110,935 nodes explored, 143,555,468 overshoot leaves, and zero exact hits. The closest sum below 1 for n_1 = 12 had gap<br><br>    182145367 / 19973395835321728800 ≈ 9.119e-12.<br><br>The denominator cutoff M = 500 was not active: every branch terminated by overshoot before reaching the bound. Across n_1 = 2,...,12, the largest denominator reached by a non-overshooting branch was 80, and the largest denominator attempted by an overshoot leaf was 82.<br><br>This is only a finite computational check and of course does not prove the conjecture. I am posting it as reproducible computational evidence.<br><br>I acknowledge the earlier discussion by Daniil Sedov, Terence Tao, and Thomas Bloom clarifying that positive denominators are intended. The search assumes n_i &gt;= 2 throughout.<br><br>The computation was carried out by Jordi Vallverdú (UAB), with AI-assisted code generation and audit using Claude Opus 4.7, GPT-5.5 Thinking, and Aristotle by Harmonic. I can share the Python/C code, raw logs, JSON output, and SHA-256 checksums if useful.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/jvallverdu">jvallverdu</a></strong>
+      
+      — <a href="/forum/thread/287#post-6276">13:47 on 05 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6276" data-react-url="/forum/post/6276/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: old-bielefelder"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-6277"
+    class="post depth-1
+           
+           even">
+    <div class="post-body" id="post-6277">
+    
+
+
+
+      
+      <p>Interesting approach. Can you tell the runtimes for each of the 11 n_1-values?</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/old-bielefelder">old-bielefelder</a></strong>
+      
+      — <a href="/forum/thread/287#post-6277">15:34 on 05 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6277" data-react-url="/forum/post/6277/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-6324"
+    class="post depth-2
+           
+           odd">
+    <div class="post-body" id="post-6324">
+    
+
+
+
+      
+      <p>Sure — here are the wall-clock runtimes reported by the exact-arithmetic Python run that produced the data:<br><br>n_1 =  2:   0.00 s<br>n_1 =  3:   0.00 s<br>n_1 =  4:   0.00 s<br>n_1 =  5:   0.00 s<br>n_1 =  6:   0.01 s<br>n_1 =  7:   0.03 s<br>n_1 =  8:   0.20 s<br>n_1 =  9:   1.16 s<br>n_1 = 10:   6.67 s<br>n_1 = 11:  38.47 s<br>n_1 = 12: 219.84 s<br><br>Total runtime for (n_1=2,\ldots,12) was about 266 seconds, i.e. roughly 4.4 minutes, in that run.<br><br>These are not careful hardware benchmarks, just the wall-clock times from the run log. The computation used exact rational arithmetic via Python integers with gcd reduction; I have not separately benchmarked the GMP C reference implementation yet</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/jvallverdu">jvallverdu</a></strong>
+      
+      — <a href="/forum/thread/287#post-6324">11:31 on 08 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6324" data-react-url="/forum/post/6324/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-6278"
+    class="post depth-1
+           
+           odd">
+    <div class="post-body" id="post-6278">
+    
+
+
+
+      
+      <p>Since you already checked $n_1 \le 12$, let $n_1 \ge 12$ be fixed and assume that $1 = \frac{1}{n_1} + \cdots + \frac{1}{n_k}$ with $\max(n_{i+1} - n_i) \le 2$. Then this latter inequality implies that $2n_1 \le n_k \le 8n_1$, as otherwise the sum $\frac{1}{n_1} + \cdots + \frac{1}{n_k}$ is either smaller or larger than $1$. Now assume that for all $M \in [2n_1, 8n_1]$ there exists a prime $p \in (M/2+1, M)$ such that either $\frac{p-1}{2}$ or $\frac{p+1}{2}$ is prime. With $n_k = M$, the condition $\max(n_{i+1} - n_i) \le 2$ then also implies that we must have some $n_i &#62; M/2$ which is either prime or twice a prime. But if $n_i = p$ is prime, then in the sum $\frac{1}{n_1} + \cdots + \frac{1}{n_k}$ there is only one denominator divisible by $p$, which implies that the sum cannot be equal to $1$. On the other hand, if say $n_i = 2q$ with $q$ prime, then the only multiples of $q$ that the sum could possibly contain as denominators are $q, 2q, 3q$. But with these denominators you also cannot get rid of the prime $q$ in the denominator unless $q \le 11$. And with some case analysis one can check that this is excluded by the assumption $n_1 \ge 12$. <br><br>Long story short: for $n_1 \ge 12$ it is not necessary to brute-force like this. Simply find a sequence $13 = p_1 &lt; p_2 &lt; \cdots &lt; p_m$ of primes such that for all $j$, $p_{j+1} &lt; 2p_j$ and either $\frac{p_j-1}{2}$ or $\frac{p_j+1}{2}$ is prime. With such a sequence it follows that any potential counterexample must have $n_1 &gt; p_m/8$.<br><br>More generally, if I'm not mistaken, the statement in the remarks to this problem can be generalized as follows: if for all large enough $N$ there exists an $n \in [N, 2N]$ such that both $n$ and $n+1$ are divisible by primes larger than $\frac{3N}{\log N}$, then there are only finitely many counterexamples.<br><br>Even more generally, if for all large enough $N$ there exists an $n \in [N, 2N]$ such that $n+j$ is divisible by a prime larger than $\frac{3N}{\log N}$ for all $1 \le j \le m$, then the equation $1 = \frac{1}{n_1} + \cdots + \frac{1}{n_k}$ implies $\max(n_{i+1} - n_i) &#62; m$ for all but finitely many tuples of $n_i$.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Woett">Woett</a></strong>
+      
+      — <a href="/forum/thread/287#post-6278">16:25 on 05 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6278" data-react-url="/forum/post/6278/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: old-bielefelder"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-6284"
+    class="post depth-2
+           
+           even">
+    <div class="post-body" id="post-6284">
+    
+
+
+
+      
+      <p>ChatGPT simply found a sequence starting at 13 with<br>&#62; $p_1 &lt; p_ 2 &lt; ⋯ &lt; p_m$<br>&gt; such that for all $j$ ... is prime.<br>until 10,000:<br><br>13, 23, 37, 47, 73, 107,<br>157, 277, 541, 1019, 2017,<br>4021, 8039, 9973.<br><br>And these "good primes" are so frequent that <br>the sequence might well by prolonged until <br>infinity.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/old-bielefelder">old-bielefelder</a></strong>
+      
+      — <a href="/forum/thread/287#post-6284">05:58 on 06 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6284" data-react-url="/forum/post/6284/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: jvallverdu"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-6325"
+    class="post depth-2
+           
+           odd">
+    <div class="post-body" id="post-6325">
+    
+
+
+
+      
+      <p>Thank you — this is very interesting, and much more structural than my brute-force check.<br>If I understand your argument correctly, the idea is:<br><br>For a putative counterexample with (n_1 \ge 12) and all gaps (\le 2), writing (M=n_k), one has roughly<br><br>[<br>2n_1 \le M \le 8n_1.<br>]<br><br>If for each relevant (M) there is a “good” prime (p\in(M/2,M)), with either ((p-1)/2) or ((p+1)/2) prime, then the gap condition forces one of (p,p-1,p+1) to occur among the denominators. This gives a large-prime divisibility obstruction, up to the small cases you mention.<br><br>So a chain of good primes<br><br>[<br>13=p_1&lt;p_2&lt;\cdots&lt;p_m<br>]<br><br>with (p_{j+1}&lt;2p_j) should cover all (M&lt;p_m), and hence push any possible counterexample beyond roughly<br><br>[<br>n_1 &gt; p_m/8.<br>]<br><br>Your list up to (9973) would therefore, if the divisibility lemma and small-prime case analysis check out, push any counterexample beyond about (n_1&#62;1246), which is far stronger than my (n_1\le 12) computational check.<br><br>I will try to independently verify the “good prime” chain and the divisibility obstruction before claiming anything stronger. Thanks again — this looks like the right direction.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/jvallverdu">jvallverdu</a></strong>
+      
+      — <a href="/forum/thread/287#post-6325">11:40 on 08 May 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6325" data-react-url="/forum/post/6325/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2443"
+    class="post depth-0
+           
+           even">
+    <div class="post-body" id="post-2443">
+    
+
+
+
+      
+      <p>Are negative integers allowed? If so, a counterexample is straightforward.<br><br>Take $k = 20$ and<br>$$(n_1, \dots, n_{20}) = (-11, -10, -9, -8, -7, -5, -3, -1, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12).$$<br><br>Every consecutive gap is $1$ or $2$, so $\max(n_{i+1} - n_i) = 2 &lt; 3$.<br><br>For each $m \in \{1, 3, 5, 7, 8, 9, 10, 11\}$, both $m$ and $-m$ appear, so $\frac{1}{m} + \frac{1}{-m} = 0$. The remaining terms are $\frac{1}{2}, \frac{1}{4}, \frac{1}{6}, \frac{1}{12}$, and<br>$$\frac{1}{2} + \frac{1}{4} + \frac{1}{6} + \frac{1}{12} = \frac{6 + 3 + 2 + 1}{12} = 1.$$<br><br>So the claim is false unless the problem requires $n_i &gt; 0$.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Gusarich">Daniil Sedov</a></strong>
+      
+      — <a href="/forum/thread/287#post-2443">21:16 on 26 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2443" data-react-url="/forum/post/2443/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2454"
+    class="post depth-1
+           
+           odd">
+    <div class="post-body" id="post-2454">
+    
+
+
+
+      
+      <p>From looking at the definition of the sets ${\mathcal H}_n$ and ${\mathcal H}$ in [ErGr80, p. 32], the condition $n_i&#62;0$ (or equivalently $n_1&#62;0$) is indeed imposed, and the problem should be updated accordingly.</p>
+      
+      
+      <div class="fixed-post">
+(The site has been updated to address this comment.)
+      </div>
+
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TerenceTao">TerenceTao</a></strong>
+      
+      — <a href="/forum/thread/287#post-2454">00:28 on 27 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2454" data-react-url="/forum/post/2454/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: TerenceTao"
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2464"
+    class="post depth-2
+           
+           even">
+    <div class="post-body" id="post-2464">
+    
+
+
+
+      
+      <p>Yes, in fact in all problems on unit fractions I think there is an implicit assumption that we are only considering integers $&#62;1$ in the denominators.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TFBloom">Thomas Bloom</a></strong>
+      
+      — <a href="/forum/thread/287#post-2464">08:29 on 27 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2464" data-react-url="/forum/post/2464/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Vjeko_Kovac, Quanyu Tang"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">2</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+      
+    </ul>
+  </div>
+
+<div class="post-list-actions" style="text-align: center;">
+  <a href="#"
+     id="toggle-posts"
+     class="show-more-link"
+     aria-expanded="false"
+     aria-controls="more-posts"
+     data-remaining="2">
+    Show 2 more comments
+  </a>
+</div>
+
+
+
+
+
+<p>
+                        <div style="text-align:center;">
+<strong>All comments are the responsibility of the user. Comments appearing on this page are not verified for correctness. Please keep posts mathematical and on topic.</strong>
+</div>
+<p>
+
+
+<div style="text-align:center; margin: 1em">
+
+
+  <p><a href="/forum/login?next=%2Fforum%2Fthread%2F287">Log in</a> to add a comment.</p>
+
+
+    </div>
+<p><div style="text-align: center; margin: 1em 0;">
+<a href="/forum/">Back to the forum</a>
+</div>
+                </div>
+            </div>
+            
+
+<script>
+document.addEventListener("submit", (e) => {
+  const form = e.target.closest(".reply-form");
+  if (!form) return;
+  const btn = form.querySelector('button[type="submit"]');
+  if (btn?.dataset.submitting === "1") {
+    e.preventDefault(); // already submitted
+    return;
+  }
+  if (btn) {
+    btn.dataset.submitting = "1";
+    btn.disabled = true;
+    btn.textContent = "Posting…";
+  }
+});
+</script>
+
+<script>
+document.addEventListener("click", (ev) => {
+  const a = ev.target.closest(".thread-sort .order");
+  if (!a) return;
+});
+</script>
+
+<script>
+document.addEventListener("submit", (e) => {
+  const form = e.target.closest(".comment-form");
+  if (!form) return;
+
+  const btn = form.querySelector('button[type="submit"]');
+  if (!btn) return;
+
+  // Already submitting? Block.
+  if (btn.dataset.submitting === "1") {
+    e.preventDefault();
+    return;
+  }
+
+  // First submit: lock UI
+  btn.dataset.submitting = "1";
+  btn.disabled = true;
+  const original = btn.textContent;
+  btn.dataset.originalText = original;
+  btn.textContent = "Posting…";
+});
+</script>
+           
+
+
+
+
+<script>
+window.MathJax = {
+  output: {
+    font: 'mathjax-tex'
+  },
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+};
+</script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@4.1.2/tex-chtml-nofont.js"></script>
+
+
+<!-- Previewing forum posts -->
+<!-- Previewing forum posts -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, m => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[m]);
+  }
+
+  function normalizeHref(href) {
+    href = href.trim();
+    if (!/^https?:\/\//i.test(href) && !href.startsWith("/")) {
+      href = "https://" + href;
+    }
+
+    return href;
+  }
+
+  let mathJaxQueue = Promise.resolve();
+
+  function clearMathJax(element) {
+    if (window.MathJax && MathJax.typesetClear) {
+      MathJax.typesetClear([element]);
+    }
+  }
+
+  function typesetMath(element) {
+    if (!window.MathJax) return;
+
+    if (MathJax.typesetPromise) {
+      mathJaxQueue = mathJaxQueue
+        .then(() => {
+          if (MathJax.startup && MathJax.startup.promise) {
+            return MathJax.startup.promise;
+          }
+        })
+        .then(() => MathJax.typesetPromise([element]))
+        .catch(err => {
+          console.error("MathJax typeset failed:", err);
+        });
+
+      return;
+    }
+
+    if (MathJax.Hub) {
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, element]);
+    }
+  }
+
+  function renderPreview(textarea, preview, label) {
+    let raw = textarea.value;
+    const anchors = [];
+    let idx = 0;
+
+    raw = raw.replace(
+      /<a\s+href=("(?:[^"]*)"|'(?:[^']*)')\s*>([\s\S]*?)<\/a>/gi,
+      (match, qHref, labelText) => {
+        const href = qHref.slice(1, -1);
+        const token = `__A_TAG_${idx++}__`;
+
+        anchors.push({
+          token,
+          href: normalizeHref(href),
+          label: labelText
+        });
+
+        return token;
+      }
+    );
+
+    let safe = escapeHtml(raw);
+
+    anchors.forEach(a => {
+      const html = `<a href="${escapeHtml(a.href)}">${escapeHtml(a.label)}</a>`;
+      safe = safe.replace(a.token, html);
+    });
+
+    safe = safe.replace(/\{PROBLEM=(.+?)\}/g, (_, p1) =>
+      `<a href="/${escapeHtml(p1)}">[${escapeHtml(p1)}]</a>`
+    );
+
+    safe = safe.replace(/\n/g, "<br>");
+    clearMathJax(preview);
+
+    if (!safe.trim()) {
+      preview.innerHTML = "";
+      preview.classList.add("hidden");
+      label.classList.add("hidden");
+      return;
+    }
+
+    preview.innerHTML = safe;
+    preview.classList.remove("hidden");
+    label.classList.remove("hidden");
+
+    typesetMath(preview);
+  }
+
+  document.querySelectorAll("form textarea").forEach(textarea => {
+    const form = textarea.closest("form");
+    const preview = form && form.querySelector(".post-preview");
+    const label = form && form.querySelector(".preview-label");
+
+    if (preview && label) {
+      textarea.addEventListener("input", () => renderPreview(textarea, preview, label));
+      renderPreview(textarea, preview, label);
+    }
+  });
+});
+</script>
+
+<!-- To handle the search bar -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function setFilterLink(linkId, newFilter) {
+        const link = document.getElementById(linkId);
+        if (!link) return;
+        const pathParts = window.location.pathname.split("/");
+        // Expect: /<section>/<entry> or /<section>/<entry>/<filter>
+        if (pathParts.length >= 3) {
+            const section = pathParts[1];
+            const entry = pathParts[2];
+            // Construct base: /tags/additive, /sources_bib/BL09, etc.
+            const baseUrl = "/" + section + "/" + entry;
+            link.href = baseUrl + "/" + newFilter;
+        }
+    }
+    setFilterLink("solvedLink", "solved");
+    setFilterLink("openLink", "open");
+    setFilterLink("yesLink", "yes");
+    setFilterLink("noLink", "no");
+});
+</script>
+
+<!-- Handle the dual view link -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const dualLink = document.getElementById("dualViewLink");
+  if (!dualLink) return;
+
+  const isInDualView = window.location.pathname.startsWith("/dual");
+  dualLink.textContent = isInDualView ? "Exit Dual View" : "Dual View";
+  dualLink.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    if (isInDualView) {
+      try {
+        const leftIframe = document.getElementById("iframe-left");
+        const src = leftIframe?.src || "/";
+        let clean = src.replace(window.location.origin, "");
+        clean = clean.replace(/[?&]embed=1/, "");
+
+        window.location.href = clean;
+      } catch (err) {
+        window.location.href = "/";
+      }
+    } else {
+      const currentPath = window.location.pathname + window.location.search;
+      const rightPanelDefault = "/";
+      const hash = `#left:${encodeURIComponent(currentPath)}&right:${encodeURIComponent(rightPanelDefault)}`;
+      window.location.href = `/dual${hash}`;
+    }
+  });
+});
+</script>
+
+<!-- Redirect links and searches when in dual view mode -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  if (!window.location.pathname.startsWith("/dual")) return;
+
+  function getTargetPanel() {
+    const selected = document.querySelector('input[name="targetPanel"]:checked');
+    return selected ? selected.value : "left";
+  }
+
+  function loadInPanel(panel, path) {
+    if (!path) return;
+    const iframe = document.getElementById(`iframe-${panel}`);
+    if (!iframe) return;
+    const url = path.includes("?") ? path + "&embed=1" : path + "?embed=1";
+    iframe.src = url;
+    const inputBox = document.querySelector(`#panel-${panel} input`);
+    if (inputBox) inputBox.value = path;
+    console.log(`Loaded "${url}" into panel "${panel}"`);
+  }
+  
+  document.querySelectorAll(".dual-aware a[href^='/'], a.dual-aware[href^='/']").forEach(link => {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      const path = this.getAttribute("href");
+      loadInPanel(getTargetPanel(), path);
+    });
+  });
+
+  const idForm = document.getElementById("idsearchForm");
+  if (idForm) {
+    idForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const input = idForm.querySelector(".idsearchTerm").value.trim();
+      if (!input) return;
+
+      let path = null;
+
+      if (/^\d+$/.test(input)) {
+        path = "/go_to/" + encodeURIComponent(input);
+      } else if (/^((\d+|end)(-(\d+|end))?\s*)+(open|solved|yes|no)?$/i.test(input)) {
+        const parts = input.split(/\s+/).filter(Boolean);
+        path = "/range/" + parts.map(encodeURIComponent).join("/");
+      } else {
+        alert("Invalid input format.");
+        return;
+      }
+
+      loadInPanel(getTargetPanel(), path);
+    });
+  }
+
+  const searchForm = document.getElementById("searchForm");
+  if (searchForm) {
+    searchForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const input = searchForm.querySelector(".searchTerm").value.trim();
+      if (!input) return;
+
+      const path = "/search/" + encodeURIComponent(input);
+      loadInPanel(getTargetPanel(), path);
+    });
+  }
+});
+</script>
+
+<!-- Different menu on mobile -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const button = document.getElementById("mobileMenuButton");
+  const dropdown = document.getElementById("mobileDropdown");
+
+  if (button && dropdown) {
+    button.addEventListener("click", function () {
+      dropdown.classList.toggle("show");
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+      }
+    });
+  }
+});
+</script>
+
+<!-- For expanding threads -->
+
+<script>
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('#toggle-posts');
+  if (!link) return;
+  e.preventDefault(); 
+
+  const box = document.getElementById('more-posts');
+  const isHidden = box.classList.toggle('hidden');
+  const expanded = !isHidden;
+
+  link.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  box.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+
+  link.textContent = expanded
+    ? 'Show only the top five comments'
+    : `Show ${link.dataset.remaining} more comments`;
+});
+</script>
+
+
+<script>
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('.toggle-replies');
+  if (!link) return;
+  e.preventDefault();
+
+  const pid = link.dataset.postId;
+  const box = document.getElementById(`more-replies-${pid}`);
+  if (!box) return;
+
+  const isHidden = box.classList.toggle('hidden');
+  const expanded = !isHidden;
+
+  link.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  box.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+
+  link.textContent = expanded
+    ? 'Hide replies'
+    : `Show ${link.dataset.remaining} more replies`;
+});
+</script>
+
+
+<script>
+document.addEventListener("click", async function (event) {
+    const button = event.target.closest(".problem-status-option");
+    if (!button) return;
+
+    const widget = button.closest(".problem-status-widget");
+    if (!widget) return;
+
+    if (widget.dataset.canEdit !== "1") return;
+
+    const status = button.dataset.status;
+    const url = widget.dataset.setUrl;
+
+    widget.classList.add("is-saving");
+
+    const buttons = widget.querySelectorAll(".problem-status-option");
+    buttons.forEach(btn => btn.disabled = true);
+
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "X-Requested-With": "fetch"
+            },
+            body: JSON.stringify({ status: status })
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok || !data.ok) {
+            throw new Error(data.error || "Could not update problem status.");
+        }
+
+        widget.dataset.currentStatus = data.status;
+
+        buttons.forEach(btn => {
+            const active = btn.dataset.status === data.status;
+            btn.classList.toggle("is-active", active);
+            btn.setAttribute("aria-checked", active ? "true" : "false");
+        });
+
+        const label = widget.querySelector(".js-problem-status-label");
+        const description = widget.querySelector(".js-problem-status-description");
+
+        if (label) label.textContent = data.label || button.dataset.label;
+        if (description) description.textContent = data.description || button.dataset.description;
+          widget.style.setProperty("--status-progress", button.dataset.progress);
+
+    } catch (err) {
+        alert(err.message || "Could not update problem status.");
+    } finally {
+        widget.classList.remove("is-saving");
+
+        if (widget.dataset.canEdit === "1") {
+            buttons.forEach(btn => btn.disabled = false);
+        }
+    }
+});
+</script>
+  
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1934f1c3bf471e7',t:'MTc4MzcyNTczMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

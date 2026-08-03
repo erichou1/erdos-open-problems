@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#824}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $h(x)$ count the number of integers $1\leq a<b<x$ such that $(a,b)=1$ and $\sigma(a)=\sigma(b)$, where $\sigma$ is the sum of divisors function.
+
+Is it true that $h(x)>x^{2-o(1)}$?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Erd\H{o}s \cite{Er74b} proved that $\limsup h(x)/x= \infty$, and claimed a similar proof for this problem. A complete proof that $h(x)/x\to \infty$ was provided by Pollack and Pomerance \cite{PoPo16}.
+
+A similar question can be asked if we replace the condition $(a,b)=1$ with the condition that $a$ and $b$ are squarefree. Weisenberg suggests another variant, with the condition that there are no proper factors $u\mid a$ and $v\mid b$ such that $\sigma(u)=\sigma(v)$ and $(u,a/u)=(v,b/v)=1$, which is the weakest restriction one can impose that is still strong enough to eliminate trivial duplicates.
+
+\bigskip
+\noindent\textbf{References:}
+
+[Er74b] Erd\H{o}s, P., Remarks on some problems in number theory. Math. Balkanica (1974), 197-202.
+ 
+ [PoPo16] Pollack, Paul and Pomerance, Carl, Some problems of Erd\H{o}s on the sum-of-divisors function. Trans. Amer. Math. Soc. Ser. B (2016), 1-26.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/824}}
+\end{document}

@@ -1,0 +1,55 @@
+{
+  "problem_number": 317,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/317",
+  "retrieved_at": "2026-07-10T23:16:31.926305+00:00",
+  "page_title": "317 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "6e95c5fe1eff81eee5d65020322955259a80ca31253c4e4bf34be0d819ecb50d",
+  "comment_count": 9,
+  "comments": [
+    {
+      "post_id": "2723",
+      "text": "Define $Q_n$ to be the set of rationals that can be written as $\\sum_{a \\in A} \\frac{1}{a}$ for some subset $A \\subseteq \\{1, 2, \\ldots, n\\}$. The first question asks whether the inequality $$\\min_{\\substack{q, q' \\in Q_n \\\\ q \\neq q'}} |q - q'| < \\frac{c}{2^n}\\hspace{20pt}(1)$$holds for some absolute constant $c$. By the results in #320 we have $|Q_n| = \\exp[\\frac{n f(n)}{\\log n}]$ for some $f(n)$ that goes to infinity with $n$ at a rate of $(\\log \\log \\log n)^{1 + o(1)}$. As we have $q \\in [0, \\log n + 1]$ for all $q \\in Q_n$, by the pigeonhole principle we obtain $$\\min_{\\substack{q, q' \\in Q_n \\\\ q \\neq q'}} |q - q'| \\le \\frac{\\log n + 1}{\\exp[\\frac{n f(n)}{\\log n}]} = \\frac{1}{2^{\\frac{n (\\log \\log \\log n)^{1 + o(1)}}{\\log n}}},\\hspace{20pt}(2)$$a slight improvement over the bound from Vjeko's comment. Perhaps known concentration inequalities on random harmonic sums can improve upon $(2)$ further. On the other hand, if $Q_n$ would simply be a set of $|Q_n|$ uniformly random numbers in the interval $[0, \\log n + 1]$, then one would expect their minimum difference to be on the order of $\\frac{1}{|Q_n|^{2 + o(1)}}$. This would in fact give a lower bound of the same shape as the upper bound in inequality $(2)$, perhaps casting some doubt on the validity of $(1)$. (The site has been updated to address this comment.)",
+      "meta": "Woett — 17:43 on 04 Jan 2026 👍 1 📝 1 🤖 0"
+    },
+    {
+      "post_id": "198",
+      "text": "As an intermediate goal proving that the first question can be answered in the negative: A different version would be to consider $$\\prod_{1 \\le i \\le n} \\left\\lvert \\sum_{1 \\le i \\le n} \\frac{\\delta_i}{p_i} \\right\\rvert (1)$$ and prove that this becomes very large for large $n$. Heuristically and experimentally, this is the case. E.g. $\\frac 15 + \\frac 17 - \\frac 13 = \\frac1{3*5*7}$, i.e., $$3*5*7\\left(\\frac 15 + \\frac 17 - \\frac 13 \\right)=1.$$ But for $n=19$, the minimum nonzero expression (1) becomes $5246939312687345$ (here $p_1=2$). For the heuristics: If one takes $x$ random numbers in $[0,1]$, the minimum absolute difference between two is of the order $1/x^2$ (see e.g. [stackexchange]). Now consider all sums of some of the reciprocals of primes (the difference of two is of the desired form). Now a most filled interval of length $1/p_n$ cannot have more than $2^n$ elements. (the sums are not random uniformly distributed of course, so we estimate this dense part) Now the minimum difference could be estimated to be at least $\\frac{1}{p_n^2 2^{2n}}$. On the other hand, $\\prod_{1 \\le i \\le n} p_i = n^{(1+o(1))n}=\\omega( p_n^2 4^n),$ and also $2^{p_n}$ is much larger than $p_n^2 4^n.$ *** One could also take $p_i^{\\lfloor \\log_{p_i}(x) \\rfloor}$ everywhere, since then the lcm's correspond). [if this would be bounded, the above would also be bounded]",
+      "meta": "StijnC — 16:36 on 25 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "200",
+      "text": "I think that both questions are very likely to have affirmative answers and checking for small n confirms that. In this light, disproving the first one is much harder than proving the second one. However, the related claim for primes that you suggest looks interesting as well.",
+      "meta": "Vjeko_Kovac — 18:27 on 25 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "202",
+      "text": "[Post deleted]",
+      "meta": "Unknown — 18:45 on 25 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "204",
+      "text": "Not really, because (once again), LCM(1,...,n) = exp(n+o(n)) is much larger than 2^n.",
+      "meta": "Vjeko_Kovac — 19:06 on 25 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "207",
+      "text": "Ah now I see what went wrong. Will have to correct some remarks.",
+      "meta": "StijnC — 19:32 on 25 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "206",
+      "text": "Also, since you were mentioning the primes, they can be used to obtain a slightly weaker estimate than desired (than $c/2^n$). Namely sums of reciprocal distinct primes $\\leq n$ are all distinct and they are well-concentrated, so some two of them are at most $2^{-(1+o(1)))n/\\log n}$ apart. This gives $1/2^{(1+o(1))n/\\log n}$ on the right hand side, but I am sure that many people are well-aware of that argument. The point is in obtaining $c/2^n$. (The site has been updated to address this comment.)",
+      "meta": "Vjeko_Kovac — 19:21 on 25 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "199",
+      "text": "Hereby some thoughts for improving the first question to $C/[1,2,...,n]$. In that case, $C>13340$ is necessary. For this, define $$F(n)=lcm(1,2,..,n)\\min_{>0} \\left\\lvert \\sum_{1 \\le i \\le n} \\frac{\\delta_i}{p_i} \\right\\rvert $$ where the minimum is taken over the nonzero sums. Then it has been computed that $$F(19)=F(21)=874, F(22)= 299, F(25)=1995, F(28)=460$$ $$ F(29)=F(30)=13340, F(31)= 2057, F(32)=4114$$ Since the next lcm's do not change, we also have $F(33),F(34),F(35),F(36) \\le 4114.$ These values are nevertheless larger than the ones that could be guessed with the above heuristic (already taking into account that sums may be equal). So the fact that the numbers are not at random, seems to be important. In particular, I do not even dare to conjecture the answer to this variant. *** Thoughts about the heuristic: The number of different sums is smaller than $2^n$. (e.g. $1/(2x)=1/(3x)+1/(6x)$ indicates multiple sums can be equal) For $n=32$, there were just a bit less than $2^{26}$ terms (63545344 to be exact), and $\\sum_{i=1}^{32} 1/i$ is around $4.$ $LCM(1..32)=2,677,114,440<exp(32)<2^{48}$. And as such $LCM(1..32)*16/(2^{26})^2<1$, while $F(32)=4114$. So the heuristic estimate was pretty far off (especially since we know there is a denser part) But if the heuristic would go through and it is just some randomness with big jumps, the answer of the variant still may be yes.",
+      "meta": "StijnC — 18:20 on 25 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "201",
+      "text": "But LCM(1,...,n) = exp(n+o(n)), not 2^n, so this does not say much about the first question. If you meant the second question, then I agree. This is the \"experimental data\" I was referring to.",
+      "meta": "Vjeko_Kovac — 18:31 on 25 Aug 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

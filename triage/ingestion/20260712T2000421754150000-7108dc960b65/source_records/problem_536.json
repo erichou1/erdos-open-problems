@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 536,
+  "raw_page": {
+    "path": "raw/pages/problem_536.html",
+    "sha256": "9e02ad18fa63e29c6724fb9bc97518fea43710d240cdff17270aefcebc1d6181"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "4a74f16135dbac66352ebf33d7c05be6c3e71dfa1ee53f602a1ced389b10f9a2",
+      "source_region": "div.problem-additional-text",
+      "text": "[AbGa67] Abbott, H. L. and Gardner, B., An extremal problem in number theory. Canad. Math. Bull. (1967), 173--177.\n \n [Er62] Erd\\H{o}s, P\\'{a}l, Remarks on number theory. IV. Extremal problems in number theory. I. Mat. Lapok (1962), 228-255.\n \n [Er70] Erd\\H{o}s, Paul, Some extremal problems in combinatorial number theory. Mathematical Essays Dedicated to A. J. Macintyre (1970), 123-133."
+    },
+    "remarks": {
+      "sha256": "000425f619c45d1c17f06201dc4b53047c46375c94614c95eb3abeea68e23e03",
+      "source_region": "div.problem-additional-text",
+      "text": "The corresponding quantity is $\\gg N$ if we ask for four elements with the same pairwise least common multiple, as shown by Erd\\H{o}s \\cite{Er62} (with a proof given in \\cite{Er70}).\n\nThis was also asked by Erd\\H{o}s at the 1991 problem session of West Coast Number Theory.\n\nAbbott and Gardner \\cite{AbGa67} proved\\[f(N) \\geq (1-o(1))(\\log\\log N)\\frac{N}{\\log N}.\\]In the comments Weisenberg sketches a proof that, for some function $\\omega(N)\\to \\infty$ as $N\\to \\infty$,\\[(\\log\\log N)^{\\omega(N)}\\frac{N}{\\log N}\\ll f(N) \\leq \\left(\\frac{221}{225}+o(1)\\right)N.\\]See also [535], [537], and [856]. A related combinatorial problem is asked at [857]."
+    },
+    "statement": {
+      "sha256": "4fe30db33d654310c8dcafc75bf50e9438ef661aa0a1f7cdc11513fd0d72a782",
+      "source_region": "div#content",
+      "text": "Let $f(N)$ be the largest size of $A\\subseteq \\{1,\\ldots,N\\}$ with the property that there are no distinct $a,b,c\\in A$ such that\\[[a,b]=[b,c]=[a,c],\\]where $[a,b]$ denotes the least common multiple.\n\nEstimate $f(N)$ - in particular, is it true that $f(N)=o(N)$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/536"
+}

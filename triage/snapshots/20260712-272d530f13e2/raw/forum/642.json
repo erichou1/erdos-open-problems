@@ -1,0 +1,25 @@
+{
+  "problem_number": 642,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/642",
+  "retrieved_at": "2026-07-10T23:18:09.731394+00:00",
+  "page_title": "642 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "92d6a6d1024cd38cea7237392f9d97804b9fa874b5fb2756b3bfec8ed2d1f9af",
+  "comment_count": 3,
+  "comments": [
+    {
+      "post_id": "6424",
+      "text": "I think the $\\log^8 n$ in the [DMMS24] bound can be reduced to $\\log^7 n$ by just tightening the final parameter check in their proof. After discussing the idea with GPT 5.5 Thinking, I got it to produce the following sketch: Put $L=\\log n$, and suppose the original graph has average degree $D\\ge C L^7$, where $C$ is a sufficiently large absolute constant. Applying Lemma 2.4 of the paper gives a bipartite subgraph $G’$ on $N$ vertices with $d(G’)\\ge D/(600L)$, which is $100$-almost-regular and a $1/(10L)$-expander. Hence, writing $\\delta=\\delta(G’)$, we have $\\delta\\ge c C L^6$ for some absolute $c>0$. Also $N\\ge \\delta+1$. By Corollary 2.12, the mixing time of $G’$ satisfies $k\\le A L^2\\log N$ for an absolute constant $A$. Since $N\\le n$, this gives $k^2\\le A^2 L^4(\\log N)^2\\le A^2L^6$. Choosing $C$ large enough, we therefore get $\\delta\\ge Bk^2$, with $B$ large enough for the constants needed in Theorem 3.6 and Lemma 3.5. The other parameter check needed in the final random-walk argument is $N\\gg k^2\\log N$. This also follows. If $N\\ge M L^7$, then $N\\gg L^4(\\log N)^3\\ge k^2\\log N$, taking $M$ large enough. If instead $N<M L^7$, then $\\log N=O(\\log L)$, so $k^2\\log N\\ll L^4(\\log L)^3=o(L^6)$, while $N\\ge\\delta\\ge cCL^6$. Thus again $N\\gg k^2\\log N$. Now the rest of the proof is unchanged. Take the same random walk length $t=\\beta^2N/(10^6k)$, with $\\beta=10^{-28}$. The inequality $\\delta\\gg k^2$ gives the self-avoiding walk estimate from Theorem 3.6. It also gives $t/5\\gg kN/\\delta$, while $N\\gg k^2\\log N$ gives $t/5\\gg k\\log N$, so Lemma 3.5 applies to the relevant subwalks just as in the paper. The failure probabilities in the chord-counting and closing-edge steps are still exponentially smaller than the self-avoiding probability, after adjusting constants, so the same union-bound comparison gives positive probability that all required events occur simultaneously. On that event, the walk is self-avoiding, an edge closes it into a cycle, and the $k$ residue-class subwalks span enough mutually disjoint edges inside the vertex set of the cycle. Since the total number of such induced edges is at least twice the walk length parameter, while the cycle itself uses at most that many edges, at least $|C|$ chords remain. Thus $G$ contains a cycle with at least as many chords as vertices. So the proof appears to yield $f(n)\\ll n(\\log n)^7$, with a larger implicit constant. The only change is to start the final parameter check from $D\\ge C(\\log n)^7$ rather than $D\\ge(\\log n)^8$.",
+      "meta": "AronBhalla — 16:10 on 12 May 2026 👍 1 📝 1 🤖 0"
+    },
+    {
+      "post_id": "3871",
+      "text": "The smallest forbidden subgraph is $K_5$, so the densest example with $5$ vertices has $9$ edges. For $6\\le n\\le 12$, the densest example with $n$ vertices has $3n-7$ edges. For $7\\le n\\le 12$, the unique such example is the complete tripartite graph $K_{1,2,n-3}$; for $n=6$, there are also other examples.",
+      "meta": "BorisAlexeev — 00:37 on 28 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3063",
+      "text": "(In reference to a deleted comment in which the problem was misread) It is perhaps worth clarifying that \"diagonals\" (also known as \"chords\") in this context refer to edges connecting two vertices in the cycle that are still in the graph, but are not edges of the cycle itself (i.e., the vertices are non-consecutive in the cycle). A pair of non-consecutive vertices which are not joined by an edge of the graph would not qualify as a diagonal. (The site has been updated to address this comment.)",
+      "meta": "TerenceTao — 22:47 on 12 Jan 2026 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

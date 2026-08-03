@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 477,
+  "raw_page": {
+    "path": "raw/pages/problem_477.html",
+    "sha256": "3f86f15d643bcea502fefb1a7c20c0b9f930edc936e9f1506ce4e765d048678b"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_region": "div.problem-additional-text",
+      "text": ""
+    },
+    "remarks": {
+      "sha256": "ae4ebc71c9e68fd6679c262760361ad2c16446e26330c2947284d9a8879f8438",
+      "source_region": "div.problem-additional-text",
+      "text": "A question of Erd\\H{o}s and Graham, who thought the answer was negative. Clearly any such $A$ must be infinite.\n\nA simple proof that this is impossible for $f$ of degree $2$ is given in the comments (with the combined efforts of AlphaProof and Adenwalla): let $f(x)=c_2x^2+c_1x+c_0$ with $c_1\\neq 0$. For any infinite $A$ there exist $a,b\\in A$ such that $a-b=2c_1k$ for some $k\\geq 1$, whence\\[0\\neq a-b=f(k)-f(-k)\\]and so $n=a+f(-k)=b+f(k)$ has two distinct solutions. If $c_1=0$ then we can argue similarly finding $a,b\\in A$ with $a-b=4c_2k$ for some $k\\geq 1$, whence\\[0\\neq a-b=f(k+1)-f(k-1).\\]The same argument works for any $f$ such that $f(\\mathbb{Z})-f(\\mathbb{Z})$ contains all multiples of some fixed $q\\geq 1$, such as any polynomial of the shape\\[f(x)=g((x-k)^2)+c_1x+c_0\\]for some $g\\in \\mathbb{Z}[x]$ and $k,c_1,c_0\\in \\mathbb{Z}$ with $c_1\\neq 0$."
+    },
+    "statement": {
+      "sha256": "48697483f65274303256af561393a6869ccb3ca14bcf6af6d1fe78e391f5c62d",
+      "source_region": "div#content",
+      "text": "Is there a polynomial $f:\\mathbb{Z}\\to \\mathbb{Z}$ of degree at least $2$ and a set $A\\subset \\mathbb{Z}$ such that for any $n\\in \\mathbb{Z}$ there is exactly one $a\\in A$ and $b\\in \\{ f(k) : k\\in\\mathbb{Z}\\}$ such that $n=a+b$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/477"
+}

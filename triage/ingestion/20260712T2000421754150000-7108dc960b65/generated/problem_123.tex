@@ -1,0 +1,52 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#123}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{Prize: \$250}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $a,b,c\geq 1$ be three integers which are pairwise coprime. Is every large integer the sum of distinct integers of the form $a^kb^lc^m$ ($k,l,m\geq 0$), none of which divide any other?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+A sequence is said to be $d$-complete if every large integer is the sum of distinct integers from the sequence, none of which divide any other. This particular case of $d$-completeness was conjectured by Erd\H{o}s and Lewin \cite{ErLe96}, who (among other related results) prove this when $a=3$, $b=5$, and $c=7$.
+
+As a partial record of progress so far, the sequence $\{a^kb^lc^m\}$ is known to be $d$-complete when:
+{UL}
+{LI}$a=3$, $b=5$, $c=7$ (Erd\H{o}s and Lewin \cite{ErLe96}).{/LI}
+{LI}$a=2$, $b=5$, $c\in \{7,11,13,17,19\}$ (Erd\H{o}s and Lewin \cite{ErLe96}).{/LI}
+{LI}$a=2$, $b=5$, $c\in \{9,21,23,27,29,31\}$ - more generally, $a=2$, $b=5$, and any $c>6$ with $(c,10)=1$ such that there exists $N$ where every integer in $(N,25cN)$ is the sum of distinct elements of $\{2^k3^lc^m\}$, none of which divide any other (Ma and Chen \cite{MaCh16}).{/LI}
+{LI} $a=2$, $b=5$, $3\leq c\leq 87$ with $(c,10)=1$, or $a=2$, $b=7$, $3\leq c\leq 33$ with $(c,14)=1$, or $a=3$, $b=5$, $2\leq c\leq 14$ with $(c,15)=1$ (Chen and Yu \cite{ChYu23b}).{/LI}
+{/UL}
+In \cite{Er92b} Erd\H{o}s makes the stronger conjecture (for $a=2$, $b=3$, and $c=5$) that, for any $\epsilon>0$, all large integers $n$ can be written as the sum of distinct integers $b_1<\cdots <b_t$ of the form $2^k3^l5^m$ where $b_t<(1+\epsilon)b_1$.
+
+See also [845], and [1110] for the case of two powers.
+
+\bigskip
+\noindent\textbf{References:}
+
+[ChYu23b] Chen, Yong-Gao and Yu, Wang-Xing, On {$d$}-complete sequences of integers, {II}. Acta Arith. (2023), 161--181.
+ 
+ [Er92b] Erd\H{o}s, Paul, Some of my favourite problems in various branches of combinatorics. Matematiche (Catania) (1992), 231-240.
+ 
+ [ErLe96] Erd\H{o}s, P. and Lewin, Mordechai, $d$-complete sequences of integers. Math. Comp. (1996), 837-840.
+ 
+ [MaCh16] Ma, Mi-Mi and Chen, Yong-Gao, On {$d$}-complete sequences of integers. J. Number Theory (2016), 1--12.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/123}}
+\end{document}

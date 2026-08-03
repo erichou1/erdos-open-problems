@@ -1,0 +1,40 @@
+{
+  "problem_number": 1063,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/1063",
+  "retrieved_at": "2026-07-10T23:20:22.446812+00:00",
+  "page_title": "1063 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "e6d7b42b28b58168d66bcbe321a84a853928850fa49467f347231af00a2454fe",
+  "comment_count": 6,
+  "comments": [
+    {
+      "post_id": "7233",
+      "text": "We prove the following lower bound:\\[ n_k\\ge \\max\\left(2k,\\ \\prod_{p^a\\parallel k}p^{a+\\lfloor\\log_p(k/2)\\rfloor}\\right). \\]Let \\(n=n_k\\), \\(C=\\binom nk\\), and write \\(d_i=n-i\\). Let \\(e\\) be the unique index for which \\(d_e\\nmid C\\). Fix \\(p^a\\parallel k\\), and put\\[ M=\\max_{0\\le i<k}v_p(d_i),\\qquad S=v_p(C). \\]Since\\[ S=\\sum_{i=0}^{k-1}v_p(d_i)-v_p(k!), \\]and the levels \\(p,p^2,\\ldots,p^a\\) cancel exactly between the \\(k\\) consecutive integers \\(d_i\\) and \\(k!\\), while each higher level contributes at most \\(1\\), we have\\[ S\\le M-a. \\]Hence every \\(d_i\\) with \\(v_p(d_i)=M\\) fails to divide \\(C\\). Since there is only one failure, this maximum must occur at \\(d_e\\). Now let\\[ t=\\lfloor\\log_p(k/2)\\rfloor . \\]Because \\(p^t\\le k/2\\), among the \\(k\\) consecutive integers \\(d_i\\) at least two are divisible by \\(p^t\\). One may be \\(d_e\\), but another one divides \\(C\\), so \\(S\\ge t\\). Therefore\\[ M\\ge a+t. \\]Thus\\[ p^{a+\\lfloor\\log_p(k/2)\\rfloor}\\mid d_e \\]for every \\(p^a\\parallel k\\). Multiplying over \\(p\\mid k\\) gives\\[ \\prod_{p^a\\parallel k}p^{a+\\lfloor\\log_p(k/2)\\rfloor}\\mid d_e\\le n, \\]and since also \\(n\\ge2k\\), the claimed lower bound follows. I am unsure whether this, combined with Stijn’s upper bound, resolves the problem. I do not think it does, since I would guess Erdős is asking for sharper bounds. (Note: This was AI assisted by GPT-5.5 Thinking)",
+      "meta": "rickyc — 23:38 on 26 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7238",
+      "text": "Observation: for primes, the real value seems to be smaller (as is here the case for the lower bound as well), but both are often off by a decent exponent. Already restricted to primes, $n_p$ is not monotonuous, as can be seen in the OEIS sequence. So the main question here at the moment is indeed what is the best possible result one can expect? Next to a problem being tractable/ difficult, it might be an idea to vote for problems being not worth to further investigate actually, in which case a vote could be interesting as well.",
+      "meta": "StijnC — 14:18 on 27 Jun 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7240",
+      "text": "Yes, exactly, the issue here is that the lower and upper bounds are still far apart. I believe I may be able to improve the k/2 to k-1, strengthening the bound (I am currently investigating this). But even with k-1, the gap is still large, and Erdős likely would've wanted stronger bounds. My idea for this problem is that we could have a vote, or come to an agreement, on what “estimate” means here.",
+      "meta": "rickyc — 15:44 on 27 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "828",
+      "text": "Small observation related to the one by Monier: $n_k\\le k \\cdot lcm( \\{2,3,\\ldots,k-1\\})$ by the same reason for $k \\ge 3$. This implies an exponential upper bound $\\exp((1+o(1))n).$",
+      "meta": "StijnC — 14:17 on 01 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "846",
+      "text": "The behaviour could be exponential. Hereby it is not sure if it is of the form $c^{(1+o(1))n}$ for some constant $c$, or there is an exponential lower- and upper-bound of the latter form, but $1/k \\log n_k$ does not converge. The minimum and maximum of $n_k^{1/k}$ for $k \\le 37$ were attained in $k=10$ and $k=31$ with $(n_k)^{1/k} \\sim 2.178$ and $(n_k)^{1/k} \\sim 1.337$ respectively. As a test, I checked the distribution of the number of $0 \\le i <k$ for which $n-i$ is not a divisor of $\\binom n k$, for $2k \\le n \\le n_k$. For $k=23$ this gave e.g. $[0, 1, 4, 26, 131, 299, 432, 453, 428, 254, 165, 121, 87, 56, 57, 45, 20, 14, 2]$ (no more than $18$ numbers i were bad here, but letting $n$ above $n_k$, one can reach higher numbers as well) (The distribution seems not to be approximated by a binomial distribution)",
+      "meta": "StijnC — 06:56 on 02 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "823",
+      "text": "Remark: the sequence $(n_k)_k$ is not monotone. That implies that it is even harder to decide when this question is settled...",
+      "meta": "StijnC — 12:40 on 01 Oct 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

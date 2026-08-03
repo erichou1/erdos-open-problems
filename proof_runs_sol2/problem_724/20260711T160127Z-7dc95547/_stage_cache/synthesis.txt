@@ -1,0 +1,204 @@
+{
+"summary": "No scout proves or disproves the immutable statement. A formal defect comes first: the symbol ≫ is undefined, so the exact statement cannot satisfy the acceptance criteria until its quantifiers and constant dependence are fixed. Under the standard absolute interpretation, the strongest common reduction is that f(n) ≫ n^{1/2} is equivalent to an eventual quadratic threshold for constructing r MOLS. The highest-ranked constructive branch is a critical-scale PBD decomposition using many prime-power block sizes of order Θ(sqrt(n)); the sparse three- or four-size palettes pass gcd tests but are not reliable, and Scout 3 gives an explicit sparse-palette failure, so absence of elementary congruence obstructions must not be treated as evidence of existence. The second constructive branch is the substantively different incomplete-transversal-design embedding problem ITD(q+1,n;q), whose necessary threshold n ≥ q^2 is sharp at equality and whose first perturbation n=q^2+1 is highly rigid and finitely falsifiable. A third, more direct but less immediately falsifiable branch is exact perfect matching or absorption in the symmetric orthogonal-array hypergraph with r=Θ(sqrt(n)). The best negative branch is to seek an arithmetic-sensitive invariant for all Latin squares of order 2p, preferably through compatible transversal resolutions; existing parity, group, ring, product, and translation obstructions apply only to restricted constructions and are not upper bounds for f(2p). The portfolio should therefore construct both the broad PBD branch and the ITD first-perturbation branch, while running 2p and exact-cover computations as falsification filters. Dependency edges below are information prerequisites; the final resolution gate is explicitly disjunctive. Source report bundle: 
+
+Pasted text
+
+",
+"bottleneck_ids": [
+"S0",
+"S5",
+"S8",
+"S11",
+"S14"
+],
+"subgoals": [
+{
+"id": "S0",
+"claim": "Resolve the blocking notation defect by specifying the exact quantifiers and constant dependence intended by f(n) ≫ n^{1/2}; without this, the immutable statement has no determinate truth condition.",
+"dependencies": [],
+"centrality": 5,
+"falsifiable": true
+},
+{
+"id": "S1",
+"claim": "Verify from definitions the equivalence between r MOLS of order n, an OA(n^2,r+2,n,2), a TD(r+2,n), and n^2 length-(r+2) words over an n-symbol alphabet with pairwise agreement at most one.",
+"dependencies": [],
+"centrality": 4,
+"falsifiable": true
+},
+{
+"id": "S2",
+"claim": "Under the standard absolute interpretation of ≫, prove the threshold equivalence: f(n) ≥ c sqrt(n) eventually if and only if the least N(r) such that f(n) ≥ r for every n ≥ N(r) satisfies N(r)=O(r^2).",
+"dependencies": [
+"S0"
+],
+"centrality": 5,
+"falsifiable": true
+},
+{
+"id": "S3",
+"claim": "Establish the lossless idempotent reduction f(n)-1 ≤ g(n) ≤ f(n), the prime-power construction g(q) ≥ q-2, and the PBD closure rule g(v) ≥ min_B g(|B|).",
+"dependencies": [
+"S1"
+],
+"centrality": 5,
+"falsifiable": true
+},
+{
+"id": "S4",
+"claim": "Consolidate the critical-scale restrictions on any nontrivial PBD proof: every block supporting t global idempotent MOLS must have size at least t+2, Fisher-type counting forces t=O(sqrt(v)), and the sharper block interval is approximately [t+1,(v-1)/t].",
+"dependencies": [
+"S3"
+],
+"centrality": 5,
+"falsifiable": true
+},
+{
+"id": "S5",
+"claim": "Determine a robust prime-power palette K_x contained in [x,Cx] whose local and global pair-count semigroups, not merely gcd conditions, are compatible with every sufficiently large v ≥ C' x^2. Sparse palettes must be rejected when Fisher and pair-count constraints fail.",
+"dependencies": [
+"S4"
+],
+"centrality": 5,
+"falsifiable": true
+},
+{
+"id": "S6",
+"claim": "For the broad palette K_q consisting of all prime powers in [q,2q], test exact necessary conditions uniformly on q^2 ≤ v < 4q^2: point-degree representations, global pair-count representations with at least v blocks, parity coverage at even v, and strengthened incidence inequalities.",
+"dependencies": [
+"S5"
+],
+"centrality": 4,
+"falsifiable": true
+},
+{
+"id": "S7",
+"claim": "Construct or finitely refute PBD(v,K_q) for increasingly large q and every v in the critical interval q^2 ≤ v < 4q^2, using exact cover, cyclic difference families, or structured affine modifications rather than relying on scalar feasibility alone.",
+"dependencies": [
+"S6"
+],
+"centrality": 5,
+"falsifiable": true
+},
+{
+"id": "S8",
+"claim": "Prove a uniform critical PBD theorem: for some absolute constants C,C', every sufficiently large x and every v ≥ C' x^2 admit a PBD whose block sizes are prime powers in [x,Cx]. By PBD closure this would yield f(v) ≥ x-2 and hence the desired square-root lower bound.",
+"dependencies": [
+"S3",
+"S4",
+"S7"
+],
+"centrality": 5,
+"falsifiable": true
+},
+{
+"id": "S9",
+"claim": "Verify the incomplete-transversal-design counting theorem: ITD(q+1,n;q) requires n ≥ q^2, equality is attained for prime-power q by the explicit F_q^2 construction, and for n=q^2+t the all-new residual part is t-regular.",
+"dependencies": [
+"S1"
+],
+"centrality": 4,
+"falsifiable": true
+},
+{
+"id": "S10",
+"claim": "Translate ITD(q+1,q^2+1;q) exactly into an anchored matching-frame problem whose residual all-new hypergraph is one perfect matching, recording every pair-coverage and degree constraint without assuming extendability of arbitrary orthogonal arrays.",
+"dependencies": [
+"S9"
+],
+"centrality": 5,
+"falsifiable": true
+},
+{
+"id": "S11",
+"claim": "Prove or disprove uniformly in prime powers q the first-perturbation statement ITD(q+1,q^2+1;q). This is the highest-information finite construction target because failure would eliminate the strongest embedding conjecture, while success would reveal the required trade structure.",
+"dependencies": [
+"S10"
+],
+"centrality": 5,
+"falsifiable": true
+},
+{
+"id": "S12",
+"claim": "Conditional on understanding the first perturbation, construct ITD(q+1,q^2+t;q) for a growing range of t by decomposing the t-regular residual multipartite graph into K_{q+1} blocks while preserving the anchored matching frame.",
+"dependencies": [
+"S11"
+],
+"centrality": 4,
+"falsifiable": true
+},
+{
+"id": "S13",
+"claim": "Formulate the direct orthogonal-array problem as a perfect matching problem in the symmetric hypergraph whose vertices are coordinate-symbol-pair constraints and whose edges are words in [n]^r; quantify degrees, codegrees, edge size Θ(n), and all exact divisibility constraints for r=Θ(sqrt(n)).",
+"dependencies": [
+"S1",
+"S2"
+],
+"centrality": 4,
+"falsifiable": true
+},
+{
+"id": "S14",
+"claim": "Develop an exact absorption or structured nibble theorem for the hypergraph in S13 that remains valid when edge size is Θ(n), or produce a concrete obstruction showing that its symmetry and normalized codegree do not suffice.",
+"dependencies": [
+"S13"
+],
+"centrality": 5,
+"falsifiable": true
+},
+{
+"id": "S15",
+"claim": "For order n=2p, define the compatible-resolution parameter ρ(L) and verify f(2p)=1+max_L ρ(L); separate genuine universal constraints from parity obstructions that apply only to group, ring, coset, cyclic-linear, or translation-type Latin squares.",
+"dependencies": [
+"S1"
+],
+"centrality": 4,
+"falsifiable": true
+},
+{
+"id": "S16",
+"claim": "Search computed Latin squares of orders 2p for an invariant of compatible transversal resolutions, using incidence ranks, Smith normal forms, parity profiles, and resolution graphs; reject any proposed invariant that fails on a finite example.",
+"dependencies": [
+"S15"
+],
+"centrality": 4,
+"falsifiable": true
+},
+{
+"id": "S17",
+"claim": "Either prove a uniform arithmetic-sensitive bound max_L ρ(L)=o(sqrt(p)) along an infinite sequence of odd primes p, which would disprove the standard square-root assertion, or certify that the tested invariant family cannot yield such a bound.",
+"dependencies": [
+"S16"
+],
+"centrality": 5,
+"falsifiable": true
+},
+{
+"id": "S18",
+"claim": "Maintain a computational falsification suite for all intermediate claims: exact MOLS SAT/ILP, PBD exact cover, cyclic difference-family search, ITD exact cover, hypergraph extension coloring, and orthogonal-array trade search. Finite failures may reject branches but must not be promoted to asymptotic conclusions.",
+"dependencies": [
+"S1",
+"S5",
+"S10",
+"S13",
+"S15"
+],
+"centrality": 3,
+"falsifiable": true
+},
+{
+"id": "GOAL",
+"claim": "After S0 fixes the statement's exact meaning, resolve it without changing quantifiers by completing at least one disjunctive terminal route: prove the critical PBD theorem S8, derive the required general construction from the ITD program S11-S12, prove the direct hypergraph construction S14, or establish a universal infinite-family upper bound through S17. No such terminal route is currently complete.",
+"dependencies": [
+"S0",
+"S8",
+"S12",
+"S14",
+"S17",
+"S18"
+],
+"centrality": 5,
+"falsifiable": true
+}
+]
+}

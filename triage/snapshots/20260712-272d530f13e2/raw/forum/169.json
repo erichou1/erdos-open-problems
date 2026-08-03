@@ -1,0 +1,45 @@
+{
+  "problem_number": 169,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/169",
+  "retrieved_at": "2026-07-10T23:15:54.121443+00:00",
+  "page_title": "169 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "89e924fcd36b9362d7aa0ff1f5131190f79607131163bdcaacdd6f25d0fa5a05",
+  "comment_count": 7,
+  "comments": [
+    {
+      "post_id": "309",
+      "text": "I think Erdos problem #3 is equivalent to $f(k)$ being finite for every $k$.",
+      "meta": "TerenceTao — 18:00 on 04 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "317",
+      "text": "I'm not seeing this. Of course, if [3] is false for $k$, then $f(k) = \\infty$. But how do we prove the converse? That is, how do we rule out the case where \\begin{equation*} \\sum_{n \\in A} \\frac{1}{n} < \\infty \\end{equation*} for all $k$-AP-free sets $A$, but \\begin{equation*} \\sup_{\\text{$A$ is $k$-AP-free}} \\left(\\sum_{n \\in A} \\frac{1}{n}\\right) = \\infty? \\end{equation*} My first thought was to try proving that if there are $k$-AP-free sets $A_1, A_2,...$, whose respective sums of reciprocals approach infinity, then they can be used to construct a $k$-AP-free set $A$ whose sum of reciprocals actually diverges. One method is to take the compactness approach: pick some positive integer sequence $n_1 < n_2 < \\cdots$, and pick some (maximal) subset of $\\{1,...,n_1\\}$ that appears in infinitely many $A_i$ and add it to $A$, then restrict the sequence of $A_i$s to the ones whose initial segment is the same as $A$ and then repeat with $n_2$, and so on. It's easy to prove that $A$ has no $k$-APs, but the sum of reciprocals of elements of $A$ does not necessarily diverge (in fact, if the smallest element of $A_i$ approaches infinity as $i$ does, then $A$ is the empty set). So compactness without any considerations specific to APs won't be enough to solve this problem. Did you have a different approach (or perhaps a way of improving this one) in mind?",
+      "meta": "DesmondWeisenberg — 23:31 on 04 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "318",
+      "text": "If the supremum is finite, then recursively one can construct finite $k$-AP-free sets $A_1,A_2,A_3,\\dots$ with $\\sum_{n \\in A_j} \\frac{1}{n} \\geq 1$ (say) where the minimal element of each $A_j$ is greater than twice the maximal element of $A_1 \\cup \\dots \\cup A_{j-1}$ (by taking $A_j$ to be a $k$-AP-free set with extremely large sum of reciprocals and then deleting all elements less than twice that maximal element). Then, the $A_j$ are disjoint, and the union $\\bigcup_{j=1}^\\infty A_j$ will have divergent sum of reciprocals while still being $k$-AP-free. EDIT: okay, merely keeping each $A_j$ greater than twice the maximal element of the $A_1 \\cup \\dots \\cup A_{j-1}$ isn't going to be enough, due to $k$-term arithmetic progressions that have one element in $A_1 \\cup \\dots \\cup A_{j-1}$ and the other $k-1$ in $A_j$. But if one randomly refines each $A_j$ down to a proportion $\\varepsilon$ of the original set, and then further removes any surviving $k$-term APs of this form (which removes $O_k(|A_1 \\cup \\dots \\cup A_{j-1}| \\varepsilon^{k-1})$ of the original elements of $A_j$, where we weight each natural number $n$ by $1/n$ for the purposes of measuring size), I think one can still end up with a reduced set $A'_j$ with $\\sum_{n \\in A'_j} \\frac{1}{n}$ as large as one pleases (by first taking $\\varepsilon$ small, and then using the hypothesis of infinite supremum), with the property that the inclusion of $A'_j$ to $A'_1 \\cup \\dots \\cup A'_{j-1}$ does not add any new $k$-APs, and the argument proceeds as before. (The site has been updated to address this comment.)",
+      "meta": "TerenceTao — 00:21 on 05 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "320",
+      "text": "This should be a reference for that (see the top of the second page): The Sum of the Reciprocals of a Set of Integers with no Arithmetic Progression of $k$ Terms, Joseph L. Gerver, Proceedings of the American Mathematical Society, Vol. 62, No. 2 (Feb., 1977), pp. 211-214 (4 pages). (The site has been updated to address this comment.)",
+      "meta": "BorisAlexeev — 00:39 on 05 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "322",
+      "text": "The argument there has a slight typo (one should intersect $S_k(m)$ with $[2a_k(m-1),a_k(m)]$ rather than $[1,a_k(m)]$ when building $U_{k+1}$) but is basically correct. It's a little simpler than the repaired version of my argument because I try to keep $k$ fixed when doing the equivalence, whilst Gerver permits $k$ to slip to $k+1$ which allows one to avoid the probabilistic component of the argument.",
+      "meta": "TerenceTao — 01:29 on 05 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "312",
+      "text": "One could assume problem [3] has a positive answer in order to workout a potential solution here.",
+      "meta": "Dogmachine — 21:21 on 04 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "316",
+      "text": "Yeah, if #3 is false then $f(k)$ must be infinite for some $k$, hence for all larger $k$, and then one gets a positive answer to #169. So at least one of these two problems has a positive answer! That said, I'm not sure that the working hypothesis that #3 is true is actually of much use for this problem (it provides the weakest possible upper bound on $f(k)$, whereas this problem concerns quantitative lower bounds).",
+      "meta": "TerenceTao — 23:05 on 04 Sep 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

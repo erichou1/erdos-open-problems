@@ -1,0 +1,57 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#373}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, factorials
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Show that the equation\[n! = a_1!a_2!\cdots a_k!,\]with $n-1>a_1\geq a_2\geq \cdots \geq a_k\geq 2$, has only finitely many solutions.
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+This would follow if $P(n(n+1))/\log n\to \infty$, where $P(m)$ denotes the largest prime factor of $m$ (see Problem [368]). Erd\H{o}s \cite{Er76d} proved that this problem would also follow from showing that $P(n(n-1))>4\log n$.
+
+The condition $a_1<n-1$ is necessary to rule out the trivial solutions when $n=a_2!\cdots a_k!$. 
+
+Sur\'{a}nyi was the first to conjecture that the only non-trivial solution to $a!b!=n!$ is $6!7!=10!$. More generally, Hickerson (as reported in \cite{Er76d}) conjectured that the only non-trivial solutions to the equation in the problem statement are\[9!=2!3!3!7!,\]\[10!=6!7!,\]\[10!=3!5!7!,\]and\[16!=14!5!2!.\]Luca \cite{Lu07b} has shown that there are only finitely many solutions, conditional on the ABC conjecture, and proved unconditionally that the number of $n\leq x$ which admit a non-trivial solution is\[\leq \exp \bigg(f(x)\frac{\log (x)}{\log\log (x)}\bigg)\]for any function $f(x)$ which tends to infinity.
+
+This is discussed in problem B23 of Guy's collection \cite{Gu04}.
+
+In the case when $k=2$, Erd\H{o}s \cite{Er93} proved that if $n!=a_1!a_2!$ with $n-1>a_1\geq a_2$ then\[a_1\geq n-5\log\log n,\]and says it 'would be nice' to prove $a_1\geq n-o(\log\log n)$. Bhat and Ramachandra \cite{BhRa10} replace the $5$ with $(1+o(1))\frac{1}{\log 2}$, and also prove that the same bound holds for arbitrary $k\geq 2$.
+
+Numerical investigations on solutions to $n!=a_1!a_2!$ have been carried out by Caldwell \cite{Ca94} and Habsieger \cite{Ha19}, and it is known that there are no solutions aside from $10!=6!7!$ for $n\leq 10^{3000}$.
+
+\bigskip
+\noindent\textbf{References:}
+
+[BhRa10] Bhat, K. Dzh. and Ramachandra, K., A remark on factorials that are products of factorials. Mat. Zametki (2010), 350--354.
+ 
+ [Ca94] C. Caldwell, The Diophantine equation $A!B!=C!$. J. Recreat. Math. (1994), 128-133.
+ 
+ [Er76d] Erd\H{o}s, P., Problems and results on number theoretic properties of consecutive integers and related questions. Proceedings of the Fifth Manitoba Conference on Numerical Mathematics (Univ. Manitoba, Winnipeg, Man., 1975) (1976), 25-44.
+ 
+ [Er93] Erd\H{o}s, Paul, Some of my favorite solved and unsolved problems in graph theory. Quaestiones Math. (1993), 333-350.
+ 
+ [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.
+ 
+ [Ha19] Habsieger, Laurent, Explicit bounds for the {D}iophantine equation {$A!B!=C!$}. Fibonacci Quart. (2019), 21--28.
+ 
+ [Lu07b] Luca, Florian, On factorials which are products of factorials. Math. Proc. Cambridge Philos. Soc. (2007), 533--542.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/373}}
+\end{document}

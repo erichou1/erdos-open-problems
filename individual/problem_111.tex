@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#111}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory, chromatic number, set theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+If $G$ is a graph let $h_G(n)$ be defined such that any subgraph of $G$ on $n$ vertices can be made bipartite after deleting at most $h_G(n)$ edges. What is the behaviour of $h_G(n)$? Is it true that $h_G(n)/n\to \infty$ for every graph $G$ with chromatic number $\aleph_1$?
+
+
+
+
+A problem of Erd\H{o}s, Hajnal, and Szemer\'{e}di \cite{EHS82}. Every $G$ with chromatic number $\aleph_1$ must have $h_G(n)\gg n$ since $G$ must contain, for some $r$, $\aleph_1$ many vertex disjoint odd cycles of length $2r+1$. On the other hand, Erd\H{o}s, Hajnal, and Szemer\'{e}di proved that there is a $G$ with chromatic number $\aleph_1$ such that $h_G(n)\ll n^{3/2}$. In \cite{Er81} Erd\H{o}s conjectured that this can be improved to $\ll n^{1+\epsilon}$ for every $\epsilon&gt;0$. See also [74] .
+
+
+
+
+References
+
+[EHS82] Erd\H{o}s, P. and Hajnal, A. and Szemer\'{e}di, E., On almost bipartite large chromatic graphs . Theory and practice of combinatorics (1982), 117-123.
+
+[Er81] Erd\H{o}s, P., On the combinatorial problems which I would most like to see solved . Combinatorica (1981), 25-42.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/111}}
+\end{document}

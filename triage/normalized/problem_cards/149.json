@@ -1,0 +1,313 @@
+{
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 2.619
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "BPP22",
+      "BrJo18",
+      "CGTT90",
+      "CKP20",
+      "FGST89",
+      "FaPo19",
+      "HHT93",
+      "HJK22",
+      "HSY18",
+      "MoRe97",
+      "Sl16"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/149",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[92] No reference found.\n\n [BPP22] Bonamy, Marthe and Perrett, Thomas and Postle, Luke, Colouring graphs with sparse neighbourhoods: bounds and\napplications. J. Combin. Theory Ser. B (2022), 278-317.\n \n [BrJo18] Bruhn, Henning and Joos, Felix, A stronger bound for the strong chromatic index. Combin. Probab. Comput. (2018), 21-43.\n \n [CGTT90] Chung, F. R. K. and Gy\\'{a}rf\\'{a}s, A. and Tuza, Z. and Trotter,\nW. T., The maximum number of edges in {$2K_2$}-free graphs of bounded\ndegree. Discrete Math. (1990), 129--135.\n \n [CKP20] Cames van Batenburg, Wouter and Kang, Ross J. and Pirot,\nFran\\c cois, Strong cliques and forbidden cycles. Indag. Math. (N.S.) (2020), 64--82.\n \n [FGST89] Faudree, R. J. and Gy\\'{a}rf\\'{a}s, A. and Schelp, R. H. and Tuza,\nZs., Induced matchings in bipartite graphs. Discrete Math. (1989), 83-87.\n \n [FaPo19] Faron, Maxime and Postle, Luke, On the clique number of the square of a line graph and its\nrelation to maximum degree of the line graph. J. Graph Theory (2019), 261--274.\n \n [HHT93] Hor\\'{a}k, Peter and He, Qing and Trotter, William T., Induced matchings in cubic graphs. J. Graph Theory (1993), 151--160.\n \n [HJK22] Hurley, Eoin and de Joannis de Verclos, R\\'{e}mi and Kang, Ross\nJ., An improved procedure for colouring graphs of bounded local\ndensity. Adv. Comb. (2022), Paper No. 7, 33.\n \n [HSY18] Huang, Mingfang and Santana, Michael and Yu, Gexin, Strong chromatic index of graphs with maximum degree four. Electron. J. Combin. (2018), Paper No. 3.31, 24.\n \n [MoRe97] Molloy, Michael and Reed, Bruce, A bound on the strong chromatic index of a graph. J. Combin. Theory Ser. B (1997), 103-109.\n \n [Sl16] \\'Sleszy\\'nska-Nowak, Ma\\l gorzata, Clique number of the square of a line graph. Discrete Math. (2016), 1551--1556.",
+      "remarks": "Asked by Erd\\H{o}s and Ne\\v{s}et\\v{r}il in 1985 (see \\cite{FGST89}). This is equivalent to asking whether the chromatic number of the square of the line graph $L(G)^2$ is at most $\\frac{5}{4}\\Delta^2$. This bound would be the best possible, as witnessed by a blowup of $C_5$, although improvements may be possible for odd $\\Delta$.\n\nIt is easy to see that $\\mathrm{sq}(G)\\leq 5$ when $\\Delta\\leq 2$: in general, the trivial bound of\\[\\mathrm{sq}(G)\\leq 2\\Delta^2-2\\Delta+1\\]follows from the observations that the number of neighbours of any edge of $G$ is $\\leq 2\\Delta^2-2\\Delta$.\n\nThis was improved to $\\mathrm{sq}(G)\\leq 1.998\\Delta^2$ (for $\\Delta$ sufficiently large) by Molloy and Reed \\cite{MoRe97}. This was improved to $1.93\\Delta^2$ by Bruhn and Joos \\cite{BrJo18} and to $1.835\\Delta^2$ by Bonamy, Perrett, and Postle \\cite{BPP22}. The best bound currently available is\\[1.772\\Delta^2,\\]proved by Hurley, de Joannis de Verclos, and Kang \\cite{HJK22}. Mahdian has, in their Masters' thesis, proved an upper bound of $(2+o(1))\\frac{\\Delta^2}{\\log \\Delta}$ under the additional assumption that $G$ is $C_4$-free.\n\nAndersen \\cite{92} and Hor\\'{a}k, He, and Trotter \\cite{HHT93} have independently shown that $\\mathrm{sq}(G)\\leq 10$ when $\\Delta\\leq 3$. (This is best possible, as shown e.g. by a $C_8$ with all four diagonals). Huang, Santana, and Yu \\cite{HSY18} proved that $\\mathrm{sq}(G)\\leq 21$ when $\\Delta\\leq 4$.\n\nErd\\H{o}s and Ne\\v{s}et\\v{r}il also asked the easier problem of whether $G$ containing at least $\\tfrac{5}{4}\\Delta^2$ many edges implies $G$ containing two strongly independent edges. This was proved by Chung, Gy\\'{a}rf\\'{a}s, Tuza, and Trotter \\cite{CGTT90}.\n\nIt is still open even whether the clique number of $L(G)^2$ at most $\\frac{5}{4}\\Delta^2$. Let $\\omega=\\omega(L(G)^2)$ be this clique number. \\'{S}leszy\\'{n}ska-Nowak \\cite{Sl16} proved $\\omega \\leq \\frac{3}{2}\\Delta^2$. Faron and Postle \\cite{FaPo19} proved $\\omega\\leq \\frac{4}{3}\\Delta^2$. Cames van Batenburg, Kang, and Pirot \\cite{CKP20} have proved $\\omega\\leq \\frac{5}{4}\\Delta^2$ under the additional assumption that $G$ is triangle-free (and $\\omega\\leq \\Delta^2$ if $G$ is $C_5$-free)."
+    },
+    "source_state": "open",
+    "tags": [
+      "graph theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 3.66,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0305,
+        0.436933
+      ],
+      "probability": 0.233716
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 1.232,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.284812
+      ],
+      "probability": 0.109685
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.144533
+      ],
+      "probability": 0.04
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.3,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.428554
+      ],
+      "probability": 0.20354
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 0.867,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.199281
+      ],
+      "probability": 0.067358
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.1,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.228734
+      ],
+      "probability": 0.083969
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 40.0,
+      "credible_interval_approx": [
+        0.0,
+        0.071043
+      ],
+      "probability": 0.02439
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.436385
+      ],
+      "probability": 0.2
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "minor"
+    },
+    "literature": {
+      "comment_count": 4,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:15:47.692676+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "d7f110b26f1eb3f8f6e8d4a2ac20173c3565e3ba7427b243645b58ec43c41c85"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "implicit_convention"
+      ],
+      "ambiguity_status": "minor",
+      "quantifier_signal_count": 1,
+      "question_count": 1,
+      "requires_source_audit": true,
+      "statement_characters": 389,
+      "statement_tokens_approx": 61
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove_or_disprove",
+      "multi_part": false,
+      "primary_domain": "graph theory"
+    }
+  },
+  "problem_id": "erdos-149",
+  "problem_number": 149,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove_or_disprove",
+    "multi_part": false,
+    "primary_domain": "graph theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_149.html",
+      "raw_html_sha256": "d2c231d6884f9219be4163f02ed5d0d76e7426e2e5266818f1cc07af8ced96bc",
+      "section_sha256": {
+        "references": "6e3e2e7302731b84a3ada169461f6b8890855961c8fe9853ba1e71ec9473c464",
+        "remarks": "82070c84c4fade24e802154b9d0639b6855f31a69455063927549789ed425dd4",
+        "statement": "0ac6b25363f6089b1e325e0c5508600866cc7eaa706ba7e1a8545486b9fcfd81"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_149.json",
+      "source_record_sha256": "97377756ec9de0b2893524035b0a467929f8c9489e7a76412f10667bd189a113",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_149.tex",
+    "latex_sha256": "a8d43ad57f85d4320380798f48210e9eac16d10ac3baa26c8aa2f23f5056aa42",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "0ac6b25363f6089b1e325e0c5508600866cc7eaa706ba7e1a8545486b9fcfd81",
+    "recommended_attack_modes": [
+      "literature_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "4f86335422edfa89ec67aa67ef6f51e305eabc0bf78cee6918bc97f5d6eb2a67",
+  "routes": [
+    "literature_search",
+    "natural_language_research"
+  ],
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "4f86335422edfa89ec67aa67ef6f51e305eabc0bf78cee6918bc97f5d6eb2a67",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "0ac6b25363f6089b1e325e0c5508600866cc7eaa706ba7e1a8545486b9fcfd81",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "9da75bd1ea80f7cedf780db9079f0671e683af2b8d18d62116130d9faf28f105",
+  "schema_version": 2,
+  "snapshot_id": "20260713-deb58d0facd9",
+  "statement": {
+    "ambiguity_status": "minor",
+    "intended": "The strong chromatic index of a graph $G$, denoted by $\\mathrm{sq}(G)$, is the minimum $k$ such that the edges of $G$ can be partitioned into $k$ sets of 'strongly independent' edges, that is, such that the subgraph of $G$ induced by each set is the union of vertex-disjoint edges.\n\nIs it true that, for any graph $G$ with maximum degree $\\Delta$,\\[\\mathrm{sq}(G)\\leq\\frac{5}{4}\\Delta^2?\\]",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "The strong chromatic index of a graph $G$, denoted by $\\mathrm{sq}(G)$, is the minimum $k$ such that the edges of $G$ can be partitioned into $k$ sets of 'strongly independent' edges, that is, such that the subgraph of $G$ induced by each set is the union of vertex-disjoint edges. Is it true that, for any graph $G$ with maximum degree $\\Delta$,\\[\\mathrm{sq}(G)\\leq\\frac{5}{4}\\Delta^2?\\]",
+    "original": "The strong chromatic index of a graph $G$, denoted by $\\mathrm{sq}(G)$, is the minimum $k$ such that the edges of $G$ can be partitioned into $k$ sets of 'strongly independent' edges, that is, such that the subgraph of $G$ induced by each set is the union of vertex-disjoint edges.\n\nIs it true that, for any graph $G$ with maximum degree $\\Delta$,\\[\\mathrm{sq}(G)\\leq\\frac{5}{4}\\Delta^2?\\]",
+    "statement_sha256": "0ac6b25363f6089b1e325e0c5508600866cc7eaa706ba7e1a8545486b9fcfd81"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

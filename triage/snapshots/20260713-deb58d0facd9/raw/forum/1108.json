@@ -1,0 +1,20 @@
+{
+  "problem_number": 1108,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/1108",
+  "retrieved_at": "2026-07-10T23:20:36.361748+00:00",
+  "page_title": "1108 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "a7c65c332bf2b79d07db3dbbd74c9618b5689668074fa16028bf8966f75c990d",
+  "comment_count": 2,
+  "comments": [
+    {
+      "post_id": "1742",
+      "text": "The OEIS sequences for the initial problem (some variants) are known: A051761 A115645 A025494 The largest number here is $1183893^2$ equals the sum of $i!$ for $i \\in \\{1,2,3,7,8,9,10,11,12,13,14,15\\}$. Heuristically, one of course expects a finite number of elements of this form.",
+      "meta": "StijnC — 17:21 on 17 Nov 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1740",
+      "text": "Related to the problem discussed with Mahler: $\\textbf{remark on equivalent solutions}$ One should not be allowed to count equivalent ones. E.g. every set $S$ of $4$ consecutive numbers, starting with an even number $2j$, results in a square (of $20 \\cdot 7^j$). For this reason, we may impose that we only count the sets $S$ containing $0.$ Also $1+k$ may be a square, so for additional special ones we of course need to impose $\\max S>2.$ (the case $\\max S=2$ does not lead to a solution) $\\textbf{Heuristical remark}$ A literature search didn't result in much. As sketched in [BLPPPV21], for every $k>4$, the number of squares of the desired form for the fixed $k$, can be estimated by $\\frac{k}{k-4}$, and so one can expect there are finitely many for fixed $k$. Furthermore, with the additional imposed values, also over all $k \\ge 5$, the expected number of solutions is finite, since $\\sum_k 1/k^2$ is finite. I would estimate it slightly different myself, but all that is needed is some heuristics that prove finiteness. The underlying idea of the birthday paradox also says that $k=4$ should be the threshold. $\\textbf{Small max S}$ For $\\max S \\le 4$, Wolfram Alpha should find all integral points. Here $20^2=1+7+7^2+7^3$ and $611^2=1+72+72^3$ are the only examples with $k\\ge 5.$ $\\textbf{More examples}$ The solutions with $k\\ge 5$ and values bounded by $10^{19}$ (the expected number of larger solutions is likely very small/ this list may even be complete) are $$20^2=1+7+7^2+7^3$$ $$521^2=1+12^2+12^3+12^4+12^5$$ $$611^2=1+72+72^3$$ $$11677^2=\\sum_{i \\in S} 8^i \\mbox{ for } S=[0,1,2, 3, 4, 5, 7, 9]$$ $$972799^2= \\sum_{i \\in S} 5^i \\mbox{ for } S=[0,2, 4, 5, 11, 12, 15, 16,17]$$ $$3051273374^2=\\sum_{i \\in S} 5^i \\mbox{ for } S=[0,3, 6, 7, 8, 13, 14, 15, 17, 18, 19, 23, 24, 25, 26, 27]$$ ($400, 271441,373321,136352329,946337894401$ or related did not appear in OEIS) (full list so far: $400, 271441,373321,136352329,946337894401,9310269202881343876$)",
+      "meta": "StijnC — 14:00 on 17 Nov 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

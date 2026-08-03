@@ -1,0 +1,39 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#972}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $\alpha&#62;1$ be irrational. Are there infinitely many primes $p$ such that $\lfloor p\alpha\rfloor$ is also prime?
+
+
+
+
+Vinogradov \cite{Vi48} proved that the sequence $\{p\alpha\}$ is uniformly distributed for every irrational $\alpha$, and hence there are infinitely many primes $p$ of the shape $p=\lfloor n\alpha\rfloor$ for every irrational $\alpha&#62;1$. Indeed, this occurs if and only if\[\frac{p}{\alpha}\leq n&lt;\frac{p+1}{\alpha},\]which is true if and only if $\{p\alpha^{-1}\}&gt;1-\alpha^{-1}$, which happens infinitely often by the uniform distribution of $\{p\alpha^{-1}\}$.
+
+
+
+
+References
+
+[Vi48] Vinogradov, I. M., On an estimate of trigonometric sums with prime numbers . Izv. Akad. Nauk SSSR Ser. Mat. (1948), 225--248.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/972}}
+\end{document}

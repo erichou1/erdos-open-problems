@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#486}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, primitive sets
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $A\subseteq \mathbb{N}$, and for each $n\in A$ choose some $X_n\subseteq \mathbb{Z}/n\mathbb{Z}$. Let\[B = \{ m\in \mathbb{N} : m\not\in X_n\pmod{n}\textrm{ for all }n\in A\textrm{ with }m>n\}.\]Must $B$ have a logarithmic density, i.e. is it true that\[\lim_{x\to \infty} \frac{1}{\log x}\sum_{\substack{m\in B\\ m<x}}\frac{1}{m}\]exists?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Davenport and Erd\H{o}s \cite{DaEr36} proved that the answer is yes when $X_n=\{0\}$ for all $n\in A$. An alternative elementary proof was later given by Davenport and Erd\H{o}s in \cite{DaEr51}.
+
+Erd\H{o}s \cite{Er80} wrote 'perhaps this question is not very difficult as far as I know it has not been attacked really seriously'.
+
+The problem considers logarithmic density since Besicovitch \cite{Be34} showed examples exist without a natural density, even when $X_n=\{0\}$ for all $n\in A$. 
+
+This is a generalisation of [25] (which is the case when $\lvert X_n\rvert=1$ for all $n\in A$).
+
+\bigskip
+\noindent\textbf{References:}
+
+[Be34] Besicovitch, A., On the density of certain sequences of integers. Math. Annalen (1934), 336-341.
+ 
+ [DaEr36] Davenport, H. and Erd\H{o}s, P., On sequences of positive integers. Acta Arithmetica (1936), 147-151.
+ 
+ [DaEr51] Davenport, H. and Erd\H{o}s, P., On sequences of positive integers. J. Indian Math. Soc. (N.S.) (1951), 19--24.
+ 
+ [Er80] Erd\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/486}}
+\end{document}

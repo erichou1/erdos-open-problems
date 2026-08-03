@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#1191}
+\date{Last updated: 2026-04-04}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{Prize: \$1000}
+
+\noindent\textbf{Tags:} additive combinatorics, sidon sets
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $A\subset\mathbb{N}$ be an infinite Sidon set. Is it true that\[\liminf_{x\to \infty} \frac{\lvert A\cap [1,x]\rvert}{x^{1/2}}(\log x)^{1/2}=0?\]Does there exist an infinite Sidon set $A$ such that\[\liminf_{x\to \infty} \frac{\lvert A\cap [1,x]\rvert}{x^{1/2}}(\log x)^c&#62;0\]for some $c&#62;0$?
+
+
+
+
+Erd\H{o}s proved (see for example \cite{HaRo66}) that if $A$ is an infinite Sidon set then\[\liminf_{x\to \infty} \frac{\lvert A\cap [1,x]\rvert}{x^{1/2}}(\log x)^{1/2}\leq c\]for some constant $c&gt;0$. In \cite{Er80} he offered \$1000 'for clearing up the problems' raised by this; he may have meant for finding the optimal function $f$ such that\[\liminf_{x\to \infty} \frac{\lvert A\cap [1,x]\rvert}{x^{1/2}}f(x)=0\]for all infinite Sidon sets $A$. The second question is a stronger form of [39] . See also [729] for the behaviour of the $\limsup$.
+
+
+
+
+References
+
+[Er80] Erd\H{o}s, Paul, A survey of problems in combinatorial number theory . Ann. Discrete Math. (1980), 89-115.
+
+[HaRo66] Halberstam, H. and Roth, K. F., Sequences. {V}ol. I . (1966), xx+291.
+
+\noindent\textbf{Related OEIS sequences:} possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/1191}}
+\end{document}

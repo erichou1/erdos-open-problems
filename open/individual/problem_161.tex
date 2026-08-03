@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#161}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{Prize: \$500}
+
+\noindent\textbf{Tags:} combinatorics, ramsey theory, discrepancy
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $\alpha\in[0,1/2)$ and $n,t\geq 1$. Let $F^{(t)}(n,\alpha)$ be the smallest $m$ such that we can $2$-colour the edges of the complete $t$-uniform hypergraph on $n$ vertices such that if $X\subseteq [n]$ with $\lvert X\rvert \geq m$ then there are at least $\alpha \binom{\lvert X\rvert}{t}$ many $t$-subsets of $X$ of each colour. For fixed $n,t$ as we change $\alpha$ from $0$ to $1/2$ does $F^{(t)}(n,\alpha)$ increase continuously or are there jumps? Only one jump?
+
+
+
+
+For $\alpha=0$ this is the usual Ramsey function. A conjecture of Erd\H{o}s, Hajnal, and Rado (see [562] ) implies that\[ F^{(t)}(n,0)\asymp \log_{t-1} n\]and results of Erd\H{o}s and Spencer imply that\[F^{(t)}(n,\alpha) \gg_\alpha (\log n)^{\frac{1}{t-1}}\]for all $\alpha&gt;0$, and a similar upper bound holds for $\alpha$ close to $1/2$. Erd\H{o}s said in \cite{Er90b}: 'If I can hazard a guess completely unsupported by evidence, I am afraid that the jump occurs all in one step at $0$. It would be much more interesting if my conjecture would be wrong and perhaps there is some hope for this for $t&gt;3$. I know nothing and offer \$500 to anybody who can clear up this mystery.' Conlon, Fox, and Sudakov \cite{CFS11} have proved that, for any fixed $\alpha&gt;0$,\[F^{(3)}(n,\alpha) \ll_\alpha \sqrt{\log n}.\]Coupled with the lower bound above, this implies that there is only one jump for fixed $\alpha$ when $t=3$, at $\alpha=0$. For all $\alpha&gt;0$ it is known that\[F^{(t)}(n,\alpha)\gg_t (\log n)^{c_\alpha}.\]See also [563] for more on the case $t=2$. This problem is #40 in Ramsey Theory in the graphs problem collection.
+
+
+
+
+References
+
+[CFS11] Conlon, David and Fox, Jacob and Sudakov, Benny, Large almost monochromatic subsets in hypergraphs . Israel J. Math. (2011), 423--432.
+
+[Er90b] Erd\H{o}s, Paul, Problems and results on graphs and hypergraphs: similarities and differences . Mathematics of Ramsey theory (1990), 12-28.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/161}}
+\end{document}

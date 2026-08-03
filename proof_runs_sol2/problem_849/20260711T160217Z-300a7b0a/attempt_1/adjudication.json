@@ -1,0 +1,83 @@
+{
+"reviewer_role": "adjudicator",
+"verdict": "fail",
+"outcome": "unknown",
+"claims_checked": 16,
+"claims_total": 16,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14",
+"C15",
+"C16"
+],
+"open_gaps": [
+"The exact immutable statement is not proved or disproved.",
+"The wording does not explicitly quantify n and k as integers. The candidate adopts an additional discrete-domain interpretation, which remains a blocking ambiguity under the acceptance criteria.",
+"No argument globally constructs or excludes a value with exactly four interior representations, so t=5 remains unresolved.",
+"LOW_HIGH_EXCLUSION is unproved: simultaneous membership in S_2, S_3, S_4, and S_k for some k at least 5 is not ruled out.",
+"HIGH_EXTENSION_BOUND is unproved: no theorem bounds the total interior multiplicity of a value represented on at least two layers k at least 5.",
+"No construction realizes exact interior multiplicity q for every nonnegative integer q.",
+"The displacement-word branch supplies no effective bound or complete decision procedure for its unbounded integer variables.",
+"The finite computation, even if independently reproduced, leaves every value a greater than 10^30 untreated."
+],
+"unchecked_imports": [],
+"material_errors": [
+{
+"claim_id": "C1",
+"error": "The candidate changes the formally ambiguous statement by imposing n,k in the integers. All later conclusions are conditional on that added interpretation."
+},
+{
+"claim_id": "C3",
+"error": "The displayed binomial-coefficient quotients are reversed: the written ratios are less than 1, not greater than 1. The intended monotonicity conclusions are true, but the stated derivations are false."
+},
+{
+"claim_id": "C5",
+"error": "The displayed quotient used to establish growth of the central binomial coefficients is reversed. The reciprocal is the quantity greater than 1."
+},
+{
+"claim_id": "C10",
+"error": "Reducing a bounded displacement word to finitely many polynomial equations does not imply decidability by finite exact search. The variables n and k remain unbounded, and no effective bound or complete Diophantine decision argument is supplied."
+},
+{
+"claim_id": "C11",
+"error": "The claim is internally contradictory: it states that e_i/d_i decreases, calls this an increase, derives the decreasing orientation, and then gives the 3003 example where e_i/d_i increases. The stated monotonicities of U and G are also reversed, and the arithmetic assertion 3/63=21 is false."
+},
+{
+"claim_id": "C12",
+"error": "Its proof depends on C11, which is not established as written. The conclusions cannot be retained by silently repairing the preceding theorem."
+},
+{
+"claim_id": "C16",
+"error": "The printed row recurrence is the inverse of the correct recurrence. The low-layer algebraic tests also omit explicit admissibility checks in their stated equivalences. Moreover, the computation is only a bounded exclusion and cannot establish a global conclusion."
+},
+{
+"claim_id": "GOAL",
+"error": "Neither the negative terminal branch nor the universal positive construction is completed. The candidate explicitly terminates with the main assertion unresolved."
+}
+],
+"completeness_score": 37,
+"proof_confidence": 0,
+"adversarial_survival_score": 48,
+"statement_sha256": "b669094e22469ade57dcca529d2ce001ede0c9bee628c97121ad1d9a7ebfb01b",
+"notes": {
+"summary": "The candidate contains useful conditional partial results, but it fails the required proof-or-disproof task and includes several locally false or unsupported derivations.",
+"surviving_core": [
+"Under the standard discrete interpretation, every a at least 2 has the automatic representation (a,1), each fixed layer contributes at most one row, and every fiber is finite.",
+"The exact witnesses M(2)=1, M(6)=2, M(120)=3, and M(3003)=4 are correctly certifiable.",
+"The layer-set reformulation, ordering of equal-value fibers, displacement identity, and adjacent-layer Pell-type collision construction provide partial structural information.",
+"No surviving claim closes either terminal branch required to decide the universal assertion."
+]
+}
+}

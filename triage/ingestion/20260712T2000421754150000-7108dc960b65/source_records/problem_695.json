@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 695,
+  "raw_page": {
+    "path": "raw/pages/problem_695.html",
+    "sha256": "d37159455aabf3473e2c1204a3c3447c82e9fc98eb878e878d6cc5c4ab8835b5"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "fed261bcc18b9a0328bf6c131d91fcf13997c5ca49fcdf0bb77df02f46914121",
+      "source_region": "div.problem-additional-text",
+      "text": "[FKL10] Ford, Kevin and Konyagin, Sergei V. and Luca, Florian, Prime chains and {P}ratt trees. Geom. Funct. Anal. (2010), 1231--1258."
+    },
+    "remarks": {
+      "sha256": "2aaa772227a5d8fd1d3146fc1f57cca5814902f7afcfbd107274304128d5c408",
+      "source_region": "div.problem-additional-text",
+      "text": "Such a sequence is sometimes called a prime chain. \n\nIf we take the obvious 'greedy' chain with $2=p_1$ and $p_{i+1}$ is the smallest prime $\\equiv 1\\pmod{p_i}$ then Linnik's theorem implies that this sequence grows like\\[p_k \\leq e^{e^{O(k)}}.\\]It is conjectured that, for any prime $p$, there is a prime $p'\\leq p(\\log p)^{O(1)}$ which is congruent to $1\\pmod{p}$, which would imply this sequence grows like\\[p_k\\leq \\exp(k(\\log k)^{1+o(1)}).\\]An extensive study of the growth of finite prime chains was carried out by Ford, Konyagin, and Luca \\cite{FKL10}.\n\nSee also [696]."
+    },
+    "statement": {
+      "sha256": "16f3c0420f2294f1c2fb6a3758c33d6dde34c4c1134de951a8518cc01e0aa5ce",
+      "source_region": "div#content",
+      "text": "Let $p_1<p_2<\\cdots$ be a sequence of primes such that $p_{i+1}\\equiv 1\\pmod{p_i}$. Is it true that\\[\\lim_k p_k^{1/k}=\\infty?\\]Does there exist such a sequence with\\[p_k \\leq \\exp(k(\\log k)^{1+o(1)})?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/695"
+}

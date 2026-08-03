@@ -1,0 +1,61 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#61}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+For any graph $H$ is there some $c=c(H)>0$ such that every graph $G$ on $n$ vertices that does not contain $H$ as an induced subgraph contains either a complete graph or independent set on $\geq n^c$ vertices?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Conjectured by Erd\H{o}s and Hajnal \cite{ErHa89}, who proved that a complete graph or independent set must exist on\[\geq \exp(c_H\sqrt{\log n})\]many vertices, where $c_H>0$ is some constant. This was improved by Buci\'{c}, Nguyen, Scott, and Seymour \cite{BNSS23} to\[\geq \exp(c_H\sqrt{\log n\log\log n}).\]The conjecture has been proved:
+{UL}
+{LI} for $H$ with $\leq 4$ vertices by Erd\H{o}s and Hajnal \cite{ErHa89}.{/LI}
+{LI} for the 'bull' graph on $5$ vertices (a $P_4$ with a new vertex adjacent to the two middle vertices) by Chudnovsky and Safra \cite{ChSa08}.{/LI}
+{LI} for $C_5$ by Chudnovsky, Scott, Seymour, and Spirkl \cite{CSSS23}.{/LI}
+{LI} for $P_5$ by Nguyen, Scott, and Seymour \cite{NSS26}.{/LI}
+{/UL}
+Alon, Pach, and Solymosi \cite{APS01} have proved that the family of $H$ for which the conjecture holds is closed under vertex substitution; together with the three final results above this means the conjecture is now known for all $H$ on $5$ vertices.
+
+Nguyen, Scott, and Seymour \cite{NSS24} have proved that if $H$ is a path then all $H$-free graphs on $n$ vertices contain either a complete graph or independent set on\[\geq 2^{(\log n)^{1-o(1)}}\]many vertices.
+
+A detailed account of this problem, including the proof of some special cases, is given in the PhD thesis of Nguyen. 
+
+This problem is #80 in Extremal Graph Theory in the graphs problem collection.
+
+\bigskip
+\noindent\textbf{References:}
+
+[APS01] Alon, Noga and Pach, J\'{a}nos and Solymosi, J\'ozsef, Ramsey-type theorems with forbidden subgraphs. Combinatorica (2001), 155--170.
+ 
+ [BNSS23] Buci\'C, M. and Nguyen, T. and Scott, A. and Seymour, P., A loglog step towards Erdos-Hajnal. arXiv:2301.10147 (2023).
+ 
+ [CSSS23] Chudnovsky, Maria and Scott, Alex and Seymour, Paul and
+Spirkl, Sophie, Erd\H{o}s-{H}ajnal for graphs with no 5-hole. Proc. Lond. Math. Soc. (3) (2023), 997--1014.
+ 
+ [ChSa08] Chudnovsky, Maria and Safra, Shmuel, The {E}rd\H os-{H}ajnal conjecture for bull-free graphs. J. Combin. Theory Ser. B (2008), 1301--1310.
+ 
+ [ErHa89] Erd\H{o}s, P. and Hajnal, A., Ramsey-type theorems. Discrete Appl. Math. (1989), 37-52.
+ 
+ [NSS24] Nguyen, Tung and Scott, Alex and Seymour, Paul, On a problem of {E}l-{Z}ahar and {E}rd\H{o}s. J. Combin. Theory Ser. B (2024), 211--222.
+ 
+ [NSS26] Nguyen, Tung and Scott, Alex and Seymour, Paul, Induced subgraph density. {VII}. The five-vertex path. Proc. Lond. Math. Soc. (3) (2026), Paper No. e70133.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/61}}
+\end{document}

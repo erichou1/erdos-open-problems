@@ -1,0 +1,94 @@
+{
+"reviewer_role": "independent adversarial referee (counterexample)",
+"verdict": "fail",
+"claims_checked": 14,
+"claims_total": 14,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14"
+],
+"open_gaps": [
+"The immutable wording still lacks a unique nondegenerate interpretation. Distinctness, positivity of d, admissible square roots, generator domains, properness, and the meaning of arbitrarily large remain unresolved.",
+"No uniform bound B(W) for linked-factor chains is proved, and no fixed width W with arbitrarily long chains is constructed.",
+"No height-independent upper bound for the dimension of proper square cubes is proved.",
+"No dimension-lifting construction producing proper square cubes in every dimension is supplied.",
+"C6 requires a valid derivation of its descent-versus-halving conclusion; the argument actually written is invalid.",
+"The singular-boundary case in C12 needs a self-contained justification of the improper finite-difference integral formula."
+],
+"unchecked_imports": [
+"C12 invokes repeated multivariate finite-difference integration for f(x)=sqrt(x), including extension to A_S=0 by an improper limiting argument, without fully proving the identity, convergence, and passage to the limit."
+],
+"counterexample_searches": [
+{
+"target": "Literal first-question nondegeneracy",
+"result": "The constant sequence x_i=1 with d=0 satisfies the displayed inequalities for every k under a permissive literal reading."
+},
+{
+"target": "Literal second-question nondegeneracy",
+"result": "Taking a=1 and every b_i=0 produces collapsed nominal cubes of every dimension if zero generators and repeated vertices are allowed."
+},
+{
+"target": "C3 boundary p_i>h_i",
+"result": "An edge beginning at 0 squared has p_i=h_i, confirming that strict inequality fails when zero is admitted."
+},
+{
+"target": "C6 numerical inference",
+"result": "The asserted identity rs/(r+s)=1/r+1/s is already false at r=s=1. The asserted upper bound rs/(r+s)<=2 is false at r=s=5, where the quotient is 5/2."
+},
+{
+"target": "Binary additive-cube enumeration in C9",
+"result": "Exhaustive checking of all binary words through length 10 confirms the reported counts 1,2,4,6,10,16,18,12,10,6,0 and the six length-9 survivors."
+},
+{
+"target": "Extension of the binary obstruction to width 2",
+"result": "The stated ternary word of length 30 was checked against every possible adjacent triple of equal-length blocks and contains no equal-sum additive cube."
+},
+{
+"target": "Overstrong local monotonicity assertions",
+"result": "The supplied roots 5,32,45,55 and 1,41,58,71,82 correctly exhibit genuine halving events and a halving event followed by decrement descent."
+},
+{
+"target": "Low-dimensional impossibility of square cubes",
+"result": "The stated proper 2-cube and proper 3-cube were arithmetically verified, defeating any proposed obstruction based only on one- or two-dimensional faces."
+}
+],
+"material_errors": [
+{
+"claim_id": "C6",
+"error": "The transition-classification proof contains a false identity and the wrong inequality. From 6brs<=W(r+s), the report cites rs/(r+s)<=2 to conclude 3b<=W. That implication does not follow. The final adversarial-referee section repeats the same erroneous inequality, so C6 cannot be recorded as checked on the basis presented."
+},
+{
+"claim_id": "C12",
+"error": "The report labels the curvature hierarchy fully checked, but the finite-difference integral representation at the singular base A_S=0 is asserted through a convergent limit without supplying the limiting argument required for self-containment."
+},
+{
+"claim_id": "GOAL",
+"error": "The candidate explicitly replaces the immutable statement by a working interpretation and then proves neither the positive nor the negative alternative for either substantive question. This directly fails the acceptance criterion requiring resolution of the exact original statement."
+},
+{
+"claim_id": "RESULT_METADATA",
+"error": "PROOF_CONFIDENCE 95 and CLAIMS_CHECKED 14 are not supported: no proof or disproof is delivered, and at least C6 has an invalid written derivation."
+}
+],
+"completeness_score": 63,
+"proof_confidence": 6,
+"adversarial_survival_score": 61,
+"statement_sha256": "d23ff4ea91f0d915bd67a828cdec2f9acc9b33169e5e84e2e4f5660875187ca1",
+"notes": "The report contains several useful and independently verifiable reductions, particularly C2-C5, C7-C11, C13, and the explicit tests in C14. They remain partial results and do not settle either quantified question. The uploaded file is identified here only as the reviewed input, not as mathematical evidence: 
+
+Pasted text
+
+"
+}

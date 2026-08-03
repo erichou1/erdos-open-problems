@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 86,
+  "raw_page": {
+    "path": "raw/pages/problem_86.html",
+    "sha256": "6e9efc155dca0b7ab428d0ef07eb7b3fb8eeb7f6fdeb4464e2d01eefa2b1859a"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "42b67d3471dbcee15741470141b7011b43dd4a5106327ad56f34e3d08d652747",
+      "source_region": "div.problem-additional-text",
+      "text": "[BHLL14] Balogh, J\\'{o}zsef and Hu, Ping and Lidick\\'{y}, Bernard and Liu, Hong, Upper bounds on the size of 4- and 6-cycle-free subgraphs of the hypercube. European J. Combin. (2014), 75-85.\n \n [BHN95] Brass, Peter and Harborth, Heiko and Nienborg, Hauke, On the maximum number of edges in a {$C_4$}-free subgraph of\n{$Q_n$}. J. Graph Theory (1995), 17--23.\n \n [Ba12b] R. Baber, Tur\\'{a}n densities of hypercubes. arXiv:1201.3587 (2012).\n \n [Er91] Erd\\H{o}s, P., Problems and results in combinatorial analysis and combinatorial number theory. Graph theory, combinatorics, and applications, Vol. 1 (Kalamazoo, MI, 1988) (1991), 397-406."
+    },
+    "remarks": {
+      "sha256": "93c50f74e422cf86eab68bb0c2a4fcd87120af83019596e8ae26824d8231140b",
+      "source_region": "div.problem-additional-text",
+      "text": "Let $f(n)$ be the maximum number of edges in a subgraph of $Q_n$ without a $C_4$, so that this conjecture is that $f(n)\\leq (\\frac{1}{2}+o(1))n2^{n-1}$.\n\nErd\\H{o}s \\cite{Er91} showed that\\[f(n) \\geq \\left(\\frac{1}{2}+\\frac{c}{n}\\right)n2^{n-1}\\]for some constant $c>0$, and wrote it is 'perhaps not hopeless' to determine $f(n)$ exactly. Brass, Harborth, and Nienborg \\cite{BHN95} improved this to\\[f(n) \\geq \\left(\\frac{1}{2}+\\frac{c}{\\sqrt{n}}\\right)n2^{n-1}\\]for some constant $c>0$.\n\nBalogh, Hu, Lidicky, and Liu \\cite{BHLL14} proved that $f(n)\\leq 0.6068 n2^{n-1}$. This was improved to $\\leq 0.60318 n2^{n-1}$ by Baber \\cite{Ba12b}.\n\nA similar question can be asked for other even cycles.\n\nSee also [666] and the entry in the graphs problem collection."
+    },
+    "statement": {
+      "sha256": "0b5334842173eff5a749a76eb3296eb1d1e989d4ef4cb775b13704321e3e059f",
+      "source_region": "div#content",
+      "text": "Let $Q_n$ be the $n$-dimensional hypercube graph (so that $Q_n$ has $2^n$ vertices and $n2^{n-1}$ edges). Is it true that every subgraph of $Q_n$ with\\[\\geq \\left(\\frac{1}{2}+o(1)\\right)n2^{n-1}\\]many edges contains a $C_4$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/86"
+}

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 430,
+  "raw_page": {
+    "path": "raw/pages/problem_430.html",
+    "sha256": "648152a75e223e34e7cfea076b73147c9b228c3bcdf5cc83d5f4ae55400cbd5a"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_region": "div.problem-additional-text",
+      "text": ""
+    },
+    "remarks": {
+      "sha256": "bc35de6f1066bba8f07f1691adf572e04df656a228256427fa519b7a1b6500fa",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s and Graham write 'preliminary calculations made by Selfridge indicate that this is the case but no proof is in sight'. For example if $n=8$ we have $a_1=7$ and $a_2=5$ and then must stop.\n\nSarosh Adenwalla has observed that this problem is equivalent to (the first part of) [385]. Indeed, assuming a positive answer to that, for all large $n$, there exists a composite $m<n$ such that all primes dividing $m$ are $>n-m$. It follows that such an $m$ is equal to some $a_i$ in the sequence defined for $[1,n)$, and $m$ is composite by assumption."
+    },
+    "statement": {
+      "sha256": "3bbbd5c95ad33064a6bf01008518e4fc3eea0dbbb67714f6d61299576e448662",
+      "source_region": "div#content",
+      "text": "Fix some integer $n$ and define a decreasing sequence in $[1,n)$ by $a_1=n-1$ and, for $k\\geq 2$, letting $a_k$ be the greatest integer in $[1,a_{k-1})$ such that all of the prime factors of $a_k$ are $>n-a_k$.\n\nIs it true that, for sufficiently large $n$, not all of this sequence can be prime?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/430"
+}

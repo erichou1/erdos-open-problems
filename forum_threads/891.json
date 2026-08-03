@@ -1,0 +1,25 @@
+{
+  "problem_number": 891,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/891",
+  "retrieved_at": "2026-07-10T23:19:20.372304+00:00",
+  "page_title": "891 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "46d6209455a5b58fd82a424697aba0e707b0ff757abf0d409e2cf14d1a816130",
+  "comment_count": 3,
+  "comments": [
+    {
+      "post_id": "6965",
+      "text": "James A. Maxdougall and Roger B. Eggleton in \"Consecutive Integers with Equally Many Principal Divisors\", note that there is no sequence of 10 consecutive integers each of which having exactly two distinct prime divisors.",
+      "meta": "Dogmachine — 17:41 on 13 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2864",
+      "text": "It follows from Catalan's conjecture that any three consecutive positive integers starting from 8 onward must contain a number with at least two distinct prime divisors. This was also an exercise posed by Waclaw Sierpinski iirc. EDIT: It could be added that we are requiring more than $k$ distinct prime factors, because otherwise It can be misunterstood that counting with multiplicity is allowed.",
+      "meta": "Dogmachine — 11:41 on 08 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "178",
+      "text": "While Desmond's remark would possibly leading to saying \"no\", I also want to add observations leading to a plausible \"yes\". Observation: If this is not the case for some large $n$, one of the elements in the interval is of the form $p_1^{e_1} p_2^{e_2} \\ldots p_k^{e_k}$. So it is sufficient to consider the neighbourhood of these powers and check if many of them have few prime factors. This seems unlikely. Quantitave for $k=2$: Let $n>4372$ (likely the necessary bound), where $r=6 \\lfloor n/6 \\rfloor =2^i*3^j$. Then $r-2$ and $r+2$ are both multiples of $2$, and $r-3, r+3$ are both multiples of $3$. If $i,j>1$, then furthermore the exponents of the small primes are one. So the probability that is works, is bounded by a function of the form $1/ \\log(x)^2.$ Also the other elements in the interval are likely not pseudoprimepowers, so the sum of chances to find one is small. For $r=3*2^i$, one needs that $r-3$ or $r+3$ is almost prime. So $i$ needs to be prime or a power of $2$ (the latter is expected to be excluded, as there is likely no Fermat number above $2^{32}+1$). So take $p$ such that $2^p-1$ is a Mersenne prime. Now $3*2^p-1=t*s$ and $3*2^p-2=2*q$ should already both have at most $2$ prime factors. For $r=2*3^i$, one can guess along the same lines. Nonetheless, fully making the above rigourous, may be hard. Anyone else ideas? Cases to exclude? ** for $k=3$, $n>8611$ may be the quantitative \"large enough\".",
+      "meta": "StijnC — 07:35 on 24 Aug 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

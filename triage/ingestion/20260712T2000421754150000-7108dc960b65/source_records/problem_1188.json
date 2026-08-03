@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1188,
+  "raw_page": {
+    "path": "raw/pages/problem_1188.html",
+    "sha256": "a367cbd42fe11e93f4d3cb1f28497aca279de2644cffba53937ba806d3f05915"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "d4169e7f86bab6952e616e787db52f9f3d41c10c626b2eeb429ab7a032f32a9f",
+      "source_region": "div.problem-additional-text",
+      "text": "[BBMST24] Balister, Paul and Bollob\\'{a}s, B\\'ela and Morris, Robert and\nSahasrabudhe, Julian and Tiba, Marius, The structure and number of {E}rd\\H os covering systems. J. Eur. Math. Soc. (JEMS) (2024), 75--109.\n \n [Er80] Erd\\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.\n \n [Ho15] Hough, Bob, Solution of the minimum modulus problem for covering systems. Ann. of Math. (2) (2015), 361-382."
+    },
+    "remarks": {
+      "sha256": "1e0bb824ebb5ff154096e3af4807588b3ad421b205f187b6e3b83387541d7955",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s \\cite{Er80} asked this without the minimal assumption, but otherwise this is trivial (since e.g. any system containing some fixed covering system would work, resulting in $\\gg 2^x$ many such systems). He expected $F(x)\\to \\infty$ as $x\\to \\infty$ 'very slowly'.\n\nIn \\cite{Er80} Erd\\H{o}s also asked to estimate the number of irreducible covering sets in $[1,x]$ (that is, those sets of moduli which contain no proper sets of moduli which form a covering system, perhaps with a different choice of congruence class). If this count is $G(x)$ then trivially $G(x)\\leq F(x)$. See [1189] for more on irreducible covering sets.\n\nIt follows from the solution of Hough \\cite{Ho15} to [2] that $F(x)\\to \\infty$ as $x\\to \\infty$ (although a lower bound of $F(x) \\gg \\log x$ is easily established by elementary means, as observed by van Doorn in the comments). The lower bound construction of Balister, Bollob\\'{a}s, Morris, Sahasrabudhe, and Tiba \\cite{BBMST24} implies that there are at least $\\exp(k^{3+o(1)})$ many minimal distinct covering systems, all of whose moduli are at most $\\prod_{p<k}p=e^{(1+o(1))k}$, which implies\\[F(x)\\geq \\exp((\\log x)^{3-o(1)})\\](in particular $F(x)$ grows faster than any polynomial, perhaps contradicting Erd\\H{o}s' guess that it should grow 'very slowly', although it is possible he was thinking of the number of different moduli possible). The trivial upper bound is\\[F(x) \\leq \\exp(O(x\\log x)).\\]"
+    },
+    "statement": {
+      "sha256": "01c1c0886356695385e2a34ee498a485c53b5a5a965bfb6e8092dc87eb0123d4",
+      "source_region": "div#content",
+      "text": "Call a set of distinct integers $1<n_1<\\cdots<n_k$ with associated congruence classes $a_i\\pmod{n_i}$ a distinct covering system if every integer satisfies at least one of these congruences. A minimal distinct covering system is one such that no proper subset forms a covering system.\n\nLet $F(x)$ count the number of minimal distinct covering systems with all moduli in $[1,x]$. Estimate $F(x)$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1188"
+}

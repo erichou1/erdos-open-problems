@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#788}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} additive combinatorics
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $f(n)$ be maximal such that if $B\subset (2n,4n)\cap \mathbb{N}$ there exists some $C\subset (n,2n)\cap \mathbb{N}$ such that $c_1+c_2\not\in B$ for all $c_1\neq c_2\in C$ and $\lvert C\rvert+\lvert B\rvert \geq f(n)$. Estimate $f(n)$. In particular is it true that $f(n)\leq n^{1/2+o(1)}$?
+
+
+
+
+A conjecture of Choi \cite{Ch71}, who proved $f(n) \ll n^{3/4}$. Adenwalla in the comments has provided a simple construction that proves $f(n) \gg n^{1/2}$. Hunter in the comments has sketched an argument that gives $f(n) \ll n^{2/3+o(1)}$. The bound\[f(n) \ll (n\log n)^{2/3}\]was proved by Baltz, Schoen, and Srivastav \cite{BSS00}. In general, the argument given by Hunter shows that, if a random Cayley graph with probability $p$ has (almost surely) independence number $\ll p^{-c-o(1)}$, then $f(n) \leq n^{\frac{c}{c+1}+o(1)}$. The work of Alon and Pham \cite{AlPh25} on random Cayley graphs therefore implies that\[f(n) \leq n^{3/5+o(1)},\]and the conjectured bound of $\leq p^{-1+o(1)}$ for the independence number would yield $f(n)\leq n^{1/2+o(1)}$.
+
+
+
+
+References
+
+[AlPh25] N. Alon and H. T. Pham, Random Cayley graphs and random subsets . arXiv:2509.02561 (2025).
+
+[BSS00] Baltz, Andreas and Schoen, Tomasz and Srivastav, Anand, Probabilistic construction of small strongly sum-free sets via large Sidon sets . Colloq. Math. (2000), 171--176.
+
+[Ch71] Choi, S. L. G., On a combinatorial problem in number theory . Proc. London Math. Soc. (3) (1971), 629-642.
+
+\noindent\textbf{Related OEIS sequences:} possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/788}}
+\end{document}

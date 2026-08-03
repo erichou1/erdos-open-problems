@@ -1,0 +1,79 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "egmra"
+description = "Evidence-Gated Mathematical Research Architecture — an event-sourced, neuro-symbolic autonomous research operating system."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Proprietary" }
+authors = [{ name = "EGMRA maintainers" }]
+keywords = ["mathematics", "research", "verification", "provenance", "erdos"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: OS Independent",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Mathematics",
+]
+# The core package is stdlib-only, so a plain ``pip install -e .`` yields a
+# fully importable, fully testable system with no external services. Live
+# adapters (browser reasoning, HTTP fetch, PDF) are opt-in extras below.
+dependencies = []
+dynamic = ["version"]
+
+[project.optional-dependencies]
+# Browser ChatGPT is the primary informal-reasoning provider (DECISIONS.md D-A).
+browser = ["playwright>=1.60.0"]
+# Upstream corpus fetch / status refresh.
+fetch = ["requests>=2.28.0", "PyYAML>=6.0"]
+# Guide/report PDF regeneration.
+pdf = ["fpdf2>=2.8.4"]
+# Everything needed to develop and collect/run the COMPLETE test suite (the
+# repository's legacy unittest suite imports the browser + fetch + pdf helpers).
+dev = [
+    "pytest>=9.0,<10",
+    "requests>=2.28.0",
+    "PyYAML>=6.0",
+    "playwright>=1.60.0",
+    "fpdf2>=2.8.4",
+]
+# Durable PostgreSQL event store (M2).
+postgres = ["psycopg[binary]>=3.1"]
+# Official Aristotle formal-search SDK (DECISIONS.md D-B).
+aristotle = ["aristotlelib>=2.1"]
+# Convenience aggregate of every documented live adapter.
+all = [
+    "playwright>=1.60.0",
+    "requests>=2.28.0",
+    "PyYAML>=6.0",
+    "fpdf2>=2.8.4",
+    "psycopg[binary]>=3.1",
+    "aristotlelib>=2.1",
+]
+
+[project.scripts]
+egmra = "egmra.cli:main"
+
+[project.urls]
+Documentation = "https://www.erdosproblems.com"
+
+[tool.setuptools.dynamic]
+version = { attr = "egmra.__version__" }
+
+[tool.setuptools.packages.find]
+# Package only the egmra library; the repository's loose top-level scripts
+# (fetchers, runners, one-off tools) are intentionally not distributed.
+include = ["egmra*"]
+namespaces = false
+
+[tool.setuptools.package-data]
+# Ship the corpus snapshot so `egmra run --erdos N` works from an installed wheel
+# outside the source checkout.
+egmra = ["data/*.tex", "data/*.json"]
+
+[tool.pytest.ini_options]
+testpaths = ["egmra/tests", "tests"]
+addopts = "-q"

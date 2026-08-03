@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 431,
+  "raw_page": {
+    "path": "raw/pages/problem_431.html",
+    "sha256": "51ad6f0c44cc681b5090fd020b382f742eeb4d63d61eb0ea75d44bec9fb3c414"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "70de454dcbfa5f9b8227285c318738b06ea2fe238da2622fd31c4c1a99acd95a",
+      "source_region": "div.problem-additional-text",
+      "text": "[El01] Elsholtz, Christian, The inverse Goldbach problem. Mathematika (2001), 151-158.\n \n [ElHa15] Elsholtz, Christian and Harper, Adam J., Additive decompositions of sets with restricted prime factors. Trans. Amer. Math. Soc. (2015), 7403-7427.\n \n [Er80] Erd\\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.\n \n [Gr90] Granville, Andrew, A note on sums of primes. Canad. Math. Bull. (1990), 452--454.\n \n [TaZi23] Tao, Terence and Ziegler, Tamar, Infinite partial sumsets in the primes. J. Anal. Math. (2023), 375--389."
+    },
+    "remarks": {
+      "sha256": "3b039169e04a7ec4eca650c552ecb7c25d94528ac65613645ca6156c4b52d07f",
+      "source_region": "div.problem-additional-text",
+      "text": "A problem of Ostmann, sometimes known as the 'inverse Goldbach problem'. (In \\cite{Er80} Erd\\H{o}s dates this to abou 25 years old, putting it at about 1955.)\n\nThe answer is surely no. The best result in this direction is due to Elsholtz and Harper \\cite{ElHa15}, who showed that if $A,B$ are such sets then for all large $x$ we must have\\[\\frac{x^{1/2}}{\\log x\\log\\log x} \\ll \\lvert A \\cap [1,x]\\rvert \\ll x^{1/2}\\log\\log x\\]and similarly for $B$.\n\nElsholtz \\cite{El01} has proved there are no sets $A,B,C$ (all of size at least $2$) such that $A+B+C$ agrees with the set of prime numbers up to finitely many exceptions.\n\nGranville \\cite{Gr90} proved, conditional on the prime $k$-tuples conjecture, that there are infinite sets $B$ and $C$ such that\\[\\{ \\tfrac{b+c}{2}: b\\in B, c\\in C\\}\\]is a subset of the primes. Tao and Ziegler \\cite{TaZi23} gave an unconditional proof that there are infinite sets $B=\\{b_1<\\cdots\\}$ and $C=\\{c_1<\\cdots\\}$ such that\\[\\{ b_i+c_j : b_i\\in B, c_j\\in C, i<j\\}\\]is a subset of the primes.\n\nSee also [429] and [432]."
+    },
+    "statement": {
+      "sha256": "00a04add354ec939bc829826b83d88ac98269e690a4814ce241fbd14db18c023",
+      "source_region": "div#content",
+      "text": "Are there two infinite sets $A$ and $B$ such that $A+B$ agrees with the set of prime numbers up to finitely many exceptions?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/431"
+}

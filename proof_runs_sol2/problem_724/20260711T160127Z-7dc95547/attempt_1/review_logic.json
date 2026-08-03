@@ -1,0 +1,102 @@
+{
+"reviewer_role": "independent adversarial referee (logic)",
+"verdict": "fail",
+"claims_checked": 18,
+"claims_total": 18,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14",
+"C15",
+"C16",
+"C17",
+"C18"
+],
+"open_gaps": [
+"The immutable statement remains formally ambiguous because the meaning and constant dependence in ≫ are not specified. The candidate adopts one interpretation despite the acceptance criterion requiring ambiguity to be treated as blocking.",
+"No proof or disproof of the square-root lower bound is supplied under the adopted interpretation.",
+"G1: the proposed uniform critical-scale PBD existence theorem is unproved.",
+"G2: the proposed uniform ITD embedding theorem, including the first perturbation for general prime powers, is unproved.",
+"G3: no exact perfect-matching theorem for the orthogonal-array hypergraph at r=Theta(sqrt(n)) is proved.",
+"G4: no universal arithmetic-sensitive upper bound for arbitrary Latin squares along an infinite sequence is proved.",
+"C16 requires a new valid verification or construction; its displayed matrix does not satisfy C14 as defined."
+],
+"unchecked_imports": [],
+"counterexample_searches": [
+{
+"target": "Sparse PBD palette claim",
+"result": "The arithmetic obstruction for K={32,64,243}, v=1026 checks correctly: Fisher's bound and pair counting force c=0, after which divisibility modulo 16 is impossible."
+},
+{
+"target": "Extended sparse palette K={32,64,81,243}",
+"result": "The stated obstruction checks correctly: a 243-block violates the counting lower bound, while without one every block-pair count is even but binom(1026,2) is odd."
+},
+{
+"target": "Transversal in the cyclic Latin square of even order",
+"result": "The modular-sum contradiction is valid."
+},
+{
+"target": "Translation-type families at even order",
+"result": "The permutation-sum argument correctly shows that this restricted construction class contains at most one square."
+},
+{
+"target": "C15 finite translation frame for q=3",
+"result": "All six required difference multisets equal Z_7 minus {0}; the construction passes the stated finite check."
+},
+{
+"target": "C16 finite translation frame for q=4",
+"result": "The construction fails as written. For coordinate pair (0,1) and missing coordinate i=3, the required difference is C_{3,1}-C_{3,0}=2-2=0, whereas C14 requires every such difference orbit to cover only nonzero elements. Several other coordinate pairs also produce zero differences."
+},
+{
+"target": "C17 boundary cases",
+"result": "The codegree formula needs r>=3. At r=2 there are no two distinct compatible vertices, and the displayed value n^(r-3)=n^(-1) cannot be the codegree."
+}
+],
+"material_errors": [
+{
+"location": "Exact normalization / C1",
+"severity": "fatal",
+"error": "The candidate changes an ambiguous immutable statement into the separately chosen assertion Q. This directly violates the instruction to treat ambiguity as a blocking defect rather than select a convenient interpretation."
+},
+{
+"location": "Overall conclusion",
+"severity": "fatal",
+"error": "The candidate explicitly leaves every terminal route open and therefore neither proves nor disproves the original assertion."
+},
+{
+"location": "C16",
+"severity": "major",
+"error": "The displayed matrix does not satisfy the row-wise difference condition required by C14. The triples printed in C16 are instead obtained from transposed differences C_{k,i}-C_{j,i}. Since the definition uses d_{i,h,j}=hC_{i,j}, that transpose cannot be silently substituted. Thus ITD(5,17;4) is unsupported by the given construction."
+},
+{
+"location": "C17",
+"severity": "minor",
+"error": "The maximum-codegree statement is asserted for unrestricted integers r,n but is undefined or false at r=2. A missing boundary hypothesis is not permitted under the stated acceptance criteria."
+},
+{
+"location": "Final self-audit",
+"severity": "major",
+"error": "The assertion that every listed finite difference condition was checked is contradicted by the explicit failure of C16."
+}
+],
+"completeness_score": 70,
+"proof_confidence": 0,
+"adversarial_survival_score": 74,
+"statement_sha256": "3c9f2d219321365a80825b0cb65a244b298b263a6a3d9a43b4b4c3c7a4331a06",
+"notes": "Most structural reductions C2-C15 and C18 survive local checking, apart from the fatal statement-normalization issue. C16 contains a concrete algebraic verification failure, and C17 omits a boundary condition. Even after deleting those defective claims, the candidate remains a research portfolio rather than a proof or counterexample. Source artifact reviewed: 
+
+Pasted text
+
+"
+}

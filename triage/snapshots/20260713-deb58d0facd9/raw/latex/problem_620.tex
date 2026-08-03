@@ -1,0 +1,54 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#620}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory
+
+\medskip
+\noindent\textbf{Note:} Erdős-Rogers problem
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+If $G$ is a graph on $n$ vertices without a $K_4$ then how large a triangle-free induced subgraph must $G$ contain?
+
+
+
+
+This was first asked by Erd\H{o}s and Rogers \cite{ErRo62}, and is generally known as the Erd\H{o}s-Rogers problem. Let $f(n)$ be such that every such graph contains a triangle-free subgraph with at least $f(n)$ vertices. It is now known that $f(n)=n^{1/2+o(1)}$. Bollob\'{a}s and Hind \cite{BoHi91} proved\[n^{1/2} \ll f(n) \ll n^{7/10+o(1)}.\]Krivelevich \cite{Kr94} improved this to\[n^{1/2}(\log\log n)^{1/2} \ll f(n) \ll n^{2/3}(\log n)^{1/3}.\]Wolfovitz \cite{Wo13} proved\[f(n) \ll n^{1/2}(\log n)^{120}.\]The best bounds currently known are\[n^{1/2}\frac{(\log n)^{1/2}}{\log\log n}\ll f(n) \ll n^{1/2}\log n.\]The lower bound follows from results of Shearer \cite{Sh95}, and the upper bound was proved by Mubayi and Verstraete \cite{MuVe24}.
+
+
+
+
+References
+
+[BoHi91] Bollob\'{a}s, B. and Hind, H. R., Graphs without large triangle free subgraphs . Discrete Math. (1991), 119-131.
+
+[ErRo62] Erd\H{o}s, P. and Rogers, C. A., The construction of certain graphs . Canadian J. Math. (1962), 702-707.
+
+[Kr94] Krivelevich, Michael, {$K^s$}-free graphs without large {$K^r$}-free subgraphs . Combin. Probab. Comput. (1994), 349-354.
+
+[MuVe24] D. Mubayi and J. Verstraete, On the order of Erd\H{o}s-Rogers functions . arXiv:2401.02548 (2024).
+
+[Sh95] Shearer, James B., On the independence number of sparse graphs . Random Structures Algorithms (1995), 269--271.
+
+[Wo13] Wolfovitz, Guy, {$K_4$}-free graphs without large induced triangle-free subgraphs . Combinatorica (2013), 623-631.
+
+\noindent\textbf{Related OEIS sequences:} possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/620}}
+\end{document}

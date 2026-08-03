@@ -1,0 +1,40 @@
+{
+  "problem_number": 1208,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/1208",
+  "retrieved_at": "2026-07-10T23:21:07.258000+00:00",
+  "page_title": "1208 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "f63ca796ec3cff770dd33a0f987571bf4afd1ebc8538930ab8a70f37a0505108",
+  "comment_count": 6,
+  "comments": [
+    {
+      "post_id": "7012",
+      "text": "A small observation about possible sharp upper-bound examples. Let\\[ Q(P)=\\left|\\{(p,q,s,t)\\in P^4:\\|p-q\\|=\\|s-t\\|\\}\\right| \\]be the distance energy of an \\(N\\)-point planar set \\(P\\). The Clemen--Fuehrer--Roche-Newton/Li--Postle argument seems to give the following quantitative form. If\\[ Q(P)\\leq C N^3 L,\\qquad 1\\leq L\\leq C\\log N, \\]then \\(P\\) contains a distance-Sidon subset of size\\[ \\Omega_C\\!\\left(N^{1/3}\\left(\\frac{\\log N}{L}\\right)^{1/3}\\right). \\]Indeed, in their hypergraph proof the only change is replacing the general Guth--Katz input\\[ \\overline{\\Delta}_4=O(N^2\\log N) \\]by\\[ \\overline{\\Delta}_4=O(N^2L), \\]and the same codegree checks still have polynomial room. Thus any construction proving a sharp upper bound \\(F_2(N)=O(N^{1/3})\\) would have to satisfy\\[ Q(P)\\geq cN^3\\log N. \\]So such a construction must essentially saturate the Guth--Katz distance-energy bound. In particular, low-energy or pseudo-random-looking distance colourings cannot be extremal witnesses. As a quick application, for rectangular grids \\([W]\\times[H]\\), \\(W\\geq H\\), the standard divisor decomposition gives\\[ Q([W]\\times[H])=O(W^3H^3+W^2H^4\\log^3 H). \\]Hence sufficiently elongated rectangles, for example \\(W\\geq H\\log^3H\\), already contain distance-Sidon subsets of size\\[ \\Omega\\!\\left(N^{1/3}(\\log N)^{1/3}\\right), \\]and cannot be sharp \\(O(N^{1/3})\\) examples.",
+      "meta": "Lumantis — 22:12 on 15 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6983",
+      "text": "@Sungchul Lee: Very nice, I also noticed this a few days ago (and mentioned it to Ernie Croot, Junzhe Mao, Adam Sheffer, and Kyle Yip), and I was planning to write a note about this. Using the same ideas, it is also possible to show that there exist sets P in R^2 of size N where the largest subset without isosceles triangles has size << N^{1-c} for some c > 0. This gives a polynomial improvement for a problem of Brass-Moser-Pach. Essentially, the idea to combinate a split-prime/CRT argument together with the arithmetic input from the unit distance input was introduced recently in my counterexample for the Elekes-Ronyai problem: https://arxiv.org/abs/2606.13619, and we further expect that the ideas from our forthcoming work with Ernie, Junzhe, Adam, and Kyle will help generate many more such constructions (it will become public tomorrow). Happy to chat more about it later.",
+      "meta": "pohoatza — 18:42 on 14 Jun 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6984",
+      "text": "I asked ChatGPT to make the constant in the result by Sungchul Lee explicit. After some back and forth it came up with an unbelievably small constant (the smallest positive number I have ever seen). What constant can be derived from your solution/proof?",
+      "meta": "old-bielefelder — 19:42 on 14 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6976",
+      "text": "With the help of GPT-5.5 Pro, I have obtained a polynomial improvement to the upper bound for this problem:\\[ F_2(n) \\ll n^{1/2-\\varepsilon} \\]for some absolute constant \\(\\varepsilon>0\\). This improves the previous square-grid upper bound \\(F_2(n)\\ll n^{1/2-o(1)}\\). The manuscript is available here: https://github.com/lsngchl/Erdos1208 The main idea is to combine the number-field towers of bounded root discriminant used in the recent OpenAI unit-distance construction with a split-prime argument of Pohoata and Sheffer. I have checked the mathematical details of the proof myself, but I am not an expert in this area, so I would be very grateful for any comments, corrections, or pointers to relevant prior work.",
+      "meta": "Sungchul Lee — 09:43 on 14 Jun 2026 👍 3 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6978",
+      "text": "Congrats! Looks like another inspiration from the unit distance result. I have run a screening check which finds no error. There is 1 minor wording issue; see the second to last message. Looks like the inspiration is the arithmetic part of the OpenAI proof, which is the tower. The geometric part of the OpenAI proof is not used, and we proceed differently by using Pohoata-Sheffer as stated above.",
+      "meta": "Nat Sothanaphan — 16:08 on 14 Jun 2026 👍 3 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6959",
+      "text": "The planar lower bound for $F_2(n)$ has recently been improved. Clemen, Führer and Roche-Newton prove that every finite $P\\subset\\mathbb{R}^2$ contains a subset $S\\subset P$ with $|S|\\gg|P|^{1/3}$ all of whose pairwise distances are distinct (a \"distance Sidon set\"), thereby removing the $(\\log n)^{1/3}$ factor in the bound of Charalambides [Ch13]. That is,\\[ n^{1/3}\\ll F_2(n)\\ll \\frac{n^{1/2}}{(\\log n)^{1/4}}. \\]The proof combines the Guth–Katz distance-energy estimate with a theorem of Li and Postle on the independence number of hypergraphs satisfying suitable edge-distribution conditions, together with tools from incidence geometry. The improvement is for the plane only: the higher-dimensional bounds ([Th95], [CFGHUZ15]) and the spherical version of the problem are unchanged, and the gap to the upper bound remains open. Reference: F. C. Clemen, J. Führer, O. Roche-Newton, \"Geometric Sidon Problems\", arXiv:2606.05841 (June 2026). Disclosure: AI assistance use (Claude Opus 4.8, ultra code thinking)",
+      "meta": "Lumantis — 09:23 on 13 Jun 2026 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

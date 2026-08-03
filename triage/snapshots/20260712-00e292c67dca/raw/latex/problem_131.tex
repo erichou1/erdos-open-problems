@@ -1,0 +1,49 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#131}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $F(N)$ be the maximal size of $A\subseteq\{1,\ldots,N\}$ such that no $a\in A$ divides the sum of any distinct elements of $A\backslash\{a\}$. Estimate $F(N)$. In particular, is it true that\[F(N) &#62; N^{1/2-o(1)}?\]
+
+
+
+
+This was studied by Erd\H{o}s, Lev, Rauzy, S\'{a}ndor, and S\'{a}rk\"{o}zy \cite{ELRSS99}, where they call such a property 'non-dividing', and prove the explicit bound\[F(N)&lt;3N^{1/2}+1.\]In \cite{Er97b} Erd\H{o}s credits Csaba with a construction that proves $F(N) \gg N^{1/5}$. Such a construction was also given in \cite{ELRSS99}, where it is linked to the problem of non-averaging sets (see [186] ). Indeed, every such set is non-averaging, and hence the result of Pham and Zakharov \cite{PhZa24} implies\[F(N) \leq N^{1/4+o(1)}.\]This shows the answer to the original question is no, but the general question of the correct growth of $F(N)$ remains open. In \cite{Er75b} Erd\H{o}s writes that he originally thought $F(N) &lt;(\log N)^{O(1)}$, but that Straus proved that\[F(N) &gt; \exp((\sqrt{\tfrac{2}{\log 2}}+o(1))\sqrt{\log N}).\]See also [13] . This is discussed in problem C16 of Guy's collection \cite{Gu04}.
+
+
+
+
+References
+
+[ELRSS99] Erd\H{o}s, P. and Lev, V. and Rauzy, G. and S\'{a}ndor, C. and S\'{a}rk\"ozy, A., Greedy algorithm, arithmetic progressions, subset sums and divisibility . Discrete Math. (1999), 119--135.
+
+[Er75b] Erd\H{o}s, Paul, Problems and results in combinatorial number theory . Journ\'{e}es Arithm\'{e}tiques de Bordeaux (Conf., Univ. Bordeaux, Bordeaux, 1974) (1975), 295-310.
+
+[Er97b] Erd\H{o}s, Paul, Some old and new problems in various branches of combinatorics . Discrete Math. (1997), 227-231.
+
+[Gu04] Guy, Richard K., Unsolved problems in number theory . (2004), xviii+437.
+
+[PhZa24] Pham, H. T. and Zakharov, D., Sharp bound for the Erd\H{o}s-Straus non-averaging set problem . arXiv:2410.14624 (2024).
+
+\noindent\textbf{Related OEIS sequences:} A068063
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/131}}
+\end{document}

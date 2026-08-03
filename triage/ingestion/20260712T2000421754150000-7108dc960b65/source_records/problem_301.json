@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 301,
+  "raw_page": {
+    "path": "raw/pages/problem_301.html",
+    "sha256": "6a01391c6a860be28c92f0fa3889bf73d2ec1b38a73c5c8770e133619bf6a0c4"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "source_region": "div.problem-additional-text",
+      "text": ""
+    },
+    "remarks": {
+      "sha256": "39bb567fc9e7f27224b7e12c99df02a077f9ad5e0957bd601db36187021ce1d7",
+      "source_region": "div.problem-additional-text",
+      "text": "The example $A=(N/2,N]\\cap \\mathbb{N}$ shows that $f(N)\\geq N/2$.\n\nWouter van Doorn has given an elementary argument that proves\\[f(N)\\leq (25/28+o(1))N.\\]Indeed, consider the sets $S_a=\\{2a,3a,4a,6a,12a\\}\\cap [1,N]$ as $a$ ranges over all integers of the form $8^b9^cd$ with $(d,6)=1$. All such $S_a$ are disjoint and, if $A$ has no solutions to the given equation, then $A$ must omit at least two elements of $S_a$ when $a\\leq N/12$ and at least one element of $S_a$ when $N/12<a\\leq N/6$, and an elementary calculation concludes the proof.\n\nStijn Cambie and Wouter van Doorn have noted that, if we allow solutions to this equation with non-distinct $b_i$, then the size of the maximal set is at most $N/2$. Indeed, this is the classical threshold for the existence of some distinct $a,b\\in A$ such that $a\\mid b$.\n\nSee also [302] and [327]."
+    },
+    "statement": {
+      "sha256": "48e7eb7759f427fdeac55169c711f4aca32e8f9f7f9c3c7b4e356f3021ed3df9",
+      "source_region": "div#content",
+      "text": "Let $f(N)$ be the size of the largest $A\\subseteq \\{1,\\ldots,N\\}$ such that there are no solutions to\\[\\frac{1}{a}= \\frac{1}{b_1}+\\cdots+\\frac{1}{b_k}\\]with distinct $a,b_1,\\ldots,b_k\\in A$?\n\nEstimate $f(N)$. In particular, is it true that $f(N)=(\\tfrac{1}{2}+o(1))N$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/301"
+}

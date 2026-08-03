@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#1106}
+\date{Last updated: 2025-11-17}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $p(n)$ denote the partition function of $n$ and let $F(n)$ count the number of distinct prime factors of\[\prod_{1\leq k\leq n}p(k).\]Does $F(n)\to \infty$ with $n$? Is $F(n)&gt;n$ for all sufficiently large $n$?
+
+
+
+
+Asked by Erd\H{o}s at Oberwolfach in 1986. Schinzel noted in the Oberwolfach problem book that $F(n)\to \infty$ follows from the asymptotic formula for $p(n)$ and a result of Tijdeman \cite{Ti73}. This is not obvious; details are given in a paper of Erd\H{o}s and Ivi\'{c} (see page 69 of \cite{ErIv90}). Schinzel and Wirsing \cite{ScWi87} have proved $F(n) \gg \log n$. Ono \cite{On00} has proved that every prime divides $p(n)$ for some $n\geq 1$ (indeed this holds, for any fixed prime, for a positive density set of $n$).
+
+
+
+
+References
+
+[ErIv90] Erd\H{o}s, Paul and Ivi\'c, Aleksandar, The distribution of values of a certain class of arithmetic functions at consecutive integers . (1990), 45--91.
+
+[On00] Ono, Ken, Distribution of the partition function modulo {$m$} . Ann. of Math. (2) (2000), 293--307.
+
+[ScWi87] Schinzel, A. and Wirsing, E., Multiplicative properties of the partition function . Proc. Indian Acad. Sci. Math. Sci. (1987), 297--303.
+
+[Ti73] Tijdeman, R., On integers with many small prime factors . Compositio Math. (1973), 319--330.
+
+\noindent\textbf{Related OEIS sequences:} A194259, A194260
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/1106}}
+\end{document}

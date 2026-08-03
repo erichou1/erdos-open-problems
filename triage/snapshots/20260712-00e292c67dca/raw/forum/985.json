@@ -1,0 +1,20 @@
+{
+  "problem_number": 985,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/985",
+  "retrieved_at": "2026-07-10T23:19:50.294133+00:00",
+  "page_title": "985 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "04a22e4dea34b279a76a0f9244c41023ea19ec0bf3c1b3146ad3614326f39bd9",
+  "comment_count": 2,
+  "comments": [
+    {
+      "post_id": "4612",
+      "text": "GPT-5.4 Thinking finds the following relevant progress: 1. Let $G(p)$ denote the least prime primitive root modulo a prime $p$. Nongkynrih (Acta Arith. 72 (1995), 45–53) studied the distribution of prime primitive roots and proved that for almost all primes $p$ one has an asymptotic formula for the number of prime primitive roots $\\le H$ is $N(H,p) \\sim \\frac{\\varphi(p-1)}{p-1}\\pi(H)$ provided $H$ is sufficiently large (polylogarithmic in $p$). Since $\\varphi(p-1)/(p-1) \\gg 1/\\log\\log p$, taking $H=(\\log p)^A$ with $A$ large enough implies that $G(p) \\le (\\log p)^A$ for almost all primes $p$. In particular, for a set of primes of natural density $1$ there exists a prime primitive root $q \\le (\\log p)^A < p$. Thus the conjectured property holds for almost all primes $p$. 2. Related work of Martin (“The least prime primitive root and the shifted sieve”, 1997) shows that similar bounds for $G(p)$ follow from shifted sieve methods and that, assuming GRH, one obtains bounds implying $G(p) \\ll (\\log p)^C$ for all sufficiently large primes $p$. Under GRH this would therefore imply the statement of the problem for all sufficiently large $p$. 3. Computationally, extensive searches for the least prime primitive root $G(p)$ (e.g. Oliveira e Silva’s tables up to at least $10^{14}$) have not produced any counterexample to the statement that $G(p) < p$. Therefore, the problem appears to remain open in full generality, but it is known that $G(p) \\le (\\log p)^A$ for almost all primes $p$ (unconditionally), and that $G(p) \\ll (\\log p)^C$ for all sufficiently large primes $p$ under GRH. Both results imply that the conjecture holds for all sufficiently large primes in the corresponding sense. (The site has been updated to address this comment.)",
+      "meta": "AronBhalla — 01:21 on 06 Mar 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "111",
+      "text": "Of course, $p > 2$ is required. Moreover, the (plausibly too) naive heuristic says this should be true (up to at most finitely many counterexamples): there are $\\varphi(p-1) \\ge \\frac{cp}{\\log \\log p}$ many primitive roots modulo $p$, and $\\frac{(1+o(1))p}{\\log p}$ many primes below $p$. The probability that random sets with these growth rates don't intersect goes to 0 quite quickly.",
+      "meta": "Woett — 09:50 on 17 Aug 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

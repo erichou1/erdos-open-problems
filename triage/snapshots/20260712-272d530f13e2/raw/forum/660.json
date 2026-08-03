@@ -1,0 +1,25 @@
+{
+  "problem_number": 660,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/660",
+  "retrieved_at": "2026-07-10T23:18:13.523282+00:00",
+  "page_title": "660 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "3c7b86643c63c8dfd8dfcca92c922809601ba8f40471e0464bf65ad0a256795a",
+  "comment_count": 3,
+  "comments": [
+    {
+      "post_id": "1396",
+      "text": "Is this the correct problem formulation? It would seem that a pyramid with a regular (n-1)-gon as its base would already have at least (n-1)/2 distances (follows from Problem 93). Then by making the height arbitrarily large, one would get one more distinct distance and since (n-1)/2 + 1 > n/2 > (1-c)n/2 the problem is trivial. (The site has been updated to address this comment.)",
+      "meta": "kiwomuc — 13:32 on 23 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1408",
+      "text": "Good point! I've double checked and the wording is a little ambiguous. The exact wording is: \"Let $x_1,\\ldots,x_n$ be a convex polyhedron in three dimensional space. Is it possible that for all large $n$ the number of distinct distances determined by our set is less than $\\frac{n}{2}(1-\\epsilon)$?\" I read this in the form written above, but maybe what he intended was \"Is the number of distinct distances always at least $(\\frac{1}{2}-o(1))n$?\" This would make more sense given the comparison to Altman's result (although if this is what was intended then the wording is confusing). The other alternative is that he did intend the problem as I wrote it above, but had some kind of general position (i.e. no four points on a plane). Although as I write that I see that your example is easily turned into one in general position, just by moving the vertices of the polygon around slightly. So I'll edit it to the first possibility above, unless anyone else wants to weigh in. For historical comparison, the problem originally said: Let $x_1,\\ldots,x_n\\in \\mathbb{R}^3$ be the vertices of a convex polyhedron. Is there some constant $c>0$ such that, for all $n$ sufficiently large, the number of distinct distances determined by the $x_i$ is at most\\[(1-c)\\frac{n}{2}?\\]EDIT: Of course this is trivially extremely false, since a generic set of $n$ points in suitably general position form a convex polyhedron with $\\gg n^2$ distances, so (as with most of these problems) the interesting thing is the lower bound on the number of distances, not the upper bound!",
+      "meta": "Thomas Bloom — 05:41 on 24 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1420",
+      "text": "This makes more sense. For odd n, (n-1)/2 is possible by using a double pyramid and choosing the height cleverly and for a regular tetrahedron we only have one distance. I couldn't think of any other smart examples but I'm wondering if this problem and problem 93 can be generalized to $\\mathbb{R}^d$ and $\\lfloor \\frac{n}{2}\\rfloor - (d-2)$",
+      "meta": "kiwomuc — 10:50 on 24 Oct 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

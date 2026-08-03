@@ -1,0 +1,44 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#260}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} irrationality
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $a_1<a_2<\cdots$ be an increasing sequence such that $a_n/n\to \infty$. Is the sum\[\sum_n \frac{a_n}{2^{a_n}}\]irrational?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Erd\H{o}s \cite{Er81l} proved this is true under either of the stronger assumptions that
+{UL}
+{LI} $a_{n+1}-a_n\to \infty$ or {/LI}
+{LI} $a_n \gg n\sqrt{\log n\log\log n}$.{/LI}
+{/UL}
+Erd\H{o}s and Graham speculate that the condition $\limsup a_{n+1}-a_n=\infty$ is not sufficient, but know of no example.
+
+In \cite{Va99} this is asked with $a_n/n\to \infty$ replaced by $a_{n+1}-a_n\to \infty$, which as above was proved by Erd\H{o}s in \cite{Er81l}.
+
+\bigskip
+\noindent\textbf{References:}
+
+[Er81l] Erd\H{o}s, Paul, Sur l'irrationalit\'{e}{} d'une certaine s\'{e}rie. C. R. Acad. Sci. Paris S\'{e}r. I Math. (1981), 765--768.
+ 
+ [Va99] Various, Some of Paul's favorite problems. Booklet produced for the conference "Paul Erd\H{o}s and his mathematics", Budapest, July 1999 (1999).
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/260}}
+\end{document}

@@ -1,0 +1,58 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#114}
+\date{Last updated: 2025-12-28}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} FALSIFIABLE \quad \textbf{Prize: \$250}
+
+\noindent\textbf{Tags:} polynomials, analysis
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+If $p(z)\in\mathbb{C}[z]$ is a monic polynomial of degree $n$ then is the length of the curve $\{ z\in \mathbb{C} : \lvert p(z)\rvert=1\}$ maximised when $p(z)=z^n-1$?
+
+
+
+
+A problem of Erd\H{o}s, Herzog, and Piranian \cite{EHP58}. It is also listed as Problem 4.10 in \cite{Ha74}, where it is attributed to Erd\H{o}s. In \cite{Va99} it is just aked whether the length is at most $2n+O(1)$. This is true, as a consequence of result of Tao \cite{Ta25} below. Let the maximal length of such a curve be denoted by $f(n)$. {UL} {LI}The length of the curve when $p(z)=z^n-1$ is $2n+O(1)$, and hence the conjecture implies in particular that $f(n)=2n+O(1)$.{/LI} {LI}Dolzhenko \cite{Do61} proved $f(n) \leq 4\pi n$, but few were aware of this work.{/LI} {LI}Pommerenke \cite{Po61} proved $f(n)\ll n^2$.{/LI} {LI}Borwein \cite{Bo95} proved $f(n)\ll n$ (Borwein was unaware of Dolzhenko's earlier work). The prize of \$250 is reported by Borwein \cite{Bo95}.{/LI} {LI}Eremenko and Hayman \cite{ErHa99} proved the full conjecture when $n=2$, and $f(n)\leq 9.173n$ for all $n$.{/LI} {LI}Danchenko \cite{Da07} proved $f(n)\leq 2\pi n$.{/LI} {LI}Fryntov and Nazarov \cite{FrNa09} proved that $z^n-1$ is a local maximiser, and solved this problem asymptotically, proving that\[f(n)\leq 2n+O(n^{7/8}).\]{/LI} {LI} Tao \cite{Ta25} has proved that $p(z)=z^n-1$ is the unique (up to rotation and translation) maximiser for all sufficiently large $n$. {/UL} Erd\H{o}s, Herzog, and Piranian \cite{EHP58} also ask whether the length is at least $2\pi$ if $\{ z: \lvert f(z)\rvert&#60;1\}$ is connected (which $z^n$ shows is the best possible). This was proved by Pommerenke \cite{Po59}.
+
+
+
+
+References
+
+[Bo95] Borwein, Peter, The arc length of the lemniscate {$\{|p(z)|=1\}$} . Proc. Amer. Math. Soc. (1995), 797--799.
+
+[Da07] Danchenko, V. I., The lengths of lemniscates. {V}ariations of rational functions . Mat. Sb. (2007), 51--58.
+
+[Do61] Dol\v zenko, E. P., Some estimates concerning algebraic hypersurfaces and derivatives of rational functions . Dokl. Akad. Nauk SSSR (1961), 1287--1290.
+
+[EHP58] Erd\H{o}s, P. and Herzog, F. and Piranian, G., Metric properties of polynomials . J. Analyse Math. (1958), 125-148.
+
+[ErHa99] Eremenko, Alexandre and Hayman, Walter, On the length of lemniscates . Michigan Math. J. (1999), 409--415.
+
+[FrNa09] Fryntov, Alexander and Nazarov, Fedor, New estimates for the length of the {E}rd\H os-{H}erzog-{P}iranian lemniscate . (2009), 49--60.
+
+[Ha74] Hayman, W. K., Research problems in function theory: new problems . (1974), 155--180.
+
+[Po59] Pommerenke, Ch., On some problems by Erd\H{o}s, Herzog and Piranian . Michigan Math. J. (1959), 221-225.
+
+[Po61] Pommerenke, Ch., On metric properties of complex polynomials . Michigan Math. J. (1961), 97-115.
+
+[Ta25] T. Tao, The maximal length of the Erd\H{o}s-Herzog-Piranian leminscate length in high degree . arXiv:2512.12455 (2025).
+
+[Va99] Various, Some of Paul's favorite problems . Booklet produced for the conference "Paul Erd\H{o}s and his mathematics", Budapest, July 1999 (1999).
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/114}}
+\end{document}

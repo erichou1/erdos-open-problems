@@ -1,0 +1,119 @@
+{
+"reviewer_role": "independent adversarial referee (counterexample)",
+"verdict": "fail",
+"claims_checked": 21,
+"claims_total": 21,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14",
+"C15",
+"C16",
+"C17",
+"C18",
+"C19",
+"C20",
+"C21"
+],
+"open_gaps": [
+"No construction or lower bound resolves the pairwise-distinct planar question at the n/sqrt(log n) threshold.",
+"The internally distinct but overlapping planar convention remains unresolved.",
+"The variable binary-quadratic-form compression branch remains unresolved.",
+"The high-rank algebraic norm branch remains unresolved.",
+"The few-symbol Euclidean distance-matrix branch remains unresolved.",
+"No multiscale radial-support, bisector, or energy estimate reaches the required threshold.",
+"The comparison F(n)=o(f(2n)) remains unresolved.",
+"The arithmetic benchmark requested in the validated subgoal graph is not proved; C14 supplies only an exact finite reduction.",
+"The required computational harness is proposed but not constructed."
+],
+"unchecked_imports": [],
+"counterexample_searches": [
+{
+"target": "C3",
+"search": "Checked the smallest n and the possibility that exclusion of zero distance invalidates the witness.",
+"result": "The witness uses the positive distance 1 and remains valid."
+},
+{
+"target": "C5",
+"search": "Audited deletion under both distinctness conventions and tested the worst position n just above N_(t-1) for bounded subsequence ratios.",
+"result": "No quantifier or interpolation failure was found."
+},
+{
+"target": "C6",
+"search": "Exhaustive-style randomized tests on disjoint integer sets for n up to 5.",
+"result": "No example with fewer than n absolute cross-differences was found; the ordered-chain proof is valid."
+},
+{
+"target": "C8",
+"search": "Enumerated cyclic separations in the alternating regular 2n-gon for 2<=n<=20.",
+"result": "The number of cross-distances was exactly ceil(n/2) in every tested case."
+},
+{
+"target": "C9",
+"search": "Tested the boundary K=1 at n=2 and n=3 and audited radius-zero circle intersections.",
+"result": "The square realizes n=2, while the two-anchor argument correctly excludes n>=3."
+},
+{
+"target": "C10",
+"search": "Checked coincident-circle, tangent-circle, two-point-circle, parallel-edge, multiple-crossing, and crossing-lemma boundary cases.",
+"result": "No counterexample was found; the fixed-radius incidence proof is internally adequate."
+},
+{
+"target": "C11",
+"search": "Audited zero cross-distances when X and Y overlap.",
+"result": "There are at most n zero pairs, so the Omega(n^(2/3)) asymptotic deduction survives."
+},
+{
+"target": "C13",
+"search": "Randomized planar integer-set tests for n up to 7, including overlapping X and Y.",
+"result": "No violation of |X-Y|>=2n-1 was found."
+},
+{
+"target": "C14",
+"search": "Directly enumerated the checkerboard cross-distance set for q=2,4,6,8.",
+"result": "The direct distance set exactly matched the stated parity-restricted sum-of-two-squares set."
+},
+{
+"target": "C15-C18",
+"search": "Recomputed every threshold from K=o(n/sqrt(log n)) and checked ordered versus unordered multiplicities.",
+"result": "The omega(n sqrt(log n)), omega(sqrt(log n)), omega(n^2 sqrt(log n)), and omega(n^3 sqrt(log n)) thresholds are correct."
+},
+{
+"target": "C19-C20",
+"search": "Expanded the centered squared-distance matrix algebra and tested rational-Gram degeneracies.",
+"result": "The rank bounds and integer-relation obstruction are valid necessary conditions."
+},
+{
+"target": "C21",
+"search": "Tested both claimed asymptotic implications using abstract growth-rate examples.",
+"result": "Both one-way implications are correct, and neither establishes equivalence without additional bounds on f."
+}
+],
+"material_errors": [
+"The candidate does not prove or disprove the pairwise-distinct planar assertion, which is the central locked component.",
+"It does not resolve the internally distinct overlapping convention.",
+"It does not resolve the separately stated F=o(f) problem.",
+"Several mandatory validated subgoals are only described as research branches rather than established or refuted.",
+"Consequently, the final adjudication does not satisfy the acceptance criteria even though no numbered auxiliary claim C1-C21 was falsified."
+],
+"completeness_score": 66,
+"proof_confidence": 8,
+"adversarial_survival_score": 96,
+"statement_sha256": "1a1d20a3dee71f7bdc92834c48238b40d7d273fd322f3d71771e35966a2596cc",
+"notes": "The auxiliary claims are unusually robust under boundary and randomized testing, but they amount to partial structural progress rather than a resolution of the immutable statement. The correct verdict is therefore failure by incompleteness, not failure because of a discovered counterexample to C1-C21. Source artifact reviewed: 
+
+Pasted text
+
+"
+}

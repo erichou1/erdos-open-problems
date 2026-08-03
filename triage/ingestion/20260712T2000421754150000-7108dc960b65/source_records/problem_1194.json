@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1194,
+  "raw_page": {
+    "path": "raw/pages/problem_1194.html",
+    "sha256": "3fedeaad9c4b532f67c619ab779c78f754ce1de57f1f91e764207dc4ed552b5b"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "7f8f645bc5edb27b1227813aa22f8feb0aaad1317ed14f76c582f54de13b170e",
+      "source_region": "div.problem-additional-text",
+      "text": "[CiNa08] Cilleruelo, Javier and Nathanson, Melvyn B., Perfect difference sets constructed from Sidon sets. Combinatorica (2008), 401--414.\n \n [Er80] Erd\\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.\n \n [HaRo66] Halberstam, H. and Roth, K. F., Sequences. {V}ol. I. (1966), xx+291.\n \n [Le04] Lev, Vsevolod F., Reconstructing integer sets from their representation\nfunctions. Electron. J. Combin. (2004), Research Paper 78, 6."
+    },
+    "remarks": {
+      "sha256": "5761c216eb86125f67325e5be4040e1caa8013f08a8b873526ce9568266b4887",
+      "source_region": "div.problem-additional-text",
+      "text": "Such a set is called a perfect difference set; they can be constructed, for example, by a greedy approach (as detailed by Lev \\cite{Le04}). The greedy construction achieves $a_n\\ll n^3$.\n\nErd\\H{o}s \\cite{Er80} wrote it is 'easy to see' that\\[\\limsup_{n\\to \\infty}\\frac{a_n}{n}=\\infty.\\]Indeed, since $A$ must be a Sidon set, if $a_n \\leq f(n)n$ for all $n$, then all differences in $[1,x/f(x)]$ can be realised by differences from $A\\cap [1,x]$, and hence $\\lvert A\\cap [1,x]\\rvert^2 \\gg x/f(x)$. Erd\\H{o}s (see for example \\cite{HaRo66}) proved that for infinitely many $x$ $\\lvert A\\cap [1,x]\\rvert \\ll (x/\\log x)^{1/2}$, which is a contradiction for a suitable choice of $f$.\n\nThis argument proves that $a_n\\gg n\\log n$ for infinitely many $n$.\n\nCilleruelo and Nathanson \\cite{CiNa08} describe a method for construction dense perfect difference sets from dense Sidon sets, allowing many of the results for the latter to transfer to the former.\n\nGPT-5.4 Pro (see the comments) has given an argument which proves that $a_n\\gg n^{2-o(1)}$ infinitely often; in fact $a_n \\gg n^2/f(n)$ infinitely often for any function $f$ such that $\\sum \\frac{1}{nf(n)}$ diverges."
+    },
+    "statement": {
+      "sha256": "1ee485bf92718fa80d77d4a0ef8a56c6ba7ead0f69a66d083c8f2d616bc6fda7",
+      "source_region": "div#content",
+      "text": "Let $A\\subset\\mathbb{N}$ be such that every integer $n\\geq 1$ can be written uniquely as $a_n-b_n$ for some $a_n,b_n\\in A$. How fast must $a_n/n$ increase?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1194"
+}

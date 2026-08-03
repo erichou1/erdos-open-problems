@@ -1,0 +1,49 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#821}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $g(n)$ count the number of $m$ such that $\phi(m)=n$. Is it true that, for every $\epsilon>0$, there exist infinitely many $n$ such that\[g(n) > n^{1-\epsilon}?\]
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Pillai proved that $\limsup g(n)=\infty$ and Erd\H{o}s \cite{Er35b} proved that there exists some constant $c>0$ such that $g(n) >n^c$ for infinitely many $n$.
+
+This conjecture would follow if we knew that, for every $\epsilon>0$, there are $\gg_\epsilon \frac{x}{\log x}$ many primes $p<x$ such that all prime factors of $p-1$ are $<p^\epsilon$.
+
+The best known bound is that there are infinitely many $n$ such that\[g(n) > n^{0.71568\cdots},\]obtained by Lichtman \cite{Li22} as a consequence of proving that there are $\geq \frac{x}{(\log x)^{O(1)}}$ many primes $p\leq x$ such that all prime factors of $p-1$ are $\leq x^{0.2843\cdots}$ (which improves a number of previous exponents, most recently Baker and Harman \cite{BaHa98}).
+
+The average size of $g(n)$ was investigated by Luca and Pollack \cite{LuPo11}.
+
+See also [416].
+
+\bigskip
+\noindent\textbf{References:}
+
+[BaHa98] Baker, R. C. and Harman, G., Shifted primes without large prime factors. Acta Arith. (1998), 331--361.
+ 
+ [Er35b] Erd\H{o}s, P., On the normal number of prime factors of $p-1$ and some related problems concerning Euler's $\varphi$-function. Quart. J. Math. (1935), 205-213.
+ 
+ [Li22] J. D. Lichtman, Primes in arithmetic progressions to large moduli and shifted primes without large prime factors. arXiv:2211.09641 (2022).
+ 
+ [LuPo11] Luca, Florian and Pollack, Paul, An arithmetic function arising from {C}armichael's conjecture. J. Th\'{e}or. Nombres Bordeaux (2011), 697--714.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/821}}
+\end{document}

@@ -1,0 +1,37 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#635}
+\date{Last updated: 2026-01-30}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $t\geq 1$ and $A\subseteq \{1,\ldots,N\}$ be such that whenever $a,b\in A$ with $b-a\geq t$ we have $b-a\nmid b$. How large can $\lvert A\rvert$ be? Is it true that\[\lvert A\rvert \leq \left(\frac{1}{2}+o_t(1)\right)N?\]
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Asked by Erd\H{o}s in a letter to Ruzsa in around 1980. Erd\H{o}s observes that when $t=1$ the maximum possible is\[\lvert A\rvert=\left\lfloor\frac{N+1}{2}\right\rfloor,\]achieved by taking $A$ to be all odd numbers in $\{1,\ldots,N\}$. He also observes that when $t=2$ there exists such an $A$ with\[\lvert A\rvert \geq \frac{N}{2}+c\log N\]for some constant $c>0$: take $A$ to be the union of all odd numbers together with numbers of the shape $2^k$ with $k$ odd.
+
+The second question has been resolved in the affirmative by ChatGPT-5.2 (prompted by Leeham); Tao has since observed that a positive answer also follows fairly quickly from an inequality due to Elliott \cite{El79}.
+
+\bigskip
+\noindent\textbf{References:}
+
+[El79] Elliott, P. D. T. A., Probabilistic number theory. I. (1979), xxii+359+xxxiii pp. (2 plates).
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/635}}
+\end{document}

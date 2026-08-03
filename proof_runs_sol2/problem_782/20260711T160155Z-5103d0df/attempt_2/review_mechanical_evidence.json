@@ -1,0 +1,39 @@
+{
+"reviewer_role": "independent adversarial referee (mechanical_evidence)",
+"verdict": "pass",
+"claims_checked": 5,
+"claims_total": 5,
+"checked_claim_ids": [
+"B0.1",
+"B0.2",
+"B0.3",
+"B0.4",
+"B0.5"
+],
+"open_gaps": [
+"The immutable statement does not specify whether quasi-progression terms must be distinct or increasing.",
+"The sign and domain of d are unstated.",
+"The intended meaning of squares, including whether 0 is included, is unstated.",
+"The cube summation index set and its finiteness are unstated.",
+"Generator positivity, nonzeroness, and injectivity of the Boolean subset-sum map are unstated.",
+"Arbitrarily large may refer to nominal dimension, distinct cardinality, or numerical height."
+],
+"unchecked_imports": [],
+"counterexample_searches": [
+"Verified exactly that C=1, d=0, and x_i=1 for every i satisfy all displayed quasi-progression inequalities for every k; for k=1 the indexed conjunction is empty.",
+"Verified that the constant sequence is rejected after adding either strict increase or d>0, so the permissive and nondegenerate witness predicates differ.",
+"Verified that a=1 and b_1=...=b_r=0 produce the square set {1} for every nominal dimension r while its distinct cardinality remains 1.",
+"Verified that positivity of generators alone does not imply injectivity; for example b_1=b_2=1 gives equal subset sums for {1} and {2}.",
+"Checked whether the surrounding arithmetic-progression and implication remarks force the omitted conventions; they do not uniquely determine them."
+],
+"material_errors": [],
+"completeness_score": 99,
+"proof_confidence": 98,
+"adversarial_survival_score": 98,
+"statement_sha256": "d23ff4ea91f0d915bd67a828cdec2f9acc9b33169e5e84e2e4f5660875187ca1",
+"notes": "The candidate correctly resolves B0 by a human-verifiable ambiguity certificate and terminates before entering branches conditional on unique semantics. It makes no computational, CAS, SAT/SMT, bounded-search, or imported-theorem claim requiring external certification. The only defect found is nonmaterial notation: \mathcal S_0={n^2\in\mathbb Z} fails to bind n and should have been written with an explicit set-builder variable and domain. The explicit witnesses use 1, so this typo does not affect the certificate. The label RESOURCE_EXHAUSTED is awkward because B0 was completed, but it does not alter the mathematical conclusion. Immutable input identified by 
+
+Pasted text
+
+."
+}

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 181,
+  "raw_page": {
+    "path": "raw/pages/problem_181.html",
+    "sha256": "74f1371880d3dac6b7ee75c1ccb483ca00be3ddd25c0b30f047c0c88fa11cf71"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "16637b9f15e1315a950a717ecce2a08c338835310757529fcdc8f2ca936fa87e",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er93] Erd\\H{o}s, Paul, Some of my favorite solved and unsolved problems in graph theory. Quaestiones Math. (1993), 333-350.\n \n [Ti22] Tikhomirov, K., A remark on the Ramsey number of the hypercube. arXiv:2208.14568 (2022)."
+    },
+    "remarks": {
+      "sha256": "76b858ccbc2474d3371129c2accacaf016e4fd9f95884695d5057c08b372f6ec",
+      "source_region": "div.problem-additional-text",
+      "text": "Conjectured by Burr and Erd\\H{o}s, althouhg in \\cite{Er93} Erd\\H{o}s says the behaviour of $R(Q_n)$ was considered by himself and S\\'{o}s, who could not decide whether $R(Q_n)/2^n\\to \\infty$ or not.\n\nThe trivial bound is\\[R(Q_n) \\leq R(K_{2^n})\\leq C^{2^n}\\]for some constant $C>1$. This was improved a number of times; the current best bound due to Tikhomirov \\cite{Ti22} is\\[R(Q_n)\\ll 2^{(2-c)n}\\]for some small constant $c>0$. (In fact $c\\approx 0.03656$ is permissible.)\n\nThis problem is #20 in Ramsey Theory in the graphs problem collection."
+    },
+    "statement": {
+      "sha256": "d23affe528c1786415ed6a1ed411cae1f397ef96e1625e03bde5e32fdf3a0e86",
+      "source_region": "div#content",
+      "text": "Let $Q_n$ be the $n$-dimensional hypercube graph (so that $Q_n$ has $2^n$ vertices and $n2^{n-1}$ edges). Prove that\\[R(Q_n) \\ll 2^n.\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/181"
+}

@@ -1,0 +1,357 @@
+{
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.607
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "CKS75",
+      "Er65",
+      "Er73"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/790",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[CKS75] Choi, S. L. G. and Koml\\'os, J. and Szemer\\'{e}di, E., On sum-free subsequences. Trans. Amer. Math. Soc. (1975), 307--313.\n \n [Er65] Erd\\H{o}s, P., Extremal problems in number theory. Proc. Sympos. Pure Math., Vol. VIII (1965), 181-189.\n \n [Er73] Erd\\H{o}s, P., Problems and results on combinatorial number theory. A survey of combinatorial theory (Proc. Internat. Sympos., Colorado State Univ., Fort Collins, Colo., 1971) (1973), 117-138.",
+      "remarks": "Erd\\H{o}s observed that $l(n)\\geq (n/2)^{1/2}$, which Choi improved to $l(n)>(1+c)n^{1/2}$ for some $c>0$. Erd\\H{o}s \\cite{Er73} thought he could prove $l(n)=o(n)$ but had 'difficulties in reconstructing [his] proof'. (In \\cite{Er65} he wrote 'by complicated arguments we can show $l(n)=o(n)$'.)\n\nChoi, Koml\\'{o}s, and Szemer\\'{e}di \\cite{CKS75} proved\\[\\left(\\frac{\\log n}{\\log\\log n}n\\right)^{1/2}\\ll l(n) \\ll \\frac{n}{\\log n}.\\]They further conjecture that $l(n)\\geq n^{1-o(1)}$. \n\nSee also [876]."
+    },
+    "source_state": "open",
+    "tags": [
+      "additive combinatorics"
+    ]
+  },
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.79,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.301091
+      ],
+      "probability": 0.129804
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 2.427,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.0,
+        0.366668
+      ],
+      "probability": 0.174237
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 13.0,
+      "credible_interval_approx": [
+        0.0,
+        0.134243
+      ],
+      "probability": 0.037037
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.867,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.007687,
+        0.475459
+      ],
+      "probability": 0.241573
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.033,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.181062
+      ],
+      "probability": 0.064449
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.0,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.0,
+        0.29079
+      ],
+      "probability": 0.129032
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.063431
+      ],
+      "probability": 0.021739
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.0,
+        0.384039
+      ],
+      "probability": 0.173913
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 1,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:18:49.284695+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "c24bca905f06d4ca9c508340c6a79553c03f28127fe36f286cc8130932e706d4"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 2,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 383,
+      "statement_tokens_approx": 58
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove_or_disprove",
+      "multi_part": true,
+      "primary_domain": "additive combinatorics"
+    }
+  },
+  "problem_id": "erdos-790",
+  "problem_number": 790,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove_or_disprove",
+    "multi_part": true,
+    "primary_domain": "additive combinatorics"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_790.html",
+      "raw_html_sha256": "e5093d118408f18788bc6d029f0f4e3943b554d5827f0db2f1bc7c3c3bd3a860",
+      "section_sha256": {
+        "references": "85c50d921b279dc1db29ecbb8c2f4add1e718903b263f4725bc2a6454ade212e",
+        "remarks": "1095a7faef5c8a1d2d589cfe015ef85672cc4e5f02e294551601c9b68901e8c0",
+        "statement": "4d0cb68e346f2dd5366d4bbfff268df2127a13540c4399853aaf826aa91b3396"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_790.json",
+      "source_record_sha256": "b962b22a6e843158af55be09255815c25295ec2df3cfa77c3cf93fd0aa5981e5",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_790.tex",
+    "latex_sha256": "ebeaf1d2a88e2356c007f72b4127ed18b7aa2518ad1a7a7f078ae954c303f1cd",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "4d0cb68e346f2dd5366d4bbfff268df2127a13540c4399853aaf826aa91b3396",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "subproblem_decomposition",
+      "shared_infrastructure_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Let $l(n)$ be maximal such that if $A\\subset\\mathbb{Z}$ with $\\lvert A\\rvert=n$ then there exists a sum-free $B\\subseteq A$ with $\\lvert B\\rvert \\geq l(n)$ - that is, $B$ is such that there are no solutions to\\[a_1=a_2+\\cdots+a_r\\]with $a_i\\in B$ all distinct.\n\nEstimate $l(n)$. In particular, is it true that $l(n)n^{-1/2}\\to \\infty$?",
+        "focus_question_sha256": "cbefdef638b4946b06c26682b37850d097f89c9683c5550c6477aae67af09c69",
+        "parent_statement_sha256": "4d0cb68e346f2dd5366d4bbfff268df2127a13540c4399853aaf826aa91b3396",
+        "part_index": 1,
+        "subproblem_contract_sha256": "43e233beeb3435ae2b16deead9bf30b454e8438d21fe7c10775c0bf4c7f72808",
+        "subproblem_id": "erdos-790-part-01-43e233be"
+      },
+      {
+        "focus_question": "Is it true that $l(n)< n^{1-c}$ for some $c>0$?",
+        "focus_question_sha256": "1376a165fd43b6878f23b0c23458b4ac7ad73c7d0c63d970ab898e50cc8b7cfe",
+        "parent_statement_sha256": "4d0cb68e346f2dd5366d4bbfff268df2127a13540c4399853aaf826aa91b3396",
+        "part_index": 2,
+        "subproblem_contract_sha256": "b7b120ea21d6f2eac47a32b62d2b6314990144cf5fdf9e2402d78b228cf0fbea",
+        "subproblem_id": "erdos-790-part-02-b7b120ea"
+      }
+    ]
+  },
+  "research_directive_sha256": "433d4ad87f5838cb670fea94413b5081651c1a866324f9a02c0e10d090ee530a",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "subproblem_decomposition",
+    "shared_infrastructure_search"
+  ],
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "433d4ad87f5838cb670fea94413b5081651c1a866324f9a02c0e10d090ee530a",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "4d0cb68e346f2dd5366d4bbfff268df2127a13540c4399853aaf826aa91b3396",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "c07b6d69186b0fd0fc920985fd99785dbfcccb4fc6521ba0e62ed00aeec93fd2",
+  "schema_version": 2,
+  "snapshot_id": "20260713-deb58d0facd9",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Let $l(n)$ be maximal such that if $A\\subset\\mathbb{Z}$ with $\\lvert A\\rvert=n$ then there exists a sum-free $B\\subseteq A$ with $\\lvert B\\rvert \\geq l(n)$ - that is, $B$ is such that there are no solutions to\\[a_1=a_2+\\cdots+a_r\\]with $a_i\\in B$ all distinct.\n\nEstimate $l(n)$. In particular, is it true that $l(n)n^{-1/2}\\to \\infty$? Is it true that $l(n)< n^{1-c}$ for some $c>0$?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $l(n)$ be maximal such that if $A\\subset\\mathbb{Z}$ with $\\lvert A\\rvert=n$ then there exists a sum-free $B\\subseteq A$ with $\\lvert B\\rvert \\geq l(n)$ - that is, $B$ is such that there are no solutions to\\[a_1=a_2+\\cdots+a_r\\]with $a_i\\in B$ all distinct. Estimate $l(n)$. In particular, is it true that $l(n)n^{-1/2}\\to \\infty$? Is it true that $l(n)< n^{1-c}$ for some $c>0$?",
+    "original": "Let $l(n)$ be maximal such that if $A\\subset\\mathbb{Z}$ with $\\lvert A\\rvert=n$ then there exists a sum-free $B\\subseteq A$ with $\\lvert B\\rvert \\geq l(n)$ - that is, $B$ is such that there are no solutions to\\[a_1=a_2+\\cdots+a_r\\]with $a_i\\in B$ all distinct.\n\nEstimate $l(n)$. In particular, is it true that $l(n)n^{-1/2}\\to \\infty$? Is it true that $l(n)< n^{1-c}$ for some $c>0$?",
+    "statement_sha256": "4d0cb68e346f2dd5366d4bbfff268df2127a13540c4399853aaf826aa91b3396"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-790",
+      "part_index": 1,
+      "run_contract_id": "70e65a4b538c1440b8979cda0b2408722bf33ffbab925af47687cc7834c98069",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Let $l(n)$ be maximal such that if $A\\subset\\mathbb{Z}$ with $\\lvert A\\rvert=n$ then there exists a sum-free $B\\subseteq A$ with $\\lvert B\\rvert \\geq l(n)$ - that is, $B$ is such that there are no solutions to\\[a_1=a_2+\\cdots+a_r\\]with $a_i\\in B$ all distinct.\n\nEstimate $l(n)$. In particular, is it true that $l(n)n^{-1/2}\\to \\infty$?",
+        "focus_question_sha256": "cbefdef638b4946b06c26682b37850d097f89c9683c5550c6477aae67af09c69",
+        "normalized": "Let $l(n)$ be maximal such that if $A\\subset\\mathbb{Z}$ with $\\lvert A\\rvert=n$ then there exists a sum-free $B\\subseteq A$ with $\\lvert B\\rvert \\geq l(n)$ - that is, $B$ is such that there are no solutions to\\[a_1=a_2+\\cdots+a_r\\]with $a_i\\in B$ all distinct. Estimate $l(n)$. In particular, is it true that $l(n)n^{-1/2}\\to \\infty$? Is it true that $l(n)< n^{1-c}$ for some $c>0$?",
+        "original": "Let $l(n)$ be maximal such that if $A\\subset\\mathbb{Z}$ with $\\lvert A\\rvert=n$ then there exists a sum-free $B\\subseteq A$ with $\\lvert B\\rvert \\geq l(n)$ - that is, $B$ is such that there are no solutions to\\[a_1=a_2+\\cdots+a_r\\]with $a_i\\in B$ all distinct.\n\nEstimate $l(n)$. In particular, is it true that $l(n)n^{-1/2}\\to \\infty$? Is it true that $l(n)< n^{1-c}$ for some $c>0$?",
+        "statement_sha256": "4d0cb68e346f2dd5366d4bbfff268df2127a13540c4399853aaf826aa91b3396"
+      },
+      "subproblem_contract_sha256": "43e233beeb3435ae2b16deead9bf30b454e8438d21fe7c10775c0bf4c7f72808",
+      "subproblem_id": "erdos-790-part-01-43e233be"
+    },
+    {
+      "parent_problem_id": "erdos-790",
+      "part_index": 2,
+      "run_contract_id": "d0b2866ff406dbf0547caa49921db0b2f6afcedf75087f64d7eda3ac49c77d76",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Is it true that $l(n)< n^{1-c}$ for some $c>0$?",
+        "focus_question_sha256": "1376a165fd43b6878f23b0c23458b4ac7ad73c7d0c63d970ab898e50cc8b7cfe",
+        "normalized": "Let $l(n)$ be maximal such that if $A\\subset\\mathbb{Z}$ with $\\lvert A\\rvert=n$ then there exists a sum-free $B\\subseteq A$ with $\\lvert B\\rvert \\geq l(n)$ - that is, $B$ is such that there are no solutions to\\[a_1=a_2+\\cdots+a_r\\]with $a_i\\in B$ all distinct. Estimate $l(n)$. In particular, is it true that $l(n)n^{-1/2}\\to \\infty$? Is it true that $l(n)< n^{1-c}$ for some $c>0$?",
+        "original": "Let $l(n)$ be maximal such that if $A\\subset\\mathbb{Z}$ with $\\lvert A\\rvert=n$ then there exists a sum-free $B\\subseteq A$ with $\\lvert B\\rvert \\geq l(n)$ - that is, $B$ is such that there are no solutions to\\[a_1=a_2+\\cdots+a_r\\]with $a_i\\in B$ all distinct.\n\nEstimate $l(n)$. In particular, is it true that $l(n)n^{-1/2}\\to \\infty$? Is it true that $l(n)< n^{1-c}$ for some $c>0$?",
+        "statement_sha256": "4d0cb68e346f2dd5366d4bbfff268df2127a13540c4399853aaf826aa91b3396"
+      },
+      "subproblem_contract_sha256": "b7b120ea21d6f2eac47a32b62d2b6314990144cf5fdf9e2402d78b228cf0fbea",
+      "subproblem_id": "erdos-790-part-02-b7b120ea"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

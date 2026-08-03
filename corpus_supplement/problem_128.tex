@@ -1,0 +1,60 @@
+% corpus_supplement: Erdős problem #128
+% source: https://www.erdosproblems.com/latex/128
+% fetched_at: 2026-07-14T18:48:10Z
+% payload_sha256: f935ae282b3a6a594ab7b93b6b951c773236fcf6e8edebef72e37e638f4a44c7
+% statement/remarks/references extracted by erdos_ingest.extract_source_page;
+% rendered by erdos_ingest.render_tex — do not edit
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#128}
+\date{Last updated: 2025-10-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $G$ be a graph with $n$ vertices such that every induced subgraph on $\geq \lfloor n/2\rfloor$ vertices has more than $n^2/50$ edges. Must $G$ contain a triangle?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+A problem of Erd\H{o}s and Rousseau. The constant $50$ would be best possible as witnessed by a blow-up of $C_5$ or the Petersen graph. 
+
+Erd\H{o}s, Faudree, Rousseau, and Schelp \cite{EFRS94} proved that this is true with $50$ replaced by $16$. More generally, they prove that, for any $0<\alpha<1$, if every set of $\geq \alpha n$ vertices contains $>\alpha^3n^2/2$ edges then $G$ contains a triangle.
+
+Krivelevich \cite{Kr95} has proved this with $n/2$ replaced by $3n/5$ (and $50$ replaced by $25$).
+
+Keevash and Sudakov \cite{KeSu06} have proved this under the additional assumption that either $G$ has at most $n^2/12$ edges, or that $G$ has at least $n^2/5$ edges. Norin and Yepremyan \cite{NoYe15} proved that this is true if $G$ has at least $(1/5-c)n^2$ edges, for some constant $c>0$.
+
+Razborov \cite{Ra22} proved this is true if $\frac{1}{50}$ is replaced by $\frac{27}{1024}$.
+
+See also the entry in the graphs problem collection.
+
+\bigskip
+\noindent\textbf{References:}
+
+[EFRS94] Erd\H{o}s, P. and Faudree, R. J. and Rousseau, C. C. and
+Schelp, R. H., A local density condition for triangles. Discrete Math. (1994), 153--161.
+ 
+ [KeSu06] Keevash, Peter and Sudakov, Benny, Sparse halves in triangle-free graphs. J. Combin. Theory Ser. B (2006), 614-620.
+ 
+ [Kr95] Krivelevich, Michael, On the edge distribution in triangle-free graphs. J. Combin. Theory Ser. B (1995), 245-260.
+ 
+ [NoYe15] Norin, Sergey and Yepremyan, Liana, Sparse halves in dense triangle-free graphs. J. Combin. Theory Ser. B (2015), 1--25.
+ 
+ [Ra22] Razborov, A. A., More about sparse halves in triangle-free graphs. Mat. Sb. (2022), 119--140.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/128}}
+\end{document}

@@ -1,0 +1,15 @@
+{
+  "problem_number": 323,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/323",
+  "retrieved_at": "2026-07-10T23:16:34.917736+00:00",
+  "page_title": "323 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "2319e4d4943e12871abf2ba392a5308f5462cdfad2b18bebd4592b5768af9c44",
+  "comment_count": 1,
+  "comments": [
+    {
+      "post_id": "6884",
+      "text": "I would like to share a small numerical contribution concerning the case \\(k=3\\), \\(m=3\\). I uploaded the corresponding Google Colab notebook, data files, plots, and code here: Zenodo numerical package for \\(f_{3,3}(x)\\). The function considered is\\[ f_{3,3}(x)= \\#\\{1\\leq n\\leq x:\\ n=a^3+b^3+c^3,\\ a,b,c\\in\\mathbb Z_{\\geq 0}\\}. \\]Using a pair-sum bitset algorithm, I computed the exact values\\[ f_{3,3}(10^r),\\qquad 0\\leq r\\leq 8. \\]The obtained sequence is\\[ 1,\\ 6,\\ 28,\\ 173,\\ 1352,\\ 11662,\\ 107875,\\ 1037872,\\ 10172774. \\]Thus, if\\[ a(r)=f_{3,3}(10^r), \\]then the beginning of the proposed new sequence is\\[ a(0)=1,\\quad a(1)=6,\\quad a(2)=28,\\quad a(3)=173,\\quad a(4)=1352, \\]\\[ a(5)=11662,\\quad a(6)=107875,\\quad a(7)=1037872,\\quad a(8)=10172774. \\]The algorithm first forms all pair sums\\[ a^3+b^3\\leq x, \\]then marks all integers of the form\\[ a^3+b^3+c^3\\leq x \\]in a Boolean array. This gives exact values for the above range. The observed densities\\[ \\frac{f_{3,3}(10^r)}{10^r} \\]decrease slowly and appear numerically close to \\(0.10\\) for \\(r=8\\). A simple experimental fit suggests a possible positive-density model of the form\\[ f_{3,3}(x)\\approx \\delta_3 x+A x^\\theta, \\]with numerical values approximately\\[ \\delta_3\\approx 0.10,\\qquad \\theta\\approx 0.68. \\]This is only numerical evidence, not a proof. However, the data seem consistent with the stronger conjectural possibility that\\[ f_{3,3}(x)\\sim \\delta_3 x \\]for some positive constant \\(\\delta_3\\), perhaps near \\(0.10\\). I also propose the following OEIS-type sequence associated with this problem:\\[ a(r)=\\#\\{1\\leq n\\leq 10^r:\\ n=x^3+y^3+z^3,\\ x,y,z\\in\\mathbb Z_{\\geq0}\\}. \\]The first terms are\\[ 1,\\ 6,\\ 28,\\ 173,\\ 1352,\\ 11662,\\ 107875,\\ 1037872,\\ 10172774. \\]The computations and plots are included in the Zenodo/Colab package linked above. Disclosure :Chatgpt 5.5 is used for assistance to predict the obtained entries (vaues up to 10^16))",
+      "meta": "Zeraoulia Rafik — 00:07 on 08 Jun 2026 👍 1 📝 0 🤖 0"
+    }
+  ]
+}

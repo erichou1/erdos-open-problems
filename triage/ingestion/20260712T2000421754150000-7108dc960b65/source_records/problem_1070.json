@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1070,
+  "raw_page": {
+    "path": "raw/pages/problem_1070.html",
+    "sha256": "e2ef0b72f69c864c845fa15014e63037b23f5e607f568f8c9b3a31b63ce85e67"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "06c4714b6148949f73c6b19e3bc23e94397feaea8a85ce812cf058b53b1971e9",
+      "source_region": "div.problem-additional-text",
+      "text": "[ACMVZ23] G. Ambrus, A. Csisz\\'{a}rik, M. Matolcsi, D. Varga, and P. Zs\\'{a}mboki, The density of planar sets avoiding unit distances. arXiv:2207.14179 (2023).\n \n [Cr67] H. T. Croft, Incidence incidents. Eureka (1967), 22-26.\n \n [LaRo72] Larman, D. G. and Rogers, C. A., The realization of distances within sets in Euclidean space. Mathematika (1972), 1-24.\n \n [MRVZ23] M. Matolcsi, I. Z. Ruzsa, D. Varga, and P. Zs\\'{a}mboki, The fractional chromatic number of the plane is at least $4$. arXiv:2311.10069 (2023)."
+    },
+    "remarks": {
+      "sha256": "4fce66cd9da52c74223199ed1b0cb29c56400e34c57a8421b12311aa2419d51a",
+      "source_region": "div.problem-additional-text",
+      "text": "In other words, estimate the minimal independence number of a unit distance graph with $n$ vertices. If $\\omega$ is the independence number and $\\chi$ is the chromatic number then $\\omega \\chi\\geq n$, and hence $f(n)\\geq n/\\chi$, where $\\chi$ is the answer to the Hadwiger-Nelson problem [508].\n\nThe Moser spindle shows $f(n)\\leq \\frac{2}{7}n\\approx 0.285n$. Larman and Rogers \\cite{LaRo72} noted that if $m_1$ is the supremum of the upper densities of measurable subsets of $\\mathbb{R}^2$ which have no unit distance pairs then\\[f(n)\\geq m_1n.\\]Croft \\cite{Cr67} gave the best-known lower bound of $m_1\\geq 0.22936$ and hence\\[0.22936n \\leq f(n) \\leq \\frac{2}{7}n\\approx 0.285n.\\]Ambrus, Csisz\\'{a}rik, Matolcsi, Varga, and Zs\\'{a}mboki \\cite{ACMVZ23} have proved that $m_1\\leq 0.247$, and hence this approach cannot achieve $f(n)\\geq n/4$. See [232] for more on $m_1$. \n\nMatolcsi, Ruzsa, Varga, and Zs\\'{a}mboki \\cite{MRVZ23} have improved the upper bound to\\[f(n) \\leq \\left(\\frac{1}{4}+o(1)\\right)n.\\]They conjecture that $m_1=0.22936\\cdots$ (the lower bound of Croft mentioned above) and $f(n)=(1/4+o(1))n$.\n\nIf we also insist that no two points are distance $<1$ apart then this is problem becomes [1066]."
+    },
+    "statement": {
+      "sha256": "c519c5f2fd155f8633fb87c1ced8e79603bfd571a09c296eb235c5f1f0649fd3",
+      "source_region": "div#content",
+      "text": "Let $f(n)$ be maximal such that, given any $n$ points in $\\mathbb{R}^2$, there exist $f(n)$ points such that no two are distance $1$ apart. Estimate $f(n)$. In particular, is it true that $f(n)\\geq n/4$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1070"
+}

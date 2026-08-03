@@ -1,0 +1,37 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#624}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} combinatorics
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $X$ be a finite set of size $n$ and $H(n)$ be such that there is a function $f:\{A : A\subseteq X\}\to X$ so that for every $Y\subseteq X$ with $\lvert Y\rvert \geq H(n)$ we have\[\{ f(A) : A\subseteq Y\}=X.\]Prove that\[H(n)-\log_2 n \to \infty.\]
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+A problem of Erd\H{o}s and Hajnal \cite{ErHa68} who proved that\[\log_2 n \leq H(n) < \log_2n +(3+o(1))\log_2\log_2n.\]Erd\H{o}s said that even the weaker statement that for $n=2^k$ we have $H(n)\geq k+1$ is open, but Alon has provided the following simple proof: by the pigeonhole principle there are $\frac{n-1}{2}$ subsets $A_i$ of size $2$ such that $f(A_i)$ is the same. Any set $Y$ of size $k$ containing at least $k/2$ of them can have at most\[2^k-\lfloor k/2\rfloor+1< 2^k=n\]distinct elements in the union of the images of $f(A)$ for $A\subseteq Y$. 
+
+For this weaker statement, Erd\H{o}s and Gy\'{a}rf\'{a}s conjectured the stronger form that if $\lvert X\rvert=2^k$ then, for any $f:\{A : A\subseteq X\}\to X$, there must exist some $Y\subset X$ of size $k$ such that\[\#\{ f(A) : A\subseteq Y\}< 2^k-k^C\]for every $C$ (with $k$ sufficiently large depending on $C$). This was proved by Alon (personal communication), who proved the stronger version that there exists some absolute constant $c>0$ such that, if $k$ is large enough, there must exist some $Y\subset X$ of size $k$ such that\[\#\{ f(A) : A\subseteq Y\}<(1-c)2^k.\]Alon also proved that, provided $k$ is large enough, if $\lvert X\rvert=2^k$ there exists some $f:\{A: A\subseteq X\}\to X$ such that, if $Y\subset X$ with $\lvert Y\rvert=k$, then\[\#\{ f(A) : A\subseteq Y\}>\tfrac{1}{4}2^k.\]
+
+\bigskip
+\noindent\textbf{References:}
+
+[ErHa68] Erd\H{o}s, P. and Hajnal, A., On a combinatorial problem. Mat. Lapok (1968), 345-348.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/624}}
+\end{document}

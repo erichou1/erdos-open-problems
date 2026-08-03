@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 513,
+  "raw_page": {
+    "path": "raw/pages/problem_513.html",
+    "sha256": "54146839bd9eaed2e0c334dfe2b9b08a74573bc510297f3ceeb35fab7935d483"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "031fd1860eb5b0f6c6c974a2e39b4c242dd3fff20522142e545f39329ae887ec",
+      "source_region": "div.problem-additional-text",
+      "text": "[ClHa64] Clunie, J. and Hayman, W. K., The maximum term of a power series. J. Analyse Math. (1964), 143-186.\n \n [GrSh63] Gray, Alfred and Shah, S. M., A note on entire functions and a conjecture of Erd\\H{o}s. Bull. Amer. Math. Soc. (1963), 573-577.\n \n [HeTa26] Y. He and Q. Tang, Generalizing the Clunie--Hayman construction in an Erd\\H{o}s maximum-term problem. arXiv:2602.12217 (2026)."
+    },
+    "remarks": {
+      "sha256": "7464e2ca3559c6268a06ac3e5c461d3db30dd6165f6f4f84d5be8506462573d4",
+      "source_region": "div.problem-additional-text",
+      "text": "Let $B$ be the supremum of all such values. \n\nIt is trivial that $B\\in [1/2,1]$. K\\\"{o}v\\'{a}ri (unpublished) observed that it must be $>1/2$. Gray and Shah \\cite{GrSh63} give an argument of Clunie which shows $B\\leq 2/\\pi$. Clunie and Hayman \\cite{ClHa64} improved both bounds to\\[4/7< B \\leq 2/\\pi-c\\]for some absolute constant $c>0$. He and Tang \\cite{HeTa26} have improved the lower bound to\\[B> 0.5850724\\](note that $4/7\\approx 0.57143$). This was further improved slightly to $0.5850788$ by GPT (as prompted by Sothanaphan). Note that $2/\\pi \\approx 0.63662$.\n\nSee also [227]."
+    },
+    "statement": {
+      "sha256": "73355ad31dcbdc4eca7028b45d60951514f689320e3307408c06764e014ca988",
+      "source_region": "div#content",
+      "text": "Let $f=\\sum_{n=0}^\\infty a_nz^n$ be a transcendental entire function. What is the greatest possible value of\\[\\liminf_{r\\to \\infty} \\frac{\\max_n\\lvert a_nr^n\\rvert}{\\max_{\\lvert z\\rvert=r}\\lvert f(z)\\rvert}?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/513"
+}

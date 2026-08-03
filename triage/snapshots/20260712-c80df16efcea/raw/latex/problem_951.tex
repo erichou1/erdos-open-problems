@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#951}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $1&#60;a_1&#60;\cdots$ be a sequence of real numbers such that\[\left\lvert \prod_i a_i^{k_i}-\prod_j a_j^{\ell_j}\right\rvert \geq 1\]for every distinct pair of non-negative finitely supported integer tuples $k_i,\ell_j\geq 0$. Is it true that\[\#\{ a_i \leq x\} \leq \pi(x)?\]
+
+
+
+
+Erd\H{o}s \cite{Er77c} said this question was asked 'during [his] lecture at Queens College [by] one member of the audience (perhaps S. Shapiro)'. (Although in \cite{Er80} he seems sure it was Shapiro, but also recalled that he had himself asked this in \cite{Er69}.) In \cite{Er80} he further asks whether equality holds if and only if the $a_i$ are the set of primes. Such a sequence of $a_i$ is sometimes called a set of Beurling prime numbers (and the sequence of products called the associated generalised integers). Beurling conjectured that if the number of reals in $[1,x]$ of the form $\prod a_i^{k_i}$ is $x+o(\log x)$ then the $a_i$ must be the sequence of primes. It is unclear whether this is intended to hold for all $x$ or just all sufficiently large $x$. The former question can be disproved by finite calculation (since any finite sequence of $a_i$ can be extended to a suitable infinite sequence via a greedy algorithm). A finite counterexample for $x=10$ was found by ChatGPT-5.2 Pro (prompted by Leeham).
+
+
+
+
+References
+
+[Er69] Erd\H{o}s, Paul, Some applications of graph theory to number theory . The Many Facets of Graph Theory (Proc. Conf., Western Mich. Univ., Kalamazoo, Mich., 1968) (1969), 77-82.
+
+[Er77c] Erd\H{o}s, Paul, Problems and results on combinatorial number theory. III . Number theory day (Proc. Conf., Rockefeller Univ., New York, 1976) (1977), 43-72.
+
+[Er80] Erd\H{o}s, Paul, A survey of problems in combinatorial number theory . Ann. Discrete Math. (1980), 89-115.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/951}}
+\end{document}

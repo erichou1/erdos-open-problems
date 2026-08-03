@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 66,
+  "raw_page": {
+    "path": "raw/pages/problem_66.html",
+    "sha256": "823641e638591467d5881331eac0e278e530f13fb1345eeba24a6118ee1d2143"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "413822fb5081f2c7454657f3cd98a0592fcdb2c7526173dcd2709b9cbf808e2a",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er80] Erd\\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.\n \n [Ho07] G. Horv\\'{a}th, An improvement of a theorem of Erd\\H{o}s and S\\'{a}rk\\\"{o}zy. Pollack Periodica (2007), 155-161."
+    },
+    "remarks": {
+      "sha256": "3633886e826fac511825cc7a4fe05a50f28fe8444b5cd9d78de2b4df3a06008c",
+      "source_region": "div.problem-additional-text",
+      "text": "A suitably constructed random set has this property if we are allowed to ignore an exceptional set of density zero. The challenge is obtaining this with no exceptional set. Erd\\H{o}s believed the answer should be no. In \\cite{Er80} he explicitly asked whether there exists such a set where the limit is $1$ (and did not believe there existed such a sequence).\n\nErd\\H{o}s and S\\'{a}rk\\\"{o}zy proved that\\[\\frac{\\lvert 1_A\\ast 1_A(n)-\\log n\\rvert}{\\sqrt{\\log n}}\\to 0\\]is impossible. Erd\\H{o}s suggests it may even be true that the $\\liminf$ and $\\limsup$ of $1_A\\ast 1_A(n)/\\log n$ are always separated by some absolute constant. \n\nHorv\\'{a}th \\cite{Ho07} proved that\\[\\lvert 1_A\\ast 1_A(n)-\\log n\\rvert \\leq (1-\\epsilon)\\sqrt{\\log n}\\]cannot hold for all large $n$."
+    },
+    "statement": {
+      "sha256": "2add9e4feb1c741650e0c256b57b854b34c65e2e559e3c1db8a0b10aa9d52a7c",
+      "source_region": "div#content",
+      "text": "Is there $A\\subseteq \\mathbb{N}$ such that\\[\\lim_{n\\to \\infty}\\frac{1_A\\ast 1_A(n)}{\\log n}\\]exists and is $\\neq 0$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/66"
+}

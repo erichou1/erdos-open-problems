@@ -1,0 +1,66 @@
+﻿# â”€â”€ Private / sensitive: never commit â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+# Browser profiles (contain auth cookies & session tokens)
+.chatgpt_profile/
+.chatgpt_profile
+.chatgpt_profile_*
+.deepseek_profile/
+
+# Chat maps (contain private conversation IDs / URLs)
+.chatgpt_chat_map.json
+.deepseek_chat_map.json
+*chat_map.json
+# Working prompt drafts
+message*.txt
+proof_runs/
+proof_runs_sol2/
+# Logs
+*.log
+.gpt_watch.log
+.ds_watch.log
+# User-generated DeepSeek run output (kept local; ChatGPT results are tracked)
+outputs/deepseek/
+solutions_deepseek/
+erdos_problems/solutions_deepseek/
+# â”€â”€ Python â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.env
+# â”€â”€ OS â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+.DS_Store
+# â”€â”€ Misc â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+*.png
+# Local authentication and environment data
+.venv*/
+*.pyc
+# Local temporary and backup files
+solve_rename.py.backup
+egmra.keys.sh
+# EGMRA secrets / signed artifacts (never commit)
+*.keys.sh
+signed-policy.json
+policy-template.json
+cfg.json
+# EGMRA generated run data / state (kept local)
+egmra_runs/
+egmra_artifacts/
+egmra_cache/
+egmra_quarantine/
+egmra_campaigns/
+egmra_outcomes/
+egmra_campaign*.json
+*.throttle.json
+browser_throttle.json
+# Build outputs
+build/
+dist/
+# Lean build outputs under the pinned project (config is tracked; build is not)
+aristotle_lean_project/.lake/
+aristotle_lean_project/lake-manifest.json
+aristotle_lean_project/lakefile.olean
+egmra.keys.sh
+ckpts-*/
+reviews/
+targets/

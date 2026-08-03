@@ -1,0 +1,25 @@
+{
+  "problem_number": 390,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/390",
+  "retrieved_at": "2026-07-10T23:16:56.719095+00:00",
+  "page_title": "390 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "e85f43c34830efde8a996cdebde3eca886b3e07fe57172276b5accbc6e812051",
+  "comment_count": 3,
+  "comments": [
+    {
+      "post_id": "6187",
+      "text": "I wrote a short note giving an explicit lower bound for the liminf in Problem #390. It should be noted that this result was obtained with AI:\\[ \\liminf_{n\\to\\infty} \\frac{f(n)-2n}{n/\\log n} \\ge \\frac{4029639598}{25970038185} \\approx 0.15516494697830188. \\]This does not prove an upper bound, nor does it prove that an asymptotic constant exists. It is just a finite lower-bound improvement, using the first thirteen large-prime obstruction layers. The argument is closely related to the large-prime obstruction Tao described in his earlier comment, but is presented here as a finite, quantified version. Thanks. PDF: https://drive.google.com/file/d/1gcFkDf-6PIIjpZAYC9rqfhWf5IKgL218/view?usp=sharing",
+      "meta": "sammausberg — 19:32 on 02 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6203",
+      "text": "Congrats. Standard check found no issues. The previously known lower bound value from the notes and also from quick literature search was $1/9$.",
+      "meta": "Nat Sothanaphan — 11:54 on 03 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "249",
+      "text": "This problem shares many features with #391, and in particular many of the techniques in this recent paper of Alexeev, Conway, Rosenfeld, Sutherland, Uhr, Ventullo, and myself may be relevant here. One can summarize the arguments in [EGS82] as follows. In both the upper and lower bound one should think of the product $a_1 \\dots a_k$ by starting from $(n+1) \\dots 2n = n! \\binom{2n}{n}$, removing some factors $b_1,\\dots,b_r$ in $(n,2n]$, and then adding some factors $c_1,\\dots,c_s$ in $(2n, f(n)]$. Thus, one can rewrite the equation $n! = a_1 \\dots a_k$ as $$ b_1 \\dots b_r = \\binom{2n}{n} c_1 \\dots c_s \\quad (1)$$ for some $n < b_1 < \\dots < b_r \\leq 2n$ and $2n < c_1 < \\dots < c_s \\leq f(n)$. For the lower bound: every prime $p$ in $(2n/4, 2n/3]$ divides $\\binom{2n}{n}$ once (by Kummer's theorem), which means exactly one of $2p$ or $3p$ has to be in the $\\{b_1,\\dots,b_r\\}$. By the prime number theorem, this creates $\\gg \\frac{n}{\\log n}$ factors of $2$ or $3$ on the LHS of (1); since $\\binom{2n}{n}$ only has $O(\\log n)$ factors of each (by Kummer again), these factors have to be absorbed by the $c_1,\\dots,c_s$; but $(2n,f(n)]$ only contains $O(f(n)-2n + \\log n)$ copies of both $2$ and $3$, which easily leads to the lower bound $f(n)-2n \\gg \\frac{n}{\\log n}$ (assuming $n$ large enough of course). For the upper bound: factorize $\\binom{2n}{n}$ into prime powers $p^a$; one can check (again from Kummer) that all such factors are at most $2n$. For each such prime power, add $2^i p^a$ to the collection $b_1,\\dots,b_r$, where $i$ is chosen so that $2^i p^a \\in (n,2n]$. This balances out all the factors of $\\binom{2n}{n}$, but creates excess powers of 2 on the LHS; one can calculate this excess (using the prime number theorem) to be $O(\\frac{n}{\\log n})$. To balance out this excess, add various $b_j$ to the LHS and $2b_j$ to the RHS for greedily chosen $n < b_j < n + O(n/\\log n)$; this will establish $f(n)-2n \\ll \\frac{n}{\\log n}$. The lower bound analysis is wasteful because it does not take into account the primes $p \\in (2n/6, 2n/5]$, $p \\in (2n/8, 2n/7]$, etc. (though the first few intervals should provide the dominant contribution to the bound). The upper bound analysis is wasteful because it only uses even numbers for the $c_j$ to balance powers of 2 on the LHS; one should also be able to balance powers of 3, 5, etc. with more effort. One key idea in the paper linked above is that products of consecutive integers $\\prod_{j=1}^H (N+j)$ have prime factorizations that do not depend very strongly on the starting point $N$: the number of times a prime $p$ divides $\\prod_{j=1}^H (N+j)$ is almost the same as the number of times it divides $\\prod_{j=1}^H (N'+j)$ if $p$ is small compared to $N,N',H$. This should allow one to introduce blocks of consecutive integers on the left and right-hand sides of (1) to help balance the prime factorizations, though actually carrying out this strategy could be complicated.",
+      "meta": "TerenceTao — 14:46 on 30 Aug 2025 👍 1 📝 0 🤖 0"
+    }
+  ]
+}

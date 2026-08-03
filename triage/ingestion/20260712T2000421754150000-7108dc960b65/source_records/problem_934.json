@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 934,
+  "raw_page": {
+    "path": "raw/pages/problem_934.html",
+    "sha256": "251292bc2d2f648e53b041c6a03262ded841b76173ebda1e661c31ef5d5971da"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "92204cfd6029928a915bbf56391b5d51a00521a1b4943624bb2bdc08cb790c8d",
+      "source_region": "div.problem-additional-text",
+      "text": "[BBPP83] Bermond, J.-C. and Bond, J. and Paoli, M. and Peyrat, C., Graphs and interconnection networks: diameter and\nvulnerability. (1983), 1--30.\n \n [CCJK22] Cambie, Stijn and Cames van Batenburg, Wouter and de Joannis\nde Verclos, R\\'{e}mi and Kang, Ross J., Maximizing line subgraphs of diameter at most {$t$}. SIAM J. Discrete Math. (2022), 939--950.\n \n [CGTT90] Chung, F. R. K. and Gy\\'{a}rf\\'{a}s, A. and Tuza, Z. and Trotter,\nW. T., The maximum number of edges in {$2K_2$}-free graphs of bounded\ndegree. Discrete Math. (1990), 129--135.\n \n [Er88] Erd\\H{o}s, P, Problems and results in combinatorial analysis and graph theory. Discrete Math. (1988), 81-92."
+    },
+    "remarks": {
+      "sha256": "a9757b1f906a6ab5abd1907ccbe3f1f56342e3f34af13b4d9de2f79d46508a70",
+      "source_region": "div.problem-additional-text",
+      "text": "A problem of Erd\\H{o}s and Ne\\v{s}et\\v{r}il. Erd\\H{o}s \\cite{Er88} wrote 'This problem seems to be interesting only if there is a nice expression for $h_t(d)$.'\n\nIt is easy to see that $h_t(d)\\leq 2d^t$ always and $h_1(d)=d+1$. \n\nErd\\H{o}s and Ne\\v{s}et\\v{r}il and Bermond, Bond, Paoli, and Peyrat \\cite{BBPP83} independently conjectured that $h_2(d) \\leq \\tfrac{5}{4}d^2+1$, with equality for even $d$ (see [149]). This was proved by Chung, Gy\\'{a}rf\\'{a}s, Tuza, and Trotter \\cite{CGTT90}.\n\nCambie, Cames van Batenburg, de Joannis de Verclos, and Kang \\cite{CCJK22} conjectured that\\[h_3(d) \\leq d^3-d^2+d+2,\\]with equality if and only if $d=p^k+1$ for some prime power $p^k$, and proved that $h_3(3)=23$. They also conjecture that, for all $t\\geq 3$, $h_t(d)\\geq (1-o(1))d^t$ for infinitely many $d$ and $h_t(d)\\leq (1+o(1))d^t$ for all $d$ (where the $o(1)$ term $\\to 0$ as $d\\to \\infty$).\n\nThe same authors prove that, if $t$ is large, then there are infinitely many $d$ such that $h_t(d) \\geq 0.629^td^t$, and that for all $t\\geq 1$ we have\\[h_t(d) \\leq \\tfrac{3}{2}d^t+1.\\]"
+    },
+    "statement": {
+      "sha256": "fe21abff7d82d2444a2797642b1f4bc0c2bb3fe76d1bcaad3096daff5dbb814d",
+      "source_region": "div#content",
+      "text": "Let $h_t(d)$ be minimal such that every graph $G$ with $h_t(d)$ edges and maximal degree $\\leq d$ contains two edges whose shortest path between them has length $\\geq t$.\n\nEstimate $h_t(d)$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/934"
+}

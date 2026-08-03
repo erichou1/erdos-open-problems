@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#704}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory, geometry, chromatic number
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $G_n$ be the unit distance graph in $\mathbb{R}^n$, with two vertices joined by an edge if and only if the distance between them is $1$. Estimate the chromatic number $\chi(G_n)$. Does it grow exponentially in $n$? Does\[\lim_{n\to \infty}\chi(G_n)^{1/n}\]exist?
+
+
+
+
+A generalisation of the Hadwiger-Nelson problem (which addresses $n=2$). Frankl and Wilson \cite{FrWi81} proved exponential growth:\[\chi(G_n) \geq (1+o(1))1.2^n.\]This was improved to\[\chi(G_n)\geq (1.239\cdots+o(1))^n\]by Raigorodsky \cite{Ra00}. The trivial colouring (by tiling with cubes) gives\[\chi(G_n) \leq (2+\sqrt{n})^n.\]Larman and Rogers \cite{LaRo72} improved this to\[\chi(G_n) \leq (3+o(1))^n,\]and conjecture the truth may be $(2^{3/2}+o(1))^n$. (Note that $2^{3/2}\approx 2.828$.) Prosanov \cite{Pr20} has given an alternative proof of this upper bound. See also [508] , [705] , and [706] .
+
+
+
+
+References
+
+[FrWi81] Frankl, P. and Wilson, R. M., Intersection theorems with geometric consequences . Combinatorica (1981), 357-368.
+
+[LaRo72] Larman, D. G. and Rogers, C. A., The realization of distances within sets in Euclidean space . Mathematika (1972), 1-24.
+
+[Pr20] Prosanov, Roman, A new proof of the Larman-Rogers upper bound for the chromatic number of the Euclidean space . Discrete Appl. Math. (2020), 115-120.
+
+[Ra00] Ra\u igorodski\u i, A. M., On the chromatic number of a space . Uspekhi Mat. Nauk (2000), 147--148.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/704}}
+\end{document}

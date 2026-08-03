@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 589,
+  "raw_page": {
+    "path": "raw/pages/problem_589.html",
+    "sha256": "f3a45f7aa173d652d6d448550c55ce12fdc2476fb4985b23e0a5d0c55cdc00aa"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "786a08aa26d2f14c40c2fda654c433180641a385079a7d1902818313d5c666e2",
+      "source_region": "div.problem-additional-text",
+      "text": "[BaSo18] Balogh, J\\'{o}zsef and Solymosi, J\\'{o}zsef, On the number of points in general position in the plane. Discrete Anal. (2018), Paper No. 16, 20.\n \n [Fu91b] F\\\"{u}redi, Zolt\\'{a}n, Maximal independent subsets in Steiner systems and in planar\nsets. SIAM J. Discrete Math. (1991), 196--199.\n \n [FuKa91] Furstenberg, H. and Katznelson, Y., A density version of the Hales-Jewett Theorem. Journal d'Analyse Math\\'{e}matique (1991), 64-119."
+    },
+    "remarks": {
+      "sha256": "82c91e9c4d1a861146721bd0ae6196c595c617a41a7e026267b4a1e3324fdc24",
+      "source_region": "div.problem-additional-text",
+      "text": "The trivial greedy algorithm gives $g(n)\\gg n^{1/2}$. A similar question can be asked for a set with no $k$ points on a line, searching for a subset with no $l$ points on a line, for any $3\\leq l<k$.\n\nErd\\H{o}s thought that $g(n) \\gg n$, but in fact $g(n)=o(n)$, which follows from the density Hales-Jewett theorem proved by Furstenberg and Katznelson \\cite{FuKa91} (see [185]).\n\nF\\\"{u}eredi \\cite{Fu91b} proved\\[n^{1/2}\\log n\\ll g(n)=o(n).\\]Balogh and Solymosi \\cite{BaSo18} improved the upper bound to\\[g(n) \\ll n^{5/6+o(1)}.\\]"
+    },
+    "statement": {
+      "sha256": "3e1e8383736b8c2cf36982290e6e4c68d0fabc1b70e5a3b0822c8e4a6ef77bc8",
+      "source_region": "div#content",
+      "text": "Let $g(n)$ be maximal such that in any set of $n$ points in $\\mathbb{R}^2$ with no four points on a line there exists a subset on $g(n)$ points with no three points on a line. Estimate $g(n)$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/589"
+}

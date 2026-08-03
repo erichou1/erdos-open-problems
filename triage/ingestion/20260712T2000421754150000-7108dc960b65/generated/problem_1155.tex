@@ -1,0 +1,46 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#1155}
+\date{Last updated: 2026-01-23}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Construct a random graph on $n$ vertices in the following way: begin with the complete graph $K_n$. At each stage, choose uniformly a random triangle in the graph and delete all the edges of this triangle. Repeat until the graph is triangle-free.
+
+Describe the typical parameters and structure of such a graph. In particular, if $f(n)$ is the number of edges remaining, then is it true that\[\mathbb{E}f(n)\asymp n^{3/2}\]and that $f(n) \ll n^{3/2}$ almost surely?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+A problem of Bollob\'{a}s and Erd\H{o}s, described in \cite{Va99} as 'motivated by the task of generating a random triangle-free graph'. In \cite{Bo98} it says they asked this at the 'Quo Vadis, Graph Theory?' conference in Fairbanks, Alaska, in 1990, 'while admiring the playful bears'.
+
+Grable \cite{Gr97} proved that, for every $\epsilon>0$,\[\mathbb{P}(f(n)>n^{7/4+\epsilon})\to 0.\]Bohman, Frieze, and Lubetzky \cite{BFL15} proved that $f(n)=n^{3/2+o(1)}$ almost surely - in other words, for every $\epsilon>0$,\[\mathbb{P}(n^{3/2-\epsilon}<f(n)<n^{3/2+\epsilon})\to 1.\]
+
+\bigskip
+\noindent\textbf{References:}
+
+[BFL15] Bohman, Tom and Frieze, Alan and Lubetzky, Eyal, Random triangle removal. Adv. Math. (2015), 379--438.
+ 
+ [Bo98] Bollob\'{a}s, B\'ela, To prove and conjecture: {P}aul {E}rd\H os and his
+mathematics. Amer. Math. Monthly (1998), 209--237.
+ 
+ [Gr97] Grable, David A., On random greedy triangle packing. Electron. J. Combin. (1997), Research Paper 11, 19.
+ 
+ [Va99] Various, Some of Paul's favorite problems. Booklet produced for the conference "Paul Erd\H{o}s and his mathematics", Budapest, July 1999 (1999).
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/1155}}
+\end{document}

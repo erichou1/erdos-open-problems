@@ -1,0 +1,60 @@
+{
+  "problem_number": 306,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/306",
+  "retrieved_at": "2026-07-10T23:16:29.406922+00:00",
+  "page_title": "306 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "3585686c7593dbe13565f4c3defce99ab83c8559c42271285bad2da8b1089d74",
+  "comment_count": 10,
+  "comments": [
+    {
+      "post_id": "7086",
+      "text": "I would like to report a Lean-formalized affirmative solution to this problem. The main theorem has been formalized in Lean 4 with Mathlib; the corresponding release is archived in Tang (2026). The formalization is sorry-free; apart from Lean’s standard logical axioms, the stated axiom boundary consists of two explicitly named inputs corresponding to Rosser and Schoenfeld (1962). A human-readable arXiv manuscript is currently being prepared. Tang, Y. (2026). A machine-checked proof of Erdős Problem 306 in Lean 4 (v0.0.3). Zenodo. https://doi.org/10.5281/zenodo.20767390 Rosser, J. Barkley, and Lowell Schoenfeld. “Approximate formulas for some functions of prime numbers.” Illinois Journal of Mathematics 6(1): 64–94, March 1962. https://doi.org/10.1215/ijm/1255631807",
+      "meta": "Yuren_Tang — 22:32 on 19 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7097",
+      "text": "Interesting. Initially this looks strange because we just had a partial result by Li. However, I have run a screening check and it appears the Lean formalization could be correct. I am not entirely sure because the repository is quite large and I do not know all of Lean's tricks. Would be more confident with also an upcoming informal version if the two versions correspond! Regarding Li's partial result, it also appears that your work goes by a different route, so these are independent developments. That's also interesting and we'll probably know more with the informal version.",
+      "meta": "Nat Sothanaphan — 19:12 on 20 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7101",
+      "text": "Thank you very much for taking a look. For reproducibility, I have set up a GitHub Actions workflow. The badge near the top of the README (“verify-erdos-306 passing”) links to the current verification status, and the workflow file shows exactly what is run. The run corresponding to release v0.0.3 is here: https://github.com/Yuren-Tang/erdos-306/actions/runs/27848297688 At this stage, v0.0.3 should be understood mainly as a verifiable snapshot of the formal result, not yet as a polished exposition. I am currently reorganising the development both mathematically and engineering-wise on the 'clear-up' branch; it is already cleaner in some respects, but still work in progress. My plan is to make a cleaner release together with a human-readable informal manuscript corresponding more closely to the Lean proof.",
+      "meta": "Yuren_Tang — 22:41 on 20 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7114",
+      "text": "Thanks, looking forward to it.",
+      "meta": "Nat Sothanaphan — 12:50 on 21 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7049",
+      "text": "I have a proof of the omega=2 case of this problem, formalized in Lean 4 / Mathlib. Below is a summary of the argument, followed by a link to the formalization. Disclosure. This is a human-AI collaboration. I directed the mathematics and take full responsibility for all content; AI tools (principally Anthropic's Claude, used through Claude Code) contributed substantially to the Lean 4 / Mathlib formalization, to the numerical experiments, and to parts of the exposition. The arXiv version states this explicitly, both in the abstract and in a dedicated \"Use of AI\" section. Summary of the proof. In their paper BEG15, they proved the $\\omega=3$ case: every natural number can be written as a sum of finitely many distinct unit fractions whose denominators are each a product of three distinct primes. We reuse the proof machinery of BEG15, only with the target being the $\\omega=2$ case, i.e. requiring the denominator of each unit fraction to be a product of two distinct primes -- that is, the denominators are so-called semiprimes. This machinery reduces the problem to whether a natural number $n$ is a member of the set $L^2(N)/P_N$, where $P_N$ is the primorial of $N$, and the former, $L^2(N)$, is the set of all possible sums of the atoms $P_N/p_i/p_j$; its largest element is $\\sigma^2(N)$ (note that this value equals $B_N\\cdot P_N$, where $B_N=\\sum 1/(p_ip_j)\\to\\infty$, so it is far larger than $P_N$). The machinery then converts this problem into a contiguous-covering problem for the middle segment of $L^2(N)$ within the interval $[0,\\sigma^2(N)]$, and proves that for $N\\ge 10$ the interval $[\\lceil \\tfrac16\\sigma^2(N)\\rceil,\\ \\lfloor \\tfrac56\\sigma^2(N)\\rfloor]$ is always covered; after normalizing these intervals by dividing by $P_N$, their union covers the whole of $[1,\\infty)$, so every natural number $n$ can be expressed, which proves the $\\omega=2$ case. To prove the central-covering problem above, we use an inductive argument. For $N$, multiplying its covered interval by $p_{N+1}$ yields a comb inside $L^2(N+1)$ whose elements are spaced $p_{N+1}$ apart, and these elements are also elements of $L^2(N+1)$. Then, via Olson's theorem, we prove the completeness, over the finite field $\\bmod\\ p_{N+1}$, of the atoms of $L^2(N+1)$ of the form $P_{N+1}/p_i/p_{N+1}$ -- i.e. the fillability of the gaps of the comb -- thereby advancing the central covering from $N$ to $N+1$. The argument above extends quite naturally to part of the rational case. For a fraction $a/b$ in lowest terms with $b$ squarefree, as long as $a/b$ is not too small, multiplying it by some $P_N$ lets it fall into the corresponding central covering region, and so we obtain the required sum representation. But if $a/b$ is too small, it cannot fall into any such central region and the argument fails; this is why our proof does not cover all rationals. We prove a lower bound: for every $a/b>1/5$, a suitable $P_N$ can be found. With this in hand, the rational $\\omega=3$ case becomes easier instead, because for any $a/b$ we can simply multiply by a large prime $r$ so that $a/b\\cdot r>1/5$, then decompose it into a sum of reciprocals of semiprimes, and finally divide each reciprocal by $r$, thereby obtaining a sum of reciprocals of products of three primes -- this is the rational $\\omega=3$ case. There is, however, one issue to resolve: we require $r$ not to coincide with a prime factor of the semiprimes, i.e. to avoid the situation $1/(r\\cdot r\\cdot p)$; in the paper this is handled by restricting the central-covering argument from $P_N$ to the primorial that excludes $r$, together with the corresponding sets. For the $\\omega\\ge 4$ case, our lifting technique can be obtained similarly from $\\omega-1$. This is the rough outline of the entire proof. Formalization. The complete Lean 4 / Mathlib formalization (and the standard-library Python scripts) is included in the arXiv source tarball, downloadable here: https://arxiv.org/src/2606.15159 (the 'anc/lean/' directory). The entire development is machine-checked, with no 'sorry'. It reduces to exactly two explicitly cited classical inputs -- Olson's addition theorem and a Rosser-type prime bound -- together with the standard Lean/Mathlib foundations and the 'native_decide' compiler-trust base used for the finite computations; the full axiom surface is listed in the appendix and can be inspected with '#print axioms'. A full build takes on the order of ten minutes. Preprint: https://arxiv.org/abs/2606.15159 Shisheng Li",
+      "meta": "Shisheng Li — 12:37 on 18 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7051",
+      "text": "To clarify, this is not claiming a full proof of the problem, but claims a partial proof that many rationals (including all integers) can be represented in the given form.",
+      "meta": "Thomas Bloom — 13:49 on 18 Jun 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7058",
+      "text": "Congrats! I have run a screening check which finds some number of (minor) issues in the informal proof; see the third-to-last message. The formal Lean proof however appears to be correct and corresponds to the paper. As Bloom already stated this is only for integers and some rationals, not the whole $\\omega = 2$ (semiprime) case. The headline of the comment above may confuse a little bit.",
+      "meta": "Nat Sothanaphan — 19:47 on 18 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7060",
+      "text": "It is a proof for all rationals $>1/5$ in the $\\omega=2$ case and a full proof for all rationals in the $\\omega=3$ case if I understand correctly.",
+      "meta": "Adenwalla — 21:52 on 18 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7082",
+      "text": "Yes, proven for all rationals in $\\omega \\ge 3$ case. For $\\omega = 2$, proven for all rationals $a/b \\ge T(r)$, where $r$ is the largest prime factor of $b$, or $1$ if $b = 1$. Here $$ T(r) = \\min\\bigg( \\frac{1}{6} \\sum_{p < q \\le r \\\\ p, q \\text{ primes}}, \\frac{1}{5} \\bigg). $$ For $r \\ge 59$, we have $T(r) = 1/5$. Note $T(r) = 0$ for $r = 1, 2$ and $T(r)$ is nondecreasing. Credit to GPT-5.5 Thinking for discussion.",
+      "meta": "Nat Sothanaphan — 18:07 on 19 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4452",
+      "text": "GPT-5.2 Thinking has uncovered several examples for the case where $a/b=1$: 1. Decompositions go back to Barbeau (1976/77; 101 terms). 2. Burshtein (Discrete Math 306 (2006); NNTDM 16 (2010)) gives various improved constructions under different metrics (e.g. $k=52$ with $\\max n_i=1963$). 3. OEIS A201650 records a 48-term example (attributed to Allan Johnson). 4. Watanabe (arXiv:2009.03275, 2020) gives 94 examples with 48 terms (including Johnson's above) and 17 examples with 47 terms. Watanabe also conjectures that 47 is minimal. (The site has been updated to address this comment.)",
+      "meta": "AronBhalla — 15:27 on 25 Feb 2026 👍 1 📝 1 🤖 0"
+    }
+  ]
+}

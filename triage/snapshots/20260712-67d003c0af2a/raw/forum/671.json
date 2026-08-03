@@ -1,0 +1,35 @@
+{
+  "problem_number": 671,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/671",
+  "retrieved_at": "2026-07-10T23:18:18.364063+00:00",
+  "page_title": "671 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "64f01b399fa2ca117a6e986f9a88aa0769b58106cb8d1f05cefe4228149b6036",
+  "comment_count": 5,
+  "comments": [
+    {
+      "post_id": "7142",
+      "text": "GPT Pro resolves both questions in the affirmative. You can find the argument here as well as the Lean formalisation by Codex here.",
+      "meta": "Liam Price — 23:12 on 22 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7153",
+      "text": "Thanks Liam. As a side note, I tend to find the papers you post here much more readable and 'human' (in some hard to quantity sense) than most AI-generated assisted papers posted here. Is this because you (or other humans) are taking a lot of time to digest and rewrite the initial AI output, or are you using the AI to write these papers in a different way than most people?",
+      "meta": "Thomas Bloom — 12:49 on 23 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7157",
+      "text": "It's a good question. It's definitely a mixture of both; Kevin and I have a very specific prompt for the model to output the latex rather than just, for example, \"write the proof in latex\", as well having Kevin go over the final proof and clean it up a bit to make it more human readable. Here is the prompt we use if you're interested: \"Write the completed proof as a publishable math research paper using amsart using a4paper, margin=1in. Keep the title brief and to the point. The abstract should only be at most 6 sentences. Use section headings and paragraph breaks sparingly. Do not add an author entry. Be rigorous and self-contained. Ensure to address any issues you raised. Give the LaTeX in a code markdown block. Use display mode less for simple steps and combining multiple rearrangements into one line.\" If you have any other questions about our workflow, I will happily answer them.",
+      "meta": "Liam Price — 14:04 on 23 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7159",
+      "text": "How close is the output that prompt produces to the final versions you post here? You say Kevin cleans it up a bit, what kind of cleaning up is required?",
+      "meta": "Thomas Bloom — 15:48 on 23 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7160",
+      "text": "It’s a bit hard to gauge exactly, but often I see that its alignment blocks are somewhat broken, or that it likes to over use parentheses in display mode for domains of things which I then move outside of the display mode as suitable. Also, it often uses a lot of weird paragraph breaks that are somewhat jarring to read so I tend to close that where it makes sense to, and I see that it likes to use random terminology that it has come up with that aren’t standard terms in the literature. For example, the model had previously used terms like “fan” and “template” on a different problem solution which I didn’t recognise and, in fact they had more conventional terminology in the literature that I replaced with because I recognised that. Sometimes it helps to add to the above prompt something like “You should check that all terminology used in your work is standard conventional terminology in the surrounding literature”. Another thing I see the model often do is weird flashy lemma titles or doing it uncapitalised and I try to tone that down a bit. It also likes to be really verbose by restating trivial definitions of things or writing things of the form “Let $X$ be $A$, let $Y$ be $B$, let $Z$ be $C$” as opposed to “Let $X,Y,Z$ be $A,B,C$, respectively”, and that I often switch out as well. It also doesn’t really punctuate sentence openers and I have a personal taste for including commas there. All in all though, I don’t often have to modify too much, just places where things are really jarring to read that I know no human mathematician would write something like that.",
+      "meta": "Kevin Barreto — 16:00 on 23 Jun 2026 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

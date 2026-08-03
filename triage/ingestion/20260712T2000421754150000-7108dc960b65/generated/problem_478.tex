@@ -1,0 +1,54 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#478}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, factorials
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $p$ be a prime and\[A_p = \{ k! \pmod{p} : 1\leq k<p\}.\]Is it true that\[\lvert A_p\rvert \sim (1-\tfrac{1}{e})p?\]
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Since $A_p/A_p=\{1,\ldots,p-1\}$ it follows that $\lvert A_p\rvert \gg p^{1/2}$. The best known lower bound is due to Grebennikov, Sagdeev, Semchankau, and Vasilevskii \cite{GSSV24},\[\lvert A_p\rvert \geq (\sqrt{2}-o(1))p^{1/2},\]which follows from proving that $\lvert A_pA_p\rvert=(1+o(1))p$.
+
+Wilson's theorem implies $(p-2)!\equiv 1\pmod{p}$, and hence $\lvert A_p\rvert\leq p-2$. Results on $\lvert A_p\rvert$ on average were obtained by Klurman and Munsch \cite{KlMu17}. 
+
+It is even open whether there are infinitely many primes $p$ such that $\lvert A_p\rvert=p-2$: in other words, such that $2!,\ldots,(p-1)!$ are all distinct modulo $p$ (such primes are sometimes called socialist primes). Rokowska and Schinzel \cite{RoSc60} have proved that any socialist prime is $5\pmod{8}$, and must satisfy $-(\frac{5}{p})=(\frac{-23}{p})=1$. Moreover, the congruence class missing from $2!,\ldots,(p-1)!$ must be $-(\frac{p-1}{2})!$. 
+
+The only known socialist prime is $p=5$. Trudgian \cite{Tr13} has shown there are no other socialist primes $<10^9$. This was extended to $10^{11}$ by Andreji\'{c} and Tatarevic \cite{AnTa16}.
+
+This is also discussed in problems A2 and F11 of Guy's collection \cite{Gu04}.
+
+\bigskip
+\noindent\textbf{References:}
+
+[AnTa16] V. Andreji\'{c} and M. Tatarevic, On distinct residues of factorials. arXiv:1603.04086 (2016).
+ 
+ [GSSV24] Grebennikov, Alexandr and Sagdeev, Arsenii and Semchankau,
+Aliaksei and Vasilevskii, Aliaksei, On the sequence {$n! \bmod p$}. Rev. Mat. Iberoam. (2024), 637--648.
+ 
+ [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.
+ 
+ [KlMu17] Klurman, Oleksiy and Munsch, Marc, Distribution of factorials modulo {$p$}. J. Th\'{e}or. Nombres Bordeaux (2017), 169--177.
+ 
+ [RoSc60] Rokowska, B. and Schinzel, A., Sur un probl\`eme de {M}. {E}rd\H os. Elem. Math. (1960), 84--85.
+ 
+ [Tr13] T. Trudgian, There are no socialist primes less than $10^9$. arXiv:1310.6403 (2013).
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/478}}
+\end{document}

@@ -1,0 +1,99 @@
+{
+"reviewer_role": "independent adversarial referee (logic)",
+"verdict": "fail",
+"claims_checked": 21,
+"claims_total": 21,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14",
+"C15",
+"C16",
+"C17",
+"C18",
+"C19",
+"C20",
+"C21"
+],
+"open_gaps": [
+"No construction or lower bound resolves the planar problem when all 2n points are pairwise distinct.",
+"The internally distinct but overlapping planar convention remains unresolved.",
+"The comparison F(n)=o(f(2n)) remains unresolved.",
+"No variable quadratic-form, algebraic-norm, Euclidean-matrix, or radial-support branch reaches the required n/sqrt(log n) threshold.",
+"The semantic conventions are discussed but are not represented by one internally consistent definition of F_C."
+],
+"unchecked_imports": [
+"C10 invokes the planar simple-graph edge bound derived from Euler's formula, but the promised derivation is absent.",
+"The stated hypothesis e<=3v-6 requires v>=3, whereas the random induced subgraphs used in C10 may have zero, one, or two vertices; those cases are not handled in the written inference."
+],
+"counterexample_searches": [
+{
+"target": "C2-C3 formalization",
+"search": "Applied the displayed definition of F_C to the repetition-allowed convention.",
+"result": "The definition minimizes over sets with |X|=|Y|=n, which forbids the repeated-point witness used in C3. Thus C3 is correct only after replacing that definition by one over indexed tuples."
+},
+{
+"target": "C9 boundary case",
+"search": "Set n=1.",
+"result": "The claimed inequality remains true, but the proof cannot choose two distinct anchors in X, so the stated proof does not cover its full quantifier range."
+},
+{
+"target": "C10 random-subgraph step",
+"search": "Consider induced subgraphs with v(H)=0, 1, or 2.",
+"result": "The assertion that a planar simple graph has at most 3v(H)-6 edges is false in these cases. The desired weaker inequality can be repaired, but that repair is absent."
+},
+{
+"target": "C8 regular-polygon construction",
+"search": "Checked n=2, 3, 4 and the parity of all cyclic separations.",
+"result": "No counterexample found; the number of cross-chord lengths is ceil(n/2)."
+},
+{
+"target": "C14 checkerboard reduction",
+"search": "Checked q=2 and q=4 and examined the possible orientation reversal of a difference vector.",
+"result": "No counterexample found; orientation reversal preserves the squared norm, although this point is not explicitly stated."
+},
+{
+"target": "C20 rational-Gram obstruction",
+"search": "Tested kernels with relations having positive, negative, and mixed-sign coordinates.",
+"result": "No counterexample found; the proposed shift places both coefficient vectors in every sufficiently large box."
+}
+],
+"material_errors": [
+{
+"location": "Overall conclusion",
+"error": "The candidate does not prove or disprove the principal pairwise-distinct planar assertion and does not resolve F=o(f). This directly fails the acceptance criteria."
+},
+{
+"location": "Definition preceding C2",
+"error": "F_C is defined using n-element sets for every convention. That definition cannot encode repetitions, so the subsequent claim F_rep(n)=1 is formally inconsistent with the candidate's own normalization."
+},
+{
+"location": "C10",
+"error": "The crossing argument applies the v>=3 planar-edge theorem to random induced subgraphs without treating v<3. Consequently C10 is not fully established by the written local inferences."
+},
+{
+"location": "C11",
+"error": "C11 depends entirely on C10. Although the fixed-radius incidence statement is plausible and the remaining summation is correct, the candidate's claimed self-contained derivation inherits C10's proof gap."
+},
+{
+"location": "C9",
+"error": "The proof assumes n>=2 but the statement is unqualified. The n=1 boundary is separately true, not proved in C9."
+}
+],
+"completeness_score": 57,
+"proof_confidence": 12,
+"adversarial_survival_score": 73,
+"statement_sha256": "1a1d20a3dee71f7bdc92834c48238b40d7d273fd322f3d71771e35966a2596cc",
+"notes": "The repeated-point witness and the three-dimensional lattice-cube construction are valid after using the appropriate tuple or distinct-set definitions. Most auxiliary algebraic, energy, bisector, matrix-rank, and one-dimensional claims survive direct checking. Nevertheless, the central planar distinct-point problem is explicitly left open, the F-versus-f question is not answered, and the formal inconsistency in the definition of F_C prevents the literal-convention discussion from being a completely coherent proof. The submission is therefore an informative partial audit, not a solution of the locked statement."
+}

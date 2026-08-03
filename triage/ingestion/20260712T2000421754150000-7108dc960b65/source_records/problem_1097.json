@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1097,
+  "raw_page": {
+    "path": "raw/pages/problem_1097.html",
+    "sha256": "e10d2d3727be17f776e18609ea78504904bbb81cbce418c6371b71be943cfabe"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "1eb8807eaac0913dbcf6256685f22c1393581ddc73e899689a8feb29eb2d5308",
+      "source_region": "div.problem-additional-text",
+      "text": "[Bo99] Bourgain, J., On the dimension of {K}akeya sets and related maximal\ninequalities. Geom. Funct. Anal. (1999), 256--282.\n \n [GGTW25] B. Georgiev, J. G\\'{o}mez-Serrano, T. Tao, and A. Wagner, Mathematical exploration and discovery at scale. arXiv:2511.02864 (2025).\n \n [KaTa99] Katz, Nets Hawk and Tao, Terence, Bounds on arithmetic projections, and applications to the\n{K}akeya conjecture. Math. Res. Lett. (1999), 625--630.\n \n [Le15] Lemm, Marius, New counterexamples for sums-differences. Proc. Amer. Math. Soc. (2015), 3863--3868."
+    },
+    "remarks": {
+      "sha256": "94ec7282547219555a1c7734582286cdb1f7352a0f6fe1df9766f792188ebebd",
+      "source_region": "div.problem-additional-text",
+      "text": "A problem Erd\\H{o}s posed in the 1989 problem session of Great Western Number Theory.\n\nHe states that Erd\\H{o}s and Ruzsa gave an explicit construction which achieved $n^{1+c}$ for some $c>0$, and Erd\\H{o}s and Spencer gave a probabilistic proof which achieved $n^{3/2}$, and speculated this may be the best possible.\n\nIn the comment section, Chan has noticed that this problem is exactly equivalent to a sums-differences question of Bourgain \\cite{Bo99}, introduced as an arithmetic path towards the Kakeya conjecture: find the smallest $c\\in [1,2]$ such that, for any finite sets of integers $A$ and $B$ and $G\\subseteq A\\times B$ we have\\[\\lvert A\\overset{G}{-}B\\rvert \\ll \\max(\\lvert A\\rvert,\\lvert B\\rvert, \\lvert A\\overset{G}{+}B\\rvert)^c\\](where, for example, $A\\overset{G}{+}B$ denotes the set of $a+b$ with $(a,b)\\in G$). \n\nThis is equivalent in the sense that the greatest exponent $c$ achievable for the main problem here is equal to the smallest constant achievable for the sums-differences question. The current best bounds known are thus\\[1.77898\\cdots \\leq c \\leq 11/6 \\approx 1.833.\\]The upper bound is due to Katz and Tao \\cite{KaTa99}. The lower bound is due to Lemm \\cite{Le15} (with a very small improvement found by AlphaEvolve \\cite{GGTW25}). \n\nThis resolves the second part of the question negatively, but the general question of the correct order of magnitude remains open."
+    },
+    "statement": {
+      "sha256": "0a807a89012195b02cae9c28de1562dc3b1a8b6fcf69bd0025a8375a2f79aa1f",
+      "source_region": "div#content",
+      "text": "Let $A$ be a set of $n$ integers. How many distinct $d$ can occur as the common difference of a three-term arithmetic progression in $A$?\n\nIn particular, are there always $O(n^{3/2})$ many such $d$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1097"
+}

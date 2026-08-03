@@ -1,0 +1,39 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#335}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, additive combinatorics
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $d(A)$ denote the density of $A\subseteq \mathbb{N}$. Characterise those $A,B\subseteq \mathbb{N}$ with positive density such that\[d(A+B)=d(A)+d(B).\]
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+One way this can happen is if there exists $\theta>0$ such that\[A=\{ n>0 : \{ n\theta\} \in X_A\}\textrm{ and }B=\{ n>0 : \{n\theta\} \in X_B\}\]where $\{x\}$ denotes the fractional part of $x$ and $X_A,X_B\subseteq \mathbb{R}/\mathbb{Z}$ are such that $\mu(X_A+X_B)=\mu(X_A)+\mu(X_B)$. Are all possible $A$ and $B$ generated in a similar way (using other groups)?
+
+This has been partially resolved by Ackelsburg and Richter \cite{AcRi26}, under the additional assumption that one of the sets meets every residue class in $\mathbb{N}$. Roughly speaking, if $d(A)>0$ and $d(A+B)=d(A)+d(B)<1$ and $B$ meets every residue class then either both $A$ and $B$ arise from a rotation on the product of the circle group with a finite cyclic group, or $A$ is in a single residue class modulo some $h$ and $B$ 'looks like' the union of all but one residue class modulo $h$.
+
+A full characterisation without the assumption that one of the sets meets every residue class seems hopeless; for example, taking $A=B$ to be a random subset of the even integers with density $1/4$ we have $d(A+A)=1/2$.
+
+\bigskip
+\noindent\textbf{References:}
+
+[AcRi26] E. Ackelsburg and F. Richter, An inverse theorem for sumsets of sets of positive density in the integers. arXiv:2604.12864 (2026).
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/335}}
+\end{document}

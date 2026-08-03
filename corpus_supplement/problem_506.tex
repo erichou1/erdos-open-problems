@@ -1,0 +1,52 @@
+% corpus_supplement: Erdős problem #506
+% source: https://www.erdosproblems.com/latex/506
+% fetched_at: 2026-07-14T18:47:49Z
+% payload_sha256: ce0c09aea25508372cd5e43e1798fddad57123a4e2435b28a921ea1cb0a05d94
+% statement/remarks/references extracted by erdos_ingest.extract_source_page;
+% rendered by erdos_ingest.render_tex — do not edit
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#506}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} geometry
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+What is the minimum number of circles determined by any $n$ points in $\mathbb{R}^2$, not all on a circle?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+There is clearly some non-degeneracy condition intended here - probably either that not all the points are on a line, or the stronger condition that no three points are on a line.
+
+This was resolved by Elliott \cite{El67}, who claimed that (assuming not all points are on a circle or a line), provided $n>393$, the points determine at least $\binom{n-1}{2}$ distinct circles. There was an error, observed by Purdy and Smith \cite{PuSm}, who noted that Elliott's proof actually gives a lower bound of\[\binom{n-1}{2}+1-\left\lfloor\frac{n-1}{2}\right\rfloor,\]again for all $n>393$. This is best possible, as witnessed by a circle with $n-1$ points and a single point off the circle. This corrected lower bound was also reported by B\'{a}lint and B\'{a}lintov\'{a} \cite{BaBa94}, although without any explanation.
+
+The problem appears to remain open for small $n$. Segre observed that projecting a cube onto a plane shows that the lower bound $\binom{n-1}{2}$ is false for $n=8$.
+
+See also [104] and [831].
+
+\bigskip
+\noindent\textbf{References:}
+
+[BaBa94] B\'{a}lintov\'{a}, A. and B\'{a}lint, V., On the number of circles determined by {$n$} points in the
+{E}uclidean plane. Acta Math. Hungar. (1994), 283--289.
+ 
+ [El67] Elliott, P. D. T. A., On the number of circles determined by {$n$} points. Acta Math. Acad. Sci. Hungar. (1967), 181--188.
+ 
+ [PuSm] No reference found.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/506}}
+\end{document}

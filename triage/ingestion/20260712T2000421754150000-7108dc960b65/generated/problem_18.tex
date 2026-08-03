@@ -1,0 +1,46 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#18}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, divisors, factorials
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+We call $m$ practical if every integer $1\leq n<m$ is the sum of distinct divisors of $m$. If $m$ is practical then let $h(m)$ be such that $h(m)$ many divisors always suffice.
+
+Are there infinitely many practical $m$ such that\[h(m) < (\log\log m)^{O(1)}?\]Is it true that $h(n!)<n^{o(1)}$? Or perhaps even $h(n!)<(\log n)^{O(1)}$?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+It is easy to see that almost all numbers are not practical. Erd\H{o}s originally showed that $h(n!) <n$. Vose \cite{Vo85} proved the existence of infinitely many practical $m$ such that $h(m)\ll (\log m)^{1/2}$. 
+
+The sequence of practical numbers is A005153 in the OEIS.
+
+The reward of \$250 is offered in \cite{Er81h} for a proof or disproof of whether\[h(n) <(\log \log n)^{O(1)}\]for infinitely many practical $n$.
+
+See also [304] and [825].
+
+\bigskip
+\noindent\textbf{References:}
+
+[Er81h] Erd\H{o}s, P., Some problems and results on additive and multiplicative
+number theory. Analytic number theory (Philadelphia, Pa., 1980) (1981), 171-182.
+ 
+ [Vo85] Vose, Michael D., Egyptian fractions. Bull. London Math. Soc. (1985), 21-24.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/18}}
+\end{document}

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 160,
+  "raw_page": {
+    "path": "raw/pages/problem_160.html",
+    "sha256": "03614c02c01289e46c4c54f0318c2d3fac08dc478c0479e3cd0e619cd1465f04"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "0c077d944e1374de325682289cc58bbc8fc8907a2f08ab6046f6071855a084c7",
+      "source_region": "div.problem-additional-text",
+      "text": "[BlSi23] T. F. Bloom and O. Sisask, An improvement to the Kelley-Meka bounds on three-term arithmetic progressions. arXiv:2309.02353 (2023).\n \n [KeMe23] Kelley, Z. and Meka, R., Strong Bounds for 3-Progressions. arXiv:2302.05537 (2023)."
+    },
+    "remarks": {
+      "sha256": "de6b0e3ab0af29aab8edd781fcfe762b3a9a3c4974897a962005fd50268410ad",
+      "source_region": "div.problem-additional-text",
+      "text": "Investigated by Erd\\H{o}s and Freud. This has been discussed on MathOverflow, where LeechLattice shows\\[h(N) \\ll N^{2/3}.\\]In the comments of this site Hunter improves this to\\[h(N) \\ll N^{\\frac{\\log 3}{\\log 22}+o(1)}\\](note $\\frac{\\log 3}{\\log 22}\\approx 0.355$).\n\nThe observation of Zach Hunter in that question coupled with recent progress on the size of subsets without three-term arithmetic progression (see \\cite{BlSi23} which improves slightly on the bounds due to Kelley and Meka \\cite{KeMe23}) imply that\\[h(N) \\gg \\exp(c(\\log N)^{1/9})\\]for some $c>0$."
+    },
+    "statement": {
+      "sha256": "28b2b0f98fcd21c7a92dcd3e2be6298d2a54284aa9785380daaf9f9d0d9fcb1d",
+      "source_region": "div#content",
+      "text": "Let $h(N)$ be the smallest $k$ such that $\\{1,\\ldots,N\\}$ can be coloured with $k$ colours so that every four-term arithmetic progression must contain at least three distinct colours. Estimate $h(N)$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/160"
+}

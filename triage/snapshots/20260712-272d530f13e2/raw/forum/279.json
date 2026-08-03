@@ -1,0 +1,60 @@
+{
+  "problem_number": 279,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/279",
+  "retrieved_at": "2026-07-10T23:16:24.025869+00:00",
+  "page_title": "279 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "ec1f0e23c81e0a53cde45f32578894ec25413332f69102fb83eb83b348df4a47",
+  "comment_count": 10,
+  "comments": [
+    {
+      "post_id": "5496",
+      "text": "I've run it multiple times over with a GPT-5.4 Pro instance and every time AI seems to be confused by the comment here below the problem, especially $k=1,2$ case. It seems Erdos also meant a weaker statement for almost all integers (density 1) rather than sufficiently large. I attach the note which shows both strong and weak version IF one know case of $k=1$ (which is noted in the comments as true, but I couldn't find it anywhere), and prove that $k=1$ for what is in the Erdos-Graham paper, and argues that the strong version shouldnt be true in general. I'd love a second opinion of whether the statement should be corrected and to what - ideally checked with a precise Erdos reference, because I don't see a reference here (have one in my note if that's what meant).",
+      "meta": "Przemek Chojecki — 15:33 on 16 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5499",
+      "text": "For this one I'll wait for more clarification before checking.",
+      "meta": "Nat Sothanaphan — 16:20 on 16 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5500",
+      "text": "The problem is mentioned in page 29 of OLD AND NEW PROBLEMS AND RESULTS IN COMBINATORIAL NUMBER THEORY . The question is asked for all sufficiently large integers, but there is no claim that a solution is known when $k=1$ or $2$.",
+      "meta": "Adenwalla — 16:23 on 16 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5508",
+      "text": "I agree that the final sentence should be changed to something like: For all $k$, any set $A$ such that $\\sum_{n\\in A}\\frac{1}{n}=\\infty$ has the property that almost all integers can be written this way. (The site has been updated to address this comment.)",
+      "meta": "Woett — 17:53 on 16 Apr 2026 👍 2 📝 1 🤖 0"
+    },
+    {
+      "post_id": "5510",
+      "text": "Yes, this comment would be much better. And I think the main difficulty is actually proving it for either $k=1,2$ or $3$. The rest follows from the 'lift' argument in my note.",
+      "meta": "Przemek Chojecki — 18:37 on 16 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5515",
+      "text": "Well, $a_p = c$ for all $p$ works for $k = 1$ and all $c$. I don't immediately see a solution for $k = 2$, but $a_2 = 1$ and $a_p = 0$ for $p \\ge 3$ already brings you pretty close, as then you're only missing powers of two.",
+      "meta": "Woett — 20:32 on 16 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5528",
+      "text": "Thanks, I agree, I think I just misread 'almost all' for 'all' when adding the final remark.",
+      "meta": "Thomas Bloom — 06:51 on 17 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5539",
+      "text": "Yes, Erdos even mentions that he thinks any $A$ is probably not true in this sufficiently large setting. GPT-5.4 can pretty quickly produce a counterexample with $A$ sparse enough. Also $k=3$ is indeed quite difficult, but there seems to be a way. The Ford–Green–Konyagin–Tao machinery already proves the prime-only statement on arbitrarily long overlapping finite windows, and potentially one can globalize those windows into “all sufficiently large integers.” A high-probability version of their $S_2$-random step would very likely finish the argument by a Borel–Cantelli patching over the overlapping windows, but the published proof does not give that. I'm leaving this comment for the future, as this problem might become tractable sooner or later.",
+      "meta": "Przemek Chojecki — 08:44 on 17 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5556",
+      "text": "There is a gap in Theorem 7, which may be repairable. The issue, near the end of proof, is $\\sum_{j \\le J} |I_j| \\ll x$ is not actually true from $x \\in I_J$, because the interval $I_J$ may be large. See last message in this discussion with GPT-5.4 Thinking.",
+      "meta": "Nat Sothanaphan — 13:44 on 17 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5557",
+      "text": "Thank you for checking! Anyway, my note above was mostly related to previous comments below the problem for any $A$ not just primes. With the current statement corrected, you can disregard it.",
+      "meta": "Przemek Chojecki — 13:59 on 17 Apr 2026 👍 1 📝 0 🤖 0"
+    }
+  ]
+}

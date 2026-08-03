@@ -1,0 +1,15 @@
+{
+  "problem_number": 876,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/876",
+  "retrieved_at": "2026-07-10T23:19:14.850836+00:00",
+  "page_title": "876 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "a6d8cbeb71dec210035e9a9b51eb2d4b5ac5585321ab56e08e1e2cfb50b8e64f",
+  "comment_count": 1,
+  "comments": [
+    {
+      "post_id": "7166",
+      "text": "A log-free improvement follows from the results of Conlon--Fox--Pham: https://www.its.caltech.edu/~dconlon/subset_sums.pdf and Szemerédi--Vu: https://annals.math.princeton.edu/wp-content/uploads/annals-v163-n1-p01.pdf. Write $\\Sigma(X)$ for the finite subset sums of $X$. Theorem 1.9 from the work of Conlon--Fox--Pham, inserted into the proof of Szemerédi--Vu, Corollary 1.4, gives an absolute $C$ such that, if $X(x)\\ge C\\sqrt{x}$ eventually, then $\\{dm:m\\ge M\\}\\subseteq\\Sigma(X)$ for some $d,M\\ge1$. Indeed, in Szemerédi--Vu's Lemma 6.4 the common differences are replaced successively by gcds, so the progressions remain homogeneous; their residue-correction and Graham-net argument then produces a tail of $d\\mathbb N$. Now suppose that $A$ satisfies the condition of the problem and $\\liminf_{x\\to\\infty}A(x)/\\sqrt{x}>C$. Choose an infinite $D=\\{u_j\\}\\subset A$ with $u_j\\ge j^4$, and put $X=A\\setminus D$. Then $D(x)=O(x^{1/4})$, so $X(x)\\ge C\\sqrt{x}$ eventually. Hence $\\{dm:m\\ge M\\}\\subseteq\\Sigma(X)$. By pigeonhole, there are $u<v$ in $D$ with $u\\equiv v\\pmod d$ and $v-u\\ge Md$. Thus $v-u\\in\\Sigma(X)$, so $v=u+\\sum_{s\\in S}s$ for some nonempty finite $S\\subset X$, a contradiction. Therefore $\\liminf_{x\\to\\infty}A(x)/\\sqrt{x}\\le C$. AI Acknowledgement: this connection between the recent results of Conlon--Fox--Pham and this problem was made independently by GPT-5.5 without human involvement.",
+      "meta": "SamKorsky — 17:24 on 23 Jun 2026 👍 1 📝 0 🤖 0"
+    }
+  ]
+}

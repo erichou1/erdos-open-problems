@@ -1,0 +1,25 @@
+{
+  "problem_number": 913,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/913",
+  "retrieved_at": "2026-07-10T23:19:24.652573+00:00",
+  "page_title": "913 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "072767de9784e1c6431d3e7445718c72588ddd9ae9e80269843716544ede36f8",
+  "comment_count": 3,
+  "comments": [
+    {
+      "post_id": "3667",
+      "text": "Write \\(v_p(m)\\) for the exponent of a prime \\(p\\) in \\(m\\). Since \\(\\gcd(n,n+1)=1\\), the prime factorisation of \\(n(n+1)\\) is just the disjoint union of the factorisations of \\(n\\) and of \\(n+1\\), so the condition is equivalent to:\\[ \\{\\,v_p(n):p\\mid n\\,\\}\\ \\cup\\ \\{\\,v_p(n+1):p\\mid n+1\\,\\} \\quad\\text{has no repeats.} \\]A first (very strong) necessary consequence is that exponent \\(1\\) can occur at most once. So: - \\(n\\) cannot have two distinct primes to the first power (else you’d already repeat \"1\" inside \\(n\\)); - \\(n+1\\) cannot have two distinct primes to the first power; - and you cannot have a prime to the first power in both \\(n\\) and \\(n+1\\). In particular, at least one of \\(n\\) or \\(n+1\\) must be powerful/squareful (every prime divisor occurs with exponent \\(\\ge 2\\)): if \\(n\\) uses exponent \\(1\\) anywhere, then \\(n+1\\) must avoid exponent \\(1\\) entirely, hence \\(n+1\\) is powerful; if \\(n\\) uses no exponent \\(1\\), then \\(n\\) itself is powerful. That already puts the problem in \"prime values of structured sequences\" territory, and with current techniques this is far beyond what we can prove in general. In fact, even very special subfamilies are open - for example, proving infinitely many solutions with exponent set \\(\\{1,2,3\\}\\) via\\[ n=8p^2-1,\\qquad n+1=2^3p^2 \\]amounts to proving infinitely many primes \\(p\\) with \\(8p^2-1\\) prime, which is a special case of standard prime-producing conjectures (Bateman-Horn / Schinzel). So conditionally: Under Schinzel’s Hypothesis H (or Bateman-Horn), the suggested family works, and much more is predicted. For any distinct integers \\(a,b\\ge 2\\), Hypothesis H predicts infinitely many primes \\(p\\) with \\(p\\) and \\(2^a p^b-1\\) prime; then\\[ n=2^a p^b-1,\\quad n+1=2^a p^b \\]gives exponents \\(\\{1,a,b\\}\\) all distinct. The above example is \\((a,b)=(3,2)\\). For what it’s worth, small examples exist in abundance (e.g. \\(n=63\\) gives \\(n(n+1)=2^6\\cdot 3^2\\cdot 7^1\\), exponents \\(\\{1,2,6\\}\\)), but turning that into an infinite proof seems to require exactly this kind of conjectural input, so the problem looks hard.",
+      "meta": "Przemek Chojecki — 09:32 on 23 Jan 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3672",
+      "text": "Also true if the conjecture about infinitely many Mersenne primes is true. So yes, many conjectures would do the job. The abundancy of small examples is less convincing as an argument. For large values of $n$ and $n+1$, the prime factorisation typically has many (order $\\log \\log n$) different prime factors with multiplicity 1.",
+      "meta": "StijnC — 10:40 on 23 Jan 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3676",
+      "text": "Minor correction: Schinzel H needs irreducible polynomials, so \"any distinct integers $a,b \\ge 2$\" needs to be weakened to also $\\gcd(a,b) = 1$. Credit to ChatGPT for the observation.",
+      "meta": "Nat Sothanaphan — 11:46 on 23 Jan 2026 👍 1 📝 0 🤖 0"
+    }
+  ]
+}

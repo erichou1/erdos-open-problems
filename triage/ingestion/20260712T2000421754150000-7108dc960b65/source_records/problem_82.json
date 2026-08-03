@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 82,
+  "raw_page": {
+    "path": "raw/pages/problem_82.html",
+    "sha256": "731da6b8afb0cbe8a9b58b2f326d4f77c36b70dcfec32807b804dc328aa224a3"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "4a95afd5ea16b12e45e5a66897073e7871c5cc8d4edcd1abcfb6d37099338046",
+      "source_region": "div.problem-additional-text",
+      "text": "[AKS07] Alon, N. and Krivelevich, M. and Sudakov, B., Large nearly regular induced subgraphs. arXiv:0710.2106 (2007).\n \n [DyMc26] P. Dyson and B. McKay, Ramsey numbers for regular induced subgraphs. arXiv:2604.08215 (2026).\n \n [Er93] Erd\\H{o}s, Paul, Some of my favorite solved and unsolved problems in graph theory. Quaestiones Math. (1993), 333-350.\n \n [FMRS95] Fajtlowicz, Siemion and McColgan, Tamara and Reid, Talmage and\nStaton, William, Ramsey numbers for induced regular subgraphs. Ars Combin. (1995), 149--154."
+    },
+    "remarks": {
+      "sha256": "38d4036a77d4b3101403655c8b7a5d33dd719825edb36568cddfcab241a8f656",
+      "source_region": "div.problem-additional-text",
+      "text": "Conjectured by Erd\\H{o}s, Fajtlowicz, and Stanton. It is known that $F(5)=3$ and $F(7)=4$. \n\nRamsey's theorem implies that $F(n)\\gg \\log n$. Bollob\\'{a}s observed that $F(n)\\ll n^{1/2+o(1)}$. Alon, Krivelevich, and Sudakov \\cite{AKS07} have improved this to $n^{1/2}(\\log n)^{O(1)}$. Dyson and McKay \\cite{DyMc26} have improved this further to $F(n) \\ll n^{1/2}$. \n\nIn \\cite{Er93} Erd\\H{o}s asks whether, if $t(n)$ is the largest trivial (either empty or complete) subgraph which a graph on $n$ vertices must contain (so that $t(n) \\gg \\log n$ by Ramsey's theorem), then is it true that\\[F(n)-t(n)\\to \\infty?\\]Equivalently, and in analogue with the definition of Ramsey numbers, one can define $G(n)$ to be the minimal $m$ such that every graph on $m$ vertices contains a regular induced subgraph on at least $n$ vertices. This problem can be rephrased as asking whether $G(n) \\leq 2^{o(n)}$. \n\nFajtlowicz, McColgan, Reid, and Staton \\cite{FMRS95} showed that $G(1)=1$, $G(2)=2$, $G(3)=5$, $G(4)=7$, and $G(5)\\geq 12$. Boris Alexeev and Brendan McKay (see the comments and this site) have computed $G(5)=17$, $G(6)\\geq 21$, and $G(7)\\geq 29$. Dyson and McKay \\cite{DyMc26} have proved $G(7)\\geq 30$, and $G(k)\\geq \\frac{9}{163}k^2$ for all large $k$.\n\nSee also [1031] for another question regarding induced regular subgraphs."
+    },
+    "statement": {
+      "sha256": "a3bf3760292daf365021e853a828bbe4fea89559eb3bf3b08bb21e7e6dc77a01",
+      "source_region": "div#content",
+      "text": "Let $F(n)$ be maximal such that every graph on $n$ vertices contains a regular induced subgraph on at least $F(n)$ vertices. Prove that $F(n)/\\log n\\to \\infty$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/82"
+}

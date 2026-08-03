@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 821,
+  "raw_page": {
+    "path": "raw/pages/problem_821.html",
+    "sha256": "5a740cee16e41ea9b938d97c3ff179f587d4f3c972039e19bebd743a02f13c73"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "920a04b02cd47e10acf89aa52aa402dec152b9ee552d52c4f67a7b7302eb8c72",
+      "source_region": "div.problem-additional-text",
+      "text": "[BaHa98] Baker, R. C. and Harman, G., Shifted primes without large prime factors. Acta Arith. (1998), 331--361.\n \n [Er35b] Erd\\H{o}s, P., On the normal number of prime factors of $p-1$ and some related problems concerning Euler's $\\varphi$-function. Quart. J. Math. (1935), 205-213.\n \n [Li22] J. D. Lichtman, Primes in arithmetic progressions to large moduli and shifted primes without large prime factors. arXiv:2211.09641 (2022).\n \n [LuPo11] Luca, Florian and Pollack, Paul, An arithmetic function arising from {C}armichael's conjecture. J. Th\\'{e}or. Nombres Bordeaux (2011), 697--714."
+    },
+    "remarks": {
+      "sha256": "7558b7dd2f8091f3f9365fa9983a7d24fa7ca12964969ecd7b55c515019e774d",
+      "source_region": "div.problem-additional-text",
+      "text": "Pillai proved that $\\limsup g(n)=\\infty$ and Erd\\H{o}s \\cite{Er35b} proved that there exists some constant $c>0$ such that $g(n) >n^c$ for infinitely many $n$.\n\nThis conjecture would follow if we knew that, for every $\\epsilon>0$, there are $\\gg_\\epsilon \\frac{x}{\\log x}$ many primes $p<x$ such that all prime factors of $p-1$ are $<p^\\epsilon$.\n\nThe best known bound is that there are infinitely many $n$ such that\\[g(n) > n^{0.71568\\cdots},\\]obtained by Lichtman \\cite{Li22} as a consequence of proving that there are $\\geq \\frac{x}{(\\log x)^{O(1)}}$ many primes $p\\leq x$ such that all prime factors of $p-1$ are $\\leq x^{0.2843\\cdots}$ (which improves a number of previous exponents, most recently Baker and Harman \\cite{BaHa98}).\n\nThe average size of $g(n)$ was investigated by Luca and Pollack \\cite{LuPo11}.\n\nSee also [416]."
+    },
+    "statement": {
+      "sha256": "49e696349079b6d10c72d82c1746b9fb5a0387005bc49b38af02fcda83b44c4f",
+      "source_region": "div#content",
+      "text": "Let $g(n)$ count the number of $m$ such that $\\phi(m)=n$. Is it true that, for every $\\epsilon>0$, there exist infinitely many $n$ such that\\[g(n) > n^{1-\\epsilon}?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/821"
+}

@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#968}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $u_n=p_n/n$, where $p_n$ is the $n$th prime. Does the set of $n$ such that $u_n&#60;u_{n+1}$ have positive density?
+
+
+
+
+Erd\H{o}s and Prachar \cite{ErPr61} proved that\[\sum_{p_n&lt;x} \lvert u_{n+1}-u_n\rvert \asymp (\log x)^2,\]and that the set of $n$ such that $u_n&gt;u_{n+1}$ has positive density. As with many of Erd\H{o}s' questions, by 'positive density' here he most likely meant positive lower density - in other words, there exists a constant $c&#62;0$ such that for all large $x$ the number of such $n\leq x$ is at least $cx$. Erd\H{o}s also asks whether\[u_n&lt;u_{n+1}&lt;u_{n+2}\]or\[u_n&gt;u_{n+1}&#62;u_{n+2}\]have infinitely many solutions.
+
+
+
+
+References
+
+[ErPr61] Erd\H{o}s, P. and Prachar, K., S\"{a}tze und {P}robleme \"{u}ber {$p\sb{k}/k$} . Abh. Math. Sem. Univ. Hamburg (1961/62), 251--256.
+
+\noindent\textbf{Related OEIS sequences:} A387591
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/968}}
+\end{document}

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 687,
+  "raw_page": {
+    "path": "raw/pages/problem_687.html",
+    "sha256": "a6865a7698773d0258d3e5e71d01e913a3e245bea9d43ed43dbe4cf095174bf3"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "9c3b644f9544ab528a0a4bb4b9b882c6d0422908ee9f381c732087e2e23d06ed",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er80] Erd\\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.\n \n [FGKMT18] Ford, Kevin and Green, Ben and Konyagin, Sergei and Maynard, James and Tao, Terence, Long gaps between primes. J. Amer. Math. Soc. (2018), 65-105.\n \n [Iw78] Iwaniec, Henryk, On the problem of {J}acobsthal. Demonstratio Math. (1978), 225--231.\n \n [Ra38] Rankin, R. A., The Difference between Consecutive Prime Numbers. J. London Math. Soc. (1938), 242-247."
+    },
+    "remarks": {
+      "sha256": "168bb42a561ca6166fae3162b36ef624418b04d01428e80cb7abbb590b1822c0",
+      "source_region": "div.problem-additional-text",
+      "text": "This function (associated with Jacobsthal) is closely related to the problem of gaps between primes (see [4]). The best known upper bound is due to Iwaniec \\cite{Iw78},\\[Y(x) \\ll x^2.\\]The best lower bound is due to Ford, Green, Konyagin, Maynard, and Tao \\cite{FGKMT18},\\[Y(x) \\gg x\\frac{\\log x\\log\\log\\log x}{\\log\\log x},\\]improving on a previous bound of Rankin \\cite{Ra38}. \n\nMaier and Pomerance have conjectured that $Y(x)\\ll x(\\log x)^{2+o(1)}$. \n\nIn \\cite{Er80} he writes 'It is not clear who first formulated this problem - probably many of us did it independently. I offer the maximum of \\$1000 dollars and $1/2$ my total savings for clearing up of this problem.'\n\nIn \\cite{Er80} Erd\\H{o}s also asks about a weaker variant in which all except $o(y/\\log y)$ of the integers in $[1,y]$ are congruent to at least one of the $a_p\\pmod{p}$, and in particular asks if the answer is very different.\n\nSee also [688] and [689]. A more general Jacobsthal function is the focus of [970]."
+    },
+    "statement": {
+      "sha256": "14f5eaeacafcb7719b1486aeeeae7af90d59fdd636f26ceff7100391119fd068",
+      "source_region": "div#content",
+      "text": "Let $Y(x)$ be the maximal $y$ such that there exists a choice of congruence classes $a_p$ for all primes $p\\leq x$ such that every integer in $[1,y]$ is congruent to at least one of the $a_p\\pmod{p}$. \n\nGive good estimates for $Y(x)$. In particular, can one prove that $Y(x)=o(x^2)$ or even $Y(x)\\ll x^{1+o(1)}$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/687"
+}

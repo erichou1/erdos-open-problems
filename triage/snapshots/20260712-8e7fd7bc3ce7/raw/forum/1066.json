@@ -1,0 +1,25 @@
+{
+  "problem_number": 1066,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/1066",
+  "retrieved_at": "2026-07-10T23:20:23.673847+00:00",
+  "page_title": "1066 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "a1bd0b8bd0679a75c4e9a815aa84c088c82cdc7e47187bdf75b2e774e208de95",
+  "comment_count": 3,
+  "comments": [
+    {
+      "post_id": "7426",
+      "text": "I have finished cleaning up the proof and am publishing a partial result claiming a new lower bound on g(n) of 7/27. This proof should be a big improvement compared to my previous note in exposition. Thanks to Professor Konrad Swanepoel for looking over the proof and providing clear critiques I definitely needed! The full proof can be seen here The finishing touches were done with GPT-5.6-sol pro. Additionally, a paper on a new lower bound of 6/23 is in the works and has been in development since... This morning, since GPT-5.6-sol-pro is considerably stronger than GPT-5.5 Pro. Nevertheless, a complete resolution to lim(g(n)/n) hasn't been discovered, but seems doable?",
+      "meta": "Tomodovodoo — 13:35 on 10 Jul 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6507",
+      "text": "I am wondering what a meaningful contribution to this problem is, or for that matter what solving this problem beyond currently improving bounds. I believe it is possible to inch this lower bound further, but I am wondering in what capacity this would contribute. Specifically, I believe a lower bound of 7/27 can be pushed with most of the same machinery as Swanepoel with tedious work for a reduction to m=7. However, I would like some input by those more familiar with the subject. What constitutes a meaningful contribution here? I am still currently working on formalizing the current best bounds, and only then working on stricter bounds since I find the current arguments via induction precarious and difficult. I have added all GPT-5.5 pro conversations related to solving this problem, which mostly tend to agree that the current arguments hold, up to the imported machinery of Swanepoel's methodology. I have tried my best to make sure that the current mathematics holds up to that standard! I won't be able to 100% guarrantee full correctness for this attempt because it's genuinely hard for me to work through, but this is also not the final attempt yet. I am currently working up a formalization of the original bounds of the Pach and Toth paper and the Swanepoel paper, which has turned out to be quite the challenge (200k lines of Lean right now...). After I can even certify Swanepoels inputs and the full cited lemmas and theorems, I am quite confident my current write up suffices. I believe I have a genuine result worth sharing. Don't waste too much time working through this proof please, this is at best a good reference note I know has issues. Thanks for reading my update :D preliminary \\(7/27\\) proof pdf I'll also share my full GPT-5.5 pro conversation, for those interested (they might take a few seconds to load) 1066 Erdos Try 1 (main thread) 1066 Erdos Try 2 (main verifier) Full Proof in LaTeX (uncontaminated verifier) 1066 Erdos Try 3 1066 Erdos Try 4 1066 Erdos Try 5 1066 Erdos Try 6 For those interested in full workflow details, this one was a bit special! For this problem, my current workflow includes a cross-auditing of having a half-hallucinating GPT-5.5 Pro with iterative audits against it to try to validate that no smallest counterexample to this new lower bound can exist. Current versions of GPT 5.5 Pro either woefully refuse to do any work on this problem, or manage to hallucinate their way into careless theorems and lemmas. Only way I managed so far was explicitly forbidding it from making any attempt at saying it cannot solve the problem and go from there. Quite an interesting workflow if I'm honest, I see this improving in a few months. Essentially, since current models (aka GPT-5.5 pro) refuse to work without explicit targets or bounds, I ran a mostly empirical method of new upper and lower bound selections, first trying for a bound of 2/7 which required proving a four-coloring configuration I couldn't work my way through. Eventually, one of the many GPT-5.5 pro hallucinations turned to 7/27 via badly constructed machinery which I identified as a plausible route, which over the course of 4 days has turned into this attempt.",
+      "meta": "Tomodovodoo — 07:28 on 18 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "829",
+      "text": "OK, I have corrected the accidental repetition of [358] and replaced it with a genuinely new problem. (Hopefully this has been corrected quickly enough to avoid causing any confusion/misplaced links elsewhere on the web.) It's probably best if everyone (including me) deletes their previous comments, or at least edits them to say that this repetition no longer applies.",
+      "meta": "Thomas Bloom — 15:36 on 01 Oct 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

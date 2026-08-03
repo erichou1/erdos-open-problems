@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 393,
+  "raw_page": {
+    "path": "raw/pages/problem_393.html",
+    "sha256": "7ed89bf2994287820e61ade8d5f1f9a74b01841e05702473742767699d574aca"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "dabd3de720e041a2c7e41885c9d4f54eddb1179630c6c510193154852fa1c3e4",
+      "source_region": "div.problem-additional-text",
+      "text": "[BPZ23] Bui, Hung M. and Pratt, Kyle and Zaharescu, Alexandru, Power savings for counting solutions to polynomial-factorial\nequations. Adv. Math. (2023), Paper No. 109021, 32.\n \n [BeOs92] Berend, Daniel and Osgood, Charles F., On the equation {$P(x)=n!$} and a question of {E}rd\\H{o}s. J. Number Theory (1992), 189--193.\n \n [Lu02] Luca, Florian, The {D}iophantine equation {$P(x)=n!$} and a result of {M}.\n{O}verholt. Glas. Mat. Ser. III (2002), 269--273."
+    },
+    "remarks": {
+      "sha256": "08b6660951485a7ca32b6711b7368466e362157d1f1f55d0b15ec95e64293e2a",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s and Graham write that they do not even know whether $f(n)=1$ infinitely often (i.e. whether a factorial is the product of two consecutive integers infinitely often).\n\nLet $F_m(N)$ count the number of $n\\leq N$ such that $f(n)=m$. Berend and Osgood \\cite{BeOs92} proved that, for each fixed $m$, $F_m(N)=o(N)$. Bui, Pratt, and Zaharescu \\cite{BPZ23} have shown that\\[F_m(N)\\ll_m N^{33/34}.\\]A result of Luca \\cite{Lu02} implies that $f(n)\\to \\infty$ as $n\\to \\infty$, conditional on the ABC conjecture."
+    },
+    "statement": {
+      "sha256": "533be4f4ebba5550716f6185acc95a6304b38465cd0c95cb2ca5469b13529845",
+      "source_region": "div#content",
+      "text": "Let $f(n)$ denote the minimal $m\\geq 1$ such that\\[n! = a_1\\cdots a_t\\]with $a_1<\\cdots <a_t=a_1+m$. What is the behaviour of $f(n)$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/393"
+}

@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#920}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory, chromatic number
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $f_k(n)$ be the maximum possible chromatic number of a graph with $n$ vertices which contains no $K_k$.
+
+Is it true that, for $k\geq 4$,\[f_k(n) \gg \frac{n^{1-\frac{1}{k-1}}}{(\log n)^{c_k}}\]for some constant $c_k>0$?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Graver and Yackel \cite{GrYa68} proved that\[f_k(n) \ll \left(n\frac{\log\log n}{\log n}\right)^{1-\frac{1}{k-1}}.\]It is known that $f_3(n)\asymp (n/\log n)^{1/2}$ (see [1104]). 
+
+The lower bound $R(4,m) \gg m^3/(\log m)^4$ of Mattheus and Verstraete \cite{MaVe23} (see [166]) implies\[f_4(n) \gg \frac{n^{2/3}}{(\log n)^{4/3}}.\]A positive answer to this question would follow from [986]. The known bounds for that problem imply, for $k\geq 5$,\[f_k(n) \gg \frac{n^{1-\frac{1}{k-2}}}{(\log n)^{c_k}}.\]See [1104] (and also [1013]) for the case $k=3$.
+
+\bigskip
+\noindent\textbf{References:}
+
+[GrYa68] Graver, Jack E. and Yackel, James, Some graph theoretic results associated with Ramsey's theorem. J. Combinatorial Theory (1968), 125--175.
+ 
+ [MaVe23] Mattheus, S. and Verstraete, J., The asymptotics of $r(4,t)$. arXiv:2306.04007 (2023).
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/920}}
+\end{document}

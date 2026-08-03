@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#394}
+\date{Last updated: 2025-10-28}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $t_k(n)$ denote the least $m$ such that\[n\mid m(m+1)(m+2)\cdots (m+k-1).\]Is it true that\[\sum_{n\leq x}t_2(n)\ll \frac{x^2}{(\log x)^c}\]for some $c&#62;0$? Is it true that, for $k\geq 2$,\[\sum_{n\leq x}t_{k+1}(n) =o\left(\sum_{n\leq x}t_k(n)\right)?\]
+
+
+
+
+In \cite{ErGr80} they mention a conjecture of Erd\H{o}s that the sum is $o(x^2)$. This was proved by Erd\H{o}s and Hall \cite{ErHa78}, who proved that in fact\[\sum_{n\leq x}t_2(n)\ll \frac{\log\log\log x}{\log\log x}x^2.\]Erd\H{o}s and Hall conjecture that the sum is $o(x^2/(\log x)^c)$ for any $c&#60;\log 2$. Since $t_2(p)=p-1$ for prime $p$ it is trivial that\[\sum_{n\leq x}t_2(n)\gg \frac{x^2}{\log x}.\]Erd\H{o}s and Hall \cite{ErHa78} also note that $t_{n-1}(n!)=2$ and $t_{n-2}(n!)\ll n$, which $n=2^r$ shows is the best possible. They ask about the behaviour of $t_{n-3}(n!)$ and also ask ask whether, for infinitely many $n$,\[t_k(n!)&#60; t_{k-1}(n!)-1\]for all $1\leq k&#60;n$. They proved (with Selfridge) that this holds for $n=10$.
+
+
+
+
+References
+
+[ErGr80] Erd\H{o}s, P. and Graham, R., Old and new problems and results in combinatorial number theory . Monographies de L'Enseignement Mathematique (1980).
+
+[ErHa78] Erd\H{o}s, P. and Hall, R. R., On some unconventional problems on the divisors of integers . J. Austral. Math. Soc. Ser. A (1978), 479--485.
+
+\noindent\textbf{Related OEIS sequences:} A344005
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/394}}
+\end{document}

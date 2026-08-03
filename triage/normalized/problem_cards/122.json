@@ -1,0 +1,305 @@
+{
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.511
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "EPS97",
+      "Er97",
+      "Er97e"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/122",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[EPS97] Erd\\H{o}s, Paul and Pomerance, Carl and S\\'{a}rk\\\"{o}zy, Andr\\'{a}s, On locally repeated values of certain arithmetic functions. IV. Ramanujan J. (1997), 227-241.\n \n [Er97] Erd\\H{o}s, Paul, Problems in number theory. New Zealand J. Math. (1997), 155-160.\n \n [Er97e] Erd\\H{o}s, Paul, Some of my favourite unsolved problems. Math. Japon. (1997), 527-537.",
+      "remarks": "In \\cite{Er97} Erd\\H{o}s is only considering number theoretic functions which grow 'slowly' (i.e. slower than $(\\log n)^{1-c}$ for some $c>0$). \n\nThis is considered by Erd\\H{o}s, Pomerance, and S\\'{a}rk\\\"{o}zy \\cite{EPS97}, who prove in particular that if $\\omega(n)$ counts the number of distinct prime divisors of $n$, then for all large $x$ there are intervals $I,J\\subset [1,x]$ of width\\[\\lvert I\\rvert\\asymp \\left(\\frac{\\log x}{\\log\\log x}\\right)^{1/2}\\]and\\[\\lvert J\\rvert \\asymp (\\log\\log x)^{1/2}\\]such that if $n\\in I$ then $n+\\omega(n)\\in J$. (Note the normal order of $\\omega$ is $\\log\\log x$, and hence $(\\log\\log n)^{1/2}/\\omega(n)\\to 0$ for almost all $n$.) \n\nIn \\cite{Er97} and \\cite{Er97e} Erd\\H{o}s reports that he, Pomerance, and S\\'{a}rkz\\\"{o}zy can prove the more general claim above for $f$ being $\\tau(n)$, the divisor function, or $\\omega(n)$, and states it 'probably fails' for $\\phi(n)$ or $\\sigma(n)$."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 3.37,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.018828,
+        0.419689
+      ],
+      "probability": 0.219258
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 1.875,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.35706
+      ],
+      "probability": 0.157883
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 2.0,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.319945
+      ],
+      "probability": 0.142857
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.267,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.425526
+      ],
+      "probability": 0.201183
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.167,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.23659
+      ],
+      "probability": 0.088608
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.1,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.228734
+      ],
+      "probability": 0.083969
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 2.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.400045
+      ],
+      "probability": 0.181818
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 40.0,
+      "credible_interval_approx": [
+        0.0,
+        0.071043
+      ],
+      "probability": 0.02439
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.436385
+      ],
+      "probability": 0.2
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "minor"
+    },
+    "literature": {
+      "comment_count": 3,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:15:38.710103+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "e62a068a5248ef80ada799df5bfd8bc19fbf78517e4d8724352f3e37bd3b4b36"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "which_objects"
+      ],
+      "ambiguity_status": "minor",
+      "quantifier_signal_count": 1,
+      "question_count": 1,
+      "requires_source_audit": true,
+      "statement_characters": 232,
+      "statement_tokens_approx": 34
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "classify",
+      "multi_part": false,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-122",
+  "problem_number": 122,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "classify",
+    "multi_part": false,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_122.html",
+      "raw_html_sha256": "63878ac2c120545549711cc56c7d427d8afcb2637448b6ac61675100dfa9aea4",
+      "section_sha256": {
+        "references": "7e2a1a8cf5623ee8aa19ce6e8dde4386ca9dfe3797ed344c086d86f890c5c5f5",
+        "remarks": "d3e2e4be125af69725ded201a954f0c3cd25fca98fc82557bc0df9b502146c53",
+        "statement": "242038839ffcb877a56157f08d17407d3cd69b40322a4f992b0af71514a8c12d"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_122.json",
+      "source_record_sha256": "ce861428815e4e1b113d8c8d39e9ce5deeadba4f9f04e83e18dd5d1aa089b56f",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_122.tex",
+    "latex_sha256": "ea8f6f4018d2c007cf6913ad478c5425c9d43e149d3e4ee22c37fe20eaccb231",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "242038839ffcb877a56157f08d17407d3cd69b40322a4f992b0af71514a8c12d",
+    "recommended_attack_modes": [
+      "literature_search",
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "2e9c2c37086e15a407739c7e0bf1de9c4c18c69eae193dab2df066f85640d19f",
+  "routes": [
+    "literature_search",
+    "natural_language_research"
+  ],
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "2e9c2c37086e15a407739c7e0bf1de9c4c18c69eae193dab2df066f85640d19f",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "242038839ffcb877a56157f08d17407d3cd69b40322a4f992b0af71514a8c12d",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "bd67c7fe32a7d4e561b5268b79318adc607045d2ca2eec5d1146ce41b42eb257",
+  "schema_version": 2,
+  "snapshot_id": "20260713-deb58d0facd9",
+  "statement": {
+    "ambiguity_status": "minor",
+    "intended": "For which number theoretic functions $f$ is it true that, for any $F(n)$ such that $F(n)/f(n)\\to 0$ for almost all $n$, there are infinitely many $x$ such that\\[\\frac{\\#\\{ n\\in \\mathbb{N} : n+f(n)\\in (x,x+F(x))\\}}{F(x)}\\to \\infty?\\]",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "For which number theoretic functions $f$ is it true that, for any $F(n)$ such that $F(n)/f(n)\\to 0$ for almost all $n$, there are infinitely many $x$ such that\\[\\frac{\\#\\{ n\\in \\mathbb{N} : n+f(n)\\in (x,x+F(x))\\}}{F(x)}\\to \\infty?\\]",
+    "original": "For which number theoretic functions $f$ is it true that, for any $F(n)$ such that $F(n)/f(n)\\to 0$ for almost all $n$, there are infinitely many $x$ such that\\[\\frac{\\#\\{ n\\in \\mathbb{N} : n+f(n)\\in (x,x+F(x))\\}}{F(x)}\\to \\infty?\\]",
+    "statement_sha256": "242038839ffcb877a56157f08d17407d3cd69b40322a4f992b0af71514a8c12d"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

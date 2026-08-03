@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#1040}
+\date{Last updated: 2025-09-15}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} analysis
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $F\subseteq \mathbb{C}$ be a closed infinite set, and let $\mu(F)$ be the infimum of\[\lvert \{ z: \lvert f(z)\rvert < 1\}\rvert,\]as $f$ ranges over all polynomials of the shape $\prod (z-z_i)$ with $z_i\in F$.
+
+Is $\mu(F)$ determined by the transfinite diameter of $F$? In particular, is $\mu(F)=0$ whenever the transfinite diameter of $F$ is $\geq 1$?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+A problem of Erd\H{o}s, Herzog, and Piranian \cite{EHP58}, who show that the answer is yes if $F$ is a line segment or disc, and that if the transfinite diameter is $<1$ then $\{ z: \lvert f(z)\rvert < 1\}$ always contains a disc of radius $\gg_F 1$.
+
+Erd\H{o}s and Netanyahu \cite{ErNe73} proved that if $F$ is also bounded and connected, with transfinite diameter $0<c<1$, then $\{ z: \lvert f(z)\rvert < 1\}$ always contains a disc of radius $\gg_c 1$.
+
+The transfinite diameter of $F$, also known as the logarithmic capacity, is defined by\[\rho(F)=\lim_{n\to \infty}\sup_{z_1,\ldots,z_n\in F}\left(\prod_{i<j}\lvert z_i-z_j\rvert\right)^{1/\binom{n}{2}}.\]Aletheia \cite{Fe26} has shown that $\mu(F)$ is not determined by the transfinite diameter of $F$, by producing two distinct closed infinite sets $F_1$ and $F_2$, both of which have transfinite diameter $0$, and yet $\mu(F_1)\geq \pi/4$ while $\mu(F_2)$ can be made arbitrarily close to $0$.
+
+\bigskip
+\noindent\textbf{References:}
+
+[EHP58] Erd\H{o}s, P. and Herzog, F. and Piranian, G., Metric properties of polynomials. J. Analyse Math. (1958), 125-148.
+ 
+ [ErNe73] Erd\H{o}s, P. and Netanyahu, E., A remark on polynomials and the transfinite diameter. Israel J. Math. (1973), 23--25.
+ 
+ [Fe26] T. Feng et al, Semi-Autonomous Mathematics Discovery with Gemini: A Case Study on the Erd\H{o}s Problems. arXiv:2601.22401 (2026).
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/1040}}
+\end{document}

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1017,
+  "raw_page": {
+    "path": "raw/pages/problem_1017.html",
+    "sha256": "68ee3dd41069eb3617543d01f638acba9f4484ab4dcc9886f8cdac3aed43e76a"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "e9a551cd2787de248f216c3bf600f7dce60d8d94234218b681e0f50f78cd56f4",
+      "source_region": "div.problem-additional-text",
+      "text": "[EGP66] Erd\\H{o}s, Paul and Goodman, A. W. and P\\'{o}sa, Lajos, The representation of a graph by set intersections. Canadian J. Math. (1966), 106-112.\n \n [Er71] Erd\\H{o}s, P., Some unsolved problems in graph theory and combinatorial analysis. Combinatorial Mathematics and its Applications (Proc.\nConf., Oxford, 1969) (1971), 97-109.\n \n [GyKe17] Gy\\H{o}ri, Ervin and Keszegh, Bal\\'{a}zs, On the number of edge-disjoint triangles in {$K_4$}-free\ngraphs. Combinatorica (2017), 1113--1124.\n \n [Lo68] Lov\\'{a}sz, L., On covering of graphs. Theory of Graphs (Proc. Colloq., Tihany, 1966) (1968), 231-236."
+    },
+    "remarks": {
+      "sha256": "a45ba6a86f6bb4effea8699862fc5d8dc656af2a05bb708132f0c4104eb37f84",
+      "source_region": "div.problem-additional-text",
+      "text": "The function $f(n,k)$ is sometimes called the clique partition number.\n\nErd\\H{o}s, Goodman, and P\\'{o}sa \\cite{EGP66} proved that $f(n,k)\\leq n^2/4$ for all $k$ (and in fact the complete graphs can be taken to be edges and triangles), which is best possible in general, as witnessed for example by a complete bipartite graph. In \\cite{Er71} Erd\\H{o} asks vaguely whether this result can be 'sharpened' for $k>n^2/4$.\n\nLov\\'{a}sz \\cite{Lo68} proved that every graph on $n$ vertices and $k$ edges is the union of $\\binom{n}{2}-k+t$ complete graphs, where $t$ is maximal such that $t^2-t\\leq \\binom{n}{2}-k$, but without the assumption that the complete graphs are edge disjoint. Lov\\'{a}sz's result is sharp in many cases.\n\nIf $k>n^2/4$ and the graph contains no $K_4$ then this is equivalent to finding the minimum number of edge disjoint triangles. This special case was also asked about by Erd\\H{o}s. A complete answer was provided by Gy\\\"{o}ri and Keszegh \\cite{GyKe17}, who proved that every $K_4$-free graph with $n$ vertices and $\\lfloor n^2/4\\rfloor+m$ edges contins $m$ pairwise edge disjoint triangles.\n\nSee also [184] for an analogous problem decomposing into edges and cycles, and [583] for decomposing into paths. The clique partition problem for chordal graphs is the subject of [81]."
+    },
+    "statement": {
+      "sha256": "51f399e0346a2b56ff05d068a0e250ac53c8061e02b03152c198633978c74b96",
+      "source_region": "div#content",
+      "text": "Let $f(n,k)$ be such that every graph on $n$ vertices and $k$ edges can be partitioned into at most $f(n,k)$ edge-disjoint complete graphs. Estimate $f(n,k)$ for $k>n^2/4$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1017"
+}

@@ -1,0 +1,104 @@
+{
+"reviewer_role": "independent adversarial referee (structural_dependency)",
+"verdict": "fail",
+"claims_checked": 14,
+"claims_total": 14,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14"
+],
+"open_gaps": [
+"The immutable statement remains semantically unresolved: distinctness, positivity and domain of d, inclusion of zero among squares, generator domains, cube properness, and the meaning of arbitrarily large are not fixed.",
+"Validated subgoal A3 is not fully discharged. The candidate gives a conditional descent-versus-halving dichotomy, not the requested complete transition classification.",
+"Validated subgoal A7 is absent: no reproducible exact linked-factor-chain harness is constructed or supplied.",
+"Validated subgoal A4 remains open: no scale-independent bound B(W) for linked-factor chains is proved.",
+"Validated subgoal A5 remains open: no fixed-width construction of arbitrarily long compatible chains is given.",
+"Validated subgoal B6 is absent: examples and spot checks are supplied, but no exact recursive cube-search and identity-checking harness is constructed.",
+"Validated subgoal B4 remains open: curvature, congruence, and divisor growth are not converted into a height-independent dimension bound.",
+"Validated subgoal B5 remains open: no dimension-lifting mechanism for proper square cubes is constructed.",
+"D1 and GOAL are not discharged because neither the positive nor negative decisive branches are completed.",
+"Consequently neither of the two questions in the immutable statement is proved or disproved under any explicitly authorized semantic interpretation."
+],
+"unchecked_imports": [
+"C8 and C9 rely on the supplied assertion that four distinct integer squares cannot form a nonconstant four-term arithmetic progression; the candidate checks applicability but does not prove that assertion.",
+"The binary exhaustive-enumeration result in C9 is asserted without a machine-checkable certificate or complete recursion tree in the artifact, although an independent finite check confirms the listed counts.",
+"The improper mixed finite-difference integral formula at base A=0 in C12 is stated with only a convergence assertion rather than a complete derivation."
+],
+"counterexample_searches": [
+{
+"target": "Literal nondegeneracy assumptions",
+"result": "The constant sequence x_i=1 with d=0 satisfies the first displayed inequalities for every k under a permissive reading."
+},
+{
+"target": "Nominal-dimensional cube interpretation",
+"result": "Taking a=1 and every generator b_i=0 produces collapsed cubes of arbitrary nominal dimension."
+},
+{
+"target": "C6 displayed inequality",
+"result": "The assertion rs/(r+s)<=2 is false; r=s=10 gives rs/(r+s)=5."
+},
+{
+"target": "Binary additive-cube enumeration",
+"result": "Independent exhaustive checking confirms counts 1,2,4,6,10,16,18,12,10,6,0 for lengths 0 through 10 and confirms the six listed length-nine survivors."
+},
+{
+"target": "Extension of the binary obstruction to width two",
+"result": "The listed ternary word of length 30 was checked and is additive-cube-free, so the width-one argument does not automatically extend."
+},
+{
+"target": "Claims excluding halving transitions",
+"result": "The root sequences 5,32,45,55 and 1,41,58,71,82 verify genuine halving events and mixed halving/descent behavior."
+},
+{
+"target": "Low-dimensional square-cube impossibility",
+"result": "The parameters a=4 and generators 4485,7392,20160 give the eight distinct squares 4,4489,7396,11881,20164,24649,27556,32041."
+}
+],
+"material_errors": [
+{
+"claim_id": "C6",
+"error": "The proof uses the false inequality rs/(r+s)<=2. The claimed conclusion 3b<=W does not follow from the inequality actually written. It would require replacing it with (r+s)/(rs)=1/r+1/s<=2, which is a repair forbidden to the referee."
+},
+{
+"claim_id": "C6",
+"error": "Because the faulty step is used to establish the large-gap transition dichotomy, the candidate's dependency ledger incorrectly labels C6 as checked."
+},
+{
+"claim_id": "C9",
+"error": "The enumeration establishes only the conditional width-one result. It does not discharge the all-width uniform-chain node A4, and therefore contributes no resolution of the quantified first question."
+},
+{
+"claim_id": "C12-C13",
+"error": "These claims provide lower bounds on curvatures, divisors, and generator sizes only. No upper bound or descent preserving dimension is proved, so they do not discharge B4."
+},
+{
+"claim_id": "Dependency ledger",
+"error": "The ledger covers the candidate's fourteen local claims but does not establish proof coverage of the validated DAG. In particular A7 and B6 are missing, while A4, A5, B4, B5, D1, and GOAL are explicitly unresolved."
+},
+{
+"claim_id": "Overall result",
+"error": "The acceptance criteria require a proof or disproof of both exact questions. The candidate explicitly reports resource exhaustion and adopts only a conditional working interpretation, so it cannot pass regardless of the correctness of most local lemmas."
+}
+],
+"completeness_score": 53,
+"proof_confidence": 5,
+"adversarial_survival_score": 61,
+"statement_sha256": "d23ff4ea91f0d915bd67a828cdec2f9acc9b33169e5e84e2e4f5660875187ca1",
+"notes": "Most local algebraic, congruence, curvature, divisor, transfer, and explicit-example claims survive independent checking. The decisive structural nodes do not. C6 additionally contains a concrete invalid inference, so even the partial large-gap classification is not discharged as written. The reviewed artifact is the supplied file 
+
+Pasted text
+
+."
+}

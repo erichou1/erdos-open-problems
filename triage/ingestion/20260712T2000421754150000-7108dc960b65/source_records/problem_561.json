@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 561,
+  "raw_page": {
+    "path": "raw/pages/problem_561.html",
+    "sha256": "c956a99a913512e4db13090bcd5e9002531adcfb0b27c3de99423dbbd5b64b3f"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "bcaf1fde8586fbe4fb0a40bc2024aeb0917caf6d13c655a6b9fd9b56f48b8867",
+      "source_region": "div.problem-additional-text",
+      "text": "[BEFRS78] Burr, S. A. and Erd\\H{o}s, P. and Faudree, R. J. and Rousseau,\nC. C. and Schelp, R. H., Ramsey-minimal graphs for multiple copies. Nederl. Akad. Wetensch. Indag. Math. (1978), 187-195.\n \n [DJKR25] Davoodi, Akbar and Javadi, Ramin and Kamranian, Azam and Raeisi, Ghaffar, On a conjecture of {E}rd\\H{o}s on size {R}amsey number of star forests. Ars Math. Contemp. (2025), Paper No. 9, 10.\n \n [GySc02] Gy\\H ori, Ervin and Schelp, R. H., Two-edge colorings of graphs with bounded degree in both\ncolors. Discrete Math. (2002), 105--110."
+    },
+    "remarks": {
+      "sha256": "a3bc2c1d75555c6c5f70d775e2a4e91e11165a771cc9ab517d84db83ff79cdc8",
+      "source_region": "div.problem-additional-text",
+      "text": "Burr, Erd\\H{o}s, Faudree, Rousseau, and Schelp \\cite{BEFRS78} proved this when all the $n_i$ are identical and all the $m_i$ are identical.\n\nGy\\H{o}ri and Schelp \\cite{GySc02} proved this when $\\binom{l_k}{2}> \\sum_{k\\leq i\\leq s+t}l_i$ for all $2\\leq k\\leq s+t$. More special cases, including all cases when $s=1$, or $s=2$ and $n_1=n_2$, or all $n_i$ and $m_j$ are odd, or all $n_i$ are an identical odd number and $m_1$ is odd, were proved by Davoodi, Javadi, Kamranian, and Raeisi \\cite{DJKR25}. \n\nThis problem is #30 in Ramsey Theory in the graphs problem collection."
+    },
+    "statement": {
+      "sha256": "f54eac62977e56a1ed58e9c4cbdbe530e4b1e5eef0968ff8a67ae4d3c64f866d",
+      "source_region": "div#content",
+      "text": "Let $\\hat{R}(G)$ denote the size Ramsey number, the minimal number of edges $m$ such that there is a graph $H$ with $m$ edges such that in any $2$-colouring of the edges of $H$ there is a monochromatic copy of $G$. \n\nLet $F_1$ and $F_2$ be the union of stars. More precisely, let $F_1=\\cup_{i\\leq s} K_{1,n_i}$ and $F_2=\\cup_{j\\leq t} K_{1,m_j}$ with $n_1\\geq \\cdots \\geq n_s\\geq 1$ and $m_1\\geq \\cdots \\geq m_t\\geq 1$. Prove that\\[\\hat{R}(F_1,F_2) = \\sum_{2\\leq k\\leq s+t}l_k\\]where\\[l_k=\\max\\{n_i+m_j-1 : i+j=k\\}.\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/561"
+}

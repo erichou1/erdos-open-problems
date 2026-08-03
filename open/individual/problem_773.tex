@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#773}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, sidon sets, squares
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+What is the size of the largest Sidon subset $A\subseteq\{1,2^2,\ldots,N^2\}$? Is it $N^{1-o(1)}$?
+
+
+
+
+A question of Alon and Erd\H{o}s \cite{AlEr85}, who proved $\lvert A\rvert \geq N^{2/3-o(1)}$ is possible (via a random subset), and observed that\[\lvert A\rvert \ll \frac{N}{(\log N)^{1/4}},\]since (as shown by Landau) the density of the sums of two squares decays like $(\log N)^{-1/2}$. This upper bound was improved to\[\lvert A\rvert \leq N^{1-\frac{c}{\log\log N}}\]for some constant $c&gt;0$ by Croot, Mao, and Yip (see the comments). The lower bound was improved to\[\lvert A\rvert \gg N^{2/3}\]by Lefmann and Thiele \cite{LeTh95}. In \cite{Er80} Erd\H{o}s further defines $g(A)$ to be the maximal size of a Sidon set of $\{a^2 : a\in A\}$, and asks whether $g(A)\geq g(\{1,\ldots,N\})$ where $N=\lvert A\rvert$. (See [530] for the linear analogue.) He further asks the infinite analogue: is there an infinite set $A\subset \mathbb{N}$ such that $\lvert A\cap [1,N]\rvert \geq N^{1-o(1)}$ for all large $N$ and $\{a^2 : a \in A\}$ is a Sidon set? See [1206] for a similar question for higher powers.
+
+
+
+
+References
+
+[AlEr85] Alon, Noga and Erd\H{o}s, P., An application of graph theory to additive number theory . European J. Combin. (1985), 201-203.
+
+[Er80] Erd\H{o}s, Paul, A survey of problems in combinatorial number theory . Ann. Discrete Math. (1980), 89-115.
+
+[LeTh95] Lefmann, Hanno and Thiele, Torsten, Point sets with distinct distances . Combinatorica (1995), 379--408.
+
+\noindent\textbf{Related OEIS sequences:} A390813
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/773}}
+\end{document}

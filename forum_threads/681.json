@@ -1,0 +1,35 @@
+{
+  "problem_number": 681,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/681",
+  "retrieved_at": "2026-07-10T23:18:21.875805+00:00",
+  "page_title": "681 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "768ee49dc7fef5667ced69d00597d43b8b9fcad493c834cbe5eed61714a6def3",
+  "comment_count": 5,
+  "comments": [
+    {
+      "post_id": "4563",
+      "text": "This should be accessible with sieve methods (Maynard/Chen-style). I did some back and forth with GPT-5.2 and here's where's the difficulty lies. First of all note that if $n+1$ is composite then one may take $k=1$, since $p(n+1)\\geq 2>1=k^2$. Thus the only potentially difficult values are $n=p-1$ with $p$ prime. Any admissible witness must satisfy $k^4<n+k$, hence $k\\leq n^{1/4}+O(1)$, and it is natural to search on a dyadic block $K<k\\leq 2K$ with $K=n^\\alpha$ and $\\alpha<1/4$, so that $k^2\\leq 4K^2$. Fix $\\alpha\\in(0,1/4)$, put $K=n^\\alpha$ and $y=4K^2$, and consider the short interval $I=(n+K,n+2K]$. A sufficient condition is the existence of a composite $m\\in I$ with $p(m)>y$ (then $m=n+k$ for some $k\\in(K,2K]$ and $p(m)>y\\geq k^2$). The sieve heuristic for $y$-rough numbers predicts $\\#\\{m\\in I:p(m)>y\\}\\approx K\\,\\omega(u)/\\log y$ with $u=\\log n/\\log y$ and Buchstab function $\\omega$, while $\\#\\{m\\in I:m\\ \\textrm{prime}\\}\\approx K/\\log n$; since $u\\omega(u)>1$ for $u>2$ (equivalently $\\alpha<1/4$), the heuristic main term already suggests that $I$ should contain composite $y$-rough values. However, existing pointwise sieve methods do not currently yield such a uniform lower bound in a single length-$K$ interval when $y\\asymp K^2$, because the lower linear sieve requires sieve level $R>y^2$ whereas one only has trivial remainder control for divisibility in a fixed short interval. Unconditionally, an averaging-over-$p$ substitute appears accessible: one may sieve the primes $p\\in[X,2X]$ with $K=X^\\alpha$ and $y=4K^2$ using Rosser--Iwaniec linear sieve weights and the Bombieri--Vinogradov theorem (level $1/2$) to obtain a positive lower bound for the mean of $R(p)=\\#\\{K<k\\leq 2K:(p-1+k,P(y))=1\\}$ provided $s=(\\log R)/(\\log y)>2$. Taking $R=X^{1/4-\\varepsilon}$ and $y=X^{2\\alpha}$ gives $s\\approx 1/(8\\alpha)$, so $s>2$ holds for any fixed $\\alpha<1/16$, and a standard second-moment argument (with singular series averaging as in Gallagher) then yields $R(p)\\gg K/\\log X$ for all but $o(\\pi(X))$ primes $p\\in[X,2X]$. Since primes in $(p+K,p+2K]$ contribute only $\\asymp K/\\log X$, one obtains for almost all such primes $p$ a shift $k\\in(K,2K]$ with $p-1+k$ composite and $p(p-1+k)>k^2$. References for the sieve ingredients include J. Friedlander and H. Iwaniec, Opera de Cribro (2010), and D. R. Heath-Brown, Lectures on sieves (2002); improving the exponent toward $\\alpha=1/4$ would require new distribution input beyond Bombieri--Vinogradov.",
+      "meta": "Przemek Chojecki — 12:47 on 03 Mar 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1362",
+      "text": "A389680 is now published in OEIS (The site has been updated to address this comment.)",
+      "meta": "Giorgos Kalogeropoulos — 10:18 on 22 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1363",
+      "text": "In case you are not aware, it is possible to add OEIS sequences directly to the database yourself. See here.",
+      "meta": "Woett — 10:53 on 22 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1373",
+      "text": "Unfortunately, I don't use github..",
+      "meta": "Giorgos Kalogeropoulos — 16:58 on 22 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1374",
+      "text": "Now linked, thanks.",
+      "meta": "TerenceTao — 17:25 on 22 Oct 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1055,
+  "raw_page": {
+    "path": "raw/pages/problem_1055.html",
+    "sha256": "bb0979bb54c257966b07c03052e44acdcaca374958f2058488350084cf562f11"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "bb21a755bb0b1af4b6df96150dcbf28aa1e922c6f1c9d93a7c06400275153e06",
+      "source_region": "div.problem-additional-text",
+      "text": "[Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437."
+    },
+    "remarks": {
+      "sha256": "1b2dd84283936187da90269ec3f752bcfe6e904533c2a96adfaa89bbf9a77678",
+      "source_region": "div.problem-additional-text",
+      "text": "A classification due to Erd\\H{o}s and Selfridge. It is easy to prove that the number of primes $\\leq n$ in class $r$ is at most $n^{o(1)}$. \n\nThe sequence $p_r$ begins $2,13,37,73,1021$ (A005113 in the OEIS). Erd\\H{o}s thought $p_r^{1/r}\\to \\infty$, while Selfridge thought it quite likely to be bounded.\n\nA similar question can be asked replacing $p+1$ with $p-1$.\n\nThis is problem A18 in Guy's collection \\cite{Gu04}."
+    },
+    "statement": {
+      "sha256": "94b1c502a8b4094fab6d20574a16b7153516d4d7c5aa330df6929161a254a435",
+      "source_region": "div#content",
+      "text": "A prime $p$ is in class $1$ if the only prime divisors of $p+1$ are $2$ or $3$. In general, a prime $p$ is in class $r$ if every prime factor of $p+1$ is in some class $\\leq r-1$, with equality for at least one prime factor.\n\nAre there infinitely many primes in each class? If $p_r$ is the least prime in class $r$, then how does $p_r^{1/r}$ behave?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1055"
+}

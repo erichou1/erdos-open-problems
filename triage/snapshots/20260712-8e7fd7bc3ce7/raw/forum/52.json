@@ -1,0 +1,90 @@
+{
+  "problem_number": 52,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/52",
+  "retrieved_at": "2026-07-10T23:15:19.145434+00:00",
+  "page_title": "52 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "0978b6c2e5e35af26eaea30449ac3d4d300000fa00799cf2d7d1b483027179ee",
+  "comment_count": 16,
+  "comments": [
+    {
+      "post_id": "6831",
+      "text": "There are independent disproofs of the real case claimed by both Anthropic and OpenAI on X. For Anthropic, the writeup is here. Presumably this is by Claude Mythos, and levent seems to have already verified and digested the argument. For OpenAI, I only see a shared chat by GPT-5.5. Most likely the claimed submission is the latex in the final response, but it seems unclear to me whether this has been checked for correctness. (There are no verification steps for the final latex in the shared chat - in my experience there are very plausibly mistakes at this stage of the chat.)",
+      "meta": "Nat Sothanaphan — 15:24 on 04 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6868",
+      "text": "I have been in direct contact with Boris Alexeev (who prompted the OpenAI's shared chat), and it has been clarified that no expert has vouched for this proposed solution. This is a concern as Sebastien Bubeck from OpenAI clearly advertised the proposed solution as: \"GPT-5.5 (the one available right now to everyone) can also disprove the sum-product conjecture\". I find this to be at least misleading. Therefore, we can't be sure yet whether the OpenAI proposed solution is correct. I have run standard check in this discussion and no issue was found. Note that as usual this is only a screening and does not by itself verify the proposed solution. There is some trouble with citation/bibliography as usual, but nothing immediately harmful in my opinion.",
+      "meta": "Nat Sothanaphan — 14:52 on 06 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6869",
+      "text": "I did reach out to Nat, suggesting that he run his standard checks. I disagree with any further characterization of our communication.",
+      "meta": "BorisAlexeev — 16:28 on 06 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6870",
+      "text": "To clarify slightly, Boris reached out to me asking me to perform the standard check on the two solutions here. I pointed out that he or someone associated with the proposed solution should be the one to vouch for it. He then asked me again to perform the standard check because it would be ideal for a random ChatGPT link that no one vouched for. Seeing that my request for vouching has not been addressed, I said that I would be commenting on the situation soon if no vouching appeared, which I have done above.",
+      "meta": "Nat Sothanaphan — 16:56 on 06 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6871",
+      "text": "Also, if this is perhaps a misunderstanding and the solution has already been carefully reviewed by OpenAI, it is difficult to understand why this is not clarified immediately e.g. in Boris' comment above. My overall concern is lack of transparency from OpenAI, which has been proven here regardless of which case holds.",
+      "meta": "Nat Sothanaphan — 17:07 on 06 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6873",
+      "text": "Both the Anthropic and OpenAI proofs you link to are correct, and essentially the same (except for cosmetic differences) as the construction we gave in [BSSZ26] (and which I sketched in the recent blog post here). There are minor differences between all three (e.g. in how we bound the regulator by discriminant, or exactly how to bound the number of units in a multiplicative box), but again these are cosmetic, and the ideas are the same. (For the OpenAI version I just read the chat transcript you linked to, which ends up describing the proof accurately, after earlier answers which are interesting to read, first claiming that a construction isn't possible, then claiming a more complicated one over $\\mathbb{C}$ only, before arriving at the simpler construction over $\\mathbb{R}$.)",
+      "meta": "Thomas Bloom — 20:49 on 06 Jun 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6712",
+      "text": "The case $A \\subset \\mathbb{R}$ is now recorded as optimization constant 84b on Tao's GitHub.",
+      "meta": "Nat Sothanaphan — 19:21 on 28 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6691",
+      "text": "See \"The sum-product conjecture is false for real numbers\" by Thomas F Bloom, Will Sawin, Carl Schildkraut, Dmitrii Zhelezov. (The site has been updated to address this comment.)",
+      "meta": "BorisAlexeev — 04:33 on 28 May 2026 👍 7 📝 1 🤖 0"
+    },
+    {
+      "post_id": "6694",
+      "text": "Congrats to the authors! Interesting I find a declaration of \"AI role\" at the end of the introduction (p. 4, lower middle). Quote: > The authors were inspired to revisit the possibility > of disproving the sum-product conjecture using number > fields of large degree by the recent OpenAI counterexample > to the unit distance conjecture (see [2]). Curiously, > the final construction given here required far less > number theoretic input than the unit distance > counterexample.",
+      "meta": "old-bielefelder — 07:34 on 28 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6701",
+      "text": "Big congrats here!",
+      "meta": "Nat Sothanaphan — 13:40 on 28 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6705",
+      "text": "Huge congratulations to Tom, Will, Carl, and Dmitrii. This is an incredible result.",
+      "meta": "KylePratt — 15:20 on 28 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6695",
+      "text": "In our paper we sketched how to get the constant $c=0.00000089$, just to give some concrete value, but didn't try hard to optimise it, with the expectation that anything we tried would be swiftly optimised/improved upon. This seems as good a venue as any to record improvements; Ingo has already obtained $c=0.000719$, and will comment with a link below.",
+      "meta": "Thomas Bloom — 07:51 on 28 May 2026 👍 4 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6696",
+      "text": "Here are links to tex file and pdf. The improvement is due to ChatGPT 5.5 (long thinking) alone. My only part was to see: \"... a constant. Let 'us' try to improve.\" I am a bit like a hammer, scanning my environment for nails. I like what the authors wrote in their Section 5. Quote (p.11, top) > We have not tried to keep track of explicit constants in the proofs above, since > these would obscure the main ideas of the proof, and the calculations become quite > messy... > We have not made any attempt to change the structure of the argument, even > slightly, to optimize the constants My prompt for ChatGPT was: > improve on th small constant c = 0.00... 87 in section 5. and then > recheck your construction for the improved constant carefully. > If positive, write plain tex-file . Output also pdf.",
+      "meta": "old-bielefelder — 08:09 on 28 May 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6698",
+      "text": "There is an \"easter egg\" in the paper for optimizers, in that we put a little more effort into optimizing the function field case, though it is still not fully optimized, because optimizations that introduce only a small amount of additional complexity give a reasonable constant (for specific values of q). One possible initial approach to optimize the bound is to translate the arguments in the function field case back to the number field case. (Actually, I'm interested to see how well ChatGPT can do this.)",
+      "meta": "WillSawin — 11:48 on 28 May 2026 👍 3 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6699",
+      "text": "I'll record here my personal bet that optimising in various ways (including bringing in splitting at some small primes, as in the unit distance construction) should eventually end up with a constant $c>1/100$, but will not break past $1/10$ (unless of course a significant new idea is introduced, in which case all bets are off).",
+      "meta": "Thomas Bloom — 11:55 on 28 May 2026 👍 4 📝 0 🤖 0"
+    },
+    {
+      "post_id": "417",
+      "text": "There is a question on Math Overflow asking whether it is possible to compute the expression in this question, restricting to A of size n: How to compute A263996?",
+      "meta": "BorisAlexeev — 01:51 on 10 Sep 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

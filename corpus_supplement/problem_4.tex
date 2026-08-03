@@ -1,0 +1,59 @@
+% corpus_supplement: Erdős problem #4
+% source: https://www.erdosproblems.com/latex/4
+% fetched_at: 2026-07-15T02:53:18Z
+% payload_sha256: 3ffbdd294e651fa9a9e50783a8ed3e79f35458d3d880a6c27ad6f6a029d9445b
+% statement/remarks/references extracted by erdos_ingest.extract_source_page;
+% rendered by erdos_ingest.render_tex — do not edit
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#4}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, primes
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Is it true that, for any $C>0$, there are infinitely many $n$ such that\[p_{n+1}-p_n> C\frac{\log\log n\log\log\log\log n}{(\log\log \log n)^2}\log n?\]
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+The peculiar quantitative form of Erd\H{o}s' question was motivated by an old result of Rankin \cite{Ra38}, who proved there exists some constant $C>0$ such that the claim holds. Solved by Maynard \cite{Ma16} and Ford, Green, Konyagin, and Tao \cite{FGKT16}. The best bound available, due to all five authors \cite{FGKMT18}, is that there are infinitely many $n$ such that\[p_{n+1}-p_n\gg \frac{\log\log n\log\log\log\log n}{\log\log \log n}\log n.\]The likely truth is a lower bound like $\gg(\log n)^2$. In \cite{Er97c} Erd\H{o}s revised the value of this problem to \$5000 and reserved the \$10000 for a lower bound of $>(\log n)^{1+c}$ for some $c>0$.
+
+The best known upper bound is\[p_{n+1}-p_n \ll n^{0.525+o(1)},\]proved by Baker, Harman, and Pintz \cite{BHP01}.
+
+See also [687].
+
+This is discussed in problem A8 of Guy's collection \cite{Gu04}.
+
+\bigskip
+\noindent\textbf{References:}
+
+[BHP01] Baker, R. C. and Harman, G. and Pintz, J., The difference between consecutive primes. {II}. Proc. London Math. Soc. (3) (2001), 532--562.
+ 
+ [Er97c] Erd\H{o}s, Paul, Some of my favorite problems and results. The mathematics of Paul Erd\H{o}s, I (1997), 47-67.
+ 
+ [FGKMT18] Ford, Kevin and Green, Ben and Konyagin, Sergei and Maynard, James and Tao, Terence, Long gaps between primes. J. Amer. Math. Soc. (2018), 65-105.
+ 
+ [FGKT16] Ford, Kevin and Green, Ben and Konyagin, Sergei and Tao, Terence, Large gaps between consecutive prime numbers. Ann. of Math. (2) (2016), 935-974.
+ 
+ [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.
+ 
+ [Ma16] Maynard, James, Large gaps between primes. Ann. of Math. (2) (2016), 915-933.
+ 
+ [Ra38] Rankin, R. A., The Difference between Consecutive Prime Numbers. J. London Math. Soc. (1938), 242-247.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/4}}
+\end{document}

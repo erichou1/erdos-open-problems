@@ -1,0 +1,85 @@
+{
+  "problem_number": 1013,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/1013",
+  "retrieved_at": "2026-07-10T23:19:55.168345+00:00",
+  "page_title": "1013 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "eebd474f0ba72e3fdba1ba1476fd720114180573a13470b939d5ef8b0fa940f9",
+  "comment_count": 15,
+  "comments": [
+    {
+      "post_id": "945",
+      "text": "note that if $R(3,n/k)>n$, then $n\\le h_3(k)$. thus we should get an optimal construction from the best know bounds for #165. meanwhile, the other bound should not be due to Shearer, since that (I believe) is just about independent sets. instead, you want to quote a result for chromatic number, which I believe is originally due to Johansson. (The site has been updated to address this comment.)",
+      "meta": "zach hunter — 13:36 on 08 Oct 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3567",
+      "text": "I think this is the other way around - if $R(3,n/k)>n$ then there is a triangle-free graph on $n$ vertices with independence number $\\leq n/k$, and so chromatic number $\\geq k$, and hence (deleting vertices if necessary to get chromatic number $=k$) $h_3(k) \\leq n$. Johansson's bound for the chromatic number of triangle-free graphs (if I've found the right result) says that $\\chi(G) \\ll \\frac{n}{\\log n}$, which implies the lower bound $h_3(k)\\gg (\\log k)k$, which is weaker than the Graver-Yackel bound given here. EDIT: In fact this is the dual function to [1104].",
+      "meta": "Thomas Bloom — 07:39 on 21 Jan 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3575",
+      "text": "I agree with Bloom.",
+      "meta": "Nat Sothanaphan — 11:03 on 21 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3581",
+      "text": "For the record: as in problem 1104, the application of Johansson's theorem is more subtle. It says that $\\chi(G)\\ll \\frac{\\Delta}{ \\log \\Delta}$ where $\\Delta$ is the maximum degree of a triangle-free graph $G$. This implies $\\chi(G)\\ll \\sqrt {\\frac{n}{\\log n}}$, hence $h_3(k) \\gg k^2 \\log k$. The proof in a nutshell: If $\\Delta \\leq \\sqrt{n \\log n}$ then it's immediate. Otherwise select a vertex $v$ with maximum degree and apply induction to $G-N[v]$.",
+      "meta": "Wouter CvB — 13:27 on 21 Jan 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3583",
+      "text": "Aha of course, I misread Johansson's result. Incidentally, I can't find a copy of their paper anywhere online, do you know if there's a copy available somewhere?",
+      "meta": "Thomas Bloom — 13:32 on 21 Jan 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3591",
+      "text": "Johansson's result was in a technical report \"Asymptotic choice number for triangle free graphs\" from 1996, which he famously never published. There doesn't seem to exist a stable link to the report online, and I have never seen it. However, if I remember well, the write-up in chapters 12 and 13 of the book \"Graph colouring and the probabilistic method\"(2002) by Michael Molloy and Bruce Reed follows Johansson's proof. It used a rather technical (semi-random) method. Since 2017 there have been shorter proofs and improvements, using e.g. entropy compression, or Lovász Local Lemma, and even just the first moment method.",
+      "meta": "Wouter CvB — 14:28 on 21 Jan 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "716",
+      "text": "There is indeed a little mistake in wording here. The correct version should be Denote by $h_3(k)$ the smallest integer for which there is a graph of $h_3(k)$ vertices which contains no triangle and has chromatic number $k$. (note it is not because there is an example on $h_3(k)$ vertices satisfying it, all graphs with higher order have the same property.) The related OEIS sequence is [A292528]. Computing $h_3(k)$ is tough",
+      "meta": "StijnC — 13:09 on 26 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "737",
+      "text": "Thanks for checking Stijn, a crucial couple of words that makes all the difference. Corrected now.",
+      "meta": "Thomas Bloom — 07:20 on 27 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "710",
+      "text": "There are triangle free graphs with arbitrarily large chromatic number, so the question as written doesn't seem to make sense.",
+      "meta": "Adenwalla — 09:27 on 26 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "711",
+      "text": "I don't see why? This question is about the relationship between the number of vertices and chromatic number in triangle-free graphs. The fact you mention is just showing $h_3(k)\\to \\infty$.",
+      "meta": "Thomas Bloom — 10:00 on 26 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "713",
+      "text": "The question implies that for a fixed k, all graphs on sufficiently many vertices with chromatic number k have a triangle. But I can take a triangle free graph with chromatic number k, and then add as many vertices as I want by joining a arbitrarily large path to one of the vertices. This doesn't change the chromatic number or create a triangle.",
+      "meta": "Adenwalla — 10:18 on 26 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "714",
+      "text": "Hmm, yes. I'll check the source later.",
+      "meta": "Thomas Bloom — 10:22 on 26 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "715",
+      "text": "Judging by how it is linked to [920], I'd guess it's meant to be about the largest chromatic number a triangle free graph on $n$ vertices can have.",
+      "meta": "Adenwalla — 10:25 on 26 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "717",
+      "text": "Note that the latter interpretation was impossible (or way more typos were there); the chromatic number is bounded by the order, so a lower bound above $k^2$ would not be the best",
+      "meta": "StijnC — 13:11 on 26 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "718",
+      "text": "The source was [Er71(-25)] and has been checked.",
+      "meta": "StijnC — 13:12 on 26 Sep 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

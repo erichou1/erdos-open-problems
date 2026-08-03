@@ -1,0 +1,53 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#1085}
+\date{Last updated: 2025-10-17}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} geometry, distances
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $f_d(n)$ be minimal such that, in any set of $n$ points in $\mathbb{R}^d$, there exist at most $f_d(n)$ pairs of points which distance $1$ apart. Estimate $f_d(n)$.
+
+
+
+
+The most difficult cases are $d=2$ and $d=3$. When $d=2$ this is the unit distance problem [90] , and the best known bounds are\[n^{1+c}&lt; f_2(n) \ll n^{4/3}\]for some small constant $c&gt;0$, the lower bound by an internal model at OpenAI, at least for infinitely many $n$ (see [90] ) and the upper bound by Spencer, Szemer\'{e}di, and Trotter \cite{SST84}. When $d=3$ the best known bounds are\[n^{4/3}\log\log n \ll f_3(n) \ll n^{3/2}\beta(n)\]where $\beta(n)$ is a very slowly growing function, the lower bound by Erd\H{o}s \cite{Er60b} and the upper bound by Clarkson, Edelsbrunner, Guibas, Sharir, and Welzl \cite{CEGSW90}. A construction of Lenz (taking points on orthogonal circles) shows that, for $d\geq 4$,\[f_d(n)\geq \frac{p-1}{2p}n^2-O(1)\]with $p=\lfloor d/2\rfloor$. Erd\H{o}s \cite{Er60b} showed that the Erd\H{o}s-Stone theorem implies\[f_d(n) \leq \left(\frac{p-1}{2p}+o(1)\right)n^2\]for $d\geq 4$. Erd\H{o}s \cite{Er67e} determined $f_d(n)$ up to $O(1)$ for all even $d\geq 4$. Brass \cite{Br97} determined $f_4(n)$ exactly. Swanepoel \cite{Sw09} determined $f_d(n)$ exactly for even $d\geq 6$. For odd $d\geq 5$ Erd\H{o}s and Pach \cite{ErPa90} proved that there exist constants $c_1(d),c_2(d)&gt;0$ such that\[\frac{p-1}{2p}n^2 +c_1n^{4/3}\leq f_d(n) \leq \frac{p-1}{2p}n^2 +c_2n^{4/3}.\]
+
+
+
+
+References
+
+[Br97] Brass, P., On the maximum number of unit distances among {$n$} points in dimension four . (1997), 277--290.
+
+[CEGSW90] Clarkson, Kenneth L. and Edelsbrunner, Herbert and Guibas, Leonidas J. and Sharir, Micha and Welzl, Emo, Combinatorial complexity bounds for arrangements of curves and spheres . Discrete Comput. Geom. (1990), 99--160.
+
+[Er60b] Erd\H{o}s, P., On sets of distances of {$n$} points in {E}uclidean space . Magyar Tud. Akad. Mat. Kutat\'o{} Int. K\"ozl. (1960), 165--169.
+
+[Er67e] Erd\H{o}s, P., On some applications of graph theory to geometry . Canadian J. Math. (1967), 968--971.
+
+[ErPa90] Erd\H{o}s, P. and Pach, J., Variations on the theme of repeated distances . Combinatorica (1990), 261--269.
+
+[SST84] Spencer, J. and Szemer\'{e}di, E. and Trotter, Jr., W., Unit distances in the Euclidean plane . Graph theory and combinatorics (Cambridge, 1983) (1984), 293-303.
+
+[Sw09] Swanepoel, Konrad J., Unit distances and diameters in {E}uclidean spaces . Discrete Comput. Geom. (2009), 1--27.
+
+\noindent\textbf{Related OEIS sequences:} A186705, possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/1085}}
+\end{document}

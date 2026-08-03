@@ -1,0 +1,404 @@
+{
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.486
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-11-21",
+      "state": "yes"
+    },
+    "references": [
+      "Gu04",
+      "Pi30"
+    ],
+    "source_last_update": "2025-10-05",
+    "source_problem_url": "https://www.erdosproblems.com/1074",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.\n \n [Pi30] S. S. Pillai, Question 1490. J. Indian Math. Soc. (1930), 230.",
+      "remarks": "Questions raised by Erd\\H{o}s, Hardy, and Subbarao, who called the set $S$ 'EHS numbers' and the set $P$ 'Pillai primes', and proved that both $S$ and $P$ are infinite. Pillai \\cite{Pi30} raised the question of whether there exist any primes in $P$. This was answered by Chowla, who noted that, for example,\\[14!+1\\equiv 18!+1\\equiv 0\\pmod{23}.\\]The sequence $S$ begins\\[8,9,13,14,15,16,17,\\ldots\\]and is A064164 in the OEIS. The sequence $P$ begins\\[23,29,59,61,67,71,\\ldots\\]and is A063980 in the OEIS.\n\nRegarding the first question, Hardy and Subbarao computed all EHS numbers up to $2^{10}$, and write '...if this trend conditions we expect [the limit] to be around $0.5$, if it exists. The frequency with which the EHS numbers occur - most often in long sequences of consecutive integers - makes us believe that their asymptotic density exists and is unity. Erd\\H{o}s, though initially hesitant, later agreed with this view.'\n\nRegarding the second question, they write '[from the data] it would appear that if the limit exists, it is perhaps between $0.5$ and $0.6$. But then there seems to be no reason why the ratio should not tend to $1$, even though very slowly and certainly not monotonically.'\n\nThis is discussed in problem A2 of Guy's collection \\cite{Gu04}."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.7,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.292623
+      ],
+      "probability": 0.124088
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.693,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.034144,
+        0.45199
+      ],
+      "probability": 0.243067
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.2,
+      "beta": 13.0,
+      "credible_interval_approx": [
+        0.0,
+        0.22434
+      ],
+      "probability": 0.084507
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.667,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.459822
+      ],
+      "probability": 0.228571
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.533,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.016446,
+        0.364849
+      ],
+      "probability": 0.190647
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 3.8,
+      "beta": 14.0,
+      "credible_interval_approx": [
+        0.028252,
+        0.398714
+      ],
+      "probability": 0.213483
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.092979
+      ],
+      "probability": 0.038462
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.002288,
+        0.452997
+      ],
+      "probability": 0.227642
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 5,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:20:26.331413+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "0cde3180ef4c95b60fbdfaacd2c92805b1ba4b61efb25ca78427492d9a3a530d"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 2,
+      "question_count": 4,
+      "requires_source_audit": true,
+      "statement_characters": 407,
+      "statement_tokens_approx": 59
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "compute",
+      "multi_part": true,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-1074",
+  "problem_number": 1074,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "compute",
+    "multi_part": true,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_1074.html",
+      "raw_html_sha256": "89aa38981b609f71bf59e651864a0c22f47c0df150136d7f6a9725b497bf8aa6",
+      "section_sha256": {
+        "references": "6abd07701427dfa16b7d79fc182f0e30855c2482bd1a08090323b2e7a2b67404",
+        "remarks": "4005176af1f292b7d61796c5d387ed3022cdb67bb90e25b9e293ab3ea9d07ebf",
+        "statement": "a722d9c0120cd5ad933d671716ebc6af52e096886a9eaf5abb52c4387b3b2827"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_1074.json",
+      "source_record_sha256": "05f2e982a70c961595df5f7b61c91fda1417ecb5ad515b3678515bae20f39c18",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_1074.tex",
+    "latex_sha256": "80cb294b90638a3bfb61f8a8aa4c6691b55cda6bf6bff323d930e0d768d0951f",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "a722d9c0120cd5ad933d671716ebc6af52e096886a9eaf5abb52c4387b3b2827",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "formal_search",
+      "subproblem_decomposition",
+      "shared_infrastructure_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Let $S$ be the set of all $m\\geq 1$ such that there exists a prime $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$. Does\\[\\lim \\frac{\\lvert S\\cap [1,x]\\rvert}{x}\\]exist?",
+        "focus_question_sha256": "0693b17975aaa562202d5716f2eee10fad94906a0ef7d1cedbb53f8862b5e0b8",
+        "parent_statement_sha256": "a722d9c0120cd5ad933d671716ebc6af52e096886a9eaf5abb52c4387b3b2827",
+        "part_index": 1,
+        "subproblem_contract_sha256": "2411997e429312485d6f65299bf86b61b57d946ed5f65b8c73cd1817089d5c3a",
+        "subproblem_id": "erdos-1074-part-01-2411997e"
+      },
+      {
+        "focus_question": "What is it?",
+        "focus_question_sha256": "bbff7b98d6da70612cb94badd2dde68a4dbe1107104b55f330a2225c8ebf55b2",
+        "parent_statement_sha256": "a722d9c0120cd5ad933d671716ebc6af52e096886a9eaf5abb52c4387b3b2827",
+        "part_index": 2,
+        "subproblem_contract_sha256": "17931d0f44d8b91d114d2a004c6a6db38a20a23adb7d1349f5aa65574a5ffa29",
+        "subproblem_id": "erdos-1074-part-02-17931d0f"
+      },
+      {
+        "focus_question": "Similarly, if $P$ is the set of all primes $p$ such that there exists an $m$ with $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$, then does\\[\\lim \\frac{\\lvert P\\cap [1,x]\\rvert}{\\pi(x)}\\]exist?",
+        "focus_question_sha256": "d8747044b6135a716e05f78889db060e26fe166c12ad6bda449ad0deb26ef359",
+        "parent_statement_sha256": "a722d9c0120cd5ad933d671716ebc6af52e096886a9eaf5abb52c4387b3b2827",
+        "part_index": 3,
+        "subproblem_contract_sha256": "746c161da835e3a090e2c9947b98bf256020d2a07952a8bb796bf52c596cd076",
+        "subproblem_id": "erdos-1074-part-03-746c161d"
+      },
+      {
+        "focus_question": "What is it?",
+        "focus_question_sha256": "bbff7b98d6da70612cb94badd2dde68a4dbe1107104b55f330a2225c8ebf55b2",
+        "parent_statement_sha256": "a722d9c0120cd5ad933d671716ebc6af52e096886a9eaf5abb52c4387b3b2827",
+        "part_index": 4,
+        "subproblem_contract_sha256": "5814898c66cc3421c972ff831b263247f47ccdaa43952fe3eb64dbda344e83c2",
+        "subproblem_id": "erdos-1074-part-04-5814898c"
+      }
+    ]
+  },
+  "research_directive_sha256": "4ffb1dc4c2179558b2553a9c6ac9873a19ff33ed08622c56cf2ea6deffe77f33",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "formal_search",
+    "subproblem_decomposition",
+    "shared_infrastructure_search"
+  ],
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "4ffb1dc4c2179558b2553a9c6ac9873a19ff33ed08622c56cf2ea6deffe77f33",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "a722d9c0120cd5ad933d671716ebc6af52e096886a9eaf5abb52c4387b3b2827",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "b3d926eaa4f5dd2c17059de9e170e050dc28af98454117712bb46d22b0daaddf",
+  "schema_version": 2,
+  "snapshot_id": "20260713-deb58d0facd9",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Let $S$ be the set of all $m\\geq 1$ such that there exists a prime $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$. Does\\[\\lim \\frac{\\lvert S\\cap [1,x]\\rvert}{x}\\]exist? What is it?\n\nSimilarly, if $P$ is the set of all primes $p$ such that there exists an $m$ with $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$, then does\\[\\lim \\frac{\\lvert P\\cap [1,x]\\rvert}{\\pi(x)}\\]exist? What is it?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $S$ be the set of all $m\\geq 1$ such that there exists a prime $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$. Does\\[\\lim \\frac{\\lvert S\\cap [1,x]\\rvert}{x}\\]exist? What is it? Similarly, if $P$ is the set of all primes $p$ such that there exists an $m$ with $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$, then does\\[\\lim \\frac{\\lvert P\\cap [1,x]\\rvert}{\\pi(x)}\\]exist? What is it?",
+    "original": "Let $S$ be the set of all $m\\geq 1$ such that there exists a prime $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$. Does\\[\\lim \\frac{\\lvert S\\cap [1,x]\\rvert}{x}\\]exist? What is it?\n\nSimilarly, if $P$ is the set of all primes $p$ such that there exists an $m$ with $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$, then does\\[\\lim \\frac{\\lvert P\\cap [1,x]\\rvert}{\\pi(x)}\\]exist? What is it?",
+    "statement_sha256": "a722d9c0120cd5ad933d671716ebc6af52e096886a9eaf5abb52c4387b3b2827"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-1074",
+      "part_index": 1,
+      "run_contract_id": "20b45e777e2a7dd926fdf2877e99d47840dffa6c236cdfe7a72b7d1341cc7b4c",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Let $S$ be the set of all $m\\geq 1$ such that there exists a prime $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$. Does\\[\\lim \\frac{\\lvert S\\cap [1,x]\\rvert}{x}\\]exist?",
+        "focus_question_sha256": "0693b17975aaa562202d5716f2eee10fad94906a0ef7d1cedbb53f8862b5e0b8",
+        "normalized": "Let $S$ be the set of all $m\\geq 1$ such that there exists a prime $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$. Does\\[\\lim \\frac{\\lvert S\\cap [1,x]\\rvert}{x}\\]exist? What is it? Similarly, if $P$ is the set of all primes $p$ such that there exists an $m$ with $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$, then does\\[\\lim \\frac{\\lvert P\\cap [1,x]\\rvert}{\\pi(x)}\\]exist? What is it?",
+        "original": "Let $S$ be the set of all $m\\geq 1$ such that there exists a prime $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$. Does\\[\\lim \\frac{\\lvert S\\cap [1,x]\\rvert}{x}\\]exist? What is it?\n\nSimilarly, if $P$ is the set of all primes $p$ such that there exists an $m$ with $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$, then does\\[\\lim \\frac{\\lvert P\\cap [1,x]\\rvert}{\\pi(x)}\\]exist? What is it?",
+        "statement_sha256": "a722d9c0120cd5ad933d671716ebc6af52e096886a9eaf5abb52c4387b3b2827"
+      },
+      "subproblem_contract_sha256": "2411997e429312485d6f65299bf86b61b57d946ed5f65b8c73cd1817089d5c3a",
+      "subproblem_id": "erdos-1074-part-01-2411997e"
+    },
+    {
+      "parent_problem_id": "erdos-1074",
+      "part_index": 2,
+      "run_contract_id": "487d07430a4155ce56936628612c69dfd9d630448094cfeb4b863b11b8f3c372",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "What is it?",
+        "focus_question_sha256": "bbff7b98d6da70612cb94badd2dde68a4dbe1107104b55f330a2225c8ebf55b2",
+        "normalized": "Let $S$ be the set of all $m\\geq 1$ such that there exists a prime $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$. Does\\[\\lim \\frac{\\lvert S\\cap [1,x]\\rvert}{x}\\]exist? What is it? Similarly, if $P$ is the set of all primes $p$ such that there exists an $m$ with $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$, then does\\[\\lim \\frac{\\lvert P\\cap [1,x]\\rvert}{\\pi(x)}\\]exist? What is it?",
+        "original": "Let $S$ be the set of all $m\\geq 1$ such that there exists a prime $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$. Does\\[\\lim \\frac{\\lvert S\\cap [1,x]\\rvert}{x}\\]exist? What is it?\n\nSimilarly, if $P$ is the set of all primes $p$ such that there exists an $m$ with $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$, then does\\[\\lim \\frac{\\lvert P\\cap [1,x]\\rvert}{\\pi(x)}\\]exist? What is it?",
+        "statement_sha256": "a722d9c0120cd5ad933d671716ebc6af52e096886a9eaf5abb52c4387b3b2827"
+      },
+      "subproblem_contract_sha256": "17931d0f44d8b91d114d2a004c6a6db38a20a23adb7d1349f5aa65574a5ffa29",
+      "subproblem_id": "erdos-1074-part-02-17931d0f"
+    },
+    {
+      "parent_problem_id": "erdos-1074",
+      "part_index": 3,
+      "run_contract_id": "e27dafd226c79c9b33a36ccb7a40286d9769c1410b1671e5e90796fecefc71a3",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Similarly, if $P$ is the set of all primes $p$ such that there exists an $m$ with $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$, then does\\[\\lim \\frac{\\lvert P\\cap [1,x]\\rvert}{\\pi(x)}\\]exist?",
+        "focus_question_sha256": "d8747044b6135a716e05f78889db060e26fe166c12ad6bda449ad0deb26ef359",
+        "normalized": "Let $S$ be the set of all $m\\geq 1$ such that there exists a prime $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$. Does\\[\\lim \\frac{\\lvert S\\cap [1,x]\\rvert}{x}\\]exist? What is it? Similarly, if $P$ is the set of all primes $p$ such that there exists an $m$ with $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$, then does\\[\\lim \\frac{\\lvert P\\cap [1,x]\\rvert}{\\pi(x)}\\]exist? What is it?",
+        "original": "Let $S$ be the set of all $m\\geq 1$ such that there exists a prime $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$. Does\\[\\lim \\frac{\\lvert S\\cap [1,x]\\rvert}{x}\\]exist? What is it?\n\nSimilarly, if $P$ is the set of all primes $p$ such that there exists an $m$ with $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$, then does\\[\\lim \\frac{\\lvert P\\cap [1,x]\\rvert}{\\pi(x)}\\]exist? What is it?",
+        "statement_sha256": "a722d9c0120cd5ad933d671716ebc6af52e096886a9eaf5abb52c4387b3b2827"
+      },
+      "subproblem_contract_sha256": "746c161da835e3a090e2c9947b98bf256020d2a07952a8bb796bf52c596cd076",
+      "subproblem_id": "erdos-1074-part-03-746c161d"
+    },
+    {
+      "parent_problem_id": "erdos-1074",
+      "part_index": 4,
+      "run_contract_id": "120ef1448a05d2eb2a0ffefa9012191ca6e2181e8e19492175692ff50fad9d82",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "What is it?",
+        "focus_question_sha256": "bbff7b98d6da70612cb94badd2dde68a4dbe1107104b55f330a2225c8ebf55b2",
+        "normalized": "Let $S$ be the set of all $m\\geq 1$ such that there exists a prime $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$. Does\\[\\lim \\frac{\\lvert S\\cap [1,x]\\rvert}{x}\\]exist? What is it? Similarly, if $P$ is the set of all primes $p$ such that there exists an $m$ with $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$, then does\\[\\lim \\frac{\\lvert P\\cap [1,x]\\rvert}{\\pi(x)}\\]exist? What is it?",
+        "original": "Let $S$ be the set of all $m\\geq 1$ such that there exists a prime $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$. Does\\[\\lim \\frac{\\lvert S\\cap [1,x]\\rvert}{x}\\]exist? What is it?\n\nSimilarly, if $P$ is the set of all primes $p$ such that there exists an $m$ with $p\\not\\equiv 1\\pmod{m}$ such that $m!+1\\equiv 0\\pmod{p}$, then does\\[\\lim \\frac{\\lvert P\\cap [1,x]\\rvert}{\\pi(x)}\\]exist? What is it?",
+        "statement_sha256": "a722d9c0120cd5ad933d671716ebc6af52e096886a9eaf5abb52c4387b3b2827"
+      },
+      "subproblem_contract_sha256": "5814898c66cc3421c972ff831b263247f47ccdaa43952fe3eb64dbda344e83c2",
+      "subproblem_id": "erdos-1074-part-04-5814898c"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

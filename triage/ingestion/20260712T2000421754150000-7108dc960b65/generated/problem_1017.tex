@@ -1,0 +1,51 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#1017}
+\date{Last updated: 2025-09-12}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $f(n,k)$ be such that every graph on $n$ vertices and $k$ edges can be partitioned into at most $f(n,k)$ edge-disjoint complete graphs. Estimate $f(n,k)$ for $k>n^2/4$.
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+The function $f(n,k)$ is sometimes called the clique partition number.
+
+Erd\H{o}s, Goodman, and P\'{o}sa \cite{EGP66} proved that $f(n,k)\leq n^2/4$ for all $k$ (and in fact the complete graphs can be taken to be edges and triangles), which is best possible in general, as witnessed for example by a complete bipartite graph. In \cite{Er71} Erd\H{o} asks vaguely whether this result can be 'sharpened' for $k>n^2/4$.
+
+Lov\'{a}sz \cite{Lo68} proved that every graph on $n$ vertices and $k$ edges is the union of $\binom{n}{2}-k+t$ complete graphs, where $t$ is maximal such that $t^2-t\leq \binom{n}{2}-k$, but without the assumption that the complete graphs are edge disjoint. Lov\'{a}sz's result is sharp in many cases.
+
+If $k>n^2/4$ and the graph contains no $K_4$ then this is equivalent to finding the minimum number of edge disjoint triangles. This special case was also asked about by Erd\H{o}s. A complete answer was provided by Gy\"{o}ri and Keszegh \cite{GyKe17}, who proved that every $K_4$-free graph with $n$ vertices and $\lfloor n^2/4\rfloor+m$ edges contins $m$ pairwise edge disjoint triangles.
+
+See also [184] for an analogous problem decomposing into edges and cycles, and [583] for decomposing into paths. The clique partition problem for chordal graphs is the subject of [81].
+
+\bigskip
+\noindent\textbf{References:}
+
+[EGP66] Erd\H{o}s, Paul and Goodman, A. W. and P\'{o}sa, Lajos, The representation of a graph by set intersections. Canadian J. Math. (1966), 106-112.
+ 
+ [Er71] Erd\H{o}s, P., Some unsolved problems in graph theory and combinatorial analysis. Combinatorial Mathematics and its Applications (Proc.
+Conf., Oxford, 1969) (1971), 97-109.
+ 
+ [GyKe17] Gy\H{o}ri, Ervin and Keszegh, Bal\'{a}zs, On the number of edge-disjoint triangles in {$K_4$}-free
+graphs. Combinatorica (2017), 1113--1124.
+ 
+ [Lo68] Lov\'{a}sz, L., On covering of graphs. Theory of Graphs (Proc. Colloq., Tihany, 1966) (1968), 231-236.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/1017}}
+\end{document}

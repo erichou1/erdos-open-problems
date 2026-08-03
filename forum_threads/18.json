@@ -1,0 +1,40 @@
+{
+  "problem_number": 18,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/18",
+  "retrieved_at": "2026-07-10T23:15:11.332836+00:00",
+  "page_title": "18 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "3869326c48f4eb7766e5adfb6be592643e79b86e60d8fabdfee55c3dcda46c59",
+  "comment_count": 6,
+  "comments": [
+    {
+      "post_id": "6926",
+      "text": "Some exact values of h, for reference. Writing h(m) for the maximum over 1 ≤ k < m of the least number of distinct divisors of m summing to k (computed exactly by DP, cross-checked with two independent implementations): h(n!) for n = 3,...,11: 2, 3, 4, 5, 5, 6, 7, 7, 7. Among practical m ≤ 16384 the largest with h(m) = 4 is m = 180, and the minimum of h over each dyadic block [2^j, 2^{j+1}) equals 5 for 8 ≤ j ≤ 13 (attained at m = 264, 528, 1050, 2100, 4200, 9240). Also h(720720) = 6, h(4324320) = 7.",
+      "meta": "securehedgehog999 — 22:57 on 10 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4118",
+      "text": "When formalizing, The Formal Conjectures Authors noticed an issue that needs to be documented: The original description is ambigous in that it doesn't clarify whether the same subset should be applied to all numbers < n! . However, it only makes sense if for every $m\\lt n!$ a new subset is taken.",
+      "meta": "rws — 11:51 on 03 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4119",
+      "text": "You are indeed allowed to use all divisors of $n!$. So to fully spell out the second question: does there, for every $\\epsilon > 0$, exist an $n_0$ such that for every $n \\ge n_0$ and for every $m < n!$ there is a set $S_{m,n}$ such that 1) For all $i \\in S_{m,n}$ we have that $i$ divides $n!$. 2) The sum $\\sum_{i \\in S_{m,n}} i$ is equal to $m$. 3) The size $|S_{m,n}|$ is smaller than $n^{\\epsilon}$.",
+      "meta": "Woett — 12:16 on 03 Feb 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1598",
+      "text": "Perhaps it should be added which of these questions has the prize attached to it; namely, the first one. (The site has been updated to address this comment.)",
+      "meta": "Dogmachine — 14:22 on 30 Oct 2025 👍 1 📝 1 🤖 0"
+    },
+    {
+      "post_id": "1615",
+      "text": "I think it's actually a little unclear - he just writes 'for a proof or disproof of'\\[h(n) < (\\log\\log n)^{O(1)},\\]which makes no sense as written without further quantifiers. Based on the context I think he meant this to be about $h(n!)$ (and then $\\log\\log n$ should become $\\log n$) and this was just a typo.",
+      "meta": "Thomas Bloom — 07:35 on 31 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2114",
+      "text": "It's true that 'for a proof or disproof of $h(n) < (\\log \\log n)^C$' makes no sense without quantifiers, but the words before this inequality are 'for infinitely many $n$'. So I read this as 'for a proof or disproof of [the existence of infinitely many $n$ with] $h(n) < (\\log \\log n)^C$'. I therefore do not think it's about $h(n!)$ specifically. Edit 3-2-2026: reading it again, I agree with Dogmachine and my past self, so I pressed the update button. Somewhat amusingly, as Erdős defined $h(n) = 0$ in [Er81h] if $n$ is not practical, the inequality $h(n) < (\\log \\log n)^C$ trivially holds for infinitely many $n$. But I'm afraid I don't get to claim \\$250 quite this easily. (The site has been updated to address this comment.)",
+      "meta": "Woett — 23:10 on 08 Dec 2025 👍 0 📝 1 🤖 0"
+    }
+  ]
+}

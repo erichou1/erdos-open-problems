@@ -1,0 +1,175 @@
+{
+  "problem_number": 872,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/872",
+  "retrieved_at": "2026-07-10T23:19:12.979543+00:00",
+  "page_title": "872 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "a32ccb87047fdd766337a54a5059f2249ad1710adc5961f6e6e14110d42543f4",
+  "comment_count": 33,
+  "comments": [
+    {
+      "post_id": "6333",
+      "text": "Following the recent discussions on formalisation, Aristotle wrotes a Lean 4 proof for the 23/48 upper bound in a single afternoon today (May 8). To avoid the complexity of full game trees, the code uses an IsCRespecting property. This restricts the space of valid plays to those where Shortener strictly targets the \"odd centers\" ($C$). It proves that any maximal C-respecting play terminates in at most $\\lceil n/2 \\rceil - |C|/2$ moves. The lean code was refined with Aristotle and Claude-Opus-4.7. You can run it here: lean proof. I hope this can be a useful.",
+      "meta": "Pommeret — 20:13 on 08 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6350",
+      "text": "Thanks. It would appear this is a bit different from the $23/48$ bound, because as you noted the space of valid plays has been restricted. By discussion with GPT, this formalizes perhaps the core argument but it does not formalize the whole result.",
+      "meta": "Nat Sothanaphan — 16:44 on 09 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6552",
+      "text": "The proof is fine because only the actions of player SHORT are limited.",
+      "meta": "old-bielefelder — 04:22 on 21 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6569",
+      "text": "This result has already been accepted as correct, but the *formalization* is not complete.",
+      "meta": "Nat Sothanaphan — 16:33 on 21 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1108",
+      "text": "With the help of ChatGPT I generated some code to work out the game length for each $N$ assuming both players are playing optimally, and the 'Long' player goes first. This sequence goes (from $N=2$ up to $N=40$). 1,2,2,3,3,4,4,5,5,5,5,6,6,7,7,7,7,8,8,9,9,10,10, 11,11,11,11,11,12,13,13,14,14,14,14,15,15,16,16,16,16 The corresponding sequence of $f(n)-\\pi(n)$, if $f(n)$ is the length of the game, is $0$ for $2\\leq N\\leq 8$, $1$ for $9\\leq N\\leq 20$, $2$ for $21\\leq N\\leq 27$, $3$ for $28\\leq N\\leq 34$, and $4$ for $35\\leq N\\leq 40$. As an instructive example, when $N=9$ (the first time this game goes on longer than the number of primes) one optimal (for both players) game goes 6 - 4 - 5 - 7 - 9 As another example, when $N=21$, 6 - 4 - 9 - 5 - 14 - 11 - 13 - 17 - 19 - 21 Or when $N=35$, 30-4-14-9-22-13-17-19-21-23-25-29-31-33-35 This (very limited) amount of computational evidence does seem to suggest that $f(n)-\\pi(n)\\to \\infty$ at least. It's a curious game - one might naively think that the Long player should focus on choosing large primes and the Short player should focus on choosing small primes, and indeed there is a 'prime bias' in the transcripts above (to be expected, e.g. certainly all primes in $(N/2,N]$ must appear at some point) but it seems like both players are better off choosing numbers with many factors for the first couple of turns at least.",
+      "meta": "Thomas Bloom — 16:25 on 15 Oct 2025 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3008",
+      "text": "It seems like the long player should start with choosing the largest primorial (say $p_k$#) less than $N$, as this stops the short player from choosing any of the primes up to $p_k$. The short player then plays $2^2$. The long player then plays $p_n$#$/p_k$# for the largest $n$ such that this is less than $N$, and the short player plays $3^2$. Essentially the long player plays the product of the most consecutive primes that haven't appeared in prior turns that they can and the short player plays the smallest number that can be played. When the long player cannot do that any more, they take $\\min\\{2p\\}$ for primes $p<N/2$ such that $2p$ can be played. I would imagine that when $N$ is large enough, the long player would perhaps move on to choosing the smallest possible $3p$ etc. Ultimately there remains a set of terms that must be chosen, such as the primes in $[N/2,N]$ or $pq>N/2$ when $2p$ and $2q$ have already been chosen. The aim for the long player is to 'defend' as many small primes as possible, and the way to cover as many as possible at once is to choose the product of as many as you can. The aim for the short player is roughly to choose the smallest terms possible as these have the most multiples less than $N$, though there may be a preference towards small primes or squares of primes when possible.",
+      "meta": "Adenwalla — 20:38 on 11 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6153",
+      "text": "Two friends from the German \"Computer Chess scene\" have written programs which solve the game for some more values of N. First Thomas Zipproth until N=47. And today Frank Brenner until N=65. Moreover they computed the values for \"Long player\" to start, for \"Short player to start\", and the simple cooperative versions, where in one case both players want to end soon, and in the other case both want to delay the end as much as possible. Here is a link to Brenner's result. In the same thread also the earlier results of Zipproth can be found. Game lengths The table is to be read as follows: Each N has one line. For example, the line for N=65 reads 65 | 20 | 26 | 18 | 33 | 259.495s | 78918730 N=65; Short player starts (gives length 20), Long Player starts (gives length 26), length 18 for always Short (= number of primes until N), length 33 (=upfloor) for always Long. 259 sec = computing times for N=65 with 10 threads, 78918730 number of nodes (in the alpha-beta tree).",
+      "meta": "old-bielefelder — 18:07 on 01 May 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6164",
+      "text": "With only one exception at N=27, Brenner's data until N=65 show the following structure for the game with player Long to start: Let low(N) be the number of moves when both players cooperate in finishing as soon as possible. Let upp(N) be the number of moves when both players cooperate in finishing as late as possible. low(N) = number of primes till N, upp(N) = upper floor of N/2. L(N) = upper floor of [low(N) + upp(N)]/2. Open question: Does this hold for all N > 27? For large N this would mean L(N) = N/4 + o(N). *************************** If player Short starts, the optimal game length seems to be much nearer to the lower bound low(N) = pi(N).",
+      "meta": "old-bielefelder — 20:49 on 01 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6165",
+      "text": "The lower bound I sketch in another comment works just as well if Short starts, so (asymptotically at least) the game always lasts much longer than $\\pi(n)$. I'd expect that the game length shouldn't change much, whoever goes first. The conjecture that $n/4$ is optimal is an interesting one.",
+      "meta": "Thomas Bloom — 20:58 on 01 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6270",
+      "text": "On the open question of game length with player LONG to start: It is NOT always the arithmetic mean of the two single-player lengths: Frank Brenner was able to compute some more optimal lengths. For N=85 and 86 he got 32 for optimal length with LONG to start, but 23 and 43 for the single player situations. In this light I think something like L(N)=N/4 + ... is no longer realistic. The next days will show if for some more N > 86 computation of optimal LONG-lengths is possible. ******************** I also have a sketchy name for the game now: ** Beat the Delers **, a mixture of English and Dutch. In Holland, \"delers\" has the two meanings of divisors (in math) and dealers (in the casino). Of course, the word joke with respect to Ed Thorpe's classic book \"Beat the Dealer\" is intended.",
+      "meta": "old-bielefelder — 07:30 on 05 May 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6550",
+      "text": "Frank Brenner made further progress with speeding up his code for the game. One rather unexpected side result is: Looking at the game setting SHORT vs LONG with N between 105 and 164, there seem to be two equi-optimal first moves for SHORT: 2 and 3! And also for $N < 105$ move 3 is at most worse by length 1 in comparison with move 2. Does someone have a heuristic explanation for this? Currently memory is the bottleneck for further progress. Frank's machine has only 32 GB for the hash tables.",
+      "meta": "old-bielefelder — 03:37 on 21 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6532",
+      "text": "The last sentence in the introduction can be made stronger by using the following argument: Fix $n$ and let $p_1, p_2, ..., p_k$ be all primes in ${2, 3, ..., n}$. For each $i$ from $1$ to $k$ look at the largest power $q_i$ of $p_i$ that is still in ${2, 3, ... n}$. All these $q_i$ are distinct. If $S$ is the set of all moves in a complete game on ${2, 3, ..., n}$, then each of its elements covers at most one of the $q_i$. Hence $|S|$ has to be at least $pi(n) = k$. ************************************************* A few more comments on the game: In the meantime Frank Brenner has computed game-theoretic values for alll $N \\le 120$. Optimal game lengths grow weakly monotonous with $N$. One special observation: If player SHORT starts, she should for optimality mark $2$ or $3$ in her first move. All other first moves are seriously weaker.",
+      "meta": "old-bielefelder — 11:52 on 20 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6027",
+      "text": "I have a short note giving a dyadic refinement of the fan-capture lower bound. The idea is that the existing semiprime fan strategy only counts the top layer $pq\\in(n/2,n]$. If Prolonger first runs an activation phase that $H$-secures the small odd primes, rendering every $2^b p$ with $0\\le b\\le H$ illegal, the same right-star capture argument applies to the whole dyadic chain $C_{pq}=\\{pq,2pq,4pq,\\ldots\\}$ whenever $n/2^{H+1}<pq\\le n$. This gives, for every fixed $H\\ge0$,\\[ L(n)\\ge \\left(\\frac12(1-2^{-H-1})-o_H(1)\\right) \\frac{n\\log\\log n}{\\log n}, \\]and hence\\[ L(n)\\ge \\left(\\frac12-o(1)\\right) \\frac{n\\log\\log n}{\\log n}. \\]It does not settle the linear question, but appears to improve the visible lower-bound constant in the current fan-capture method from $1/8$ to $1/2$. note pdf: https://github.com/jonaslsaa/maths/blob/main/872.pdf",
+      "meta": "jonaslsa — 10:06 on 29 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6036",
+      "text": "Thanks! Standard check found no issues. Here $L(n)$ is how long the game is guaranteed to last when Prolonger goes first.",
+      "meta": "Nat Sothanaphan — 13:13 on 29 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6042",
+      "text": "Thanks! I had a look at your note, and the earlier note of Om_Buddhdev_sensho, to try and understand this lower bound; here is a shorter explanation of the strategy (in particular stripping out a fair amount of additional pre-strategies in both notes, which perhaps are required for getting good constants, but unnecessary for the cruder order of magnitude bound). Consider the bipartite graph, with both parts the set of primes, with an edge $p\\sim q$ whenever $pq\\in (n/2,n]$. The number of edges in this graph is $\\gg\\frac{n\\log\\log n}{\\log n}$ by classical estimates on the number of semiprimes in an interval. Prolonger's strategy is to choose $pq$ corresponding to edges in this graph. These never have any multiple in $A$ (the set chosen thus far) since they are in $(n/2,n]$. The only thing that can stop Prolonger choosing this integer/corresponding edge is if one of the vertices $p$ or $q$ was claimed already by Shortener. (Shortener might be claiming other integers of course, but since these don't restrict Prolonger's moves in this strategy, Prolonger doesn't care what else Shortener is doing. Shortener can also choose an 'edge' instead, but this is clearly less efficient than eliminating a vertex (which can be justified e.g. by a strategy stealing argument).) So this is now basically a question about a game on played on a bipartite graph on $m$ : Prolonger is colouring edges red, and Shortener is colouring vertices blue, with the restrictions that a red edge can't contain a blue vertex. I claim that, in this graph game, Prolonger can guarantee at least $\\gg m$ turns, which gives an $\\gg \\frac{n\\log\\log n}{\\log n}$ bound for the primitive set game. The trick is to use the method of potentials (a common technique in this sort of combinatorial game analysis; see for example the Erdős-Selfridge bound on maker-breaker games). Call a vertex 'protected' if it is on a red edge. The weight of an edge $e$ is the number of protected vertices on it. The weight of a vertex $x$ is\\[F(x)=\\sum_{\\substack{x\\in e\\textrm{ available}}}2^{w(e)}.\\]Prolonger's strategy is to choose an edge adjacent to a vertex which maximises $F(x)$. (Intuitively, Prolonger's goal is to try and protect the best vertices, so that there will be lots of edges available later; here the 'best' vertices are those with a lot of edges, where we value edges whose other endpoint is already protected more highly, since these are safe from Shortener forever). More precisely, consider the potential function\\[\\sum_{e\\textrm{ available}}2^{w(e)},\\]which starts at $m$. When Prolonger claims an edge adjacent to an unprotected vertex $x$, they double the weight of all edges incident to $x$, since now $x$ is protected, and removes one edge from being available, so the potential has gone up by at least $F(x)-O(1)$. If Shortener then colours the vertex $y$, then this decreases the potential by at most $F(y)+O(1)$. Since $F(x)\\geq F(y)$, overall the potential changes by $O(1)$ each turn, so must last for $\\gg m$ many turns. This is similar enough to arguments in the literature I've seen that I expect this kind of result is already folklore/known to experts/in the literature somewhere, although just in the 'bipartite graph' game language, rather than in terms of this primitive set game. It seems likely that by playing on a $k$-uniform hypergraph instead, with Prolonger choosing the products of $k$ primes in $(n/2,n]$, a generalisation of this potential-type argument should allow one to prove that $\\gg_k \\frac{n(\\log\\log n)^k}{\\log n}$ is always possible for any $k\\geq 2$. The limit of this kind of strategy still seems to be $n/(\\log n)^{1-o(1)}$ however; the next significant step would be an alternative argument that shows $L(n) \\gg n/(\\log n)^c$ for some constant $c<1$. EDIT: Since this sort of game can be surprisingly subtle to analyse, it would be good if someone could try to formalise these sort of lower bounds - this kind of argument, which is locally very elementary and classical but requires a bit of tricky logic, is an ideal place to use formalisation to check we're not missing anything.",
+      "meta": "Thomas Bloom — 15:41 on 29 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6259",
+      "text": "thanks! this is a helpful way to view the coarse lower bound. I agree that the top-layer semiprime strategy can be abstracted as a graph game on edges \\(pq\\in(n/2,n]\\), and that this gives a clean route to\\[ L(n)\\gg \\frac{n\\log\\log n}{\\log n}. \\]The dyadic note is trying to keep track of the leading constant within this fan-capture method.. The extra step is that it does not only use the top layer \\(pq>n/2\\), but first \\(H\\)-secures \\(p,2p,\\ldots,2^Hp\\) and then counts chains \\(C_{pq}\\) for\\[ n/2^{H+1}<pq\\le n. \\]This is what gives the factor\\[ \\frac12(1-2^{-H-1}) \\]and hence the \\(1/2\\) constant after taking \\(H\\) large. Agree that the graph-game abstraction is probably the cleanest way to explain the order-of-magnitude lower bound. The hypergraph direction sounds interesting too, though I think the expected count for products of \\(k\\) primes should be of order\\[ n(\\log\\log n)^{k-1}/\\log n \\]for fixed \\(k\\), and the potential argument may need extra care because hypergraph codegrees can be large.",
+      "meta": "jonaslsa — 21:21 on 04 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6263",
+      "text": "Yes, the exponent $k$ rather than $k-1$ is definitely just a typo. And I agree that the potential argument is definitely not obvious! It would definitely be a situation where formalisation is highly desired, because of the elementary yet quantitatively subtle nature of things.",
+      "meta": "Thomas Bloom — 05:49 on 05 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6170",
+      "text": "Is there a popular name for this game? I asked Gemini about its history, and it came up with a reference to Dutch mathematician Frederik Schuh (1952). In tournament play \"komi bidding\" in the beginning should be included. Assume two players $A$ and $B$. $N$ is fixed. Each player - in secret - names a number $k$. Then the numbers ($k_1$ and $k_2$) are disclosed. The player with the larger number becomes LONG, the other player SHORT. Threshold for determining the winner is the arithmetic mean $k = (k1+k2)/2$. If the game ends in exactly this number of moves, the result is a draw. I want to propose this game for the next \"Computer (Games) Olympiad\", which likely will take place in November or December 2026. There it might be played with $N=200$ or some other value in that range. It would be nice to have a sketchy name. Something with Sperner and/or Schuh comes to my mind. Other ideas? Some information on the \"International Computer Games Association\": ICGA ******************************* EDIT (from the invitation for the 2025 Olympiad): Recent Olympiads have had competitions for following games: Amazons, Arimaa, Ataxx, Brazilian Draughts, Breakthrough, Canadian Draughts, Chinese Checkers, Chinese Chess, Chinese Dark Chess, Clobber, Connect6, Dice Shogi, Dots and Boxes, EinStein Würfelt Nicht, Go (9×9), Havannah (8×8), Havannah (10×10), Hex (11×11), Hex (13×13), Hex (19×19), HoneyMoon Bridge, International Draughts, Kyoto Shogi, Lines of Action, Mahjong, Mini Shogi, Nonogram, Othello (8×8), Othello (10×10), Othello (16×16), Outer-Open Gomoku, Santorini, Shobu, Surakarta, Sylver Coinage, Kriegspiel, Quoridor, Backgammon, Azul and Kingdomino (with advances rules: The middle Kingdom, Harmony, and The Mighty Duel). If your favorite game is not on this list and you know that there are at least two potential entrants, please contact us and we can add a new game to the Olympiad. ******************** Reference: Schuh, F. \"Spel van delers\" (Game of Divisors), Nieuw Tijdschrift voor Wiskunde 39 (1952), pp. 299–304.",
+      "meta": "old-bielefelder — 06:44 on 02 May 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5726",
+      "text": "Using a research agent harness (GPT-5.4 Pro primary, Claude Opus 4.7 + Gemini 3.1 DeepThink secondary) for the past week I was able to prove: - Upper bound: $L(n) < 0.19n$. Via a fourth-order Bonferroni on Shortener's odd-prime-prefix strategy. Constant is $W_4/2 \\le 0.1897123371$, interval-arithmetic certified. - Lower bound: $L(n) \\ge (1/8 - o(1))\\, n \\log\\log n / \\log n$. First order-improvement over the trivial $n/\\log n$ baseline. Two-phase Prolonger: activate small primes (Mertens gives the reciprocal-mass), then max-degree right-capture on the resulting fan graph. Also: - Shield reduction: three-line structural reduction — $|A| \\ge |U_n| - \\beta_n(P)$ for any Prolonger shield prefix $P$. Turns terminal game positions into a weighted lower-half antichain problem. - Polynomial shield-weight barrier (Theorem A, Lean combinatorial core): any shield-prefix proof of a linear lower bound via the reduction above needs $|P| \\ge n^{e^{-2c} - o(1)}$ shields. Hard constraint on a natural proof class. - Exact $5n/24 + O(1)$ first-hit cover (zero-sorry Lean): the minimum upper-half cover of the lower half by divisibility is exactly $5n/24 + O(1)$, with a matching packing. - Intermediate upper bounds $13/36$ and $5/16$ (both Lean-verified): improvements from the current $419/1008 \\approx 0.416$. - Three proof-class obstructions (Section 8): Sherali–Adams transversal-LP integrality; Johnson $q$-shadow covering dichotomy; separator-only closure limitation. Delimit what the current method family can produce. - $K_4$-fiber refutation of the general safe-edge hypothesis using $\\{13, 17, 19, 23\\}$ — explicit small counterexample that motivates the restricted form used in the conditional $n(\\log\\log n)^2/\\log n$ lower bound. Intermediate bounds $L(n) \\le 13/36$ and $L(n) \\le 5/16$ are zero-sorry Lean. The $<0.19$ has a Lean endgame reduction; the envelope-inversion / prime-rounding bridge (Lemmas 7.4–7.17) is still prose. It has passed all GPT Pro audits so far. I tried hard to get to a full solution but fell short. I hope someone smarter than me is able to make use of this for advancing this problem further. Paper: sensho.xyz/papers/erdos-872.pdf Repo: github.com/xa8zz/erdos-harness",
+      "meta": "Om_Buddhdev_sensho — 11:00 on 23 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5456",
+      "text": "With GPT 5.4 Pro assistance, building on the $8/105$ construction, I wanted to flag a refinement that uses $v_p$-adic parity conditions rather than simple coprimality. For $k \\geq 4$, let $I_k(n) = (n/k, n/3] \\cap (2\\mathbb{Z}+1)$ and $\\mathcal{R}_k$ be the reduced ratios $a/b > 1$ with $a, b$ odd, $a, b \\leq k$, and $a/b < k/3$. Call $B \\subseteq I_k(n)$ ratio-independent if no two elements have ratio in $\\mathcal{R}_k$. At $k = 8$, $\\mathcal{R}_8 = \\{5/3, 7/5, 7/3\\}$, and defining $$B_8(n) := \\{b \\in I_8(n) : v_5(b) \\equiv 0 \\pmod{2} \\text{ and } (3 \\mid b \\Rightarrow b > n/7)\\}$$ gives a ratio-independent set of density $85/1008 \\approx 0.0843$, improving on $8/105 \\approx 0.0762$. The $v_5$-parity condition kills the $5/3$ and $7/5$ edges automatically (the valuation flips parity), while the geometric cut on multiples of $3$ handles $7/3$ (where $v_5$ is preserved). At $k = 7$ the same parity idea alone gives $5/63 \\approx 0.0794$. This is just a static claim about the ratio-graph model. Converting to a Prolonger strategy requires verifying $B_8$ survives adversarial Shortener play, which I haven't checked carefully. Even if it converts, it doesn't address whether L(n)≥ϵnL(n) \\geq \\epsilon n L(n)≥ϵn is achievable in general; it's a constant improvement within the interval+sieve class. The more interesting question is whether the $v_p$-parity family has a nontrivial limiting density as $k \\to \\infty$, or whether it's also capped below $1/2$. I haven't computed $k \\geq 9$ yet. Posting in case others want to poke at either the conversion step or the asymptotic behavior. I'm going to attempt further solutions with AI.",
+      "meta": "Om_Buddhdev_sensho — 03:50 on 16 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5480",
+      "text": "Congrats. I ran standard check which assessed this comment as correct. However, GPT-5.4 Thinking also believed that the improved constant from this comment should be $1/2 - 1/2 \\cdot 85/1008 = 923/2016 = 0.457\\dots$ rather than $1/2- 85/1008 = 419/1008 = 0.415\\dots$, which still improves on the earlier $23/48 = 0.479\\dots$. I am not sure whether this is correct but it seems important to note it here.",
+      "meta": "Nat Sothanaphan — 12:13 on 16 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4299",
+      "text": "GPT-5.2 Pro appears to have determined a strategy that disproves the last $(1-\\varepsilon)\\frac{n}{2}$ question on the assumption the Prolonger starts first, and can be viewed here. After a quick literature review, ChatGPT Deep Research did not appear to locate anything directly resolving aspects of this problem, but does appear to locate literature on related things. I have attempted formalising the result but have ran into some issues; will keep trying.",
+      "meta": "Liam Price — 22:12 on 14 Feb 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4302",
+      "text": "The GPT chat says it was unable to load? (Or for aome reason I cannot see your chat?) For the paper; there is a more efficient way than sharing Overleaf? (Some people tend to have too many Overleaf folders, and likely we only need to see the PDF once)",
+      "meta": "StijnC — 08:40 on 15 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4305",
+      "text": "Here's the pdf version, not sure why chatgpt isn't loading, works fine for me.",
+      "meta": "Liam Price — 14:22 on 15 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4313",
+      "text": "As far as I can tell, the argument is correct but I think Lemma 4.5 is misstated. It is possible to choose a single $t$ that bottom kills multiple $s\\in S$. This isn't an issue in your Shortener strategy as the Shortener is just picking the $s$ themselves, and so the conclusion of Lemma 4.5 holds. EDIT: My mistake, I see that the Lemma holds as stated.",
+      "meta": "Adenwalla — 18:28 on 15 Feb 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4331",
+      "text": "Appreciate the input!",
+      "meta": "Liam Price — 19:13 on 16 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4342",
+      "text": "Quick check by GPT sees no major gaps. In general I really appreciate you+Kevin continuing to try AI on these problems. The hype phase has passed, so they probably won't make major news now. Moreover for partial solutions it's even less of a news (but partial solutions could be more common from now on). But from a mathematical perspective, these are all very valuable. Especially since it means AI continues to work consistently and diversely on problems.",
+      "meta": "Nat Sothanaphan — 15:24 on 17 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4348",
+      "text": "One can slightly improve the GPT bound ϵ > 1/24 to ϵ > 1/15, by modifying C to include all odd numbers in between (n/5, n/3]. Now the possible multiples of s in C in the upper half interval [n/2, n] are 2s, 3s and 4s. By oddness one cannot have 2s=3s', 2s=4s' or 3s=4s' with s, s' in C. Thus these multiples are distinct and lemma 4.1 extends to this scenario. Everything else remains the same and you get ϵ > 1/15. Edit: Further improvement to ϵ can be made by choosing C to be the set of all odd numbers in (n/7, n/3] that are not multiples of 5. Then you'll have ϵ>(1/3-1/7)*1/2*4/5=8/105",
+      "meta": "Xiao_Hu — 18:37 on 17 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1104",
+      "text": "Given that the player who wants the game to end quickly can just choose the primes, the game can always be ended in $\\frac{n}{\\log(n)}$ or $\\frac{2n}{\\log(n)}$ moves (depending how moves are counted).",
+      "meta": "Adenwalla — 15:15 on 15 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1105",
+      "text": "I don't think this is true - the other player might choose numbers with lots of prime divisors, so that after a certain point the other player has no primes left that are valid choices to play - but there still might be lots of other non-primes that are valid, so the game continues, and they have to abandon their primes-only strategy. For example, when $N=9$, if the first player wants to end it quickly and the second wants to prolong it, and the first player tries to use only primes, then the game might go: 7 - 8 - 5 - 6 - 9 (This example still doesn't last long, but note that the first player still had the valid choice of 9 available even though all the primes were used up.) It would be interesting to actually give an explicit strategy of the prolonger that shows they can also force it to last at least $100\\frac{n}{\\log n}$ (say) moves - given that Erdős was asking if the threshold was linear, presumably he believed this to be possible.",
+      "meta": "Thomas Bloom — 15:35 on 15 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "69",
+      "text": "This raises an interesting related question, which I hope can shed some light on the game: how small can a maximal primitive subset of $\\{2,...,n\\}$ be? The set of primes shows that it can be $\\pi(n)$. Is this the smallest possible for all $n \\geq 2$? If so, then the game must always last at least $\\pi(n)$ moves no matter what the players do. I'm not sure if Erdős ever asked this question. He and Cameron asked in [CaEr90] how many primitive subsets there are of $\\{2,...,n\\}$, and this was solved by Angelo here. (I don't think that problem appears on this website yet.) See, e.g., McNew's paper here for results on counting maximal primitive subsets of $\\{2,...,n\\}$, though more of the literature seems to focus on counting maximum-size primitive sets. However, I'm not sure if the question of how small a maximal primitive subset can be has ever appeared in the literature. There's a related paper here, but a quick skim didn't reveal any results that are applicable to this problem specifically.",
+      "meta": "DesmondWeisenberg — 20:45 on 11 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "73",
+      "text": "Every maximal primitive subset must contain all primes in $(n/2,n]$, so $\\gg \\frac{n}{\\log n}$ is a lower bound.",
+      "meta": "Thomas Bloom — 21:15 on 11 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "76",
+      "text": "Nice observation! That shows that if $A \\subseteq \\{2,...,N\\}$ is a maximal primitive set, then $|A| \\geq (\\frac{1}{2} + o(1))\\frac{n}{\\log n}$. In fact, it's actually not a lot harder to show that $|A| \\geq (1 + o(1))\\frac{n}{\\log n}$. This is because every prime number at least $\\sqrt{n}$ must have a multiple in $A$, and no two of these primes can have a multiple in common. This shows that $|A|$ is at least the number of primes in $[\\sqrt{n}, n]$, which is asymptotically $\\frac{n}{\\log n}$.",
+      "meta": "DesmondWeisenberg — 23:00 on 11 Aug 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "problem_number": 890,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/890",
+  "retrieved_at": "2026-07-10T23:19:19.822564+00:00",
+  "page_title": "890 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "6174709542c3b8fc427614e33e2e07fa0673b67d039a3c43fe20efe695914648",
+  "comment_count": 6,
+  "comments": [
+    {
+      "post_id": "5223",
+      "text": "Might it be that the first problem as stated here is missing the assumption that $n+1, \\dots, n+k$ must be composite? The DeepMind prover agent proved the first question with a formalization that appears to reflect the statement here (but without the composite assumption), where the inequality in particular fails for k = 26. formal proof here",
+      "meta": "Moritz Firsching — 12:40 on 03 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5225",
+      "text": "I don't see anywhere they were assuming all are composite, but there are other problems with this statement - see the older comments by Meza and Tao. I've revisited this and updated the first question to better reflect what was most likely intended - could you check whether the DeepMind counterexample is still valid for this version?",
+      "meta": "Thomas Bloom — 13:18 on 03 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5227",
+      "text": "Ah, the \"composite\" was just coming from another paper by Erdős and Selfridge: \"Some Problems on the Prime Factors of Consecutive Integers II\") from 1971, but I suppose it is not exactly this question. The counterexample doesn't work anymore with the adapted definitions, will update the statement in Formal Conjectures, thanks!",
+      "meta": "Moritz Firsching — 13:50 on 03 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "141",
+      "text": "The first problem Erdös and Selfridge state is not about $\\omega (n)$, but a little variation which only counts the prime factors of $n+k$ which are greater than k. Otherwise the sum $\\sum_{0 \\le i \\le k}\\omega (n) \\gg \\log\\log(k)k$ from Turán-Kubilius inequality over the set of primes less than $\\sqrt{k}$. The case for fixed $k$ would follow from the $k$-tuples conjecture the following way: Let $N$ be sufficiently large in terms of $k$. Then linear forms $L(n;j) = N!n + j$ for $1 \\le j \\le k+1$ form an admissible $k$-tuple if $N$ is sufficiently large. Then, by the $k$-tuples conjecture, there exists infinitely many $n$ such that $L(n;j)$ is prime for all $1 \\le j \\le k+1$. This implies that $N!n + j$ is equal to a prime $p_{j}$ times $j$ infinitely often. The sum that Erdös and Selfridge were considering would be equal to $k+ \\pi(k)$ (each $N!n + j$ will contribute $1$ if $j-1$ is not prime and $2$ if it is). Note: the condition $j-1$ being prime or not comes from the fact that we've shifted the beginning of the string of consecutive integers to $N!n + 1$.",
+      "meta": "Agustín Meza — 22:29 on 20 Aug 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "179",
+      "text": "I'm not sure I understand your first comment - in this question I'm sure that Erdős and Selfridge intended to ask about $\\omega$, rather than the variant you describe. (They did discuss other problems involving this variant in that paper.) Indeed, it has to be $\\omega$, otherwise the lower bound construction they give doesn't work!",
+      "meta": "Thomas Bloom — 08:37 on 24 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1021",
+      "text": "I thik Agustin is correct and Erdos and Selfridge messed up slightly in their statement: every prime $p \\leq k$ will in fact divide at least $\\lfloor k/p\\rfloor$ of the $n,\\dots,n+k-1$, so their $\\pi(k)$ should really be $\\sum_{p \\leq k} \\lfloor k/p \\rfloor$ (which is $\\sim k \\log\\log k$ as Agustin points out). Then the first part of the problem is indeed a variant of the prime tuples conjecture.",
+      "meta": "TerenceTao — 00:43 on 12 Oct 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

@@ -1,0 +1,381 @@
+{
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.527
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "Go70",
+      "Gu04",
+      "Wa76"
+    ],
+    "source_last_update": "2025-09-20",
+    "source_problem_url": "https://www.erdosproblems.com/365",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Go70] Golomb, S. W., Powerful numbers. Amer. Math. Monthly (1970), 848-855.\n \n [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.\n \n [Wa76] Walker, David T., Consecutive integer pairs of powerful numbers and related\nDiophantine equations. Fibonacci Quart. (1976), 111-116.",
+      "remarks": "Erd\\H{o}s originally asked Mahler whether there are infinitely many pairs of consecutive powerful numbers, but Mahler immediately observed that the answer is yes from the infinitely many solutions to the Pell equation $x^2=2^3y^2+1$. \n\nThe list of $n$ such that $n$ and $n+1$ are both powerful is A060355 in the OEIS.\n\nThe answer to the first question is no: Golomb \\cite{Go70} observed that both $12167=23^3$ and $12168=2^33^213^2$ are powerful. Walker \\cite{Wa76} proved that the equation\\[7^3x^2=3^3y^2+1\\]has infinitely many solutions, giving infinitely many counterexamples.\n\nSee also [364].\n\nThis is discussed in problem B16 of Guy's collection \\cite{Gu04}."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.87,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.308418
+      ],
+      "probability": 0.134823
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.263,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.016175,
+        0.425855
+      ],
+      "probability": 0.221015
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 13.0,
+      "credible_interval_approx": [
+        0.0,
+        0.134243
+      ],
+      "probability": 0.037037
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.6,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.454399
+      ],
+      "probability": 0.224138
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.0,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.177569
+      ],
+      "probability": 0.0625
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.6,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.0,
+        0.256307
+      ],
+      "probability": 0.10596
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.063431
+      ],
+      "probability": 0.021739
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.0,
+        0.384039
+      ],
+      "probability": 0.173913
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 3,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:16:48.438624+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "cca8e347b4472cae8c64a25a966e7f60830382b0319321bcb0f0583a7a55df72"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "asymptotic_notation",
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 0,
+      "question_count": 3,
+      "requires_source_audit": true,
+      "statement_characters": 214,
+      "statement_tokens_approx": 38
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove",
+      "multi_part": true,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-365",
+  "problem_number": 365,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove",
+    "multi_part": true,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_365.html",
+      "raw_html_sha256": "7c6224fa64f85cb22a79a167bcb75466822f992a430933b01cea86fbcc9dcd8a",
+      "section_sha256": {
+        "references": "eeac629b01ececefc2d5ec4d15bb9a00013e342be87ff108d303302176219e4f",
+        "remarks": "48227c8c244e2300b2855cbafca047975e24dc64b3f6a5556cc463b76dcc7106",
+        "statement": "cecb84c43ad4c75b0f895d9c8a4bbedab13ae5f64ef960588a0a0a3a72bcd300"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_365.json",
+      "source_record_sha256": "43fc15886de71afa08be3ed8fba8529ba8782f37ae31e96d5cf208087d4aee7c",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_365.tex",
+    "latex_sha256": "a367659ae900eca8a1328c87db308ad2f228ad05656401878b8afd6afa6121b8",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "cecb84c43ad4c75b0f895d9c8a4bbedab13ae5f64ef960588a0a0a3a72bcd300",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "subproblem_decomposition",
+      "shared_infrastructure_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Do all pairs of consecutive powerful numbers $n$ and $n+1$ come from solutions to Pell equations?",
+        "focus_question_sha256": "2cb87ce999d1ff4daf6ca4b5909cba529b463175e2c96c414e6dbabaa090e8d6",
+        "parent_statement_sha256": "cecb84c43ad4c75b0f895d9c8a4bbedab13ae5f64ef960588a0a0a3a72bcd300",
+        "part_index": 1,
+        "subproblem_contract_sha256": "6b9880d3eb1b6c6c1a6afb48d2ac868d9656c175a09c820676bf970c5b876ba1",
+        "subproblem_id": "erdos-365-part-01-6b9880d3"
+      },
+      {
+        "focus_question": "In other words, must either $n$ or $n+1$ be a square?",
+        "focus_question_sha256": "f4977bc95a1943f9bcef7c81c9cd1cc1692dcab65a7f0951afc27783c24644f4",
+        "parent_statement_sha256": "cecb84c43ad4c75b0f895d9c8a4bbedab13ae5f64ef960588a0a0a3a72bcd300",
+        "part_index": 2,
+        "subproblem_contract_sha256": "dd1017c4a252cc60699cd9b64495eec5c57fd14192483168cfa107ba20ebc4ef",
+        "subproblem_id": "erdos-365-part-02-dd1017c4"
+      },
+      {
+        "focus_question": "Is the number of such $n\\leq x$ bounded by $(\\log x)^{O(1)}$?",
+        "focus_question_sha256": "3507c40e474327f562f86bee003b5990e35ee76565ed21643f3e250f47192a12",
+        "parent_statement_sha256": "cecb84c43ad4c75b0f895d9c8a4bbedab13ae5f64ef960588a0a0a3a72bcd300",
+        "part_index": 3,
+        "subproblem_contract_sha256": "72380f5dac2612fce68ee32a9626cfb6df5a6665715a48c241763e7ac32a7eff",
+        "subproblem_id": "erdos-365-part-03-72380f5d"
+      }
+    ]
+  },
+  "research_directive_sha256": "3f17da280a04a27ae8457788475b411d048004c6a222e0bbc0f5560a80a97f94",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "subproblem_decomposition",
+    "shared_infrastructure_search"
+  ],
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "3f17da280a04a27ae8457788475b411d048004c6a222e0bbc0f5560a80a97f94",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "cecb84c43ad4c75b0f895d9c8a4bbedab13ae5f64ef960588a0a0a3a72bcd300",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "0b41e9bb8483416494b08eb7b1d2f1c8c925a46c6ea3c00359df13e19543a220",
+  "schema_version": 2,
+  "snapshot_id": "20260713-deb58d0facd9",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Do all pairs of consecutive powerful numbers $n$ and $n+1$ come from solutions to Pell equations? In other words, must either $n$ or $n+1$ be a square?\n\nIs the number of such $n\\leq x$ bounded by $(\\log x)^{O(1)}$?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Do all pairs of consecutive powerful numbers $n$ and $n+1$ come from solutions to Pell equations? In other words, must either $n$ or $n+1$ be a square? Is the number of such $n\\leq x$ bounded by $(\\log x)^{O(1)}$?",
+    "original": "Do all pairs of consecutive powerful numbers $n$ and $n+1$ come from solutions to Pell equations? In other words, must either $n$ or $n+1$ be a square?\n\nIs the number of such $n\\leq x$ bounded by $(\\log x)^{O(1)}$?",
+    "statement_sha256": "cecb84c43ad4c75b0f895d9c8a4bbedab13ae5f64ef960588a0a0a3a72bcd300"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-365",
+      "part_index": 1,
+      "run_contract_id": "8a9668071288c317268a77ea187e260f7ba2b217fa417a3319b28e17df2d9bf4",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Do all pairs of consecutive powerful numbers $n$ and $n+1$ come from solutions to Pell equations?",
+        "focus_question_sha256": "2cb87ce999d1ff4daf6ca4b5909cba529b463175e2c96c414e6dbabaa090e8d6",
+        "normalized": "Do all pairs of consecutive powerful numbers $n$ and $n+1$ come from solutions to Pell equations? In other words, must either $n$ or $n+1$ be a square? Is the number of such $n\\leq x$ bounded by $(\\log x)^{O(1)}$?",
+        "original": "Do all pairs of consecutive powerful numbers $n$ and $n+1$ come from solutions to Pell equations? In other words, must either $n$ or $n+1$ be a square?\n\nIs the number of such $n\\leq x$ bounded by $(\\log x)^{O(1)}$?",
+        "statement_sha256": "cecb84c43ad4c75b0f895d9c8a4bbedab13ae5f64ef960588a0a0a3a72bcd300"
+      },
+      "subproblem_contract_sha256": "6b9880d3eb1b6c6c1a6afb48d2ac868d9656c175a09c820676bf970c5b876ba1",
+      "subproblem_id": "erdos-365-part-01-6b9880d3"
+    },
+    {
+      "parent_problem_id": "erdos-365",
+      "part_index": 2,
+      "run_contract_id": "e3f0e767b5e8513e1c85e40a0a35cb2b863377dbec34cb1439030d386974a4b4",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "In other words, must either $n$ or $n+1$ be a square?",
+        "focus_question_sha256": "f4977bc95a1943f9bcef7c81c9cd1cc1692dcab65a7f0951afc27783c24644f4",
+        "normalized": "Do all pairs of consecutive powerful numbers $n$ and $n+1$ come from solutions to Pell equations? In other words, must either $n$ or $n+1$ be a square? Is the number of such $n\\leq x$ bounded by $(\\log x)^{O(1)}$?",
+        "original": "Do all pairs of consecutive powerful numbers $n$ and $n+1$ come from solutions to Pell equations? In other words, must either $n$ or $n+1$ be a square?\n\nIs the number of such $n\\leq x$ bounded by $(\\log x)^{O(1)}$?",
+        "statement_sha256": "cecb84c43ad4c75b0f895d9c8a4bbedab13ae5f64ef960588a0a0a3a72bcd300"
+      },
+      "subproblem_contract_sha256": "dd1017c4a252cc60699cd9b64495eec5c57fd14192483168cfa107ba20ebc4ef",
+      "subproblem_id": "erdos-365-part-02-dd1017c4"
+    },
+    {
+      "parent_problem_id": "erdos-365",
+      "part_index": 3,
+      "run_contract_id": "de907f74f98af55c749897b0fd9528542cfd103ad6ebb4df881044cfd4b93f1b",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Is the number of such $n\\leq x$ bounded by $(\\log x)^{O(1)}$?",
+        "focus_question_sha256": "3507c40e474327f562f86bee003b5990e35ee76565ed21643f3e250f47192a12",
+        "normalized": "Do all pairs of consecutive powerful numbers $n$ and $n+1$ come from solutions to Pell equations? In other words, must either $n$ or $n+1$ be a square? Is the number of such $n\\leq x$ bounded by $(\\log x)^{O(1)}$?",
+        "original": "Do all pairs of consecutive powerful numbers $n$ and $n+1$ come from solutions to Pell equations? In other words, must either $n$ or $n+1$ be a square?\n\nIs the number of such $n\\leq x$ bounded by $(\\log x)^{O(1)}$?",
+        "statement_sha256": "cecb84c43ad4c75b0f895d9c8a4bbedab13ae5f64ef960588a0a0a3a72bcd300"
+      },
+      "subproblem_contract_sha256": "72380f5dac2612fce68ee32a9626cfb6df5a6665715a48c241763e7ac32a7eff",
+      "subproblem_id": "erdos-365-part-03-72380f5d"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

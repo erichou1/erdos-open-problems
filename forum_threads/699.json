@@ -1,0 +1,40 @@
+{
+  "problem_number": 699,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/699",
+  "retrieved_at": "2026-07-10T23:23:24.286784+00:00",
+  "page_title": "699 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "895aade00e54ea361f04c230752879fde9d20252c0d747621fd736a66f79c90e",
+  "comment_count": 6,
+  "comments": [
+    {
+      "post_id": "6082",
+      "text": "[Post deleted]",
+      "meta": "Unknown — 07:42 on 30 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6123",
+      "text": "In Case B: when $i<q<j$, it may be that $\\binom n j$ and $\\binom {n-i}{j-i}$ are not multiples of $q$, while $\\binom ji$ and $\\binom ni$ are. E.g., assume $q=j-k_j$ and $q|n-k_n$ where $k_j<k_n<i$ and $v_q(n-k_n)=1$.",
+      "meta": "StijnC — 07:29 on 01 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6379",
+      "text": "After reviewing this proof, it is invalid (and the Lean code is not formalising anything like the statement here).",
+      "meta": "Thomas Bloom — 05:14 on 11 May 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2782",
+      "text": "I ran a Rust implementation to test the official statement (“for every 1 ≤ i < j ≤ n/2 there is a prime p ≥ i dividing both binomials”) up to n = 10^7; no counterexamples found. Targeted extensions: all n = 2^k for k ≤ 27 (n ≈ 1.34×10^8) and all n = 3^m + 1 for m ≤ 17 (n ≈ 1.29×10^8). In these ranges the official statement holds. The stronger claim “some prime p > i divides both” fails only at the pairs below; in each case the shared prime ≥ i is exactly p = i. n (i,j) gcd of binomials 10 (3,5) 2^2 · 3 16 (2,6) 2^3 28 (3,14) 2^2 · 3^2 28 (5,14) 2^3 · 3^3 · 5 244 (3,122) 2^2 · 3^4 512 (2,147) 2^8 2048 (2,713) 2^10 2188 (3,1094) 2^2 · 3^6 1594324 (3,797162) 2^2 · 3^12 Observed structure: - i = 2: occurs at powers of two (seen at 2^4, 2^9, 2^11); gcd is a pure power of 2. - i = 3: occurs at n = 3^m + 1 with j = n/2 for m = 2, 3, 5, 7, 13; none beyond that up to m = 17. - For i ≥ 4, only (n, i, j) = (28, 5, 14) in all searched ranges.",
+      "meta": "Cong — 01:45 on 06 Jan 2026 👍 3 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2791",
+      "text": "May be a good practice in the community going forward to share code for numerical experiments. Especially in the age of LLMs, code can be modified and built upon easily. Before, for example, if I don't know Rust or don't have Rust toolchains installed, it may be difficult for me to build off this code. But at present I can easily ask for translation to Python or any common language, etc.!",
+      "meta": "Nat Sothanaphan — 07:41 on 06 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2803",
+      "text": "Great suggestion, I have open-sourced it all here https://github.com/conglu1997/erdos_699_rust. One reason for Rust is it was far easier for me to optimize, I tried Python a little bit and got something like N up to 30K overnight and concluded it would be an uphill battle to get it fast enough.",
+      "meta": "Cong — 10:53 on 06 Jan 2026 👍 2 📝 0 🤖 0"
+    }
+  ]
+}

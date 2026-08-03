@@ -1,0 +1,360 @@
+{
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.438
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "Er63d",
+      "Sp73"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/176",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Er63d] Erd\\H{o}s, P\\'{a}l, On combinatorial questions connected with a theorem of\n{R}amsey and van der {W}aerden. Mat. Lapok (1963), 29--37.\n \n [Sp73] J. Spencer, Problems 185. Bull. Canad. Math. Soc. (1973), 185.",
+      "remarks": "When $\\ell=k$ this is the van der Waerden number $W(k)$ (see [138]). Spencer \\cite{Sp73} has proved that if $k=2^tm$ with $m$ odd then\\[N(k,1)=2^t(k-1)+1.\\]Erd\\H{o}s and Graham write that 'no decent bound' is known even for $N(k,2)$.\n\nErd\\H{o}s \\cite{Er63d} proved that, for every $c>0$,\\[N(k,ck)> (1+\\alpha_c)^k\\]where $\\alpha_c\\to 0$ as $c\\to 0$ and $\\alpha_c\\to \\sqrt{2}-1$ as $c\\to 1$. \n\nHunter in the comment section observes that the local lemma implies an improved bound of\\[N(k,ck) \\gg \\frac{2^k}{k^{O(1)}\\sum_{i>\\frac{1+c}{2}k}\\binom{k}{i}},\\]so that in particular as $c\\to 1$ we have, for all large $k$, $N(k,ck)\\geq (2-o(1))^k$ (where the $o(1)$ term $\\to 0$ as $c\\to 1$)."
+    },
+    "source_state": "open",
+    "tags": [
+      "additive combinatorics",
+      "arithmetic progressions",
+      "discrepancy"
+    ]
+  },
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 3.48,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.023254,
+        0.426358
+      ],
+      "probability": 0.224806
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 2.471,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.0,
+        0.370139
+      ],
+      "probability": 0.17686
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 0.5,
+      "beta": 13.0,
+      "credible_interval_approx": [
+        0.0,
+        0.134243
+      ],
+      "probability": 0.037037
+    },
+    "p_high_mathematical_value": {
+      "alpha": 3.067,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.018074,
+        0.490214
+      ],
+      "probability": 0.254144
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 1.2,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.0,
+        0.197843
+      ],
+      "probability": 0.074074
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 2.2,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.0,
+        0.306613
+      ],
+      "probability": 0.140127
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.063431
+      ],
+      "probability": 0.021739
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.0,
+        0.384039
+      ],
+      "probability": 0.173913
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 12,
+      "recent_claim_signal": true,
+      "retrieved_at": "2026-07-10T23:15:56.831584+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "eb3e739e5634c1a6a6e29084087a15eaf76e9de68a7d45280123eb6cef4357c4"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 4,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 382,
+      "statement_tokens_approx": 47
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": false,
+      "goal": "prove_or_disprove",
+      "multi_part": true,
+      "primary_domain": "additive combinatorics"
+    }
+  },
+  "problem_id": "erdos-176",
+  "problem_number": 176,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": false,
+    "goal": "prove_or_disprove",
+    "multi_part": true,
+    "primary_domain": "additive combinatorics"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_176.html",
+      "raw_html_sha256": "5a1ce449c465ccc28ddbb6952cca5b48fd0fb4fe64031f867abb6288305ea484",
+      "section_sha256": {
+        "references": "4419fd46c0b175d466663c40015b701ff5330bbab929b713188520e3e0f6ba77",
+        "remarks": "e9dd5d47f464faa1aa3649369586da866ef676fca258e0beb41401cceb17eec9",
+        "statement": "e9b97fd75792c938c95ed6899823c19673a695be70fc7f4fa7b6f397a74ca484"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_176.json",
+      "source_record_sha256": "3c574f63b78eaddf0403a13519678b1d3deb1e611f2f0da93659a211cc550a01",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_176.tex",
+    "latex_sha256": "44924fa0dff2d964dd93b760af47e0aa9d71b6eb62b1f416b0a44e2554edef94",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "e9b97fd75792c938c95ed6899823c19673a695be70fc7f4fa7b6f397a74ca484",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "subproblem_decomposition",
+      "shared_infrastructure_search",
+      "literature_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Let $N(k,\\ell)$ be the minimal $N$ such that for any $f:\\{1,\\ldots,N\\}\\to\\{-1,1\\}$ there must exist a $k$-term arithmetic progression $P$ such that\\[ \\left\\lvert \\sum_{n\\in P}f(n)\\right\\rvert\\geq \\ell.\\]Find good upper bounds for $N(k,\\ell)$. Is it true that for any $c>0$ there exists some $C>1$ such that\\[N(k,ck)\\leq C^k?",
+        "focus_question_sha256": "4b122907524d42975a448e8e1c117e9ecac345a0ebf49d0a1f3a611237888bbd",
+        "parent_statement_sha256": "e9b97fd75792c938c95ed6899823c19673a695be70fc7f4fa7b6f397a74ca484",
+        "part_index": 1,
+        "subproblem_contract_sha256": "1afa11d7ceb56e649a68a53b368043dc8ca6249f7aba154cb0db0c9f1f6843e1",
+        "subproblem_id": "erdos-176-part-01-1afa11d7"
+      },
+      {
+        "focus_question": "\\]What about\\[N(k,2)\\leq C^k\\]or\\[N(k,\\sqrt{k})\\leq C^k?",
+        "focus_question_sha256": "22bff858a40a00870cc89780e1677ec96489c39908c236cea08ef11e1c6c341c",
+        "parent_statement_sha256": "e9b97fd75792c938c95ed6899823c19673a695be70fc7f4fa7b6f397a74ca484",
+        "part_index": 2,
+        "subproblem_contract_sha256": "f0fb6bb1cb947bbb8014208e2bae50b837fbc96681b2c397d7c3880874d9dc8b",
+        "subproblem_id": "erdos-176-part-02-f0fb6bb1"
+      }
+    ]
+  },
+  "research_directive_sha256": "4c80bd3c7e2122c95e7f684f501be554e9b91d60640ad78556fb903062da7ffe",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "subproblem_decomposition",
+    "shared_infrastructure_search",
+    "literature_search"
+  ],
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "4c80bd3c7e2122c95e7f684f501be554e9b91d60640ad78556fb903062da7ffe",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "e9b97fd75792c938c95ed6899823c19673a695be70fc7f4fa7b6f397a74ca484",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "9e28bd46ac9f6d658753c2df1f41ee589246c79be9a41ceae93ef1481e477988",
+  "schema_version": 2,
+  "snapshot_id": "20260713-deb58d0facd9",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Let $N(k,\\ell)$ be the minimal $N$ such that for any $f:\\{1,\\ldots,N\\}\\to\\{-1,1\\}$ there must exist a $k$-term arithmetic progression $P$ such that\\[ \\left\\lvert \\sum_{n\\in P}f(n)\\right\\rvert\\geq \\ell.\\]Find good upper bounds for $N(k,\\ell)$. Is it true that for any $c>0$ there exists some $C>1$ such that\\[N(k,ck)\\leq C^k?\\]What about\\[N(k,2)\\leq C^k\\]or\\[N(k,\\sqrt{k})\\leq C^k?\\]",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $N(k,\\ell)$ be the minimal $N$ such that for any $f:\\{1,\\ldots,N\\}\\to\\{-1,1\\}$ there must exist a $k$-term arithmetic progression $P$ such that\\[ \\left\\lvert \\sum_{n\\in P}f(n)\\right\\rvert\\geq \\ell.\\]Find good upper bounds for $N(k,\\ell)$. Is it true that for any $c>0$ there exists some $C>1$ such that\\[N(k,ck)\\leq C^k?\\]What about\\[N(k,2)\\leq C^k\\]or\\[N(k,\\sqrt{k})\\leq C^k?\\]",
+    "original": "Let $N(k,\\ell)$ be the minimal $N$ such that for any $f:\\{1,\\ldots,N\\}\\to\\{-1,1\\}$ there must exist a $k$-term arithmetic progression $P$ such that\\[ \\left\\lvert \\sum_{n\\in P}f(n)\\right\\rvert\\geq \\ell.\\]Find good upper bounds for $N(k,\\ell)$. Is it true that for any $c>0$ there exists some $C>1$ such that\\[N(k,ck)\\leq C^k?\\]What about\\[N(k,2)\\leq C^k\\]or\\[N(k,\\sqrt{k})\\leq C^k?\\]",
+    "statement_sha256": "e9b97fd75792c938c95ed6899823c19673a695be70fc7f4fa7b6f397a74ca484"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-176",
+      "part_index": 1,
+      "run_contract_id": "a8c39fe6eb7a127280552472d06d5f30894da775da6964bb4b84214e168b7f91",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Let $N(k,\\ell)$ be the minimal $N$ such that for any $f:\\{1,\\ldots,N\\}\\to\\{-1,1\\}$ there must exist a $k$-term arithmetic progression $P$ such that\\[ \\left\\lvert \\sum_{n\\in P}f(n)\\right\\rvert\\geq \\ell.\\]Find good upper bounds for $N(k,\\ell)$. Is it true that for any $c>0$ there exists some $C>1$ such that\\[N(k,ck)\\leq C^k?",
+        "focus_question_sha256": "4b122907524d42975a448e8e1c117e9ecac345a0ebf49d0a1f3a611237888bbd",
+        "normalized": "Let $N(k,\\ell)$ be the minimal $N$ such that for any $f:\\{1,\\ldots,N\\}\\to\\{-1,1\\}$ there must exist a $k$-term arithmetic progression $P$ such that\\[ \\left\\lvert \\sum_{n\\in P}f(n)\\right\\rvert\\geq \\ell.\\]Find good upper bounds for $N(k,\\ell)$. Is it true that for any $c>0$ there exists some $C>1$ such that\\[N(k,ck)\\leq C^k?\\]What about\\[N(k,2)\\leq C^k\\]or\\[N(k,\\sqrt{k})\\leq C^k?\\]",
+        "original": "Let $N(k,\\ell)$ be the minimal $N$ such that for any $f:\\{1,\\ldots,N\\}\\to\\{-1,1\\}$ there must exist a $k$-term arithmetic progression $P$ such that\\[ \\left\\lvert \\sum_{n\\in P}f(n)\\right\\rvert\\geq \\ell.\\]Find good upper bounds for $N(k,\\ell)$. Is it true that for any $c>0$ there exists some $C>1$ such that\\[N(k,ck)\\leq C^k?\\]What about\\[N(k,2)\\leq C^k\\]or\\[N(k,\\sqrt{k})\\leq C^k?\\]",
+        "statement_sha256": "e9b97fd75792c938c95ed6899823c19673a695be70fc7f4fa7b6f397a74ca484"
+      },
+      "subproblem_contract_sha256": "1afa11d7ceb56e649a68a53b368043dc8ca6249f7aba154cb0db0c9f1f6843e1",
+      "subproblem_id": "erdos-176-part-01-1afa11d7"
+    },
+    {
+      "parent_problem_id": "erdos-176",
+      "part_index": 2,
+      "run_contract_id": "385cc7ec5f0501c42e7d6b1d663c59dfd6b90c0b2474674e3474106bce9323d4",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "\\]What about\\[N(k,2)\\leq C^k\\]or\\[N(k,\\sqrt{k})\\leq C^k?",
+        "focus_question_sha256": "22bff858a40a00870cc89780e1677ec96489c39908c236cea08ef11e1c6c341c",
+        "normalized": "Let $N(k,\\ell)$ be the minimal $N$ such that for any $f:\\{1,\\ldots,N\\}\\to\\{-1,1\\}$ there must exist a $k$-term arithmetic progression $P$ such that\\[ \\left\\lvert \\sum_{n\\in P}f(n)\\right\\rvert\\geq \\ell.\\]Find good upper bounds for $N(k,\\ell)$. Is it true that for any $c>0$ there exists some $C>1$ such that\\[N(k,ck)\\leq C^k?\\]What about\\[N(k,2)\\leq C^k\\]or\\[N(k,\\sqrt{k})\\leq C^k?\\]",
+        "original": "Let $N(k,\\ell)$ be the minimal $N$ such that for any $f:\\{1,\\ldots,N\\}\\to\\{-1,1\\}$ there must exist a $k$-term arithmetic progression $P$ such that\\[ \\left\\lvert \\sum_{n\\in P}f(n)\\right\\rvert\\geq \\ell.\\]Find good upper bounds for $N(k,\\ell)$. Is it true that for any $c>0$ there exists some $C>1$ such that\\[N(k,ck)\\leq C^k?\\]What about\\[N(k,2)\\leq C^k\\]or\\[N(k,\\sqrt{k})\\leq C^k?\\]",
+        "statement_sha256": "e9b97fd75792c938c95ed6899823c19673a695be70fc7f4fa7b6f397a74ca484"
+      },
+      "subproblem_contract_sha256": "f0fb6bb1cb947bbb8014208e2bae50b837fbc96681b2c397d7c3880874d9dc8b",
+      "subproblem_id": "erdos-176-part-02-f0fb6bb1"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

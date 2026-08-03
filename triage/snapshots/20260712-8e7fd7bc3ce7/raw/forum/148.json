@@ -1,0 +1,20 @@
+{
+  "problem_number": 148,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/148",
+  "retrieved_at": "2026-07-10T23:15:47.120430+00:00",
+  "page_title": "148 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "7206b1f99ad06e41120c6417c7829349f89ce21f8b335a1d65bd91259336b1c5",
+  "comment_count": 2,
+  "comments": [
+    {
+      "post_id": "327",
+      "text": "I have carefully read [Ko14] and found that equation (4) in [Ko14] seems incorrect, because the equality right above it, namely\\[ \\frac{1}{2^{3^k} - 2^{3^{k-1}}} = \\frac{1}{2^{3^k}} + \\frac{1}{2^{3^k} + 2^{3^{k-m}}} + \\frac{1}{2^{3^{k+m}} + 2^{3^k}}, \\]is false, regardless of whether \\(m\\) appears in the exponent of 3 or not. I could not find a way to fix this step. However, the result of Elsholtz (arXiv:1606.02117v1) actually covers the bound stated in [Ko14], so the lower bound’s order of magnitude remains correct. Therefore, I suggest that the statement “The lower bound is due to Konyagin [Ko14]” should also cite Elsholtz’s result.",
+      "meta": "Quanyu Tang — 09:18 on 05 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2564",
+      "text": "Based on this comment I have sent an e-mail to Sergei Konyagin, and he kindly responded to me. He agreed that the equation you referred to was indeed a mistake. The corrected equation is \\begin{align*} \\frac{1}{2^{3^k} - 2^{3^{k-1}}} &= \\frac{1}{2^{3^k}} + \\frac{1}{(2^{2 \\times 3^{k-1}}-1)2^{3^k}} \\\\ &= \\frac{1}{2^{3^k}} + \\frac{1}{(2^{2 \\times 3^{k-1}}-1)(2^{3^k}+2^{3^k-m})} + \\frac{1}{(2^{2 \\times 3^{k-1}}-1)(2^{3^k}+2^{3^k+m})}. \\hspace{10pt} (1) \\end{align*}He further explained that he made a few more small mistakes (e.g. the statement of Lemma $1$ in his paper should contain the assumption that $m$ is odd), but the main result still holds. In any case, the point of equation $(1)$ is that the final two denominators are divisible by $2^m + 1$, which by his Lemma $1$ has many divisors, eventually leading to the claimed lower bound on $F(k)$.",
+      "meta": "Woett — 10:30 on 29 Dec 2025 👍 2 📝 0 🤖 0"
+    }
+  ]
+}

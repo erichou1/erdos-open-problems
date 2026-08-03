@@ -1,0 +1,304 @@
+{
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.773
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "no"
+    },
+    "references": [
+      "EGMRSS73",
+      "FrRo90",
+      "Kr91",
+      "Kr92",
+      "LRW12"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/174",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[EGMRSS73] Erd\\H{o}s, P. and Graham, R. L. and Montgomery, P. and Rothschild, B. L. and Spencer, J. and Straus, E. G., Euclidean Ramsey Theorems I. J. Comb. Th. A (1973), 341-363.\n \n [FrRo90] Frankl, P. and R\\\"{o}dl, V., A partition property of simplices in Euclidean space. J. Amer. Math. Soc. (1990), 1-7.\n \n [Kr91] K\\v{r}\\'{\\i}\\v{z}, Igor, Permutation groups in Euclidean Ramsey theory. Proc. Amer. Math. Soc. (1991), 899-907.\n \n [Kr92] K\\v{r}\\'{\\i}\\v{z}, Igor, All trapezoids are Ramsey. Discrete Math. (1992), 59-62.\n \n [LRW12] Leader, Imre and Russell, Paul A. and Walters, Mark, Transitive sets in Euclidean Ramsey theory. J. Combin. Theory Ser. A (2012), 382-396.",
+      "remarks": "Erd\\H{o}s, Graham, Montgomery, Rothschild, Spencer, and Straus \\cite{EGMRSS73} proved that every Ramsey set is 'spherical': it lies on the surface of some sphere. Graham has conjectured that every spherical set is Ramsey. Leader, Russell, and Walters \\cite{LRW12} have alternatively conjectured that a set is Ramsey if and only if it is 'subtransitive': it can be embedded in some higher-dimensional set on which rotations act transitively.\n\nSets known to be Ramsey include vertices of $k$-dimensional rectangles \\cite{EGMRSS73}, non-degenerate simplices \\cite{FrRo90}, trapezoids \\cite{Kr92}, and regular polygons/polyhedra \\cite{Kr91}."
+    },
+    "source_state": "open",
+    "tags": [
+      "geometry",
+      "ramsey theory"
+    ]
+  },
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 2.16,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.333535
+      ],
+      "probability": 0.152542
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 1.117,
+      "beta": 10.0,
+      "credible_interval_approx": [
+        0.0,
+        0.269689
+      ],
+      "probability": 0.100438
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.6,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.282916
+      ],
+      "probability": 0.117647
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.633,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.457125
+      ],
+      "probability": 0.226361
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 2.1,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.328512
+      ],
+      "probability": 0.148936
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 1.5,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.272872
+      ],
+      "probability": 0.111111
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.0,
+      "beta": 39.0,
+      "credible_interval_approx": [
+        0.0,
+        0.07279
+      ],
+      "probability": 0.025
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.0,
+      "beta": 8.0,
+      "credible_interval_approx": [
+        0.0,
+        0.436385
+      ],
+      "probability": 0.2
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": false,
+      "source_reports_formalized": false,
+      "translation_risk": "clear"
+    },
+    "literature": {
+      "comment_count": 4,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:15:56.228684+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "12990bf7ff520331068c19ae1d6b13c03846b794eed5dc12d7b1373016b9071f"
+    },
+    "statement": {
+      "ambiguity_markers": [],
+      "ambiguity_status": "clear",
+      "quantifier_signal_count": 5,
+      "question_count": 0,
+      "requires_source_audit": false,
+      "statement_characters": 244,
+      "statement_tokens_approx": 37
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "prove",
+      "multi_part": false,
+      "primary_domain": "geometry"
+    }
+  },
+  "problem_id": "erdos-174",
+  "problem_number": 174,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "prove",
+    "multi_part": false,
+    "primary_domain": "geometry"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_174.html",
+      "raw_html_sha256": "a0f6bc800ffabd7b4437cf8eee2ee60cbcebd0aaa064f2ddcbec761fc7aa3a0d",
+      "section_sha256": {
+        "references": "1aefc23acead80981a6987dd1e8542bb3aac3da10e64d8adcadc4c5f125c9f2e",
+        "remarks": "654ea88fb1b3492b31aadac6b76f1af707029d63ef7b922f1e42eeffb5e0046f",
+        "statement": "ea8bb42bc9be40d1c39e49577c0e1620ecc7876c90415bb633494368f931b596"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_174.json",
+      "source_record_sha256": "030fb0a1de049d08426c6de94eb6b98f20765cbf26dcb6bd52a83307792a9073",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_174.tex",
+    "latex_sha256": "8cfb72d9f659625d2bc789fea6763e66e3b91d37bbf1f42e4829bcd3042ba5a2",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "ea8bb42bc9be40d1c39e49577c0e1620ecc7876c90415bb633494368f931b596",
+    "recommended_attack_modes": [
+      "natural_language_research"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": []
+  },
+  "research_directive_sha256": "877d76750ef507eea791fd8bf2fd4b37a60d246a21f7edc3ff6839e54aa766fe",
+  "routes": [
+    "natural_language_research"
+  ],
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "877d76750ef507eea791fd8bf2fd4b37a60d246a21f7edc3ff6839e54aa766fe",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "ea8bb42bc9be40d1c39e49577c0e1620ecc7876c90415bb633494368f931b596",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "7c1bea985803de3d27149c9fa54da1c074e39c37ecce0cadf287c144fcd13860",
+  "schema_version": 2,
+  "snapshot_id": "20260713-deb58d0facd9",
+  "statement": {
+    "ambiguity_status": "clear",
+    "intended": "A finite set $A\\subset \\mathbb{R}^n$ is called Ramsey if, for any $k\\geq 1$, there exists some $d=d(A,k)$ such that in any $k$-colouring of $\\mathbb{R}^d$ there exists a monochromatic copy of $A$. Characterise the Ramsey sets in $\\mathbb{R}^n$.",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "A finite set $A\\subset \\mathbb{R}^n$ is called Ramsey if, for any $k\\geq 1$, there exists some $d=d(A,k)$ such that in any $k$-colouring of $\\mathbb{R}^d$ there exists a monochromatic copy of $A$. Characterise the Ramsey sets in $\\mathbb{R}^n$.",
+    "original": "A finite set $A\\subset \\mathbb{R}^n$ is called Ramsey if, for any $k\\geq 1$, there exists some $d=d(A,k)$ such that in any $k$-colouring of $\\mathbb{R}^d$ there exists a monochromatic copy of $A$. Characterise the Ramsey sets in $\\mathbb{R}^n$.",
+    "statement_sha256": "ea8bb42bc9be40d1c39e49577c0e1620ecc7876c90415bb633494368f931b596"
+  },
+  "subproblems": [],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

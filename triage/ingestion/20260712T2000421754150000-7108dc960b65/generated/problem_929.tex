@@ -1,0 +1,39 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#929}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $k\geq 2$ be large and let $S(k)$ be the minimal $x$ such that there is a positive density set of $n$ where\[n+1,n+2,\ldots,n+k\]are all divisible by primes $\leq x$.
+
+Estimate $S(k)$ - in particular, is it true that $S(k)\geq k^{1-o(1)}$?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+It follows from Rosser's sieve that $S(k)> k^{1/2-o(1)}$.
+
+It is trivial that $S(k)\leq k+1$ since, for example, one can take $n\equiv 1\pmod{(k+1)!}$. The best bound on large gaps between primes due to Ford, Green, Konyagin, Maynard, and Tao \cite{FGKMT18} (see [4]) implies\[S(k) \ll k \frac{\log\log\log k}{\log\log k\log\log\log\log k}.\]
+
+\bigskip
+\noindent\textbf{References:}
+
+[FGKMT18] Ford, Kevin and Green, Ben and Konyagin, Sergei and Maynard, James and Tao, Terence, Long gaps between primes. J. Amer. Math. Soc. (2018), 65-105.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/929}}
+\end{document}

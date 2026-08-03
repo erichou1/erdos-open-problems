@@ -1,0 +1,34 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#879}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Call a set $S\subseteq \{1,\ldots,n\}$ admissible if $(a,b)=1$ for all $a\neq b\in S$. Let\[G(n) = \max_{S\subseteq \{1,\ldots,n\}} \sum_{a\in S}a\]and\[H(n)=\sum_{p&lt;n}p+ n\pi(n^{1/2}).\]Is it true that\[G(n) &gt;H(n)-n^{1+o(1)}?\]Is it true that, for every $k\geq 2$, if $n$ is sufficiently large then the admissible set which maximises $G(n)$ contains at least one integer with at least $k$ prime factors?
+
+
+
+
+Erd\H{o}s and Van Lint proved that\[H(n)-n^{3/2-o(1)}&lt;G(n)&lt;H(n)\]and\[\frac{H(n)-G(n)}{n}\to \infty.\]They proved that $G(n)&gt;H(n)-n^{1+o(1)}$ assuming 'plausible (but hopeless) assumptions about the distribution of primes'. They also prove the second claim when $k=2$. See also [878] .
+
+\noindent\textbf{Related OEIS sequences:} A186736
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/879}}
+\end{document}

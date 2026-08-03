@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#802}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Is it true that any $K_r$-free graph on $n$ vertices with average degree $t$ contains an independent set on\[\gg_r \frac{\log t}{t}n\]many vertices?
+
+
+
+
+A conjecture of Ajtai, Erd\H{o}s, Koml\'{o}s, and Szemer\'{e}di \cite{AEKS81}, who proved that there must exist an independent set on\[\gg_r \frac{\log\log(t+1)}{t}n\]many vertices. Shearer \cite{Sh95} improved this to\[\gg_r \frac{\log t}{\log\log(t+1)t}n.\]Ajtai, Koml\'{o}s, and Szemer\'{e}di \cite{AKS80} proved the conjectured bound when $r=3$. Alon \cite{Al96b} proved the conjectured bound, but replacing the $K_r$-free assumption with the stronger assumption that the induced graph on every vertex neighbourhood has chromatic number $\leq r-2$.
+
+
+
+
+References
+
+[AEKS81] Ajtai, M. and Erd\H{o}s, P. and Koml\'{o}s, J. and Szemer\'{e}di, E., On Tur\'{a}n's theorem for sparse graphs . Combinatorica (1981), 313-317.
+
+[AKS80] Ajtai, Mikl\'{o}s and Koml\'{o}s, J\'{a}nos and Szemer\'{e}di, Endre, A note on Ramsey numbers . J. Combin. Theory Ser. A (1980), 354-360.
+
+[Al96b] Alon, Noga, Independence numbers of locally sparse graphs and a Ramsey type problem . Random Structures Algorithms (1996), 271-278.
+
+[Sh95] Shearer, James B., On the independence number of sparse graphs . Random Structures Algorithms (1995), 269--271.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/802}}
+\end{document}

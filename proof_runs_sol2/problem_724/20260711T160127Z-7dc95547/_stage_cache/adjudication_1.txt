@@ -1,0 +1,95 @@
+{
+"reviewer_role": "adjudicator",
+"verdict": "fail",
+"outcome": "unknown",
+"claims_checked": 18,
+"claims_total": 18,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14",
+"C15",
+"C16",
+"C17",
+"C18"
+],
+"open_gaps": [
+"The immutable statement does not define the symbol ≫ or its constant dependence. Under the acceptance criteria, this ambiguity is blocking and cannot be removed by adopting a preferred interpretation.",
+"Even under the candidate's adopted absolute interpretation, no proof or disproof of f(n) ≥ c√n for all sufficiently large n is obtained.",
+"No uniform critical-scale PBD theorem with prime-power block sizes of order Θ(√v) is proved.",
+"No uniform ITD(q+1,n;q) construction covering the range needed for the asymptotic assertion is proved.",
+"No exact perfect-matching or absorption theorem is proved for the orthogonal-array hypergraph when r=Θ(√n).",
+"No universal infinite-family upper bound on compatible transversal resolutions is proved that would disprove the square-root assertion.",
+"The advertised q=4 first-perturbation construction C16 is invalid as written and requires replacement or repair.",
+"The codegree assertion in C17 requires additional boundary hypotheses, at least r≥3."
+],
+"unchecked_imports": [
+{
+"location": "C12",
+"import": "The field of order q² contains a copy of the field of order q and is a two-dimensional vector space over it.",
+"issue": "The candidate states only existence of a field of each prime-power order. That statement alone does not justify the required subfield and scalar-action structure."
+},
+{
+"location": "Section 3.3",
+"import": "The direct-product construction f(mn) ≥ min{f(m),f(n)}.",
+"issue": "This construction is invoked without a theorem statement or proof from the supplied definitions."
+}
+],
+"material_errors": [
+{
+"location": "Exact normalization and C1",
+"severity": "fatal",
+"error": "The candidate replaces the ambiguous immutable assertion with a separately chosen interpretation of ≫, contrary to the explicit rule that ambiguity must be treated as a blocking defect."
+},
+{
+"location": "Overall conclusion",
+"severity": "fatal",
+"error": "Every terminal route is explicitly left open. The candidate therefore neither proves nor disproves the exact original statement."
+},
+{
+"location": "C16",
+"severity": "major",
+"error": "The displayed matrix does not satisfy C14 under the stated convention d_{i,h,j}=hC_{ij}. For coordinate pair (0,1) and anchor i=3, C_{3,1}-C_{3,0}=2-2=0 modulo 13, whereas the frame condition requires only nonzero differences. The printed verification uses transposed indices."
+},
+{
+"location": "C14",
+"severity": "major",
+"error": "The claim does not explicitly assume or construct the required order-q core. The shifts construct the outside rows only; old-old pairs require a separately supplied OA(q²,q+1,q,2), with suitable hypotheses on q."
+},
+{
+"location": "C17",
+"severity": "moderate",
+"error": "The maximum-codegree formula is asserted for unrestricted integers r,n but fails at r=2, where there are no two distinct compatible vertices and n^(r-3)=n^(-1) cannot be a codegree."
+},
+{
+"location": "C4",
+"severity": "minor",
+"error": "N(t) is defined using an infimum over an unspecified domain and is then treated as an attained integer threshold. The asymptotic equivalence is repairable, but the exact formulation has an attainment or rounding gap."
+},
+{
+"location": "Adversarial referee pass and result ledger",
+"severity": "major",
+"error": "The candidate asserts that all finite frame conditions were checked and that all eighteen claims survived checking, but C16 fails by direct modular computation and C17 omits a required boundary condition."
+}
+],
+"completeness_score": 58,
+"proof_confidence": 0,
+"adversarial_survival_score": 56,
+"statement_sha256": "3c9f2d219321365a80825b0cb65a244b298b263a6a3d9a43b4b4c3c7a4331a06",
+"notes": "Many intermediate reductions, including most of C2-C13, C15, and C18, are useful and substantially correct after appropriate hypotheses are supplied. They constitute a proof-search portfolio rather than a resolution. The blocking notation defect, the absence of any completed terminal route, the false C16 certificate, and the unchecked structural import in C12 require rejection. Source reviewed: 
+
+Pasted text
+
+"
+}

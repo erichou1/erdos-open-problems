@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 920,
+  "raw_page": {
+    "path": "raw/pages/problem_920.html",
+    "sha256": "28a951a4ed02954bfd953e1926982807320d1510c857cac788202b824a57e590"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "143f32ff8489e78839b2382d0ae6a0c628500b61db87b8c3b020e8870f71acea",
+      "source_region": "div.problem-additional-text",
+      "text": "[GrYa68] Graver, Jack E. and Yackel, James, Some graph theoretic results associated with Ramsey's theorem. J. Combinatorial Theory (1968), 125--175.\n \n [MaVe23] Mattheus, S. and Verstraete, J., The asymptotics of $r(4,t)$. arXiv:2306.04007 (2023)."
+    },
+    "remarks": {
+      "sha256": "00f0eb6526082306c7199414e6fbc7ad46b9a809208819a4b66bcaea18c1db10",
+      "source_region": "div.problem-additional-text",
+      "text": "Graver and Yackel \\cite{GrYa68} proved that\\[f_k(n) \\ll \\left(n\\frac{\\log\\log n}{\\log n}\\right)^{1-\\frac{1}{k-1}}.\\]It is known that $f_3(n)\\asymp (n/\\log n)^{1/2}$ (see [1104]). \n\nThe lower bound $R(4,m) \\gg m^3/(\\log m)^4$ of Mattheus and Verstraete \\cite{MaVe23} (see [166]) implies\\[f_4(n) \\gg \\frac{n^{2/3}}{(\\log n)^{4/3}}.\\]A positive answer to this question would follow from [986]. The known bounds for that problem imply, for $k\\geq 5$,\\[f_k(n) \\gg \\frac{n^{1-\\frac{1}{k-2}}}{(\\log n)^{c_k}}.\\]See [1104] (and also [1013]) for the case $k=3$."
+    },
+    "statement": {
+      "sha256": "037910ba899514f591eb65673856ab207983f20465e07d7bdc124b018a5dd91e",
+      "source_region": "div#content",
+      "text": "Let $f_k(n)$ be the maximum possible chromatic number of a graph with $n$ vertices which contains no $K_k$.\n\nIs it true that, for $k\\geq 4$,\\[f_k(n) \\gg \\frac{n^{1-\\frac{1}{k-1}}}{(\\log n)^{c_k}}\\]for some constant $c_k>0$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/920"
+}

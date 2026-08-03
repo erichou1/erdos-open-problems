@@ -1,0 +1,50 @@
+{
+  "problem_number": 638,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/638",
+  "retrieved_at": "2026-07-10T23:18:08.663765+00:00",
+  "page_title": "638 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "de5270a304d26fdf88fa58e4dff7bfbf52fff772f3a7952c254fcbbd1a719902",
+  "comment_count": 8,
+  "comments": [
+    {
+      "post_id": "5909",
+      "text": "Hello, I would like to submit a potential solution to the problem. https://pdfhost.io/v/kQ6nBNKNY8_Erdos_Problem_638 I have tried to get it submitted through Aristotle AI. Everything appears to be fine. Thank you.",
+      "meta": "InfiniteInsights — 12:02 on 26 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5913",
+      "text": "Congrats. Standard check found 1 minor mathematical issue. I note that this problem's intended interpretation may still be unclear and this could impact the status of the proposed solution.",
+      "meta": "Nat Sothanaphan — 14:39 on 26 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5914",
+      "text": "Thank you for the careful check. I appreciate it. I agree with both points. I will revise the note to make the scope clear: the construction gives a counterexample for the hereditary finite-subgraph interpretation of the problem, and the induced-subgraph variant is handled separately in the final section. I will avoid wording that suggests the note settles interpretations beyond that scope. I will also fix the Berge-cycle definition by stating the length convention explicitly. Thanks again for reviewing the argument and for flagging the potential interpretation issue.",
+      "meta": "InfiniteInsights — 15:25 on 26 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5918",
+      "text": "Hello, I have revised the note. https://pdfhost.io/v/ekDqqcZSMh_Erdos_638_-_InfiniteInsights The abstract and introduction now state explicitly that the construction addresses the hereditary finite-subgraph interpretation of Erdős Problem 638, rather than claiming to settle every possible interpretation of the page. The induced-subgraph version is stated separately as an analogue. I also fixed the Berge-cycle convention by defining Berge cycles only for lengths (m\\ge 2), and added a few clarifying sentences around the sparse Ramsey input and the finite-girth avoidance step. As an additional check, I did what you did in the thread you shared and tried to do a line-by-line check of the paper. Further, I ran it through Aristotle AI. Thank you.",
+      "meta": "InfiniteInsights — 20:08 on 26 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5934",
+      "text": "Thanks! If you did formalization, it would be greatly appreciated to share it, as this is one of the quickest routes to get a solution accepted as correct.",
+      "meta": "Nat Sothanaphan — 13:54 on 27 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5940",
+      "text": "Sharing the Lean project here: https://github.com/woeowiegj/Erdos638 To set expectations: it formalises the compactness/diagonal part of the hereditary ordinary finite-subgraph counterexample. The finite avoidance principle and the block-sequence existence lemma are left as explicit 'sorry's; those are the parts supplied in the written note from sparse Ramsey theory, Berge cycles, and the recursive construction. So the repo certifies the reduction from those inputs to the ordinary and induced counterexamples, rather than being a complete formalisation of the whole written proof. Initial Lean draft was produced with Aristotle AI. Thank you!",
+      "meta": "InfiniteInsights — 16:32 on 27 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5696",
+      "text": "\"Closed under taking subgraphs\" is still false and a similar counterexample can be constructed. The right assumption seems to be that $S$ is closed under finite subgraphs and then the problem is wide open with quite a lot of literature (Reiher's survey, also this https://arxiv.org/pdf/1603.00521).",
+      "meta": "Przemek Chojecki — 09:27 on 22 Apr 2026 👍 1 📝 1 🤖 0"
+    },
+    {
+      "post_id": "2779",
+      "text": "I believe Erdős likely intended to add an extra condition on $S$ that, e.g. it be closed under taking subgraphs, i.e. be hereditary. Otherwise, e.g. $S=\\{K_{R_3(n)}:n\\in\\mathbb{N}\\}$ gives a trivial counterexample. (The site has been updated to address this comment.)",
+      "meta": "Kevin Barreto — 22:45 on 05 Jan 2026 👍 0 📝 1 🤖 0"
+    }
+  ]
+}

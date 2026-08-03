@@ -1,0 +1,60 @@
+{
+  "problem_number": 400,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/400",
+  "retrieved_at": "2026-07-10T23:16:58.983495+00:00",
+  "page_title": "400 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "24984cae417ee35fb2b81c2d8ca28c8f0798a0e0b88fe602b39b950651278e90",
+  "comment_count": 10,
+  "comments": [
+    {
+      "post_id": "7028",
+      "text": "Using a recent result of Pomerance, one gets the lower bound\\[ \\sum_{n\\le x} g_k(n) \\gg_k x\\log x \\]for every fixed \\(k\\ge 2\\). Indeed, by Theorem 1 here: https://math.colgate.edu/~integers/aa47/aa47.pdf, for every fixed \\(\\eta<1/\\log 4\\), there is a set \\(S_\\eta\\) of asymptotic density \\(1\\) such that, for every \\(m\\in S_\\eta\\) and every positive integer \\(r\\le \\eta\\log m\\),\\[ \\frac{(m+r)!}{m!}\\mid {2m\\choose m}. \\]Taking \\(r=\\lfloor \\eta\\log m\\rfloor\\), this gives\\[ m!(m+r)! \\mid (2m)!. \\]Hence, in the definition of \\(g_k(2m)\\), we may take\\[ a_1=m+r,\\qquad a_2=m,\\qquad a_3=\\cdots=a_k=1, \\]and obtain\\[ g_k(2m)\\ge r+k-2\\ge \\lfloor\\eta\\log m\\rfloor . \\]Therefore, with \\(M=\\lfloor x/2\\rfloor\\),\\[ \\sum_{n\\le x}g_k(n) \\ge \\sum_{\\substack{m\\le M\\\\ m\\in S_\\eta}}\\lfloor\\eta\\log m\\rfloor = \\left(\\frac{\\eta}{2}+o(1)\\right)x\\log x. \\]Since this holds for every \\(\\eta<1/\\log4\\),\\[ \\liminf_{x\\to\\infty}\\frac{1}{x\\log x}\\sum_{n\\le x}g_k(n) \\ge \\frac{1}{2\\log4}. \\]Together with the standard upper bound \\(g_k(n)\\ll_k\\log n\\), this gives the correct order of magnitude for the summatory function, although not the asymptotic constant. With some optimization, I think I can get $c_k \\ge \\frac{k - 1}{\\log{4}}$, but the correct constant is likely $\\frac{k - 1}{\\log{2}}$ as mentioned in the upper bound comment.",
+      "meta": "SamKorsky — 19:20 on 16 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7031",
+      "text": "Thanks. Also check out this paper of mine; the last appendix has similar/parallel results to those of Pomerance. Basically, this was an outgrowth of the event in Jan 2026 where AI first autonomously resolved an Erdos problem, [728]. Subsequently, [729] and [401] were also solved by similar arguments. My paper was a writeup of those arguments, with some generalizations in the appendix. In parallel, Pomerance also worked on these results, since the AI's arguments were built on his earlier work. That'd be the paper you're linking to. In my paper, there's a general Theorem 3 which has Corollary 1 and Corollary 2 matching Pomerance's results. In case that's useful, but I would guess it's still not enough for the problem.",
+      "meta": "Nat Sothanaphan — 21:54 on 16 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7036",
+      "text": "Thanks; sorry, somehow I missed that paper while doing an AI-assisted lit review. I'm continuing to work on this problem (using ideas from your paper now as well!) and right now I believe I can prove $c_k \\ge \\frac{k - 1}{\\log 3}$. With some more work I think it's plausible we can prove that $c_k = \\frac{k - 1}{\\log 2}$ :)",
+      "meta": "SamKorsky — 08:14 on 17 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7100",
+      "text": "@Nat Sothanaphan It will take me a while to write up, but in the next few weeks I have a manuscript proving that one can take $c_k \\ge \\frac{3(k - 1)}{\\log12}$. Unfortunately I wasn't able to push the constant further than that.",
+      "meta": "SamKorsky — 21:58 on 20 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7113",
+      "text": "Looking forward to it!",
+      "meta": "Nat Sothanaphan — 12:48 on 21 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7144",
+      "text": "Welp looks like I was beaten to the punch: https://arxiv.org/pdf/2606.23661, haha.",
+      "meta": "SamKorsky — 04:34 on 23 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7147",
+      "text": "This seems problematic - as Eric Li notes this paper was heavily created/written by ChatGPT, which tends to first of all look at the remarks and comments on this site when asked to prove something. Presumably it used the remarks here as a starting point. It therefore seems disingenuous to not mention your remarks. But this is part of a wider question about how we should be assigning 'credit' for a solution in this new age of AI. (Also as a side note this paper is clearly heavily, if not entirely, AI-written and so, as usual, it is difficult to read and likely misses important citations and context, and presumably a human-written version would be shorter, perhaps more powerful, and certainly be more pleasant to read.)",
+      "meta": "Thomas Bloom — 08:13 on 23 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7154",
+      "text": "Thanks Thomas for the comment and for running the Erdős Problems site so well. I appreciate SamKorsky’s posts on the forum — they already pointed toward the same clean coefficient $ \\frac{3(k-1)}{\\log 12} $, which turns out to be the natural balancing point of the mixed binary–ternary method once you equalise the digit budgets and use up the representation slack. It’s great that we converged on exactly the same endpoint independently. I’ve just uploaded v2 of the preprint with two small additions: a new paragraph in “Relation to previous work” that credits Sam’s announcement, and a sentence in the Acknowledgements thanking him for the parallel progress and the forum discussion — v2 should appear on the arXiv in the next few days.",
+      "meta": "Eric Li — 13:02 on 23 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7162",
+      "text": "Yep I ran into the same \"natural balancing point,\" and the argument (and its use of the result of Drmota and Spiegelhofer, which was also pointed out to me independently by GPT-5.5) seems essentially identical to mine.",
+      "meta": "SamKorsky — 16:45 on 23 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6598",
+      "text": "FWIW, here's what Erdős and Graham probably had in mind: The condition is equivalent to $\\sum_i \\nu_p(a_i!)\\le \\nu_p(n!)$ for all $p$. This is equivalent to $\\sum_i a_i-s_p(a_i)\\le n-s_p(n)$, or $(a_1+\\dots+a_k)-n\\le s_p(a_1)+\\dots+s_p(a_k)-s_p(n)$. If you take $p=2$ for example, you get that $g_k(n)\\le \\log_2(a_1)+\\dots+\\log_2(a_k)+O_k(1)\\le k\\log n+O_k(1)$. This yields the $g_k(n)\\ll_k \\log n$. This idea in fact gives the upper bound $c_k\\le \\frac{k-1/2}{\\log 2}$. Getting a lower bound seems difficult in comparison. Really, the bottleneck should be $p=2$.",
+      "meta": "AnayAggarwal — 22:13 on 22 May 2026 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

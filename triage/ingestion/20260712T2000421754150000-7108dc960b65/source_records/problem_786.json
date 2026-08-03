@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 786,
+  "raw_page": {
+    "path": "raw/pages/problem_786.html",
+    "sha256": "b660ec9d2db95978796f8fabc5110fc36d0e256f95f91c717b53a1a6b670983d"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "0076540788d33af3396abbf9426d39c7f8ebfcf87eed81a9da19cb55931d5eac",
+      "source_region": "div.problem-additional-text",
+      "text": "[ERS73] Erd\\H{o}s, P. and Ruzsa, Jr., I. and S\\'{a}rk\\\"ozi, A., On the number of solutions of {$f(n)=a$} for additive functions. Acta Arith. (1973), 1--9.\n \n [Er65] Erd\\H{o}s, P., Extremal problems in number theory. Proc. Sympos. Pure Math., Vol. VIII (1965), 181-189.\n \n [Er80] Erd\\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.\n \n [GrSo01] Granville, Andrew and Soundararajan, K., The spectrum of multiplicative functions. Ann. of Math. (2) (2001), 407-470."
+    },
+    "remarks": {
+      "sha256": "519e5707bd2a3c8ddf3c9af736ad371d07c091e9a30e5099ab837dc1b834a29c",
+      "source_region": "div.problem-additional-text",
+      "text": "An example of such a set with density $1/4$ is given by the integers $\\equiv 2\\pmod{4}$.\n\nSelfridge constructed such a set with density $1/e-\\epsilon$ for any $\\epsilon>0$: let $p_1<\\cdots<p_k$ be a sequence of large consecutive primes such that\\[\\sum_{i=1}^k\\frac{1}{p_i}<1<\\sum_{i=1}^{k+1}\\frac{1}{p_i},\\]and let $A$ be those integers divisible by exactly one of $p_1,\\ldots,p_k$.\n\nFor the second question the set of integers with a prime factor $>N^{1/2}$ give an example of a set with size $\\geq (\\log 2)N$. Erd\\H{o}s could improve this constant slightly. Such an improvement is given by Tao in the comments, taking $A$ to be the set of all integers with exactly one prime factor $>N^{\\frac{1}{1+\\sqrt{e}}}$, which has size $\\approx 0.8285 N$.\n\nIn \\cite{Er65} Erd\\H{o}s reports that Ruzsa proved the maximal size of such an $A$ is $\\leq (1-c)N$ for some constant $c>0$ for large $N$, but the proof 'is not yet published'. It is presumably the following.\n\nFor any such $A$ we can define an associated additive function $f$ by letting $f(a_1\\cdots a_r)=r$, and then $A=\\{ n: f(n)=1\\}$. A result of Erd\\H{o}s, Ruzsa, and S\\'{a}rkz\\\"{o}zy \\cite{ERS73} then implies that there exists a constant $c>0$ such that, for all sufficiently large $N$, $\\lvert A\\rvert\\leq (1-c)N$. In \\cite{ERS73} they indicate that their method should be able to obtain this with $c=1/10$. In the comments Tao explains how a result of Granville and Soundararajan \\cite{GrSo01} implies\\[\\lvert A\\rvert\\leq (1-c+o(1))N\\]for an explicit constant $c\\approx 0.1715$, and this is the best possible (see also [121]).\n\nTheorem 2 from \\cite{ERS73} also implies a negative answer to the first question, in that the density is at most $1/2$.\n\nThe above all assumes that repetition is allowed amongst the $a_i$ and $b_i$ in this condition. It is ambiguous in the original sources cited whether this was intended or not. If we insist the products are of distinct elements then this is a weaker condition on $A$, and the above questions are still open.\n\nThe formulation in \\cite{Er80} is clear that repetitions are not allowed, but also claims that Ruzsa had shown the answer to both questions is no in this case (and that Ruzsa had shown that the upper density of $A$ is $<1/e$ if $A$ is infinite with this property); it is possible that Erd\\H{o}s was mistakenly thinking of the above results, in which repetitions are allowed.\n\nSee also [421] and [795]."
+    },
+    "statement": {
+      "sha256": "1035a5bce3bf504bbb7b9234bf3dedf479a932a0a28955082b2f7ce75ab3b29b",
+      "source_region": "div#content",
+      "text": "Let $\\epsilon>0$. Is there some set $A\\subset \\mathbb{N}$ of density $>1-\\epsilon$ such that $a_1\\cdots a_r=b_1\\cdots b_s$ with $a_i,b_j\\in A$ can only hold when $r=s$?\n\nSimilarly, can one always find a set $A\\subset\\{1,\\ldots,N\\}$ with this property of size $\\geq (1-o(1))N$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/786"
+}

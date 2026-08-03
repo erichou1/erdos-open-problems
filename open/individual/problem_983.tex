@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#983}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $n\geq 2$ and $\pi(n)&lt;k\leq n$. Let $f(k,n)$ be the smallest integer $r$ such that in any $A\subseteq \{1,\ldots,n\}$ of size $\lvert A\rvert=k$ there exist primes $p_1,\ldots,p_r$ such that $&gt;r$ many $a\in A$ are only divisible by primes from $\{p_1,\ldots,p_r\}$. Is it true that\[2\pi(n^{1/2})-f(\pi(n)+1,n)\to \infty\]as $n\to \infty$? In general, estimate $f(k,n)$, particularly when $\pi(n)+1&#60;k=o(n)$.
+
+
+
+
+It is trivial that $f(k,n)\leq \pi(n)$. Erd\H{o}s and Straus \cite{Er70b} proved that\[f(\pi(n)+1,n)=2\pi(n^{1/2})+o_A\left(\frac{n^{1/2}}{(\log n)^A}\right)\]for any $A&#62;0$ and, for any constant $1&#62;c&#62;0$,\[f(cn,n)=\log\log n+(c_1+o(1))\sqrt{2\log\log n},\]where\[c=\frac{1}{\sqrt{2\pi}}\int_{-\infty}^{c_1}e^{-x^2/2}\mathrm{d}x.\]
+
+
+
+
+References
+
+[Er70b] Erd\H{o}s, P., Some applications of graph theory to number theory . Proc. Second Chapel Hill Conf. on Combinatorial Mathematics and its Applications (Univ. North Carolina, Chapel Hill, N.C., 1970) (1970), 136-145.
+
+\noindent\textbf{Related OEIS sequences:} possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/983}}
+\end{document}

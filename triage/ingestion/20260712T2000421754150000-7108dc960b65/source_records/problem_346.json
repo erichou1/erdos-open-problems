@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 346,
+  "raw_page": {
+    "path": "raw/pages/problem_346.html",
+    "sha256": "2d29b737af67d8d1f80d8122dff898438b05018e75064d37a945a76ab5f4e918"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "2dcb250ec9bbdbf6f9b6bbe6ff32951671f003a8a787fcdaf5769bb64a6b71cf",
+      "source_region": "div.problem-additional-text",
+      "text": "[ErGr80] Erd\\H{o}s, P. and Graham, R., Old and new problems and results in combinatorial number theory. Monographies de L'Enseignement Mathematique (1980).\n \n [Gr64d] Graham, R. L., A property of Fibonacci numbers. Fibonacci Quart. (1964), 1-10."
+    },
+    "remarks": {
+      "sha256": "038d3c2294f681ad341e5195dceefe1020acd3e36a708e275dd10b19869d7e4c",
+      "source_region": "div.problem-additional-text",
+      "text": "Graham \\cite{Gr64d} has shown that the sequence $a_n=F_n-(-1)^{n}$, where $F_n$ is the $n$th Fibonacci number, has these properties. Erd\\H{o}s and Graham \\cite{ErGr80} remark that it is easy to see that if $a_{n+1}/a_n>\\frac{1+\\sqrt{5}}{2}$ then the second property is automatically satisfied, and that it is not hard to construct very irregular sequences satisfying both properties."
+    },
+    "statement": {
+      "sha256": "252b1f97bd917300aa958762a0668a12cd771de25cf2c82ad06fdd43fb9b2a77",
+      "source_region": "div#content",
+      "text": "Let $A=\\{1\\leq a_1< a_2<\\cdots\\}$ be a set of integers such that\n{UL}\n{LI} $A\\backslash B$ is complete for any finite subset $B$ and {/LI}\n{LI} $A\\backslash B$ is not complete for any infinite subset $B$.{/LI}\n{/UL}\n(Here 'complete' means all sufficiently large integers can be written as a sum of distinct members of the sequence.)\n\nIs it true that if $a_{n+1}/a_n \\geq 1+\\epsilon$ for some $\\epsilon>0$ and all $n$ then\\[\\lim_n \\frac{a_{n+1}}{a_n}=\\frac{1+\\sqrt{5}}{2}?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/346"
+}

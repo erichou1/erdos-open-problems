@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 138,
+  "raw_page": {
+    "path": "raw/pages/problem_138.html",
+    "sha256": "792bd2295331ea730306c62f98fb70dddb7fb1c5c21664ab3e82a5aaca8f817f"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "0e5cfb493595819a563b0a9d3ceb5195ff55208b9c4c435c41687be2b90b1ef6",
+      "source_region": "div.problem-additional-text",
+      "text": "[Be68] Berlekamp, E. R., A construction for partitions which avoid long arithmetic progressions. Canad. Math. Bull. (1968), 409-414.\n \n [Er80] Erd\\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.\n \n [Er81] Erd\\H{o}s, P., On the combinatorial problems which I would most like to see solved. Combinatorica (1981), 25-42.\n \n [FoHu26] J. Fox and Z. Hunter, Three-color van der Waerden numbers grow super-exponentially. arXiv:2606.02541 (2026).\n \n [Go01] Gowers, W. T., A new proof of Szemer\\'{e}di's theorem. Geom. Funct. Anal. (2001), 465-588.\n \n [KoSh16] Kozik, Jakub and Shabanov, Dmitry, Improved algorithms for colorings of simple hypergraphs and\napplications. J. Combin. Theory Ser. B (2016), 312--332."
+    },
+    "remarks": {
+      "sha256": "8d1a6b85cb5e36ccc26fb6e4430b5233df609710d86c300d101677f93b0d2184",
+      "source_region": "div.problem-additional-text",
+      "text": "When $p$ is prime Berlekamp \\cite{Be68} has proved $W(p+1)\\geq p2^p$. Gowers \\cite{Go01} has proved\\[W(k) \\leq 2^{2^{2^{2^{2^{k+9}}}}}.\\]The best general lower bound is $W(k)\\gg 2^k$, due to Kozik and Shabanov \\cite{KoSh16}.\n\nIn \\cite{Er81} Erd\\H{o}s further asks whether $W(k+1)/W(k)\\to \\infty$, or $W(k+1)-W(k)\\to \\infty$. DeepMind has proved (see the comments) that\\[W(k+1)\\geq W(k)+k,\\]answering the second question.\n\nIn \\cite{Er80} Erd\\H{o}s asks whether $W(k)/2^k\\to \\infty$, and offers \\$500 for a proof or disproof of $W(k)^{1/k}\\to \\infty$.\n\nThe analogous question for $r\\geq 3$ colours was resolved by Fox and Hunter \\cite{FoHu26}, who proved\\[W_3(k)^{1/k}\\geq C^{\\log_*k}\\]for some constant $C>1$."
+    },
+    "statement": {
+      "sha256": "2b5738d7b1c54952a2efb7e03ebc79edb422a9ba23322869803c2167b29f636f",
+      "source_region": "div#content",
+      "text": "Let the van der Waerden number $W(k)$ be such that whenever $N\\geq W(k)$ and $\\{1,\\ldots,N\\}$ is $2$-coloured there must exist a monochromatic $k$-term arithmetic progression. Improve the bounds for $W(k)$ - for example, prove that $W(k)^{1/k}\\to \\infty$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/138"
+}

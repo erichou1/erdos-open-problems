@@ -1,0 +1,49 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#976}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $f\in \mathbb{Z}[x]$ be an irreducible polynomial of degree $d\geq 2$. Let $F_f(n)$ be maximal such that there exists $1\leq m\leq n$ with $f(m)$ is divisible by a prime $\geq F_f(n)$. Equivalently, $F_f(n)$ is the greatest prime divisor of\[\prod_{1\leq m\leq n}f(m).\]Estimate $F_f(n)$. In particular, is it true that $F_f(n)\gg n^{1+c}$ for some constant $c&#62;0$? Or even $\gg n^d$?
+
+
+
+
+Nagell \cite{Na22} and Ricci \cite{Ri34} proved that\[F_f(n) \gg n\log n,\]which Erd\H{o}s \cite{Er52c} improved to\[F_f(n) \gg n(\log n)^{\log\log\log n}.\]In \cite{Er65b} he claimed a proof of\[F_f(n) \gg n\exp((\log n)^c)\]for some constant $c&#62;0$, but said he had never published the proof, which was 'fairly complicated'. This seems to have been flawed, since Erd\H{o}s and Schinzel \cite{ErSc90} later published a weaker bound. A proof of the stronger bound above was finally provided by Tenenbaum \cite{Te90}.
+
+
+
+
+References
+
+[Er52c] Erd\H{o}s, P., On the greatest prime factor of {$\prod^x_{k=1}f(k)$} . J. London Math. Soc. (1952), 379--384.
+
+[Er65b] Erd\H{o}s, Paul, Some recent advances and current problems in number theory . Lectures on Modern Mathematics, Vol. III (1965), 196-244.
+
+[ErSc90] Erd\H{o}s, P. and Schinzel, A., On the greatest prime factor of {$\prod^x_{k=1}f(k)$} . Acta Arith. (1990), 191--200.
+
+[Na22] Nagell, . Abhandlungen aus dem Math. Seminar Hamburg (1922), 179-194.
+
+[Ri34] G. Ricci, . Annali de Mat. (1934), 295-303.
+
+[Te90] Tenenbaum, G\'{e}rald, Sur une question d'{E}rd\H{o}s et Schinzel . (1990), 405--443.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/976}}
+\end{document}

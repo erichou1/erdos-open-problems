@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 183,
+  "raw_page": {
+    "path": "raw/pages/problem_183.html",
+    "sha256": "dc70edd6eb81c5ac19f5477a616074f6dbe2731bb1f0495e3f6534634388515d"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "fce830ac87db59aecfc26a9c1cfb0db3e4fe8db7530d9c7c17d7062aa4bf20c2",
+      "source_region": "div.problem-additional-text",
+      "text": "[ACPPRT21] R. Ageron, P. Casteras, T. Pellerin, Y. Portella, A. Rimmel, and J. Tomasik, New lower bounds for Schur and weak Schur numbers. arXiv:2112.03175 (2021).\n \n [El19] No reference found.\n\n [Ex94] Exoo, G., A lower bound for Schur numbers and multicolor Ramsey numbers. Electronic J. of Combinatorics (1994).\n \n [FrSw00] Fredricksen, Harold and Sweet, Melvin M., Symmetric sum-free partitions and lower bounds for Schur\nnumbers. Electron. J. Combin. (2000), Research Paper 32, 9.\n \n [Wa97] Wan, Honghui, Upper bounds for {R}amsey numbers {$R(3,3,\\cdots,3)$} and\nSchur numbers. J. Graph Theory (1997), 119--122.\n \n [Wh73] Whitehead, Jr., Earl Glen, The {R}amsey number {$N(3,\\,3,\\,3,\\,3;\\,2)$}. Discrete Math. (1973), 389--396.\n \n [XXC02] Xu, Xiao Dong and Xie, Zheng and Chen, Zhi, Upper bounds for {R}amsey numbers {$R_n(3)$} and Schur\nnumbers. Math. Econ. (2002), 81--84."
+    },
+    "remarks": {
+      "sha256": "c5e924c976a02f3a0d61d6fed9b309cd3d98178beb14c7e264e0fc4319368a67",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s offers \\$100 for showing that this limit is finite. An easy pigeonhole argument shows that\\[R(3;k)\\leq 2+k(R(3;k-1)-1),\\]from which $R(3;k)\\leq \\lceil e k!\\rceil$ immediately follows. The best-known upper bound is\\[R(3;k)\\leq (e-\\tfrac{1}{6}) k!+1,\\]due to Xu, Xie, and Chen \\cite{XXC02} (improving previous bounds of Wan \\cite{Wa97} and Whitehead \\cite{Wh73}). See Eliahou \\cite{El19} for more on the upper bound. These arise from the same type of inductive relationship and computational bounds for $R(3;k)$ for small $k$. The best-known lower bound (coming from lower bounds for Schur numbers) is\\[R(3,k)\\geq (380)^{k/5}-O(1),\\]due to Ageron, Casteras, Pellerin, Portella, Rimmel, and Tomasik \\cite{ACPPRT21} (improving previous bounds of Exoo \\cite{Ex94} and Fredricksen and Sweet \\cite{FrSw00}). Note that $380^{1/5}\\approx 3.2806$.\n\nSee also [483].\n\nThis problem is #21 in Ramsey Theory in the graphs problem collection."
+    },
+    "statement": {
+      "sha256": "e13ca80ed939e430547807ccba79f73becbd492dee0596bac517a4e13f576187",
+      "source_region": "div#content",
+      "text": "Let $R(3;k)$ be the minimal $n$ such that if the edges of $K_n$ are coloured with $k$ colours then there must exist a monochromatic triangle. Determine\\[\\lim_{k\\to \\infty}R(3;k)^{1/k}.\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/183"
+}

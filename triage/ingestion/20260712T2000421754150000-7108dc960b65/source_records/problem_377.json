@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 377,
+  "raw_page": {
+    "path": "raw/pages/problem_377.html",
+    "sha256": "0a373a39e2650ee7ed9223ead0db8e0a84693ef06c74c789a680d6fdd21e8995"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "813f4bb1d221d08bb3c9d6a752568c2a36d79dd277290718137c77d4a2b13eb0",
+      "source_region": "div.problem-additional-text",
+      "text": "[EGRS75] Erd\\H{o}s, P. and Graham, R. L. and Ruzsa, I. Z. and Straus, E. G., On the prime factors of $(\\sp{2n}\\sb{n})$. Math. Comp. (1975), 83-92.\n \n [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437."
+    },
+    "remarks": {
+      "sha256": "f19708ebd95edaa854ec0dab42f1b3337db26618f3f7447adad3ba92f9c55d12",
+      "source_region": "div.problem-additional-text",
+      "text": "A question of Erd\\H{o}s, Graham, Ruzsa, and Straus \\cite{EGRS75}, who proved that if $f(n)$ is the sum in question then\\[\\lim_{x\\to \\infty}\\frac{1}{x}\\sum_{n\\leq x}f(n) = \\sum_{k=2}^\\infty \\frac{\\log k}{2^k}=\\gamma_0\\]and\\[\\lim_{x\\to \\infty}\\frac{1}{x}\\sum_{n\\leq x}f(n)^2 = \\gamma_0^2,\\]so that for almost all integers $f(m)=\\gamma_0+o(1)$. They also prove that, for all large $n$,\\[f(n) \\leq c\\log\\log n\\]for some constant $c<1$. (It is trivial from Mertens estimates that $f(n)\\leq (1+o(1))\\log\\log n$.)\n\nA positive answer would imply that\\[\\sum_{p\\leq n}1_{p\\mid \\binom{2n}{n}}\\frac{1}{p}=(1-o(1))\\log\\log n,\\]and Erd\\H{o}s, Graham, Ruzsa, and Straus say there is 'no doubt' this latter claim is true.\n\nThis is mentioned in problem B33 of Guy's collection \\cite{Gu04}."
+    },
+    "statement": {
+      "sha256": "e90f01a2a498645fc94e85ebbf7d210d6058c532bc84ced0c2f37f043807edeb",
+      "source_region": "div#content",
+      "text": "Is there some absolute constant $C>0$ such that\\[\\sum_{p\\leq n}1_{p\\nmid \\binom{2n}{n}}\\frac{1}{p}\\leq C\\]for all $n$ (where the summation is restricted to primes $p\\leq n$)?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/377"
+}

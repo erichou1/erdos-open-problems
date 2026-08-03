@@ -1,0 +1,85 @@
+{
+  "problem_number": 264,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/264",
+  "retrieved_at": "2026-07-10T23:16:18.374958+00:00",
+  "page_title": "264 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "c8ee23258e6a920f73830c960d8cfc78c1564162f8aa65b8ec642cf505a49d86",
+  "comment_count": 15,
+  "comments": [
+    {
+      "post_id": "2258",
+      "text": "Aristotle was able to prove that $2^n$ is not an irrationality sequence, while $2^{2^n}$ is, directly from the formalized statements previously made available at the Formal Conjectures project. (This run was operated by Pietro Monticone a few days ago.) Type-check it online! In particular, it was not provided with the paper by Kovač and Tao. (However, I don't know whether its argument derived from that source anyway.) In particular, I haven't looked at the proof, except to note that it mentions 1 through 4 a lot (instead of 1 through 5 as in the other proof).",
+      "meta": "BorisAlexeev — 17:30 on 18 Dec 2025 👍 3 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2259",
+      "text": "How can we know? Does Aristotle have web search? I realize this is sort of important to gauge the significance - If it's from web search, that speaks to ability to auto-formalize papers - If not, that speaks to ability to resolve this question (like in previous cases)",
+      "meta": "Nat Sothanaphan — 17:53 on 18 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2263",
+      "text": "Aristotle does not have web search.",
+      "meta": "tudorachim — 18:57 on 18 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2271",
+      "text": "This is very nice and quite impressive! Regarding $a_n=2^n$: You and Aristotle are right. It is sufficient to range $b_n$ over $\\{1,2,3,4\\}$; I haven't observed this before. The range $\\{1,2,3,4,5\\}$ was simply more convenient, since one only needs a single term from the tail to dominate the \"gap\" from the preceding term. Regarding $a_n=2^{2^n}$: Correct, this was not discussed in the paper [KoTa24]; it is a more classical result. Namely, Erdős and Straus in this paper from 1964 (Theorem 1) proved the following: If a sequence of positive integers $(c_n)$ satisfies\\[ \\limsup_{n\\to\\infty}\\frac{c_n^2}{c_{n+1}}\\leq1,\\quad \\limsup_{n\\to\\infty}\\frac{LCM(c_1,\\ldots,c_n)}{c_{n+1}}<\\infty,\\quad \\sum_{n=1}^{\\infty}\\frac{1}{c_n}\\in\\mathbb{Q}, \\]then it has to satisfy the recurrence relation $c_{n+1}=c_n^2-c_n+1$ for sufficiently large indices $n$. Now just apply this to $c_n=2^{2^n}+b_n$ for a bounded sequence $(b_n)$, also estimating trivially $LCM(c_1,\\ldots,c_n)\\leq c_1\\cdots c_n$. If the sequence $(c_n)$ satisfied the recurrence relation for large $n$, we would have that $(2b_n-1)2^{2^n}$ is bounded, but $|2b_n-1|\\geq1$, so it is not. However, it is still impressive that Aristotle figured it all out just by itself! By the way, yesterday I ran Aristotle for several hours with the same irrationality question but for $a_n=n!$ (entered manually as text), but there was no luck. I believe that this part of the problem is still open.",
+      "meta": "Vjeko_Kovac — 22:25 on 18 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2282",
+      "text": "Directly from the Formal Conjectures input, Aristotle (operated by Pietro Monticone) was indeed not able to resolve the problem of $n!$, nor to prove your and Terry's more general results.",
+      "meta": "BorisAlexeev — 14:30 on 19 Dec 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2236",
+      "text": "I got Aristotle to formalize a negative answer to the first half of this problem. More precisely, I asked it to formalize the claim: There exists a sequence $(b_k)_{k=1}^{\\infty}$ with values in the set $\\{1,2,3,4,5\\}$ such that the infinite sum $\\sum_{k=1}^{\\infty} \\frac{1}{2^k+b_k}$ is a rational number. First, I wrote up a LaTeX blueprint of the proof originally appearing in this paper. Aristotle took about 50 minutes to formalize it, producing a Lean file which compiles in under a minute. Then, I removed all links and comments from the Lean file and asked Gemini 3 Pro to literally translate the (now mysterious) main theorem back to English. Theorem translation reads correctly, so the Lean file seems to be proving the correct statement. (I am new to Lean, so any comments or corrections are welcome.)",
+      "meta": "Vjeko_Kovac — 21:31 on 17 Dec 2025 👍 3 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2239",
+      "text": "Similar to my comment on #189: if you are not confident in your own ability to verify that the statement has been correctly formalized, a natural thing to do is see if one can now fill in the sorry in https://github.com/google-deepmind/formal-conjectures/blob/main/FormalConjectures/ErdosProblems/264.lean using your file as an import.",
+      "meta": "TerenceTao — 23:16 on 17 Dec 2025 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2241",
+      "text": "This might be slightly off-topic, and I should probably ask elsewhere: That's what I initially wanted to do, but I didn't know how to use the official formalization on FormalConjectures in combination with Aristotle, since it imports \"FormalConjectures.Util.ProblemImports\". Can Aristotle still handle such Lean files? Also, is there a way to make Lean 4 Web compile Lean files from FormalConjectures, since they import more than just Mathlib? Also, can I easily obtain a self-contained Lean formalization of a problem, which only imports Mathlib?",
+      "meta": "Vjeko_Kovac — 05:37 on 18 Dec 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2253",
+      "text": "Here are some of my takes on your questions: A centralized place where you can ask these questions is the Lean Zulip, many of them specifically on the topic \"Discussion thread for Aristotle API\". But I think it's fine to ask here -- it's very related to what lots of people are doing here, and you are a respected contributor to the site. :) It *is* possible to have Aristotle import the FormalConjectures project. You probably have to clone that git repository, and then launch Aristotle from within it. There may be version compatibility issues which plague Lean development in general. But in this case, it's relatively easy to manually strip down the Lean file to something like this: import Mathlib def IsIrrationalitySequence (a : ℕ → ℕ) : Prop := ∀ b : ℕ → ℕ, BddAbove (Set.range b) → 0 ∉ Set.range (a + b) → 0 ∉ Set.range b → Irrational (∑' n, (1 : ℝ) / (a n + b n)) theorem erdos_264.parts.i : ¬IsIrrationalitySequence (2 ^ ·) := by sorry The only change really required was to remove \"@[category research solved, AMS 11]\". In other cases, you might need to copy over a definition from elsewhere in the FormalConjectures repository. It isn't always the easiest thing to find, but maybe an LLM could help? In this case, this succeeded in about 15 minutes, and you can see the result here. Regarding running the real FormalConjectures project in \"Lean 4 Web\": I don't believe that is possible at the moment. I am told that being able to run multiple files online is a feature under development right now.",
+      "meta": "BorisAlexeev — 16:05 on 18 Dec 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2268",
+      "text": "Thank you Boris, these are very useful tips and explanations! I'm learning mostly from your examples and methodology descriptions on this site. :-)",
+      "meta": "Vjeko_Kovac — 20:29 on 18 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2244",
+      "text": "Disclaimer: I don't know Lean as well. But I would wary about the LLM \"back-translation\". The reason being that LLM and human failure modes are quite similar: both can misread wrong theorem as the \"right\" theorem if the right formulation makes more sense. In this regard, it makes more sense to treat LLM as some \"fallible coworker\" rather than a \"rigid\" computer system/algorithm that you might want to rely on in this kind of manner.",
+      "meta": "Nat Sothanaphan — 11:55 on 18 Dec 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2246",
+      "text": "FWIW, the statement is formalised correctly. Taken literally, it reads: there exists a sequence $(b_n)_{n\\in\\mathbb{N}_0}$ taking values in $\\{1,2,3,4,5\\}$ for all $n\\in\\mathbb{N}_0$ and a number $q\\in\\mathbb{Q}$ s.t. $\\sum_{k\\in\\mathbb{N}_0}\\frac{1}{2^{k+1}+b_{k+1}}=q$, i.e. so that the sum is rational. The prime notation on $\\Sigma'$ in Lean 4 is necessary for denoting an infinite sum. Since the summand here is defined for all $k\\in\\mathbb{N}_0$, it gives what you intend it to be. Should one want a more human-readable translation of Aristotle's formalisation, see here.",
+      "meta": "Kevin Barreto — 13:38 on 18 Dec 2025 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2247",
+      "text": "Nice, this looks like something that even I can read :-) and it compiles in a few seconds!",
+      "meta": "Vjeko_Kovac — 14:01 on 18 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2254",
+      "text": "Regarding using an LLM to translate back from Lean to English (\"de-formalize\"): in my experience looking at a bunch of misformalized statements, ChatGPT Pro was able to identify approximately half of the misformalizations. So perhaps there is still noticeable risk in that regard. However, if you present an LLM with a misformalized statement AND a proof that \"cheats\" by taking advantage of the misformalization, I have found a very high success rate with the LLM catching that. The remaining case would be a misformalized statement but with a \"proper\" proof (for the \"real\" statement). I'd guess that the LLM would be more likely to miss the misformalization there, because it's accompanied by a proof that doesn't \"cheat\", but I haven't actually tried this configuration because it hasn't come up.",
+      "meta": "BorisAlexeev — 16:10 on 18 Dec 2025 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2256",
+      "text": "Thanks! This is useful information. We can think about how an LLM \"thinks\" in this case. If the proof cheats, it's easy to spot the pattern. But a human will likely spot it too. But I think there's a real risk of a proof which looks morally right but fails in subtle ways - and the misformalization happens to allow that to pass. In that case a human will probably fail to spot it. And from your comment, an LLM might probably fail to spot it too.",
+      "meta": "Nat Sothanaphan — 16:27 on 18 Dec 2025 👍 2 📝 0 🤖 0"
+    }
+  ]
+}

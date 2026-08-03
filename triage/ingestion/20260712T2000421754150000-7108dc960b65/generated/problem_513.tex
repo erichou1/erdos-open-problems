@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#513}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} analysis
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $f=\sum_{n=0}^\infty a_nz^n$ be a transcendental entire function. What is the greatest possible value of\[\liminf_{r\to \infty} \frac{\max_n\lvert a_nr^n\rvert}{\max_{\lvert z\rvert=r}\lvert f(z)\rvert}?\]
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Let $B$ be the supremum of all such values. 
+
+It is trivial that $B\in [1/2,1]$. K\"{o}v\'{a}ri (unpublished) observed that it must be $>1/2$. Gray and Shah \cite{GrSh63} give an argument of Clunie which shows $B\leq 2/\pi$. Clunie and Hayman \cite{ClHa64} improved both bounds to\[4/7< B \leq 2/\pi-c\]for some absolute constant $c>0$. He and Tang \cite{HeTa26} have improved the lower bound to\[B> 0.5850724\](note that $4/7\approx 0.57143$). This was further improved slightly to $0.5850788$ by GPT (as prompted by Sothanaphan). Note that $2/\pi \approx 0.63662$.
+
+See also [227].
+
+\bigskip
+\noindent\textbf{References:}
+
+[ClHa64] Clunie, J. and Hayman, W. K., The maximum term of a power series. J. Analyse Math. (1964), 143-186.
+ 
+ [GrSh63] Gray, Alfred and Shah, S. M., A note on entire functions and a conjecture of Erd\H{o}s. Bull. Amer. Math. Soc. (1963), 573-577.
+ 
+ [HeTa26] Y. He and Q. Tang, Generalizing the Clunie--Hayman construction in an Erd\H{o}s maximum-term problem. arXiv:2602.12217 (2026).
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/513}}
+\end{document}

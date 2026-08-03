@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 87,
+  "raw_page": {
+    "path": "raw/pages/problem_87.html",
+    "sha256": "55dae711c896339ab12ac2ff5ef888ee7d30d5ba6fd3a0a135e50813de4e697d"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "79a1a1f2bcd039280bf167eb8cbd44fa2ab73d8c821f4814c1d16daf1214b4cb",
+      "source_region": "div.problem-additional-text",
+      "text": "[FaMc93] Faudree, R. J. and McKay, B., A conjecture of Erd\\H{o}s and the Ramsey number $r(W_6)$. J. Combinatorial Math. and Combinatorial Computing (1993), 23-31."
+    },
+    "remarks": {
+      "sha256": "40c155442852a30af9b10a41c7a1c96077922f3b192ff37baa3e8c2c34ba40cd",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s originally conjectured that $R(G)\\geq R(k)$, which is trivial for $k=3$, but fails already for $k=4$, as Faudree and McKay \\cite{FaMc93} showed that $R(W)=17$ for the pentagonal wheel $W$.\n\nSince $R(k)\\leq 4^k$ this is trivial for $\\epsilon\\geq 3/4$. Yuval Wigderson points out that $R(G)\\gg 2^{k/2}$ for any $G$ with chromatic number $k$ (via a random colouring), which asymptotically matches the best-known lower bounds for $R(k)$.\n\nThis problem is #12 and #13 in Ramsey Theory in the graphs problem collection."
+    },
+    "statement": {
+      "sha256": "37fabc297329cfcc536e97f63d28102383e728a876dc73d882bfacd59666da79",
+      "source_region": "div#content",
+      "text": "Let $\\epsilon >0$. Is it true that, if $k$ is sufficiently large, then\\[R(G)>(1-\\epsilon)^kR(k)\\]for every graph $G$ with chromatic number $\\chi(G)=k$? \n\nEven stronger, is there some $c>0$ such that, for all large $k$, $R(G)>cR(k)$ for every graph $G$ with chromatic number $\\chi(G)=k$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/87"
+}

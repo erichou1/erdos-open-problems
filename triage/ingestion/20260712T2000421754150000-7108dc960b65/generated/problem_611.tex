@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#611}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+For a graph $G$ let $\tau(G)$ denote the minimal number of vertices that include at least one from each maximal clique of $G$ (sometimes called the clique transversal number).
+
+Is it true that if all maximal cliques in $G$ have at least $cn$ vertices then $\tau(G)=o_c(n)$?
+
+Similarly, estimate for $c>0$ the minimal $k_c(n)$ such that if every maximal clique in $G$ has at least $k_c(n)$ vertices then $\tau(G)<(1-c)n$.
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+A problem of Erd\H{o}s, Gallai, and Tuza \cite{EGT92}, who proved for the latter question that $k_c(n) \geq n^{c'/\log\log n}$ for some $c'>0$, and that if every clique has size least $k$ then $\tau(G) \leq n-(kn)^{1/2}$. Bollob\'{a}s and Erd\H{o}s proved that if every maximal clique has at least $n+3-2\sqrt{n}$ vertices then $\tau(G)=1$ (and this threshold is best possible).
+
+See also [610] and the entry in the graphs problem collection.
+
+\bigskip
+\noindent\textbf{References:}
+
+[EGT92] Erd\H{o}s, Paul and Gallai, Tibor and Tuza, Zsolt, Covering the cliques of a graph with vertices. Discrete Math. (1992), 279-289.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/611}}
+\end{document}

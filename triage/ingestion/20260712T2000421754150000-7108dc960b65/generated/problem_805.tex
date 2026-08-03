@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#805}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+For which functions $g(n)$ with $n>g(n)\geq (\log n)^2$ is there a graph on $n$ vertices in which every induced subgraph on $g(n)$ vertices contains a clique of size $\geq \log n$ and an independent set of size $\geq \log n$?
+
+In particular, is there such a graph for $g(n)=(\log n)^3$?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+A problem of Erd\H{o}s and Hajnal, who thought that there is no such graph for $g(n)=(\log n)^3$. Alon and Sudakov \cite{AlSu07} proved that there is no such graph with\[g(n)=\frac{c}{\log\log n}(\log n)^3\]for some constant $c>0$.
+
+Alon, Buci\'{c}, and Sudakov \cite{ABS21} construct such a graph with\[g(n)\leq 2^{2^{(\log\log n)^{1/2+o(1)}}}.\]See also [804].
+
+\bigskip
+\noindent\textbf{References:}
+
+[ABS21] Alon, Noga and Buci\'c, Matija and Sudakov, Benny, Large cliques and independent sets all over the place. Proc. Amer. Math. Soc. (2021), 3145-3157.
+ 
+ [AlSu07] Alon, Noga and Sudakov, Benny, On graphs with subgraphs having large independence numbers. J. Graph Theory (2007), 149-157.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/805}}
+\end{document}

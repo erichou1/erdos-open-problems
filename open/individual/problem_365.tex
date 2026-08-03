@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#365}
+\date{Last updated: 2025-09-20}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Do all pairs of consecutive powerful numbers $n$ and $n+1$ come from solutions to Pell equations ? In other words, must either $n$ or $n+1$ be a square? Is the number of such $n\leq x$ bounded by $(\log x)^{O(1)}$?
+
+
+
+
+Erd\H{o}s originally asked Mahler whether there are infinitely many pairs of consecutive powerful numbers, but Mahler immediately observed that the answer is yes from the infinitely many solutions to the Pell equation $x^2=2^3y^2+1$. The list of $n$ such that $n$ and $n+1$ are both powerful is A060355 in the OEIS. The answer to the first question is no: Golomb \cite{Go70} observed that both $12167=23^3$ and $12168=2^33^213^2$ are powerful. Walker \cite{Wa76} proved that the equation\[7^3x^2=3^3y^2+1\]has infinitely many solutions, giving infinitely many counterexamples. See also [364] . This is discussed in problem B16 of Guy's collection \cite{Gu04}.
+
+
+
+
+References
+
+[Go70] Golomb, S. W., Powerful numbers . Amer. Math. Monthly (1970), 848-855.
+
+[Gu04] Guy, Richard K., Unsolved problems in number theory . (2004), xviii+437.
+
+[Wa76] Walker, David T., Consecutive integer pairs of powerful numbers and related Diophantine equations . Fibonacci Quart. (1976), 111-116.
+
+\noindent\textbf{Related OEIS sequences:} A060355, A060859, A175155
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/365}}
+\end{document}

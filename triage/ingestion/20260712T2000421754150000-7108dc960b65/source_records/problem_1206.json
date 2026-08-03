@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1206,
+  "raw_page": {
+    "path": "raw/pages/problem_1206.html",
+    "sha256": "7f1628cebc2adde5d6dfa3f1ff491ed02b36e270072310003d68eed2d99d9c74"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "a57054cecd220c69ccdcc73d25d25f7ddfa7a037b07760431d246c281d45998b",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er80] Erd\\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.\n \n [GGK26] M. Garaev, F. Garayev, and S. Konyagin, On Sidon sets with squares, cubes, and quartics in short intervals. arXiv:2602.08807 (2026).\n \n [GaKo24] Gabdullin, M. R. and Konyagin, S. V., Trigonometric polynomials with frequencies in the set of\ncubes. Math. Notes (2024), 336--340."
+    },
+    "remarks": {
+      "sha256": "b5ebc5817a8cfd000b9d3ea2c1cd1167edea88b7f39cd375d5a6f03e9b8287c7",
+      "source_region": "div.problem-additional-text",
+      "text": "This question may also be asked for higher powers, and [324] suggests that for fifth powers $\\{n^5 :n\\geq 1\\}$ may itself be a Sidon set.\n\nGabdullin and Konyagin \\cite{GaKo24} proved that there is a constant $c>0$ such that $\\{ n^3 : N-cN^{1/2}\\leq n\\leq N\\}$ is a Sidon set. Garaev, Garayev, and Konyagin \\cite{GGK26} have proved that the exponent $1/2$ can be improved to $4/7-o(1)$ for infinitely many $N$, and to $3/5$ for all $N$ if we replace $n^3$ with $n^4$.\n\nIn \\cite{Er80} Erd\\H{o}s defines $g_k(A)$ to be the maximal size of a Sidon set of $\\{a^k : a\\in A\\}$, and asks whether $g_k(A)\\geq g_k(\\{1,\\ldots,N\\})$ where $N=\\lvert A\\rvert$. (See [530] for the linear analogue.)\n\nSee also [773] for an analogous question about squares."
+    },
+    "statement": {
+      "sha256": "d773c5969bd7f17325dfd8b71efeff3f93399cf194f125d01c36d87d01ee59b1",
+      "source_region": "div#content",
+      "text": "Does $\\{1,2^3,\\ldots,N^3\\}$ contain a Sidon set of size $\\gg N$?\n\nIs there an infinite set $A\\subset \\mathbb{N}$ of positive density such that $\\{a^3 : a\\in A\\}$ is a Sidon set?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1206"
+}

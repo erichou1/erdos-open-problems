@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 654,
+  "raw_page": {
+    "path": "raw/pages/problem_654.html",
+    "sha256": "71938c2be7dab9394705947b1dbdb2c9d5eabce37899c95979276294c0c2e4a3"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "fcb3cb599e1ee2452e4d7a80e2f07985533f29a1c3760cf665dcd3badd1d28d2",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er87b] Erd\\H{o}s, P., Some combinatorial and metric problems in geometry. Intuitive geometry (Si\\'{o}fok, 1985) (1987), 167-177.\n \n [Er97e] Erd\\H{o}s, Paul, Some of my favourite unsolved problems. Math. Japon. (1997), 527-537.\n \n [ErPa90] Erd\\H{o}s, P. and Pach, J., Variations on the theme of repeated distances. Combinatorica (1990), 261--269.\n \n [Fe26] T. Feng et al, Semi-Autonomous Mathematics Discovery with Gemini: A Case Study on the Erd\\H{o}s Problems. arXiv:2601.22401 (2026)."
+    },
+    "remarks": {
+      "sha256": "ad716d87ca208a5c46406612a12b355d9e346ad7c606a6adc0eda8bbfd1384dc",
+      "source_region": "div.problem-additional-text",
+      "text": "It is trivial that $f(n) \\geq (n-1)/3$. In \\cite{Er97e} Erd\\H{o}s asks whether $f(n)>(1-o(1))n$, but says this is 'perhaps too optimistic but I am sure that [the trivial bound] can be significantly improved'.\n\nIn \\cite{Er87b} and \\cite{ErPa90} Erd\\H{o}s and Pach ask this under the additional assumption that there are no three points on a line (so that the points are in general position), although they only ask the weaker question whether there is a lower bound of the shape $(\\tfrac{1}{3}+c)n$ for some constant $c>0$.\n\nThey suggest the lower bound $(1-o(1))n$ is true under the assumption that any circle around a point $x_i$ contains at most $2$ other $x_j$.\n\nThe strongest form of this conjecture was disproved by Aletheia \\cite{Fe26}, which constructed a set of $n$ points in $\\mathbb{R}^2$, no four on a circle, such that there are at most $\\frac{3}{4}n$ distinct distances from any single point (although this construction has all the points on the union of two lines, so does not help with the stronger version with the points in general position)."
+    },
+    "statement": {
+      "sha256": "a2bead0d857b160c49532197e9637dbcd2b3eb6cf9638fbd5df1bbc871efaca9",
+      "source_region": "div#content",
+      "text": "Let $f(n)$ be such that, given any $x_1,\\ldots,x_n\\in \\mathbb{R}^2$ with no four points on a circle, there exists some $x_i$ with at least $f(n)$ many distinct distances to other $x_j$. Estimate $f(n)$ - in particular, is it true that\\[f(n)>(1-o(1))n?\\]Or at least\\[f(n) > (1/3+c)n\\]for some $c>0$, for all large $n$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/654"
+}

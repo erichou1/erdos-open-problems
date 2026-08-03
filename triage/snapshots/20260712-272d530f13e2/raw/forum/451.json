@@ -1,0 +1,40 @@
+{
+  "problem_number": 451,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/451",
+  "retrieved_at": "2026-07-10T23:17:13.678503+00:00",
+  "page_title": "451 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "1d83f52804cda103b69a4e2145e2da206f0de2897ac5c24c1ce57266819eee99",
+  "comment_count": 6,
+  "comments": [
+    {
+      "post_id": "7062",
+      "text": "Quanyu Tang and I have just uploaded our paper Consecutive integers free of certain prime factors to the arXiv. This paper is a human-written version of the AI-generated paper that Quanyu shared here in the comment section two months ago. With $\\theta = \\frac{21}{40}$ we prove that for all large enough $k$ and all $n$ with $$2k < n \\le \\exp\\left(\\frac{\\log^2 k}{20 \\log \\log k}\\right), \\qquad (1)$$there must be a prime $p \\in (k, k + 3k^{\\theta})$ that divides the product $P := (n-k)\\cdots(n-1)$. In particular, we have the lower bound $$n_k > \\exp\\left(\\frac{\\log^2 k}{20 \\log \\log k}\\right) \\qquad (2)$$for all large enough $k$, showing that $n_k$ indeed grows faster than any polynomial. A corresponding Lean formalization can be found here, which, apart from a result by Baker-Harman-Pintz stating that the number of primes in $I := (k, k + k^{\\theta})$ is $\\gg \\frac{k^{\\theta}}{\\log k}$, is completely self-contained. For a very high-level overview of the proof: it is based on a theorem by Konyagin from his paper Estimates of the least prime factor of a binomial coefficient in which he gives the best known lower bound for #1095. Given a smooth function $f(x)$, Konyagin's theorem gives a beautifully general upper bound on the number of integers $m$ for which $f(m)$ is close to a rational number with small denominator. The crux (i.e. the reason that such a theorem is relevant) is that if the product $P$ is not divisible by a prime $p \\in I$, then $n \\bmod{p}$ must be close to $p$, so that the fraction $\\frac{n}{p}$ must be close to an integer. Applying Konyagin's upper bound to the function $f(x) := \\frac{n}{x}$ (for an $n$ for which $(1)$ above holds) and combining it with a lower bound on the number of primes in $I$, shows that there must be a prime $p \\in I$ for which $f(p)$ is not close to an integer, which implies that $p$ divides $P$. ChatGPT of course deserves credit for $(2)$, although I must admit that I have barely looked at the write-up it produced. Once it was realized that this problem is quite similar to #1095 (and I suggest that these problems should link to one another), and that Konyagin's ideas can also be applied here, that was sufficient to start writing the paper Quanyu and I just uploaded. (The site has been updated to address this comment.)",
+      "meta": "Woett — 01:31 on 19 Jun 2026 👍 1 📝 2 🤖 0"
+    },
+    {
+      "post_id": "7077",
+      "text": "Congrats and thanks for the subsequent work which makes us confident in the result!",
+      "meta": "Nat Sothanaphan — 15:23 on 19 Jun 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5916",
+      "text": "After iterating GPT-5.5 Pro more than a dozen times, it produced a note claiming a good lower bound for \\(n_k\\). More precisely, the draft claims to prove that there exists an absolute constant \\(c>0\\) such that, for all sufficiently large \\(k\\),\\[n_k>\\exp\\left(c\\frac{(\\log k)^2}{\\log\\log k}\\right).\\]In particular, this would imply Erdős's conjecture that $n_k>k^d$ for all constant \\(d\\). The draft has passed several AI-based checks, but I do not have time to manually verify every detail of the proof carefully. Therefore I am posting it here, and I would be very grateful for any comments, corrections, or independent checks. The PDF is available here: pdfhere. The tex source is available here: texhere.",
+      "meta": "Quanyu Tang — 17:10 on 26 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5932",
+      "text": "Congrats! Standard check found no issues.",
+      "meta": "Nat Sothanaphan — 13:26 on 27 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1658",
+      "text": "A386620 is now published (The site has been updated to address this comment.)",
+      "meta": "Giorgos Kalogeropoulos — 23:28 on 02 Nov 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "847",
+      "text": "Here is a heuristic proof of this Problem. Let\\[ \\mathcal P_k=\\{p:\\ p\\ \\text{prime},\\ k<p<2k\\},\\qquad M_k=\\prod_{p\\in\\mathcal P_k}p. \\]The condition that the whole block $[n-k,n-1]$ contains no multiple of any $p\\in\\mathcal P_k$ is equivalent to saying that the $k$ integers $n-1,\\dots,n-k$ are all coprime to $M_k$. For a fixed $p\\in\\mathcal P_k$, the interval $[n-k,n-1]$ contains a multiple of $p$ iff\\[ n\\equiv 1,2,\\dots,k\\pmod p. \\]Thus the allowed residues mod $p$ are exactly the $p-k$ classes $\\{0,k+1,\\dots,p-1\\}$. By the Chinese Remainder Theorem, the number of allowed residue classes mod $M_k$ is\\[ A_k=\\prod_{p\\in\\mathcal P_k}(p-k), \\]so the exact density of admissible $n$ is\\[ D_k \\ :=\\ \\frac{A_k}{M_k} \\ =\\ \\prod_{\\substack{k<p<2k\\\\ p\\ \\mathrm{prime}}} \\left(1-\\frac{k}{p}\\right). \\]Using summation over primes and the prime number theorem one obtains the asymptotic\\[ \\log\\frac{1}{D_k}=(\\log 4+o(1))\\,\\frac{k}{\\log k}. \\]Numerically (for $1\\le k\\le 50$), $\\log n_k$ grows on the $\\frac{k}{\\log k}$ scale and closely tracks $(\\log 4)\\frac{k}{\\log k}$; in this range we in fact observe\\[ \\log n_k \\ \\le\\ (\\log 4)\\,\\frac{k}{\\log k}, \\]while we cannot replace $\\log 4$ by $\\log 3$. Heuristically one expects $n_k\\asymp D_k^{-1}$; making this rigorous appears to be the remaining difficulty. Details of the proofs and numerical evidence can be found on my GitHub page here.",
+      "meta": "Quanyu Tang — 11:31 on 02 Oct 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

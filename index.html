@@ -1,0 +1,533 @@
+<!doctype html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Erdős × ChatGPT — Open Problem Attempts</title>
+<meta name="description" content="An automated, transparent log of large-language-model attempts at every open Erdős problem. Verdicts, completeness scores, and full reasoning transcripts.">
+<meta property="og:title" content="Erdős × ChatGPT — Open Problem Attempts">
+<meta property="og:description" content="Automated LLM attempts at every open Erdős problem, with completeness scores and full transcripts.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20viewBox='0%200%20100%20100'%3E%3Ctext%20y='.9em'%20font-size='90'%20fill='%232f6df6'%3E%E2%88%91%3C/text%3E%3C/svg%3E">
+<style>
+  :root {
+    --bg: #f6f7fb; --panel: #ffffff; --panel-2: #f1f3f9; --line: #e4e7f0;
+    --ink: #161a26; --muted: #646b80; --faint: #9aa1b4;
+    --accent: #2f6df6; --accent-ink: #ffffff;
+    --green: #128a4b; --green-bg: #d8f6e4; --amber: #9a6500; --amber-bg: #fdf0d6;
+    --low: #7a8194; --low-bg: #eceef4;
+    --red: #c1121f; --shadow: 0 1px 2px rgba(20,26,46,.06), 0 6px 24px rgba(20,26,46,.06);
+    --radius: 14px;
+  }
+  html[data-theme="dark"] {
+    --bg: #0c0e14; --panel: #14171f; --panel-2: #1b1f2a; --line: #262b38;
+    --ink: #eef1f8; --muted: #9aa2b6; --faint: #6b7488;
+    --accent: #5b8bff; --accent-ink: #0c0e14;
+    --green: #34d27e; --green-bg: #11331f; --amber: #f0b65a; --amber-bg: #3a2e12;
+    --low: #8b93a6; --low-bg: #20242f;
+    --red: #ff6b6b; --shadow: 0 1px 2px rgba(0,0,0,.4), 0 10px 30px rgba(0,0,0,.35);
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Inter,
+                 Helvetica, Arial, sans-serif;
+    background: var(--bg); color: var(--ink); line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 1.25rem 4rem; }
+
+  /* Header */
+  header.top {
+    position: sticky; top: 0; z-index: 20; backdrop-filter: saturate(180%) blur(10px);
+    background: color-mix(in srgb, var(--bg) 82%, transparent);
+    border-bottom: 1px solid var(--line);
+  }
+  .top .row { max-width: 1180px; margin: 0 auto; padding: .7rem 1.25rem;
+    display: flex; align-items: center; gap: .9rem; }
+  .brand { display: flex; align-items: center; gap: .6rem; font-weight: 700;
+    letter-spacing: -.01em; font-size: 1.02rem; }
+  .brand .sigma { display: inline-grid; place-items: center; width: 30px; height: 30px;
+    border-radius: 9px; background: var(--ink); color: var(--bg); font-size: 1.1rem;
+    font-weight: 800; }
+  .brand small { display: block; font-weight: 500; color: var(--muted); font-size: .72rem;
+    letter-spacing: .02em; }
+  .spacer { flex: 1; }
+  .ghost { font: inherit; font-size: .85rem; padding: .42rem .7rem; border-radius: 9px;
+    border: 1px solid var(--line); background: var(--panel); color: var(--ink);
+    cursor: pointer; display: inline-flex; align-items: center; gap: .4rem; }
+  .ghost:hover { border-color: var(--accent); }
+  .ghost.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+
+  /* Hero */
+  .hero { padding: 2.4rem 0 1.4rem; }
+  .hero h1 { margin: 0 0 .5rem; font-size: clamp(1.6rem, 3.6vw, 2.4rem);
+    letter-spacing: -.02em; line-height: 1.12; }
+  .hero p { margin: 0; max-width: 46rem; color: var(--muted); font-size: 1.02rem; }
+  .hero .meta { margin-top: .9rem; font-size: .82rem; color: var(--faint);
+    display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; }
+  .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--green);
+    display: inline-block; box-shadow: 0 0 0 3px var(--green-bg); }
+
+  /* Stats */
+  .stats { display: grid; gap: .85rem; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    margin: 1.2rem 0 1.6rem; }
+  .stat { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 1rem 1.1rem; box-shadow: var(--shadow); }
+  .stat .k { font-size: .76rem; color: var(--muted); text-transform: uppercase;
+    letter-spacing: .06em; font-weight: 600; }
+  .stat .v { font-size: 1.85rem; font-weight: 750; letter-spacing: -.02em; margin-top: .15rem;
+    font-variant-numeric: tabular-nums; }
+  .stat .sub { font-size: .78rem; color: var(--faint); }
+  .stat .track { height: 6px; border-radius: 6px; background: var(--panel-2); margin-top: .6rem;
+    overflow: hidden; }
+  .stat .fill { height: 100%; border-radius: 6px; background: var(--accent); }
+  .stat.good .fill { background: var(--green); }
+  .stat.pending .fill { background: var(--low); }
+
+  /* Controls */
+  .controls { display: flex; gap: .6rem; flex-wrap: wrap; align-items: center;
+    margin-bottom: 1rem; position: sticky; top: 52px; z-index: 10;
+    padding: .65rem; background: var(--panel); border: 1px solid var(--line);
+    border-radius: var(--radius); box-shadow: var(--shadow); }
+  .search { flex: 1 1 200px; min-width: 160px; display: flex; align-items: center; gap: .45rem;
+    background: var(--panel-2); border: 1px solid transparent; border-radius: 10px; padding: .1rem .6rem; }
+  .search:focus-within { border-color: var(--accent); }
+  .search input { border: 0; background: transparent; font: inherit; color: var(--ink);
+    padding: .42rem 0; width: 100%; outline: none; }
+  .segmented { display: inline-flex; background: var(--panel-2); border-radius: 10px; padding: 3px; flex-wrap: wrap; }
+  .segmented button { font: inherit; font-size: .85rem; border: 0; background: transparent;
+    color: var(--muted); padding: .36rem .7rem; border-radius: 8px; cursor: pointer; white-space: nowrap; }
+  .segmented button[aria-pressed="true"] { background: var(--panel); color: var(--ink);
+    box-shadow: var(--shadow); font-weight: 600; }
+  select.sort { font: inherit; font-size: .85rem; padding: .42rem .6rem; border-radius: 10px;
+    border: 1px solid var(--line); background: var(--panel-2); color: var(--ink); cursor: pointer; }
+  #sync { margin-left: auto; }
+  #syncMsg { font-size: .78rem; color: var(--muted); }
+  #syncMsg.ok { color: var(--green); } #syncMsg.warn { color: var(--amber); } #syncMsg.err { color: var(--red); }
+
+  /* Table */
+  .panel { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+    box-shadow: var(--shadow); }
+  /* No overflow here: an overflow container would capture the sticky <thead>
+     and detach it from the page scroll. The page scrolls horizontally on very
+     narrow screens instead, which keeps the sticky header aligned. */
+  .scroll { overflow: visible; }
+  table { border-collapse: separate; border-spacing: 0; width: 100%; font-size: .9rem; min-width: 820px; }
+  thead th { position: sticky; top: 116px; background: var(--panel-2); color: var(--muted);
+    text-align: left; font-weight: 600; font-size: .76rem; letter-spacing: .04em; text-transform: uppercase;
+    padding: .6rem .8rem; border-bottom: 1px solid var(--line); z-index: 5; white-space: nowrap; }
+  thead th:first-child { border-top-left-radius: var(--radius); }
+  thead th:last-child { border-top-right-radius: var(--radius); }
+  thead th.c { text-align: center; }
+  tbody td { padding: .5rem .8rem; border-bottom: 1px solid var(--line); vertical-align: middle; }
+  tbody tr:last-child td { border-bottom: 0; }
+  tbody tr:last-child td:first-child { border-bottom-left-radius: var(--radius); }
+  tbody tr:last-child td:last-child { border-bottom-right-radius: var(--radius); }
+  tbody tr:hover td { background: color-mix(in srgb, var(--accent) 5%, transparent); }
+  tr.pending td { color: var(--faint); }
+  tr.pending { background: repeating-linear-gradient(135deg, transparent, transparent 9px,
+    color-mix(in srgb, var(--low) 6%, transparent) 9px, color-mix(in srgb, var(--low) 6%, transparent) 10px); }
+  .pn { font-weight: 700; font-variant-numeric: tabular-nums; }
+  .pn a { color: var(--ink); }
+  tr.pending .pn a { color: var(--muted); }
+  .pn a:hover { color: var(--accent); }
+  .badge { display: inline-block; font-size: .72rem; font-weight: 700; padding: .14rem .5rem;
+    border-radius: 999px; letter-spacing: .01em; }
+  .badge.pending { color: var(--low); background: var(--low-bg); }
+  .comp { display: flex; align-items: center; gap: .55rem; min-width: 140px; }
+  .comp .bar { flex: 1; height: 7px; border-radius: 6px; background: var(--panel-2); overflow: hidden; }
+  .comp .bar i { display: block; height: 100%; border-radius: 6px; background: var(--amber); }
+  .comp.green .bar i { background: var(--green); }
+  .comp .pct { font-variant-numeric: tabular-nums; font-weight: 650; width: 2.6rem; text-align: right;
+    font-size: .85rem; }
+  td.c { text-align: center; }
+  .muted { color: var(--faint); }
+  .sol { font-size: .82rem; display: inline-flex; align-items: center; gap: .3rem; white-space: nowrap; }
+  td.chk input { width: 1.05rem; height: 1.05rem; cursor: pointer; accent-color: var(--accent); }
+
+  /* Verdict dropdown */
+  select.verdict { font: inherit; font-size: .8rem; font-weight: 700; padding: .22rem 1.4rem .22rem .55rem;
+    border-radius: 999px; border: 1px solid transparent; cursor: pointer; appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='3'%3E%3Cpath d='M6 9l6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right .45rem center; }
+  select.verdict.v-High   { color: var(--green); background-color: var(--green-bg); }
+  select.verdict.v-Medium { color: var(--amber); background-color: var(--amber-bg); }
+  select.verdict.v-Low    { color: var(--low);   background-color: var(--low-bg); }
+  select.verdict option { color: var(--ink); background: var(--panel); font-weight: 600; }
+
+  /* Notes */
+  input.notes { font: inherit; font-size: .82rem; width: 100%; min-width: 120px;
+    padding: .32rem .5rem; border-radius: 8px; border: 1px solid var(--line);
+    background: var(--panel-2); color: var(--ink); }
+  input.notes:focus { outline: none; border-color: var(--accent); background: var(--panel); }
+  input.notes::placeholder { color: var(--faint); }
+
+  .state { padding: 3rem 1rem; text-align: center; color: var(--muted); }
+  .spin { width: 26px; height: 26px; border: 3px solid var(--line); border-top-color: var(--accent);
+    border-radius: 50%; animation: sp 1s linear infinite; margin: 0 auto .8rem; }
+  @keyframes sp { to { transform: rotate(360deg); } }
+
+  footer { margin-top: 2rem; color: var(--muted); font-size: .85rem; }
+  footer .card { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 1.1rem 1.2rem; box-shadow: var(--shadow); }
+  footer code { background: var(--panel-2); padding: .08rem .35rem; border-radius: 5px; font-size: .85em; }
+  .hide { display: none !important; }
+</style>
+</head>
+<body>
+<header class="top">
+  <div class="row">
+    <div class="brand">
+      <span class="sigma">∑</span>
+      <span>Erdős × ChatGPT
+        <small>automated open-problem attempts</small></span>
+    </div>
+    <span class="spacer"></span>
+    <a class="ghost" id="repoLink" href="#" target="_blank" rel="noopener" title="Source repository">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8a8 8 0 0 0 5.47 7.59c.4.07.55-.17.55-.38l-.01-1.49c-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.5 7.5 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48l-.01 2.2c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8Z"/></svg>
+      <span class="col-opt">GitHub</span>
+    </a>
+    <button class="ghost" id="themeBtn" title="Toggle theme" aria-label="Toggle theme">◐</button>
+  </div>
+</header>
+
+<div class="wrap">
+  <section class="hero">
+    <h1>Every open Erdős problem, handed to a frontier model.</h1>
+    <p>A transparent, automated log of large-language-model attempts at the open
+       problems on <a href="https://www.erdosproblems.com" target="_blank" rel="noopener">erdosproblems.com</a>.
+       Each entry shows a <strong>completeness score</strong> — how much of the
+       argument the model actually established, not how confident it sounds — and
+       links to the full reasoning transcript. Problems not yet attempted are
+       listed too, so you can see what's left.</p>
+    <div class="meta">
+      <span><span class="dot"></span> Live feed</span>
+      <span id="updated">updating…</span>
+      <span id="repoMeta"></span>
+    </div>
+  </section>
+
+  <section class="stats" id="stats"><!-- filled by JS --></section>
+
+  <div class="controls">
+    <label class="search">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <input id="search" type="search" placeholder="Search problem #…" autocomplete="off">
+    </label>
+    <div class="segmented" id="filter" role="group" aria-label="Filter">
+      <button data-f="all" aria-pressed="true">All</button>
+      <button data-f="run" aria-pressed="false">Run</button>
+      <button data-f="pending" aria-pressed="false">Pending</button>
+      <button data-f="high" aria-pressed="false">High</button>
+      <button data-f="green" aria-pressed="false">≥60%</button>
+    </div>
+    <select class="sort" id="sort" aria-label="Sort">
+      <option value="num-asc">Problem # ↑</option>
+      <option value="num-desc">Problem # ↓</option>
+      <option value="comp-desc">Completeness ↓</option>
+      <option value="comp-asc">Completeness ↑</option>
+    </select>
+    <button class="ghost primary" id="sync" title="Sync your marks to GitHub">Connect GitHub</button>
+    <span id="syncMsg"></span>
+  </div>
+
+  <div class="panel">
+    <div class="scroll">
+      <table id="t" class="hide">
+        <thead>
+          <tr>
+            <th>Problem</th>
+            <th>Verdict</th>
+            <th>Completeness</th>
+            <th>Solution</th>
+            <th class="c">Checked</th>
+            <th class="c">Fable</th>
+            <th class="c">Works</th>
+            <th>Notes</th>
+          </tr>
+        </thead>
+        <tbody id="rows"></tbody>
+      </table>
+    </div>
+    <div class="state" id="state"><div class="spin"></div>Loading attempts…</div>
+  </div>
+
+  <footer>
+    <div class="card">
+      <strong>How this works.</strong> Problems are investigated under an offline,
+      statement-locked research workflow with independent exploration and layered
+      adversarial review. The <em>completeness score</em> measures how much of the
+      argument was rigorously established. <strong>These are machine attempts, not
+      peer-reviewed proofs</strong> — even <code>candidate-proved</code> is not a
+      solved claim. Only the separate verification gate may promote a result. The
+      <b>Verdict</b> dropdown is a human likelihood rating
+      (High / Medium / Low); tick <b>Checked</b> once a person has read it,
+      <b>Fable</b> once it's been formalised in Fable, and <b>Works</b> if it holds
+      up — and leave <b>Notes</b>. These sync to the repo for everyone when you
+      <strong>Connect GitHub</strong> (a fine-grained token with
+      <em>Contents: Read &amp; write</em> on this repo only; stored only in your
+      browser, never committed). Without a token they persist locally.
+    </div>
+  </footer>
+</div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const LS_MARKS = "erdos_marks_v3";
+const LS_TOKEN = "erdos_gh_token_v1";
+const LS_THEME = "erdos_theme";
+const VERDICTS = ["High", "Medium", "Low"];
+
+let DATA = null;            // data.json
+let MARKS = loadLocalMarks();
+let CFG = { repo: "erichou1/erdos-open-problems", branch: "main" };
+
+/* ---------- theme ---------- */
+(function initTheme() {
+  const saved = localStorage.getItem(LS_THEME)
+    || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light");
+  document.documentElement.dataset.theme = saved;
+})();
+$("#themeBtn").addEventListener("click", () => {
+  const next = document.documentElement.dataset.theme === "dark" ? "light" : "dark";
+  document.documentElement.dataset.theme = next;
+  localStorage.setItem(LS_THEME, next);
+});
+
+/* ---------- marks storage ---------- */
+function loadLocalMarks() {
+  try { return JSON.parse(localStorage.getItem(LS_MARKS)) || {}; }
+  catch (e) { return {}; }
+}
+function saveLocalMarks() { localStorage.setItem(LS_MARKS, JSON.stringify(MARKS)); }
+
+// The effective verdict for a problem: explicit human review wins. Every
+// machine-only candidate defaults to Low, regardless of its self-reported label.
+function effVerdict(p) {
+  const m = MARKS[p.n];
+  if (m && m.verdict) return m.verdict;
+  if (!p.run) return null;
+  return p.status === "solved" ? "High" : "Low";
+}
+
+/* ---------- load feed ---------- */
+async function boot() {
+  try {
+    const res = await fetch("data.json", { cache: "no-store" });
+    if (!res.ok) throw new Error("HTTP " + res.status);
+    DATA = await res.json();
+  } catch (e) {
+    $("#state").innerHTML =
+      "Could not load <code>data.json</code>. If you opened this file directly, "
+      + "view it through the deployed site instead.<br><small>" + e + "</small>";
+    return;
+  }
+  CFG.repo = DATA.repo || CFG.repo;
+  CFG.branch = DATA.branch || CFG.branch;
+  $("#repoLink").href = "https://github.com/" + CFG.repo;
+  $("#repoMeta").textContent = CFG.repo;
+  if (DATA.generated) {
+    const d = new Date(DATA.generated);
+    $("#updated").textContent = "Updated " + d.toLocaleDateString(undefined,
+      { year: "numeric", month: "short", day: "numeric" });
+  }
+  renderStats();
+  // Pull the freshest committed marks (served alongside the site).
+  try {
+    const r = await fetch("status_state.json", { cache: "no-store" });
+    if (r.ok) { MARKS = Object.assign({}, await r.json(), loadLocalMarks()); }
+  } catch (e) { /* keep local */ }
+  render();
+  $("#t").classList.remove("hide");
+  $("#state").classList.add("hide");
+}
+
+function renderStats() {
+  const t = DATA.totals, g = DATA.green_threshold;
+  const pct = (a, b) => b ? Math.round(100 * a / b) : 0;
+  const pending = t.pending != null ? t.pending : (t.total - t.run);
+  const cards = [
+    { k: "Attempted", v: t.run, sub: pct(t.run, t.total) + "% of " + t.total + " open", fill: pct(t.run, t.total) },
+    { k: "Pending", v: pending, sub: "not yet run", fill: pct(pending, t.total), cls: "pending" },
+    { k: "≥" + g + "% complete", v: t.green, sub: "strong partial results", fill: pct(t.green, t.run), cls: "good" },
+    { k: "Avg completeness", v: t.avg_completeness + "%", sub: "across all attempts", fill: t.avg_completeness },
+  ];
+  $("#stats").innerHTML = cards.map(c => `
+    <div class="stat ${c.cls || ""}">
+      <div class="k">${c.k}</div>
+      <div class="v">${c.v}</div>
+      <div class="sub">${c.sub}</div>
+      <div class="track"><div class="fill" style="width:${Math.min(100, c.fill)}%"></div></div>
+    </div>`).join("");
+}
+
+/* ---------- table render ---------- */
+const ui = { q: "", filter: "all", sort: "num-asc" };
+
+function visible() {
+  const g = DATA.green_threshold;
+  let list = DATA.problems.filter(p => {
+    if (ui.q && !String(p.n).includes(ui.q)) return false;
+    if (ui.filter === "run") return p.run;
+    if (ui.filter === "pending") return !p.run;
+    if (ui.filter === "high") return effVerdict(p) === "High";
+    if (ui.filter === "green") return (p.completeness ?? -1) >= g;
+    return true;
+  });
+  const c = (p) => p.completeness ?? -1;
+  const cmp = {
+    "num-asc": (a, b) => a.n - b.n,
+    "num-desc": (a, b) => b.n - a.n,
+    "comp-desc": (a, b) => c(b) - c(a) || a.n - b.n,
+    "comp-asc": (a, b) => c(a) - c(b) || a.n - b.n,
+  }[ui.sort];
+  return list.sort(cmp);
+}
+
+function esc(s) { return (s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;")
+  .replace(/>/g, "&gt;").replace(/"/g, "&quot;"); }
+
+function render() {
+  const g = DATA.green_threshold;
+  const rows = visible().map(p => {
+    const m = MARKS[p.n] || {};
+    const probLink = `<a href="https://www.erdosproblems.com/${p.n}" target="_blank" rel="noopener">#${p.n}</a>`;
+
+    if (!p.run) {
+      return `<tr class="pending" data-id="${p.n}">
+        <td class="pn">${probLink}</td>
+        <td><span class="badge pending">not run</span></td>
+        <td class="muted">—</td>
+        <td class="muted">—</td>
+        <td class="c muted">—</td><td class="c muted">—</td><td class="c muted">—</td>
+        <td class="muted">—</td></tr>`;
+    }
+
+    const comp = p.completeness;
+    const has = comp !== null && comp !== undefined;
+    const green = has && comp >= g;
+    const compCell = has
+      ? `<div class="comp ${green ? "green" : ""}"><div class="bar"><i style="width:${comp}%"></i></div><span class="pct">${comp}%</span></div>`
+      : `<div class="comp"><span class="pct" style="width:auto;color:var(--faint)">—</span></div>`;
+
+    const ev = effVerdict(p);
+    const opts = VERDICTS.map(v =>
+      `<option value="${v}"${v === ev ? " selected" : ""}>${v}</option>`).join("");
+    const verdictCell =
+      `<select class="verdict v-${ev}" data-id="${p.n}" data-kind="verdict">${opts}</select>`;
+
+    const ck = (kind) => `<input type="checkbox" data-id="${p.n}" data-kind="${kind}"${m[kind] ? " checked" : ""}>`;
+    const notes = `<input class="notes" type="text" data-id="${p.n}" data-kind="notes" placeholder="add a note…" value="${esc(m.notes)}">`;
+
+    return `<tr data-id="${p.n}">
+      <td class="pn">${probLink}</td>
+      <td>${verdictCell}</td>
+      <td>${compCell}</td>
+      <td><a class="sol" href="${p.blob}" target="_blank" rel="noopener">transcript
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M9 7h8v8"/></svg></a></td>
+      <td class="c chk">${ck("checked")}</td>
+      <td class="c chk">${ck("fable")}</td>
+      <td class="c chk">${ck("works")}</td>
+      <td>${notes}</td>
+    </tr>`;
+  }).join("");
+  $("#rows").innerHTML = rows ||
+    `<tr><td colspan="8" class="state">No problems match this view.</td></tr>`;
+}
+
+/* ---------- controls ---------- */
+$("#search").addEventListener("input", e => { ui.q = e.target.value.trim().replace(/^#/, ""); render(); });
+$("#sort").addEventListener("change", e => { ui.sort = e.target.value; render(); });
+$("#filter").addEventListener("click", e => {
+  const b = e.target.closest("button"); if (!b) return;
+  ui.filter = b.dataset.f;
+  $("#filter").querySelectorAll("button").forEach(x =>
+    x.setAttribute("aria-pressed", x === b ? "true" : "false"));
+  render();
+});
+
+/* ---------- edits + GitHub sync ---------- */
+function setMark(id, kind, value) {
+  MARKS[id] = MARKS[id] || {};
+  MARKS[id][kind] = value;
+  saveLocalMarks();
+  scheduleCommit();
+}
+$("#rows").addEventListener("change", e => {
+  const el = e.target, id = el.dataset.id, kind = el.dataset.kind;
+  if (!id) return;
+  if (el.type === "checkbox") setMark(id, kind, el.checked);
+  else if (el.tagName === "SELECT" && kind === "verdict") {
+    setMark(id, kind, el.value);
+    el.className = "verdict v-" + el.value;   // recolor pill
+  }
+});
+let notesTimer = null;
+$("#rows").addEventListener("input", e => {
+  const el = e.target;
+  if (el.dataset.kind !== "notes") return;
+  const id = el.dataset.id, val = el.value;
+  MARKS[id] = MARKS[id] || {};
+  MARKS[id].notes = val;
+  saveLocalMarks();
+  setSync("saving…");
+  clearTimeout(notesTimer);
+  notesTimer = setTimeout(scheduleCommit, 700);
+});
+
+const API = () => `https://api.github.com/repos/${CFG.repo}/contents/status_state.json`;
+const b64e = (s) => btoa(unescape(encodeURIComponent(s)));
+const b64d = (s) => decodeURIComponent(escape(atob((s || "").replace(/\s/g, ""))));
+function setSync(msg, cls) { const s = $("#syncMsg"); s.textContent = msg; s.className = cls || ""; }
+
+let saveTimer = null, saving = false, pending = false;
+function scheduleCommit() {
+  if (!localStorage.getItem(LS_TOKEN)) { setSync("saved locally", "warn"); return; }
+  setSync("saving…"); clearTimeout(saveTimer); saveTimer = setTimeout(commit, 1000);
+}
+async function commit() {
+  const token = localStorage.getItem(LS_TOKEN); if (!token) return;
+  if (saving) { pending = true; return; }
+  saving = true; setSync("saving to GitHub…");
+  const headers = { Authorization: "Bearer " + token, Accept: "application/vnd.github+json",
+    "X-GitHub-Api-Version": "2022-11-28" };
+  try {
+    const get = await fetch(API() + "?ref=" + CFG.branch, { headers, cache: "no-store" });
+    let remote = {}, sha = null;
+    if (get.ok) { const j = await get.json(); sha = j.sha; try { remote = JSON.parse(b64d(j.content)); } catch (e) {} }
+    else if (get.status !== 404) throw new Error("GET " + get.status);
+    MARKS = Object.assign({}, remote, MARKS);
+    const body = { message: "Update review marks [skip ci]",
+      content: b64e(JSON.stringify(MARKS, null, 2)), branch: CFG.branch };
+    if (sha) body.sha = sha;
+    const put = await fetch(API(), { method: "PUT", headers, body: JSON.stringify(body) });
+    if (put.ok) setSync("synced ✓", "ok");
+    else if (put.status === 401 || put.status === 403) setSync("token rejected (needs Contents: write)", "err");
+    else if (put.status === 409) { saving = false; return commit(); }
+    else setSync("save failed (" + put.status + ")", "err");
+  } catch (e) { setSync("save error — kept locally", "err"); }
+  finally { saving = false; if (pending) { pending = false; commit(); } }
+}
+function updateSyncBtn() {
+  $("#sync").textContent = localStorage.getItem(LS_TOKEN) ? "GitHub connected ✓" : "Connect GitHub";
+}
+$("#sync").addEventListener("click", () => {
+  if (localStorage.getItem(LS_TOKEN)) {
+    if (confirm("Disconnect GitHub and forget the token in this browser?")) {
+      localStorage.removeItem(LS_TOKEN); updateSyncBtn(); setSync("disconnected", "warn");
+    }
+    return;
+  }
+  const tok = prompt("Paste a GitHub fine-grained token with Contents: Read & write on "
+    + CFG.repo + " only.\nStored only in this browser; never committed.");
+  if (tok && tok.trim()) { localStorage.setItem(LS_TOKEN, tok.trim()); updateSyncBtn(); commit(); }
+});
+
+updateSyncBtn();
+boot();
+</script>
+</body>
+</html>

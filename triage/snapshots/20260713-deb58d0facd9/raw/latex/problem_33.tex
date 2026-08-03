@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#33}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, additive basis
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $A\subset\mathbb{N}$ be such that every large integer can be written as $n^2+a$ for some $a\in A$ and $n\geq 0$. What is the smallest possible value of\[\limsup \frac{\lvert A\cap\{1,\ldots,N\}\rvert}{N^{1/2}}?\]Is\[\liminf \frac{\lvert A\cap\{1,\ldots,N\}\rvert}{N^{1/2}}&#62;1?\]
+
+
+
+
+Such a set $A$ is called an additive complement of the set of squares. Erd\H{o}s observed that there exist $A$ for which the $\limsup$ is finite and $&gt;1$. Moser \cite{Mo65} proved that, for any such $A$,\[\liminf \frac{\lvert A\cap\{1,\ldots,N\}\rvert}{N^{1/2}}&gt;1.06.\]The best-known lower bound is\[\liminf \frac{\lvert A\cap\{1,\ldots,N\}\rvert}{N^{1/2}}\geq\frac{4}{\pi}\approx 1.273\]proved by Cilleruelo \cite{Ci93}, Habsieger \cite{Ha95}, and Balasubramanian and Ramana \cite{BaRa01}. The problem of minimising the $\limsup$ appears to have been much less studied. van Doorn has a construction of such an $A$ in which, for all $N$,\[\frac{\lvert A\cap\{1,\ldots,N\}\rvert}{N^{1/2}}&lt; 2\phi^{5/2}\approx 6.66,\]where $\phi=\frac{1+\sqrt{5}}{2}$ is the golden ratio.
+
+
+
+
+References
+
+[BaRa01] Balasubramanian, R. and Ramana, D. S., Additive complements of the squares . C. R. Math. Acad. Sci. Soc. R. Can. (2001), 6--11.
+
+[Ci93] Cilleruelo, Javier, The additive completion of {$k$}th-powers . J. Number Theory (1993), 237--243.
+
+[Ha95] Habsieger, Laurent, On the additive completion of polynomial sets . J. Number Theory (1995), 130--135.
+
+[Mo65] Moser, Leo, On the additive completion of sets of integers . (1965), 175--180.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/33}}
+\end{document}

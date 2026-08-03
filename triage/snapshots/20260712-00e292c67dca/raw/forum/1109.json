@@ -1,0 +1,20 @@
+{
+  "problem_number": 1109,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/1109",
+  "retrieved_at": "2026-07-10T23:20:36.913521+00:00",
+  "page_title": "1109 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "6a4203a716187e58099717157f7411d94eb91502aecfcfbbd1ff0ed02f5b6555",
+  "comment_count": 2,
+  "comments": [
+    {
+      "post_id": "2003",
+      "text": "I computed $f(N)$ for $1 \\le N \\le 250$. Method: The vertices are odd squarefree integers $a \\le N$ (even or non-squarefree $a$ fail since $2a$ is not squarefree), with an edge between distinct $a,b$ if $a+b$ is not squarefree. Then $f(N)$ is the maximum independent set size. I used branch-and-bound with bitsets, cross-checked against brute-force for small $N$. $$\\begin{aligned} 1 &\\le N \\le 4 &:\\qquad f(N) &= 1\\\\ 5 &\\le N \\le 18 &:\\qquad f(N) &= 2\\\\ 19 &\\le N \\le 22 &:\\qquad f(N) &= 3\\\\ 23 &\\le N \\le 36 &:\\qquad f(N) &= 4\\\\ 37 &\\le N \\le 40 &:\\qquad f(N) &= 5\\\\ 41 &\\le N \\le 58 &:\\qquad f(N) &= 6\\\\ 59 &\\le N \\le 86 &:\\qquad f(N) &= 7\\\\ 87 &\\le N \\le 100 &:\\qquad f(N) &= 8\\\\ 101 &\\le N \\le 104 &:\\qquad f(N) &= 9\\\\ 105 &\\le N \\le 112 &:\\qquad f(N) &= 10\\\\ 113 &\\le N \\le 130 &:\\qquad f(N) &= 11\\\\ 131 &\\le N \\le 150 &:\\qquad f(N) &= 12\\\\ 151 &\\le N \\le 158 &:\\qquad f(N) &= 13\\\\ 159 &\\le N \\le 166 &:\\qquad f(N) &= 14\\\\ 167 &\\le N \\le 194 &:\\qquad f(N) &= 15\\\\ 195 &\\le N \\le 202 &:\\qquad f(N) &= 16\\\\ 203 &\\le N \\le 238 &:\\qquad f(N) &= 17\\\\ 239 &\\le N \\le 250 &:\\qquad f(N) &= 18 \\end{aligned}$$ Example: $f(101) = 9$ is achieved by $\\{5, 17, 29, 41, 53, 65, 77, 89, 101\\}$, an arithmetic progression with common difference 12. All pairwise sums have the form $10 + 12k$, which is squarefree for $k \\le 16$. The sequence of transition points $(1, 5, 19, 23, 37, 41, 59, 87, 101, 105, 113, 131, 151, 159, 167, 195, 203, 239, \\ldots)$ does not appear in OEIS.",
+      "meta": "AlexisOlson — 02:26 on 04 Dec 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2007",
+      "text": "This latter sequence looks suitable for submission to the OEIS to me.",
+      "meta": "TerenceTao — 06:37 on 04 Dec 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

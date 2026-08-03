@@ -1,0 +1,52 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#584}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory, cycles
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $G$ be a graph with $n$ vertices and $\delta n^{2}$ edges. Are there subgraphs $H_1,H_2\subseteq G$ such that
+{UL}
+{LI}$H_1$ has $\gg \delta^3n^2$ edges and every two edges in $H_1$ are contained in a cycle of length at most $6$, and furthermore if two edges share a vertex they are on a cycle of length $4$, and
+{LI}$H_2$ has $\gg \delta^2n^2$ edges and every two edges in $H_2$ are contained in a cycle of length at most $8$.
+{/UL}
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+A problem of Erd\H{o}s, Duke, and R\"{o}dl. Duke and Erd\H{o}s \cite{DuEr82} proved the first if $n$ is sufficiently large depending on $\delta$. The real challenge is to prove this when $\delta=n^{-c}$ for some $c>0$. Duke, Erd\H{o}s, and R\"{o}dl \cite{DER84} proved the first statement with a $\delta^5$ in place of a $\delta^3$.
+
+Fox and Sudakov \cite{FoSu08b} have proved the second statement when $\delta >n^{-1/5}$. 
+
+See also the entry in the graphs problem collection.
+
+\bigskip
+\noindent\textbf{References:}
+
+[DER84] Duke, Richard and Erd\H{o}s, Paul and R\"{o}dl, Vojt\vEch, More results on subgraphs with many short cycles. Proceedings of the fifteenth Southeastern conference on
+combinatorics, graph theory and computing (Baton Rouge,
+La., 1984) (1984), 295-300.
+ 
+ [DuEr82] Duke, Richard and Erd\H{o}s, Paul, Subgraphs in which each pair of edges lies in a short common
+cycle. Proceedings of the thirteenth Southeastern conference on
+combinatorics, graph theory and computing (Boca Raton,
+Fla., 1982) (1982), 253-260.
+ 
+ [FoSu08b] Fox, Jacob and Sudakov, Benny, On a problem of Duke-Erd\H{o}s-R\"{o}dl on cycle-connected subgraphs. J. Combin. Theory Ser. B (2008), 1056-1062.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/584}}
+\end{document}

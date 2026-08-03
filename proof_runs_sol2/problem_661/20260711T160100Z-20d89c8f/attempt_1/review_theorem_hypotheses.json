@@ -1,0 +1,91 @@
+{
+"reviewer_role": "independent adversarial referee (theorem_hypotheses)",
+"verdict": "fail",
+"claims_checked": 21,
+"claims_total": 21,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14",
+"C15",
+"C16",
+"C17",
+"C18",
+"C19",
+"C20",
+"C21"
+],
+"open_gaps": [
+"The pairwise-distinct planar assertion K=o(n/sqrt(log n)) is neither proved nor disproved.",
+"The internally-distinct convention with X intersecting Y is unresolved.",
+"The comparison F(n)=o(f(2n)) is unresolved.",
+"The arithmetic benchmark for the number of values represented by the checkerboard or binary-quadratic-form construction is not proved.",
+"The variable quadratic-form, algebraic-norm, Euclidean-matrix, bisector-structure, and radial-support branches remain unresolved.",
+"No exact computational harness satisfying the validated subgoal specifications is supplied.",
+"The universal planar lower bound C11 is not fully certified because its sole dependency C10 has an unchecked theorem-hypothesis case."
+],
+"unchecked_imports": [
+"C10 invokes the planar simple-graph bound e<=3v-6, attributed to Euler's formula, without supplying the promised derivation.",
+"The e<=3v-6 theorem is stated only for v>=3, but it is applied to random induced graphs H without checking that v(H)>=3. For example, a planar simple graph with two vertices and one edge does not satisfy e<=3v-6.",
+"The crossing-number argument assumes, without an exact statement and hypothesis check, a good crossing-minimal drawing in which every crossing has four distinct endpoints and therefore survives vertex sampling with probability p^4.",
+"The local perturbation converting the circle-arc drawing into a good drawing with fewer than n^2 crossings is asserted as harmless rather than proved with its crossing-count preservation conditions."
+],
+"counterexample_searches": [
+{
+"target": "C2-C3 repetition convention",
+"result": "A formal-domain counterexample was found. The displayed definition of F_C minimizes over sets X,Y with |X|=|Y|=n. It therefore excludes repeated indexed points. The repeated-point witness proving one distance is not admissible for F_rep as actually defined; indeed C9 would rule out value 1 for n>=3 in that set-based domain."
+},
+{
+"target": "C10 planar-edge theorem hypotheses",
+"result": "The random graph H can have v(H)=2 and e(H)=1, for which the asserted bound e(H)<=3v(H)-6 is false. The weaker inequality needed by the argument may be repairable, but it is not the theorem stated and checked in the candidate."
+},
+{
+"target": "C10 coincident circles and parallel arcs",
+"result": "No counterexample was found: distinct fixed-radius circles have distinct centers, and the arc multiplicity between a vertex pair is at most four."
+},
+{
+"target": "C11 zero-distance handling",
+"result": "No counterexample was found: disjoint sets have no zero cross-pairs, while internally distinct overlapping sets have at most n zero cross-pairs."
+},
+{
+"target": "C14 checkerboard converse",
+"result": "No counterexample was found. Every bounded difference vector with odd coordinate sum can be realized by grid endpoints of opposite parity."
+},
+{
+"target": "C19 low-rank sufficiency",
+"result": "The candidate correctly supplies the all-ones matrix as a counterexample to sufficiency for n>=3."
+},
+{
+"target": "C20 coefficient-box injectivity",
+"result": "No counterexample was found. The rational Gram hypothesis does yield a nonzero rational kernel vector and hence an integer relation producing collisions in all sufficiently large boxes."
+}
+],
+"material_errors": [
+"The candidate does not satisfy the acceptance criterion requiring a proof or disproof of the exact locked planar statement. Its final adjudication explicitly leaves the substantive planar conventions unresolved.",
+"The normalization is internally inconsistent: F_C is defined using n-element sets for every convention, while convention 1 and C3 require indexed tuples with repetitions. Consequently C2 is not a correct common formalization and C3 does not prove the stated F_rep(n)=1.",
+"C10 fails the special theorem-hypothesis mandate. The planar edge theorem is applied to random subgraphs without verifying its v>=3 hypothesis, and the promised Euler derivation is absent.",
+"Because C11 depends entirely on C10, the claimed self-contained lower bound F_dis(n)=Omega(n^(2/3)) is not established by the submitted proof as written.",
+"The declaration that no attack invalidated C1-C21 and that there are no unchecked imports is false.",
+"The candidate omits resolution of several required validated subgoals, including the arithmetic benchmark, computational harness, construction branches, radial-support branch, and F versus f branch."
+],
+"completeness_score": 43,
+"proof_confidence": 22,
+"adversarial_survival_score": 37,
+"statement_sha256": "1a1d20a3dee71f7bdc92834c48238b40d7d273fd322f3d71771e35966a2596cc",
+"notes": "Several individual claims survive direct checking, notably C4-C9, C12-C14, C16-C21 subject to their stated distinctness settings. The repeated-point witness and the three-dimensional grid construction are valid in their appropriate domains. Nevertheless, the formal convention mismatch, the C10 theorem-hypothesis defect, and the complete absence of a planar threshold-level resolution require failure. Source reviewed: 
+
+Pasted text
+
+"
+}

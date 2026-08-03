@@ -1,0 +1,53 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#986}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory, ramsey theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+For any fixed $s\geq 3$,\[R(s,k) \gg \frac{k^{s-1}}{(\log k)^c}\]for some constant $c=c(s)&#62;0$.
+
+
+
+
+According to Chung and Graham \cite{ChGr98} this was first conjectured by Erd\H{o}s in 1947. Spencer \cite{Sp77} proved this for $s=3$ and Mattheus and Verstraete \cite{MaVe23} proved this for $s=4$. The best general bounds available for $s\geq 5$ are\[\frac{k^{s-2}}{(\log k)^{2s-6}}\ll_k R(s,k) \ll_s \frac{k^{s-1}}{(\log k)^{s-2}}.\]The lower bound was proved by Brada\v{c} \cite{Br26}, improving on earlier work of Bohman and Keevash \cite{BoKe10}. The upper bound was proved by Ajtai, Koml\'{o}s, and Szemer\'{e}di \cite{AKS80}. Li, Rousseau, and Zang \cite{LRZ01} have shown that $\ll_s$ in the upper bound can be improved to $\leq (1+o(1))$. The special case $s=3$ is the topic of [165] and $s=4$ is the topic of [166] . This problem is #6 in Ramsey Theory in the graphs problem collection. See also [920] .
+
+
+
+
+References
+
+[AKS80] Ajtai, Mikl\'{o}s and Koml\'{o}s, J\'{a}nos and Szemer\'{e}di, Endre, A note on Ramsey numbers . J. Combin. Theory Ser. A (1980), 354-360.
+
+[BoKe10] Bohman, Tom and Keevash, Peter, The early evolution of the {$H$}-free process . Invent. Math. (2010), 291--336.
+
+[Br26] D. Brada\v{c}, Nearly tight exponents for off-diagonal Ramsey numbers . arXiv:2605.28793 (2026).
+
+[ChGr98] F. Chung and R. Graham, Erd\H{o}s on Graphs . His legacy of unsolved problems, A K Peters Ltd, Wellesley, MA (1998).
+
+[LRZ01] Li, Yusheng and Rousseau, Cecil C. and Zang, Wenan, Asymptotic upper bounds for {R}amsey functions . Graphs Combin. (2001), 123--128.
+
+[MaVe23] Mattheus, S. and Verstraete, J., The asymptotics of $r(4,t)$ . arXiv:2306.04007 (2023).
+
+[Sp77] Spencer, J., Asymptotic lower bounds for Ramsey functions . Discrete Math. (1977), 69-76.
+
+\noindent\textbf{Related OEIS sequences:} A000791, A059442
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/986}}
+\end{document}

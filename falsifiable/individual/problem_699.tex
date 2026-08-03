@@ -1,0 +1,38 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#699}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} FALSIFIABLE \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, binomial coefficients
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Is it true that for every $1\leq i&#60;j\leq n/2$ there exists some prime $p\geq i$ such that\[p\mid \textrm{gcd}\left(\binom{n}{i}, \binom{n}{j}\right)?\]
+
+
+
+
+A problem of Erd\H{o}s and Szekeres. A theorem of Sylvester and Schur says that for any $1\leq i\leq n/2$ there exists some prime $p&#62;i$ which divides $\binom{n}{i}$. Erd\H{o}s and Szekeres further conjectured that $p\geq i$ can be improved to $p&#62;i$ except in a few special cases. In particular this fails when $i=2$ and $n$ being some particular powers of $2$. They also found some counterexamples when $i=3$, but only one counterexample when $i\geq 4$:\[\textrm{gcd}\left(\binom{28}{5},\binom{28}{14}\right)=2^3\cdot 3^3\cdot 5.\]This is mentioned in problem B31 of Guy's collection \cite{Gu04}.
+
+
+
+
+References
+
+[Gu04] Guy, Richard K., Unsolved problems in number theory . (2004), xviii+437.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/699}}
+\end{document}

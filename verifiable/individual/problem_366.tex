@@ -1,0 +1,44 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#366}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} VERIFIABLE \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Are there any $2$-full $n$ such that $n+1$ is $3$-full? That is, if $p\mid n$ then $p^2\mid n$ and if $p\mid n+1$ then $p^3\mid n+1$.
+
+
+
+
+Erd\H{o}s originally asked Mahler whether there are infinitely many pairs of consecutive powerful numbers, but Mahler immediately observed that the answer is yes from the infinitely many solutions to the Pell equation $x^2=8y^2+1$. Note that $8$ is 3-full and $9$ is $2$-full. Erd\H{o}s and Graham asked if this is the only pair of such consecutive integers. Stephan has observed that $12167=23^3$ and $12168=2^33^213^2$ (a pair already known to Golomb \cite{Go70}) is another example, but (by OEIS A060355 ) there are no other examples for $n&lt;10^{22}$. In \cite{Er76d} Erd\H{o}s asks the weaker question of whether there are any consecutive pairs of $3$-full integers (which is also discussed in problem B16 of Guy's collection \cite{Gu04}). Turturean notes in the comments that the ABC conjecture implies there are only finite ly many such $n$.
+
+
+
+
+References
+
+[Er76d] Erd\H{o}s, P., Problems and results on number theoretic properties of consecutive integers and related questions . Proceedings of the Fifth Manitoba Conference on Numerical Mathematics (Univ. Manitoba, Winnipeg, Man., 1975) (1976), 25-44.
+
+[Go70] Golomb, S. W., Powerful numbers . Amer. Math. Monthly (1970), 848-855.
+
+[Gu04] Guy, Richard K., Unsolved problems in number theory . (2004), xviii+437.
+
+\noindent\textbf{Related OEIS sequences:} A060355
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/366}}
+\end{document}

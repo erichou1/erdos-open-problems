@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#36}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, additive combinatorics
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Find the optimal constant $c>0$ such that the following holds. 
+
+For all sufficiently large $N$, if $A\sqcup B=\{1,\ldots,2N\}$ is a partition into two equal parts, so that $\lvert A\rvert=\lvert B\rvert=N$, then there is some $x$ such that the number of solutions to $a-b=x$ with $a\in A$ and $b\in B$ is at least $cN$.
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+The minimum overlap problem. The example (with $N$ even) $A=\{N/2+1,\ldots,3N/2\}$ shows that $c\leq 1/2$ (indeed, Erd\H{o}s initially conjectured that $c=1/2$). The lower bound of $c\geq 1/4$ is trivial, and Scherk improved this to $1-1/\sqrt{2}=0.29\cdots$. The current records are\[0.379005 < c < 0.380876,\]the lower bound due to White \cite{Wh22} and the upper bound due to the TTT-Discover LLM \cite{YKLBMWKCZGS26}, improving slightly on earlier bounds due to AlphaEvolve \cite{GGTW25} and Haugland \cite{Ha16}.
+
+This is discussed in problem C17 of Guy's collection \cite{Gu04}.
+
+\bigskip
+\noindent\textbf{References:}
+
+[GGTW25] B. Georgiev, J. G\'{o}mez-Serrano, T. Tao, and A. Wagner, Mathematical exploration and discovery at scale. arXiv:2511.02864 (2025).
+ 
+ [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.
+ 
+ [Ha16] Haugland, J. K., The minimum overlap problem revisited. arXiv:1609.08000 (2016).
+ 
+ [Wh22] White, E. P., Erd\H{o}s' minimum overlap problem. arXiv:2201.05704 (2022).
+ 
+ [YKLBMWKCZGS26] M. Yuksekgonul, D. Koceja, X. Li, F. Bianchi, J. McCaleb, X. Wang, J. Kautz, Y. Choi, J. Zou, C. Guestrin, and Y. Sun, Learning to Discover at Test Time. https://test-time-training.github.io/discover.pdf (2026).
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/36}}
+\end{document}

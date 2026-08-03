@@ -1,0 +1,50 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#1194}
+\date{Last updated: 2026-04-04}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} additive combinatorics, additive basis, sidon sets
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $A\subset\mathbb{N}$ be such that every integer $n\geq 1$ can be written uniquely as $a_n-b_n$ for some $a_n,b_n\in A$. How fast must $a_n/n$ increase?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Such a set is called a perfect difference set; they can be constructed, for example, by a greedy approach (as detailed by Lev \cite{Le04}). The greedy construction achieves $a_n\ll n^3$.
+
+Erd\H{o}s \cite{Er80} wrote it is 'easy to see' that\[\limsup_{n\to \infty}\frac{a_n}{n}=\infty.\]Indeed, since $A$ must be a Sidon set, if $a_n \leq f(n)n$ for all $n$, then all differences in $[1,x/f(x)]$ can be realised by differences from $A\cap [1,x]$, and hence $\lvert A\cap [1,x]\rvert^2 \gg x/f(x)$. Erd\H{o}s (see for example \cite{HaRo66}) proved that for infinitely many $x$ $\lvert A\cap [1,x]\rvert \ll (x/\log x)^{1/2}$, which is a contradiction for a suitable choice of $f$.
+
+This argument proves that $a_n\gg n\log n$ for infinitely many $n$.
+
+Cilleruelo and Nathanson \cite{CiNa08} describe a method for construction dense perfect difference sets from dense Sidon sets, allowing many of the results for the latter to transfer to the former.
+
+GPT-5.4 Pro (see the comments) has given an argument which proves that $a_n\gg n^{2-o(1)}$ infinitely often; in fact $a_n \gg n^2/f(n)$ infinitely often for any function $f$ such that $\sum \frac{1}{nf(n)}$ diverges.
+
+\bigskip
+\noindent\textbf{References:}
+
+[CiNa08] Cilleruelo, Javier and Nathanson, Melvyn B., Perfect difference sets constructed from Sidon sets. Combinatorica (2008), 401--414.
+ 
+ [Er80] Erd\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.
+ 
+ [HaRo66] Halberstam, H. and Roth, K. F., Sequences. {V}ol. I. (1966), xx+291.
+ 
+ [Le04] Lev, Vsevolod F., Reconstructing integer sets from their representation
+functions. Electron. J. Combin. (2004), Research Paper 78, 6.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/1194}}
+\end{document}

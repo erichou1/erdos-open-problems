@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#282}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, unit fractions
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $A\subseteq \mathbb{N}$ be an infinite set and consider the following greedy algorithm for a rational $x\in (0,1)$: choose the minimal $n\in A$ such that $n\geq 1/x$ and repeat with $x$ replaced by $x-\frac{1}{n}$. If this terminates after finitely many steps then this produces a representation of $x$ as the sum of distinct unit fractions with denominators from $A$.
+
+Does this process always terminate if $x$ has odd denominator and $A$ is the set of odd numbers? More generally, for which pairs $x$ and $A$ does this process terminate?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+In 1202 Fibonacci observed that this process terminates for any $x$ when $A=\mathbb{N}$. The problem when $A$ is the set of odd numbers is due to Stein. 
+
+Graham \cite{Gr64b} has shown that $\frac{m}{n}$ is the sum of distinct unit fractions with denominators $\equiv a\pmod{d}$ if and only if\[\left(\frac{n}{(n,(a,d))},\frac{d}{(a,d)}\right)=1.\]Does the greedy algorithm always terminate in such cases?
+
+Graham \cite{Gr64c} has also shown that $x$ is the sum of distinct unit fractions with square denominators if and only if $x\in [0,\pi^2/6-1)\cup [1,\pi^2/6)$. Does the greedy algorithm for this always terminate? Erd\H{o}s and Graham believe not - indeed, perhaps it fails to terminate almost always.
+
+See also [206].
+
+\bigskip
+\noindent\textbf{References:}
+
+[Gr64b] Graham, R. L., On finite sums of unit fractions. Proc. London Math. Soc. (3) (1964), 193-207.
+ 
+ [Gr64c] Graham, R. L., On finite sums of reciprocals of distinct nth powers. Pacific J. Math. (1964), 85-92.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/282}}
+\end{document}

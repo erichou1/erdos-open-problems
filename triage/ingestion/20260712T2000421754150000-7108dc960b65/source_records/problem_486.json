@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 486,
+  "raw_page": {
+    "path": "raw/pages/problem_486.html",
+    "sha256": "ed831f6865958e6ec8f4d3bbd5d31a1ae3740435eab58acede5c6e817377c10e"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "8bf35d1875b4ccab528977cf6b2541d8b45470f0255ec2136c2a7c4b0a9d7f23",
+      "source_region": "div.problem-additional-text",
+      "text": "[Be34] Besicovitch, A., On the density of certain sequences of integers. Math. Annalen (1934), 336-341.\n \n [DaEr36] Davenport, H. and Erd\\H{o}s, P., On sequences of positive integers. Acta Arithmetica (1936), 147-151.\n \n [DaEr51] Davenport, H. and Erd\\H{o}s, P., On sequences of positive integers. J. Indian Math. Soc. (N.S.) (1951), 19--24.\n \n [Er80] Erd\\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115."
+    },
+    "remarks": {
+      "sha256": "d3a75415b86f8ce7909fccfde107e06d64e45fbbce5f991f2fca3fd6610f1d98",
+      "source_region": "div.problem-additional-text",
+      "text": "Davenport and Erd\\H{o}s \\cite{DaEr36} proved that the answer is yes when $X_n=\\{0\\}$ for all $n\\in A$. An alternative elementary proof was later given by Davenport and Erd\\H{o}s in \\cite{DaEr51}.\n\nErd\\H{o}s \\cite{Er80} wrote 'perhaps this question is not very difficult as far as I know it has not been attacked really seriously'.\n\nThe problem considers logarithmic density since Besicovitch \\cite{Be34} showed examples exist without a natural density, even when $X_n=\\{0\\}$ for all $n\\in A$. \n\nThis is a generalisation of [25] (which is the case when $\\lvert X_n\\rvert=1$ for all $n\\in A$)."
+    },
+    "statement": {
+      "sha256": "2bd4f62d9ae3c76964955246f324d2966fba1d03119bfed84d7686047f9dac49",
+      "source_region": "div#content",
+      "text": "Let $A\\subseteq \\mathbb{N}$, and for each $n\\in A$ choose some $X_n\\subseteq \\mathbb{Z}/n\\mathbb{Z}$. Let\\[B = \\{ m\\in \\mathbb{N} : m\\not\\in X_n\\pmod{n}\\textrm{ for all }n\\in A\\textrm{ with }m>n\\}.\\]Must $B$ have a logarithmic density, i.e. is it true that\\[\\lim_{x\\to \\infty} \\frac{1}{\\log x}\\sum_{\\substack{m\\in B\\\\ m<x}}\\frac{1}{m}\\]exists?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/486"
+}

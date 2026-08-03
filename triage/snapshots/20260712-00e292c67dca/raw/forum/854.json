@@ -1,0 +1,45 @@
+{
+  "problem_number": 854,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/854",
+  "retrieved_at": "2026-07-10T23:19:07.044279+00:00",
+  "page_title": "854 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "6c7b613e10ad51279e47bccb6390516544b0553d92890aae34012c506849d8b7",
+  "comment_count": 7,
+  "comments": [
+    {
+      "post_id": "1770",
+      "text": "[Ob1] is not able to load any reference. (The site has been updated to address this comment.)",
+      "meta": "Alfaiz — 04:11 on 21 Nov 2025 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "1591",
+      "text": "OEIS sequences: *https://oeis.org/A389839 for exactly this statement *https://oeis.org/A048670 for the related version Note; the first is bounded by the second plus two. In https://oeis.org/A048670, lower bounds are also presented Literature check: Google Scholar gave 9 references, but none with the word primorial ChatGPT lead me to the OEIS sequence (The site has been updated to address this comment.)",
+      "meta": "StijnC — 21:49 on 29 Oct 2025 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1158",
+      "text": "So that IS why is still marked as open.",
+      "meta": "Dogmachine — 22:20 on 16 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "92",
+      "text": "removed since it was about the other version",
+      "meta": "StijnC — 19:38 on 13 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1156",
+      "text": "Even though your proof is very short, I notice that I still find it hard to follow. But nevertheless, the question asks about consecutive gaps $a_{i+1} - a_i$, whereas you seem to look at arbitrary differences $a_j - a_i$. Are you sure you are answering the correct question?",
+      "meta": "Woett — 21:35 on 16 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "89",
+      "text": "$\\textbf{Remark on different variant (not initial question)}$ If we would consider all differences of the form $a_i-a_j$, the answer becomes very different. *if not excluding odd integers, the answer is 1 (this is also the case for the initial problem) *if we are restricting to even integers, it is $(1-o(1))n_k$ If we denote $f(k)$ for the smallest positive even integer not of the form $a_i-a_j$, then the right but harder question would be to estimate how large $n_k-f(k)$ is. I could easily prove that this is $o(n_k)$ (e.g. bounded by $4n_{k-1}$), and with some work even that it is much smaller for large $k$. Nevertheless, the right answer here should be $n_k-f(k)=(2+o(1))p_k$. The lower bound for that is trivial. Note that the sequence starts with $a_1=1, a_2=p_{k+1}, a_3=p_{k+2} \\ldots$ (till $p_k^2$ appears at some point) and $a_{\\phi{(n_k)}+1-i}=n-a_i$. Let $r$ be an odd composite prime smaller than $2p_{k+1}$, then $n_k-(r-1)$ cannot be written as $a_i-a_j$, since $a_{\\phi{(n_k)}-1}-a_2$<$n_k-(r+1)$ and $a_{\\phi{(n_k)}}-a_i=a_{\\phi{(n_k)}+1-i}-a_1$ cannot be $r-1$, since $r$ is not a prime (and it is smaller than $p_k^2$). The upper bound is not trivial (understatement) Assumption (stronger form Goldbach's conjecture): For an integer $q$>$0$, every even integer larger than some $2q+o(q)$ can be written as the sum of two primes larger than $q$. It even may well be that the $o(q)$ is polylog(q). Now take an even number (bounded by $n_k$) larger larger than $(2+o(1))p_{k}$, this can be written as the sum $p_r+p_s$ with $r,s$>$k$ by the above assumption. Now $p_r$ and $n_k-p_s$ are both relative prime with $n_k$ and thus of the form $a_i,a_j$. Now $a_j-a_i=n_k-(p_r+p_s).$ From this we conclude. For completeness, hereby also the easy proof (which can be sharpened, but not up to the right form) By induction, for $k \\ge 2$, and even $m$, does $m$ or $n_k-m$ appear as $a_i-a_j$. (base step $k=2,3$ trivial to check) Now going to $n_{k+1}$, take an even number $m$<$n_{k+1}-4n_k$. Let $m=r n_k + s.$ Then $s$ or $n_k-s$ appeared before as a difference. If it is $n_k-s$, then write $n_k+a_i-a_j=s$. Now $((r+v)n_k+a_j,vn_k+a_i)$ or $((r+v+1)n_k+a_i,vn_k+a_j)$ is a solution for some $v \\in \\{0,1,2\\}$ since for each linear combination, only one $v$ can lead to a multiple of $p_{k+1}.$ So each such $m$ can be written as the difference of two numbers relative prime with $n_{k+1}$ smaller than $n_{k+1}.$ Summary smallest even number not of the form $a_i-a_j$ is proven to be at most $n_k-4n_{k-1}=(1-o(1))n_k$ and conjectured to be $n_k-(2+o(1))p_k$.",
+      "meta": "StijnC — 18:56 on 13 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "87",
+      "text": "In other words, the problem is about which numbers are not gaps between totatives. Obviously, we need to estimate the smallest even integer which is not a gap, else the answer is trivially 1.",
+      "meta": "Dogmachine — 13:40 on 13 Aug 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

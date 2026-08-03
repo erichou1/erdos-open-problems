@@ -1,0 +1,48 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#510}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} analysis
+
+\medskip
+\noindent\textbf{Note:} Chowla's cosine problem
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+If $A\subset \mathbb{Z}$ is a finite set of size $N$ then is there some absolute constant $c&#62;0$ and $\theta$ such that\[\sum_{n\in A}\cos(n\theta) &#60; -cN^{1/2}?\]
+
+
+
+
+Chowla's cosine problem. Ruzsa \cite{Ru04} (improving on an earlier result of Bourgain \cite{Bo86}), proved an upper bound of\[-\exp(O(\sqrt{\log N})).\]Polynomial bounds were proved independently by Bedert \cite{Be25c} and Jin, Milojevi\'{c}, Tomon, and Zhang \cite{JMTZ25}. The best bound follows from the method of Bedert \cite{Be25c}, which proved the existence of some $c&gt;0$ such that, for all $A$ of size $N$,\[\sum_{n\in A}\cos(n\theta) &lt; -cN^{1/7}.\]The example $A=B-B$, where $B$ is a Sidon set, shows that $N^{1/2}$ would be the best possible here. This problem is Problem 81 on Green's open problems list . This is related to [256] .
+
+
+
+
+References
+
+[Be25c] B. Bedert, Polynomial bounds for the Chowla Cosine Problem . arXiv:2509.05260 (2025).
+
+[Bo86] Bourgain, J., Sur le minimum d'une somme de cosinus . Acta Arith. (1986), 381-389.
+
+[JMTZ25] Z. Jin, A. Milojevi\'{c}, I. Tomon, and S. Zhang, From small eigenvalues to large cuts, and Chowla's cosine problem . arXiv:2509.03490 (2025).
+
+[Ru04] Ruzsa, Imre Z., Negative values of cosine sums . Acta Arith. (2004), 179-186.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/510}}
+\end{document}

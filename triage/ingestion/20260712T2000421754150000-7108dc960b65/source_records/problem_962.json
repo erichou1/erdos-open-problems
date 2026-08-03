@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 962,
+  "raw_page": {
+    "path": "raw/pages/problem_962.html",
+    "sha256": "37ce9dd75543d670b614eed8d3662180c0820b03b93a85292f1936fb4ed8e725"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "c2a3acb45f37c30095fe5a7b1715c5c3543ae9307616283fceb543de4f997d16",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er65] Erd\\H{o}s, P., Extremal problems in number theory. Proc. Sympos. Pure Math., Vol. VIII (1965), 181-189.\n \n [Er76e] Erd\\H{o}s, P., Problems and results on consecutive integers. Publ. Math. Debrecen (1976), 271-282."
+    },
+    "remarks": {
+      "sha256": "82b61b0b74fbf5729791b466332a282be2d6d0e393ff67e084c7ccf25f543715",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s \\cite{Er65} wrote it is 'not hard to prove' that\\[\\log k(n)\\geq (\\log n)^{1/2-o(1)}\\]and it 'seems likely' that $k(n)=o(n^\\epsilon)$, but had no non-trivial upper bound for $k(n)$. In \\cite{Er76e} he gives an argument which proves\\[\\log k(n) \\gg \\sqrt{\\log n\\log\\log n},\\]and thought that this bound was 'fairly sharp'.\n\nTao in the comments has given a simple argument proving $k(n) \\leq (1+o(1))n^{1/2}$. In \\cite{Er76e} Erd\\H{o}s reports he could prove that\\[k(n) \\leq \\exp(-(\\log n)^c)n^{1/2}\\]for some constant $c>0$, but could not prove that $k(n) \\leq n^{1/2-c}$ for a constant $c>0$, which he said 'seems a ridiculously weak result'. \n\nTang has proved a lower bound of\\[\\log k(n)\\geq \\left(\\frac{1}{\\sqrt{2}}-o(1)\\right)\\sqrt{\\log n\\log\\log n}.\\]"
+    },
+    "statement": {
+      "sha256": "4eb4f053feeac329899c4de43f756d5a9cb075be69c837fcee1054a592fa67e2",
+      "source_region": "div#content",
+      "text": "Let $k(n)$ be the maximal $k$ such that there exists $m\\leq n$ such that each of the integers\\[m+1,\\ldots,m+k\\]are divisible by at least one prime $>k$. Estimate $k(n)$ - in particular, is it true that\\[\\log k(n) \\leq (\\log n)^{1/2+o(1)}?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/962"
+}

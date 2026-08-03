@@ -1,0 +1,362 @@
+{
+  "allocation_context_id": "258841de4a69f8992b466ac8fe0bb0dfc422bf778855136aa803b8653c063ebf",
+  "allocation_status": "exact_context_ready",
+  "budget": "verified_pipeline_v2:4fc5421244b900bd",
+  "budget_config": {
+    "browser_channel": "playwright-chromium",
+    "browser_headless": false,
+    "initial_backoff_s": 15.0,
+    "max_attempts": 8,
+    "max_backoff_s": 120.0,
+    "max_revisions": 2,
+    "profile_capability": "persistent-authenticated-user-profile-v1",
+    "rate_limit_policy": "shared-host-tempdir-v1",
+    "request_spacing_s": 12.0,
+    "review_roles_per_attempt": 8,
+    "scout_contexts": 4,
+    "stage_timeout_s": 1800.0
+  },
+  "cheap_probe_version": "cheap_probe_v2",
+  "cost": {
+    "expected_compute_cost": "unknown_until_instrumented",
+    "expected_expert_review_cost": "unknown",
+    "expected_verification_cost": "low",
+    "relative_compute_units": 1.615
+  },
+  "metadata": {
+    "formalized": {
+      "last_update": "2025-08-31",
+      "state": "yes"
+    },
+    "references": [
+      "Er85e",
+      "ErMi52",
+      "Gu04"
+    ],
+    "source_last_update": "2025-08-31",
+    "source_problem_url": "https://www.erdosproblems.com/945",
+    "source_reports_resolved": false,
+    "source_sections": {
+      "references": "[Er85e] Erd\\H{o}s, P., Some problems and results in number theory. Number theory and combinatorics. Japan 1984 (Tokyo,\nOkayama and Kyoto, 1984) (1985), 65-87.\n \n [ErMi52] Erd\\H{o}s, P. and Mirsky, L., The distribution of values of the divisor function {$d(n)$}. Proc. London Math. Soc. (3) (1952), 257--271.\n \n [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.",
+      "remarks": "A problem of Erd\\H{o}s and Mirsky \\cite{ErMi52}, who proved that\\[\\frac{(\\log x)^{1/2}}{\\log\\log x}\\ll F(x) \\ll \\exp\\left(O\\left(\\frac{(\\log x)^{1/2}}{\\log\\log x}\\right)\\right).\\]Erd\\H{o}s \\cite{Er85e} claimed that the lower bound could be improved via their method 'with some more work' to $(\\log x)^{1-o(1)}$. Beker has improved the upper bound to\\[F(x) \\ll \\exp\\left(O\\left((\\log x)^{1/3+o(1)}\\right)\\right).\\]Cambie has observed that Cram\\'{er's conjecture} implies that $F(x) \\ll (\\log x)^2$, and furthermore if every interval in $[x,2x]$ of length $\\gg \\log x$ contains a squarefree number (see [208]) then every interval of length $\\gg (\\log x)^2$ contains two numbers with the same number of divisors, whence\\[F(x) \\ll (\\log x)^2.\\]See [1004] for the analogous problem with the Euler totient function.\n\nThis problem is discussed in problem B18 of Guy's collection \\cite{Gu04}."
+    },
+    "source_state": "open",
+    "tags": [
+      "number theory",
+      "divisors"
+    ]
+  },
+  "model_portfolio": "chatgpt-5.6",
+  "pipeline_version": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+  "posterior": {
+    "calibration_status": "uncalibrated_weak_prior_mvp",
+    "matching_outcome_records": 0,
+    "matching_verified_outcome_records": 0,
+    "model_version": "heuristic-competing-risks-v2",
+    "outcome_status_counts": {},
+    "p_correct_but_already_known": {
+      "alpha": 1.87,
+      "beta": 12.0,
+      "credible_interval_approx": [
+        0.0,
+        0.308418
+      ],
+      "probability": 0.134823
+    },
+    "p_expected_corpus_wide_unlock": {
+      "alpha": 3.681,
+      "beta": 11.5,
+      "credible_interval_approx": [
+        0.033651,
+        0.451304
+      ],
+      "probability": 0.242477
+    },
+    "p_finite_computational_resolution": {
+      "alpha": 1.3,
+      "beta": 13.0,
+      "credible_interval_approx": [
+        0.0,
+        0.234961
+      ],
+      "probability": 0.090909
+    },
+    "p_high_mathematical_value": {
+      "alpha": 2.767,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.002499,
+        0.467756
+      ],
+      "probability": 0.235127
+    },
+    "p_lean_verified_exact_target": {
+      "alpha": 3.367,
+      "beta": 15.0,
+      "credible_interval_approx": [
+        0.01098,
+        0.355626
+      ],
+      "probability": 0.183303
+    },
+    "p_reusable_formal_infrastructure": {
+      "alpha": 3.6,
+      "beta": 13.5,
+      "credible_interval_approx": [
+        0.022708,
+        0.398345
+      ],
+      "probability": 0.210526
+    },
+    "p_statement_or_interpretation_failure": {
+      "alpha": 5.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.114656,
+        0.59963
+      ],
+      "probability": 0.357143
+    },
+    "p_verified_correctness_novelty_pending": {
+      "alpha": 1.0,
+      "beta": 9.0,
+      "credible_interval_approx": [
+        0.0,
+        0.277289
+      ],
+      "probability": 0.1
+    },
+    "p_verified_novel_resolution": {
+      "alpha": 1.8,
+      "beta": 45.0,
+      "credible_interval_approx": [
+        0.0,
+        0.092979
+      ],
+      "probability": 0.038462
+    },
+    "p_verified_partial_progress": {
+      "alpha": 2.8,
+      "beta": 9.5,
+      "credible_interval_approx": [
+        0.002288,
+        0.452997
+      ],
+      "probability": 0.227642
+    }
+  },
+  "probe_summary": {
+    "early_research": {
+      "attempts": 0,
+      "censored": false,
+      "completed_manifests": 0,
+      "correctness_gate_present_unbound": false,
+      "gate_statuses": [],
+      "incomplete_runs": 0,
+      "learning_policy": "schema_valid_exact_context_ledger_only",
+      "runs": 0
+    },
+    "formal": {
+      "lean_evidence_certificate": false,
+      "lean_route_available": true,
+      "source_reports_formalized": true,
+      "translation_risk": "material"
+    },
+    "literature": {
+      "comment_count": 3,
+      "recent_claim_signal": false,
+      "retrieved_at": "2026-07-10T23:19:36.204150+00:00",
+      "snapshot_available": true,
+      "source_html_sha256": "dc5989145ee22800a7f9c99bd0a50fa499825d3e4d220d678ccfb307fe526bf0"
+    },
+    "statement": {
+      "ambiguity_markers": [
+        "unspecified_constant",
+        "asymptotic_notation",
+        "multiple_questions"
+      ],
+      "ambiguity_status": "material",
+      "quantifier_signal_count": 1,
+      "question_count": 2,
+      "requires_source_audit": true,
+      "statement_characters": 406,
+      "statement_tokens_approx": 60
+    },
+    "structure": {
+      "asymptotic": false,
+      "exact_search_affordance": false,
+      "finite_signal": true,
+      "goal": "prove_or_disprove",
+      "multi_part": true,
+      "primary_domain": "number theory"
+    }
+  },
+  "problem_id": "erdos-945",
+  "problem_number": 945,
+  "problem_type": {
+    "asymptotic": false,
+    "exact_search_affordance": false,
+    "finite_signal": true,
+    "goal": "prove_or_disprove",
+    "multi_part": true,
+    "primary_domain": "number theory"
+  },
+  "provenance": {
+    "canonical_source": {
+      "commit_pinned_catalog_sha256": "7108dc960b65c891afd4c9555ef76d6607418b321a786a0457f863d75a7a2605",
+      "commit_pinned_catalog_url": "https://raw.githubusercontent.com/teorth/erdosproblems/8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c/data/problems.yaml",
+      "extractor_version": "canonical-sections-v2",
+      "raw_html_path": "raw/pages/problem_945.html",
+      "raw_html_sha256": "e541729b7607b8ce30b98f6f403b7fe1602a7064d92656bc4331f164d3eb1e71",
+      "section_sha256": {
+        "references": "11a5e2943df2fcba7b23891f491edef55e6fb526349b9486695ac40bcc628709",
+        "remarks": "770ba742bc1480db7446c716a47d112e6a9af3fb1d4c24f0c501e2fc1dce317a",
+        "statement": "b00bf2977018a92dee0b405473a100a7b84bc0faf6a504b53f5231fe78f42071"
+      },
+      "snapshot_id": "20260712T2000421754150000-7108dc960b65",
+      "snapshot_time": "2026-07-12T20:00:42.175415+00:00",
+      "source_record_path": "source_records/problem_945.json",
+      "source_record_sha256": "5514957b8a0fad2318a107c9af8b9a6a57a341ce4d90006d2aceddcde3abb19f",
+      "upstream_commit": "8b46f270eeef01ac6904f2d8053a4ea1df2c7c0c",
+      "upstream_repository_url": "https://github.com/teorth/erdosproblems"
+    },
+    "catalog_fetched_at": "2026-07-12T06:30:51.455505+00:00",
+    "latex_path": "open/individual/problem_945.tex",
+    "latex_sha256": "3a3e6cef0bb2b202b31d071e1b713fb3a786f01bb886c3b7f176881677cdea39",
+    "source_commit": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "source_snapshot_id": "20260712T2000421754150000-7108dc960b65",
+    "source_snapshot_sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+  },
+  "research_directive": {
+    "parent_statement_sha256": "b00bf2977018a92dee0b405473a100a7b84bc0faf6a504b53f5231fe78f42071",
+    "recommended_attack_modes": [
+      "statement_audit",
+      "human_clarification",
+      "formal_search",
+      "subproblem_decomposition",
+      "shared_infrastructure_search"
+    ],
+    "schema_version": 1,
+    "subproblem_targets": [
+      {
+        "focus_question": "Let $F(x)$ be the maximal $k$ such that there exist $n+1,\\ldots,n+k\\leq x$ with $\\tau(n+1),\\ldots,\\tau(n+k)$ all distinct (where $\\tau(m)$ counts the divisors of $m$). Estimate $F(x)$. In particular, is it true that\\[F(x) \\leq (\\log x)^{O(1)}?",
+        "focus_question_sha256": "6dc915a42b053e275df4653a61d2b9171db6b2a23ae8c497e396551adfd7b2cd",
+        "parent_statement_sha256": "b00bf2977018a92dee0b405473a100a7b84bc0faf6a504b53f5231fe78f42071",
+        "part_index": 1,
+        "subproblem_contract_sha256": "5e7a02970f1a5054d5fcbb51c00e5c1a6779ba13884d8052ed634c38e4d1555c",
+        "subproblem_id": "erdos-945-part-01-5e7a0297"
+      },
+      {
+        "focus_question": "\\]In other words, is there a constant $C>0$ such that, for all large $x$, every interval $[x,x+(\\log x)^C]$ contains two integers with the same number of divisors?",
+        "focus_question_sha256": "5097837a6ab906ed3798dbdccc4eeacdd4942176502101f904163f6965e7f3c1",
+        "parent_statement_sha256": "b00bf2977018a92dee0b405473a100a7b84bc0faf6a504b53f5231fe78f42071",
+        "part_index": 2,
+        "subproblem_contract_sha256": "0b3bf5b4f1d5161ecc585e89b755030faff6150c21f66bf3bf8710e8f48d6b0e",
+        "subproblem_id": "erdos-945-part-02-0b3bf5b4"
+      }
+    ]
+  },
+  "research_directive_sha256": "e880afd45916b896392f5a7cf40d5835a0ba6085631846ade734f72f2c195d29",
+  "routes": [
+    "statement_audit",
+    "human_clarification",
+    "formal_search",
+    "subproblem_decomposition",
+    "shared_infrastructure_search"
+  ],
+  "run_contract": {
+    "budget": {
+      "max_revisions": 2,
+      "review_roles_per_attempt": 8,
+      "scout_contexts": 4
+    },
+    "dependencies": {
+      "requirements_lock_sha256": "2f83369cefe075e217671dcf4f7a4fa487c3cbc5992e053460bd06bb9f4eda7f"
+    },
+    "execution_config": {
+      "browser_channel": "playwright-chromium",
+      "browser_headless": false,
+      "initial_backoff_s": 15.0,
+      "max_attempts": 8,
+      "max_backoff_s": 120.0,
+      "profile_capability": "persistent-authenticated-user-profile-v1",
+      "rate_limit_policy": "shared-host-tempdir-v1",
+      "request_spacing_s": 12.0,
+      "stage_timeout_s": 1800.0
+    },
+    "model_portfolio": "chatgpt-5.6",
+    "pipeline_fingerprint": "pipeline-content-sha256:d992243e6d1124da98218807bbcc1fed50496af96476673546f17c5c2eddd843",
+    "research_directive_sha256": "e880afd45916b896392f5a7cf40d5835a0ba6085631846ade734f72f2c195d29",
+    "run_contract_schema_version": 2,
+    "runtime": {
+      "implementation": "CPython",
+      "machine": "arm64",
+      "platform": "darwin",
+      "platform_release": "25.3.0",
+      "python": "3.14.4"
+    },
+    "source_snapshot": {
+      "id": "20260712T2000421754150000-7108dc960b65",
+      "sha256": "743b01e7522f4fcf149f5b875de1cd60206eb595eae096e5c81c8538db4448f2"
+    },
+    "statement_sha256": "b00bf2977018a92dee0b405473a100a7b84bc0faf6a504b53f5231fe78f42071",
+    "toolset": {
+      "browser_runner": "playwright",
+      "chromium_binary": {
+        "binary_sha256": "b1b9e2dd063115031f08eadc10ed381ca0fa05b2284baff8f721d87f5f0f61b7",
+        "revision": "1228",
+        "version": "149.0.7827.55"
+      },
+      "feature_flags_sha256": "037d62cbbd94478d2b6b7a5b13846a2c4915d9a346fd45f2de3bd09a382d031c",
+      "formal_verifier": "disabled",
+      "playwright": "1.61.0",
+      "playwright_browsers_manifest_sha256": "ee39bc924bc3d1bd895626c2910f1292d109bbfeeb5abd113acb45e1951cc942",
+      "rate_limit_state": "tempdir/erdos_chatgpt_rate_limit.json"
+    }
+  },
+  "run_contract_id": "165c82e82c1950772bd7ad15928d5c86e10897f8a4c85a53636d92c71c51d461",
+  "schema_version": 2,
+  "snapshot_id": "20260713-deb58d0facd9",
+  "statement": {
+    "ambiguity_status": "material",
+    "intended": "Let $F(x)$ be the maximal $k$ such that there exist $n+1,\\ldots,n+k\\leq x$ with $\\tau(n+1),\\ldots,\\tau(n+k)$ all distinct (where $\\tau(m)$ counts the divisors of $m$). Estimate $F(x)$. In particular, is it true that\\[F(x) \\leq (\\log x)^{O(1)}?\\]In other words, is there a constant $C>0$ such that, for all large $x$, every interval $[x,x+(\\log x)^C]$ contains two integers with the same number of divisors?",
+    "intended_statement_status": "source_text_pending_theorem_level_audit",
+    "interpretation_branches": [],
+    "normalized": "Let $F(x)$ be the maximal $k$ such that there exist $n+1,\\ldots,n+k\\leq x$ with $\\tau(n+1),\\ldots,\\tau(n+k)$ all distinct (where $\\tau(m)$ counts the divisors of $m$). Estimate $F(x)$. In particular, is it true that\\[F(x) \\leq (\\log x)^{O(1)}?\\]In other words, is there a constant $C>0$ such that, for all large $x$, every interval $[x,x+(\\log x)^C]$ contains two integers with the same number of divisors?",
+    "original": "Let $F(x)$ be the maximal $k$ such that there exist $n+1,\\ldots,n+k\\leq x$ with $\\tau(n+1),\\ldots,\\tau(n+k)$ all distinct (where $\\tau(m)$ counts the divisors of $m$). Estimate $F(x)$. In particular, is it true that\\[F(x) \\leq (\\log x)^{O(1)}?\\]In other words, is there a constant $C>0$ such that, for all large $x$, every interval $[x,x+(\\log x)^C]$ contains two integers with the same number of divisors?",
+    "statement_sha256": "b00bf2977018a92dee0b405473a100a7b84bc0faf6a504b53f5231fe78f42071"
+  },
+  "subproblems": [
+    {
+      "parent_problem_id": "erdos-945",
+      "part_index": 1,
+      "run_contract_id": "41b7ec2f400ddcfa43850f119632b1963bfb9375869bd7fde452e09a2698e0b3",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "Let $F(x)$ be the maximal $k$ such that there exist $n+1,\\ldots,n+k\\leq x$ with $\\tau(n+1),\\ldots,\\tau(n+k)$ all distinct (where $\\tau(m)$ counts the divisors of $m$). Estimate $F(x)$. In particular, is it true that\\[F(x) \\leq (\\log x)^{O(1)}?",
+        "focus_question_sha256": "6dc915a42b053e275df4653a61d2b9171db6b2a23ae8c497e396551adfd7b2cd",
+        "normalized": "Let $F(x)$ be the maximal $k$ such that there exist $n+1,\\ldots,n+k\\leq x$ with $\\tau(n+1),\\ldots,\\tau(n+k)$ all distinct (where $\\tau(m)$ counts the divisors of $m$). Estimate $F(x)$. In particular, is it true that\\[F(x) \\leq (\\log x)^{O(1)}?\\]In other words, is there a constant $C>0$ such that, for all large $x$, every interval $[x,x+(\\log x)^C]$ contains two integers with the same number of divisors?",
+        "original": "Let $F(x)$ be the maximal $k$ such that there exist $n+1,\\ldots,n+k\\leq x$ with $\\tau(n+1),\\ldots,\\tau(n+k)$ all distinct (where $\\tau(m)$ counts the divisors of $m$). Estimate $F(x)$. In particular, is it true that\\[F(x) \\leq (\\log x)^{O(1)}?\\]In other words, is there a constant $C>0$ such that, for all large $x$, every interval $[x,x+(\\log x)^C]$ contains two integers with the same number of divisors?",
+        "statement_sha256": "b00bf2977018a92dee0b405473a100a7b84bc0faf6a504b53f5231fe78f42071"
+      },
+      "subproblem_contract_sha256": "5e7a02970f1a5054d5fcbb51c00e5c1a6779ba13884d8052ed634c38e4d1555c",
+      "subproblem_id": "erdos-945-part-01-5e7a0297"
+    },
+    {
+      "parent_problem_id": "erdos-945",
+      "part_index": 2,
+      "run_contract_id": "8ca1659c4246c6d7b4ef57b311583113a06ef04232a5cde6502df18b68209b25",
+      "schema_version": 2,
+      "statement": {
+        "focus_question": "\\]In other words, is there a constant $C>0$ such that, for all large $x$, every interval $[x,x+(\\log x)^C]$ contains two integers with the same number of divisors?",
+        "focus_question_sha256": "5097837a6ab906ed3798dbdccc4eeacdd4942176502101f904163f6965e7f3c1",
+        "normalized": "Let $F(x)$ be the maximal $k$ such that there exist $n+1,\\ldots,n+k\\leq x$ with $\\tau(n+1),\\ldots,\\tau(n+k)$ all distinct (where $\\tau(m)$ counts the divisors of $m$). Estimate $F(x)$. In particular, is it true that\\[F(x) \\leq (\\log x)^{O(1)}?\\]In other words, is there a constant $C>0$ such that, for all large $x$, every interval $[x,x+(\\log x)^C]$ contains two integers with the same number of divisors?",
+        "original": "Let $F(x)$ be the maximal $k$ such that there exist $n+1,\\ldots,n+k\\leq x$ with $\\tau(n+1),\\ldots,\\tau(n+k)$ all distinct (where $\\tau(m)$ counts the divisors of $m$). Estimate $F(x)$. In particular, is it true that\\[F(x) \\leq (\\log x)^{O(1)}?\\]In other words, is there a constant $C>0$ such that, for all large $x$, every interval $[x,x+(\\log x)^C]$ contains two integers with the same number of divisors?",
+        "statement_sha256": "b00bf2977018a92dee0b405473a100a7b84bc0faf6a504b53f5231fe78f42071"
+      },
+      "subproblem_contract_sha256": "0b3bf5b4f1d5161ecc585e89b755030faff6150c21f66bf3bf8710e8f48d6b0e",
+      "subproblem_id": "erdos-945-part-02-0b3bf5b4"
+    }
+  ],
+  "toolset_version": "142ab97636d9251468a1570fe3bd66a62492741b09f25243ce2773f8a97576aa"
+}

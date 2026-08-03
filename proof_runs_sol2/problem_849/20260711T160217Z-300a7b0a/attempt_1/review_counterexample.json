@@ -1,0 +1,102 @@
+{
+"reviewer_role": "independent adversarial referee (counterexample)",
+"verdict": "fail",
+"claims_checked": 16,
+"claims_total": 16,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14",
+"C15",
+"C16"
+],
+"open_gaps": [
+"The immutable wording does not explicitly quantify n and k as integers. The candidate adopts the standard discrete interpretation despite the acceptance criterion requiring ambiguity to remain a blocking defect.",
+"No proof or disproof of the universal assertion is supplied.",
+"The candidate does not exclude an exact multiplicity-five value: the proposed low-high exclusion S_2 ∩ S_3 ∩ S_4 ∩ S_k = ∅ for k ≥ 5 remains unproved.",
+"The proposed high-layer extension bound remains unproved.",
+"No admissible four-interior-point collision is constructed or globally excluded.",
+"The Pell collision family is not lifted to four exact interior representations.",
+"No construction realizes every exact interior multiplicity q ≥ 0.",
+"The finite exclusion through 10^30 cannot settle any value above that bound."
+],
+"unchecked_imports": [
+"No external theorem is used as a premise.",
+"C16 is presented without source code, a transcript, a hash, or a separately verifiable certificate. Its headline enumeration counts were independently reproduced with exact integer arithmetic, but the candidate itself is not computationally self-certifying."
+],
+"counterexample_searches": [
+{
+"target": "C2-C7 boundary cases",
+"method": "Checked the smallest admissible rows and every omitted layer in the witnesses 2, 6, 120, and 3003.",
+"result": "No counterexample found; the claimed exact multiplicities 1, 2, 3, and 4 are correct under the discrete interpretation."
+},
+{
+"target": "C11 collision-slope orientation",
+"method": "Tested the chain (78,2), (15,5), (14,6) for the value 3003.",
+"result": "The row-drop-to-column-rise ratios are 21 and 1, while their reciprocals are 1/21 and 1. This agrees with the candidate's corrected semantic formulation: d_i/e_i decreases and e_i/d_i increases."
+},
+{
+"target": "C11 averaging proof",
+"method": "Checked the monotonicities of U(r,k)=log(r/(r-k)) and G(r,j)=log((r-j)/(j+1)) across consecutive collision rectangles.",
+"result": "The next-edge U terms are strictly larger and the next-edge G terms strictly smaller, so the claimed slope ordering survives."
+},
+{
+"target": "C13 Pell recurrence",
+"method": "Applied the recurrence to (X,Y)=(29,13) and checked the resulting binomial identities.",
+"result": "It gives (X,Y)=(199,89), hence (n,k)=(104,39), and binom(104,39)=binom(103,40)=61218182743304701891431482520."
+},
+{
+"target": "C16 finite enumeration",
+"method": "Re-enumerated every pair with 5 ≤ k, n ≥ 2k, and binom(n,k) ≤ 10^30 using arbitrary-precision integer recurrence, then applied the exact S_2, S_3, and S_4 tests.",
+"result": "The reported 3,014,786 occurrences, 3,014,784 distinct values, and the two repeated high-layer values 3003 and 61218182743304701891431482520 were reproduced. No value with four interior representations was found below 10^30."
+},
+{
+"target": "Small-row collision search",
+"method": "Grouped all interior binomial coefficients for rows n ≤ 1000.",
+"result": "The only value with at least three interior representations was 3003, with exactly the three interior points listed by the candidate. This is finite evidence only."
+}
+],
+"material_errors": [
+{
+"location": "Scope and C1",
+"error": "The candidate conditionally replaces the formally ambiguous statement with a discrete-domain version. Under the immutable acceptance criterion, that conditional normalization cannot constitute resolution of the exact wording."
+},
+{
+"location": "Terminal conclusion",
+"error": "The candidate explicitly leaves every decisive branch open and returns RESOURCE_EXHAUSTED. It therefore fails the requirement to prove or disprove the original universal assertion."
+},
+{
+"location": "C16",
+"error": "Even a correct exhaustive calculation through 10^30 is only a bounded exclusion. It provides no valid inference about all integers a and cannot establish the negative answer at t=5."
+},
+{
+"location": "Dependency graph",
+"error": "Neither NEGATIVE_T5 nor POSITIVE_SCALING is completed. Consequently GOAL has no completed terminal dependency."
+}
+],
+"completeness_score": 60,
+"proof_confidence": 0,
+"adversarial_survival_score": 86,
+"statement_sha256": "b669094e22469ade57dcca529d2ce001ede0c9bee628c97121ad1d9a7ebfb01b",
+"notes": [
+"The auxiliary structural claims largely survive direct boundary, algebraic, and finite-computation attacks.",
+"No counterexample to C1-C16 was found after interpreting the vertically extracted fractions in their mathematically consistent orientation.",
+"Survival of the auxiliary claims does not compensate for the absence of either a global counterexample at some t or a construction for every t.",
+"Reviewed supplied candidate: 
+
+Pasted text
+
+"
+]
+}

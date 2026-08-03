@@ -1,0 +1,25 @@
+{
+  "problem_number": 1160,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/1160",
+  "retrieved_at": "2026-07-10T23:20:51.379907+00:00",
+  "page_title": "1160 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "bba92c4469a4766d57a06f07248d56d5f674f76838e6a41af3071d80847edd3a",
+  "comment_count": 3,
+  "comments": [
+    {
+      "post_id": "3796",
+      "text": "The Wikipedia page on $p$-groups says that \"there is a folklore conjecture asserting that almost all finite groups are 2-groups: the fraction of isomorphism classes of 2-groups among isomorphism classes of groups of order at most n is thought to tend to 1 as n tends to infinity\". [Random numerology: There are $14$ groups of order $16$ and also $14$ groups of order in $(8,16)$. Similarly, there are $51$ groups of order $32$ and also $51$ groups of order in $(16,32)$.]",
+      "meta": "BorisAlexeev — 14:46 on 26 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3798",
+      "text": "Thanks! I've just found some more background and results on this problem, which you might be interested in - added to the remarks above. The reference to Pantelidakis was found in [BNV07], but I haven't managed to find an online copy of the original DPhil thesis to double check this. Assuming this result is reported accurately, the conjecture for all odd $n$ is reduced to a finite check, which perhaps may be in range of some clever modern computations? EDIT: For more numerology, a list of $g(n)$ for $n\\leq 2000$ can be found on the last couple pages of this report by Besche, Eick, and O'Brien.",
+      "meta": "Thomas Bloom — 15:55 on 26 Jan 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3806",
+      "text": "Thanks. My numerology was in the direction of \"Question 22.18 of [BNV07]\", except I wanted it true for all $m$. So one version might be that $\\sum_{2^{m-1}<n<2^m} g(n) \\le g(2^m)$, which is true for small $m$ (and tight for $m=4$ and $m=5$). (This would imply the original Erdős conjecture above.) The table you mention is easy to look at as a human. For a computer, the OEIS has a file for $n\\le 2047$ linked here. It's also available as FiniteGroupCount[n] in Mathematica.",
+      "meta": "BorisAlexeev — 19:29 on 26 Jan 2026 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

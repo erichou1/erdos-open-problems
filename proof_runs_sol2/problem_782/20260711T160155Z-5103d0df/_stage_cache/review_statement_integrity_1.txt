@@ -1,0 +1,99 @@
+{
+"reviewer_role": "independent adversarial referee (statement_integrity)",
+"verdict": "fail",
+"claims_checked": 14,
+"claims_total": 14,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14"
+],
+"open_gaps": [
+"The semantic blocker is not resolved, so the candidate never identifies a unique exact proposition to prove or disprove.",
+"Neither quantified question in the immutable statement is proved or disproved.",
+"No scale-independent bound for fixed-width linked-factor chains is established, and no fixed-width construction of arbitrarily long chains is supplied.",
+"No height-independent dimension bound for proper square cubes is established, and no construction of cubes in every dimension is supplied.",
+"The requested exact linked-factor-chain falsification harness and recursive cube-search harness are not provided.",
+"The boundary case k=1 is not incorporated into the claimed gap-diameter normalization."
+],
+"unchecked_imports": [
+"C12 invokes repeated finite-difference integration for sqrt(x), including the singular boundary A_S=0, without fully stating and checking the improper-integral and limiting hypotheses.",
+"C12 does not explicitly define Y(S) to be the nonnegative square root, although its positivity and monotonicity arguments require that choice."
+],
+"counterexample_searches": [
+{
+"target": "Semantic nondegeneracy",
+"result": "The constant sequence x_i=1 with d=0 satisfies the first displayed inequalities under the permissive literal reading."
+},
+{
+"target": "Collapsed cubes",
+"result": "Taking a=1 and every b_i=0 produces nominal cubes of arbitrary listed dimension but only the singleton set {1}."
+},
+{
+"target": "C6 arithmetic inequality",
+"result": "The asserted bound rs/(r+s)<=2 is false: r=s=5 gives rs/(r+s)=5/2. These values also satisfy the stated local conditions r<=b, s>=r, and s<b when b=10."
+},
+{
+"target": "C9 binary enumeration",
+"result": "An independent exhaustive offline enumeration confirms the listed counts through length 10 and confirms that no binary additive-cube-free word of length 10 exists."
+},
+{
+"target": "C14 explicit quasi-progressions",
+"result": "Direct arithmetic confirms the width-1 and halving-event examples."
+},
+{
+"target": "C14 ternary word",
+"result": "Direct exhaustive checking of all starts and block lengths confirms that the displayed length-30 ternary word avoids the stated additive-cube pattern."
+},
+{
+"target": "C14 square cubes",
+"result": "Direct calculation confirms the displayed proper two-dimensional and three-dimensional square cubes."
+}
+],
+"material_errors": [
+{
+"claim_id": "GLOBAL",
+"error": "The candidate explicitly replaces the immutable wording with a working strict-increase/proper-cube interpretation. It then leaves that repaired problem unresolved. This fails the acceptance criteria requiring a proof or disproof of both exact questions without changed domains, assumptions, or conclusions."
+},
+{
+"claim_id": "C6",
+"error": "The proof uses the false assertion rs/(r+s)<=2 and claims this yields 3b<=W. The displayed counterexample r=s=5 disproves the asserted inequality. Therefore the transition-classification derivation is invalid as written, notwithstanding the possibility that its conclusion could be established by a different argument."
+},
+{
+"claim_id": "C2",
+"error": "The equivalence uses min_i G_i and max_i G_i without treating k=1, for which there are no gaps. Thus it is not an equivalence for every k appearing in the immutable quantifier."
+},
+{
+"claim_id": "C12",
+"error": "The curvature proof silently requires principal nonnegative roots and a justified singular-boundary finite-difference formula. Those hypotheses are not fully stated and checked."
+},
+{
+"claim_id": "DEPENDENCY_LEDGER",
+"error": "The ledger labels C6 as checked and says the inequality direction was corrected, but the report still contains the false <=2 inequality. The self-certification is therefore inaccurate."
+},
+{
+"claim_id": "COMPLETENESS",
+"error": "Central validated tasks A4, A5, B4, B5, and D1 remain unresolved, while A7 and B6 are not actually constructed. Fourteen checked intermediate claims do not constitute completion of the requested statement."
+}
+],
+"completeness_score": 58,
+"proof_confidence": 5,
+"adversarial_survival_score": 46,
+"statement_sha256": "d23ff4ea91f0d915bd67a828cdec2f9acc9b33169e5e84e2e4f5660875187ca1",
+"notes": "Most algebraic and finite intermediate claims survive independent checking under the candidate's added nondegeneracy conventions, including C3-C5, C7-C11, C13, and the explicit examples in C14. That does not cure the statement-integrity failure or the invalid C6 proof. Reviewed from the uploaded untrusted artifact: 
+
+Pasted text
+
+"
+}

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1155,
+  "raw_page": {
+    "path": "raw/pages/problem_1155.html",
+    "sha256": "c91958f134d2e5d3e7aa3cf6a207a37b63a4ec12d1618a63ef8a05da3eb7c96e"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "627eba42746f4c952951d28d2ebbcd9a1c3e284d3210ca8c970c154083cacefd",
+      "source_region": "div.problem-additional-text",
+      "text": "[BFL15] Bohman, Tom and Frieze, Alan and Lubetzky, Eyal, Random triangle removal. Adv. Math. (2015), 379--438.\n \n [Bo98] Bollob\\'{a}s, B\\'ela, To prove and conjecture: {P}aul {E}rd\\H os and his\nmathematics. Amer. Math. Monthly (1998), 209--237.\n \n [Gr97] Grable, David A., On random greedy triangle packing. Electron. J. Combin. (1997), Research Paper 11, 19.\n \n [Va99] Various, Some of Paul's favorite problems. Booklet produced for the conference \"Paul Erd\\H{o}s and his mathematics\", Budapest, July 1999 (1999)."
+    },
+    "remarks": {
+      "sha256": "60177c6ed94f3d711b7ce8b25968013b02174d1148727919763bae554ff37299",
+      "source_region": "div.problem-additional-text",
+      "text": "A problem of Bollob\\'{a}s and Erd\\H{o}s, described in \\cite{Va99} as 'motivated by the task of generating a random triangle-free graph'. In \\cite{Bo98} it says they asked this at the 'Quo Vadis, Graph Theory?' conference in Fairbanks, Alaska, in 1990, 'while admiring the playful bears'.\n\nGrable \\cite{Gr97} proved that, for every $\\epsilon>0$,\\[\\mathbb{P}(f(n)>n^{7/4+\\epsilon})\\to 0.\\]Bohman, Frieze, and Lubetzky \\cite{BFL15} proved that $f(n)=n^{3/2+o(1)}$ almost surely - in other words, for every $\\epsilon>0$,\\[\\mathbb{P}(n^{3/2-\\epsilon}<f(n)<n^{3/2+\\epsilon})\\to 1.\\]"
+    },
+    "statement": {
+      "sha256": "fb466c41499b91d93d52b15df06723ec16fbd519453d39581d1dc704a768d2c7",
+      "source_region": "div#content",
+      "text": "Construct a random graph on $n$ vertices in the following way: begin with the complete graph $K_n$. At each stage, choose uniformly a random triangle in the graph and delete all the edges of this triangle. Repeat until the graph is triangle-free.\n\nDescribe the typical parameters and structure of such a graph. In particular, if $f(n)$ is the number of edges remaining, then is it true that\\[\\mathbb{E}f(n)\\asymp n^{3/2}\\]and that $f(n) \\ll n^{3/2}$ almost surely?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1155"
+}

@@ -1,0 +1,20 @@
+{
+  "problem_number": 820,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/820",
+  "retrieved_at": "2026-07-10T23:18:57.139022+00:00",
+  "page_title": "820 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "f122c83b7b2fba5a857141d56c904dd9e91f90db50b32ec092ba98bc39076de7",
+  "comment_count": 2,
+  "comments": [
+    {
+      "post_id": "1099",
+      "text": "The proof by Erdős combined with slightly more recent knowledge provides the required lower bound on $H(n)$ for infinitely many $n$, modulo the exact value of the constant $c$. Let me explain. Let $\\omega^*(n)$ count the number of primes $p$ such that $p-1$ divides $n$. By Proposition $10$ in this 1983 paper by Adleman, Pomerance and Rumely (see page $201$, or page $29$ of the pdf-file), there exists an absolute constant $c > 0$ such that there are infinitely many $n$ with $\\omega^*(n) > n^{c/\\log \\log n}$. So let $n$ be a large enough integer for which $m > n^{c/\\log \\log n}$ primes $p_1, p_2, \\ldots, p_m$ exist with $p_i - 1 | n$. With $k < l = H(n)$ such that $\\gcd(k^n-1, l^n-1) = 1$, we then must have that $kl$ is divisible by the product $p_1p_2 \\cdots p_m$ due to Fermat's little theorem. By noting that this product $p_1p_2\\cdots p_m$ is, by the prime number theorem, larger than $e^{2m}$ if $n$ (and therefore $m$) is large enough, we get \\begin{align*} H(n) &> \\sqrt{kl} \\\\ &\\ge \\sqrt{p_1p_2 \\cdots p_m} \\\\ &> e^m \\\\ &> \\exp[n^{c/\\log \\log n}], \\end{align*}as promised. By the way, since $\\omega^*(n)$ is at most the number of divisors of $n$, which is in turn upper bounded by $n^{(\\log 2 + o(1))/\\log \\log n}$, it is tempting to think that the optimal $c$ could be $\\log 2$. But I certainly have no idea and this is pure speculation. (The site has been updated to address this comment.)",
+      "meta": "Woett — 12:54 on 15 Oct 2025 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "610",
+      "text": "It may be interesting to link this problem to the related problem [\\#770]. (The site has been updated to address this comment.)",
+      "meta": "StijnC — 07:14 on 19 Sep 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

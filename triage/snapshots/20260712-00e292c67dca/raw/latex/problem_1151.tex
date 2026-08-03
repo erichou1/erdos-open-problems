@@ -1,0 +1,44 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#1151}
+\date{Last updated: 2026-01-23}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} analysis, polynomials
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Given $a_1,\ldots,a_n\in [-1,1]$ let\[\mathcal{L}^nf(x) = \sum_{1\leq i\leq n}f(a_i)\ell_i(x)\]be the unique polynomial of degree $n-1$ which agrees with $f$ on $a_i$ for $1\leq i\leq n$ (that is, the Lagrange interpolation polynomial).
+
+Let $a_i$ be the set of Chebyshev nodes. Prove that, for any closed $A\subseteq [-1,1]$, there exists a continuous function $f$ such that $A$ is the set of limit points of $\mathcal{L}^nf(x)$.
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+This is as the problem is given in \cite{Va99}, but I am unclear exactly what is intended here - is this meant for fixed, arbitrary, $x\in [-1,1]$?
+
+Erd\H{o}s \cite{Er41} proved that, if $x=\cos(\pi p/q)$ for some odd integers $p,q\geq 1$, then there is a continuous function $f$ such that\[\lim_{n\to \infty}\mathcal{L}^nf(x)=\infty,\]where the limit is taken over the sequence of Chebyshev nodes as $n\to \infty$. In \cite{Er43} he claims (without proof) that for any closed set $A$ there exists a continuous $f$ such that the limit points of $\mathcal{L}^nf(x)$ is $A$ (for specific $x$ of this shape).
+
+\bigskip
+\noindent\textbf{References:}
+
+[Er41] Erd\H{o}s, P., On divergence properties of the {L}agrange interpolation
+parabolas. Ann. of Math. (2) (1941), 309--315.
+ 
+ [Er43] Erd\H{o}s, P., A note on {F}arey series. Quart. J. Math. Oxford Ser. (1943), 82--85.
+ 
+ [Va99] Various, Some of Paul's favorite problems. Booklet produced for the conference "Paul Erd\H{o}s and his mathematics", Budapest, July 1999 (1999).
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/1151}}
+\end{document}

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 359,
+  "raw_page": {
+    "path": "raw/pages/problem_359.html",
+    "sha256": "d1e7c0e8ad5c0777b4d4aa3acd41c1dc68450f564c59cf114aa6499c7c2b1f71"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "3131af830b4624bccb7db4a3064dc9c91169cf8a484f4664397308aa02981a4f",
+      "source_region": "div.problem-additional-text",
+      "text": "[An75] Andrews, George E., Research Problems: Mac Mahon's Prime Numbers of Measurement. Amer. Math. Monthly (1975), 922-923.\n \n [Po77] Porubsk\\'y, \\v S., On {M}ac{M}ahon's segmented numbers and related sequences. Nieuw Arch. Wisk. (3) (1977), 403--408."
+    },
+    "remarks": {
+      "sha256": "80af1d5e85f4b013d84d29a76f02c2ff9c6cd771350355acffe3b253c9bf5a0c",
+      "source_region": "div.problem-additional-text",
+      "text": "A problem of MacMahon, studied by Andrews \\cite{An75}. When $n=1$ this sequence begins\\[1,2,4,5,8,10,14,15,\\ldots.\\]This sequence is A002048 in the OEIS. Andrews conjectures\\[a_k\\sim \\frac{k\\log k}{\\log\\log k}.\\]Porubsky \\cite{Po77} proved that, for any $\\epsilon>0$, there are infinitely many $k$ such that\\[a_k < (\\log k)^\\epsilon \\frac{k\\log k}{\\log\\log k},\\]and also that if $A(x)$ counts the number of $a_i\\leq x$ then\\[\\limsup \\frac{A(x)}{\\pi(x)}\\geq \\frac{1}{\\log 2}\\]where $\\pi(x)$ counts the number of primes $\\leq x$.\n\nSee also [839]."
+    },
+    "statement": {
+      "sha256": "0a4cfc1de49cf850f42dd4d38a61d714ea734275c79c030919121d21545befd7",
+      "source_region": "div#content",
+      "text": "Let $a_1<a_2<\\cdots$ be an infinite sequence of integers such that $a_1=n$ and $a_{i+1}$ is the least integer which is not a sum of consecutive earlier $a_j$s. What can be said about the density of this sequence?\n\nIn particular, in the case $n=1$, can one prove that $a_k/k\\to \\infty$ and $a_k/k^{1+c}\\to 0$ for any $c>0$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/359"
+}

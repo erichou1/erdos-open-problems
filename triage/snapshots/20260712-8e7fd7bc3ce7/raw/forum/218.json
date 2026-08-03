@@ -1,0 +1,80 @@
+{
+  "problem_number": 218,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/218",
+  "retrieved_at": "2026-07-10T23:16:07.473671+00:00",
+  "page_title": "218 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "7e57bd04a388017a4daa2104f6832c71981ad4e590c3baa09ee7dc0856a511e6",
+  "comment_count": 14,
+  "comments": [
+    {
+      "post_id": "3901",
+      "text": "So are there any rules to accepting conditional solutions for problems reduced to well-known conjectures? I followed my (GPT assisted) work above with a uniform Hardy--Littlewood prime $k$-tuple conjecture obtain the solution. Obviously no one is solving that any time soon, so where would this go? Uniform Hardy--Littlewood correlations (conjectural). Fix $k \\ge 1$ and $\\lambda > 0$. Uniformly for distinct integers\\[ 0 \\le h_1 < h_2 < \\cdots < h_k \\le \\lambda \\log x, \\]one has\\[ \\sum_{n \\le x} \\prod_{j=1}^k \\Lambda(n+h_j) = \\bigl(\\mathfrak{S}(\\{h_1,\\dots,h_k\\}) + o_{k,\\lambda}(1)\\bigr)\\,x, \\]where $\\Lambda$ is the von Mangoldt function and $\\mathfrak{S}(\\{h_1,\\dots,h_k\\})$ is the Hardy--Littlewood singular series. Assume this conjecture holds for all $k \\ge 1$. Fix $\\lambda > 0$. For $x$ large, form the scaled point set\\[ \\mathcal{P}_x = \\left\\{ \\frac{p-x}{\\log x} \\in [0,\\lambda] :\\ p \\text{ prime},\\ x < p \\le x + \\lambda \\log x \\right\\}. \\]Then $\\mathcal{P}_x$ converges in finite-dimensional distributions to a rate-$1$ Poisson point process on $[0,\\lambda]$. Let\\[ 0 \\le a_1 < b_1 \\le \\cdots \\le a_m < b_m \\le \\lambda, \\]and let $N_i(x)$ count primes in the interval\\[ (x + a_i \\log x,\\ x + b_i \\log x]. \\]Joint convergence to independent Poisson random variables with means $(b_i - a_i)$ follows by computing mixed factorial moments\\[ \\mathbb{E}\\!\\left[\\prod_i (N_i)_{r_i}\\right] \\]averaged over $x$. Expanding these moments reduces to sums of the above type with $k = \\sum r_i$, where the shifts $h_j$ range over a set of size $O(\\log x)$. The conjectural asymptotic supplies the main term, and the remaining singular-series averages match those of a Poisson process. Let $(T_0 < T_1 < T_2 < \\cdots)$ be the points of a rate-$1$ Poisson point process on $\\mathbb{R}$, conditioned to have a point at $0$. Then the successive gaps\\[ G_i = T_{i+1} - T_i \\]are independent $\\mathrm{Exp}(1)$ random variables. Let $X$ and $Y$ be independent $\\mathrm{Exp}(1)$ random variables. For each $c > 0$,\\[ \\mathbb{P}(Y \\ge cX) = \\frac{1}{1+c}. \\]In particular,\\[ \\mathbb{P}(Y > X) = \\mathbb{P}(Y < X) = \\tfrac12, \\qquad \\mathbb{P}(Y = X) = 0. \\]Indeed,\\[ \\mathbb{P}(Y \\ge cX) = \\int_0^\\infty \\mathbb{P}(Y \\ge cx)\\,e^{-x}\\,dx = \\int_0^\\infty e^{-cx}e^{-x}\\,dx = \\frac{1}{1+c}. \\]Assume the uniform Hardy--Littlewood conjecture above. Choose a prime $p_n$ uniformly at random among primes $\\le x$ and consider the local prime configuration in the interval\\[ [p_n,\\ p_n + \\lambda \\log p_n]. \\]After rescaling by $\\log p_n$, the consecutive gaps\\[ \\left( \\frac{d_n}{\\log p_n}, \\frac{d_{n+1}}{\\log p_n} \\right) \\]converge in distribution to independent $\\mathrm{Exp}(1)$ random variables $(X,Y)$. Therefore, for each fixed $c > 0$, the limiting density exists and equals\\[ \\delta(\\{n : d_{n+1} \\ge c\\,d_n\\}) = \\mathbb{P}(Y \\ge cX) = \\frac{1}{1+c}. \\]Taking $c = 1$ gives density $1/2$. Since ties have density zero, the same limit holds with $\\ge$ replaced by $>$, and similarly for $<$.",
+      "meta": "John N. Dvorak — 23:33 on 28 Jan 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3902",
+      "text": "This type of implication is already known in the literature; see for instance this paper of Banks. (The site has been updated to address this comment.)",
+      "meta": "TerenceTao — 00:42 on 29 Jan 2026 👍 2 📝 1 🤖 0"
+    },
+    {
+      "post_id": "3903",
+      "text": "Thanks! Can we call this one a conditional resolution then?",
+      "meta": "John N. Dvorak — 02:21 on 29 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3904",
+      "text": "Ive added it under Section 1(b) of the wiki. For future attempts at applying AI to these problems, I would recommend also performing a literature review to ensure that the AI tool is not simply repeating arguments that were already well known to experts.",
+      "meta": "TerenceTao — 03:15 on 29 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3917",
+      "text": "So to review the bidding of a conditional resolution: 1) We show that ($d_n = d_{n+1} \\le y$) and ($d_n = d_{n+1} > y$) have density zero: The argument partitions at $y = (\\log x)^{4/3}$. Small equal gaps ($d_n = d_{n+1} \\le y$) are bounded by uniform Brun sieve estimates for $3$-tuples. Large equal gaps ($d_n = d_{n+1} > y$) are bounded using the telescoping sum $$\\sum_{m \\le \\pi(x)} d_m = p_{\\pi(x)+1} - 2 \\ll x,$$ which implies that the number of gaps exceeding $y$ is $\\ll x/y$. With the choice $y = (\\log x)^{4/3}$, both contributions are $o(\\pi(x))$, so $$T(x)/\\pi(x) \\to 0.$$ 2) We follow Banks [Ba23] who gives a heuristic argument, assuming a quantitative form of the prime tuples conjecture, that the first statement is true, and in fact for any $c\\geq 0$ and $\\epsilon>0$ the number of $n$ such that $p_n\\leq x$ and $d_{n+1}\\geq cd_n$ is\\[\\frac{\\pi(x)}{c+1}+O\\left(\\frac{x}{(\\log x)^{3/2+\\epsilon}}\\right).\\]",
+      "meta": "John N. Dvorak — 14:44 on 29 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1853",
+      "text": "Followed Terry Tao's suggestion above to use sieve theory methods. After several iterations (and outstanding help from Kimi K2, Grok, and Gemini) on the optimal splitting threshold, the proof is now complete: equal consecutive prime gaps have asymptotic density zero, thereby reducing Erdős Problem #218 to showing that each strict inequality $d_{n+1} > d_n$ and $d_{n+1} < d_n$ has density $1/2$. The argument partitions at $y = (\\log x)^{4/3}$. Small equal gaps ($d_n = d_{n+1} \\le y$) are bounded by uniform Brun sieve estimates for $3$-tuples. Large equal gaps ($d_n = d_{n+1} > y$) are bounded using the telescoping sum $$\\sum_{m \\le \\pi(x)} d_m = p_{\\pi(x)+1} - 2 \\ll x,$$ which implies that the number of gaps exceeding $y$ is $\\ll x/y$. With the choice $y = (\\log x)^{4/3}$, both contributions are $o(\\pi(x))$, so $$T(x)/\\pi(x) \\to 0.$$ The visual overview linked below shows Google Nano Banana Pro's rendering of the proof and looks incredible! I intend to see if I can \"vibe prove\" this in Lean next. 6-page preprint (pdf) One-page visual overview (jpg)",
+      "meta": "John N. Dvorak — 18:21 on 26 Nov 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1855",
+      "text": "John, have you tried Aristotle for formalizing the proof (https://aristotle.harmonic.fun)? It can take the proof text directly and autoformalize, with success doing this in one shot for a number of proved Erdos problems so far.",
+      "meta": "nanand2 — 20:04 on 26 Nov 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1856",
+      "text": "Supplementary: John might look in particular at the recent comments of BorisAlexeev on several problems in this forum.",
+      "meta": "old-bielefelder — 20:33 on 26 Nov 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1857",
+      "text": "Not yet...let me go try and report back!",
+      "meta": "John N. Dvorak — 20:45 on 26 Nov 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1858",
+      "text": "One limiting factor is that I'm not sure the Brun sieve is in Mathlib yet. There is a version of it in the PNT+ project at https://github.com/AlexKontorovich/PrimeNumberTheoremAnd/blob/main/PrimeNumberTheoremAnd/BrunTitchmarsh.lean (as well as the imports involving the Selberg sieve) but it would take some non-trivial Lean and analytic number theory expertise to work with it; I doubt Aristotle could handle it on its own, though perhaps I will be pleasantly surprised by this.",
+      "meta": "TerenceTao — 23:10 on 26 Nov 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1859",
+      "text": "Terry, I also see the Strong PNT proof repo done by Gauss which ought to have much of that: https://github.com/math-inc/strongpnt. A concern I have is compatibility among Lean versions; I'm tracking it was 4.12 and we are now on 4.2x. I have a (very) long-horizon goal to get Littlewood's infinite sign change theorem for Li(x) and Pi(x) formalized in Lean but am worried about starting a project of its magnitude when it's possible version concurrency/required tactic updates may derail the effort.",
+      "meta": "John N. Dvorak — 23:50 on 26 Nov 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "294",
+      "text": "Yes, If i am not mistaken, i believe Brun's method gives a proof that this set has density zero.",
+      "meta": "Dogmachine — 22:31 on 03 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "310",
+      "text": "In a similar vein, I can believe that some version of the prime tuples conjecture should be able to answer all these questions affirmatively (though for the first two questions one may need quite a uniformly quantitative version of this conjecture).",
+      "meta": "TerenceTao — 21:03 on 04 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "292",
+      "text": "It should be possible to use existing sieve theory methods to show that the set of $n$ for which $d_{n+1}=d_n$ has density zero, so that the first two problems are equivalent to each other.",
+      "meta": "TerenceTao — 21:18 on 03 Sep 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

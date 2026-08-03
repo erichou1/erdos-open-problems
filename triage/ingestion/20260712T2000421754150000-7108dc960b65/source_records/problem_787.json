@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 787,
+  "raw_page": {
+    "path": "raw/pages/problem_787.html",
+    "sha256": "a25f67e31e412851bd396773bb7ccc29377b67e4521640f6bf799c9686b2d304"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "2aece5336982c02a0434a294567d7f086e7f2a90c369e7ec00c4fc0e3dbecc57",
+      "source_region": "div.problem-additional-text",
+      "text": "[Be25] A. Beker, The Erd\\H{o}s-Moser sum-free set problem via improved bounds for $k$-configurations. arXiv:2501.10203 (2025).\n \n [Ch71] Choi, S. L. G., On a combinatorial problem in number theory. Proc. London Math. Soc. (3) (1971), 629-642.\n \n [Ru05] Ruzsa, Imre Z., Sum-avoiding subsets. Ramanujan J. (2005), 77-82.\n \n [Sa21] Sanders, Tom, The Erd\\H{o}s-Moser sum-free set problem. Canad. J. Math. (2021), 63-107."
+    },
+    "remarks": {
+      "sha256": "1acbfdbe74067f350376a313b669fb1a001c02001f8ec723d70998e4e414ca34",
+      "source_region": "div.problem-additional-text",
+      "text": "This function was considered by Erd\\H{o}s and Moser. Choi observed that, without loss of generality, one can assume that $A\\subset \\mathbb{Z}$.\n\nKlarner proved $g(n) \\gg \\log n$ (indeed, a greedy construction suffices). Choi \\cite{Ch71} proved $g(n) \\ll n^{2/5+o(1)}$. The current best bounds known are\\[(\\log n)^{1+c} \\ll g(n) \\ll \\exp(\\sqrt{\\log n})\\]for some constant $c>0$, the lower bound due to Sanders \\cite{Sa21} and the upper bound due to Ruzsa \\cite{Ru05}. Beker \\cite{Be25} has proved\\[(\\log n)^{1+\\tfrac{1}{68}+o(1)} \\ll g(n).\\]"
+    },
+    "statement": {
+      "sha256": "2fde7ed4ce079eb6f837781c6063bb7e056a7e7598327b509712658fc5ad2630",
+      "source_region": "div#content",
+      "text": "Let $g(n)$ be maximal such that given any set $A\\subset \\mathbb{R}$ with $\\lvert A\\rvert=n$ there exists some $B\\subseteq A$ of size $\\lvert B\\rvert\\geq g(n)$ such that $b_1+b_2\\not\\in A$ for all $b_1\\neq b_2\\in B$.\n\nEstimate $g(n)$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/787"
+}

@@ -1,0 +1,105 @@
+{
+  "problem_number": 948,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/948",
+  "retrieved_at": "2026-07-10T23:19:36.894933+00:00",
+  "page_title": "948 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "d9944f8e0a491ee5f9358ea6ed81098cdfcb20b302e7d11abb2b84f3185acbae",
+  "comment_count": 19,
+  "comments": [
+    {
+      "post_id": "7119",
+      "text": "GPT Pro produces a disproof of the problem, view the argument here. I have also formalised the argument in Lean with Aristotle here. (The site has been updated to address this comment.)",
+      "meta": "Liam Price — 20:38 on 21 Jun 2026 👍 1 📝 1 🤖 0"
+    },
+    {
+      "post_id": "7122",
+      "text": "Congrats! I have run screening check which finds no issues. The Lean appears correct and corresponds to the paper. I believe the result is therefore correct. I also think the argument is similar to [ErGa91] and can be regarded as an extension of it. Since you may have some time (predicting from the recent contributions), there're still some of your contributions in the AI Wiki marked as \"Candidate\". I'd be grateful if maybe you can revisit to see if they can be formalized, or otherwise be made easier to assess/verify, etc., apart from trying new problems only. Of course not a requirement and I'll review any new contribution the same way. But seeing the flood problem/impedance mismatch which occurs everywhere with no solution, I want to see if there are ways to mitigate it, even if just by encouraging a culture where everyone helps toward result acceptance in any way they can rather than dividing work by groups. Just a thought though; not meant to pressure/push or anything.",
+      "meta": "Nat Sothanaphan — 22:35 on 21 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7123",
+      "text": "Thanks for checking! Usually for all the arguments I give I attempt a formalisation, however LLMs have increased in capabilities since then so perhaps I will go back to them.",
+      "meta": "Liam Price — 22:43 on 21 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7124",
+      "text": "Minor comment on notation: $\\chi_f$ is usually the fractional chromatic number of a graph. In a different context where one is using $k$-colourings, it would be better to avoid it and use a different notation for the obtained colouring, e.g. $c_f$ (which gives $c_{f,k} \\equiv c_f \\pmod k$, which seems good). [will react later once I ve confirmed the proof]",
+      "meta": "StijnC — 00:26 on 22 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7125",
+      "text": "Thanks for picking up on that.",
+      "meta": "Liam Price — 00:38 on 22 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7133",
+      "text": "I have completed my peer review/ confirmed the proof. Some minor comments have been sent to Liam, just to update his paper. The definitions initially feel complicated, but the proof at the end is actually elegant, relying on nothing more than the pigeon hole principle. (The site has been updated to address this comment.)",
+      "meta": "StijnC — 14:39 on 22 Jun 2026 👍 2 📝 1 🤖 0"
+    },
+    {
+      "post_id": "7372",
+      "text": "Very nice, thanks! The construction is, as Stijn says, elegant and simple in the end. Here is a rough sketch. We will in fact construct a 'bad colouring' with countably many colours (the finite version for $k$ immediately follows, reducing the colour modulo $k$). Let $f$ be the target function, and let $G$ be some other function which depends on $f$. The colour of $n$ is the minimum number of intervals of the shape $[k,G(k)]$ needed to cover all non-zero binary digits of $n$, if these intervals are chosen greedily - that is, let $k_1$ be the first non-zero digit, then $k_2>G(k_1)$ the first non-zero digit outside $[k_1,G(k_1)]$, and so on (obviously this terminates eventually since there are only finitely many non-zero digits). The key observation is that, given any sequence $a_i$ with $a_n<f(n)$ for infinitely many $n$, we can find some interval $I$ such that $m=\\sum_{i\\in I}a_i$ has the colour $1$ - that is, the binary digits of $m$ are contained in some interval $[k,G(k)]$. Let $n$ be large such that $a_n<f(n)$ and let $2^k<n\\leq 2^{k+1}$. Examining the sequence $a_1,\\ldots,a_{n}$, by pigeonhole two initial sums are congruent modulo $2^k$, so if we let $m$ be the difference of these two initial sums then all non-zero binary digits are $\\geq k$, and since $m\\leq na_{n}\\leq nf(n)$ choosing $G$ suitably (depending on $f$ only) we can ensure that $\\log_2m\\leq G(k)$, so all binary digits of $m$ are in $[k,G(k)]$ as required. So the set of finite sums of $a_n$ certainly contains something coloured $1$ - but once we have this we can get any colour, just by (removing one interval at a time from the sequence and repeatedly applying the previous paragraph) finding disjoint $I_i$ such that each $m_i=\\sum_{i\\in I_i}a_i$ has binary digits supported in $[k_i,G(k_i)]$, where $G(k_i)<k_{i+1}$.",
+      "meta": "Thomas Bloom — 05:55 on 06 Jul 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1366",
+      "text": "This problem is also mentioned as Problem 4.2 in \"Some Ramsey-type theorems\" by Erdos and Galvin (1991). (However, the version for $\\aleph_0$ - many colors is not mentioned as it is in the earlier problem paper.) The main reason I mention this is that the Galvin example is explicitly described in Theorem 4.1 and this might help clear up some of the discussion in the comments. (The site has been updated to address this comment.)",
+      "meta": "LouisD — 13:37 on 22 Oct 2025 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "684",
+      "text": "Since Galvin excluded the cases of a $2$-colouring, I will explain that construction. Assume such a sequence exists which is monochromatic. $\\textbf{red}$ There is a large $n$, such that $n>k_0 2^{k_0}$ with $F(k_0)>2^{k_0}f(n)$, and all sumsets formed with $a_1, a_2 , \\ldots, a_n$ (which are bounded by $f(n)$) are red. By definition of the colouring, and the above choice, the pigeon hole principle says that there is a valuation $k< k_0$ such that at least $2^{k_0}$ values $a_i$ ($i \\le n$) have $2$-adic valuation $k$. Then (again by the pigeon hole principle) there are some (and we need no more than $2^{k_0}$ of them) of the $a_i$ who sum to a multiple of $2^{k+k_0}$. Now $\\sum a_i <2^{k_0} f(n)<F(k_0)<F( v_2( \\sum a_i) ),$ and thus it was coloured blue, leading to a contradiction with being monochromatic. $\\textbf{blue}$ Since $k=v_2(a_1)$ is fixed, it is bounded. Now for $n>2^{k+1}F(k)$, either there are half of $a_1$ up to $a_n$ with $2$-adic valuation bounded by $k$, or half of them above $k$. In both cases, we can take a subset of them (with at least $(n-1)/2$ elements) whose sum $\\sum a_i$ has $2$-adic valuation bounded by $k$. But that sum is coloured red, leading to a contradiction.",
+      "meta": "StijnC — 15:49 on 22 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "693",
+      "text": "(post to save time on failed attempt) Two natural extensions of Galvin do not work already for $3$ colours; *having multiple function $F_1,F_2$ (suff. quick growing) such that the size of the odd part (as function of $v_2$) determines the colour. [one can ensure that the odd part is either small or big, but never medium] *partitioning red (or blue) numbers depending on parity of $v_2$ into two colours [by taking numbers with different $v_2$, one is free to avoid one of the two colours]",
+      "meta": "StijnC — 06:48 on 23 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "670",
+      "text": "the sequence $a_1,\\dots,a_n$ is not supposed to be allowed to depend on $n$. (The site has been updated to address this comment.)",
+      "meta": "zach hunter — 09:21 on 22 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "671",
+      "text": "also the counterexample seems over complicated to me. can't we simply color all $m>f(1)$ red, and $m\\le f(1)$ blue? and for the multicolor version, why can't we have $m\\le f(1)$ color one, $m\\in (f(1),\\sum_{i=1}^{f(1)} f(i)]$ color 2, and so on, so that all sufficiently large $n$ hit every color?",
+      "meta": "zach hunter — 09:25 on 22 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "672",
+      "text": "I'm not sure what you mean by not supposed to depend on $n$ - in [Er77c] Erdős certainly writes $a_1<\\cdots <a_n$, so I interpreted that as choosing $n$ elements from $[1,f(n)]$. (He earlier discusses another question of his which fixes a single infinite sequence $a_i$ independent of $n$, for which Galvin's construction was originally introduced, but this problem is slightly different). Regarding your colouring, we could take $A$ to be any subset of $[f(1),f(n)]$, so all subset sums are red, which works provided $f(n)-f(1)\\geq n$ (but I assume you're talking about a different problem here, taking your first comment into account).",
+      "meta": "Thomas Bloom — 10:12 on 22 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "673",
+      "text": "if the sequence can depend on $n$, then this should just be true by Folkman's Theorem (subset sums are partition regular).",
+      "meta": "zach hunter — 10:18 on 22 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "674",
+      "text": "Doh, of course. So on a third reading you're right, the sequence shouldn't depend on $n$ (my brain had inserted a $<$ where one didn't exist somehow). So I think the revised problem is 'Is there an $f(n)$ and integer $k$ such that in any $k$-colouring there is a sequence $a_1<a_2<\\cdots$ such that $a_n<f(n)$ for infinitely many $n$ and the set $\\sum_{i\\in S}a_i$ (as $S$ ranges over all finite sets) does not contain all colours?' So your simple example still doesn't work (we only need $a_n<f(n)$ infinitely often).",
+      "meta": "Thomas Bloom — 10:27 on 22 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "675",
+      "text": "Erdos wrote there are two potential versions to extend the initial question. In the first interpretation, he also adds a weaker statement for $\\aleph_0$ with almost disjoint sets, but if the interpretation is as above, the latter should be a stronger variant, isn't it? It may be those are indeed just directions of what would be a potential good question, without Erdos knowing yet what would be.",
+      "meta": "StijnC — 12:21 on 22 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "683",
+      "text": "I think Galvin's construction is mistated. you want to infinitely flip flop between red and blue.",
+      "meta": "zach hunter — 15:17 on 22 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "685",
+      "text": "Note that it flips infinitely often, since the colouring depends on the $2$-adic valuation of the number. I have given the explanation why the colouring works below.",
+      "meta": "StijnC — 15:51 on 22 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "686",
+      "text": "We want $f: \\mathbb Z^+ \\to \\mathbb Z^+$ and $k \\ge 3$ such that there is an infinite sequence with $a_n<f(n)$ infinitely often. For fixed $f$, this implies that Folkman's theorem does not work due to the additional restriction already for length $n$, and the infinite sequence is not implied either.",
+      "meta": "StijnC — 16:07 on 22 Sep 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

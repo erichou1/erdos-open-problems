@@ -1,0 +1,111 @@
+{
+"reviewer_role": "independent adversarial referee (statement_integrity)",
+"verdict": "fail",
+"claims_checked": 16,
+"claims_total": 16,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14",
+"C15",
+"C16"
+],
+"open_gaps": [
+"The immutable statement is not proved or disproved. The candidate explicitly ends without completing either a negative terminal branch or a universal positive construction.",
+"The candidate adds the domain n,k in Z and therefore treats only a conditional interpretation of the immutable wording. Under the stated acceptance criterion, the original domain ambiguity remains blocking.",
+"No argument excludes an exact fourfold interior collision and hence no argument excludes M(a)=5 globally.",
+"The proposed low-high exclusion S_2 intersection S_3 intersection S_4 intersection S_k being empty for every k at least 5 remains unproved.",
+"The proposed assertion that two or more representations on layers k at least 5 force at most three total interior representations remains unproved.",
+"No construction supplies exact interior multiplicity q for every nonnegative integer q.",
+"No bound on the row and lower-index variables is supplied for the displacement-word Diophantine systems."
+],
+"unchecked_imports": [],
+"counterexample_searches": [
+{
+"target": "C11 claimed slope direction",
+"result": "The candidate's own 3003 fiber is a counterexample. For (78,2), (15,5), (14,6), the successive values e/d are 3/63=1/21 and 1/1=1, so e/d increases rather than decreases."
+},
+{
+"target": "C10 inference that bounded displacement words are decidable by finite exact search",
+"result": "The d=e=1 displacement already has the infinite Pell-type family constructed in C13. Fixing or bounding displacement data does not itself bound n and k or turn integral solvability into a finite search."
+},
+{
+"target": "C16 global low-layer membership tests",
+"result": "For a=1, 8a+1 is a square and the stated k=3 and k=4 algebraic tests also pass, but a is in none of S_2, S_3, S_4 because those sets require n at least 4, 6, 8 respectively. Admissibility guards are missing. This does not affect the high-layer enumeration, whose values are at least 252."
+},
+{
+"target": "C16 finite enumeration",
+"result": "Exact integer recomputation matches the stated 3,014,786 high-layer occurrences, 3,014,784 distinct values, and the two repeated values 3003 and 61218182743304701891431482520. With the admissibility qualification above, the finite conclusion through 10^30 survives."
+}
+],
+"material_errors": [
+{
+"claim_id": "C1",
+"error": "It does not preserve and resolve the exact immutable wording; it adopts an additional integer-domain interpretation and makes every subsequent result conditional."
+},
+{
+"claim_id": "C10",
+"error": "The exact displacement identity is correct, but the statement that bounded displacement words are therefore decidable by finite exact search is unsupported. A finite collection of polynomial Diophantine systems still has an unbounded integer domain."
+},
+{
+"claim_id": "C11",
+"error": "The claim is internally contradictory. It states e_1/d_1>e_2/d_2>..., then calls this strict increase. Its proof concludes decrease, while its example actually gives increase. It also contains the false arithmetic equality 3/63=21."
+},
+{
+"claim_id": "C11",
+"error": "The average-comparison argument, with consistently positive vertical losses and horizontal gains, would imply e_{i+1}/d_{i+1}>e_i/d_i, equivalently d_i/e_i decreases. The candidate writes the reverse inequality at the conclusion."
+},
+{
+"claim_id": "C12",
+"error": "Its derivation depends on the contradictory C11. The conclusions may follow from a corrected slope theorem, but repairing C11 is forbidden in an adversarial statement-integrity review."
+},
+{
+"claim_id": "C16",
+"error": "The low-layer square and cubic conditions are not globally equivalent to membership in S_2, S_3, S_4 unless the derived row is also checked against n at least 2k. The omission creates small boundary counterexamples."
+},
+{
+"claim_id": "GOAL",
+"error": "The candidate supplies only partial structural and finite results and expressly leaves all terminal routes open, so it fails the required proof-or-disproof task."
+}
+],
+"completeness_score": 38,
+"proof_confidence": 0,
+"adversarial_survival_score": 54,
+"statement_sha256": "b669094e22469ade57dcca529d2ce001ede0c9bee628c97121ad1d9a7ebfb01b",
+"notes": {
+"claim_status": {
+"C1": "Conditional reformulation only; not an exact resolution of the immutable statement.",
+"C2": "Survives under the adopted discrete interpretation.",
+"C3": "The monotonicity conclusions survive under the adopted interpretation.",
+"C4": "Survives.",
+"C5": "Survives.",
+"C6": "Survives conditionally.",
+"C7": "The exact multiplicities for 2, 6, 120, and 3003 are correctly certified.",
+"C8": "The t=5 structural split is correct, but its two decisive exclusion statements are unproved.",
+"C9": "The counting arguments for infinitely many values of multiplicity 1 and 2 survive.",
+"C10": "The cancellation identity survives; the asserted finite decidability does not.",
+"C11": "Fails.",
+"C12": "Not established as written because its sole stated dependency fails.",
+"C13": "The Pell-type adjacent-collision construction survives and proves only at least three representations.",
+"C14": "Survives.",
+"C15": "The divisor conclusion survives, although the dependency ledger omits monotonicity used in the displayed proof.",
+"C16": "The numerical finite exclusion survives exact recomputation, but the membership tests need explicit admissibility guards."
+},
+"overall": "The candidate contains several valid partial lemmas but neither answers the quantified question nor survives its own slope audit. Source reviewed: 
+
+Pasted text
+
+"
+}
+}

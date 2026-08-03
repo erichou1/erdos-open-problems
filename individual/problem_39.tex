@@ -1,0 +1,49 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#39}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{Prize: \$500}
+
+\noindent\textbf{Tags:} number theory, sidon sets, additive combinatorics
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Is there an infinite Sidon set $A\subset \mathbb{N}$ such that\[\lvert A\cap \{1\ldots,N\}\rvert \gg_\epsilon N^{1/2-\epsilon}\]for all $\epsilon&#62;0$?
+
+
+
+
+The trivial greedy construction achieves $\gg N^{1/3}$. The first improvement on this was achieved by Ajtai, Koml\'{o}s, and Szemer\'{e}di \cite{AKS81b}, who found an infinite Sidon set with growth rate $\gg (N\log N)^{1/3}$. The current best bound of $\gg N^{\sqrt{2}-1+o(1)}$ is due to Ruzsa \cite{Ru98}. Erd\H{o}s \cite{Er73} had offered \$25 for any construction which achieves $N^{c}$ for some $c&#62;1/3$. Later he (\cite{Er77c} and \cite{Er80}) offered \$100 for a construction which achieves $\omega(N)N^{1/3}$ for some $\omega(N)\to \infty$. Erd\H{o}s proved that for every infinite Sidon set $A$ we have\[\liminf \frac{\lvert A\cap \{1,\ldots,N\}\rvert}{N^{1/2}}=0.\]Erd\H{o}s and R\'{e}nyi have constructed, for any $\epsilon&#62;0$, a set $A$ such that\[\lvert A\cap \{1\ldots,N\}\rvert \gg_\epsilon N^{1/2-\epsilon}\]for all large $N$ and $1_A\ast 1_A(n)\ll_\epsilon 1$ for all $n$. This is discussed in problem C9 of Guy's collection \cite{Gu04}.
+
+
+
+
+References
+
+[AKS81b] Ajtai, Mikl\'os and Koml\'os, J\'{a}nos and Szemer\'{e}di, Endre, A dense infinite Sidon sequence . European J. Combin. (1981), 1--11.
+
+[Er73] Erd\H{o}s, P., Problems and results on combinatorial number theory . A survey of combinatorial theory (Proc. Internat. Sympos., Colorado State Univ., Fort Collins, Colo., 1971) (1973), 117-138.
+
+[Er77c] Erd\H{o}s, Paul, Problems and results on combinatorial number theory. III . Number theory day (Proc. Conf., Rockefeller Univ., New York, 1976) (1977), 43-72.
+
+[Er80] Erd\H{o}s, Paul, A survey of problems in combinatorial number theory . Ann. Discrete Math. (1980), 89-115.
+
+[Gu04] Guy, Richard K., Unsolved problems in number theory . (2004), xviii+437.
+
+[Ru98] Ruzsa, Imre Z., An infinite Sidon sequence . J. Number Theory (1998), 63-71.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/39}}
+\end{document}

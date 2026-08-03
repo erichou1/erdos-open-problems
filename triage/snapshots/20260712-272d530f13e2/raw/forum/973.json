@@ -1,0 +1,40 @@
+{
+  "problem_number": 973,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/973",
+  "retrieved_at": "2026-07-10T23:19:46.862575+00:00",
+  "page_title": "973 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "0999a192f3592a606f2dabf74f22362ee6f66428dc587028c3eafa2b2a25d58f",
+  "comment_count": 6,
+  "comments": [
+    {
+      "post_id": "982",
+      "text": "As an additional remark, if we consider the conditions of Problem #973, one can also derive the following partial result. From Theorem 6.1 (the First Main Theorem) of [Tu84], if $\\min_i|z_i|=1$ (hence $|z_i|\\ge1$) and $g(\\nu)=\\sum_{i=1}^n b_i z_i^\\nu$, then for any $m\\ge0$\\[ \\max_{\\nu=m+1,\\dots,m+n} |g(\\nu)| \\;\\ge\\; \\left(\\frac{n}{2e(m+n)}\\right)^{\\!n}\\,\\left|\\sum_{i=1}^n b_i\\right|. \\]Taking $b_i\\equiv1$ and $m=1$ (so $\\nu=2,\\dots,n+1$) yields\\[ \\max_{2\\le k\\le n+1}\\left|\\sum_{i=1}^n z_i^k\\right| \\;\\ge\\; n\\left(\\frac{n}{2e(n+1)}\\right)^{\\!n}. \\]Therefore, if an exponential upper bound $C^{-n}$ exists in the $|z_i|\\ge1$ setting of Problem #973, one must have $C\\le 2e+o(1)$. Reference. [Tu84] P. Turán, On a New Method of Analysis and Its Applications, John Wiley & Sons, 1984. (The site has been updated to address this comment.)",
+      "meta": "Quanyu Tang — 16:24 on 10 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "981",
+      "text": "The page mentions ''Erdős proved (but I cannot find the reference) that such a sequence does exist with $|z_i|\\le1$.'' I believe I have found the missing reference. The result appears as Theorem 4.1 on page 35 of [Tu84]. In that theorem Turán attributes the result to Erdős, proving that for\\[ S_2=\\{2,3,\\dots,n,n+1\\}, \\qquad M_2=\\min_{\\{z_j\\}}\\max_{\\nu\\in S_2}\\left|\\sum_{j=1}^n z_j^{\\nu}\\right|, \\]under the normalization $\\max_j|z_j|=1$, one has\\[ M_2\\le 2(n+1)^2 e^{-\\vartheta_0 n} < 1.32^{-n} \\qquad (n>n_0), \\]where $\\vartheta_0\\approx0.2784$ satisfies $x e^{x+1}=1$. EDIT: Furthermore, in [Er92] Erdős refines the result and provides a more detailed asymptotic estimation for \\(M_2\\), showing that for sufficiently large \\(n\\),\\[ n^{-0.7823} e^{-2\\vartheta_0 n} \\leq M_2 \\leq n^{4.5} e^{-2\\vartheta_0 n}. \\]For \\(n > n_0\\), we also have the following bounds for \\(M_2\\):\\[ \\frac{1}{1.746^n} < M_2 < \\frac{1}{1.745^n}.\\]References. [Tu84] Paul Turán, On a New Method of Analysis and Its Applications, published posthumously with the assistance of Gábor Halász and János Pintz, John Wiley & Sons, New York, 1984 (Pure and Applied Mathematics series). [Er92] L. Erdős, \"On Some Problems of P. Turán Concerning Power Sums of Complex Numbers,\" Acta Mathematica Hungarica, 59.1 (1992): 11-24. (The site has been updated to address this comment.)",
+      "meta": "Quanyu Tang — 16:01 on 10 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "639",
+      "text": "Interestingly, as observed in Erdos's paper, the answer is completely different if one replaces the range $2 \\leq k \\leq n+1$ by $1 \\leq k \\leq n$. Here one has the example of the $(n+1)^{th}$ roots of unity (if $n+1$ is prime) to show that the max can be 1, but it was shown by Atkinson that it must be $\\gg 1$ (and possibly even $\\geq 1/2$)! Turan conjectures a lower bound of $1-o(1)$ as $n \\to \\infty$. It is not clear whether there is a similar construction showing that $1$ can be attained (or beaten) in the $2 \\leq k \\leq n+1$ case. EDIT: Here is a summary of Atkinson's argument. Suppose for contradiction that the power sums $s_k = \\sum_{1 \\leq i \\leq n} z_i^k$ are all small for $1 \\leq k \\leq n$. The function $g(\\theta) = -\\sum_{k=1}^n \\frac{s_k e(k\\theta)}{k}$ is the Fourier expansion of $\\sum_{1 \\leq i \\leq n} \\log(1-z_i e(\\theta))$ up to degree $n$, hence the Fourier expansion of $e^{g(\\theta)}$ agrees with $\\prod_{1 \\leq i \\leq n} (1-z_i e(\\theta))$ up to degree $n$. If we set $z_1=1$, we conclude that at $\\theta=0$, $e^{g(0)}$ is equal to the tail of its Fourier expansion after degree $n$; thus $e^{g(0)}$ is formally equal to the inner product of $e^{g(\\theta)}$ and $\\sum_{m=n+1}^\\infty e(m\\theta)$, or on integrating by parts of $e^{g(\\theta)} g'(\\theta)$ and $-\\sum_{m=n+1}^\\infty e(m\\theta)/2\\pi i -m$. Thus the inner product of $e^{g(\\theta)-g(0)} g'(\\theta)$ and $-\\sum_{m=n+1}^\\infty e(m\\theta)/2\\pi i m$ is equal to $1$. But using Plancherel's theorem to control the derivative of $g'$, one can show by standard estimates that this inner product is small if the $s_k$ are all small, giving the result. More informally: $e^{g(\\theta)-g(0)}$ has significant presence at high frequencies, which is why $g'$ cannot have all of its Fourier coefficients small.",
+      "meta": "TerenceTao — 14:32 on 20 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "626",
+      "text": "[Post deleted, as the problem statement has been updated.] (The site has been updated to address this comment.)",
+      "meta": "Quanyu Tang — 07:16 on 20 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "627",
+      "text": "On reading the original paper of Erdos it appears that the quantifiers in the formulation got permuted by mistake. One should ask whether there is a C such that for every n there is a finite sequence x, rather than ask for an infinite sequence that works for all n and some C. (The site has been updated to address this comment.)",
+      "meta": "TerenceTao — 08:07 on 20 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "628",
+      "text": "Yes, apologies, this was the intended question of Erdős; I'll fix it now.",
+      "meta": "Thomas Bloom — 08:15 on 20 Sep 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

@@ -1,0 +1,30 @@
+{
+  "problem_number": 700,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/700",
+  "retrieved_at": "2026-07-10T23:18:28.472306+00:00",
+  "page_title": "700 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "fd5b7491408b78f4bdd2bcdcec64c342dda62d67d9760e0c5ed6a52289359153",
+  "comment_count": 4,
+  "comments": [
+    {
+      "post_id": "1177",
+      "text": "I used Gemini and ChatGPT's deep research tools to conduct a literature review on this problem. After 6 minutes, Gemini did not locate any additional references beyond the Erdos-Szekeres paper; the tool recapitulated the observations already in the paper (including those already mentioned in the commentary), computed some initial values of $f(n)$ and noted some other work involving divisibility of binomial coefficients (such as a body of work concerning the factors of the central binomial coefficient $\\binom{2n}{n}$), as well as mentioning basic relevant tools such as Kummer's theorem, but nothing particularly relevant was found. After 18 minutes, ChatGPT located this very web page, and also asserted that this problem appears in Section B33 of Guy's \"Unsolved problems in number theory\"; I could not directly confirm this reference, but have seen it elsewhere on the web and the section title of B33, \"Largest divisor of a binomial coefficient\", is certainly promising. Some work on $\\mathrm{gcd}(\\binom{n}{i}, \\binom{n}{j})$ is noted, such as this paper of Bergman, as well as the aforementioned work on central binomial coefficients, but other than that, no closely related literature was found. EDIT: I was able to gain access to enough of Guy's book to view Section B33 (and related sections such as B31). It does contain several open problems by Erdos and others regarding divisibility of binomial coefficients, but does not seem to reference this question directly. So I would mark this as a hallucination by ChatGPT.",
+      "meta": "TerenceTao — 17:27 on 17 Oct 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "58",
+      "text": "The third problem is likely very hard. Even proving that $\\gg n^{1-\\epsilon}$ for small $\\epsilon$ can occur, seems hard. So one wonders if $n/f(n)$ is the product of only a small fractions of its prime divisors (assuming they are not too different). Since already checking concrete divisibilities of binomial coefficients, e.g. [#376], seem widely open, telling that in general $\\binom{n}{k}$ is a multiple of a big divisor of $n$ for all $k$, cannot be expected to be easy. In particular, one can wonder if $f(n)=n/P(n)$ might happen for $n$ being the product of many primes that are not too far apart. For the product of $5$ primes (each bounded by $29$), there are only a few values $n$ satisfying $f(n)=n/P(n)$. They are: $$2310,4830,21318,34510,73370,86710,206074.$$ For the product of $6$ (or $7$) primes bounded by $37$ (or $47$ for $7$), there was only one value $n$ satisfying $f(n)=n/P(n)$ for each; $71677177=11 * 13 * 19 * 23 * 31 * 37$ and $34207446=2 * 3 * 7 * 13 * 31 * 43 * 47$. The above examples indicate even more that the characterisation in the first subquestion seems hopeless. Someone who thinks it is not? Anyone optimistic that something can be done on the third subquestion? The second subquestion may be the one where it is possible to have a rigourous proof. A different construction may do the work. But maybe this rigourous proof would not add much to the insight the conditional proofs already gave.",
+      "meta": "StijnC — 12:35 on 11 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "46",
+      "text": "The second subquestion should definitely be answered with yes. Nevertheless, it was frustrating to not have a clear infinite family. The following two families should do the job. *there are likely infinitely many primes of the form $q=2^k+3$ where $k \\equiv 4 \\pmod {20}$ (see [oeis/A057732]) For such a $q$ (larger than $19$, the latter being valid as well), let $n=q(q+1)$, these satisfy $f(n)=q+1.$ Notice that $q+1 \\mid \\binom{n}{q}$ is the only binomial which is not a multiple of $q$. Now $2q \\mid \\binom{n}{r(q+1)}$ if $\\frac{q-1}{2}\\ge r$>$3$ and $5q \\mid \\binom{n}{r(q+1)}$ if $1\\le r \\le 3$. *(construction by Kadi Siigur) Let $p,q$ be two primes satisfying $2^l$ < $p$ < $q$ < $2^{l+1}$ for which $pq \\equiv 1 \\pmod{2^l}$ (thus $l\\ge 4$). There should be infinitely many such pairs of primes heuristically (similar to the fact that there should be infinitely many twin primes) and computations give many solutions as such. Now $n=2pq$ has the property that $f(n)=2p$. This is since $2q \\mid \\binom{2pq}{pq},$ $2q \\mid \\binom{2pq}{2pr}$ (for $r \\in [1,q]$) and $2p \\mid \\binom{2pq}{2rq}$ (for $r \\in [1,p]$).",
+      "meta": "StijnC — 19:04 on 10 Aug 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "44",
+      "text": "The first subquestion is likely undoable. For $n=pqr$ the product of 3 different primes satisfying $p \\le q \\le r \\le pq$ e.g., sometimes it is and sometimes it is not (both happen with decent proportions) For the products of $4$ primes in the range [2,29], 19 of them satisfy $f(n)=n/P(n)$; e.g. the values belonging to $$[ 4466, 14674, 10166, 14858, 1785, 4485, 7293, 16445, 51359, 147407]$$ and three of them, [1610, 8151, 10659], satisfy $\\sqrt n $<$ f(n)$<$n/P(n).$ The remaining 188 options satisfy $f(n)$<$\\sqrt n.$ Also when $n=q(q+1)$ for a prime $q$, sometimes it works and sometimes it is not. E.g. for $q=1151$, it turns out that $\\binom{q(q+1)}{6(q+1)}=q$<$n/q$, while for $q=2063$ $f(q*(q+1))=q+1.$ Already for these specific constructions, it seems one has to state it as the values $q$ such that for every $1\\le r \\le \\frac{q-1}{2}$, some digit of $r(q+1)$ written in base $p$ for some prime divisor $p$ of $q+1$ is larger than the corresponding digit in the p-ary notation of $q(q+1).$ [reduced verification can be noticed, but this seems not a like valid characterisation]",
+      "meta": "StijnC — 18:34 on 10 Aug 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

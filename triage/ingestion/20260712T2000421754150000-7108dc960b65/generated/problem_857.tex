@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#857}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} combinatorics
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $m=m(n,k)$ be minimal such that in any collection of sets $A_1,\ldots,A_m\subseteq \{1,\ldots,n\}$ there must exist a sunflower of size $k$ - that is, some collection of $k$ of the $A_i$ which pairwise have the same intersection.
+
+Estimate $m(n,k)$, or even better, give an asymptotic formula.
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Related to [536] and [856]. In \cite{Er70} Erd\H{o}s asks this in the equivalent formulation with intersection replaced by union.
+
+This is sometimes known as the weak sunflower problem (see [20] for the strong sunflower problem).
+
+When $k=3$ this is strongly connected to the cap set problem (finding the maximal size of subsets of $\mathbb{F}_3^n$ with no three-term arithmetic progressions), as observed by Alon, Shpilka, and Umans \cite{ASU13}). Naslund and Sawin \cite{NaSa17} have proved that\[m(n,3) \leq (3/2^{2/3})^{(1+o(1))n}.\]
+
+\bigskip
+\noindent\textbf{References:}
+
+[ASU13] Alon, Noga and Shpilka, Amir and Umans, Christopher, On sunflowers and matrix multiplication. Comput. Complexity (2013), 219--243.
+ 
+ [Er70] Erd\H{o}s, Paul, Some extremal problems in combinatorial number theory. Mathematical Essays Dedicated to A. J. Macintyre (1970), 123-133.
+ 
+ [NaSa17] Naslund, Eric and Sawin, Will, Upper bounds for sunflower-free sets. Forum Math. Sigma (2017), Paper No. e15, 10.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/857}}
+\end{document}

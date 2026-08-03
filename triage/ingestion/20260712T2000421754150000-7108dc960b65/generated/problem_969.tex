@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#969}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $Q(x)$ count the number of squarefree integers in $[1,x]$. Determine the order of magnitude in the error term in the asymptotic\[Q(x)=\frac{6}{\pi^2}x+E(x).\]
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+It is elementary to prove $E(x)\ll x^{1/2}$, and the prime number theorem implies $o(x^{1/2})$. The best known unconditional upper bound is of the shape $x^{1/2-o(1)}$, due to Walfisz \cite{Wa63}. Evelyn and Linfoot \cite{EvLi31} proved that\[E(x) \gg x^{1/4},\]and this is likely the true order of magnitude. The Riemann Hypothesis would follow from $E(x)\ll x^{1/4}$. 
+
+The true order of magnitude is unknown even assuming the Riemann Hypothesis. Conditional on this assumption, the best known upper bound is\[E(x)\ll x^{\frac{11}{35}+o(1)},\]due to Liu \cite{Li16}.
+
+\bigskip
+\noindent\textbf{References:}
+
+[EvLi31] Evelyn, C. J. A. and Linfoot, E. H., On a problem in the additive theory of numbers. Ann. of Math. (2) (1931), 261--270.
+ 
+ [Li16] Liu, H.-Q., On the distribution of squarefree numbers. J. Number Theory (2016), 202--222.
+ 
+ [Wa63] Walfisz, Arnold, Weylsche {E}xponentialsummen in der neueren {Z}ahlentheorie. (1963), 231.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/969}}
+\end{document}

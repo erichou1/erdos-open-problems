@@ -1,0 +1,45 @@
+{
+  "problem_number": 675,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/675",
+  "retrieved_at": "2026-07-10T23:18:18.918604+00:00",
+  "page_title": "675 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "05268fb2d9e128740a4e051179b72f92fc0c0f8847fc058fca6c91e9ca2bf9e7",
+  "comment_count": 7,
+  "comments": [
+    {
+      "post_id": "6349",
+      "text": "Building on Ho Boon Suan's note for the squarefree subquestion (c), we are able to show: for the sums-of-two-squares set $E$, and every $0 < c < 1/10$ and all sufficiently large $n$, every positive integer $t$ satisfying $a \\in E \\Longleftrightarrow a + t \\in E$ for $1 \\leq a \\leq n$ must exceed $\\exp(n^c)$. We don't settle whether $E$ has the translation property; this just bounds the size of any hypothetical local period. Writeup at https://leon2k2k2k.github.io/erdos675a.pdf The strategy is the same shape as Boon's. If $p \\equiv 3 \\pmod 4$ and $p \\nmid t$, then by Dirichlet on modulus $4p^2$ one finds two primes $\\ell_0, \\ell_1 \\equiv 1 \\pmod 4$ (hence in $E$) that are both $\\equiv -t \\pmod p$ but differ $\\pmod {p^2}$, contradicting the mod-$p^2$ lifting that the translation property forces inside $E$. This implies that every small $p \\equiv 3 \\pmod 4$ divides $t$, and the prime number theorem in arithmetic progressions gives the bound. The exponent $1/(2L) = 1/10$ comes from Xylouris's $L \\leq 5$, where $L$ is Linnik's constant. Discovered with the assistance of OpenAI's Codex inside the Rethlas pipeline; verified by hand and not yet formalized.",
+      "meta": "leon2k2k2k — 16:25 on 09 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5588",
+      "text": "About the last question on squarefree numbers, I believe I have found, with the assistance of GPT-5.4 Pro, a proof that $t_n>\\exp(n^c)$ for sufficiently large $n$, for every $0<c<25/72$; see https://boonsuan.github.io/erdos675_squarefree.pdf. (I've read the proof and I think it's correct; I have not formalized it.) The main idea is as follows: Suppose a translate $t$ preserves squarefreeness on $1,\\dots,n$. Then we show that $p^2\\mid t$ for every prime $p\\le n^c$ by assuming that $p^2\\not\\mid t$ and using a bound on the least squarefree integer in a reduced residue class to contradict the translation property. The statement of the squarefree bound (due to Nunes) used is as follows: Given a modulus $q\\ge1$ and a reduced residue class $r\\bmod q$, let $L(q,r)$ be the least positive squarefree integer $m$ such that $m\\equiv r\\pmod q$. For every $\\varepsilon>0$, there is a constant $C_\\varepsilon$ such that, uniformly for all $q\\ge1$ and all $r$ with $(r,q)=1$, we have $L(q,r)\\le C_\\varepsilon q^{36/25+\\varepsilon}$.",
+      "meta": "ho boon suan — 16:15 on 18 Apr 2026 👍 3 📝 2 🤖 0"
+    },
+    {
+      "post_id": "5604",
+      "text": "Congrats! I ran standard check which found no issues.",
+      "meta": "Nat Sothanaphan — 14:45 on 19 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6002",
+      "text": "Looks good to me! By the way, I greatly appreciate your providing of a human summary of the argument in the comment that highlights the key ideas; this makes it significantly easier to evaluate.",
+      "meta": "TerenceTao — 17:58 on 28 Apr 2026 👍 3 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6049",
+      "text": "Building on ho boon suan’s squarefree-period argument, the exponent $25/72$ can be improved using the recent Zhong--Zhang result on squarefree integers in arithmetic progressions to prime-power moduli. Let $\\beta>3/4$ be an admissible exponent for squarefree distribution modulo $q=p^2$. Then the least squarefree integer in any reduced class modulo $p^2$ is\\[ O\\!\\left(p^{2/\\beta+\\varepsilon}\\right). \\]Re-running the divisibility argument gives\\[ p^2 \\mid t_n \\]for all primes $p \\le n^c$, provided\\[ c < \\min(\\beta/2,\\,25/61). \\]The second number $25/61$ comes from the case $p \\mid t_n$, $p^2 \\nmid t_n$, using Nunes modulo $p$: choose squarefree $b \\equiv -t_n/p \\pmod p$, then\\[ pb \\le p^{61/25+\\varepsilon}. \\]Since Zhong--Zhang break the $3/4$-barrier for prime-power moduli, this gives at least\\[ t_n > \\exp(n^c)\\qquad (c < 3/8), \\]improving the previously posted $c < 25/72$. Extracting the exact $\\beta$ from their Corollary~1.2 may give a slightly stronger exponent. (suggested improvement is by gpt 5.5 pro)",
+      "meta": "aditya — 16:34 on 29 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6334",
+      "text": "I have a question about this: Zhong-Zhang Theorem 1.1 requires $q = p^n$ with $n >= 4$ and Corollary 1.2 requires $n >= 5$, but ho boon suan's argument needs it for $q = p^2$, so $n = 2$. Am I missing something? Also it is strange that I wasn't able to the pre-print on arxiv.",
+      "meta": "leon2k2k2k — 22:08 on 08 May 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5589",
+      "text": "The description should say $A=\\{ n:b\\not\\mid n \\text{ for all } b\\in B\\}$. Currently it has $A$ in place of $B$.",
+      "meta": "Adenwalla — 17:29 on 18 Apr 2026 👍 0 📝 1 🤖 0"
+    }
+  ]
+}

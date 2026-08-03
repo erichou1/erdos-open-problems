@@ -1,0 +1,25 @@
+{
+  "problem_number": 625,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/625",
+  "retrieved_at": "2026-07-10T23:18:05.242126+00:00",
+  "page_title": "625 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "7e790012a7c47ba7b644ebe9a36c95b5165de9354d17750e6872d6f3e35bc7be",
+  "comment_count": 3,
+  "comments": [
+    {
+      "post_id": "546",
+      "text": "let me share a reduction to a nicer sounding problem, which was observed several months ago with Micha Christoph, Annika Heckel, and Raphael Steiner. imagine we instead sample $G_1,G_2\\sim G(n,1/2)$ independently. let $X$ be the random variable for the smallest $k$ so that there exists a partition of $[n]$ into $k$ sets $I_1,\\dots,I_k$ so that each $I_j$ is an independent set in either $G_1$ or $G_2$. then we couple $X$ so that it is always greater than $\\zeta(G)$ for a random $G\\sim G(n,1/2)$. the proof is a form of the \"McDiarmid's coupling\"-technique, which is a very slick trick I think more people should know! now, $\\chi(G)$ concentrates inside an interval of length $n^{1/2+o(1)}$ around its expectation (by an old result of Noga). and a similar result should say $X$ should concentrate in an interval of length $n^{1/2+o(1)}$ around its mean too. thus it would suffice to compute $\\mathbb{E}[X]$ to sufficient accuracy, or instead simply show that: $\\mathbb{P}(\\chi(G_1)-X>n^{1/2+\\Omega(1)})>\\Omega(1)$.",
+      "meta": "zach hunter — 09:27 on 15 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "547",
+      "text": "Do you have a conjecture what the behaviour of $\\mathbb{E}(X)$ is? Could this approach prove the conjecture of Heckel that\\[\\chi(G)-\\zeta(G)\\asymp \\frac{n}{(\\log n)^3}\\]with high probability?",
+      "meta": "Thomas Bloom — 10:10 on 15 Sep 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "555",
+      "text": "yes I believe it should still imply this. maybe you'll get the wrong constant now. I'll try asking Annika later (we both currently are at Oberwolfach). EDIT: yes indeed, you should still get the same behaviour.",
+      "meta": "zach hunter — 12:33 on 15 Sep 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 265,
+  "raw_page": {
+    "path": "raw/pages/problem_265.html",
+    "sha256": "3eb75058ad2f046760c81f17c70ac75c6eda796729dcdb093f433dcd415894c9"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "018100112af9b9b11dda3ee54827ec5c1bda7508f99ae776d00df3d0582e62e1",
+      "source_region": "div.problem-additional-text",
+      "text": "[KoTa24] Kova\\vC, V. and Tao T., On several irrationality problems for Ahmes series. arXiv:2406.17593 (2024)."
+    },
+    "remarks": {
+      "sha256": "5003e8564d6ecd9b315caebfe9cdae8461fa2bd5ec83ee0159ce9a1266528212",
+      "source_region": "div.problem-additional-text",
+      "text": "Cantor observed that $a_n=\\binom{n}{2}$ is such a sequence. If we replace $-1$ by a different constant then higher degree polynomials can be used - for example if we consider $\\sum_{n\\geq 2}\\frac{1}{a_n}$ and $\\sum_{n\\geq 2}\\frac{1}{a_n-12}$ then $a_n=n^3+6n^2+5n$ is an example of both series being rational.\n\nErd\\H{o}s believed that $a_n^{1/n}\\to \\infty$ is possible, but $a_n^{1/2^n}\\to 1$ is necessary.\n\nThis has been almost completely solved by Kova\\v{c} and Tao \\cite{KoTa24}, who prove that such a sequence can grow doubly exponentially. More precisely, there exists such a sequence such that $a_n^{1/\\beta^n}\\to \\infty$ for some $\\beta >1$.\n\nIt remains open whether one can achieve\\[\\limsup a_n^{1/2^n}>1.\\]A folklore result states that $\\sum \\frac{1}{a_n}$ is irrational whenever $\\lim a_n^{1/2^n}=\\infty$, and hence such a sequence cannot grow faster than doubly exponentially - the remaining question is the precise exponent possible."
+    },
+    "statement": {
+      "sha256": "754afe7e5fb7c9244116f1c67e0af7ed595b9781a3b95cd8214d03ade46d5b1c",
+      "source_region": "div#content",
+      "text": "Let $1\\leq a_1<a_2<\\cdots$ be an increasing sequence of integers. How fast can $a_n\\to \\infty$ grow if\\[\\sum\\frac{1}{a_n}\\quad\\textrm{and}\\quad\\sum\\frac{1}{a_n-1}\\]are both rational?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/265"
+}

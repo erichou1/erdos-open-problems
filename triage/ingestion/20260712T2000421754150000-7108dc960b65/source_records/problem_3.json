@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 3,
+  "raw_page": {
+    "path": "raw/pages/problem_3.html",
+    "sha256": "993f8b43758d75ac48f0496e6916397a64b8afbdcfc4393f6649742056d8a8cf"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "3195bbd3a6f959f2654c228ec07f791a5b28a4ee2aa48a84c54d1fc81222a3b5",
+      "source_region": "div.problem-additional-text",
+      "text": "[BlSi20] Bloom, T.F. and Sisask, O., Breaking the logarithmic barrier in Roth's theorem on arithmetic progressions. arXiv:2007.03528 (2020).\n \n [Er81] Erd\\H{o}s, P., On the combinatorial problems which I would most like to see solved. Combinatorica (1981), 25-42.\n \n [Er83c] Erd\\H{o}s, Paul, Combinatorial problems in geometry. Math. Chronicle (1983), 35-54.\n \n [Go01] Gowers, W. T., A new proof of Szemer\\'{e}di's theorem. Geom. Funct. Anal. (2001), 465-588.\n \n [GrTa08] Green, Ben and Tao, Terence, The primes contain arbitrarily long arithmetic progressions. Ann. of Math. (2) (2008), 481-547.\n \n [GrTa17] Green, Ben and Tao, Terence, New bounds for Szemer\\'{e}di's theorem, III: a polylogarithmic bound for $r_4(N)$. Mathematika (2017), 944-1040.\n \n [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.\n \n [KeMe23] Kelley, Z. and Meka, R., Strong Bounds for 3-Progressions. arXiv:2302.05537 (2023).\n \n [LSS24] Leng, J., Sah, A. and Sawhney, M., Improved bounds for Szemer\\'{e}di's theorem. arXiv:2402.17995 (2024)."
+    },
+    "remarks": {
+      "sha256": "57ad807ec06093b37767620b8f6fd07887c1e26a865228e1ccd99c63e2ae117b",
+      "source_region": "div.problem-additional-text",
+      "text": "This is essentially asking for good bounds on $r_k(N)$, the size of the largest subset of $\\{1,\\ldots,N\\}$ without a non-trivial $k$-term arithmetic progression. For example, a bound like\\[r_k(N) \\ll_k \\frac{N}{(\\log N)(\\log\\log N)^2}\\]would be sufficient. \n\nEven the case $k=3$ is non-trivial, but was proved by Bloom and Sisask \\cite{BlSi20}. Much better bounds for $r_3(N)$ were subsequently proved by Kelley and Meka \\cite{KeMe23}. Green and Tao \\cite{GrTa17} proved $r_4(N)\\ll N/(\\log N)^{c}$ for some small constant $c>0$. Gowers \\cite{Go01} proved\\[r_k(N) \\ll \\frac{N}{(\\log\\log N)^{c_k}},\\]where $c_k>0$ is a small constant depending on $k$. The current best bounds for general $k$ are due to Leng, Sah, and Sawhney \\cite{LSS24}, who show that\\[r_k(N) \\ll \\frac{N}{\\exp((\\log\\log N)^{c_k})}\\]for some constant $c_k>0$ depending on $k$.\n\nCuriously, Erd\\H{o}s \\cite{Er83c} thought this conjecture was the 'only way to approach' the conjecture that there are arbitrarily long arithmetic progressions of prime numbers, now a theorem due to Green and Tao \\cite{GrTa08} (see [219]).\n\nIn \\cite{Er81} Erd\\H{o}s makes the stronger conjecture that\\[r_k(N) \\ll_C\\frac{N}{(\\log N)^C}\\]for every $C>0$ (now known for $k=3$ due to Kelley and Meka \\cite{KeMe23}) - see [140].\n\nSee also [139] and [142].\n\nThis is discussed in problem A5 of Guy's collection \\cite{Gu04}."
+    },
+    "statement": {
+      "sha256": "01f49f7f557e813e83255b8a2672b34ca566a121dbcd5627574082d69352a3f0",
+      "source_region": "div#content",
+      "text": "If $A\\subseteq \\mathbb{N}$ has $\\sum_{n\\in A}\\frac{1}{n}=\\infty$ then must $A$ contain arbitrarily long arithmetic progressions?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/3"
+}

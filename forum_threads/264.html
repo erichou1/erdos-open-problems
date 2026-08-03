@@ -1,0 +1,2902 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+
+<title>264 Discussion Thread | Erdős Problems</title>
+<meta property="og:title" content="264 Discussion Thread | Erdős Problems">
+<link rel="icon" href="/static/favicon.ico">
+<link rel="stylesheet" href="/static/style.css?v=733265cf">
+
+<script>
+document.addEventListener('click', (e) => {
+  // Toggle reply form
+  const toggle = e.target.closest('.reply-toggle');
+  if (toggle) {
+    const id = toggle.getAttribute('data-target');
+    const form = document.getElementById(id);
+    if (form) form.classList.toggle('hidden');
+  }
+  // Reply with quote
+  const quoteBtn = e.target.closest('.reply-quote');
+  if (quoteBtn) {
+    const id = quoteBtn.getAttribute('data-target');
+    const form = document.getElementById(id);
+    if (!form) return;
+    const ta = form.querySelector('textarea');
+    const raw = quoteBtn.getAttribute('data-raw') || '';
+    const quoted = raw.split('\n').map(l => '> ' + l).join('\n') + '\n\n';
+    ta.value = quoted;
+    form.classList.remove('hidden');
+    ta.focus();
+    const len = ta.value.length;
+    ta.setSelectionRange(len, len);
+  }
+});
+</script>
+
+<!-- This creates the reference in the bibliography box. -->
+
+<script>
+function addNewBox(key, problem_id, shouldScroll = false) {
+  const local_id = 'bib-container' + String(problem_id);
+  const container = document.getElementById(local_id);
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  fetch(`/bibs/${encodeURIComponent(key)}`)
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.text();
+    })
+    .then(html => {
+      container.innerHTML = html;
+
+      if (shouldScroll) {
+        requestAnimationFrame(() => {
+          container.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+        });
+      }
+    })
+    .catch(err => {
+      console.error("Failed to load bib:", err);
+      container.textContent = "Unable to load reference.";
+
+      if (shouldScroll) {
+        container.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+    });
+}
+</script>
+
+<script>
+const filledSVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" class="fav-icon">
+  <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+</svg>
+                `;
+const outlineSVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="black" fill="white" class="fav-icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.610l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.840-.610l1.285-5.386a.563.563 0 0 0-.182-.557L3.041 10.385a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+</svg>
+                `;
+
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest(".fav-btn");
+  if (!btn) return;
+
+  e.preventDefault();
+  const problemId = btn.dataset.problemId;
+
+  try {
+    const res = await fetch(`/forum/toggle_favourite/${problemId}`, { method: "POST" });
+    const data = await res.json();
+
+    btn.dataset.favourited = data.favourited ? "true" : "false";
+    btn.innerHTML = data.favourited ? filledSVG : outlineSVG;
+  } catch (err) {
+    console.error("Toggle failed:", err);
+  }
+});
+</script>
+
+    
+<script>
+function addImageBox(X, problem_id, shouldScroll = true) {
+  const local_id = 'image-container' + String(problem_id);
+  const container = document.getElementById(local_id);
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  const newBox = document.createElement("div");
+
+  const img = document.createElement("img");
+  img.src = `/static/${encodeURIComponent(X)}.png`;
+  img.className = "responsive-image";
+  img.alt = String(X);
+
+  newBox.appendChild(img);
+  container.appendChild(newBox);
+
+  if (shouldScroll) {
+    requestAnimationFrame(() => {
+      container.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+  }
+}
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('searchForm');
+  if (!form) return;
+  form.addEventListener('submit', function (e) {
+    const input = form.querySelector('.searchTerm');
+    if (!input) return;
+    const value = input.value.trim();
+    if (!value) return;
+    const path = '/search/' + encodeURIComponent(value);
+    const inDual = window.location.pathname.startsWith("/dual");
+    if (inDual) {
+      e.preventDefault(); 
+      const selected = document.querySelector('input[name="targetPanel"]:checked');
+      const panel = selected ? selected.value : "left";
+      const iframe = document.getElementById(`iframe-${panel}`);
+      if (iframe) {
+        const url = path.includes("?") ? path + "&embed=1" : path + "?embed=1";
+        iframe.src = url;
+        const box = document.querySelector(`#panel-${panel} input`);
+        if (box) box.value = path;
+      } else {
+        window.location.href = path;
+      }
+    } else {
+      form.action = path;
+      form.method = "GET";
+    }
+  });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.location.pathname.startsWith("/dual")) return;
+
+  var form = document.getElementById('idsearchForm');
+  if (!form) return;
+
+  form.onsubmit = function() {
+    var input = document.querySelector('.idsearchTerm').value.trim();
+    var searchUrl;
+
+    if (/^\d+$/.test(input)) {
+        searchUrl = '/' + encodeURIComponent(input);
+    } else if (/^((\d+|end)(-(\d+|end))?\s*)+(open|solved|yes|no)?$/.test(input.toLowerCase())) {
+        let parts = input.split(/\s+/).filter(Boolean);
+        searchUrl = '/range/' + parts.map(encodeURIComponent).join('/');
+    } else {
+        alert("Enter either a single integer or a space-separated list of numbers/ranges...");
+        return false;
+    }
+    window.location.href = searchUrl;
+    return false;
+  };
+});
+</script>
+
+<script>
+  window.CURRENT_USERNAME = "";
+</script>
+
+
+<script>
+document.addEventListener("click", async (ev) => {
+  const btn = ev.target.closest(".reaction-btn");
+  if (!btn) return;
+  const you = window.CURRENT_USERNAME || "";
+  const bar = btn.closest(".reaction-bar");
+  const postId = bar?.dataset.postId;
+  const rtype = btn.dataset.type;
+  const reactUrl = bar?.dataset.reactUrl; 
+  if (!postId || !rtype || !reactUrl) return;
+
+  try {
+    const res = await fetch(reactUrl, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({type: rtype})
+    });
+    const data = await res.json();
+    if (!data.ok) {
+      alert(data.error || "Could not update reaction.");
+      return;
+    }
+    const summary = data.summary;
+    
+    bar.querySelectorAll(".reaction-btn").forEach(b => {
+      const t = b.dataset.type;
+      const countSpan = bar.querySelector(`.reaction-count[data-type="${t}"]`);
+      if (countSpan && summary[t]) {
+        countSpan.textContent = summary[t].count;
+    const desc = b.dataset.desc || "";
+    const usersTitle = summary[t].users_title || "No one yet.";
+    b.title = `${desc}\n\n${usersTitle}`;
+      }
+        const iReacted = you && (summary[t].users_title || "").includes(you);
+  b.classList.toggle("active", !!iReacted);
+  b.setAttribute("aria-pressed", iReacted ? "true" : "false");
+    });
+  } catch (e) {
+    console.error(e);
+    alert("Only registered users with 5+ posts can react.");
+  }
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.body.addEventListener("click", function (e) {
+    const link = e.target.closest(".problem-reaction-link");
+    if (!link) return;
+
+    e.preventDefault();
+
+    const row = link.closest(".problem-reaction-row");
+    if (!row) return;
+
+    const form = row.querySelector(".problem-reaction-form");
+    if (!form) return;
+
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+      method: "POST",
+      body: formData,
+      headers: {
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    })
+      .then(resp => resp.json())
+      .then(data => {
+        if (!data.ok) {
+          console.error(data.error || "Problem reaction update failed");
+          return;
+        }
+
+        const summary = data.summary;
+
+        // Update users text for each reaction type
+        for (const [type, info] of Object.entries(summary)) {
+          const r = document.querySelector(
+            `.problem-reaction-row[data-reaction-type="${type}"]`
+          );
+          if (!r) continue;
+
+          const usersCell = r.querySelector(".problem-reaction-users");
+          if (usersCell) {
+            usersCell.textContent = info.users_title || "None yet";
+          }
+        }
+        link.classList.toggle("active");
+        if (link.classList.contains("active")) {
+          link.textContent = "(no)";
+        } else {
+          link.textContent = "(yes)";
+        }
+      })
+      .catch(err => {
+        console.error("Problem reaction AJAX error", err);
+      });
+  });
+});
+</script>
+
+
+
+
+
+
+</head>
+
+<body>
+
+<div class="topnav">
+
+  <div class="left">
+    <div class="logo">
+      <a class="dual-aware" href="/"><img src="/static/EPLogo.png" alt="Logo" height="50"></a>
+    </div>
+    <div class="links dual-aware desktop-nav">
+      <a href="/forum">Forum</a>
+      <a href="/dm">Inbox</a> 
+      <a href="/favourites">Favourites</a>
+      <a href="/tags">Tags</a> 
+      <div class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">More</a>
+        <div class="dropdown-content">
+          <a href="/faq">FAQ</a>
+          <a href="/prizes">Prizes</a>
+          <a href="/lists">Problem Lists</a>
+          <a href="/definitions">Definitions</a>
+          <a href="/links">Links</a>
+        </div>
+      </div> 
+    </div>
+    <div class="mobile-nav">
+    
+        <a class="forumlink" href="/forum">Forum</a>
+    <div class="dropdown">
+      <button class="dropbtn" id="mobileMenuButton">Menu</button>
+      <div class="dropdown-content">
+        <a href="/dm">Inbox</a> 
+        <a href="/favourites">Favourites</a>
+        <a href="/tags">Tags</a>  
+        <a href="/faq">FAQ</a>
+        <a href="/prizes">Prizes</a>
+        <a href="/lists">Problem Lists</a>
+        <a href="/definitions">Definitions</a>
+        <a href="/links">Links</a>
+      </div>
+     </div>
+    </div>
+  </div>
+
+  <div class = "middle">
+    <div class="button-container" style="max-width: 50%;">
+      <form id="idsearchForm">
+        <input required type="text" name="query" class="idsearchTerm" placeholder="# (or range #-#)" title="Enter either a single integer or a space-separated list of numbers/ranges, optionally ending with 'open' or 'solved'.">
+        <button type="submit" class="searchButton">Go</button>
+      </form>
+    </div>
+    <div class="button-container" style="max-width: 50%;">
+      <form id="searchForm">
+        <input required type="text" name="query" class="searchTerm" placeholder="Search" title="Search all problems.">
+        <button type="submit" class="searchButton">Go</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="right">
+    <a href="#" id="dualViewLink" class="split_all">Dual View</a>
+    <a href="/random_solved" class="split_solved dual-aware">Random Solved</a>
+    <a href="/random_open" class="split_open dual-aware">Random Open</a>
+  </div>
+
+</div>
+
+<div id="notifications-slot"></div>
+
+
+
+
+<div class="container">
+<div class="problem-box">
+
+        
+
+                    <div class="problem-text" id="open">  
+<div id="prize">
+
+<span class="tooltip">
+  OPEN
+  <span class="tooltiptext">
+    This is open, and cannot be resolved with a finite computation.
+  </span>
+</span>
+
+</div>
+
+                        <div id="content">Let $a_n$ be a sequence of positive integers such that for every bounded sequence of integers $b_n$ (with $a_n+b_n\neq 0$ and $b_n\neq 0$ for all $n$) the sum\[\sum \frac{1}{a_n+b_n}\]is irrational. Are $a_n=2^n$ or $a_n=n!$ examples of such a sequence?</div>
+                        <div id="problem_id"><a href="/264">#264</a>: <a href="#bib-container264" onclick="event.preventDefault();addNewBox('ErGr80', '264', true);return false;">[ErGr80,p.63]</a><a href="#bib-container264" onclick="event.preventDefault();addNewBox('Er88c', '264', true);return false;">[Er88c,p.105]</a></div>
+                         
+                            <div id="tags">
+                            
+  <a href="/tags/irrationality">irrationality</a>
+
+                            </div>
+                        
+                    </div>  
+                    
+                    <div class="problem-text" id="disclaimer">  
+The open status of this problem reflects the current belief of the owner of this website. There may be literature on this problem that I am unaware of, which may partially or completely solve the stated problem. Please do your own literature search before expending significant effort on solving this problem. If you find any relevant literature not mentioned here, please add this in a comment.
+                    <div
+  class="problem-status-widget"
+  data-problem-id="264"
+  data-set-url="/problem-status/264"
+  data-current-status="open"
+  data-can-edit="0"
+  style="--status-progress: 0.0; --status-count: 3;"s
+>
+                      <div class="problem-status-heading">Comment activity that has not yet been incorporated into the remarks</div>
+
+  <div class="problem-status-scale" role="radiogroup" aria-label="Problem status">
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option is-active"
+        data-status="open"
+        data-label="None"
+        data-description="There are no solutions, partial or complete, claimed in the comments."
+        data-progress="0.0"
+        role="radio"
+        aria-checked="true"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">None</span>
+      </button>
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option"
+        data-status="partial"
+        data-label="Partial"
+        data-description="There are claims of partial results and/or a path to a solution in the comments."
+        data-progress="0.5"
+        role="radio"
+        aria-checked="false"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">Partial</span>
+      </button>
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option"
+        data-status="claimed"
+        data-label="Solution"
+        data-description="A claimed solution has been posted in the comments."
+        data-progress="1.0"
+        role="radio"
+        aria-checked="false"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">Solution</span>
+      </button>
+    
+  </div>
+
+  <div class="problem-status-explanation">
+    <span class="js-problem-status-description">
+      There are no solutions, partial or complete, claimed in the comments.
+    </span>
+  </div>
+  </div>
+  
+                    </div>
+                    
+                    
+
+
+                    
+
+                        <div class="problem-additional-text"> 
+                    
+                           A possible definition of an 'irrationality sequence' (see also <a href="/262" rel="nofollow noopener noreferrer ugc" target="_blank">[262]</a> and <a href="/263" rel="nofollow noopener noreferrer ugc" target="_blank">[263]</a>). One example is $a_n=2^{2^n}$. In <a href="#bib-container264" onclick="event.preventDefault();addNewBox('ErGr80', '264', true);return false;">[ErGr80]</a> they also ask whether such a sequence can have polynomial growth, but Erdős later retracted this in <a href="#bib-container264" onclick="event.preventDefault();addNewBox('Er88c', '264', true);return false;">[Er88c]</a>, claiming 'It is not hard to show that it cannot increase slower than exponentially'.<br><br>Kovač and Tao <a href="#bib-container264" onclick="event.preventDefault();addNewBox('KoTa24', '264', true);return false;">[KoTa24]</a> have proved that $2^n$ is not such an irrationality sequence. More generally, they prove that any strictly increasing sequence of positive integers such that $\sum\frac{1}{a_n}$ converges and\[\liminf \left(a_n^2\sum_{k&gt;n}\frac{1}{a_k^2}\right) &gt;0 \]is not such an irrationality sequence. In particular, any strictly increasing sequence with $\limsup a_{n+1}/a_n &lt;\infty$ is not such an irrationality sequence.<br><br>On the other hand, Kovač and Tao do prove that for any function $F$ with $\lim F(n+1)/F(n)=\infty$ there exists such an irrationality sequence with $a_n\sim F(n)$.
+                           
+                    
+                    
+<p style="text-align: center; font-family: 'Courier New', monospace; font-size: 90%;">
+  <a href="/latex/264">View the LaTeX source</a>
+</p>
+<p style="text-align: center; font-family: 'Courier New', monospace; font-size: 90%;">
+  
+ This page was last edited 20 January 2026. <a href="/history/264">View history</a>
+</p>
+                    <div class="image-container" id="image-container264"></div>
+                        </div>
+
+                        <div class="problem-additional-text" style="text-align:center;"> 
+</div>
+
+                <div id="bib-container264"></div>
+  <div class="external">External data from <a href="https://github.com/teorth/erdosproblems">the database</a> - you can help update this</a>                
+
+
+  <br>
+  Formalised statement? 
+    
+      <a href="https://github.com/google-deepmind/formal-conjectures/blob/main/FormalConjectures/ErdosProblems/264.lean">Yes</a>
+    
+  
+  
+  
+  <br>
+  
+  </div>
+
+
+<div class="problem-reactions">
+
+<div class="comment-count">
+  <a style="color: inherit;" href="/forum/discuss/264">
+    15 comments on this problem
+  </a>
+</div>
+
+<table class="problem-reactions-table">
+  <tbody>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="like">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Likes this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    
+      <a href="/forum/user/Vjeko_Kovac" style="color:inherit; text-decoration: none;">Vjeko_Kovac</a>
+    
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="collab">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Interested in collaborating</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="working_on">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Currently working on this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="hard">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>This problem looks difficult</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="easy">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>This problem looks tractable</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="formalisable">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>The results on this problem could be formalisable</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="working_form">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>I am working on formalising the results on this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+</div>
+<br>
+
+                <div class="citationbox"> <div id="content">
+                                    
+                           <b>Additional thanks to</b>: Vjekoslav Kovac          <br> <br>
+                    
+When referring to this problem, please use the original sources of Erd&#337;s. If you wish to acknowledge this website, the recommended citation format is:
+<br><br>
+T. F. Bloom, Erd&#337;s Problem #264, https://www.erdosproblems.com/264, accessed 2026-07-10</div>
+</div>
+
+               
+
+
+<div class="problem-additional-text"> 
+
+
+
+
+<div class="thread-sort">
+Order by
+  <a href="/forum/thread/264?order=oldest"
+     class="order ">oldest first</a> or
+  <a href="/forum/thread/264?order=newest"
+     class="order active">newest first</a>. (The most recent comments are highlighted in a red border.)
+</div>
+
+
+
+
+<ul class="post-list">
+  
+    
+    
+
+
+
+
+
+
+<li id="post-2258"
+    class="post depth-0
+           
+           even">
+    <div class="post-body" id="post-2258">
+    
+
+
+
+      
+      <p>Aristotle was able to <a href="https://github.com/plby/lean-proofs/blob/main/ErdosProblems/Erdos264.md" rel="nofollow noopener noreferrer ugc" target="_blank">prove</a> that $2^n$ is not an irrationality sequence, while $2^{2^n}$ is, directly from the formalized statements previously <a href="https://github.com/google-deepmind/formal-conjectures/blob/main/FormalConjectures/ErdosProblems/264.lean" rel="nofollow noopener noreferrer ugc" target="_blank">made available</a> at the Formal Conjectures project.  (This run was operated by Pietro Monticone a few days ago.)  <a href="https://live.lean-lang.org/#project=mathlib-v4.24.0&amp;url=https%3A%2F%2Fraw.githubusercontent.com%2Fplby%2Flean-proofs%2Frefs%2Fheads%2Fmain%2Fsrc%2Fv4.24.0%2FErdosProblems%2FErdos264.lean" rel="nofollow noopener noreferrer ugc" target="_blank">Type-check it online!</a><br><br>In particular, it was not provided with the paper by Kovač and Tao.  (However, I don't know whether its argument derived from that source anyway.)  In particular, I haven't looked at the proof, except to note that it mentions 1 through 4 a lot (instead of 1 through 5 as in the other proof).</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/BorisAlexeev">BorisAlexeev</a></strong>
+      
+      — <a href="/forum/thread/264#post-2258">17:30 on 18 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2258" data-react-url="/forum/post/2258/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Vjeko_Kovac, TerenceTao, KoishiChan"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">3</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2259"
+    class="post depth-1
+           
+           odd">
+    <div class="post-body" id="post-2259">
+    
+
+
+
+      
+      <p>How can we know? Does Aristotle have web search?<br><br>I realize this is sort of important to gauge the significance<br>- If it's from web search, that speaks to ability to auto-formalize papers<br>- If not, that speaks to ability to resolve this question (like in previous cases)</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/264#post-2259">17:53 on 18 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2259" data-react-url="/forum/post/2259/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2263"
+    class="post depth-2
+           
+           even">
+    <div class="post-body" id="post-2263">
+    
+
+
+
+      
+      <p>Aristotle does not have web search.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/tudorachim">tudorachim</a></strong>
+      
+      — <a href="/forum/thread/264#post-2263">18:57 on 18 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2263" data-react-url="/forum/post/2263/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2271"
+    class="post depth-1
+           recent recent-2
+           even">
+    <div class="post-body" id="post-2271">
+    
+
+
+
+      
+      <p>This is very nice and quite impressive!<br><br>Regarding $a_n=2^n$: You and Aristotle are right. It is sufficient to range $b_n$ over $\{1,2,3,4\}$; I haven't observed this before. The range $\{1,2,3,4,5\}$ was simply more convenient, since one only needs a single term from the tail to dominate the "gap" from the preceding term.<br><br>Regarding $a_n=2^{2^n}$: Correct, this was not discussed in the paper [KoTa24]; it is a more classical result. Namely, Erdős and Straus in <a href="https://www.renyi.hu/~p_erdos/1964-19.pdf" rel="nofollow noopener noreferrer ugc" target="_blank">this paper</a> from 1964 (Theorem 1) proved the following:<br>If a sequence of positive integers $(c_n)$ satisfies\[ \limsup_{n\to\infty}\frac{c_n^2}{c_{n+1}}\leq1,\quad<br>\limsup_{n\to\infty}\frac{LCM(c_1,\ldots,c_n)}{c_{n+1}}&lt;\infty,\quad<br>\sum_{n=1}^{\infty}\frac{1}{c_n}\in\mathbb{Q}, \]then it has to satisfy the recurrence relation $c_{n+1}=c_n^2-c_n+1$ for sufficiently large indices $n$.<br>Now just apply this to $c_n=2^{2^n}+b_n$ for a bounded sequence $(b_n)$, also estimating trivially $LCM(c_1,\ldots,c_n)\leq c_1\cdots c_n$. If the sequence $(c_n)$ satisfied the recurrence relation for large $n$, we would have that $(2b_n-1)2^{2^n}$ is bounded, but $|2b_n-1|\geq1$, so it is not.<br>However, it is still impressive that Aristotle figured it all out just by itself!<br><br>By the way, yesterday I ran Aristotle for several hours with the same irrationality question but for $a_n=n!$ (entered manually as text), but there was no luck. I believe that this part of the problem is still open.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Vjeko_Kovac">Vjeko_Kovac</a></strong>
+      
+      — <a href="/forum/thread/264#post-2271">22:25 on 18 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2271" data-react-url="/forum/post/2271/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2282"
+    class="post depth-2
+           recent recent-1
+           odd">
+    <div class="post-body" id="post-2282">
+    
+
+
+
+      
+      <p>Directly from the Formal Conjectures input, Aristotle (operated by Pietro Monticone) was indeed not able to resolve <a href="https://github.com/google-deepmind/formal-conjectures/blob/7448e4d5c904c8e9b5cc9122ba55cf55f1589cd8/FormalConjectures/ErdosProblems/264.lean#L51-L55" rel="nofollow noopener noreferrer ugc" target="_blank">the problem of $n!$</a>, nor to prove <a href="https://github.com/google-deepmind/formal-conjectures/blob/7448e4d5c904c8e9b5cc9122ba55cf55f1589cd8/FormalConjectures/ErdosProblems/264.lean#L63-L90" rel="nofollow noopener noreferrer ugc" target="_blank">your and Terry's more general results</a>.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/BorisAlexeev">BorisAlexeev</a></strong>
+      
+      — <a href="/forum/thread/264#post-2282">14:30 on 19 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2282" data-react-url="/forum/post/2282/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Vjeko_Kovac"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-2236"
+    class="post depth-0
+           
+           odd">
+    <div class="post-body" id="post-2236">
+    
+
+
+
+      
+      <p>I got Aristotle to formalize a negative answer to the first half of this problem. More precisely, I asked it to formalize the claim:<br>There exists a sequence $(b_k)_{k=1}^{\infty}$ with values in the set $\{1,2,3,4,5\}$ such that the infinite sum $\sum_{k=1}^{\infty} \frac{1}{2^k+b_k}$ is a rational number.<br><br>First, I wrote up a LaTeX <a href="https://web.math.pmf.unizg.hr/~vjekovac/EP/EP264/Erdos264_blueprint.pdf" rel="nofollow noopener noreferrer ugc" target="_blank">blueprint</a> of the proof originally appearing in <a href="https://arxiv.org/abs/2406.17593" rel="nofollow noopener noreferrer ugc" target="_blank">this paper</a>. Aristotle took about 50 minutes to formalize it, producing a <a href="https://live.lean-lang.org/#project=mathlib-v4.24.0&amp;url=https%3A%2F%2Fraw.githubusercontent.com%2FVjekoKovac%2Ferdosproblems%2Frefs%2Fheads%2Fmain%2FErdos264.lean" rel="nofollow noopener noreferrer ugc" target="_blank">Lean file</a> which compiles in under a minute. Then, I removed all links and comments from the Lean file and asked Gemini 3 Pro to literally translate the (now mysterious) main theorem back to English. <a href="https://web.math.pmf.unizg.hr/~vjekovac/EP/EP264/Erdos264_converted.pdf" rel="nofollow noopener noreferrer ugc" target="_blank">Theorem translation</a> reads correctly, so the Lean file seems to be proving the correct statement.<br><br>(I am new to Lean, so any comments or corrections are welcome.)</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Vjeko_Kovac">Vjeko_Kovac</a></strong>
+      
+      — <a href="/forum/thread/264#post-2236">21:31 on 17 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2236" data-react-url="/forum/post/2236/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: BorisAlexeev, old-bielefelder, Nat Sothanaphan"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">3</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2239"
+    class="post depth-1
+           
+           even">
+    <div class="post-body" id="post-2239">
+    
+
+
+
+      
+      <p>Similar to my comment on #189: if you are not confident in your own ability to verify that the statement has been correctly formalized, a natural thing to do is see if one can now fill in the sorry in https://github.com/google-deepmind/formal-conjectures/blob/main/FormalConjectures/ErdosProblems/264.lean using your file as an import.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TerenceTao">TerenceTao</a></strong>
+      
+      — <a href="/forum/thread/264#post-2239">23:16 on 17 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2239" data-react-url="/forum/post/2239/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Vjeko_Kovac, BorisAlexeev"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">2</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2241"
+    class="post depth-2
+           
+           odd">
+    <div class="post-body" id="post-2241">
+    
+
+
+
+      
+      <p>This might be slightly off-topic, and I should probably ask elsewhere: That's what I initially wanted to do, but I didn't know how to use the official formalization on FormalConjectures in combination with Aristotle, since it imports "FormalConjectures.Util.ProblemImports". Can Aristotle still handle such Lean files? Also, is there a way to make <a href="https://live.lean-lang.org/" rel="nofollow noopener noreferrer ugc" target="_blank">Lean 4 Web</a> compile Lean files from FormalConjectures, since they import more than just Mathlib? Also, can I easily obtain a self-contained Lean formalization of a problem, which only imports Mathlib?</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Vjeko_Kovac">Vjeko_Kovac</a></strong>
+      
+      — <a href="/forum/thread/264#post-2241">05:37 on 18 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2241" data-react-url="/forum/post/2241/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: BorisAlexeev"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2253"
+    class="post depth-3
+           
+           even">
+    <div class="post-body" id="post-2253">
+    
+
+
+
+      
+      <p>Here are some of my takes on your questions:<br><br>A centralized place where you can ask these questions is the <a href="https://leanprover.zulipchat.com/" rel="nofollow noopener noreferrer ugc" target="_blank">Lean Zulip</a>, many of them specifically on the topic "<a href="https://leanprover.zulipchat.com/#narrow/channel/287929-mathlib4/topic/Discussion.20thread.20for.20Aristotle.20API/with/564270157" rel="nofollow noopener noreferrer ugc" target="_blank">Discussion thread for Aristotle API</a>".  But I think it's fine to ask here -- it's very related to what lots of people are doing here, and you are a respected contributor to the site.  :)<br><br>It *is* possible to have Aristotle import the FormalConjectures project.  You probably have to clone that git repository, and then launch Aristotle from within it.  There may be version compatibility issues which plague Lean development in general.<br><br>But in this case, it's relatively easy to manually strip down the Lean file to something like this:<br><br>import Mathlib<br>def IsIrrationalitySequence (a : ℕ → ℕ) : Prop := ∀ b : ℕ → ℕ, BddAbove (Set.range b) →<br>  0 ∉ Set.range (a + b) → 0 ∉ Set.range b → Irrational (∑' n, (1 : ℝ) / (a n + b n))<br>theorem erdos_264.parts.i : ¬IsIrrationalitySequence (2 ^ ·) := by sorry<br><br>The only change really required was to remove "@[category research solved, AMS 11]".  In other cases, you might need to copy over a definition from elsewhere in the FormalConjectures repository.  It isn't always the easiest thing to find, but maybe an LLM could help?<br><br>In this case, this succeeded in about 15 minutes, and you can <a href="https://live.lean-lang.org/#project=mathlib-v4.24.0&amp;url=https%3A%2F%2Fraw.githubusercontent.com%2Fplby%2Flean-proofs%2Frefs%2Fheads%2Fmain%2Fsrc%2Fv4.24.0%2FErdosProblems%2FErdos264b.lean" rel="nofollow noopener noreferrer ugc" target="_blank">see the result here</a>.<br><br>Regarding running the real FormalConjectures project in "<a href="https://live.lean-lang.org/" rel="nofollow noopener noreferrer ugc" target="_blank">Lean 4 Web</a>": I don't believe that is possible at the moment.  I am told that being able to run multiple files online is a feature under development right now.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/BorisAlexeev">BorisAlexeev</a></strong>
+      
+      — <a href="/forum/thread/264#post-2253">16:05 on 18 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2253" data-react-url="/forum/post/2253/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Vjeko_Kovac"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2268"
+    class="post depth-4
+           recent recent-3
+           odd">
+    <div class="post-body" id="post-2268">
+    
+
+
+
+      
+      <p>Thank you Boris, these are very useful tips and explanations! I'm learning mostly from your examples and methodology descriptions on this site. :-)</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Vjeko_Kovac">Vjeko_Kovac</a></strong>
+      
+      — <a href="/forum/thread/264#post-2268">20:29 on 18 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2268" data-react-url="/forum/post/2268/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2244"
+    class="post depth-1
+           
+           odd">
+    <div class="post-body" id="post-2244">
+    
+
+
+
+      
+      <p>Disclaimer: I don't know Lean as well.<br><br>But I would wary about the LLM "back-translation". The reason being that LLM and human failure modes are quite similar: both can misread wrong theorem as the "right" theorem if the right formulation makes more sense. In this regard, it makes more sense to treat LLM as some "fallible coworker" rather than a "rigid" computer system/algorithm that you might want to rely on in this kind of manner.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/264#post-2244">11:55 on 18 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2244" data-react-url="/forum/post/2244/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Vjeko_Kovac"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2246"
+    class="post depth-1
+           
+           even">
+    <div class="post-body" id="post-2246">
+    
+
+
+
+      
+      <p>FWIW, the statement is formalised correctly. Taken literally, it reads: there exists a sequence $(b_n)_{n\in\mathbb{N}_0}$ taking values in $\{1,2,3,4,5\}$ for all $n\in\mathbb{N}_0$ and a number $q\in\mathbb{Q}$ s.t. $\sum_{k\in\mathbb{N}_0}\frac{1}{2^{k+1}+b_{k+1}}=q$, i.e. so that the sum is rational. The prime notation on $\Sigma'$ in Lean 4 is necessary for denoting an infinite sum. Since the summand here is defined for all $k\in\mathbb{N}_0$, it gives what you intend it to be.<br><br>Should one want a more human-readable translation of Aristotle's formalisation, see <a href="https://live.lean-lang.org/#codez=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" rel="nofollow noopener noreferrer ugc" target="_blank">here</a>.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/KStar">Kevin Barreto</a></strong>
+      
+      — <a href="/forum/thread/264#post-2246">13:38 on 18 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2246" data-react-url="/forum/post/2246/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Vjeko_Kovac, BorisAlexeev"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">2</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2247"
+    class="post depth-2
+           
+           odd">
+    <div class="post-body" id="post-2247">
+    
+
+
+
+      
+      <p>Nice, this looks like something that even I can read :-) and it compiles in a few seconds!</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Vjeko_Kovac">Vjeko_Kovac</a></strong>
+      
+      — <a href="/forum/thread/264#post-2247">14:01 on 18 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2247" data-react-url="/forum/post/2247/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2254"
+    class="post depth-1
+           
+           odd">
+    <div class="post-body" id="post-2254">
+    
+
+
+
+      
+      <p>Regarding using an LLM to translate back from Lean to English ("de-formalize"): in my experience looking at a bunch of misformalized statements, ChatGPT Pro was able to identify approximately half of the misformalizations.  So perhaps there is still noticeable risk in that regard.<br><br>However, if you present an LLM with a misformalized statement AND a proof that "cheats" by taking advantage of the misformalization, I have found a very high success rate with the LLM catching that.<br><br>The remaining case would be a misformalized statement but with a "proper" proof (for the "real" statement).  I'd guess that the LLM would be more likely to miss the misformalization there, because it's accompanied by a proof that doesn't "cheat", but I haven't actually tried this configuration because it hasn't come up.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/BorisAlexeev">BorisAlexeev</a></strong>
+      
+      — <a href="/forum/thread/264#post-2254">16:10 on 18 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2254" data-react-url="/forum/post/2254/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Vjeko_Kovac, Nat Sothanaphan"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">2</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2256"
+    class="post depth-2
+           
+           even">
+    <div class="post-body" id="post-2256">
+    
+
+
+
+      
+      <p>Thanks! This is useful information.<br><br>We can think about how an LLM "thinks" in this case.<br><br>If the proof cheats, it's easy to spot the pattern. But a human will likely spot it too.<br><br>But I think there's a real risk of a proof which looks morally right but fails in subtle ways - and the misformalization happens to allow that to pass. In that case a human will probably fail to spot it.<br><br>And from your comment, an LLM might probably fail to spot it too.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/264#post-2256">16:27 on 18 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2256" data-react-url="/forum/post/2256/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Vjeko_Kovac, BorisAlexeev"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">2</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+</ul>
+
+
+
+
+
+<p>
+                        <div style="text-align:center;">
+<strong>All comments are the responsibility of the user. Comments appearing on this page are not verified for correctness. Please keep posts mathematical and on topic.</strong>
+</div>
+<p>
+
+
+<div style="text-align:center; margin: 1em">
+
+
+  <p><a href="/forum/login?next=%2Fforum%2Fthread%2F264">Log in</a> to add a comment.</p>
+
+
+    </div>
+<p><div style="text-align: center; margin: 1em 0;">
+<a href="/forum/">Back to the forum</a>
+</div>
+                </div>
+            </div>
+            
+
+<script>
+document.addEventListener("submit", (e) => {
+  const form = e.target.closest(".reply-form");
+  if (!form) return;
+  const btn = form.querySelector('button[type="submit"]');
+  if (btn?.dataset.submitting === "1") {
+    e.preventDefault(); // already submitted
+    return;
+  }
+  if (btn) {
+    btn.dataset.submitting = "1";
+    btn.disabled = true;
+    btn.textContent = "Posting…";
+  }
+});
+</script>
+
+<script>
+document.addEventListener("click", (ev) => {
+  const a = ev.target.closest(".thread-sort .order");
+  if (!a) return;
+});
+</script>
+
+<script>
+document.addEventListener("submit", (e) => {
+  const form = e.target.closest(".comment-form");
+  if (!form) return;
+
+  const btn = form.querySelector('button[type="submit"]');
+  if (!btn) return;
+
+  // Already submitting? Block.
+  if (btn.dataset.submitting === "1") {
+    e.preventDefault();
+    return;
+  }
+
+  // First submit: lock UI
+  btn.dataset.submitting = "1";
+  btn.disabled = true;
+  const original = btn.textContent;
+  btn.dataset.originalText = original;
+  btn.textContent = "Posting…";
+});
+</script>
+           
+
+
+
+
+<script>
+window.MathJax = {
+  output: {
+    font: 'mathjax-tex'
+  },
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+};
+</script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@4.1.2/tex-chtml-nofont.js"></script>
+
+
+<!-- Previewing forum posts -->
+<!-- Previewing forum posts -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, m => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[m]);
+  }
+
+  function normalizeHref(href) {
+    href = href.trim();
+    if (!/^https?:\/\//i.test(href) && !href.startsWith("/")) {
+      href = "https://" + href;
+    }
+
+    return href;
+  }
+
+  let mathJaxQueue = Promise.resolve();
+
+  function clearMathJax(element) {
+    if (window.MathJax && MathJax.typesetClear) {
+      MathJax.typesetClear([element]);
+    }
+  }
+
+  function typesetMath(element) {
+    if (!window.MathJax) return;
+
+    if (MathJax.typesetPromise) {
+      mathJaxQueue = mathJaxQueue
+        .then(() => {
+          if (MathJax.startup && MathJax.startup.promise) {
+            return MathJax.startup.promise;
+          }
+        })
+        .then(() => MathJax.typesetPromise([element]))
+        .catch(err => {
+          console.error("MathJax typeset failed:", err);
+        });
+
+      return;
+    }
+
+    if (MathJax.Hub) {
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, element]);
+    }
+  }
+
+  function renderPreview(textarea, preview, label) {
+    let raw = textarea.value;
+    const anchors = [];
+    let idx = 0;
+
+    raw = raw.replace(
+      /<a\s+href=("(?:[^"]*)"|'(?:[^']*)')\s*>([\s\S]*?)<\/a>/gi,
+      (match, qHref, labelText) => {
+        const href = qHref.slice(1, -1);
+        const token = `__A_TAG_${idx++}__`;
+
+        anchors.push({
+          token,
+          href: normalizeHref(href),
+          label: labelText
+        });
+
+        return token;
+      }
+    );
+
+    let safe = escapeHtml(raw);
+
+    anchors.forEach(a => {
+      const html = `<a href="${escapeHtml(a.href)}">${escapeHtml(a.label)}</a>`;
+      safe = safe.replace(a.token, html);
+    });
+
+    safe = safe.replace(/\{PROBLEM=(.+?)\}/g, (_, p1) =>
+      `<a href="/${escapeHtml(p1)}">[${escapeHtml(p1)}]</a>`
+    );
+
+    safe = safe.replace(/\n/g, "<br>");
+    clearMathJax(preview);
+
+    if (!safe.trim()) {
+      preview.innerHTML = "";
+      preview.classList.add("hidden");
+      label.classList.add("hidden");
+      return;
+    }
+
+    preview.innerHTML = safe;
+    preview.classList.remove("hidden");
+    label.classList.remove("hidden");
+
+    typesetMath(preview);
+  }
+
+  document.querySelectorAll("form textarea").forEach(textarea => {
+    const form = textarea.closest("form");
+    const preview = form && form.querySelector(".post-preview");
+    const label = form && form.querySelector(".preview-label");
+
+    if (preview && label) {
+      textarea.addEventListener("input", () => renderPreview(textarea, preview, label));
+      renderPreview(textarea, preview, label);
+    }
+  });
+});
+</script>
+
+<!-- To handle the search bar -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function setFilterLink(linkId, newFilter) {
+        const link = document.getElementById(linkId);
+        if (!link) return;
+        const pathParts = window.location.pathname.split("/");
+        // Expect: /<section>/<entry> or /<section>/<entry>/<filter>
+        if (pathParts.length >= 3) {
+            const section = pathParts[1];
+            const entry = pathParts[2];
+            // Construct base: /tags/additive, /sources_bib/BL09, etc.
+            const baseUrl = "/" + section + "/" + entry;
+            link.href = baseUrl + "/" + newFilter;
+        }
+    }
+    setFilterLink("solvedLink", "solved");
+    setFilterLink("openLink", "open");
+    setFilterLink("yesLink", "yes");
+    setFilterLink("noLink", "no");
+});
+</script>
+
+<!-- Handle the dual view link -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const dualLink = document.getElementById("dualViewLink");
+  if (!dualLink) return;
+
+  const isInDualView = window.location.pathname.startsWith("/dual");
+  dualLink.textContent = isInDualView ? "Exit Dual View" : "Dual View";
+  dualLink.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    if (isInDualView) {
+      try {
+        const leftIframe = document.getElementById("iframe-left");
+        const src = leftIframe?.src || "/";
+        let clean = src.replace(window.location.origin, "");
+        clean = clean.replace(/[?&]embed=1/, "");
+
+        window.location.href = clean;
+      } catch (err) {
+        window.location.href = "/";
+      }
+    } else {
+      const currentPath = window.location.pathname + window.location.search;
+      const rightPanelDefault = "/";
+      const hash = `#left:${encodeURIComponent(currentPath)}&right:${encodeURIComponent(rightPanelDefault)}`;
+      window.location.href = `/dual${hash}`;
+    }
+  });
+});
+</script>
+
+<!-- Redirect links and searches when in dual view mode -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  if (!window.location.pathname.startsWith("/dual")) return;
+
+  function getTargetPanel() {
+    const selected = document.querySelector('input[name="targetPanel"]:checked');
+    return selected ? selected.value : "left";
+  }
+
+  function loadInPanel(panel, path) {
+    if (!path) return;
+    const iframe = document.getElementById(`iframe-${panel}`);
+    if (!iframe) return;
+    const url = path.includes("?") ? path + "&embed=1" : path + "?embed=1";
+    iframe.src = url;
+    const inputBox = document.querySelector(`#panel-${panel} input`);
+    if (inputBox) inputBox.value = path;
+    console.log(`Loaded "${url}" into panel "${panel}"`);
+  }
+  
+  document.querySelectorAll(".dual-aware a[href^='/'], a.dual-aware[href^='/']").forEach(link => {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      const path = this.getAttribute("href");
+      loadInPanel(getTargetPanel(), path);
+    });
+  });
+
+  const idForm = document.getElementById("idsearchForm");
+  if (idForm) {
+    idForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const input = idForm.querySelector(".idsearchTerm").value.trim();
+      if (!input) return;
+
+      let path = null;
+
+      if (/^\d+$/.test(input)) {
+        path = "/go_to/" + encodeURIComponent(input);
+      } else if (/^((\d+|end)(-(\d+|end))?\s*)+(open|solved|yes|no)?$/i.test(input)) {
+        const parts = input.split(/\s+/).filter(Boolean);
+        path = "/range/" + parts.map(encodeURIComponent).join("/");
+      } else {
+        alert("Invalid input format.");
+        return;
+      }
+
+      loadInPanel(getTargetPanel(), path);
+    });
+  }
+
+  const searchForm = document.getElementById("searchForm");
+  if (searchForm) {
+    searchForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const input = searchForm.querySelector(".searchTerm").value.trim();
+      if (!input) return;
+
+      const path = "/search/" + encodeURIComponent(input);
+      loadInPanel(getTargetPanel(), path);
+    });
+  }
+});
+</script>
+
+<!-- Different menu on mobile -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const button = document.getElementById("mobileMenuButton");
+  const dropdown = document.getElementById("mobileDropdown");
+
+  if (button && dropdown) {
+    button.addEventListener("click", function () {
+      dropdown.classList.toggle("show");
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+      }
+    });
+  }
+});
+</script>
+
+<!-- For expanding threads -->
+
+<script>
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('#toggle-posts');
+  if (!link) return;
+  e.preventDefault(); 
+
+  const box = document.getElementById('more-posts');
+  const isHidden = box.classList.toggle('hidden');
+  const expanded = !isHidden;
+
+  link.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  box.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+
+  link.textContent = expanded
+    ? 'Show only the top five comments'
+    : `Show ${link.dataset.remaining} more comments`;
+});
+</script>
+
+
+<script>
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('.toggle-replies');
+  if (!link) return;
+  e.preventDefault();
+
+  const pid = link.dataset.postId;
+  const box = document.getElementById(`more-replies-${pid}`);
+  if (!box) return;
+
+  const isHidden = box.classList.toggle('hidden');
+  const expanded = !isHidden;
+
+  link.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  box.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+
+  link.textContent = expanded
+    ? 'Hide replies'
+    : `Show ${link.dataset.remaining} more replies`;
+});
+</script>
+
+
+<script>
+document.addEventListener("click", async function (event) {
+    const button = event.target.closest(".problem-status-option");
+    if (!button) return;
+
+    const widget = button.closest(".problem-status-widget");
+    if (!widget) return;
+
+    if (widget.dataset.canEdit !== "1") return;
+
+    const status = button.dataset.status;
+    const url = widget.dataset.setUrl;
+
+    widget.classList.add("is-saving");
+
+    const buttons = widget.querySelectorAll(".problem-status-option");
+    buttons.forEach(btn => btn.disabled = true);
+
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "X-Requested-With": "fetch"
+            },
+            body: JSON.stringify({ status: status })
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok || !data.ok) {
+            throw new Error(data.error || "Could not update problem status.");
+        }
+
+        widget.dataset.currentStatus = data.status;
+
+        buttons.forEach(btn => {
+            const active = btn.dataset.status === data.status;
+            btn.classList.toggle("is-active", active);
+            btn.setAttribute("aria-checked", active ? "true" : "false");
+        });
+
+        const label = widget.querySelector(".js-problem-status-label");
+        const description = widget.querySelector(".js-problem-status-description");
+
+        if (label) label.textContent = data.label || button.dataset.label;
+        if (description) description.textContent = data.description || button.dataset.description;
+          widget.style.setProperty("--status-progress", button.dataset.progress);
+
+    } catch (err) {
+        alert(err.message || "Could not update problem status.");
+    } finally {
+        widget.classList.remove("is-saving");
+
+        if (widget.dataset.canEdit === "1") {
+            buttons.forEach(btn => btn.disabled = false);
+        }
+    }
+});
+</script>
+  
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a193467cecfee8d8',t:'MTc4MzcyNTM3OA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

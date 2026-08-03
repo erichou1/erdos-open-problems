@@ -1,0 +1,49 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#470}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{Prize: \$10}
+
+\noindent\textbf{Tags:} number theory, divisors
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Call $n$ weird if $\sigma(n)\geq 2n$ and $n$ is not pseudoperfect, that is, it is not the sum of any set of its divisors. Are there any odd weird numbers? Are there infinitely many primitive weird numbers, i.e. those such that no proper divisor of $n$ is weird?
+
+
+
+
+Weird numbers were investigated by Benkoski and Erd\H{o}s \cite{BeEr74}, who proved that the set of weird numbers has positive density. The smallest weird number is $70$. Melfi \cite{Me15} has proved that there are infinitely many primitive weird numbers, conditional on the fact that $p_{n+1}-p_n&lt;\frac{1}{10}p_n^{1/2}$ for all large $n$, which in turn would follow from well-known conjectures concerning prime gaps. The sequence of weird numbers is A006037 in the OEIS. Fang \cite{Fa22} has shown there are no odd weird numbers below $10^{21}$, and Liddy and Riedl \cite{LiRi18} have shown that an odd weird number must have at least 6 prime divisors. If there are no odd weird numbers then every weird number has abundancy index $&lt;4$ (see [825] ). This is problem B2 in Guy's collection \cite{Gu04} (the \$10 is reported by Guy, offered by Erd\H{o}s for a solution to the question of whether any odd weird numbers exist).
+
+
+
+
+References
+
+[BeEr74] Benkoski, S. J. and Erd\H{o}s, P., On weird and pseudoperfect numbers . Math. Comp. (1974), 617-623.
+
+[Fa22] Searching on the boundary of abundance for odd weird numbers, W. Fang . arXiv:2207.12906 (2022).
+
+[Gu04] Guy, Richard K., Unsolved problems in number theory . (2004), xviii+437.
+
+[LiRi18] J. Liddy and J. Riedl, An algorithm to determine all odd primitive abundant numbers with $d$ prime divisors . Honors Research Projects. 728 (2018).
+
+[Me15] Melfi, Giuseppe, On the conditional infiniteness of primitive weird numbers . J. Number Theory (2015), 508-514.
+
+\noindent\textbf{Related OEIS sequences:} A006037, A002975
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/470}}
+\end{document}

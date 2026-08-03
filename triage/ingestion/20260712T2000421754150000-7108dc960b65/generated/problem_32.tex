@@ -1,0 +1,54 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#32}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, additive basis
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Is there a set $A\subset\mathbb{N}$ such that\[\lvert A\cap\{1,\ldots,N\}\rvert = o((\log N)^2)\]and such that every large integer can be written as $p+a$ for some prime $p$ and $a\in A$? 
+
+Can the bound $O(\log N)$ be achieved? Must such an $A$ satisfy\[\liminf \frac{\lvert A\cap\{1,\ldots,N\}\rvert}{\log N}> 1?\]
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Such a set is called an additive complement to the primes.
+
+Erd\H{o}s \cite{Er54} proved that such a set $A$ exists with $\lvert A\cap\{1,\ldots,N\}\rvert\ll (\log N)^2$ (improving a previous result of Lorentz \cite{Lo54} who achieved $\ll (\log N)^3$). 
+
+Wolke \cite{Wo96} has shown that such a bound is almost true, in that we can achieve $\ll (\log N)^{1+o(1)}$ if we only ask for almost all integers to be representable. Kolountzakis \cite{Ko96} improved this to $\ll (\log N)(\log\log N)$, and Ruzsa \cite{Ru98c} further improved this to $\ll \omega(N)\log N$ for any $\omega\to \infty$.
+
+The answer to the third question is yes: Ruzsa \cite{Ru98c} has shown that we must have\[\liminf \frac{\lvert A\cap\{1,\ldots,N\}\rvert}{\log N}\geq e^\gamma\approx 1.781.\]This is discussed in problem E1 of Guy's collection \cite{Gu04}, where it is stated that Erd\H{o}s offered \$50 for determining whether $O(\log N)$ can be achieved.
+
+\bigskip
+\noindent\textbf{References:}
+
+[Er54] Erd\H{o}s, Paul, Some results on additive number theory. Proc. Amer. Math. Soc. (1954), 847-853.
+ 
+ [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.
+ 
+ [Ko96] Kolountzakis, Mihail N., On the additive complements of the primes and sets of similar
+growth. Acta Arith. (1996), 1--8.
+ 
+ [Lo54] Lorentz, G. G., On a problem of additive number theory. Proc. Amer. Math. Soc. (1954), 838-841.
+ 
+ [Ru98c] Ruzsa, Imre Z., On the additive completion of primes. Acta Arith. (1998), 269-275.
+ 
+ [Wo96] Wolke, Dieter, On a problem of Erd\H{o}s in additive number theory. J. Number Theory (1996), 209-213.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/32}}
+\end{document}

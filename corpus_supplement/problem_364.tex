@@ -1,0 +1,57 @@
+% corpus_supplement: Erdős problem #364
+% source: https://www.erdosproblems.com/latex/364
+% fetched_at: 2026-07-14T18:47:58Z
+% payload_sha256: f3f09cfbd190e29dd158a1ae9f0d54beb3869dcad14728ed7255f97b1f45e384
+% statement/remarks/references extracted by erdos_ingest.extract_source_page;
+% rendered by erdos_ingest.render_tex — do not edit
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#364}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Are there any triples of consecutive positive integers all of which are powerful (i.e. if $p\mid n$ then $p^2\mid n$)?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Erd\H{o}s originally asked Mahler whether there are infinitely many pairs of consecutive powerful numbers, but Mahler immediately observed that the answer is yes from the infinitely many solutions to the Pell equation $x^2=8y^2+1$. 
+
+This conjecture was also made by Mollin and Walsh \cite{MoWa86}. Erd\H{o}s \cite{Er76d} believed the answer to this question is no, and in fact if $n_k$ is the $k$th powerful number then\[n_{k+2}-n_k > n_k^c\]for some constant $c>0$. The abc conjecture implies there are only finitely many such triples.
+
+It is trivial that there are no quadruples of consecutive powerful numbers since one must be $2\pmod{4}$. 
+
+Chan \cite{Ch25} has shown there are no triples $n-1,n,n+1$ of powerful numbers with $n$ a cube and $n-1,n+1$ both of the shape $p^3x^2$ for some prime $p$ and integer $x$. She \cite{Sh25} has proved there are no triples with $n$ a cube and both $n-1,n+1$ of the shape $p^2x^3$ with $p$ a prime.
+
+By OEIS A076445 there are no such $n$ for $n<7.38\times 10^{28}$.
+
+See also [137], [365], and [938].
+
+\bigskip
+\noindent\textbf{References:}
+
+[Ch25] Chan, Tsz Ho, A note on three consecutive powerful numbers. Integers (2025), Paper No. A7, 7.
+ 
+ [Er76d] Erd\H{o}s, P., Problems and results on number theoretic properties of consecutive integers and related questions. Proceedings of the Fifth Manitoba Conference on Numerical Mathematics (Univ. Manitoba, Winnipeg, Man., 1975) (1976), 25-44.
+ 
+ [MoWa86] Mollin, R. A. and Walsh, P. G., On powerful numbers. Internat. J. Math. Math. Sci. (1986), 801--806.
+ 
+ [Sh25] She, Jialai, Nonexistence of consecutive powerful triplets around cubes with prime-square factors. Integers (2025), Paper No. A103, 9.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/364}}
+\end{document}

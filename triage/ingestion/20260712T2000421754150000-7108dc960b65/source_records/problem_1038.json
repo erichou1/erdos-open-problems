@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1038,
+  "raw_page": {
+    "path": "raw/pages/problem_1038.html",
+    "sha256": "849c9bde0afd84958c7c804dc6cfe1b44ddd532c7cb17abcea1971e6d1f5e674"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "ce8a60cbda15581d99975ae24519d2de9323de1a4a8a85b14a20b060a4bb32ed",
+      "source_region": "div.problem-additional-text",
+      "text": "[EHP58] Erd\\H{o}s, P. and Herzog, F. and Piranian, G., Metric properties of polynomials. J. Analyse Math. (1958), 125-148.\n \n [Po61] Pommerenke, Ch., On metric properties of complex polynomials. Michigan Math. J. (1961), 97-115."
+    },
+    "remarks": {
+      "sha256": "902817ac454b25e81bdf65519de5a71518fbf3b2b3561a48069fc68acc4f1a66",
+      "source_region": "div.problem-additional-text",
+      "text": "A problem of Erd\\H{o}s, Herzog, and Piranian \\cite{EHP58}, who proved that the measure of the set in question is always at most $2\\sqrt{2}$ under the assumption that all the roots are in $\\{-1,1\\}$, and conjecture this is the best possible upper bound.\n\nThey also note that the infimum of the set in question is less than $2$, as witnessed by $f(x)=(x+1)(x-1)^m$ for $m\\geq 3$. They further note that if the roots are restricted to $[-2,2]$ then the infimum is zero, as witnessed by a small perturbation of the Chebyshev polynomials. \n\nThey further conjectured that, if the roots are restricted to $[-2,2]$, then\\[\\lvert \\{ x\\in \\mathbb{R} : \\lvert f(x)\\rvert < 1\\}\\rvert\\geq n^{-c}\\]for an absolute constant $c>0$. This was proved by Pommerenke \\cite{Po61}, who in fact showed that this set must contain an interval of width $\\gg n^{-4}$.\n\nThe current best known bounds (see the discussion in the comments) are\\[1.519\\approx 2^{4/3}-1\\leq \\inf \\leq 1.835\\cdots\\]and\\[\\sup = 2\\sqrt{2}\\approx 2.828.\\]"
+    },
+    "statement": {
+      "sha256": "bf5a61a8675fd8b09beece7b96944ecaa476f54f6471824d0d6c4d2ad3b5829f",
+      "source_region": "div#content",
+      "text": "Determine the infimum and supremum of\\[\\lvert \\{ x\\in \\mathbb{R} : \\lvert f(x)\\rvert < 1\\}\\rvert\\]as $f\\in \\mathbb{R}[x]$ ranges over all non-constant monic polynomials, all of whose roots are real and in the interval $[-1,1]$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1038"
+}

@@ -1,0 +1,60 @@
+{
+"reviewer_role": "independent adversarial referee (logic)",
+"verdict": "fail",
+"claims_checked": 16,
+"claims_total": 16,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14",
+"C15",
+"C16"
+],
+"open_gaps": [
+"The immutable wording does not explicitly quantify n and k as integers, and the candidate only gives a conditional analysis under an adopted discrete interpretation.",
+"The original universal statement is neither proved nor disproved.",
+"No exclusion of S_2 intersect S_3 intersect S_4 intersect S_k for all k at least 5 is proved.",
+"No bound showing that two or more representations with k at least 5 permit at most three interior representations is proved.",
+"No admissible four-point interior collision is constructed or globally excluded.",
+"No construction produces exact interior multiplicity q for every nonnegative q.",
+"The intended slope theorem needs a new, logically consistent proof before any dependent geometric conclusions can be used."
+],
+"unchecked_imports": [],
+"counterexample_searches": [
+"The fiber 3003 = C(78,2) = C(15,5) = C(14,6) directly falsifies C11 as formally written: the consecutive values e/d are 3/63 = 1/21 and 1/1 = 1, so e_1/d_1 > e_2/d_2 is false.",
+"Direct differentiation of the functions used in C11 gives the opposite monotonicities from those asserted: U(r,k)=log(1-k/r) decreases with k and increases with r, while G(r,j)=log((j+1)/(r-j)) decreases with r and increases with j.",
+"An exact finite enumeration of all C(n,k) at most 10^30 with k at least 5 independently reproduced 3,014,786 occurrences, 3,014,784 distinct values, and exactly the two repeated high-layer values 3003 and 61218182743304701891431482520.",
+"The same enumeration found no value at most 10^30 with four interior representations, independently confirming the numerical conclusion M(a) at most 4 in that range.",
+"A finite scan through rows n at most 700 found no three-point interior fiber other than the 3003 chain; this is only a falsification search and not a proof of the intended slope invariant.",
+"The adjacent-layer recurrence in C13 was checked on its first terms and correctly produces (n,k)=(15,5), (104,39), and (714,272)."
+],
+"material_errors": [
+"C3 contains two reversed inequalities. As written, C(n,k)/C(n+1,k)=(n+1-k)/(n+1) is less than 1, not greater than 1, and C(n,k)/C(n,k+1)=(k+1)/(n-k) is also less than 1 on the admissible half-row. The monotonicity conclusions are true, but the displayed local inferences are false.",
+"C5 again reverses a quotient. The quantity exceeding 1 is C(2k+2,k+1)/C(2k,k)=2(2k+1)/(k+1), not the reverse quotient displayed in the candidate.",
+"C11 is internally contradictory. It first states that e_i/d_i strictly decreases, immediately calls this equivalent to strict increase, later derives decrease again, and finally gives the 3003 example where the sequence actually increases.",
+"The monotonicity assertions used in the proof of C11 all have the wrong directions. Consequently the proposed proof does not establish either orientation of the slope invariant.",
+"C12 depends on C11 and is therefore unsupported. Its conclusions may not be imported merely because a corrected statement appears plausible.",
+"C16 states the recurrence C(n+1,k)=C(n,k)(n+1-k)/(n+1), which is the inverse of the correct recurrence. The numerical counts can be independently reproduced using the correct factor (n+1)/(n+1-k), but the algorithm written in the candidate is invalid.",
+"The candidate does not meet the acceptance criterion requiring a proof or disproof of the exact original statement."
+],
+"completeness_score": 48,
+"proof_confidence": 0,
+"adversarial_survival_score": 62,
+"statement_sha256": "b669094e22469ade57dcca529d2ce001ede0c9bee628c97121ad1d9a7ebfb01b",
+"notes": "The normalization, boundary examples, layer reformulation, density arguments, displacement identity, Pell-type adjacent collision construction, and divisor invariant largely survive independent checking. The substantive finite conclusion through 10^30 was independently reproduced, although the recurrence printed in C16 is wrong. The central new geometric claim C11 fails locally and contradicts its own example, so C11 and C12 cannot belong to a validated package. Most importantly, no terminal branch resolves the immutable quantified assertion. Reviewed artifact: 
+
+Pasted text
+
+"
+}

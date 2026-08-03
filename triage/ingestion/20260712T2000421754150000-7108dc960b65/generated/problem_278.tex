@@ -1,0 +1,37 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#278}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, covering systems
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $A=\{n_1<\cdots<n_r\}$ be a finite set of positive integers. What is the maximum density of integers covered by a suitable choice of congruences $a_i\pmod{n_i}$?
+
+Is the minimum density achieved when all the $a_i$ are equal?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Simpson \cite{Si86} has observed that the density of integers covered is at least\[\sum_i \frac{1}{n_i}-\sum_{i<j}\frac{1}{[n_i,n_j]}+\sum_{i<j<k}\frac{1}{[n_i,n_j,n_k]}-\cdot\](where $[\cdots]$ denotes the least common multiple) which is achieved when all $a_i$ are equal, settling the second question.
+
+\bigskip
+\noindent\textbf{References:}
+
+[Si86] Simpson, R. J., Exact coverings of the integers by arithmetic progressions. Discrete Math. (1986), 181--190.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/278}}
+\end{document}

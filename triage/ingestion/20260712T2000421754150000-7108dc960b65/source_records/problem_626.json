@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 626,
+  "raw_page": {
+    "path": "raw/pages/problem_626.html",
+    "sha256": "e6622d68bcd72a0c724c32a0fe04269e69e7d78114521433c07145875cdf7a65"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "8d6f84be77f91fc9fa078d7de8bfae804ca088a49d43db0853725da96c3592b5",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er59b] Erd\\H{o}s, P., Graph theory and probability. Canadian J. Math. (1959), 34-38.\n \n [Ko88] Kostochka, A. V., Upper bounds on the chromatic number of graphs. Trudy Inst. Mat. (Novosibirsk) (1988), 204-226, 265."
+    },
+    "remarks": {
+      "sha256": "c81ae493fffcb3fc716966ca1ea220f1e93d704d38205d7da21b9d9ebb3326ff",
+      "source_region": "div.problem-additional-text",
+      "text": "It is known that\\[\\frac{1}{4\\log k}\\log n\\leq g_k(n) \\leq \\frac{2}{\\log(k-2)}\\log n+1,\\]the lower bound due to Kostochka \\cite{Ko88} and the upper bound to Erd\\H{o}s \\cite{Er59b}. \n\nErd\\H{o}s \\cite{Er59b} proved that\\[\\lim_{n\\to \\infty}\\frac{\\log h^{(m)}(n)}{\\log n}\\gg \\frac{1}{m}\\]and, for odd $m$,\\[\\lim_{n\\to \\infty}\\frac{\\log h^{(m)}(n)}{\\log n}\\leq \\frac{2}{m+1},\\]and conjectured this is sharp. He had no good guess for the value of the limit for even $m$, other that it should lie in $[\\frac{2}{m+2},\\frac{2}{m}]$, but could not prove this even for $m=4$.\n\nSee also the entry in the graphs problem collection."
+    },
+    "statement": {
+      "sha256": "7d3619958a66cf9067d2be9e3eea9ee0f1bf1b09310fe6e2daaa51b8fe89a1b3",
+      "source_region": "div#content",
+      "text": "Let $k\\geq 4$ and $g_k(n)$ denote the largest $m$ such that there is a graph on $n$ vertices with chromatic number $k$ and girth $>m$ (i.e. contains no cycle of length $\\leq m$). Does\\[\\lim_{n\\to \\infty}\\frac{g_k(n)}{\\log n}\\]exist?\n\nConversely, if $h^{(m)}(n)$ is the maximal chromatic number of a graph on $n$ vertices with girth $>m$ then does\\[\\lim_{n\\to \\infty}\\frac{\\log h^{(m)}(n)}{\\log n}\\]exist, and what is its value?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/626"
+}

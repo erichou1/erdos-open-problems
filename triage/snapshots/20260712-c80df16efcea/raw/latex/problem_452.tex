@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#452}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $\omega(n)$ count the number of distinct prime factors of $n$. What is the size of the largest interval $I\subseteq [x,2x]$ such that $\omega(n)&#62;\log\log n$ for all $n\in I$?
+
+
+
+
+Erd\H{o}s \cite{Er37} proved that the density of integers $n$ with $\omega(n)&#62;\log\log n$ is $1/2$. The Chinese remainder theorem implies that there is such an interval with\[\lvert I\rvert \geq (1+o(1))\frac{\log x}{(\log\log x)^2}.\]It could be true that there is such an interval of length $(\log x)^{k}$ for arbitrarily large $k$.
+
+
+
+
+References
+
+[Er37] Erd\H{o}s, Paul, Note on the number of prime divisors of integers . J. London Math. Soc. (1937), 308-314.
+
+\noindent\textbf{Related OEIS sequences:} possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/452}}
+\end{document}

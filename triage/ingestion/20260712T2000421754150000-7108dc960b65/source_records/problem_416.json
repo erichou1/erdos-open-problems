@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 416,
+  "raw_page": {
+    "path": "raw/pages/problem_416.html",
+    "sha256": "2ace3c9c2217fa16bbe1c322abf5354a9ed34eb56577fc228b8ae6d267105e7b"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "1512dfe0e3db2308b08d99a0d2556ba71eade7f2a5c1ebc6ee0515ef3b86f0cb",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er35b] Erd\\H{o}s, P., On the normal number of prime factors of $p-1$ and some related problems concerning Euler's $\\varphi$-function. Quart. J. Math. (1935), 205-213.\n \n [Er79e] Erd\\H{o}s, Paul, Some unconventional problems in number theory. Ast\\'{e}risque (1979), 73-82.\n \n [Fo98] Ford, Kevin, The distribution of totients. Ramanujan J. (1998), 67-151.\n \n [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.\n \n [MaPo88] Maier, Helmut and Pomerance, Carl, On the number of distinct values of Euler's $\\phi$-function. Acta Arith. (1988), 263-275.\n \n [Pi29] Pillai, S. Sivasankaranarayana, On some functions connected with {$\\phi(n)$}. Bull. Amer. Math. Soc. (1929), 832-836."
+    },
+    "remarks": {
+      "sha256": "2d5447b47e66501c677f41e7415c7c90bf1e83cef60ab3f71d070a7cce49a0f0",
+      "source_region": "div.problem-additional-text",
+      "text": "Pillai \\cite{Pi29} proved $V(x)=o(x)$. Erd\\H{o}s \\cite{Er35b} proved $V(x)=x(\\log x)^{-1+o(1)}$. \n\nThe behaviour of $V(x)$ is now almost completely understood. Maier and Pomerance \\cite{MaPo88} proved\\[V(x)=\\frac{x}{\\log x}e^{(C+o(1))(\\log\\log\\log x)^2},\\]for some explicit constant $C>0$. Ford \\cite{Fo98} improved this to\\[V(x)\\asymp\\frac{x}{\\log x}e^{C_1(\\log\\log\\log x-\\log\\log\\log\\log x)^2+C_2\\log\\log\\log x-C_3\\log\\log\\log\\log x}\\]for some explicit constants $C_1,C_2,C_3>0$. Unfortunately this falls just short of an asymptotic formula for $V(x)$ and determining whether $V(2x)/V(x)\\to 2$.\n\nIn \\cite{Er79e} Erd\\H{o}s asks further to estimate the number of $n\\leq x$ such that the smallest solution to $\\phi(m)=n$ satisfies $kx<m\\leq (k+1)x$. \n\nSee also [417] and [821].\n\nThis is discussed in problem B36 of Guy's collection \\cite{Gu04}."
+    },
+    "statement": {
+      "sha256": "e106e3607589bb17dd07685717a33814196de1a5593189f47d62053fa1e143f0",
+      "source_region": "div#content",
+      "text": "Let $V(x)$ count the number of $n\\leq x$ such that $\\phi(m)=n$ is solvable. Does $V(2x)/V(x)\\to 2$? Is there an asymptotic formula for $V(x)$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/416"
+}

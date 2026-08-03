@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 676,
+  "raw_page": {
+    "path": "raw/pages/problem_676.html",
+    "sha256": "666ec4723c203f96463452db1007d500c8711fc15083c858011fb86a05d45565"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "26554ce655788877680fb2b67a6b1e27434797632d22dfafa3329bfec252c975",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er79] Erd\\H{o}s, Paul, Some unconventional problems in number theory. Math. Mag. (1979), 67-70.\n \n [Er79d] Erd\\H{o}s, P., Some unconventional problems in number theory. Acta Math. Acad. Sci. Hungar. (1979), 71-80."
+    },
+    "remarks": {
+      "sha256": "e0a85523292cad749bd73e3205c30096d7b295fa660fc1f88cb6659ab0277fd2",
+      "source_region": "div.problem-additional-text",
+      "text": "The sieve of Eratosthenes implies that almost all integers are of this form, and the Brun-Selberg sieve implies the number of exceptions in $[1,x]$ is $\\ll x/(\\log x)^c$ for some constant $c>0$. Erd\\H{o}s \\cite{Er79} believed it is 'rather unlikely' that all large integers are of this form.\n\nWhat if the condition that $p$ is prime is omitted? Selfridge and Wagstaff made a 'preliminary computer search' and suggested that there are infinitely many $n$ not of this form even without the condition that $p$ is prime. It should be true that the number of exceptions in $[1,x]$ is $<x^c$ for some constant $c<1$.\n\nMost generally, given some infinite set $A\\subseteq \\mathbb{N}$ and function $f:A\\to \\mathbb{N}$ one can ask for sufficient conditions on $A$ and $f$ that guarantee every large number (or almost all numbers) can be written as\\[am^2+b\\]for some $m\\in A$ and $a\\geq 1$ and $0\\leq b<f(m)$.\n\nIn another direction, one can ask what is the minimal $c_n$ such that $n$ can be written as $n=ap^2+b$ with $0\\leq b<c_np$ for some $p\\leq \\sqrt{n}$. This problem asks whether $c_n\\leq 1$ eventually, but in \\cite{Er79d} Erd\\H{o}s suggests that in fact $\\limsup c_n=\\infty$. Is it true that $c_n<n^{o(1)}$?"
+    },
+    "statement": {
+      "sha256": "babeb8a2baf6aeb0732bfcb8209cc32bdabbfdede2b28e53eaff194c0ffb1ae6",
+      "source_region": "div#content",
+      "text": "Is every sufficiently large integer of the form\\[ap^2+b\\]for some prime $p$ and integer $a\\geq 1$ and $0\\leq b<p$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/676"
+}

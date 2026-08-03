@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#66}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{Prize: \$500}
+
+\noindent\textbf{Tags:} number theory, additive basis
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Is there $A\subseteq \mathbb{N}$ such that\[\lim_{n\to \infty}\frac{1_A\ast 1_A(n)}{\log n}\]exists and is $\neq 0$?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+A suitably constructed random set has this property if we are allowed to ignore an exceptional set of density zero. The challenge is obtaining this with no exceptional set. Erd\H{o}s believed the answer should be no. In \cite{Er80} he explicitly asked whether there exists such a set where the limit is $1$ (and did not believe there existed such a sequence).
+
+Erd\H{o}s and S\'{a}rk\"{o}zy proved that\[\frac{\lvert 1_A\ast 1_A(n)-\log n\rvert}{\sqrt{\log n}}\to 0\]is impossible. Erd\H{o}s suggests it may even be true that the $\liminf$ and $\limsup$ of $1_A\ast 1_A(n)/\log n$ are always separated by some absolute constant. 
+
+Horv\'{a}th \cite{Ho07} proved that\[\lvert 1_A\ast 1_A(n)-\log n\rvert \leq (1-\epsilon)\sqrt{\log n}\]cannot hold for all large $n$.
+
+\bigskip
+\noindent\textbf{References:}
+
+[Er80] Erd\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.
+ 
+ [Ho07] G. Horv\'{a}th, An improvement of a theorem of Erd\H{o}s and S\'{a}rk\"{o}zy. Pollack Periodica (2007), 155-161.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/66}}
+\end{document}

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 319,
+  "raw_page": {
+    "path": "raw/pages/problem_319.html",
+    "sha256": "4293e282f4b42979caac1ab65cbd660abb2d50857aba8fa599cc3d94e5bd9861"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "2475e352fa5b292a79da51034c926482fb67da3519220cc3a1b0e0f9f6e47142",
+      "source_region": "div.problem-additional-text",
+      "text": "[Cr01] Croot, III, Ernest S., On unit fractions with denominators in short intervals. Acta Arith. (2001), 99-114."
+    },
+    "remarks": {
+      "sha256": "a5620ead2f164d40be2e6018b8818eb6e6eb8c78746a3228c89984008d74c706",
+      "source_region": "div.problem-additional-text",
+      "text": "Adenwalla has observed that a lower bound of\\[\\lvert A\\rvert\\geq (1-\\tfrac{1}{e}+o(1))N\\]follows from the main result of Croot \\cite{Cr01}, which states that there exists some set of integers $B\\subset [(\\frac{1}{e}-o(1))N,N]$ such that $\\sum_{b\\in B}\\frac{1}{b}=1$. Since the sum of $\\frac{1}{m}$ for $m\\in [c_1N,c_2N]$ is asymptotic to $\\log(c_2/c_1)$ we must have $\\lvert B\\rvert \\geq (1-\\tfrac{1}{e}+o(1))N$.\n\nWe may then let $A=B\\cup\\{1\\}$ and choose $\\delta(n)=-1$ for all $n\\in B$ and $\\delta(1)=1$. \n\nThis problem has been formalised in Lean as part of the Google DeepMind Formal Conjectures project."
+    },
+    "statement": {
+      "sha256": "f8b0f6190e970896a32acfddf4d8ce09555a1faf630de8c0b6e2acddbb22e315",
+      "source_region": "div#content",
+      "text": "What is the size of the largest $A\\subseteq \\{1,\\ldots,N\\}$ such that there is a function $\\delta:A\\to \\{-1,1\\}$ such that\\[\\sum_{n\\in A}\\frac{\\delta_n}{n}=0\\]and\\[\\sum_{n\\in A'}\\frac{\\delta_n}{n}\\neq 0\\]for all non-empty $A'\\subsetneq A$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/319"
+}

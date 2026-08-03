@@ -1,0 +1,48 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#17}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, primes
+
+\medskip
+\noindent\textbf{Note:} cluster primes
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Are there infinitely many primes $p$ such that every even number $n\leq p-3$ can be written as a difference of primes $n=q_1-q_2$ where $q_1,q_2\leq p$?
+
+
+
+
+The first prime without this property is $97$. The sequence of such primes is A038133 in the OEIS. These are called cluster primes. Blecksmith, Erd\H{o}s, and Selfridge \cite{BES99} proved that the number of such primes is\[\ll_A \frac{x}{(\log x)^A}\]for every $A&gt;0$, and Elsholtz \cite{El03} improved this to\[\ll x\exp(-c(\log\log x)^2)\]for every $c&lt;1/8$. This is discussed in problem C1 of Guy's collection \cite{Gu04}.
+
+
+
+
+References
+
+[BES99] Blecksmith, Richard and Erd\H{o}s, Paul and Selfridge, J. L., Cluster primes . Amer. Math. Monthly (1999), 43--48.
+
+[El03] Elsholtz, Christian, On cluster primes . Acta Arith. (2003), 281--284.
+
+[Gu04] Guy, Richard K., Unsolved problems in number theory . (2004), xviii+437.
+
+\noindent\textbf{Related OEIS sequences:} A038133
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/17}}
+\end{document}

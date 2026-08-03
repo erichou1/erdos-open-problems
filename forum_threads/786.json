@@ -1,0 +1,60 @@
+{
+  "problem_number": 786,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/786",
+  "retrieved_at": "2026-07-10T23:18:47.059774+00:00",
+  "page_title": "786 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "875592dedb28775f977024d3f77a3a5c75f278757ef9f4747d08475f311f022c",
+  "comment_count": 10,
+  "comments": [
+    {
+      "post_id": "4029",
+      "text": "I seem to be confused. Are repetitions allowed? Or are products of distinct elements the intended meaning? I also managed to find some more literature on the matter that might be useful here: https://users.renyi.hu/~p_erdos/1965-02.pdf https://users.renyi.hu/~p_erdos/1973-16.pdf If repetitions are allowed then I might be able to construct a solution...",
+      "meta": "ebarschkis — 10:47 on 01 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4031",
+      "text": "I had another look at the Google Deepmind formalization of the problem and they determine that repetitions are not allowed: def Set.IsMulCardSet {α : Type*} [CommMonoid α] (A : Set α) := ∀ (a b : Finset α) (_ :↑a ⊆ A) (_ : ↑b ⊆ A) (_ : a.prod id = b.prod id), a.card = b.card so I guess the products must use distinct elements but that would be a weaker problem than the one stated here. We would have to decide wether we want to keep the stronger problem with repetitions or switch to the weaker version that is restricted to distinct factors. EDIT: Looking at Tao's comment from last October, it appears that he assumes that repetitions are allowed. (The site has been updated to address this comment.)",
+      "meta": "ebarschkis — 12:49 on 01 Feb 2026 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "4040",
+      "text": "As long as one is in the regime where $r,s$ is much smaller than $N$ then there should not be much distinction as far as probabilistic arguments are concerned between sampling with repetition and sampling without repetition (they will be contiguous distributions). Sampling with repetition tends to be slightly easier to work with at a technical level, so I phrased the sketch of an argument there, but I do not foresee much difficulty in modifying it to sampling without repetition. But the current wording is ambiguous with regards to which variant is intended. EDIT: I looked at the references for the problem (the [Er65] is p.182 by the way). None of the three references make it clear (they refer to products such as $\\prod_{r=1}^{l_1} a_{i_r}$ without saying exactly what the $i_r$ are), but in nearby problems they talk about products of distinct elements, so I would be inclined to agree with the formal interpretation that each products is intended to consist of distinct elements. (Otherwise one could probably get some collision using a huge number of copies of each element on linear algebraic grounds.)",
+      "meta": "TerenceTao — 16:22 on 01 Feb 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4041",
+      "text": "Agreed on contiguity for $r,s\\ll N$. Just noting that my linear-algebra reduction idea would use powers $a^m$ as repeated factors, so it would apply to the multiset variant but not directly to the no-repetition variant. EDIT: That is pretty much what my reduction idea basically does in the repetitions-allowed variant: any integer relation $\\sum_i m_i v(a_i)=0$ yields $\\prod_i a_i^{m_i^+}=\\prod_i a_i^{m_i^-}$, and interpreting $a^m$ as $m$ repeats gives a collision with $r\\neq s$ unless $\\sum_i m_i=0$. Hence repetitions-allowed forces $A\\subset{n:F(n)=1}$ for a totally additive $F$, and ERS then gives density $\\le 1/2$ (and $|A\\cap[1,N]|\\le (1-c)N)$. So if the intended problem is open, I would think that strongly suggests the distinct-elements interpretation.",
+      "meta": "ebarschkis — 16:34 on 01 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4060",
+      "text": "Thanks - I agree that the paper of Erdős, Ruzsa, and Sárközy you link to answers both questions in the negative in the repetitions-allowed interpretation. Presumably this 1973 paper is what eventually came of the negative answer of Ruzsa that Erdős reported in 1965. I think this actually suggests that the repetitions-allowed interpretation was intended, at least in [Er65], since it was this negative proof that he presumably had in mind. Of course, the no-repetitions variant is still a valid question, so I'll leave this open until both variants are settled, but I believe Erdős had mainly the repetitions-allowed variant in mind, and hence this problem was likely resolved in 1973.",
+      "meta": "Thomas Bloom — 06:57 on 02 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4061",
+      "text": "For the repetitions version of the second problem, the above arguments combined with the result of Granville and Soundarajan in my comment from 18 October 2025 implies that one can in fact take c to be the Hall-Montgomery constant 0.1715..., which is sharp by the example given there; one simply converts the additive function $f(n)$ in the commentary to the multiplicative function $(-1)^{f(n)}$, with $A$ now contained in the level set $\\{ n \\leq N: (-1)^{f(n)}= -1\\}$. I would tentatively conjecture the same bound also holds for the no-repetitions problem; this is actually quite similar to a conjecture I made in my paper on #121, also linked to in the October comment. (The site has been updated to address this comment.)",
+      "meta": "TerenceTao — 07:34 on 02 Feb 2026 👍 1 📝 1 🤖 0"
+    },
+    {
+      "post_id": "4066",
+      "text": "Thanks, I'd missed that the upper bound of Granville and Soundararajan was of the same strength, I'll update this later. Do you know if anything there (or elsewhere) can settle the first, density, version (for repetitions version)? I believe that [ERS73] shows the density is at most $1/2$, and Selfridge's construction achieves $1/e-\\epsilon$.",
+      "meta": "Thomas Bloom — 08:37 on 02 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4087",
+      "text": "I don't know of any better bound in either direction. The set $\\{(-1)^{f(n)}=-1\\}$ can have density at most $1/2$ by Wirsing's theorem (in fact the density can be computed exactly in terms of an Euler product) and this is sharp by considering the Liouville function (corresponding to $f = \\omega$), but this set is only an upper bound for $\\{ f(n) = 1\\}$ and not a lower bound. EDIT: ChatGPT Deep Research did not report any improvements to either the upper or lower bound.",
+      "meta": "TerenceTao — 16:24 on 02 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1223",
+      "text": "If one takes $A$ to be the set of $n$ with exactly one prime factor greater than $N^{1/(1+\\sqrt{e})}$, one gets a set of density $1-c+o(1)$ where $$c = 1 - \\log(1+\\sqrt{e}) + 2 \\int_1^{\\sqrt{e}} \\frac{\\log t}{t+1}\\ dt = 0.171500\\dots$$ is the Hall-Montgomery constant; this is presumably what the \"slight improvement of the constant $\\log 2=1-0.3086\\dots$\" by Erdos optimizes to (see Theorem 9 of this recent paper of Fleiner et al. for a closely related calculation; Erdos's own calculation likely closely follows that in page 585 of this paper of Erdos, Sarkozy, and Sos). $A$ can also be defined as the set $\\{ n \\leq N: f(n)=-1\\}$, where $f$ is the completely multiplicative function with $f(p)=-1$ if $p > N^{1/(1+\\sqrt{e})}$ and $f(p)=+1$ otherwise. Corollary 1 of this paper of Granville and Soundararajan shows that this is the best density one can get from such a completely multiplicative construction, and one can tentatively conjecture that this is in fact the optimal density for the second part of this problem. (A similar line of reasoning would lead to a predicted upper bound of 1/2 for the density in the first part of the problem, but I doubt that this would be sharp, as I do not think that constructions arising from completely multiplicative functions are the most important case here.) A recent paper of mine has a similar conjecture relating to #121. In the spirit of that paper, one might try to recover Ruzsa's result (i.e., answer the second part of this problem in the negative) by constructing some reasonably uniform probability measure on $\\{1,\\dots,N\\}$ with the property that the probability of a collision $a_1 \\dots a_r = b_1 \\dots b_s$ for some suitable distinct $r,s$ is non-zero (with $a_1,\\dots,a_r,b_1,\\dots,b_s$ drawn independently using this probability measure), and also does not change much if one fixes any one of the $a_1,\\dots,a_r,b_1,\\dots,b_s$, so that one still gets collisions even if one conditions to an event of probability $1-o(1)$. As long as the probability measure is contiguous with the uniform measure in the sense that events that occur with probability $1-o(1)$ in one measure, also occur with probability $1-o(1)$ in the other, this should recover Ruzsa's result. Based on the above literature, it may also be worth considering as model problems variants of the problem in which density is not measure with respect to the uniform measure on $\\{1,\\dots,N\\}$, but instead with the logarithmic measure (with each $1 \\leq n \\leq N$ having a density proportional to $1/n$), or a zeta distribution (with $n$ ranging over all natural numbers, but with density proportional to $1/n^s$ for some $s>1$). The limiting distribution of products such as $a_1 \\dots a_r$ may be easier to analyze for such distributions, though the threshold densities will likely be different from the ones predicted above. Neither of the two AI tools above picked up on this connection; this is a good reminder that such tools are not infallible, and should be used in conjunction with more traditional literature search methods, rather than serve as a complete replacement for them.",
+      "meta": "TerenceTao — 16:39 on 18 Oct 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1217",
+      "text": "I used Gemini and ChatGPT deep research tools to conduct a literature review. Both tools ended using this web page (and other pages on this site) as their primary authoritative source, and declared themselves unable to locate the Ruzsa argument, or any further literature on this topic that was not already noted on this site, although they did a decent job presenting all the known results already mentioned here. Gemini did speculate on some possible techniques that Ruzsa *might* have used to obtain his result, but I find them rather unconvincing (it seems to be extrapolating from Ruzsa's other papers, rather than from any deep analysis of the current problem).",
+      "meta": "TerenceTao — 14:59 on 18 Oct 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 522,
+  "raw_page": {
+    "path": "raw/pages/problem_522.html",
+    "sha256": "746a5b2db804ba1a8f98487a4af49bb41f60be0283a88f043d5a79d5356b4d6c"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "dbaf77b9c2cf82c954c01a519f5a0ba2c8046074368685b12361e3ed812bfcec",
+      "source_region": "div.problem-additional-text",
+      "text": "[EO56] Erd\\H{o}s, Paul and Offord, A. C., On the number of real roots of a random algebraic equation. Proc. London Math. Soc. (3) (1956), 139-160.\n \n [Ha67] Hayman, W. K., Research problems in function theory. (1967), vii+56.\n \n [Ya21] Yakir, Oren, Approximately half of the roots of a random {L}ittlewood\npolynomial are inside the disk. Studia Math. (2021), 227--240."
+    },
+    "remarks": {
+      "sha256": "5dd05b4f65b54fc66fbe9d2b730cc438fb27d38bbf2096156e33e6db4d51124f",
+      "source_region": "div.problem-additional-text",
+      "text": "Random polynomials with independently identically distributed coefficients are sometimes called Kac polynomials - this problem considers the case of Rademacher coefficients, i.e. independent uniform $\\pm 1$ values. Erd\\H{o}s and Offord \\cite{EO56} showed that the number of real roots of a random degree $n$ polynomial with $\\pm 1$ coefficients is $(\\frac{2}{\\pi}+o(1))\\log n$.\n\nThere is some ambiguity whether Erd\\H{o}s intended the coefficients to be in $\\{-1,1\\}$ or $\\{0,1\\}$ - see the comments section.\n\nA weaker version of this was solved by Yakir \\cite{Ya21}, who proved that\\[\\frac{R_n}{n/2}\\to 1\\]in probability. (This weaker claim was also asked by Erd\\H{o}s, and also appears in a book of Hayman \\cite{Ha67}.) More precisely,\\[\\lim_{n\\to \\infty} \\mathbb{P}(\\lvert R_n-n/2\\rvert \\geq n^{9/10}) =0.\\]See also [521]."
+    },
+    "statement": {
+      "sha256": "c1ed93849990eb0b597db11ebd77a5b26643c9e43f4caeacf22c247bba3e7603",
+      "source_region": "div#content",
+      "text": "Let $f(z)=\\sum_{0\\leq k\\leq n} \\epsilon_k z^k$ be a random polynomial, where $\\epsilon_k\\in \\{-1,1\\}$ independently uniformly at random for $0\\leq k\\leq n$. \n\nIs it true that, if $R_n$ is the number of roots of $f(z)$ in $\\{ z\\in \\mathbb{C} : \\lvert z\\rvert \\leq 1\\}$, then\\[\\frac{R_n}{n/2}\\to 1\\]almost surely?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/522"
+}

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 572,
+  "raw_page": {
+    "path": "raw/pages/problem_572.html",
+    "sha256": "4ff6fe72c2daade494718739ecccbbfcca3078f58787d624fb0d0c29ff9985b8"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "3f0a56853c618c7f60f7959d9950ff077a9c90c04c6ac41609bc81eecc8417ac",
+      "source_region": "div.problem-additional-text",
+      "text": "[Be66] Benson, Clark T., Minimal regular graphs of girths eight and twelve. Canadian J. Math. (1966), 1091-1094.\n \n [BoSi74] Bondy, J. A. and Simonovits, M., Cycles of even length in graphs. J. Combinatorial Theory Ser. B (1974), 97-105.\n \n [Er38] P. Erd\\H{o}s, On sequences of integers no one of which divides the product of two others and on related problems. Tomsk. Gos. Univ. Ucen Zap. (1938), 74-82.\n \n [Er64c] Erd\\H{o}s, P., Extremal problems in graph theory. Theory of Graphs and its Applications (Proc. Sympos. Smolenice, 1963) (1964), 29-36.\n \n [LUW95] Lazebnik, F. and Ustimenko, V. A. and Woldar, A. J., A new series of dense graphs of high girth. Bull. Amer. Math. Soc. (N.S.) (1995), 73-79.\n \n [LUW99] Lazebnik, Felix and Ustimenko, Vasiliy A. and Woldar, Andrew\nJ., Polarities and $2k$-cycle-free graphs. Discrete Math. (1999), 503-513."
+    },
+    "remarks": {
+      "sha256": "29117525ddd5b7880a34a95999dabf432ce6e74f0698a8316530f9e0d2ae1abe",
+      "source_region": "div.problem-additional-text",
+      "text": "It is easy to see that $\\mathrm{ex}(n;C_{2k+1})=\\lfloor n^2/4\\rfloor$ for any $k\\geq 1$ (and $n>2k+1$) (since no bipartite graph contains an odd cycle). Erd\\H{o}s and Klein \\cite{Er38} proved $\\mathrm{ex}(n;C_4)\\asymp n^{3/2}$. \n\nErd\\H{o}s \\cite{Er64c} and Bondy and Simonovits \\cite{BoSi74} showed that\\[\\mathrm{ex}(n;C_{2k})\\ll kn^{1+\\frac{1}{k}}.\\]Benson \\cite{Be66} has proved this conjecture for $k=3$ and $k=5$. Lazebnik, Ustimenko, and Woldar \\cite{LUW95} have shown that, for arbitrary $k\\geq 3$,\\[\\mathrm{ex}(n;C_{2k})\\gg n^{1+\\frac{2}{3k-3+\\nu}},\\]where $\\nu=0$ if $k$ is odd and $\\nu=1$ if $k$ is even. See \\cite{LUW99} for further history and references.\n\nSee also [765].\n\nThis problem is #46 in Extremal Graph Theory in the graphs problem collection."
+    },
+    "statement": {
+      "sha256": "09547de552bad234312853a55f8acd00c293da73bde4d770a273931b556d6ef6",
+      "source_region": "div#content",
+      "text": "Show that for $k\\geq 3$\\[\\mathrm{ex}(n;C_{2k})\\gg n^{1+\\frac{1}{k}}.\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/572"
+}

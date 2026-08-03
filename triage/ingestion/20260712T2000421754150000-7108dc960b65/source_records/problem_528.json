@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 528,
+  "raw_page": {
+    "path": "raw/pages/problem_528.html",
+    "sha256": "536dfd49d168004291931ac00e2be7acc5948b0f9bdee38292cc823888420ff3"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "f19424467b297e6d612bb2c0cc0e7730c404e077493b2c93be8dcdde2474908c",
+      "source_region": "div.problem-additional-text",
+      "text": "[Al93] Alm, Sven Erick, Upper bounds for the connective constant of self-avoiding\nwalks. Combin. Probab. Comput. (1993), 115-136.\n \n [CG93] Conway, A. R. and Guttmann, A. J., Lower bound on the connective constant for square lattice\nself-avoiding walks. J. Phys. A (1993), 3719-3724.\n \n [CLS07] Clisby, Nathan and Liang, Richard and Slade, Gordon, Self-avoiding walk enumeration via the lace expansion. J. Phys. A (2007), 10973-11017.\n \n [HM54] Hammersley, J. M. and Morton, K. W., Poor man's Monte Carlo. J. Roy. Statist. Soc. Ser. B (1954), 23-38; discussion 61-75.\n \n [JSG16] Jacobsen, Jesper Lykke and Scullard, Christian R. and\nGuttmann, Anthony J., On the growth constant for square-lattice self-avoiding walks. J. Phys. A (2016), 494004, 18.\n \n [Ke63] Kesten, Harry, On the number of self-avoiding walks. J. Mathematical Phys. (1963), 960-969."
+    },
+    "remarks": {
+      "sha256": "5bfe28b3de115a01eed34c336ffcfea1fd2bb147a59634620dbda9f5eb3be3f7",
+      "source_region": "div.problem-additional-text",
+      "text": "The constant $C_k$ is sometimes known as the connective constant. Hammersley and Morton \\cite{HM54} showed that this limit exists, and it is trivial that $k\\leq C_k\\leq 2k-1$.\n\nKesten \\cite{Ke63} proved that $C_k=2k-1-1/2k+O(1/k^2)$, and more precise asymptotics are given by Clisby, Liang, and Slade \\cite{CLS07}.\n\nConway and Guttmann \\cite{CG93} showed that $C_2\\geq 2.62$ and Alm \\cite{Al93} showed that $C_2\\leq 2.696$. Jacobsen, Scullard, and Guttmann \\cite{JSG16} have computed the first few decimal places of $C_2$, showing that\\[C_2 = 2.6381585303279\\cdots.\\]See also [529]."
+    },
+    "statement": {
+      "sha256": "d2325dd572c95301d8621d3aef7bb82346a925b1a8804a13ee30f55c934bec56",
+      "source_region": "div#content",
+      "text": "Let $f(n,k)$ count the number of self-avoiding walks of $n$ steps (beginning at the origin) in $\\mathbb{Z}^k$ (i.e. those walks which do not intersect themselves). Determine\\[C_k=\\lim_{n\\to\\infty}f(n,k)^{1/n}.\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/528"
+}

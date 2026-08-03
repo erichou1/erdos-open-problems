@@ -1,0 +1,25 @@
+{
+  "problem_number": 640,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/640",
+  "retrieved_at": "2026-07-10T23:18:09.214902+00:00",
+  "page_title": "640 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "edbaf344acb8ac9478a56cc18983087373dc4fd4242c8aaaeaa81a624b044ebf",
+  "comment_count": 3,
+  "comments": [
+    {
+      "post_id": "3620",
+      "text": "I inserted the PEN problem into my GPT and this happened, curious how close I am. ✅ Claim: The problem resolves for k=3 k=3 with f(3)=3 f(3)=3. Reasoning: If χ(G)≥3 χ(G)≥3, then G G is non-bipartite ⇒ it must contain at least one odd cycle. Take the shortest such odd cycle. If it weren't induced, it would contain a chord ⇒ a shorter odd cycle would exist, contradicting minimality. So this shortest odd cycle is induced. Any odd cycle has chromatic number exactly 3. So the induced subgraph on the cycle also has χ=3 χ=3, satisfying the condition. Conclusion: Every graph with chromatic number ≥ 3 must contain an induced odd cycle with chromatic number ≥ 3. So setting f(3)=3 f(3)=3 works. I’m really new to all this math work 🙂 Just trying to understand things better,would love to hear where this breaks down (if it does) or if I’m actually on the right track.",
+      "meta": "ThaDragon195 — 09:36 on 22 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3625",
+      "text": "Yes, you are right that this is trivial when $k=3$, since any non-bipartite graph contains an odd cycle, and all odd cycles have chromatic number $3$. I think you have misread the question though - there is nothing saying the odd cycle needs to be induced. (If it were, then this would be trivially false for all $k>3$, since all odd cycles have chromatic number $3$.)",
+      "meta": "Thomas Bloom — 10:56 on 22 Jan 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "35",
+      "text": "Observation: This problem is equivalent to the seemingly weaker problem when we look for a path whose vertices span a graph of chromatic number $\\ge k$. To see this, suppose there exists a function $g(k)$ such that every graph of chromatic number at least $g(k)$ contains a path spanning a subgraph of chromatic number at least $k$. Now consider any graph of chromatic number at least $2g(k+1)-1$. W.l.o.g. the graph is connected. Doing a BFS layering from some vertex v, and using alternatingly two disjoint color sets to color the layers, we can see that one layer must induce a subgraph of chromatic number at least $g(k+1)$. So it contains a path inducing a subgraph of chromatic number at least $k+1$. Possibly after removing an end of this path, we find that there is a path in the layer of chromatic number $k$ of odd length. Now, linking the two ends of the path back to $v$ using shortest paths and cutting at the first layer where these shortest paths meet, we obtain an odd cycle spanning a subgraph of chromatic number at least $k$.",
+      "meta": "RaphaelSteiner — 09:55 on 10 Aug 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

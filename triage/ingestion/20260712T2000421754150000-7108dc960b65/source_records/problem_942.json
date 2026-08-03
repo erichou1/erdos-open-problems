@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 942,
+  "raw_page": {
+    "path": "raw/pages/problem_942.html",
+    "sha256": "a2c59187a342fa4f20e4154ee19e15f086e191f184dc22c9d58b8a9670d8cb40"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "5d6a53cc4fdd161306f62d976458d8d12eec3231af7b943e1c1f7c3df0c8b0ea",
+      "source_region": "div.problem-additional-text",
+      "text": "[DLS05] De Koninck, Jean-Marie and Luca, Florian and Shparlinski, Igor\nE., Powerful numbers in short intervals. Bull. Austral. Math. Soc. (2005), 11--16.\n \n [DeLu04] De Koninck, Jean-Marie and Luca, Florian, Sur la proximit\\'{e} des nombres puissants. Acta Arith. (2004), 149--157."
+    },
+    "remarks": {
+      "sha256": "9fdf8fecf21a6647d97200ec9644f5fc74c2ac13b6dcf7904664189fc5f3aac3",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s writes it is not hard to prove that $\\limsup h(n)=\\infty$, and that the density $\\delta_l$ of integers for which $h(n)=l$ exists and $\\sum \\delta_l=1$. \n\nA proof that $h(n)$ is unbounded is provided by van Doorn in the comments.\n\nDe Koninck and Luca \\cite{DeLu04} have proved, for infinitely many $n$,\\[h(n) \\gg \\left(\\frac{\\log n}{\\log\\log n}\\right)^{1/3}.\\]They also give the density ($\\approx 0.275$) of those $n$ such that $h(n)=1$.\n\nThe argument of \\cite{DeLu04} in fact makes two inefficient choices, as observed by Hughes (with AI assistance). Appropriately optimised, as described in the comment section, the construction of \\cite{DeLu04} (see also \\cite{DLS05}) yields infinitely many $n$ such that\\[h(n) \\gg \\frac{\\log n}{\\log\\log n\\log\\log\\log n}.\\]"
+    },
+    "statement": {
+      "sha256": "01b04565bf82110b4a509968597bf11da8ba3dd376507bcdaec97e1f43a387c8",
+      "source_region": "div#content",
+      "text": "Let $h(n)$ count the number of powerful (if $p\\mid m$ then $p^2\\mid m$) integers in $[n^2,(n+1)^2)$. Estimate $h(n)$. In particular is there some constant $c>0$ such that\\[h(n) < (\\log n)^{c+o(1)}\\]and, for infinitely many $n$,\\[h(n) >(\\log n)^{c-o(1)}?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/942"
+}

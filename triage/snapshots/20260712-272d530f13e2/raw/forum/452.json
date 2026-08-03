@@ -1,0 +1,15 @@
+{
+  "problem_number": 452,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/452",
+  "retrieved_at": "2026-07-10T23:17:14.132882+00:00",
+  "page_title": "452 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "71f5b08a31721fdb2f54528865ffdff929a7eb1422f38ae2b884fa19bbd5bb7d",
+  "comment_count": 1,
+  "comments": [
+    {
+      "post_id": "7347",
+      "text": "Erdős and Graham say they don't know any upper bound. I believe I can give an upper bound of $x^{ O(1/\\sqrt{\\log \\log x})}$. For a random integer in an interval $I$ of length $L$, it is straightforward to compute the first three moments of the number of prime factors $<L^{1/3}$: The mean is $\\log \\log L^{1/3}+ o(1)$, the variance is $(1+o(1) \\log \\log L^{1/3}$, and the skewness is $o( (\\log \\log L^{1/3})^{3/2})$. These moments are incompatible with a distribution supported on $ ( \\log \\log L^{1/3} - \\delta \\sqrt{ \\log \\log L^{1/3}},\\infty)$ for all $\\delta$ sufficiently small, and thus there must be some number in $I$ whose number of prime factor $<L^{1/3}$ is at most $\\log \\log L^{1/3} - \\delta \\sqrt{ \\log \\log L^{1/3}}$. Now the remaining prime factors must all be at least $L^{1/3}$, so the number of them is $\\log (2x)/\\log (L^{1/3})=3 \\log(2x)/\\log L$ so that if we choose $L$ so that $3\\log(2x)/\\log L> \\delta \\sqrt{\\log \\log L^{1/3}}$ then there must be numbers in $I$ with $<\\log \\log L^{1/3}<\\log \\log x$ prime factors. It suffices to choose $L$ with $3\\log(2x)/\\log L> \\delta \\sqrt{\\log \\log x^{1/3}}$ which gives $L= x^{ O(1/\\sqrt{\\log \\log x})}$. The reverse problem where one looks for $I$ with $\\omega(n)<\\log \\log n$ for all $n\\in I$ also seems interesting. The upper bound is much stronger: As soon as $I$ is longer than the product of the first $\\log \\log 2x$ primes, which. has size $\\log x^{ (1+o(1)) \\log \\log \\log x}$, some number in $I$ divisible by the product of the first $\\log \\log 2x$ primes and hence has at least $\\log \\log 2x$ prime factors. A lower bound can be obtained by sieving out small prime factors but I'm not sure exactly what you get.",
+      "meta": "WillSawin — 11:17 on 04 Jul 2026 👍 1 📝 0 🤖 0"
+    }
+  ]
+}

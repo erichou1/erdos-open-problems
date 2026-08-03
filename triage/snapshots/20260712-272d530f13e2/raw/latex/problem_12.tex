@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#12}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $A$ be an infinite set such that there are no distinct $a,b,c\in A$ such that $a\mid (b+c)$ and $b,c&#62;a$. Is there such an $A$ with\[\liminf \frac{\lvert A\cap\{1,\ldots,N\}\rvert}{N^{1/2}}&#62;0?\]Does there exist some absolute constant $c&#62;0$ such that there are always infinitely many $N$ with\[\lvert A\cap\{1,\ldots,N\}\rvert&#60;N^{1-c}?\]Is it true that\[\sum_{n\in A}\frac{1}{n}&#60;\infty?\]
+
+
+
+
+Asked by Erd\H{o}s and S\'{a}rk\"{o}zy \cite{ErSa70}, who proved that $A$ must have density $0$. They also prove that this is essentially best possible, in that given any function $f(x)\to \infty$ as $x\to \infty$ there exists a set $A$ with this property and infinitely many $N$ such that\[\lvert A\cap\{1,\ldots,N\}\rvert&gt;\frac{N}{f(N)}.\](Their example is given by all integers in $(y_i,\frac{3}{2}y_i)$ congruent to $1$ modulo $(2y_{i-1})!$, where $y_i$ is some sufficiently quickly growing sequence.) An example of an $A$ with this property where\[\liminf \frac{\lvert A\cap\{1,\ldots,N\}\rvert}{N^{1/2}}\log N&gt;0\]is given by the set of $p^2$, where $p\equiv 3\pmod{4}$ is prime. Elsholtz and Planitzer \cite{ElPl17} have constructed such an $A$ with\[\lvert A\cap\{1,\ldots,N\}\rvert\gg \frac{N^{1/2}}{(\log N)^{1/2}(\log\log N)^2(\log\log\log N)^2}.\]Schoen \cite{Sc01} proved that if all elements in $A$ are pairwise coprime then\[\lvert A\cap\{1,\ldots,N\}\rvert \ll N^{2/3}\]for infinitely many $N$. Baier \cite{Ba04} has improved this to $\ll N^{2/3}/\log N$. DeepMind has provided a construction that shows the answer to the second question is no (and hence the answer to the first question is yes). This construction has been simplified and improved in the comments; it is now known that there exists an $A$ with this property such that, for all large $N$,\[\lvert A\cap \{1,\ldots,N\}\rvert \geq \frac{N}{(\log N)^{O(\log\log\log N)}}.\]It is unknown whether there exists such an $A$ with $\sum_{n\in A}\frac{1}{n}=\infty$. For the finite version see [13] .
+
+
+
+
+References
+
+[Ba04] Baier, Stephan, A note on {$\scr P$}-sets . Integers (2004), A13, 6.
+
+[ElPl17] Elsholtz, Christian and Planitzer, Stefan, On Erd\H{o}s and S\'{a}rk\"ozy's sequences with Property P . Monatsh. Math. (2017), 565--575.
+
+[ErSa70] Erd\H{o}s, P. and S\'{a}rk\"ozi, A., On the divisibility properties of sequences of integers . Proc. London Math. Soc. (3) (1970), 97-101.
+
+[Sc01] Schoen, Tomasz, On a problem of Erd\H{o}s and S\'{a}rk\"ozy . J. Combin. Theory Ser. A (2001), 191--195.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/12}}
+\end{document}

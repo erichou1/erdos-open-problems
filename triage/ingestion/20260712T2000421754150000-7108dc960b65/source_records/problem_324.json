@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 324,
+  "raw_page": {
+    "path": "raw/pages/problem_324.html",
+    "sha256": "8074494bc73d230422e732193ce787b3b659ea3445e189ae40ce24f82a0bd9ba"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "5050bc61c58ce63f6e7d0d0d5662a7c37c22d3cbe4f0d5a2d454752985dc4412",
+      "source_region": "div.problem-additional-text",
+      "text": "[DuNo21] Dubickas, Arturas and Novikas, Aivaras, No cubic integer polynomial generates a Sidon sequence. Math. Nachr. (2021), 1859--1865.\n \n [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.\n \n [Ru01b] Ruzsa, I. Z., An almost polynomial Sidon sequence. Studia Sci. Math. Hungar. (2001), 367--375."
+    },
+    "remarks": {
+      "sha256": "f5cfff4ce5366da9902d35221c4d27f6f6271633336afa439d0b2f79891bcff8",
+      "source_region": "div.problem-additional-text",
+      "text": "In other words, the set $\\{ f(n) : n\\geq 1\\}$ should be a Sidon set.\n\nErd\\H{o}s and Graham describe this problem as 'very annoying'. Probably $f(x)=x^5$ should work. The Lander, Parkin, and Selfridge conjecture would imply that $f(x)=x^n$ has this property for all $n\\geq 5$.\n\nRuzsa \\cite{Ru01b} has proved there exists $c\\in [0,1]$ and $n_0\\geq 1$ such that\\[\\{ n^5 +\\lfloor cn^4\\rfloor : n \\geq n_0\\}\\]is a Sidon set.\n\nIt is easy to check that a quadratic $f$ cannot have this property. Dubickas and Novikas \\cite{DuNo21} have shown that a cubic $f$ cannot have this property. It is a classical fact that $x^4$ cannot have this property.\n\nThis is discussed in problems C9, D1, and F30 of Guy's collection \\cite{Gu04}."
+    },
+    "statement": {
+      "sha256": "a3e3bb9b57c6903f5cbe1046740d56adaec8f394f4dd9950fcc87b3cbf920964",
+      "source_region": "div#content",
+      "text": "Does there exist a polynomial $f(x)\\in\\mathbb{Z}[x]$ such that all the sums $f(a)+f(b)$ with $a<b$ nonnegative integers are distinct?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/324"
+}

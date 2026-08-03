@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 878,
+  "raw_page": {
+    "path": "raw/pages/problem_878.html",
+    "sha256": "aafc78e8a2ea504c61136fea1bef9c5e3e70e1d4877ae1b6392b4188a60a62b4"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "5fe587b6e8497e376faf74e1272a55b7b372947f401ea3b6d59057ed6884b797",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er84e] Erd\\H{o}s, P., On two unconventional number theoretic functions and on some\nrelated problems. (1984), 113--121."
+    },
+    "remarks": {
+      "sha256": "26c22016786da9403e517efb9e4f325c20b06e6a9eb1211e800b0b900569ef08",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s \\cite{Er84e} proved that\\[\\max_{n\\leq x}f(n)\\sim \\frac{x\\log x}{\\log\\log x}\\]for a sequence of $x\\to \\infty$.\n\nIt is trivial that $f(n)\\leq F(n)$ for all $n$. It may be true that, for almost all $n$,\\[F(n)\\sim \\frac{1}{2}n\\log\\log n.\\]Erd\\H{o}s notes that $f(n)/n$ 'almost behaves as a conventional additive function', but unusually $f(n)/n$ does not have a mean value - indeed,\\[\\limsup \\frac{1}{x}\\sum_{n<x}\\frac{f(n)}{n}=\\infty\\]but\\[\\liminf \\frac{1}{x}\\sum_{n<x}\\frac{f(n)}{n}<\\infty.\\]Erd\\H{o}s \\cite{Er84e} proved that\\[x\\log\\log\\log\\log x\\ll H(x) \\ll x\\log\\log\\log x.\\]Barreto has noted in the comments that this upper bound for $H(x)$ implies $f(n)=o(n\\log\\log n)$ for almost all $n$. Barreto has also noted that $\\max_{n\\leq x}f(n)=\\max_{n\\leq x}F(n)$ is false at $x=210$.\n\nSee also [879]."
+    },
+    "statement": {
+      "sha256": "1188c9c6a00731e8bbb24695bd8231a724acf92a459068224ec27a62aae0bfc6",
+      "source_region": "div#content",
+      "text": "If $n=\\prod_{1\\leq i\\leq t} p_i^{k_i}$ is the factorisation of $n$ into distinct primes then let\\[f(n)=\\sum p_i^{\\ell_i},\\]where $\\ell_i$ is chosen such that $n\\in [p_i^{\\ell_i},p_i^{\\ell_i+1})$. Furthermore, let\\[F(n)=\\max \\sum_{i} a_i\\]where the maximum is taken over all distinct $a_1,\\ldots,a_k\\leq n$ such that $(a_i,a_j)=1$ for $i\\neq j$ and all prime factors of each $a_i$ are prime factors of $n$.\n\nIs it true that, for almost all $n$,\\[f(n)=o(n\\log\\log n)\\]and\\[F(n) \\gg n\\log\\log n?\\]Is it true that\\[\\max_{n\\leq x}f(n)\\sim \\frac{x\\log x}{\\log\\log x}?\\]Is it true that (for all $x$, or perhaps just for all large $x$)\\[\\max_{n\\leq x}f(n)=\\max_{n\\leq x}F(n)?\\]Find an asymptotic formula for the number of $n<x$ such that $f(n)=F(n)$. Find an asymptotic formula for\\[H(x)=\\sum_{n<x}\\frac{f(n)}{n}.\\]Is it true that\\[H(x) \\ll x\\log\\log\\log\\log x?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/878"
+}

@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#872}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, primitive sets
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Consider the two-player game in which players alternately choose integers from $\{2,3,\ldots,n\}$ to be included in some set $A$ (the same set for both players) such that no $a\mid b$ for $a\neq b\in A$. The game ends when no legal move is possible. One player wants the game to last as long as possible, the other wants the game to end quickly. How long can the game be guaranteed to last for? At least $\epsilon n$ moves? (For $\epsilon&#62;0$ and $n$ sufficiently large.) At least $(1-\epsilon)\frac{n}{2}$ moves?
+
+
+
+
+A number theoretic variant of a combinatorial game of Hajnal, in which players alternately add edges to a graph while keeping it triangle-free. This graph theoretic game must trivially end in at most $n^2/4$ moves, and F\"{u}redi and Seress \cite{FuSe91} proved that it can be guaranteed to last for $\gg n\log n$ moves. Bir\'{o}, Horn, and Wildstrom \cite{BPW16} proved that it must end in at most $(\frac{26}{121}+o(1))n^2&lt;0.215n^2$ moves. This type of game is known as a saturation game. Erd\H{o}s does not specify which player goes first, which may result in different answers. GPT-5.2 Pro, prompted by Price, has shown that the final question has a negative answer: assuming the 'Prolonger' goes first, the 'Shortener' can guarantee that it ends in at most $(\frac{23}{48}+o(1))n$ moves. This constant has been refined, see the comment section for the latest. Since all primes in $(n/2,n]$ must eventually be chosen, the game must last for at least $\gg \frac{n}{\log n}$ moves.
+
+
+
+
+References
+
+[BPW16] Bir\'{o}, Csaba and Horn, Paul and Wildstrom, D. Jacob, An upper bound on the extremal version of Hajnal's triangle-free game . Discrete Appl. Math. (2016), 20--28.
+
+[FuSe91] F\"{u}redi, Zolt\'{a}n and Reimer, Dave and Seress, \'{A}kos, Hajnal's triangle-free game and extremal graph problems . Congr. Numer. (1991), 123--128.
+
+\noindent\textbf{Related OEIS sequences:} possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/872}}
+\end{document}

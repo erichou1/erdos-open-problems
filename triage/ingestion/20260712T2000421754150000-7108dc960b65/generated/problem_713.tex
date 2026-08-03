@@ -1,0 +1,48 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#713}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{Prize: \$500}
+
+\noindent\textbf{Tags:} graph theory, turan number
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Is it true that, for every bipartite graph $G$, there exists some $\alpha\in [1,2)$ and $c>0$ such that\[\mathrm{ex}(n;G)\sim cn^\alpha?\]Must $\alpha$ be rational?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+A problem of Erd\H{o}s and Simonovits. Erd\H{o}s sometimes asked this in the weaker version with just\[\mathrm{ex}(n;G)\asymp n^{\alpha}.\]Erd\H{o}s \cite{Er67d} had initially conjectured that, for any bipartite graph $G$, $\mathrm{ex}(n;G)\sim cn^{\alpha}$ for some constant $c>0$ and $\alpha$ of the shape $1+\frac{1}{k}$ or $2-\frac{1}{k}$ for some integer $k\geq 2$. This was disproved by Erd\H{o}s and Simonovits \cite{ErSi70}.
+
+The analogous statement is not true for hypergraphs, as shown by Frankl and F\"{u}redi \cite{FrFu87}, who proved that if $G$ is the $5$-uniform hypergraph on $8$ vertices with edges $\{12346,12457,12358\}$ then $\mathrm{ex}(n;G)=o(n^5)$ but $\mathrm{ex}(n;G)\neq O(n^c)$ for any $c<5$.
+
+A simplified proof was given by F\"{u}redi and Gerbner \cite{FuGe21}, who extended it to a counterexample for all $k\geq 5$. It remains open whether it is true for $k=3$ and $k=4$ (though F\"{u}redi and Gerbner conjecture it is not).
+
+See also [571].
+
+\bigskip
+\noindent\textbf{References:}
+
+[Er67d] Erd\H{o}s, P., Some recent results on extremal problems in graph theory.
+{R}esults. (1967), 117--123 (English); pp. 124--130 (French).
+ 
+ [ErSi70] Erd\H{o}s, P. and Simonovits, M., Some extremal problems in graph theory. Combinatorial theory and its applications, I-III (Proc. Colloq., Balatonf\"{u}red, 1969) (1970), 377-390.
+ 
+ [FrFu87] Frankl, P. and F\"uredi, Z., Exact solution of some Tur\'{a}n-type problems. J. Combin. Theory Ser. A (1987), 226--262.
+ 
+ [FuGe21] F\"uredi, Zolt\'{a}n and Gerbner, D\'{a}niel, Hypergraphs without exponents. J. Combin. Theory Ser. A (2021), Paper No. 105517, 9.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/713}}
+\end{document}

@@ -1,0 +1,30 @@
+{
+  "problem_number": 251,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/251",
+  "retrieved_at": "2026-07-10T23:16:13.700299+00:00",
+  "page_title": "251 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "a861a8c4861c2d766b9ea0b71231461318e87a9e9f977a286b9f489c749fc632",
+  "comment_count": 4,
+  "comments": [
+    {
+      "post_id": "5416",
+      "text": "The last conjecture below the main problem statement has an (overly simple) negative answer. The idea is elementary, just make the series telescope by choosing positive integers $(c_n)$ such that\\[ \\frac{p_n}{g_1\\cdots g_n} = \\frac{c_n}{g_1\\cdots g_{n-1}} - \\frac{c_{n+1}}{g_1\\cdots g_n}, \\]i.e. $c_{n+1}=c_n g_n - p_n$. Thus, one can define $(c_n)$ recursively, by only making sure that\\[ c_{n+1} \\equiv -p_n \\ (\\text{mod} \\ c_n) \\]and that it is bounded from below by something that grows slowly but steadily. Afterwards one just sets\\[ g_n := \\frac{c_{n+1}+p_n}{c_n}. \\]I got ChatGPT 5.4 Pro figure out the proof and write up the details with only minimal orchestration from my side. It is possible that Erdős also wanted $(g_n)$ to be increasing, but then it would be weird to emphasize $g_n\\geq2$ and switch the notation from $a_n$ to $g_n$ for this particular problem in [Er88c].",
+      "meta": "Vjeko_Kovac — 11:13 on 15 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5428",
+      "text": "Thanks! I ran standard check which found no issues. It seems this proof is a bit stronger than $g_n = o(p_n)$. It may be of interest to see what the best provable statement is.",
+      "meta": "Nat Sothanaphan — 17:06 on 15 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5404",
+      "text": "[ScPu11] by D. C. Schlage Puchta seems related to this problem. (See Theorem 2).",
+      "meta": "Alfaiz — 03:28 on 15 Apr 2026 👍 1 📝 1 🤖 0"
+    },
+    {
+      "post_id": "926",
+      "text": "By summation by parts, this is equivalent to the irrationality of $\\sum_n \\frac{p_{n+1}-p_n}{2^n}$. It is possible that a sufficiently quantitative and uniform version of the prime tuples conjecture can resolve this problem, if it gives sufficient statistical control on the binary expansion of about $\\log \\log n$ consecutive prime gaps $p_{n+1}-p_n$ (which is usually of size $\\asymp \\log n$) to show that the binary expansion of $\\sum_n \\frac{p_{n+1}-p_n}{2^n}$ cannot be periodic. The theory of Shannon entropy may be helpful in this regard.",
+      "meta": "TerenceTao — 17:17 on 07 Oct 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

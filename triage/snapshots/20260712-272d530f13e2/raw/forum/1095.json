@@ -1,0 +1,55 @@
+{
+  "problem_number": 1095,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/1095",
+  "retrieved_at": "2026-07-10T23:20:31.795839+00:00",
+  "page_title": "1095 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "5428bc92a00ff93b5fd75e50d465b44fbeda2b135608e53887b9babba91164a2",
+  "comment_count": 9,
+  "comments": [
+    {
+      "post_id": "7093",
+      "text": "With Konyagin's theorem on function values close to rationals (i.e Theorem 2 from [Ko99b]) already formalized for its use in #451, it wasn't too much effort to formalize the rest of the lower bound proof of $g(k) \\ge \\exp(c \\log^2 k)$ for some absolute $c > 0$. The result can be found here, and the only external input is the Baker-Harman-Pintz result that the interval $(k, k + k^{21/40})$ contains $\\gg \\frac{k^{21/40}}{\\log k}$ primes, if $k$ is large enough.",
+      "meta": "Woett — 10:18 on 20 Jun 2026 👍 1 📝 1 🤖 0"
+    },
+    {
+      "post_id": "4765",
+      "text": "I gave this problem to 5.4 pro, while it wasn't able to fully prove $\\log g( k) \\asymp \\frac{k}{\\log k}$, it was able to show (verified by Opus 4.6, Gemini 3.1 Pro, and myself) the following weaker form of the bound: Let $\\mathcal{A}(k) := \\{ n \\geq 0 : p \\nmid {n \\choose k} \\text{ for every prime } p \\leq k \\} $, and let $\\Delta(k)$ denote its natural density. If $S(k) := \\log \\Delta(k)^{-1}$, then we have $S(k) \\asymp \\frac{k}{\\log k}$. GPT also proposes the following strategy for proving the full asymptotic bound - I have not fully looked into this but it seems very roughly plausible, at least to me. Write $g(k) = k + Q(k) h_*(k)$, where\\[ Q(k) := \\prod_{p \\leq k } p^{v_p(k+1)}\\]Write $\\tilde{\\Delta}(k) = Q(k) \\Delta(k)$ and\\[ N(k) := \\prod_{p \\leq k} p^{L_p - v_p(k+1)} \\]where $L_p = \\lfloor{\\log_p k} \\rfloor + 1$. Then if one can show a bound of the form\\[ h_*(k) \\ll \\tilde{\\Delta}(k)^{-1} ( \\log N(k) )^A \\]for some absolute $A$, this should imply the desired bound of $ \\log g(k) \\asymp \\frac{k}{\\log k}$.",
+      "meta": "shtuka — 23:22 on 13 Mar 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4797",
+      "text": "Thanks. Standard near-autonomous check by GPT-5.4 Thinking only claims 2 minor issues (see the last message). This is an AI-based check that has worked well anecdotally, but it is not meant to be comprehensive and its claims are not guaranteed. You've also been added to the AI wiki (saying just in case you don't know the wiki already).",
+      "meta": "Nat Sothanaphan — 16:18 on 15 Mar 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2995",
+      "text": "As Alex and Boris state, the upper bound for $g(k)$ should be changed to $\\exp(k(1+o(1))$ in the problem description. Feel free to delete this comment upon correcting. Also this is the first time I've seen a problem \"colored green\" yet simultaneously marked as open. Yes, $g(k)$ has been \"estimated\" as the problem states, but ideally we obtain a sharp order of magnitude for $g(k)$, so the problem should be \"colored red\". (The site has been updated to address this comment.)",
+      "meta": "JakeMallen — 19:04 on 11 Jan 2026 👍 0 📝 2 🤖 0"
+    },
+    {
+      "post_id": "2996",
+      "text": "Yes, the green status is just my fault for misclicking, and is unintended! (The site has been updated to address this comment.)",
+      "meta": "Thomas Bloom — 19:18 on 11 Jan 2026 👍 1 📝 1 🤖 0"
+    },
+    {
+      "post_id": "2605",
+      "text": "Before Alex Meiburg's comment, this page said that [EES74] conjectured that $g(k) < \\exp(k^{1+o(1)})$. This statement then made its way into the Formal Conjectures project. Aristotle was able to prove that statement all by itself. Unfortunately, the definition of $g(k)$ on that page was misformalized, because it was missing the $g(k) > k+1$ condition. This actually doesn't affect the validity of the proof, but nonetheless, I fixed that misformalization and reran Aristotle. It was still able to prove this result by itself. (It was not able to prove any of the open variants of the problem.) Type-check it online! This page now says that [EES74] proved $g(k) < \\exp(k^{1+o(1)})$, but I think it is actually $g(k) < \\exp(k(1+o(1)))$. Note the difference in \"exponentiation\" versus \"multiplication\". Aristotle was not able to prove this version. (The straightforward approach here uses the Prime Number Theorem.) (The site has been updated to address this comment.)",
+      "meta": "BorisAlexeev — 15:56 on 30 Dec 2025 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2596",
+      "text": "[EES74] proved, not conjectured, that $g(k) < \\exp(k(1+o(1))$. The conjecture they give there is that $g(k) < L_k = \\textrm{lcm} \\{1 \\dots n\\}$, which should hold for all $k \\ge 7$. (The site has been updated to address this comment.)",
+      "meta": "Ameiburg — 03:50 on 30 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1926",
+      "text": "Sorenson, Sorenson, and Webster in An algorithm and estimates for the Erdős–Selfridge function (2020) define the same function $g(k)$ and introduce an approximating function $\\tilde g(k)$ based on counting admissible residues. They prove\\[ 0.530684 + o(1) \\le \\frac{\\log \\tilde g(k)}{k/\\log k} \\le 1 + o(1), \\]so in particular\\[ \\log \\tilde g(k) = \\Theta\\left(\\frac{k}{\\log k}\\right). \\]Under a uniform distribution heuristic of theirs, they show that\\[ \\log g(k) = \\log \\tilde g(k) + O(\\log k), \\]which implies that $g(k)$ is, with high probability, within a polynomial factor of $\\tilde g(k)$. Consequently, they heuristically expect $\\log g(k) = \\Theta\\left(k/\\log k\\right)$, equivalently\\[ g(k) = \\exp\\left(\\Theta\\left(\\frac{k}{\\log k}\\right)\\right), \\]a growth rate that is larger than Konyagin’s proven lower bound $g(k) \\gg \\exp\\left(c(\\log k)^2\\right)$. However, this faster $\\exp\\left(\\Theta(k/\\log k)\\right)$ growth for $g(k)$ is only supported by their heuristic and has not been proved unconditionally. (The site has been updated to address this comment.)",
+      "meta": "JakeMallen — 23:45 on 30 Nov 2025 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "1216",
+      "text": "OEIS: https://oeis.org/A003458 (The site has been updated to address this comment.)",
+      "meta": "StijnC — 13:55 on 18 Oct 2025 👍 1 📝 0 🤖 0"
+    }
+  ]
+}

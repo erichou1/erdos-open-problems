@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1189,
+  "raw_page": {
+    "path": "raw/pages/problem_1189.html",
+    "sha256": "984e42e05e4326a20a10ec2c342e0c7c4d421d3544ad2d73a8f9cb0c4e8ff77e"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "170a566b5e422c40eee1500edc6aa62f1094e1ae2505c687b5f6093c3daa112f",
+      "source_region": "div.problem-additional-text",
+      "text": "[BBMST24] Balister, Paul and Bollob\\'{a}s, B\\'ela and Morris, Robert and\nSahasrabudhe, Julian and Tiba, Marius, The structure and number of {E}rd\\H os covering systems. J. Eur. Math. Soc. (JEMS) (2024), 75--109.\n \n [Si85] Simpson, R. J., Regular coverings of the integers by arithmetic progressions. Acta Arith. (1985), 145--152.\n \n [Su07] Sun, Zhi-Wei, On covering numbers. (2007), 443--453."
+    },
+    "remarks": {
+      "sha256": "b173aa711b7168d009c8f78963bce904f07b0ac6ddc9d88d4900e2f4326e7097",
+      "source_region": "div.problem-additional-text",
+      "text": "This is subtly different from the (more usually studied) notion of minimal covering system: an irreducible covering set corresponds to the set of moduli of a minimal covering system, but not necessarily vice versa.\n\nThe divisors of $12$ (which are $>1$) are an example of an irreducible covering set. Sun \\cite{Su07} proved more generally that, for any odd prime $p$, the divisors (which are $>1$) of $2^{p-1}p$ form an irreducible covering set, settling the final question.\n\nSimpson \\cite{Si85} proved $n_k\\leq 2^{k-1}$.\n\nLet $I(k)$ count the number of irreducible covering sets of size $k$. Balister, Bollob\\'{a}s, Morris, Sahasrabudhe, and Tiba \\cite{BBMST24} proved that\\[I(k) \\leq \\exp\\left((c+o(1))\\frac{k^{3/2}}{(\\log k)^{1/2}}\\right)\\]by proving that the right-hand side is an asymptotic for the number of minimal covering systems on $k$ moduli.\n\nIt is trivial that $\\sum\\frac{1}{n_i}>1$ for any irreducible covering set.\n\nSee also [1188]."
+    },
+    "statement": {
+      "sha256": "11629eb847e20e6cbba81b6594606843a2e720096d596d3cd3afdbfd0db28bf8",
+      "source_region": "div#content",
+      "text": "Call a set of distinct integers $1<n_1<\\cdots<n_k$ a covering set if there is a choice of $a_i\\pmod{n_i}$ for $1\\leq i\\leq k$ such that every integer satisfies at least one of these congruences. A set is an irreducible covering set if no proper subset is a covering set. \n\nHow many irreducible covering sets of size $k$ are there?\n\nWhat is the minimum and maximum that $n_k$ can be?\n\nDetermine or estimate $\\max \\sum\\frac{1}{n_i}$, where the maximum ranges over all irreducible covering sets of size $k$.\n\nAre there infinitely many $n$ such that the divisors of $n$ (which are $>1$) form an irreducible covering set?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1189"
+}

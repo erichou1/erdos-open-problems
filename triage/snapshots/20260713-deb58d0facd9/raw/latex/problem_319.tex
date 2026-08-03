@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#319}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, unit fractions
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+What is the size of the largest $A\subseteq \{1,\ldots,N\}$ such that there is a function $\delta:A\to \{-1,1\}$ such that\[\sum_{n\in A}\frac{\delta_n}{n}=0\]and\[\sum_{n\in A'}\frac{\delta_n}{n}\neq 0\]for all non-empty $A'\subsetneq A$?
+
+
+
+
+Adenwalla has observed that a lower bound of\[\lvert A\rvert\geq (1-\tfrac{1}{e}+o(1))N\]follows from the main result of Croot \cite{Cr01}, which states that there exists some set of integers $B\subset [(\frac{1}{e}-o(1))N,N]$ such that $\sum_{b\in B}\frac{1}{b}=1$. Since the sum of $\frac{1}{m}$ for $m\in [c_1N,c_2N]$ is asymptotic to $\log(c_2/c_1)$ we must have $\lvert B\rvert \geq (1-\tfrac{1}{e}+o(1))N$. We may then let $A=B\cup\{1\}$ and choose $\delta(n)=-1$ for all $n\in B$ and $\delta(1)=1$. This problem has been formalised in Lean as part of the Google DeepMind Formal Conjectures project .
+
+
+
+
+References
+
+[Cr01] Croot, III, Ernest S., On unit fractions with denominators in short intervals . Acta Arith. (2001), 99-114.
+
+\noindent\textbf{Related OEIS sequences:} possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/319}}
+\end{document}

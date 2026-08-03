@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 535,
+  "raw_page": {
+    "path": "raw/pages/problem_535.html",
+    "sha256": "e4aa58299a52e283b32713643006f7da24335a6513b0d6089b82aaf43538cdf6"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "33b79b56e58222bbc1a39bd0a064d34a9b7a5e270d5aee72133c297570eaa7f0",
+      "source_region": "div.problem-additional-text",
+      "text": "[ALWZ20] Alweiss, R. and Lovett, S. and Wu, K. and Zhang, J., Improved bounds for the sunflower lemma. (2020).\n \n [AbHa67] No reference found.\n\n [AbHa70] Abbott, H. L. and Hanson, D., An extremal problem in number theory. Bull. London Math. Soc. (1970), 324-326.\n \n [Er64] Erd\\H{o}s, P., On a problem in elementary number theory and a combinatorial problem. Math. Comp. (1964), 644-646."
+    },
+    "remarks": {
+      "sha256": "a7425386605b33583766109b11c9fb5cb609226f59ca91e4e178e8f94a7e11be",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s \\cite{Er64} proved that\\[f_r(N) \\leq N^{\\frac{3}{4}+o(1)},\\]and Abbott and Hanson \\cite{AbHa70} improved this exponent to $1/2$. Erd\\H{o}s \\cite{Er64} proved the lower bound, for any $r \\geq 3$,\\[f_r(N) > N^{\\frac{c_r}{\\log\\log N}}\\]for some constant $c_r>0$, and conjectured this should also be an upper bound. \n\nThis is intimately connected with the sunflower problem [20]. Indeed, Erd\\H{o}s \\cite{Er64} noted that a positive solution to [20] would imply\\[f_r(N) \\leq N^{\\frac{C_r}{\\log\\log N}}\\]for some constant $C_r>0$. Using the recent bounds of Alweiss, Lovett, Wu, and Zhang \\cite{ALWZ20} for the sunflower problem yields\\[f_r(N) \\leq N^{C_r\\frac{\\log\\log\\log N}{\\log\\log N}},\\]and in particular $f_r(N) \\leq N^{o(1)}$. \n\nAn alternative description of the details of these lower and upper bounds was given by Abbott and Hanson \\cite{AbHa67}. (A similar detailed calculation is given in the comments by Hrishi.)\n\nSee also [536]."
+    },
+    "statement": {
+      "sha256": "30bc39426b0501f12524da89e20d475fbc20aed0b5405ba2b1f1667df358747d",
+      "source_region": "div#content",
+      "text": "Let $r\\geq 3$, and let $f_r(N)$ denote the size of the largest subset of $\\{1,\\ldots,N\\}$ such that no subset of size $r$ has the same pairwise greatest common divisor between all elements. Estimate $f_r(N)$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/535"
+}

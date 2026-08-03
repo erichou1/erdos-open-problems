@@ -1,0 +1,40 @@
+{
+  "problem_number": 1189,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/1189",
+  "retrieved_at": "2026-07-10T23:21:00.817591+00:00",
+  "page_title": "1189 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "7c00a2a10f74d2b020b1b29dbb227946c868e246e7df9a6e8e3390023c5fde0d",
+  "comment_count": 6,
+  "comments": [
+    {
+      "post_id": "5519",
+      "text": "This is certainly not new, but to get close to Simpson's upper bound, let $k \\ge 5$, set $a_i = 2^{i-1}$ with $n_i = 2^{i}$ for $1 \\le i \\le k-4$. Then for the final four congruences we take \\begin{align*} a_{k-3} &= 0, \\qquad & n_{k-3} &= 3 \\cdot 2^{k-5}, \\\\ a_{k-2} &= 0, \\qquad & n_{k-2} &= 2^{k-3}, \\\\ a_{k-1} &= 2^{k-4}, \\qquad & n_{k-1} &= 3 \\cdot 2^{k-4}, \\\\ a_{k} &= 5 \\cdot 2^{k-4}, \\qquad & n_k &= 3 \\cdot 2^{k-3}. \\end{align*}This gives $n_k \\ge 3 \\cdot 2^{k-3}$, and I expect that the optimal $n_k$ does exist somewhere in the literature. EDIT 2026-06-21: A fairly easy argument actually gives that $3 \\cdot 2^{k-3}$ is optimal. I'll try to write up the details shortly.",
+      "meta": "Woett — 21:45 on 16 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5546",
+      "text": "Theorem 2 of Klein, Koukoulopoulos, and Lemieux has a similar example which is a *minimal* covering set. For *irreducible* covering set, Sun's example in the problem description giving $n_{2p-1} \\ge p 2^{p-1}$ is the best one we found. Credit to GPT-5.4 Thinking for discussion.",
+      "meta": "Nat Sothanaphan — 10:52 on 17 Apr 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5550",
+      "text": "I think this example is irreducible, but cannot wholly prove it. Let $n=\\prod_{i=1}^t p_i^{\\alpha_i}$ and $f(n)=\\sum_{i=1}^t \\alpha_i(p_i-1)$. Then the Simpson paper proves that if $A=\\{a_i\\bmod d_i: 1\\leq i\\leq k\\}$ is a minimal covering system, then $|A|\\geq f(P)+1$ where $P=lcm(d_1,\\ldots,d_k)$. Assume the example above is not irreducible. Then it is possible to remove a modulus, reassign the residues to the remaining moduli, and create a new covering system. IF the residues can be assigned in a way such that the resulting sytem is minimal, then this is a minimal covering system $A'$. Whichever modulus you remove, the lcm of the moduli is the same as before. However, $A'$ fails the inequality $|A'|\\geq f(P)+1$. Given a minimal, non irreducible covering system, is it always possible to remove a modulus and form a minimal covering system with the remaining moduli?",
+      "meta": "Adenwalla — 12:10 on 17 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5551",
+      "text": "The congruence classes mod $2, 4, \\ldots, 2^{k-3}$ (that is, using the moduli $n_1, n_2, \\ldots, n_{k-4}, n_{k-2}$) together leave at least one residue class modulo $2^{k-3}$ uncovered. That is, we have at least three residue classes modulo $3 \\cdot 2^{k-3}$, say $a, a+2^{k-3}, a+2^{k-2} \\pmod{3 \\cdot 2^{k-3}}$ still uncovered. But each of the three remaining moduli $3 \\cdot 2^{k-5}$, $3 \\cdot 2^{k-4}$, $3 \\cdot 2^{k-3}$ (ie $n_{k-3}, n_{k-1}, n_k$) can only cover at most one of the three still uncovered classes. So the example actually does constitue an irreducible set. And in any case, even if it weren't irreducible, because of the required inequality $\\sum \\frac{1}{n_i} > 1$, one can check that you can never remove $n_i$ for $i \\le k-3$ in this case. So without even verifying whether it's irreducible, any irreducible subset would still give the lower bound $n_k \\gg 2^k$.",
+      "meta": "Woett — 12:24 on 17 Apr 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5553",
+      "text": "Yes, I was just thinking of this. There must be an irreducible subset of $A$, which would be the moduli of a minimal covering system and so satisfy Simpson's inequality. If $P:=lcm(n_1,\\ldots,n_k)$ then $f(P)+1=k$. Therefore the lcm of any proper subset of $A$ which form the moduli of a minimal covering system must be $<P$. You cannot remove any but the largest three moduli while keeping the sum of the reciprocals of the remaining moduli greater than 1. If all three of the largest moduli are removed, then the sum of the reciprocals of the remaining moduli is less than 1. The only other proper subset of $A$ which is created by removing a subset of the three largest moduli and has lcm less than $P$ is $A\\backslash\\{n_{k-2},n_k\\}$, which has lcm $3\\times 2^{k-4}$, but this has $k-2$ moduli and $f(3\\times 2^{k-4})+1=k-1$.",
+      "meta": "Adenwalla — 13:04 on 17 Apr 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5555",
+      "text": "Thanks! It seems that the literature (that I can find) only characterizes this as minimal, but it is also irreducible as we've shown.",
+      "meta": "Nat Sothanaphan — 13:32 on 17 Apr 2026 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

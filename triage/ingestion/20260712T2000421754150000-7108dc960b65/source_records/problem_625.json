@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 625,
+  "raw_page": {
+    "path": "raw/pages/problem_625.html",
+    "sha256": "a0290252dc45a20090477aa922780439e2d1cce1193064ce74fb833361ee2f83"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "83c6a751848949739d9f36988285ad72229410b630d902e49c08b5a56babee01",
+      "source_region": "div.problem-additional-text",
+      "text": "[Bo88] Bollob\\'{a}s, B., The chromatic number of random graphs. Combinatorica (1988), 49-55.\n \n [Gi16] J. Gimbel, Some of my favorite coloring problems for graphs and digraphs. Graph Theory: Favorite conjectures and open problems (2016), 95-108.\n \n [He24] A. Heckel, On a question of Erd\\H{o}s and Gimbel on the cochromatic number. arXiv:2408.13839 (2024).\n \n [He24c] A. Heckel, The difference between the chromatic and the cochromatic number of a random graph. arXiv:2409.17614 (2024).\n \n [St24b] R. Steiner, On the difference between the chromatic and cochromatic number. arXiv:2408.02400 (2024)."
+    },
+    "remarks": {
+      "sha256": "120f34aec69ad8ec8c5d6c684620235671f540ac3fc258cd0f02a0a09de7ad3f",
+      "source_region": "div.problem-additional-text",
+      "text": "A problem of Erd\\H{o}s and Gimbel (see also \\cite{Gi16}). At a conference on random graphs in Poznan, Poland (most likely in 1989) Erd\\H{o}s offered \\$100 for a proof that this is true, and \\$1000 for a proof that this is false (although later told Gimbel that \\$1000 was perhaps too much).\n\nIt is known that almost surely\\[\\frac{n}{2\\log_2n}\\leq \\zeta(G)\\leq \\chi(G)\\leq (1+o(1))\\frac{n}{2\\log_2n}.\\](The final upper bound is due to Bollob\\'{a}s \\cite{Bo88}. The first inequality follows from the fact that almost surely $G$ has clique number and independence number $< 2\\log_2n$.)\n\nHeckel \\cite{He24} and, independently, Steiner \\cite{St24b} have shown that it is not the case that $\\chi(G)-\\zeta(G)$ is bounded with high probability, and in fact if $\\chi(G)-\\zeta(G) \\leq f(n)$ with high probability then $f(n)\\geq n^{1/2-o(1)}$ along an infinite sequence of $n$. Heckel conjectures that, with high probability,\\[\\chi(G)-\\zeta(G) \\asymp \\frac{n}{(\\log n)^3}.\\]Heckel \\cite{He24c} further proved that, for any $\\epsilon>0$, we have\\[\\chi(G) -\\zeta(G) \\geq n^{1-\\epsilon}\\]for roughly $95\\%$ of all $n$."
+    },
+    "statement": {
+      "sha256": "082bef45fb75f8756fc18194faa41cd6356b0ab6dfedf9802ec3546a4f0210a7",
+      "source_region": "div#content",
+      "text": "The cochromatic number of $G$, denoted by $\\zeta(G)$, is the minimum number of colours needed to colour the vertices of $G$ such that each colour class induces either a complete graph or empty graph. Let $\\chi(G)$ denote the chromatic number.\n\nIf $G$ is a random graph with $n$ vertices and each edge included independently with probability $1/2$ then is it true that almost surely\\[\\chi(G) - \\zeta(G) \\to \\infty\\]as $n\\to \\infty$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/625"
+}

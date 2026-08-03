@@ -1,0 +1,705 @@
+{
+  "statement_lock": {
+    "original_statement": "Let $f(n)$ be the maximum number of mutually orthogonal Latin squares of order $n$. Is it true that\\[f(n) \\gg n^{1/2}?\\]\n\n\n\n\nEuler conjectured that $f(n)=1$ when $n\\equiv 2\\pmod{4}$, but this was disproved by Bose, Parker, and Shrikhande \\cite{BPS60} who proved $f(n)\\geq 2$ for $n\\geq 7$. Chowla, Erd\\H{o}s, and Straus \\cite{CES60} proved $f(n) \\gg n^{1/91}$. Wilson \\cite{Wi74} proved $f(n) \\gg n^{1/17}$. Beth \\cite{Be83c} proved $f(n) \\gg n^{1/14.8}$. The sequence of $f(n)$ is A001438 in the OEIS.\n\n\n\n\nReferences\n\n[BPS60] Bose, R. C. and Shrikhande, S. S. and Parker, E. T., Further results on the construction of mutually orthogonal Latin squares and the falsity of Euler's conjecture . Canadian J. Math. (1960), 189-203.\n\n[Be83c] Beth, Thomas, Eine Bemerkung zur Absch\\\"{a}tzung der Anzahl orthogonaler lateinischer Quadrate mittels Siebverfahren . Abh. Math. Sem. Univ. Hamburg (1983), 284-288.\n\n[CES60] Chowla, S. and Erd\\H{o}s, P. and Straus, E. G., On the maximal number of pairwise orthogonal Latin squares of a given order . Canadian J. Math. (1960), 204-208.\n\n[Wi74] Wilson, Richard M., Concerning the number of mutually orthogonal Latin squares . Discrete Math. (1974), 181-198.",
+    "sha256": "3c9f2d219321365a80825b0cb65a244b298b263a6a3d9a43b4b4c3c7a4331a06",
+    "acceptance_criteria": [
+      "Prove or disprove the exact original statement without changing quantifiers.",
+      "Do not add hypotheses, restrict domains, weaken conclusions, or omit subproblems.",
+      "Resolve every boundary case and every explicitly numbered task.",
+      "Treat ambiguity as a blocking defect rather than choosing a convenient interpretation."
+    ]
+  },
+  "subgoal_graph": {
+    "summary": "The immutable statement is not presently adjudicable because the symbol \u226b has no supplied definition; GATE0 is therefore an external specification gate, not a mathematical lemma. Conditional on an external definition as the eventual absolute-constant assertion, the primary constructive branch is a critical-scale PBD decomposition using four prime-power block sizes. The secondary constructive branch is a dyadic-window incomplete transversal-design construction. Direct orthogonal-array hypergraph matching is retained as a fallback, and a universal compatible-resolution bound at orders 2p is retained as the disproof branch. Computation is optional and may only support claims backed by explicit certificates. No terminal branch is complete, so no solution is claimed. Source artifact: \n\nPasted text\n\n",
+    "bottleneck_ids": [
+      "GATE0",
+      "P4",
+      "P5",
+      "I4",
+      "I5",
+      "D3",
+      "N2",
+      "N3"
+    ],
+    "subgoals": [
+      {
+        "id": "GATE0",
+        "claim": "Obtain an external specification of the quantifiers and constant dependence encoded by \u226b. Until this is supplied, the exact immutable statement remains formally ambiguous and cannot be proved or disproved under the acceptance criteria.",
+        "dependencies": [],
+        "centrality": 5,
+        "falsifiable": false
+      },
+      {
+        "id": "Q0",
+        "claim": "Conditional target declaration only: if GATE0 defines f(n) \u226b n^(1/2) to mean that there exist absolute constants c>0 and N such that f(n)\u2265c sqrt(n) for every integer n\u2265N, denote that quantified assertion by Q.",
+        "dependencies": [
+          "GATE0"
+        ],
+        "centrality": 5,
+        "falsifiable": false
+      },
+      {
+        "id": "F1",
+        "claim": "Prove directly that k MOLS of order n are equivalent to each of the following: an OA(n^2,k+2,n,2); n^2 words of length k+2 over an n-symbol alphabet with pairwise agreement in at most one coordinate; and a transversal design with k+2 groups of size n.",
+        "dependencies": [],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "F2",
+        "claim": "Using the orthogonal-partition subspaces over the real field, prove f(n)\u2264n\u22121. Explicitly use the finite-dimensional facts dim(U+W)=dim U+dim W for orthogonal subspaces, rank-nullity over R, and that the orthogonal complement of the all-ones vector in R^(n^2) has dimension n^2\u22121.",
+        "dependencies": [
+          "F1"
+        ],
+        "centrality": 3,
+        "falsifiable": true
+      },
+      {
+        "id": "F3",
+        "claim": "Prove the prime-power and idempotent ingredients: for every prime power q, construct q\u22121 MOLS of order q; define g(n) as the maximum number of idempotent MOLS; prove f(n)\u22121\u2264g(n)\u2264f(n); and construct at least q\u22122 idempotent MOLS of order q.",
+        "dependencies": [
+          "F1",
+          "F2"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "F4",
+        "claim": "Prove PBD closure: if every block of a pairwise balanced design on v points supports t idempotent MOLS, then the whole point set supports t idempotent MOLS.",
+        "dependencies": [
+          "F3"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "F5",
+        "claim": "Prove the critical PBD barrier. For a nontrivial finite PBD, let A be its real point-block incidence matrix. State and use rank(A)=rank(A^T) and dim ker(A^T)=v\u2212rank(A) for finite real matrices to prove that A has full row rank and hence at least v blocks. Deduce that if every block supports k idempotent MOLS, then (k+1)(k+2)\u2264v\u22121.",
+        "dependencies": [
+          "F2",
+          "F4"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "P1",
+        "claim": "For each integer x\u22652, let q be the least power of 2 at least x, let r be the least power of 3 at least x, and set K_x={q,2q,r,3r}. Verify that every member is a prime power in [x,9x], that gcd{k\u22121:k in K_x}=1, and that gcd{k(k\u22121):k in K_x}=2, so the elementary PBD divisibility conditions impose no residue restriction on the order v.",
+        "dependencies": [],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "P2",
+        "claim": "Prove the conditional reduction: if an absolute C exists such that every sufficiently large x and every v\u2265C x^2 admit a PBD(v,K_x), then Q follows from F3 and F4 by taking x=floor(sqrt(v/C)).",
+        "dependencies": [
+          "Q0",
+          "F3",
+          "F4",
+          "P1"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "P3",
+        "claim": "Derive all exact local and global feasibility constraints for PBD(v,K_x), including point-degree equations, pair counting, the real-incidence Fisher bound, parity coverage by even blocks, and the block-size restrictions implied by F5. Use these constraints to determine admissible ranges for the constant C without treating them as sufficient.",
+        "dependencies": [
+          "F5",
+          "P1"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "P4",
+        "claim": "Primary constructive task: for some absolute C, construct for every sufficiently large x and every v\u2265C x^2 an approximate decomposition of K_v into cliques whose orders lie in K_x, leaving an explicitly characterized admissible residual graph of size small enough for a uniform completion mechanism.",
+        "dependencies": [
+          "P1",
+          "P3"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "P5",
+        "claim": "Construct a uniform family of trades or absorbers, using only clique sizes from K_x, that exactly decomposes every residual graph allowed by P4 while preserving all pair multiplicities and point-degree congruences.",
+        "dependencies": [
+          "P3",
+          "P4"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "T_PBD",
+        "claim": "Primary terminal branch: combine P4 and P5 to prove PBD(v,K_x) for every sufficiently large x and every v\u2265C x^2; then invoke P2 to establish Q. This branch is currently incomplete.",
+        "dependencies": [
+          "P2",
+          "P4",
+          "P5"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "I1",
+        "claim": "Define ITD(r,n;q) as an OA(n^2,r,n,2) containing an OA(q^2,r,q,2) on designated q-symbol subalphabets. Prove that ITD(q+1,n;q) with n>q necessarily satisfies n\u2265q^2 by counting outside rows according to the number of old symbols.",
+        "dependencies": [
+          "F1"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "I2",
+        "claim": "For every prime power q, construct ITD(q+1,q^2;q) using a two-dimensional vector space V over F_q: index coordinates by F_q union {infinity}, set X_t=x+t y and X_infinity=y for x,y in V, and obtain the core by restricting x and y to a fixed one-dimensional F_q-subspace.",
+        "dependencies": [
+          "I1",
+          "F3"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "I3",
+        "claim": "Prove the anchored-matching-frame reformulation for ITD(q+1,q^2+t;q): the one-old rows define compatible perfect matchings among the new-symbol groups, and the unused graph between every pair of groups is t-regular; completing the ITD is equivalent to decomposing the residual multipartite graph into transversal K_(q+1) copies.",
+        "dependencies": [
+          "I1"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "I4",
+        "claim": "Secondary branch information-gain task: prove or disprove uniformly for powers of 2 q the first perturbation ITD(q+1,q^2+1;q), where the all-new rows are forced to form exactly one perfect matching. Isolated constructions for fixed q do not discharge this subgoal.",
+        "dependencies": [
+          "I2",
+          "I3"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "I5",
+        "claim": "Construct ITD(q+1,n;q) uniformly for every sufficiently large power of 2 q and every integer n with q^2\u2264n<4q^2, by extending the matching-frame and residual-decomposition mechanisms beyond the first perturbation.",
+        "dependencies": [
+          "I3",
+          "I4"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "T_ITD",
+        "claim": "Secondary constructive terminal branch: if I5 is proved, then for each large n choose the largest power of 2 q\u2264sqrt(n); since q^2\u2264n<4q^2 and q>sqrt(n)/2, the resulting ITD gives at least q\u22121 MOLS and establishes Q. This branch is currently incomplete.",
+        "dependencies": [
+          "Q0",
+          "I5",
+          "F1"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "D1",
+        "claim": "Define the exact orthogonal-array hypergraph H_(r,n): vertices are (i,j,a,b) with 1\u2264i<j\u2264r and a,b in [n], and for x in [n]^r set e_x={(i,j,x_i,x_j):1\u2264i<j\u2264r}. Prove that perfect matchings are exactly OA(n^2,r,n,2) and contain exactly n^2 edges. Each vertex has degree n^(r\u22122). For r\u22653, distinct compatible vertices have codegree at most n^(r\u22123), while incompatible vertices have codegree zero. For r=2, distinct vertices have codegree zero; when no distinct vertex pair exists, define the maximum over the empty set to be zero.",
+        "dependencies": [
+          "F1"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "D2",
+        "claim": "Prove that H_(r,n) has an exact fractional perfect matching by assigning weight n^(2\u2212r) to every edge, and record precisely why this fractional solution alone gives no integral orthogonal array.",
+        "dependencies": [
+          "D1"
+        ],
+        "centrality": 3,
+        "falsifiable": true
+      },
+      {
+        "id": "D3",
+        "claim": "Fallback constructive task: prove an integral perfect-matching theorem for H_(r,n) when r=floor(c sqrt(n))+2 for some absolute c>0, using a fully specified structured-nibble, exchange, or absorption argument that handles edge size Theta(n), exact coverage, and the non-negligible overlap among constraints.",
+        "dependencies": [
+          "D1",
+          "D2"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "T_DIRECT",
+        "claim": "Direct terminal branch: a proof of D3 for all sufficiently large n would produce floor(c sqrt(n)) MOLS and establish Q. This branch is currently incomplete.",
+        "dependencies": [
+          "Q0",
+          "D3"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "N1",
+        "claim": "Prove the compatible-resolution formulation: for a Latin square L, let rho(L) be the maximum number of pairwise orthogonal resolutions of its cells into transversals; then for n>1, f(n)=1+max_L rho(L). Separately record that product, cyclic-linear, group-table, and quotient-compatible difference constructions fail on many orders 2p, without treating these restricted failures as upper bounds on arbitrary MOLS.",
+        "dependencies": [
+          "F1"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "N2",
+        "claim": "Develop an invariant applying to every Latin square of order 2p, not merely algebraic or translation-based squares, that bounds the number of mutually compatible transversal resolutions. Test whether incidence parity, modular rank, Smith normal form, or intersection constraints can be converted into such a universal bound.",
+        "dependencies": [
+          "N1",
+          "F2"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "N3",
+        "claim": "Negative terminal theorem target: prove for an infinite sequence of odd primes p that max_L rho(L)=o(sqrt(p)) over all Latin squares L of order 2p. By N1 this would give f(2p)=o(sqrt(2p)) and disprove Q.",
+        "dependencies": [
+          "Q0",
+          "N2"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "T_NEG",
+        "claim": "Disproof terminal branch: complete N3 or an equivalent universal infinite-family upper bound. Restricted construction obstructions and finite examples are insufficient. This branch is currently incomplete.",
+        "dependencies": [
+          "N3"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "C1",
+        "claim": "Optional falsification suite: implement certificate-producing exact-cover, SAT, or ILP searches for proposed PBD constants and palettes, first-perturbation ITDs, and small compatible-resolution bounds. A computational result may support only the precise finite claim certified by the output and is not a dependency of a terminal theorem proved independently.",
+        "dependencies": [
+          "P3",
+          "I3",
+          "N1"
+        ],
+        "centrality": 2,
+        "falsifiable": true
+      },
+      {
+        "id": "TERM_OR",
+        "claim": "Disjunctive terminal gate: this node is complete when any one, not all, of T_PBD, T_ITD, T_DIRECT, or T_NEG is complete. The listed dependencies are alternative terminal routes rather than conjunctive obligations.",
+        "dependencies": [
+          "T_PBD",
+          "T_ITD",
+          "T_DIRECT",
+          "T_NEG"
+        ],
+        "centrality": 5,
+        "falsifiable": false
+      },
+      {
+        "id": "GOAL",
+        "claim": "After GATE0 supplies an exact definition, prove or disprove the resulting exact quantified assertion by completing one branch of TERM_OR, with every boundary case and imported theorem hypothesis checked. At present neither the immutable statement nor the conditional target Q has been resolved.",
+        "dependencies": [
+          "GATE0",
+          "TERM_OR"
+        ],
+        "centrality": 5,
+        "falsifiable": false
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "candidate_outcome": "candidate_unclassified",
+      "candidate_sha256": "5cf38be27cb01367afb0bb7621ff27b2173120f1ee92b5100205eb2fedb00a95",
+      "gate_status": "candidate_rejected",
+      "gate_reasons": [
+        "candidate has no proof or disproof claim",
+        "candidate result contract is incomplete or internally inconsistent",
+        "no trusted external or mechanical verification evidence",
+        "missing independent review roles: adjudicator, counterexample, global_synthesis, logic, mechanical_evidence, statement_integrity, structural_dependency, theorem_hypotheses",
+        "one or more reviews lack context provenance",
+        "review contexts are not unique",
+        "review statement_integrity-1 is not independent",
+        "review statement_integrity-1 did not pass",
+        "review statement_integrity-1 did not check every claim",
+        "review statement_integrity-1 used a claim count inconsistent with the candidate",
+        "review statement_integrity-1 reports material errors",
+        "review statement_integrity-1 did not attest to the immutable statement",
+        "review statement_integrity-1 completeness below 98",
+        "review statement_integrity-1 confidence below 95",
+        "review statement_integrity-1 adversarial survival below 95",
+        "review structural_dependency-1 is not independent",
+        "review structural_dependency-1 did not pass",
+        "review structural_dependency-1 did not check every claim",
+        "review structural_dependency-1 used a claim count inconsistent with the candidate",
+        "review structural_dependency-1 reports material errors",
+        "review structural_dependency-1 did not attest to the immutable statement",
+        "review structural_dependency-1 completeness below 98",
+        "review structural_dependency-1 confidence below 95",
+        "review structural_dependency-1 adversarial survival below 95",
+        "review logic-1 is not independent",
+        "review logic-1 did not pass",
+        "review logic-1 did not check every claim",
+        "review logic-1 used a claim count inconsistent with the candidate",
+        "review logic-1 reports material errors",
+        "review logic-1 did not attest to the immutable statement",
+        "review logic-1 completeness below 98",
+        "review logic-1 confidence below 95",
+        "review logic-1 adversarial survival below 95",
+        "review counterexample-1 is not independent",
+        "review counterexample-1 did not pass",
+        "review counterexample-1 did not check every claim",
+        "review counterexample-1 used a claim count inconsistent with the candidate",
+        "review counterexample-1 reports material errors",
+        "review counterexample-1 did not attest to the immutable statement",
+        "review counterexample-1 completeness below 98",
+        "review counterexample-1 confidence below 95",
+        "review counterexample-1 adversarial survival below 95",
+        "review theorem_hypotheses-1 is not independent",
+        "review theorem_hypotheses-1 did not pass",
+        "review theorem_hypotheses-1 did not check every claim",
+        "review theorem_hypotheses-1 used a claim count inconsistent with the candidate",
+        "review theorem_hypotheses-1 reports material errors",
+        "review theorem_hypotheses-1 did not attest to the immutable statement",
+        "review theorem_hypotheses-1 completeness below 98",
+        "review theorem_hypotheses-1 confidence below 95",
+        "review theorem_hypotheses-1 adversarial survival below 95",
+        "review mechanical_evidence-1 is not independent",
+        "review mechanical_evidence-1 did not pass",
+        "review mechanical_evidence-1 did not check every claim",
+        "review mechanical_evidence-1 used a claim count inconsistent with the candidate",
+        "review mechanical_evidence-1 reports material errors",
+        "review mechanical_evidence-1 did not attest to the immutable statement",
+        "review mechanical_evidence-1 completeness below 98",
+        "review mechanical_evidence-1 confidence below 95",
+        "review mechanical_evidence-1 adversarial survival below 95",
+        "review global_synthesis-1 is not independent",
+        "review global_synthesis-1 did not pass",
+        "review global_synthesis-1 did not check every claim",
+        "review global_synthesis-1 used a claim count inconsistent with the candidate",
+        "review global_synthesis-1 reports material errors",
+        "review global_synthesis-1 did not attest to the immutable statement",
+        "review global_synthesis-1 completeness below 98",
+        "review global_synthesis-1 confidence below 95",
+        "review global_synthesis-1 adversarial survival below 95",
+        "review adjudicator-1 is not independent",
+        "review adjudicator-1 did not pass",
+        "review adjudicator-1 used a claim count inconsistent with the candidate",
+        "review adjudicator-1 did not attest to the complete claim ledger",
+        "review adjudicator-1 reports open gaps",
+        "review adjudicator-1 reports unchecked imports",
+        "review adjudicator-1 reports material errors",
+        "review adjudicator-1 completeness below 98",
+        "review adjudicator-1 confidence below 95",
+        "review adjudicator-1 adversarial survival below 95",
+        "review adjudicator-1 outcome does not match the candidate"
+      ],
+      "regulator": {
+        "decision": "REWRITE",
+        "rationale": "The candidate rests on a fundamentally impermissible interpretation: it assigns a meaning to the undefined symbol \u226b even though the immutable-statement lock and acceptance criteria require ambiguity to remain a blocking defect. Because the statement cannot be clarified or changed, neither a local proof repair nor a revised constructive dependency plan can yield an accepted proof or disproof. Independently, every terminal mathematical route remains open, C16 is false under its stated indexing, C12 uses an unstated field-extension theorem, C14 omits the required core hypothesis, C17 fails at r=2, and the GOAL node encodes a textual disjunction as conjunctive dependencies. The correct recovery is therefore to rewrite the response as a formal non-adjudicability diagnosis rather than continue any proof branch under an adopted interpretation.",
+        "broken_node_ids": [
+          "S0",
+          "S9",
+          "S10",
+          "S11",
+          "S13",
+          "S14",
+          "S18",
+          "GOAL"
+        ],
+        "new_constraints": [
+          "Do not assign any interpretation to \u226b or derive conclusions conditional on a preferred convention.",
+          "State that the exact immutable assertion has no determinate truth condition under the supplied syntax and therefore cannot be proved or disproved under the acceptance criteria.",
+          "Do not present the PBD, ITD, hypergraph, or compatible-resolution portfolios as progress toward an accepted terminal resolution unless a genuinely new theorem closes one complete route.",
+          "Delete C16 unless its matrix, indexing convention, and all difference multisets are replaced and mechanically verified.",
+          "Any replacement for C12 must explicitly state and prove or declare the finite-field extension and subfield theorem used.",
+          "Any replacement for C14 must include existence of the order-q core as an explicit hypothesis and verify that the outside construction combines with it.",
+          "Restrict the hypergraph codegree formula to a precisely stated domain, including r\u22653 and n\u22651, and handle smaller boundaries separately.",
+          "Define integer thresholds such as N(t) using an attained minimum or an explicit eventual-set convention, with all rounding steps checked.",
+          "Represent the final resolution gate as an actual disjunction rather than listing all terminal branches as simultaneous dependencies.",
+          "Do not claim that computations, finite certificates, imports, or claim checks were completed unless the corresponding evidence is explicitly supplied and verified."
+        ]
+      },
+      "replan_error": "Expecting ',' delimiter: line 2 column 79 (char 80)"
+    },
+    {
+      "attempt": 2,
+      "candidate_outcome": "candidate_unclassified",
+      "candidate_sha256": "aae17ee9c8a328ba52534314401316a888d749ce74ef41b6e34f3ea0484e9977",
+      "gate_status": "candidate_rejected",
+      "gate_reasons": [
+        "candidate has no proof or disproof claim",
+        "candidate result contract is incomplete or internally inconsistent",
+        "no trusted external or mechanical verification evidence",
+        "review statement_integrity-2 did not pass",
+        "review statement_integrity-2 did not check every claim",
+        "review statement_integrity-2 used a claim count inconsistent with the candidate",
+        "review statement_integrity-2 reports material errors",
+        "review statement_integrity-2 did not attest to the immutable statement",
+        "review statement_integrity-2 completeness below 98",
+        "review statement_integrity-2 confidence below 95",
+        "review statement_integrity-2 adversarial survival below 95",
+        "review structural_dependency-2 did not pass",
+        "review structural_dependency-2 did not check every claim",
+        "review structural_dependency-2 used a claim count inconsistent with the candidate",
+        "review structural_dependency-2 reports material errors",
+        "review structural_dependency-2 did not attest to the immutable statement",
+        "review structural_dependency-2 completeness below 98",
+        "review structural_dependency-2 confidence below 95",
+        "review structural_dependency-2 adversarial survival below 95",
+        "review logic-2 did not pass",
+        "review logic-2 did not check every claim",
+        "review logic-2 used a claim count inconsistent with the candidate",
+        "review logic-2 reports material errors",
+        "review logic-2 did not attest to the immutable statement",
+        "review logic-2 completeness below 98",
+        "review logic-2 confidence below 95",
+        "review logic-2 adversarial survival below 95",
+        "review counterexample-2 did not pass",
+        "review counterexample-2 did not check every claim",
+        "review counterexample-2 used a claim count inconsistent with the candidate",
+        "review counterexample-2 reports material errors",
+        "review counterexample-2 did not attest to the immutable statement",
+        "review counterexample-2 completeness below 98",
+        "review counterexample-2 confidence below 95",
+        "review counterexample-2 adversarial survival below 95",
+        "review theorem_hypotheses-2 did not pass",
+        "review theorem_hypotheses-2 did not check every claim",
+        "review theorem_hypotheses-2 used a claim count inconsistent with the candidate",
+        "review theorem_hypotheses-2 reports material errors",
+        "review theorem_hypotheses-2 did not attest to the immutable statement",
+        "review theorem_hypotheses-2 completeness below 98",
+        "review theorem_hypotheses-2 confidence below 95",
+        "review theorem_hypotheses-2 adversarial survival below 95",
+        "review mechanical_evidence-2 did not pass",
+        "review mechanical_evidence-2 did not check every claim",
+        "review mechanical_evidence-2 used a claim count inconsistent with the candidate",
+        "review mechanical_evidence-2 reports material errors",
+        "review mechanical_evidence-2 did not attest to the immutable statement",
+        "review mechanical_evidence-2 completeness below 98",
+        "review mechanical_evidence-2 confidence below 95",
+        "review mechanical_evidence-2 adversarial survival below 95",
+        "review global_synthesis-2 did not pass",
+        "review global_synthesis-2 did not check every claim",
+        "review global_synthesis-2 used a claim count inconsistent with the candidate",
+        "review global_synthesis-2 reports material errors",
+        "review global_synthesis-2 did not attest to the immutable statement",
+        "review global_synthesis-2 completeness below 98",
+        "review global_synthesis-2 confidence below 95",
+        "review global_synthesis-2 adversarial survival below 95",
+        "review adjudicator-2 did not pass",
+        "review adjudicator-2 used a claim count inconsistent with the candidate",
+        "review adjudicator-2 did not attest to the complete claim ledger",
+        "review adjudicator-2 reports open gaps",
+        "review adjudicator-2 reports unchecked imports",
+        "review adjudicator-2 reports material errors",
+        "review adjudicator-2 completeness below 98",
+        "review adjudicator-2 confidence below 95",
+        "review adjudicator-2 adversarial survival below 95",
+        "review adjudicator-2 outcome does not match the candidate"
+      ],
+      "regulator": {
+        "decision": "REVISE_PLAN",
+        "rationale": "The defects are structural, not locally repairable. S0 asks the proof to assign an exact quantified meaning to an undefined symbol while the statement lock forbids supplementation; therefore S0 is impossible under the governing rules, and every node depending on its discharge is blocked. The GOAL node also encodes all terminal routes conjunctively although its claim declares them disjunctive, and it incorrectly makes the computational suite mandatory for a theorem proved by an independent terminal route. In addition, the candidate completes no terminal construction or upper-bound route; isolated q=3 and q=4 ITD examples, sparse-palette exclusions, and a fractional hypergraph matching cannot be patched into an asymptotic resolution. R19 has local notation and counting defects, but repairing them would not cure the broken dependency structure. The cheapest valid recovery is therefore to rebuild the plan around an explicit specification gate and, only conditionally on an externally supplied interpretation, select one terminal mathematical branch rather than preserving the impossible S0 dependency. This diagnosis is based solely on the supplied artifact. \n\nPasted text\n\n",
+        "broken_node_ids": [
+          "S0",
+          "S2",
+          "S13",
+          "GOAL"
+        ],
+        "new_constraints": [
+          "Do not represent S0 as a mathematical subgoal that can be proved from the immutable text. Record it as an external specification gate: under the ambiguity rule, the exact locked assertion is not adjudicable without an externally supplied definition of \u226b.",
+          "Keep all analysis of the eventual absolute-constant assertion explicitly conditional; it must not be presented as proving or disproving the immutable statement.",
+          "Remove S0 as a dependency of purely combinatorial formulations. In particular, S13 may depend on S1 and on a separately declared conditional target parameter r=c\u221an, but not on a falsely discharged S2.",
+          "Encode the terminal resolution as an OR-dependency: completion of S8, or a sufficient ITD theorem from S11-S12, or S14, or S17. Do not require all four branches simultaneously.",
+          "Do not make S18 mandatory when a terminal theorem is proved without computation. Require S18 only for claims whose justification relies on computational searches or finite classifications.",
+          "Choose one positive terminal branch for primary development. Treat the remaining branches as falsification or fallback routes until a genuinely new theorem-level ingredient appears.",
+          "Do not infer asymptotic conclusions from the isolated q=3 and q=4 ITD constructions, finite PBD obstructions, or restricted Latin-square parity obstructions.",
+          "Rewrite R19 as e_x={(i,j,x_i,x_j):1\u2264i<j\u2264r}; state that every perfect matching has exactly n\u00b2 edges; delete the unsupported n\u00b2/binom(r,2) fragment; and handle the r=2,n=1 empty-codegree convention explicitly.",
+          "State every imported linear-algebra fact and its hypotheses, including the scalar field and the rank-nullity implication used in the PBD incidence argument.",
+          "Do not report RESOURCE_EXHAUSTED or high completeness scores merely because several reductions were checked. Such a status requires documented exhaustion of the selected approach family, while theorem-level completeness remains zero until a terminal route is finished."
+        ]
+      }
+    },
+    {
+      "attempt": 3,
+      "candidate_outcome": "candidate_unclassified",
+      "candidate_sha256": "75c3bc37aa060e1324987ff47fb4d69ca4922b73183be03fefb0fe7fe7b162f8",
+      "gate_status": "candidate_rejected",
+      "gate_reasons": [
+        "candidate has no proof or disproof claim",
+        "candidate result contract is incomplete or internally inconsistent",
+        "no trusted external or mechanical verification evidence",
+        "review statement_integrity-3 did not pass",
+        "review statement_integrity-3 did not check every claim",
+        "review statement_integrity-3 used a claim count inconsistent with the candidate",
+        "review statement_integrity-3 reports material errors",
+        "review statement_integrity-3 did not attest to the immutable statement",
+        "review statement_integrity-3 completeness below 98",
+        "review statement_integrity-3 confidence below 95",
+        "review statement_integrity-3 adversarial survival below 95",
+        "review structural_dependency-3 did not pass",
+        "review structural_dependency-3 did not check every claim",
+        "review structural_dependency-3 used a claim count inconsistent with the candidate",
+        "review structural_dependency-3 reports material errors",
+        "review structural_dependency-3 did not attest to the immutable statement",
+        "review structural_dependency-3 completeness below 98",
+        "review structural_dependency-3 confidence below 95",
+        "review structural_dependency-3 adversarial survival below 95",
+        "review logic-3 did not pass",
+        "review logic-3 did not check every claim",
+        "review logic-3 used a claim count inconsistent with the candidate",
+        "review logic-3 reports material errors",
+        "review logic-3 did not attest to the immutable statement",
+        "review logic-3 completeness below 98",
+        "review logic-3 confidence below 95",
+        "review logic-3 adversarial survival below 95",
+        "review counterexample-3 did not pass",
+        "review counterexample-3 did not check every claim",
+        "review counterexample-3 used a claim count inconsistent with the candidate",
+        "review counterexample-3 reports material errors",
+        "review counterexample-3 did not attest to the immutable statement",
+        "review counterexample-3 completeness below 98",
+        "review counterexample-3 confidence below 95",
+        "review counterexample-3 adversarial survival below 95",
+        "review theorem_hypotheses-3 did not pass",
+        "review theorem_hypotheses-3 did not check every claim",
+        "review theorem_hypotheses-3 used a claim count inconsistent with the candidate",
+        "review theorem_hypotheses-3 reports material errors",
+        "review theorem_hypotheses-3 did not attest to the immutable statement",
+        "review theorem_hypotheses-3 completeness below 98",
+        "review theorem_hypotheses-3 confidence below 95",
+        "review theorem_hypotheses-3 adversarial survival below 95",
+        "review mechanical_evidence-3 did not pass",
+        "review mechanical_evidence-3 did not check every claim",
+        "review mechanical_evidence-3 used a claim count inconsistent with the candidate",
+        "review mechanical_evidence-3 reports material errors",
+        "review mechanical_evidence-3 did not attest to the immutable statement",
+        "review mechanical_evidence-3 completeness below 98",
+        "review mechanical_evidence-3 confidence below 95",
+        "review mechanical_evidence-3 adversarial survival below 95",
+        "review global_synthesis-3 did not pass",
+        "review global_synthesis-3 did not check every claim",
+        "review global_synthesis-3 used a claim count inconsistent with the candidate",
+        "review global_synthesis-3 reports material errors",
+        "review global_synthesis-3 did not attest to the immutable statement",
+        "review global_synthesis-3 completeness below 98",
+        "review global_synthesis-3 confidence below 95",
+        "review global_synthesis-3 adversarial survival below 95",
+        "review adjudicator-3 did not pass",
+        "review adjudicator-3 used a claim count inconsistent with the candidate",
+        "review adjudicator-3 did not attest to the complete claim ledger",
+        "review adjudicator-3 reports open gaps",
+        "review adjudicator-3 reports unchecked imports",
+        "review adjudicator-3 reports material errors",
+        "review adjudicator-3 completeness below 98",
+        "review adjudicator-3 confidence below 95",
+        "review adjudicator-3 adversarial survival below 95",
+        "review adjudicator-3 outcome does not match the candidate"
+      ]
+    }
+  ],
+  "verified_lemmas": [],
+  "failed_approaches": [
+    {
+      "attempt": 1,
+      "candidate_sha256": "5cf38be27cb01367afb0bb7621ff27b2173120f1ee92b5100205eb2fedb00a95",
+      "obstructions": [
+        "Even under the candidate's adopted absolute interpretation, no proof or disproof of f(n) \u2265 c\u221an for all sufficiently large n is obtained.",
+        "No exact perfect-matching or absorption theorem is proved for the orthogonal-array hypergraph when r=\u0398(\u221an).",
+        "No uniform ITD(q+1,n;q) construction covering the range needed for the asymptotic assertion is proved.",
+        "No uniform critical-scale PBD theorem with prime-power block sizes of order \u0398(\u221av) is proved.",
+        "No universal infinite-family upper bound on compatible transversal resolutions is proved that would disprove the square-root assertion.",
+        "The advertised q=4 first-perturbation construction C16 is invalid as written and requires replacement or repair.",
+        "The codegree assertion in C17 requires additional boundary hypotheses, at least r\u22653.",
+        "The immutable statement does not define the symbol \u226b or its constant dependence. Under the acceptance criteria, this ambiguity is blocking and cannot be removed by adopting a preferred interpretation.",
+        "malformed reviewer output: Invalid \\escape: line 56 column 266 (char 2527)",
+        "malformed reviewer output: reviewer role mismatch: expected counterexample, got independent adversarial referee (counterexample)",
+        "malformed reviewer output: reviewer role mismatch: expected global_synthesis, got independent adversarial referee (global_synthesis)",
+        "malformed reviewer output: reviewer role mismatch: expected logic, got independent adversarial referee (logic)",
+        "malformed reviewer output: reviewer role mismatch: expected mechanical_evidence, got independent adversarial referee (mechanical_evidence)",
+        "malformed reviewer output: reviewer role mismatch: expected structural_dependency, got independent adversarial referee (structural_dependency)",
+        "malformed reviewer output: reviewer role mismatch: expected theorem_hypotheses, got independent adversarial referee (theorem_hypotheses)",
+        "{'location': 'Adversarial referee pass and result ledger', 'severity': 'major', 'error': 'The candidate asserts that all finite frame conditions were checked and that all eighteen claims survived checking, but C16 fails by direct modular computation and C17 omits a required boundary condition.'}",
+        "{'location': 'C12', 'import': 'The field of order q\u00b2 contains a copy of the field of order q and is a two-dimensional vector space over it.', 'issue': 'The candidate states only existence of a field of each prime-power order. That statement alone does not justify the required subfield and scalar-action structure.'}",
+        "{'location': 'C14', 'severity': 'major', 'error': 'The claim does not explicitly assume or construct the required order-q core. The shifts construct the outside rows only; old-old pairs require a separately supplied OA(q\u00b2,q+1,q,2), with suitable hypotheses on q.'}",
+        "{'location': 'C16', 'severity': 'major', 'error': 'The displayed matrix does not satisfy C14 under the stated convention d_{i,h,j}=hC_{ij}. For coordinate pair (0,1) and anchor i=3, C_{3,1}-C_{3,0}=2-2=0 modulo 13, whereas the frame condition requires only nonzero differences. The printed verification uses transposed indices.'}",
+        "{'location': 'C17', 'severity': 'moderate', 'error': 'The maximum-codegree formula is asserted for unrestricted integers r,n but fails at r=2, where there are no two distinct compatible vertices and n^(r-3)=n^(-1) cannot be a codegree.'}",
+        "{'location': 'C4', 'severity': 'minor', 'error': 'N(t) is defined using an infimum over an unspecified domain and is then treated as an attained integer threshold. The asymptotic equivalence is repairable, but the exact formulation has an attainment or rounding gap.'}",
+        "{'location': 'Exact normalization and C1', 'severity': 'fatal', 'error': 'The candidate replaces the ambiguous immutable assertion with a separately chosen interpretation of \u226b, contrary to the explicit rule that ambiguity must be treated as a blocking defect.'}",
+        "{'location': 'Overall conclusion', 'severity': 'fatal', 'error': 'Every terminal route is explicitly left open. The candidate therefore neither proves nor disproves the exact original statement.'}",
+        "{'location': 'Section 3.3', 'import': 'The direct-product construction f(mn) \u2265 min{f(m),f(n)}.', 'issue': 'This construction is invoked without a theorem statement or proof from the supplied definitions.'}"
+      ],
+      "reusable_lesson": "Do not repeat this proof path without a new ingredient that resolves every listed obstruction."
+    },
+    {
+      "attempt": 2,
+      "candidate_sha256": "aae17ee9c8a328ba52534314401316a888d749ce74ef41b6e34f3ea0484e9977",
+      "obstructions": [
+        "For r=2 and n=1, R19's statement that the maximum codegree is zero requires an explicit convention for the maximum of an empty set.",
+        "No disjunctive terminal route in the validated subgoal graph is completed.",
+        "No exact absorption, structured-nibble, or other integral perfect-matching theorem is established for the orthogonal-array hypergraph when r=Theta(sqrt(n)).",
+        "No infinite family of orders is shown to satisfy a universal o(sqrt(n)) upper bound for f(n) or for compatible transversal resolutions.",
+        "No uniform construction of ITD(q+1,n;q) throughout the dyadic critical window q^2 <= n < 4q^2 is established.",
+        "No uniform critical-scale PBD theorem is established.",
+        "R0 is only an ambiguity diagnosis. It blocks adjudication but does not constitute a proof or disproof of the mathematical assertion.",
+        "R19 contains a malformed edge definition: e_x is written as {(i,j,x_i,x_j)<j}, so the hypergraph is not literally well-defined as displayed.",
+        "R8 uses unstated finite-dimensional linear-algebra results, including rank(A)=rank(A^T) and the implication that a trivial kernel of A^T gives full row rank, without stating their hypotheses or specifying the scalar field.",
+        "The candidate terminates with RESOURCE_EXHAUSTED rather than proving or disproving the exact statement, which directly violates the acceptance criteria.",
+        "The candidate's assertion UNCHECKED_IMPORTS: NONE is false because R8 relies on unstated linear-algebra facts and the post-R19 estimate has no identified derivation.",
+        "The computational falsification program required by S18 is not implemented or documented.",
+        "The exact immutable statement is not proved or disproved.",
+        "The expression n^2/binom(r,2)=Theta(n) after R19 is syntactically detached and unsupported. If intended as the size of a perfect matching, it is false: every perfect matching in the stated hypergraph has exactly n^2 edges.",
+        "The first-perturbation ITD construction is verified only for q=3 and q=4, not uniformly for prime powers.",
+        "The fragment following R19 appears to invoke an unidentified estimate producing n^2/binom(r,2) edges; no theorem, hypotheses, or derivation are supplied.",
+        "The notation \u226b is not defined in the immutable statement, and the supplied ambiguity rule forbids silently imposing the candidate's separately defined eventual absolute-constant interpretation.",
+        "The reported completeness score of 86 and adversarial-survival score of 96 materially overstate the submission because the interpretation gate, every terminal branch, and several intermediate subgoals remain unresolved.",
+        "malformed reviewer output: reviewer role mismatch: expected counterexample, got independent adversarial referee (counterexample)",
+        "malformed reviewer output: reviewer role mismatch: expected global_synthesis, got independent adversarial referee (global_synthesis)",
+        "malformed reviewer output: reviewer role mismatch: expected logic, got independent adversarial referee (logic)",
+        "malformed reviewer output: reviewer role mismatch: expected mechanical_evidence, got independent adversarial referee (mechanical_evidence)",
+        "malformed reviewer output: reviewer role mismatch: expected statement_integrity, got independent adversarial referee (statement_integrity)",
+        "malformed reviewer output: reviewer role mismatch: expected structural_dependency, got independent adversarial referee (structural_dependency)",
+        "malformed reviewer output: reviewer role mismatch: expected theorem_hypotheses, got independent adversarial referee (theorem_hypotheses)"
+      ],
+      "reusable_lesson": "Do not repeat this proof path without a new ingredient that resolves every listed obstruction."
+    },
+    {
+      "attempt": 3,
+      "candidate_sha256": "75c3bc37aa060e1324987ff47fb4d69ca4922b73183be03fefb0fe7fe7b162f8",
+      "obstructions": [
+        "C6 uses the universally quantified inequality g(b) <= b-2 for arbitrary block orders b, but the candidate states its upper-bound argument only inside the prime-power discussion and never establishes the required general theorem in the scope where it is used.",
+        "C9 uses the defining incidence properties of TD(k,m) without formally stating the definition and hypotheses of a transversal design.",
+        "Consequently none of the alternative terminal branches in TERM_OR is complete and GOAL is not discharged.",
+        "GATE0 remains unresolved: the supplied specification does not define the quantifiers or constant dependence represented by the symbol \u226b.",
+        "No critical-scale PBD construction, admissible-residual characterization, absorber, trade family, or exact completion mechanism is supplied; P3, P4, P5, and T_PBD remain incomplete.",
+        "No integral perfect-matching theorem is proved for the orthogonal-array hypergraph when r is of order sqrt(n); D3 and T_DIRECT remain incomplete.",
+        "No invariant bounds compatible transversal resolutions for every Latin square on an unbounded sequence of orders; N2, N3, and T_NEG remain incomplete.",
+        "The candidate explicitly returns resource exhaustion and proves or disproves neither the immutable statement nor the conditionally introduced assertion Q.",
+        "The required ITD lower bound, vector-space base construction, matching-frame reformulation, uniform first perturbation, and full dyadic-window construction are not completed; I1 through I5 and T_ITD remain incomplete.",
+        "malformed reviewer output: reviewer role mismatch: expected counterexample, got independent adversarial referee (counterexample)",
+        "malformed reviewer output: reviewer role mismatch: expected global_synthesis, got independent adversarial referee (global_synthesis)",
+        "malformed reviewer output: reviewer role mismatch: expected logic, got independent adversarial referee (logic)",
+        "malformed reviewer output: reviewer role mismatch: expected mechanical_evidence, got independent adversarial referee (mechanical_evidence)",
+        "malformed reviewer output: reviewer role mismatch: expected statement_integrity, got independent adversarial referee (statement_integrity)",
+        "malformed reviewer output: reviewer role mismatch: expected structural_dependency, got independent adversarial referee (structural_dependency)",
+        "malformed reviewer output: reviewer role mismatch: expected theorem_hypotheses, got independent adversarial referee (theorem_hypotheses)",
+        "{'claim_id': 'C0', 'error': 'The proposed eventual and all-orders formulations do not demonstrate different truth values for f: since a Latin square exists at every positive order, f(n) >= 1, and any eventual positive lower bound can be extended over finitely many initial orders by decreasing the constant. The broader undefined-notation objection may remain, but this example does not substantiate it.'}",
+        "{'claim_id': 'C11', 'error': 'The sentence asserting that when n=1 there is no distinct vertex pair is false without also imposing r=2. For r=3 and n=1, the hypergraph has three distinct vertices.'}",
+        "{'claim_id': 'C12', 'error': \"The displayed definition of A_v is syntactically malformed because it omits the condition v in e'. The intended Bonferroni argument is recoverable, but the submitted proof is not formally complete.\"}",
+        "{'claim_id': 'C6', 'error': 'The inference that every block supporting t idempotent MOLS has size at least t+2 relies on the unstated universal theorem g(b) <= b-2. From the preceding claims as formally stated, only g(b) <= f(b) <= b-1 is available, yielding b >= t+1. The displayed Fisher-threshold and block-size conclusions therefore have a broken dependency as written.'}",
+        "{'claim_id': 'C9', 'error': 'The subsequent assertion that truncation creates all four simultaneous local obligations g(s), g(s+1), g(m), and g(r) is false in allowed boundary cases. When s=1, size-one intersections are discarded; when r=m, size-s intersections need not occur.'}",
+        "{'claim_id': 'GOAL', 'error': 'The acceptance criteria require a proof or disproof of the exact immutable statement. The candidate completes no terminal branch and instead declares RESOURCE_EXHAUSTED.'}",
+        "{'claim_id': 'terminal_metadata', 'error': 'The declaration UNCHECKED_IMPORTS: NONE is inconsistent with the unstated universal idempotent bound used in C6, and CLAIMS_TOTAL: 15 omits the many unresolved obligations in the validated subgoal graph.'}"
+      ],
+      "reusable_lesson": "Do not repeat this proof path without a new ingredient that resolves every listed obstruction."
+    }
+  ]
+}

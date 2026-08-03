@@ -1,0 +1,15 @@
+{
+  "problem_number": 85,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/85",
+  "retrieved_at": "2026-07-10T23:15:28.303506+00:00",
+  "page_title": "85 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "1c931524e73dd9b321f798611605c01f6278423a4fc52276976a4602ac8598f0",
+  "comment_count": 1,
+  "comments": [
+    {
+      "post_id": "908",
+      "text": "To see why $f(n) < \\sqrt{n} + 1$ holds, let $\\delta$ be the minimum degree of a graph with $n$ vertices that does not contain a $C_4$ and define, for every vertex $v$, the set $S_v$ of all unordered pairs of distinct neighbours of $v$. Now, if $S_v \\cap S_w \\neq \\emptyset$ for some distinct vertices $v$ and $w$, say $(x,y) \\in S_v \\cap S_w$, then $v, x, w, y$ would be a $C_4$. In order words, to prevent the graph from containing a $C_4$, we need to have that all sets $S_v$ are disjoint. Now we note that, in total, there are $\\frac{1}{2}n(n-1)$ unordered pairs of vertices, while $S_v$ contains at least $\\frac{1}{2} \\delta (\\delta-1)$ pairs for every vertex $v$. We therefore get, assuming the sets $S_v$ are pairwise disjoint, \\begin{align*} \\frac{1}{2}n(n-1) &\\ge \\sum_v |S_v| \\\\ &\\ge \\sum_v \\frac{1}{2}\\delta(\\delta-1) \\\\ &= \\frac{1}{2}n\\delta(\\delta-1). \\end{align*}In other words, $n-1 \\ge \\delta (\\delta - 1)$, so that in particular $\\delta < \\sqrt{n} + \\frac{1}{2}$. Note that this proof would have also worked for the average instead of minimum degree. As for the lower bound $f(n) > \\big(1 - o(1)\\big)\\sqrt{n}$, the polarity graph induced by the projective plane (see Theorem $1$ in this $1966$ paper by Erdős, Rényi and Sós for a construction) has $n = q^2 + q + 1$ vertices and minimum degree $q = \\big(1 - o(1)\\big)\\sqrt{n}$, while it does not contain a $C_4$.",
+      "meta": "Woett — 22:56 on 06 Oct 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

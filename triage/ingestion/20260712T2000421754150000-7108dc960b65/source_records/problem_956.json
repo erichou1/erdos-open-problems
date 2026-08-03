@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 956,
+  "raw_page": {
+    "path": "raw/pages/problem_956.html",
+    "sha256": "5d879a9c1616941517851c6fbd3d88a5068e11a2fb3a024f86e52e4f49802796"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "667b58be38cf0d834645b3b93218aebfb009ca77464ceb41822473dc69ba1135",
+      "source_region": "div.problem-additional-text",
+      "text": "[ErPa90] Erd\\H{o}s, P. and Pach, J., Variations on the theme of repeated distances. Combinatorica (1990), 261--269."
+    },
+    "remarks": {
+      "sha256": "b999d08470951c30e17736a05d69c597a4ab74544b141ddb28e646e4a1325bea",
+      "source_region": "div.problem-additional-text",
+      "text": "A problem of Erd\\H{o}s and Pach \\cite{ErPa90}, who proved that $h(n) \\ll n^{4/3}$. They also consider the related function where we consider $n$ disjoint convex sets (not necessarily translates), for which they give an upper bound of $\\ll n^{7/5}$. \n\nIt is trivial that $h(n)\\geq f(n)$, where $f(n)$ is the maximal number of unit distances determined by $n$ points in $\\mathbb{R}^2$ (see [90])."
+    },
+    "statement": {
+      "sha256": "523cb4e8078ae00bb81b7c92c2192ab23634359b3f06bd21e3006c3b8a02f652",
+      "source_region": "div#content",
+      "text": "If $C,D\\subseteq \\mathbb{R}^2$ then the distance between $C$ and $D$ is defined by\\[\\delta(C,D)=\\inf_{\\substack{c\\in C\\\\ d\\in D}}\\| c-d\\|.\\]Let $h(n)$ be the maximal number of unit distances between disjoint convex translates. That is, the maximal $m$ such that there is a compact convex set $C\\subset \\mathbb{R}^2$ and a set $X$ of size $n$ such that all $(C+x)_{x\\in X}$ are disjoint and there are $m$ pairs $x_1,x_2\\in X$ such that\\[\\delta(C+x_1,C+x_2)=1.\\]Determine $h(n)$ - in particular, prove that there exists a constant $c>0$ such that $h(n)>n^{1+c}$ for all large $n$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/956"
+}

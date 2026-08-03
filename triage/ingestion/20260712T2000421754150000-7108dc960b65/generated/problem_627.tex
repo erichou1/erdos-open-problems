@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#627}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory, chromatic number
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $\omega(G)$ denote the clique number of $G$ and $\chi(G)$ the chromatic number. If $f(n)$ is the maximum value of $\chi(G)/\omega(G)$, as $G$ ranges over all graphs on $n$ vertices, then does\[\lim_{n\to\infty}\frac{f(n)}{n/(\log_2n)^2}\]exist?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Tutte and Zykov \cite{Zy52} independently proved that for every $k$ there is a graph with $\omega(G)=2$ and $\chi(G)=k$. Erd\H{o}s \cite{Er61d} proved that for every $n$ there is a graph on $n$ vertices with $\omega(G)=2$ and $\chi(G)\gg n^{1/2}/\log n$, whence $f(n) \gg n^{1/2}/\log n$.
+
+Erd\H{o}s \cite{Er67c} proved that\[f(n) \asymp \frac{n}{(\log_2n)^2}\]and that the limit in question, if it exists, must be in $[1/4,4]$. (The upper bound he states as $1$, but \cite{AFM25} note the method actually gives $4$.)
+
+Araujo, Filipe, and Miyazaki \cite{AFM25} prove that if $\lim\frac{\log R(k)}{k}$ exists and is equal to $C$ (see [77]), and also $R(s,t)\leq R(k)$ for all $st\leq k^2$, then the limit in this question also exists and is equal to $C^2$. Using this connection they improve the upper bound from $4$ to $\approx 3.7$.
+
+See also the entry in the graphs problem collection.
+
+\bigskip
+\noindent\textbf{References:}
+
+[AFM25] I. Araujo, R. Filipe, and R. Miyazaki, A note on the maximum ratio between chromatic number and clique number. arXiv:252.16062 (2025).
+ 
+ [Er61d] Erd\H{o}s, P., Graph theory and probability. II. Canadian J. Math. (1961), 346-352.
+ 
+ [Er67c] Erd\H{o}s, P., Some remarks on chromatic graphs. Colloq. Math. (1967), 253-256.
+ 
+ [Zy52] Zykov, A. A., On some properties of linear complexes. Amer. Math. Soc. Translation (1952), 33.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/627}}
+\end{document}

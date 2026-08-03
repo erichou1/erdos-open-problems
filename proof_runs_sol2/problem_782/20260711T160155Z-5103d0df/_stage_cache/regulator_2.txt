@@ -1,0 +1,17 @@
+{
+"decision": "REVISE_PROOF",
+"rationale": "The validated dependency graph and B0 termination policy are sound. The candidate correctly establishes a semantic ambiguity certificate using explicit constant-sequence and collapsed-cube witnesses, then terminates without adopting a repaired interpretation. No substantive mathematical claim or dependency is broken. Only local presentation and reporting defects require correction: the square set is written with malformed set-builder notation, positivity-versus-injectivity should be illustrated explicitly, and the outcome label RESOURCE_EXHAUSTED conflicts with successful termination at B0. Revising the plan or changing the approach family would be unnecessarily expensive and could reintroduce the previously rejected unauthorized interpretation.",
+"broken_node_ids": [
+"B0"
+],
+"new_constraints": [
+"Write the square set formally as {n^2 : n in Z}, or avoid introducing it and use only the explicit square witness 1.",
+"State explicitly that positive generators do not imply injectivity, using the witness b_1=b_2=1.",
+"Replace RESOURCE_EXHAUSTED with a status indicating successful semantic-gate termination, while keeping the substantive outcome unknown because no unique proposition is determined.",
+"Do not continue to Q0, H0, or any downstream mathematical branch after the B0 ambiguity certificate.",
+"Do not introduce distinctness, ordering, positivity, integrality, finite-index, injectivity, or cube-size conventions as repairs to the immutable statement.",
+"Make clear that the certificate proves underdetermination of the formal proposition, not a yes-or-no answer to either intended nondegenerate question.",
+"Retain the explicit separating witnesses and the k=1 vacuity check.",
+"Use no imported theorems, computations, literature claims, or external evidence."
+]
+}

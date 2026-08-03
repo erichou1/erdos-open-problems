@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 335,
+  "raw_page": {
+    "path": "raw/pages/problem_335.html",
+    "sha256": "2f6de4d77386f5406c6b9a98cd976ac412fb216b244bbe2bef46084a71c6e873"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "904d1c816463518bc548ba2dc1e751d52d9794fe686c058dfdcf1e2108b9695d",
+      "source_region": "div.problem-additional-text",
+      "text": "[AcRi26] E. Ackelsburg and F. Richter, An inverse theorem for sumsets of sets of positive density in the integers. arXiv:2604.12864 (2026)."
+    },
+    "remarks": {
+      "sha256": "c26c2bc9b50bd321359cb1b6900220016ba0a48473f846e15bc19ad6c725c106",
+      "source_region": "div.problem-additional-text",
+      "text": "One way this can happen is if there exists $\\theta>0$ such that\\[A=\\{ n>0 : \\{ n\\theta\\} \\in X_A\\}\\textrm{ and }B=\\{ n>0 : \\{n\\theta\\} \\in X_B\\}\\]where $\\{x\\}$ denotes the fractional part of $x$ and $X_A,X_B\\subseteq \\mathbb{R}/\\mathbb{Z}$ are such that $\\mu(X_A+X_B)=\\mu(X_A)+\\mu(X_B)$. Are all possible $A$ and $B$ generated in a similar way (using other groups)?\n\nThis has been partially resolved by Ackelsburg and Richter \\cite{AcRi26}, under the additional assumption that one of the sets meets every residue class in $\\mathbb{N}$. Roughly speaking, if $d(A)>0$ and $d(A+B)=d(A)+d(B)<1$ and $B$ meets every residue class then either both $A$ and $B$ arise from a rotation on the product of the circle group with a finite cyclic group, or $A$ is in a single residue class modulo some $h$ and $B$ 'looks like' the union of all but one residue class modulo $h$.\n\nA full characterisation without the assumption that one of the sets meets every residue class seems hopeless; for example, taking $A=B$ to be a random subset of the even integers with density $1/4$ we have $d(A+A)=1/2$."
+    },
+    "statement": {
+      "sha256": "9497e24cf7a5fb485018b878066198b8f3ad5edfb626811d050f5b12e83c8498",
+      "source_region": "div#content",
+      "text": "Let $d(A)$ denote the density of $A\\subseteq \\mathbb{N}$. Characterise those $A,B\\subseteq \\mathbb{N}$ with positive density such that\\[d(A+B)=d(A)+d(B).\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/335"
+}

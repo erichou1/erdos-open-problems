@@ -1,0 +1,77 @@
+{
+"reviewer_role": "independent adversarial referee (structural_dependency)",
+"verdict": "fail",
+"claims_checked": 16,
+"claims_total": 16,
+"checked_claim_ids": [
+"C1",
+"C2",
+"C3",
+"C4",
+"C5",
+"C6",
+"C7",
+"C8",
+"C9",
+"C10",
+"C11",
+"C12",
+"C13",
+"C14",
+"C15",
+"C16"
+],
+"open_gaps": [
+"The exact immutable statement is not resolved because the domains of n and k are not explicit; all substantive conclusions are conditional on the adopted integer interpretation.",
+"Neither LOW_HIGH_EXCLUSION nor its preliminary three-layer intersection problem is discharged.",
+"HIGH_EXTENSION_BOUND is not discharged.",
+"No admissible four-interior collision is constructed or globally excluded.",
+"No mechanism establishes exact interior multiplicity q for every nonnegative q.",
+"The terminal negative branch NEGATIVE_T5 and terminal positive branch POSITIVE_SCALING are both incomplete.",
+"The claimed finite decidability of every bounded displacement-word search lacks a proved bound on the variables n and k or another complete decision procedure."
+],
+"unchecked_imports": [],
+"counterexample_searches": [
+"Checked the collision-slope orientation against the 3003 chain. Its row-drop/column-rise ratios are 63/3=21 and 1/1=1, so d_i/e_i decreases and e_i/d_i increases, consistent with the substantive content of C11.",
+"Enumerated admissible fibers through row 500. The observed repeated interior structures included the known 3003 chain and supplied no counterexample to C12, although this finite search is not a proof.",
+"Verified the Pell recurrence in C13 directly: it sends (X,Y)=(29,13) to (199,89), yielding (n,k)=(104,39), and then to the stated (714,272) block.",
+"Independently reproduced C16 with exact integer arithmetic. The enumeration gives 3,014,786 high-layer occurrences, 3,014,784 distinct values, and exactly the two stated repeated values: 3003 and 61218182743304701891431482520.",
+"The independent computation found maximum interior multiplicity 3 below 10^30, attained by 3003, confirming the finite conclusion M(a)<=4 on that range.",
+"C13 itself defeats the inference used at the end of C10: fixing a bounded displacement pattern does not bound n and k, since the fixed one-edge pattern d=e=1 has infinitely many solutions."
+],
+"material_errors": [
+{
+"claim_id": "C10",
+"error": "The exact cancellation equation is correct, but the conclusion that bounded displacement words are therefore decidable by finite exact search does not follow. A finite polynomial Diophantine system may have unbounded solutions, and no search bound or complete decision algorithm is supplied. C13 demonstrates that even a fixed displacement pattern can generate infinitely many solutions."
+},
+{
+"claim_id": "GOAL",
+"error": "The validated DAG encodes NEGATIVE_T5 and POSITIVE_SCALING as simultaneous ordinary dependencies of GOAL, while the claim text requires an alternative: DOMAIN and either NEGATIVE_T5 or POSITIVE_SCALING. The graph therefore does not faithfully encode its own terminal decision rule."
+},
+{
+"claim_id": "POSITIVE_SCALING",
+"error": "The graph lists both WORD_SCALING and PELL_SCALING as dependencies, although the claim requires success of at least one construction branch. This is another unrepresented OR-dependency."
+},
+{
+"claim_id": "NORMALIZATION",
+"error": "NORMALIZATION is marked dependency-free even though it is explicitly conditional on resolving or adopting the discrete domain identified by DOMAIN."
+},
+{
+"claim_id": "PELL_DOUBLE_LIFT",
+"error": "The graph omits a node establishing the adjacent-layer Pell family on which PELL_DOUBLE_LIFT relies. The candidate later proves such a family as C13, but the validated subgoal graph does not record that load-bearing dependency."
+},
+{
+"claim_id": "GLOBAL",
+"error": "The candidate expressly leaves every terminal route incomplete and therefore does not prove or disprove the immutable universally quantified statement as required by the acceptance criteria."
+}
+],
+"completeness_score": 53,
+"proof_confidence": 0,
+"adversarial_survival_score": 82,
+"statement_sha256": "b669094e22469ade57dcca529d2ce001ede0c9bee628c97121ad1d9a7ebfb01b",
+"notes": "C1-C9 and C11-C16 survive the mathematical checks performed, with C16 independently reproduced rather than accepted from its reported output. C10 contains a genuine logical overreach, and the supplied subgoal DAG has several structural dependency defects, especially failure to encode alternative branches. The candidate is a useful conditional structural report, but it cannot pass the stated acceptance criteria because no terminal proof or disproof is discharged. Source reviewed: 
+
+Pasted text
+
+"
+}

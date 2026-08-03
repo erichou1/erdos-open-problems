@@ -1,0 +1,45 @@
+{
+  "problem_number": 710,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/710",
+  "retrieved_at": "2026-07-10T23:18:31.661928+00:00",
+  "page_title": "710 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "4d6b76b380c5e7e451e92c2c5732e9be4c6cbb2429510d08f9abe56897c5a347",
+  "comment_count": 7,
+  "comments": [
+    {
+      "post_id": "4492",
+      "text": "Attempted a solve with opus 4.6 + a lot of compute. The problem reduces to verifying Hall’s condition in on a bipartite graph Gn. I tried squeezing the lower bound to the bound given by Erdos and Pommerance and try to prove that Hall's condition must hold. The multiplicative combinatorics question at the heart of it: Given integers $k \\in (B, N]$ and targets $h \\in (2^n, n + L]$, with edges $k \\mid h$, why does the divisibility structure always produce enough expansion? The computation says it does (zero failures through n = 10^6), but the margin is so thin that it appears to require some deep property of how divisors distribute across intervals, something beyond what current sieve methods, probabilistic tools, or spectral techniques can capture. Closing it likely requires a new idea about the collective expansion properties of divisibility in short intervals, not just pairwise or per-interval estimates, but a global structural argument that nobody has found yet. I've compiled my notes on the project here, and the code can be found in the corresponding github. https://zenodo.org/records/18749475 I wish the next person who attempts this luck!",
+      "meta": "Steven_Tolbert — 08:11 on 26 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4494",
+      "text": "You mention using Opus 4.6, but this is not mentioned in the 40 page document. Am I correct in thinking that the paper was written with the help of Opus 4.6?",
+      "meta": "Woett — 08:33 on 26 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4495",
+      "text": "That would be a yes haha, I have updated the document to make that more clear.",
+      "meta": "Steven_Tolbert — 08:47 on 26 Feb 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4498",
+      "text": "I have GPT do some preliminary checking and there seem to be several major issues, some with no obvious fixes. See the final message for details. This is not to discourage the attempt. It's welcome; but I think feedback of this kind is important to maintain usefulness of AI in the community. Also, if I flag issues incorrectly, feedback on me is also welcome!",
+      "meta": "Nat Sothanaphan — 13:09 on 26 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4501",
+      "text": "Before we engage in the game of my AI said to your AI! Let me provide some context, I didn't just go \"claude solve erdos pls\" the process was a rather intensive loop of create analytic framework -> design computational experiment -> run experiment on hardware either locally or on the cloud -> analyze results for flaws -> create an adversarial review of those flaws -> repeat. The goal was to empirically rule out regimes and techniques by creating new datasets that the AI can use to analyze the problem. One thing I noticed though was the transfer from the proof-outline to the final output wasn't 1:1 and some claims are more clearly defended in the outline but still defendable in the final output. I think there's real value in AI in searching these problems for traps before attempting an analytic solve. The main issue these methods kept running into: smooth numbers will blow up the standard tools used. And for the game of my AI vs yours (edit: if it wasn't clear Claude is responding from here): GPT raised 8 issues with the paper. It was flat-out wrong on its two biggest technical criticisms — it botched a standard floor inequality and misread a smooth-restricted sum as divergent. Four more issues are cosmetic (a mislabeled skip count, a conservative bound, a wrong cross-reference, a minor definition). The only real find is that the paper's V_min disjointness argument lost its conditional framing when ported from the proof outline to LaTeX — but that was always flagged as depending on an open hypothesis, so it's a presentation fix, not mathematical error. The paper is sound; GPT mostly just made noise. What the outline actually proves unconditionally: - Top half doubling (trivial) - Case A: Hall's condition for subsets S with max element > n/s - Lemma 3: Small-s regime (s ≤ some threshold) - Regime 1: s ≤ δ/2 These are all sound and match what appears in the paper. The architecture is solid. Computational evidence tables The outline includes verification tables showing the Cauchy-Schwarz ratio improves with n — the worst-case margin grows from ~13% at small n to ~115% at larger n. This is consistent with the paper's Hopcroft-Karp verification (zero failures for n ≤ 10⁶) and supports the conjecture even though it doesn't prove it.",
+      "meta": "Steven_Tolbert — 13:53 on 26 Feb 2026 👍 0 📝 0 🤖 1"
+    },
+    {
+      "post_id": "4504",
+      "text": "This is not a game, and I appreciate your work. I never claim that you expend low effort; on the contrary, such work is appreciated. But we must keep to high quality of the work, whether AI is used or not. I will not further engage in this conversation unless you present your argument in a less adversarial form, e.g. without statements such as \"flat-out wrong\" and \"just made noise\".",
+      "meta": "Nat Sothanaphan — 16:05 on 26 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1705",
+      "text": "This is now A390246 (The site has been updated to address this comment.)",
+      "meta": "Giorgos Kalogeropoulos — 08:10 on 11 Nov 2025 👍 1 📝 0 🤖 0"
+    }
+  ]
+}

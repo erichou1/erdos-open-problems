@@ -1,0 +1,58 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#20}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{Prize: \$1000}
+
+\noindent\textbf{Tags:} combinatorics
+
+\medskip
+\noindent\textbf{Note:} sunflower conjecture
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $f(n,k)$ be minimal such that every family $\mathcal{F}$ of $n$-uniform sets with $\lvert \mathcal{F}\rvert \geq f(n,k)$ contains a $k$-sunflower. Is it true that\[f(n,k) &lt; c_k^n\]for some constant $c_k&gt;0$?
+
+
+
+
+Erd\H{o}s and Rado \cite{ErRa60} originally proved $f(n,k)\leq (k-1)^nn!$. Kostochka \cite{Ko97} improved this slightly (in particular establishing an upper bound of $o(n!)$, for which Erd\H{o}s awarded him the consolation prize of \$100), but the bound stood at $n^{(1+o(1))n}$ for a long time until Alweiss, Lovett, Wu, and Zhang \cite{ALWZ20} proved\[f(n,k) &lt; (Ck\log n\log\log n)^n\]for some constant $C&gt;1$. This was refined slightly, independently by Rao \cite{Ra20}, Frankston, Kahn, Narayanan, and Park \cite{FKNP19}, and Bell, Chueluecha, and Warnke \cite{BCW21}, leading to the current record of\[f(n,k) &lt; (Ck\log n)^n\]for some constant $C&gt;1$. This proof was streamlined by Hu . A constant of $C=64$ was achieved in the presentation by Stoeckl . In \cite{Er81} Erd\H{o}s offered \$1000 for a proof or disproof even just in the special case when $k=3$, which he expected 'contains the whole difficulty'. He also wrote 'I really do not see why this question is so difficult'. The usual focus is on the regime where $k=O(1)$ is fixed (say $k=3$) and $n$ is large, although for the opposite regime Kostochka, R\"{o}dl, and Talysheva \cite{KRT99} have shown\[f(n,k)=(1+O_n(k^{-1/2^n}))k^n.\]
+
+
+
+
+References
+
+[ALWZ20] Alweiss, R. and Lovett, S. and Wu, K. and Zhang, J., Improved bounds for the sunflower lemma . (2020).
+
+[BCW21] Bell, T. and Chueluecha, S. and Warnke, L., Note on sunflowers . Discret. Math. (2021).
+
+[Er81] Erd\H{o}s, P., On the combinatorial problems which I would most like to see solved . Combinatorica (1981), 25-42.
+
+[ErRa60] Erd\H{o}s, P. and Rado, R., Intersection theorems for systems of sets . J. London Math. Soc. (1960), 85-90.
+
+[FKNP19] Frankston, K. and Kahn, J. and Narayanan, B. and Park, J., Thresholds versus fractional expectation-thresholds . CoRR (2019).
+
+[KRT99] Kostochka, A. V. and R\"{o}dl, V. and Talysheva, L. A., On systems of small sets with no large $\Delta$-subsystems . Combin. Probab. Comput. (1999), 265-268.
+
+[Ko97] Kostochka, A., A bound on the cardinality of families not containing $\Delta$-systems . (1997).
+
+[Ra20] Rao, A., Coding for sunflowers . Discrete Analysis (2020).
+
+\noindent\textbf{Related OEIS sequences:} A332077
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/20}}
+\end{document}

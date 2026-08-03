@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1,
+  "raw_page": {
+    "path": "raw/pages/problem_1.html",
+    "sha256": "509bdb0612fd174cfc3e2f75194d702fb204e90024fc48a5132ab17c5a5f3657"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "7348df92ce5e38eb9b1611117136520f1392710d575c17485ff46d87ebce0193",
+      "source_region": "div.problem-additional-text",
+      "text": "[CoGu68] J. H. Conway and R. K. Guy, Sets of natural numbers with distinct sums. Notices Amer. Math. Soc. (1968), 345.\n \n [DFX21] Dubroff, Q. and Fox, J. and Xu, M. W., A note on the Erd\\H{o}s distinct subset sums problem. SIAM Journal on Discrete Mathematics (2021), 322-324.\n \n [Er56] Erd\\H{o}s, P., Problems and results in additive number theory. Colloque sur la Th\\'{e}orie des Nombres, Bruxelles, 1955 (1956), 127-137.\n \n [Er73] Erd\\H{o}s, P., Problems and results on combinatorial number theory. A survey of combinatorial theory (Proc. Internat. Sympos., Colorado State Univ., Fort Collins, Colo., 1971) (1973), 117-138.\n \n [Er80] Erd\\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.\n \n [Er85c] Erd\\H{o}s, P., On some of my problems in number theory I would most like to see solved. Number theory (Ootacamund, 1984) (1985), 74-84.\n \n [Er98] Erd\\H{o}s, Paul, Some of my new and almost new problems and results in combinatorial number theory. Number theory (Eger, 1996) (1998), 169-180.\n \n [ErGr80] Erd\\H{o}s, P. and Graham, R., Old and new problems and results in combinatorial number theory. Monographies de L'Enseignement Mathematique (1980).\n \n [ErSp74] Erd\\H{o}s, Paul and Spencer, Joel, Probabilistic methods in combinatorics. Akad\\'{e}miai Kiad\\'{o} (1974).\n \n [Gr71] Graham, R. L., On sums of integers taken from a fixed sequence. (1971), 22--40.\n \n [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.\n \n [Gu82] Guy, Richard K., Sets of integers whose subsets have distinct sums. (1982), 141--154.\n \n [Ru99] Ruzsa, I., Erd\\H{o}s and the Integers. Journal of Number Theory (1999), 115-163.\n \n [St23] Steinerberger, S., Some remarks on the Erd\\H{o}s distinct subset sums problem. arXiv:2208.12182 (2023)."
+    },
+    "remarks": {
+      "sha256": "727e77389902ffe774a66092a34bb8e2bf42fdd5b7b82fb3bead87a08d8516be",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s called this 'perhaps my first serious problem' (in \\cite{Er98} he dates it to 1931). The powers of $2$ show that $2^n$ would be best possible here: this provides an upper bound for the minimal such $N$ of $N\\leq 2^{n-1}$. This was improved by Conway and Guy \\cite{CoGu68} (see also \\cite{Gu82}) to $N\\leq 2^{n-2}$ (for all large $n$). The best known upper bound is\\[N\\leq 0.22002\\cdot 2^n,\\]due to Bohman.\n\nThe trivial lower bound is $N \\gg 2^{n}/n$, since all $2^n$ distinct subset sums must lie in $[0,Nn)$. Erd\\H{o}s and Moser \\cite{Er56} proved\\[ N\\geq (\\tfrac{1}{4}-o(1))\\frac{2^n}{\\sqrt{n}}.\\](In \\cite{Er85c} Erd\\H{o}s offered \\$100 for any improvement of the constant $1/4$ here.)\n\nA number of improvements of the constant have been given (see \\cite{St23} for a history), with the current record $\\sqrt{2/\\pi}$ first proved in unpublished work of Elkies and Gleason. Two proofs achieving this constant are provided by Dubroff, Fox, and Xu \\cite{DFX21}, who in fact prove the exact bound $N\\geq \\binom{n}{\\lfloor n/2\\rfloor}$.\n\nAn equivalent formulation is to ask for the maximal size of a set of integers in $[1,x]$ which is dissociated (all subset sums are distinct). If $F(x)$ is the size of such a set then this problem is equivalent to\\[F(x) <\\log_2x+O(1).\\]Conway and Guy (see \\cite{Gu82}) conjectured that $F(2^k)=k+2$ for all large $k$, but Erd\\H{o}s \\cite{Er80} wrote he had 'no opinion'.\n\nIn \\cite{Er73} and \\cite{ErGr80} the generalisation where $A\\subseteq (0,N]$ is a set of real numbers such that the subset sums all differ by at least $1$ is proposed, with the same conjectured bound. (The second proof of \\cite{DFX21} applies also to this generalisation.) This generalisation seems to have first appeared in \\cite{Gr71}.\n\nThis problem appears in Erd\\H{o}s' book with Spencer \\cite{ErSp74} in the final chapter titled 'The kitchen sink'. As Ruzsa writes in \\cite{Ru99} \"it is a rich kitchen where such things go to the sink\". \n\nThe sequence of minimal $N$ for a given $n$ is A276661 in the OEIS.\n\nSee also [350].\n\nThis is discussed in problem C8 of Guy's collection \\cite{Gu04}."
+    },
+    "statement": {
+      "sha256": "bd9aa852758b1a1b093877b64a9371a62131a4e25a514d347983d472805e1ce1",
+      "source_region": "div#content",
+      "text": "If $A\\subseteq \\{1,\\ldots,N\\}$ with $\\lvert A\\rvert=n$ is such that the subset sums $\\sum_{a\\in S}a$ are distinct for all $S\\subseteq A$ then\\[N \\gg 2^{n}.\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1"
+}

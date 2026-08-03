@@ -1,0 +1,49 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#978}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $f\in \mathbb{Z}[x]$ be an irreducible polynomial of degree $k&#62;2$ (and suppose that $k\neq 2^l$ for any $l\geq 1$) such that the leading coefficient of $f$ is positive. Does the set of integers $n\geq 1$ for which $f(n)$ is $(k-1)$-power-free have positive density? If $k&#62;3$, and for all primes $p$ there exists $n$ such that $p^{k-2}\nmid f(n)$, then are there infinitely many $n$ for which $f(n)$ is $(k-2)$-power-free? In particular, does\[n^4+2\]represent infinitely many squarefree numbers?
+
+
+
+
+Erd\H{o}s \cite{Er53} proved there are infinitely many $n$ for which $f(n)$ is $(k-1)$-power-free, except when $k=2^l$ and $2^{k-1}\mid f(n)$ for all $n$. This latter exception is possible, for example if\[f(x)=k!\left(\binom{x}{k}+1\right).\]Hooley \cite{Ho67} settled the first question, in fact providing a precise asymptotic for the number of such $n\leq x$. Heath-Brown \cite{He06} proved the answer to the second question is yes when $k\geq 10$, and Browning \cite{Br11} extended this to $k\geq 9$ (in fact establishing an asymptotic formula for the number of such $n$). (This is under the assumption that there does not exist a prime $p$ such that $p^{k-2}\mid f(n)$ for all $n$, which Erd\H{o}s did not state explicitly, but is an obvious necessary condition, and is discussed explicitly in \cite{He06} and \cite{Br11}.) In \cite{Er65b} Erd\H{o}s mentions the question of whether $2^n\pm 1$ represents infinitely many $k$th power-free integers, or $n!\pm 1$, but that these are 'intractable at present'. (See also [936] .)
+
+
+
+
+References
+
+[Br11] Browning, T. D., Power-free values of polynomials . Arch. Math. (Basel) (2011), 139--150.
+
+[Er53] Erd\H{o}s, P., Arithmetical properties of polynomials . J. London Math. Soc. (1953), 416--425.
+
+[Er65b] Erd\H{o}s, Paul, Some recent advances and current problems in number theory . Lectures on Modern Mathematics, Vol. III (1965), 196-244.
+
+[He06] Heath-Brown, D. R., Counting rational points on algebraic varieties . (2006), 51--95.
+
+[Ho67] Hooley, C., On the power free values of polynomials . Mathematika (1967), 21--26.
+
+\noindent\textbf{Related OEIS sequences:} possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/978}}
+\end{document}

@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 161,
+  "raw_page": {
+    "path": "raw/pages/problem_161.html",
+    "sha256": "da239e5b975460d9b4004e748e99a4f0a771b1ef91f821f5f76a85a1b38f7dd6"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "2a5a38f525d0cdea8d9497c9092bbe99994a310550a4737a253a0cab38aa7d71",
+      "source_region": "div.problem-additional-text",
+      "text": "[CFS11] Conlon, David and Fox, Jacob and Sudakov, Benny, Large almost monochromatic subsets in hypergraphs. Israel J. Math. (2011), 423--432.\n \n [Er90b] Erd\\H{o}s, Paul, Problems and results on graphs and hypergraphs: similarities and differences. Mathematics of Ramsey theory (1990), 12-28."
+    },
+    "remarks": {
+      "sha256": "46a6f2408a1096a2a3f73f2a51dcd7eb5fefebde9c190705f665ecb3e9d4d7f1",
+      "source_region": "div.problem-additional-text",
+      "text": "For $\\alpha=0$ this is the usual Ramsey function.\n\nA conjecture of Erd\\H{o}s, Hajnal, and Rado (see [562]) implies that\\[ F^{(t)}(n,0)\\asymp \\log_{t-1} n\\]and results of Erd\\H{o}s and Spencer imply that\\[F^{(t)}(n,\\alpha) \\gg_\\alpha (\\log n)^{\\frac{1}{t-1}}\\]for all $\\alpha>0$, and a similar upper bound holds for $\\alpha$ close to $1/2$. \n\nErd\\H{o}s said in \\cite{Er90b}: 'If I can hazard a guess completely unsupported by evidence, I am afraid that the jump occurs all in one step at $0$. It would be much more interesting if my conjecture would be wrong and perhaps there is some hope for this for $t>3$. I know nothing and offer \\$500 to anybody who can clear up this mystery.' \n\nConlon, Fox, and Sudakov \\cite{CFS11} have proved that, for any fixed $\\alpha>0$,\\[F^{(3)}(n,\\alpha) \\ll_\\alpha \\sqrt{\\log n}.\\]Coupled with the lower bound above, this implies that there is only one jump for fixed $\\alpha$ when $t=3$, at $\\alpha=0$.\n\nFor all $\\alpha>0$ it is known that\\[F^{(t)}(n,\\alpha)\\gg_t (\\log n)^{c_\\alpha}.\\]See also [563] for more on the case $t=2$.\n\nThis problem is #40 in Ramsey Theory in the graphs problem collection."
+    },
+    "statement": {
+      "sha256": "30b33785828690de98d9b5eb45c7b47f99be5d334e5749b778fbd0d075192213",
+      "source_region": "div#content",
+      "text": "Let $\\alpha\\in[0,1/2)$ and $n,t\\geq 1$. Let $F^{(t)}(n,\\alpha)$ be the smallest $m$ such that we can $2$-colour the edges of the complete $t$-uniform hypergraph on $n$ vertices such that if $X\\subseteq [n]$ with $\\lvert X\\rvert \\geq m$ then there are at least $\\alpha \\binom{\\lvert X\\rvert}{t}$ many $t$-subsets of $X$ of each colour. \n\nFor fixed $n,t$ as we change $\\alpha$ from $0$ to $1/2$ does $F^{(t)}(n,\\alpha)$ increase continuously or are there jumps? Only one jump?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/161"
+}

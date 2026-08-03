@@ -1,0 +1,970 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\usepackage{titlesec}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problems --- Falsifiable\\[0.5em]\large A Collection of 27 Problems}
+\date{Generated: 2026-06-09}
+\author{Source: \url{https://www.erdosproblems.com}}
+
+\begin{document}
+\maketitle
+\tableofcontents
+\newpage
+
+
+%% ============================================================
+\section{Problem \#23}
+\label{prob:23}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} none \quad|\quad \textbf{Updated:} 2025-08-31
+
+\noindent\textbf{Tags:} graph theory
+
+\medskip
+
+\noindent\textbf{Statement:}
+
+Can every triangle-free graph on $5n$ vertices be made bipartite by deleting at most $n^2$ edges?
+
+
+
+
+The blow-up of $C_5$ shows that this would be the best possible. The best known bound is due to Balogh, Clemen, and Lidicky \cite{BCL21}, who proved that deleting at most $1.064n^2$ edges suffices. In \cite{Er92b} Erd\H{o}s asks, more generally, if a graph on $(2k+1)n$ vertices in which every odd cycle has size $\geq 2k+1$ can be made bipartite by deleting at most $n^2$ edges. This problem is #58 in Extremal Graph Theory in the graphs problem collection.
+
+
+
+
+References
+
+[BCL21] Balogh, J. and Clemen, F. C. and Lidicky, B., Max Cuts in Triangle-Free Graphs . (2021).
+
+[Er92b] Erd\H{o}s, Paul, Some of my favourite problems in various branches of combinatorics . Matematiche (Catania) (1992), 231-240.
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#64}
+\label{prob:64}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} \$1000 \quad|\quad \textbf{Updated:} 2025-08-31
+
+\noindent\textbf{Tags:} graph theory, cycles
+
+\medskip
+
+\noindent\textbf{Statement:}
+
+Does every finite graph with minimum degree at least 3 contain a cycle of length $2^k$ for some $k\geq 2$?
+
+
+
+
+Conjectured by Erd\H{o}s and Gy\'{a}rf\'{a}s, who believed the answer must be negative, and in fact for every $r$ there must be a graph of minimum degree at least $r$ without a cycle of length $2^k$ for any $k\geq 2$. This was solved in the affirmative if the minimum degree is larger than some absolute constant by Liu and Montgomery \cite{LiMo20} (therefore disproving the above stronger conjecture of Erd\H{o}s and Gy\'{a}rf\'{a}s). Liu and Montgomery prove a much stronger result: if the average degree of $G$ is sufficiently large then there is some large integer $\ell$ such that for every even integer $m\in [(\log \ell)^8,\ell]$, $G$ contains a cycle of length $m$. An infinite tree with minimum degree $3$ shows that the answer is trivially false for infinite graphs. The conjecture has been confirmed for various families of graphs; see the comment by Alfaiz for a list. This problem is #69 in Extremal Graph Theory in the graphs problem collection.
+
+
+
+
+References
+
+[LiMo20] Liu, Hong and Montgomery, Richard, A solution to Erd\H{o}s and Hajnal's odd cycle problem . arXiv:2010.15802 (2020).
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#97}
+\label{prob:97}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} \$100 \quad|\quad \textbf{Updated:} 2025-08-31
+
+\noindent\textbf{Tags:} geometry, distances, convex
+
+\medskip
+
+\noindent\textbf{Statement:}
+
+Does every convex polygon have a vertex with no other $4$ vertices equidistant from it?
+
+
+
+
+Erd\H{o}s originally conjectured this (in \cite{Er46b}) with no $3$ vertices equidistant, but Danzer found a {IMAGE=97-Danzer,convex polygon} on 9 points such that every vertex has three vertices equidistant from it (but this distance depends on the vertex). Danzer's construction is explained in \cite{Er87b}. Fishburn and Reeds \cite{FiRe92} have found a convex polygon on 20 points such that every vertex has three vertices equidistant from it (and this distance is the same for all vertices). If this fails for $4$, perhaps there is some constant for which it holds? In \cite{Er75f} Erd\H{o}s claimed that Danzer proved that this false for every constant - in fact, for any $k$ there is a convex polygon such that every vertex has $k$ vertices equidistant from it. Since this claim was not repeated in later papers, presumably Erd\H{o}s was mistaken here. Erd\H{o}s suggested this as an approach to solve [96] . Indeed, if this problem holds for $k+1$ vertices then, by induction, this implies an upper bound of $kn$ for [96] . The answer is no if we omit the requirement that the polygon is convex (I thank Boris Alexeev and Dustin Mixon for pointing this out), since for any $d$ there are graphs with minimum degree $d$ which can be embedded in the plane such that each edge has length one (for example one can take the $d$-dimensional hypercube graph on $2^d$ vertices). One can then connect the vertices in a cyclic order so that there are no self-intersections and no three consecutive vertices on a line, thus forming a (non-convex) polygon.
+
+
+
+
+References
+
+[Er46b] Erd\H{o}s, P., On sets of distances of {$n$} points . Amer. Math. Monthly (1946), 248--250.
+
+[Er75f] Erd\H{o}s, Paul, On some problems of elementary and combinatorial geometry . Ann. Mat. Pura Appl. (4) (1975), 99-108.
+
+[Er87b] Erd\H{o}s, P., Some combinatorial and metric problems in geometry . Intuitive geometry (Si\'{o}fok, 1985) (1987), 167-177.
+
+[FiRe92] Fishburn, P. C. and Reeds, J. A., Unit distances between vertices of a convex polygon . Comput. Geom. (1992), 81-91.
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#106}
+\label{prob:106}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} none \quad|\quad \textbf{Updated:} 2025-08-31
+
+\noindent\textbf{Tags:} geometry
+
+\medskip
+
+\noindent\textbf{Statement:}
+
+Draw $n$ squares inside the unit square with no common interior point. Let $f(n)$ be the maximum possible sum of the side-lengths of the squares. Is $f(k^2+1)=k$?
+
+
+
+
+In \cite{Er94b} Erd\H{o}s dates this conjecture to 'more than 60 years ago'. Erd\H{o}s proved that $f(2)=1$ in an early mathematical paper for high school students in Hungary. Newman proved (in personal communication to Erd\H{o}s) that $f(5)=2$. It is trivial from the Cauchy-Schwarz inequality that $f(k^2)=k$. Erd\H{o}s also asks for which $n$ is it true that $f(n+1)=f(n)$. It is easy to see that $f(k^2+1)\geq k$, by first dividing the unit square into $k^2$ smaller squares of side-length $1/k$, and then replacing one square by two smaller squares of side-length $1/2k$. Hal\'{a}sz \cite{Ha84} gives a construction that shows $f(k^2+2)\geq k+\frac{1}{k+1}$, and in general, for any $c\geq 1$,\[f(k^2+2c+1)\geq k+\frac{c}{k}\]and\[f(k^2+2c)\geq k+\frac{c}{k+1}.\]Hal\'{a}sz also considers the variants where we replace a square by a parallelogram or triangle. Erd\H{o}s and Soifer \cite{ErSo95} and Campbell and Staton \cite{CaSt05} have conjectured that, in general, for any integer $-k&#60;c&#60;k$, $f(k^2+2c+1)=k+\frac{c}{k}$, and proved the corresponding lower bound. Praton \cite{Pr08} has proved that this general conjecture is equivalent to $f(k^2+1)=k$. Baek, Koizumi, and Ueoro \cite{BKU24} have proved $g(k^2+1)=k$, where $g(\cdot)$ is defined identically to $f(\cdot)$ with the additional assumption that all squares have sides parallel to the sides of the unit square. More generally, they prove that $g(k^2+2c+1)=k+c/k$ for any $-k&#60;c&#60;k$, which determines all values of $g(\cdot)$. Raj Singh \cite{Ra26} has noted that $f(k^2+1)=k$ being true for all $k$ is equivalent to it being true for infinitely many $k$, which in turn is equivalent to the convergence of\[\sum_{k\geq 1}(f(k^2+1)-k).\]Both equivalences follow from the fact that\[k(f(k^2+1)-k)\]is a non-decreasing function of $k$.
+
+
+
+
+References
+
+[BKU24] Baek, J. and Koizumi, J. and Ueoro, T., A note on the Erd\H{o}s conjecture about square packing . arXiv:2411.07274 (2024).
+
+[CaSt05] Campbell, Connie and Staton, William, A square-packing problem of Erd\H{o}s . Amer. Math. Monthly (2005), 165--167.
+
+[Er94b] Erd\H{o}s, Paul, Some problems in number theory, combinatorics and combinatorial geometry . Math. Pannon. (1994), 261-269.
+
+[ErSo95] Erd\H{o}s, Paul and Soifer, Alexander, Squares in a square . Geombinatorics (1995), 110--114.
+
+[Ha84] Hal\'{a}sz, Sylvia, Packing a convex domain with similar convex domains . J. Combin. Theory Ser. A (1984), 85--90.
+
+[Pr08] Praton, I., Packing squares in a square . Math. Mag. (2008), 358-361.
+
+[Ra26] A. Raj Singh, On a square packing conjecture of Erd\H{o}s . arXiv:2601.22163 (2026).
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#107}
+\label{prob:107}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} \$500 \quad|\quad \textbf{Updated:} 2025-08-31
+
+\noindent\textbf{Tags:} geometry, convex
+
+\medskip
+\noindent\textit{'Happy Ending' problem}
+
+
+\noindent\textbf{Statement:}
+
+Let $f(n)$ be minimal such that any $f(n)$ points in $\mathbb{R}^2$, no three on a line, contain $n$ points which form the vertices of a convex $n$-gon. Prove that $f(n)=2^{n-2}+1$.
+
+
+
+
+The Erd\H{o}s-Klein-Szekeres 'Happy Ending' problem. The problem originated in 1931 when Klein observed that $f(4)=5$. Tur\'{a}n and Makai showed $f(5)=9$. Erd\H{o}s and Szekeres proved the bounds\[2^{n-2}+1\leq f(n)\leq \binom{2n-4}{n-2}+1.\](\cite{ErSz60} and \cite{ErSz35} respectively). There were several improvements of the upper bound, but all of the form $4^{(1+o(1))n}$, until Suk \cite{Su17} proved\[f(n) \leq 2^{(1+o(1))n}.\]The current best bound is due to Holmsen, Mojarrad, Pach, and Tardos \cite{HMPT20}, who prove\[f(n) \leq 2^{n+O(\sqrt{n\log n})}.\]In \cite{Er97e} Erd\H{o}s clarifies that the \$500 is for a proof, and only offers \$100 for a disproof. Graham \cite{Gr04} offers \$1000 for a proof. This problem is #1 in Ramsey Theory in the graphs problem collection. See also [216] , [651] , and [838] .
+
+
+
+
+References
+
+[Er97e] Erd\H{o}s, Paul, Some of my favourite unsolved problems . Math. Japon. (1997), 527-537.
+
+[ErSz35] Erd\H{o}s, P. and Szekeres, G., A combinatorial problem in geometry . Compos. Math. (1935), 463-470.
+
+[ErSz60] Erd\H{o}s, P. and Szekeres, G., On some extremum problems in elementary geometry . Ann. Univ. Sci. Budapest. E\"{o}tv\"{o}s Sect. Math. (1960/61), 53-62.
+
+[Gr04] Green, Ben, The Cameron-Erd\H{o}s conjecture . Bull. London Math. Soc. (2004), 769-778.
+
+[HMPT20] Holmsen, Andreas F. and Mojarrad, Hossein Nassajian and Pach, J\'{a}nos and Tardos, G\'{a}bor, Two extensions of the Erd\H{o}s-Szekeres problem . J. Eur. Math. Soc. (JEMS) (2020), 3981-3995.
+
+[Su17] Suk, Andrew, On the Erd\H{o}s-Szekeres convex polygon problem . J. Amer. Math. Soc. (2017), 1047-1053.
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#114}
+\label{prob:114}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} \$250 \quad|\quad \textbf{Updated:} 2025-12-28
+
+\noindent\textbf{Tags:} polynomials, analysis
+
+\medskip
+
+\noindent\textbf{Statement:}
+
+If $p(z)\in\mathbb{C}[z]$ is a monic polynomial of degree $n$ then is the length of the curve $\{ z\in \mathbb{C} : \lvert p(z)\rvert=1\}$ maximised when $p(z)=z^n-1$?
+
+
+
+
+A problem of Erd\H{o}s, Herzog, and Piranian \cite{EHP58}. It is also listed as Problem 4.10 in \cite{Ha74}, where it is attributed to Erd\H{o}s. In \cite{Va99} it is just aked whether the length is at most $2n+O(1)$. This is true, as a consequence of result of Tao \cite{Ta25} below. Let the maximal length of such a curve be denoted by $f(n)$. {UL} {LI}The length of the curve when $p(z)=z^n-1$ is $2n+O(1)$, and hence the conjecture implies in particular that $f(n)=2n+O(1)$.{/LI} {LI}Dolzhenko \cite{Do61} proved $f(n) \leq 4\pi n$, but few were aware of this work.{/LI} {LI}Pommerenke \cite{Po61} proved $f(n)\ll n^2$.{/LI} {LI}Borwein \cite{Bo95} proved $f(n)\ll n$ (Borwein was unaware of Dolzhenko's earlier work). The prize of \$250 is reported by Borwein \cite{Bo95}.{/LI} {LI}Eremenko and Hayman \cite{ErHa99} proved the full conjecture when $n=2$, and $f(n)\leq 9.173n$ for all $n$.{/LI} {LI}Danchenko \cite{Da07} proved $f(n)\leq 2\pi n$.{/LI} {LI}Fryntov and Nazarov \cite{FrNa09} proved that $z^n-1$ is a local maximiser, and solved this problem asymptotically, proving that\[f(n)\leq 2n+O(n^{7/8}).\]{/LI} {LI} Tao \cite{Ta25} has proved that $p(z)=z^n-1$ is the unique (up to rotation and translation) maximiser for all sufficiently large $n$. {/UL} Erd\H{o}s, Herzog, and Piranian \cite{EHP58} also ask whether the length is at least $2\pi$ if $\{ z: \lvert f(z)\rvert&#60;1\}$ is connected (which $z^n$ shows is the best possible). This was proved by Pommerenke \cite{Po59}.
+
+
+
+
+References
+
+[Bo95] Borwein, Peter, The arc length of the lemniscate {$\{|p(z)|=1\}$} . Proc. Amer. Math. Soc. (1995), 797--799.
+
+[Da07] Danchenko, V. I., The lengths of lemniscates. {V}ariations of rational functions . Mat. Sb. (2007), 51--58.
+
+[Do61] Dol\v zenko, E. P., Some estimates concerning algebraic hypersurfaces and derivatives of rational functions . Dokl. Akad. Nauk SSSR (1961), 1287--1290.
+
+[EHP58] Erd\H{o}s, P. and Herzog, F. and Piranian, G., Metric properties of polynomials . J. Analyse Math. (1958), 125-148.
+
+[ErHa99] Eremenko, Alexandre and Hayman, Walter, On the length of lemniscates . Michigan Math. J. (1999), 409--415.
+
+[FrNa09] Fryntov, Alexander and Nazarov, Fedor, New estimates for the length of the {E}rd\H os-{H}erzog-{P}iranian lemniscate . (2009), 49--60.
+
+[Ha74] Hayman, W. K., Research problems in function theory: new problems . (1974), 155--180.
+
+[Po59] Pommerenke, Ch., On some problems by Erd\H{o}s, Herzog and Piranian . Michigan Math. J. (1959), 221-225.
+
+[Po61] Pommerenke, Ch., On metric properties of complex polynomials . Michigan Math. J. (1961), 97-115.
+
+[Ta25] T. Tao, The maximal length of the Erd\H{o}s-Herzog-Piranian leminscate length in high degree . arXiv:2512.12455 (2025).
+
+[Va99] Various, Some of Paul's favorite problems . Booklet produced for the conference "Paul Erd\H{o}s and his mathematics", Budapest, July 1999 (1999).
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#128}
+\label{prob:128}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} \$250 \quad|\quad \textbf{Updated:} 2025-10-31
+
+\noindent\textbf{Tags:} graph theory
+
+\medskip
+
+\noindent\textbf{Statement:}
+
+Let $G$ be a graph with $n$ vertices such that every induced subgraph on $\geq \lfloor n/2\rfloor$ vertices has more than $n^2/50$ edges. Must $G$ contain a triangle?
+
+
+
+
+A problem of Erd\H{o}s and Rousseau. The constant $50$ would be best possible as witnessed by a blow-up of $C_5$ or the Petersen graph. Erd\H{o}s, Faudree, Rousseau, and Schelp \cite{EFRS94} proved that this is true with $50$ replaced by $16$. More generally, they prove that, for any $0&lt;\alpha&lt;1$, if every set of $\geq \alpha n$ vertices contains $&gt;\alpha^3n^2/2$ edges then $G$ contains a triangle. Krivelevich \cite{Kr95} has proved this with $n/2$ replaced by $3n/5$ (and $50$ replaced by $25$). Keevash and Sudakov \cite{KeSu06} have proved this under the additional assumption that either $G$ has at most $n^2/12$ edges, or that $G$ has at least $n^2/5$ edges. Norin and Yepremyan \cite{NoYe15} proved that this is true if $G$ has at least $(1/5-c)n^2$ edges, for some constant $c&gt;0$. Razborov \cite{Ra22} proved this is true if $\frac{1}{50}$ is replaced by $\frac{27}{1024}$. See also the entry in the graphs problem collection .
+
+
+
+
+References
+
+[EFRS94] Erd\H{o}s, P. and Faudree, R. J. and Rousseau, C. C. and Schelp, R. H., A local density condition for triangles . Discrete Math. (1994), 153--161.
+
+[KeSu06] Keevash, Peter and Sudakov, Benny, Sparse halves in triangle-free graphs . J. Combin. Theory Ser. B (2006), 614-620.
+
+[Kr95] Krivelevich, Michael, On the edge distribution in triangle-free graphs . J. Combin. Theory Ser. B (1995), 245-260.
+
+[NoYe15] Norin, Sergey and Yepremyan, Liana, Sparse halves in dense triangle-free graphs . J. Combin. Theory Ser. B (2015), 1--25.
+
+[Ra22] Razborov, A. A., More about sparse halves in triangle-free graphs . Mat. Sb. (2022), 119--140.
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#167}
+\label{prob:167}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} none \quad|\quad \textbf{Updated:} 2025-09-28
+
+\noindent\textbf{Tags:} graph theory
+
+\medskip
+
+\noindent\textbf{Statement:}
+
+If $G$ is a graph with at most $k$ edge disjoint triangles then can $G$ be made triangle-free after removing at most $2k$ edges?
+
+
+
+
+A problem of Tuza. It is trivial that $G$ can be made triangle-free after removing at most $3k$ edges. The examples of $K_4$ and $K_5$ show that $2k$ would be best possible. The trivial bound of $\leq 3k$ was improved to $\leq (3-\frac{3}{23}+o(1))k$ by Haxell \cite{Ha99}. Kahn and Park \cite{KaPa22} have proved this is true for random graphs.
+
+
+
+
+References
+
+[Ha99] Haxell, P. E., Packing and covering triangles in graphs . Discrete Math. (1999), 251--254.
+
+[KaPa22] Kahn, Jeff and Park, Jinyoung, Tuza's conjecture for random graphs . Random Structures Algorithms (2022), 235--249.
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#242}
+\label{prob:242}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} none \quad|\quad \textbf{Updated:} 2025-09-28
+
+\noindent\textbf{Tags:} number theory, unit fractions
+
+\medskip
+\noindent\textit{Erdős-Straus conjecture}
+
+
+\noindent\textbf{Statement:}
+
+For every $n&#62;2$ there exist distinct integers $1\leq x&#60;y&#60;z$ such that\[\frac{4}{n} = \frac{1}{x}+\frac{1}{y}+\frac{1}{z}.\]
+
+
+
+
+The Erd\H{o s-Straus conjecture}. Perhaps the first place it appears in the literature is in a paper of Obl\'{a}th \cite{Ob50} (submitted in 1948), which describes it as a conjecture of Erd\H{o}s. The existence of a representation of $4/n$ as the sum of at most four distinct unit fractions follows trivially from a greedy algorithm. Schinzel conjectured (see \cite{Si56}) the generalisation that, for any fixed $a$, if $n$ is sufficiently large in terms of $a$ then there exist distinct integers $1\leq x&lt;y&lt;z$ such that\[\frac{a}{n} = \frac{1}{x}+\frac{1}{y}+\frac{1}{z}.\]When $a=5$ this conjecture is due to Sierpi\'{n}ski \cite{Si56}. For more background and results on this generalisation see Pomerance and Weingartner \cite{PoWe25}. It suffices to prove this when $n$ is prime. This has been verified for all $n\leq 10^{18}$ \cite{MiDu25}. There are many partial results, some of which are listed below. {UL} {LI}Obl\'{a}th \cite{Ob50} noted it is true if $n+1$ is divisible by a prime $\equiv 3\pmod{4}$. This implies almost all $n$ have the required decomposition.{/LI} {LI} Arguing via parametric solutions, Mordell \cite{Mo69} proved it is true for all $n$ except those congruent to one of $\{1,121,169,289,361,529\}$ modulo $840$.{/LI} {LI} Terzi \cite{Te71} extended this to prove that it is true for all $n$ except those congruent to one of $198$ possible bad congruences modulo $120120$.{/LI} {LI}Vaughan \cite{Va70} proved that the number of exceptions in $[1,x]$ is\[\leq x \exp(-c(\log x)^{2/3})\]for some constant $c&gt;0$.{/LI} {LI}This conjecture is equivalent (see Theorem 1 of \cite{BlEl22}) to the statement that, for any prime $p$, there exist integers $a,c,d\geq 1$ such that either $p\equiv -a/c\pmod{4acd-1}$ or $p\equiv -\frac{4c^2d+1}{k}\pmod{4cd}$ for some $k\mid 4c^2d+1$.{/LI} {LI} Bright and Loughran \cite{BrLo20} have shown there is no Brauer-Manin obstruction to the existence of solutions.{/LI} {LI} If $f(n)$ counts the number of solutions then Elsholtz and Tao \cite{ElTa13} have proved\[\sum_{p\leq N}f(p)=N(\log N)^{2+o(1)}\]and $f(p)\leq p^{3/5+o(1)}$ for all primes $p$.{/LI} {LI} Elsholtz and Planitzer \cite{ElPl20} have proved that for almost all $n$\[f(n) \geq (\log n)^{\log 6+o(1)}.\]{/LI} {/UL}
+
+
+
+
+References
+
+[BlEl22] Bloom, Thomas F. and Elsholtz, Christian, Egyptian fractions . Nieuw Arch. Wiskd. (5) (2022), 237--245.
+
+[BrLo20] Bright, Martin and Loughran, Daniel, Brauer-{M}anin obstruction for {E}rd\H os-Straus surfaces . Bull. Lond. Math. Soc. (2020), 746--761.
+
+[ElPl20] Elsholtz, Christian and Planitzer, Stefan, The number of solutions of the {E}rd\H os-Straus equation and sums of {$k$} unit fractions . Proc. Roy. Soc. Edinburgh Sect. A (2020), 1401--1427.
+
+[ElTa13] Elsholtz, Christian and Tao, Terence, Counting the number of solutions to the {E}rd\H os-Straus equation on unit fractions . J. Aust. Math. Soc. (2013), 50--105.
+
+[MiDu25] S. Mihnea and B. C. Dumitru, Further verification and empirical evidence for the Erd\H{o}s-Straus conjecture . arXiv:2509.00128 (2025).
+
+[Mo69] Mordell, L. J., Diophantine equations . (1969), xi+312.
+
+[Ob50] Obl\'{a}th, Richard, Sur l'\'equation diophantienne {$\frac 4n=\frac1{x_1}+\frac 1{x\sb 2}+\frac 1{x_3}$} . Mathesis (1950), 308--316.
+
+[PoWe25] C. Pomerance and A. Weingartner, Exceptions to the Erd\H{o}s-Straus-Schinzel conjecture . arXiv:2511.16817 (2025).
+
+[Si56] Sierpi\'nski, W., Sur les d\'ecompositions de nombres rationnels en fractions primaires . Mathesis (1956), 16--32.
+
+[Te71] Terzi, D. G., On a conjecture by {E}rd\H os-Straus . Nordisk Tidskr. Informationsbehandling (BIT) (1971), 212--216.
+
+[Va70] Vaughan, R. C., On a problem of {E}rd\H os, Straus and Schinzel . Mathematika (1970), 193--198.
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#287}
+\label{prob:287}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} none \quad|\quad \textbf{Updated:} 2025-12-5
+
+\noindent\textbf{Tags:} number theory, unit fractions
+
+\medskip
+
+\noindent\textbf{Statement:}
+
+Let $k\geq 2$. Is it true that, for any distinct integers $1&#60;n_1&#60;\cdots &#60;n_k$ such that\[1=\frac{1}{n_1}+\cdots+\frac{1}{n_k}\]we must have $\max(n_{i+1}-n_i)\geq 3$?
+
+
+
+
+The example $1=\frac{1}{2}+\frac{1}{3}+\frac{1}{6}$ shows that $3$ would be best possible here. The lower bound of $\geq 2$ is equivalent to saying that $1$ is not the sum of reciprocals of consecutive integers, proved by Erd\H{o}s \cite{Er32}. This conjecture would follow for all but at most finitely many exceptions if it were known that, for all large $N$, there exists a prime $p\in [N,2N]$ such that $\frac{p+1}{2}$ is also prime.
+
+
+
+
+References
+
+[Er32] Erd\H{o}s, P., Egy K\"{u}rschak-f\'{e}le elemi sz\'{a}melm\'{e}ti t\'{e}tel \'{a}ltad\'{a}nosit\'{a}sa . MAt. es Phys. Lapok (1932).
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#375}
+\label{prob:375}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} none \quad|\quad \textbf{Updated:} 2025-08-31
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Statement:}
+
+Is it true that for any $n,k\geq 1$, if $n+1,\ldots,n+k$ are all composite then there are distinct primes $p_1,\ldots,p_k$ such that $p_i\mid n+i$ for $1\leq i\leq k$?
+
+
+
+
+Note this is trivial when $k\leq 2$. Originally conjectured by Grimm \cite{Gr69}. This is a very difficult problem, since it in particular implies $p_{n+1}-p_n &lt;p_n^{1/2-c}$ for some constant $c&gt;0$, in particular resolving Legendre's conjecture . Grimm proved that this is true if $k\ll \log n/\log\log n$. Erd\H{o}s and Selfridge improved this to $k\leq (1+o(1))\log n$. Ramachandra, Shorey, and Tijdeman \cite{RST75} have improved this to\[k\ll\left(\frac{\log n}{\log\log n}\right)^3.\]Laishram and Shorey \cite{LaSh06} have verified this is true, for all $k\geq 1$, for all $n\leq 1.9\times 10^{10}$. This is problem B32 in Guy's collection \cite{Gu04}. See also [860] .
+
+
+
+
+References
+
+[Gr69] Grimm, C. A., A conjecture on consecutive composite numbers . Amer. Math. Monthly (1969), 1126--1128.
+
+[Gu04] Guy, Richard K., Unsolved problems in number theory . (2004), xviii+437.
+
+[LaSh06] Laishram, Shanta and Shorey, T. N., Grimm's conjecture on consecutive integers . Int. J. Number Theory (2006), 207--211.
+
+[RST75] Ramachandra, K. and Shorey, T. N. and Tijdeman, R., On Grimm's problem relating to factorisation of a block of consecutive integers . J. Reine Angew. Math. (1975), 109-124.
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#398}
+\label{prob:398}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} none \quad|\quad \textbf{Updated:} 2025-08-31
+
+\noindent\textbf{Tags:} number theory, factorials
+
+\medskip
+\noindent\textit{Brocard-Ramanujan conjecture}
+
+
+\noindent\textbf{Statement:}
+
+Are the only solutions to\[n!=x^2-1\]when $n=4,5,7$?
+
+
+
+
+The Brocard-Ramanujan conjecture. Erd\H{o}s and Graham describe this as an old conjecture, and write it 'is almost certainly true but it is intractable at present'. Overholt \cite{Ov93} has shown that this has only finitely many solutions assuming a weak form of the ABC conjecture . There are no other solutions below $10^9$ (see the OEIS page ). Naciri \cite{Na25} has proved that there are only finitely many solutions if $x\pm 1$ is either $k$-free (for some $k\geq 2$) or a prime power (and Cambie explains both facts in the comments), and that if $x\pm 1$ is $7$-free then $n=4,5,7$ give the only solutions.
+
+
+
+
+References
+
+[Na25] A. M. Naciri, On the Brocard-Ramanujan equation with $7$-free integers and prime powers . Integers (2025), A71.
+
+[Ov93] Overholt, Marius, The Diophantine equation $n!+1=m^2$ . Bull. London Math. Soc. (1993), 104.
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#458}
+\label{prob:458}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} none \quad|\quad \textbf{Updated:} 2025-08-31
+
+\noindent\textbf{Tags:} number theory, primes
+
+\medskip
+
+\noindent\textbf{Statement:}
+
+Let $[1,\ldots,n]$ denote the least common multiple of $\{1,\ldots,n\}$. Is it true that, for all $k\geq 1$,\[[1,\ldots,p_{k+1}-1]&#60; p_k[1,\ldots,p_k]?\]
+
+
+
+
+Erd\H{o}s and Graham write this is 'almost certainly' true, but the proof is beyond our ability, for (at least) two reasons: {UL} {LI}Firstly, one has to rule out the possibility of many primes $q$ such that $p_k&lt;q^2&lt;p_{k+1}$. There should be at most one such $q$, which would follow from $p_{k+1}-p_k&lt;p_k^{1/2}$, which is essentially the notorious Legendre's conjecture .{/LI} {LI} The small primes also cause trouble.{/LI} {/UL}
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#488}
+\label{prob:488}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} none \quad|\quad \textbf{Updated:} 2026-03-29
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Statement:}
+
+Let $A$ be a finite set and\[B=\{ n \geq 1 : a\mid n\textrm{ for some }a\in A\}.\]Is it true that, for every $m&#62;n\geq \max(A)$,\[\frac{\lvert B\cap [1,m]\rvert }{m}&#60; 2\frac{\lvert B\cap [1,n]\rvert}{n}?\]
+
+
+
+
+The constant $2$ would be the best possible here, as witnessed by taking $A=\{a\}$, $n=2a-1$, and $m=2a$. This problem is also discussed in problem E5 of Guy's collection \cite{Gu04}. In \cite{Er61} this problem is as stated above, but with $a\mid n$ in the definition of $B$ replaced by $a\nmid n$. This is most likely a typo (especially since the problem is also given as stated above in \cite{Er66}). There have been several counterexamples given for this alternate problem. Cambie has observed that, if $A$ is the set of primes bounded above by $n$, and $m=2n$, then\[\frac{\lvert B\cap [1,m]\rvert }{m}=\frac{\pi(2n)-\pi(n)+1}{2n}\sim \frac{1}{2\log n}\]while\[\frac{\lvert B\cap [1,n]\rvert}{n}=\frac{1}{n}.\]Further concrete counterexamples, found by Alexeev and Aristotle, are given in the comments section.
+
+
+
+
+References
+
+[Er61] Erd\H{o}s, Paul, Some unsolved problems . Magyar Tud. Akad. Mat. Kutat\'{o} Int. K\"{o}zl. (1961), 221-254.
+
+[Er66] Erd\H{o}s, P\'{a}l, Remarks on number theory. {V}. {E}xtremal problems in number theory. {II} . Mat. Lapok (1966), 135--155.
+
+[Gu04] Guy, Richard K., Unsolved problems in number theory . (2004), xviii+437.
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#548}
+\label{prob:548}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} none \quad|\quad \textbf{Updated:} 2025-08-31
+
+\noindent\textbf{Tags:} graph theory
+
+\medskip
+
+\noindent\textbf{Statement:}
+
+Let $n\geq k+1$. Every graph on $n$ vertices with at least $\frac{k-1}{2}n+1$ edges contains every tree on $k+1$ vertices.
+
+
+
+
+A problem of Erd\H{o}s and S\'{o}s, who also conjectured that every graph with at least\[\max\left( \binom{2k-1}{2}+1, (k-1)n-(k-1)^2+\binom{k-1}{2}+1\right)\]many edges contains every forest with $k$ edges. (Erd\H{o}s and Gallai \cite{ErGa59} proved that this is the threshold which guarantees containing $k$ independent edges.) In \cite{Er78} Erd\H{o}s says this is trivial for a star, and he and Gallai had proved it for a path. It can be easily proved by induction that every graph on $n$ vertices with at least $n(k-1)+1$ edges contains every tree on $k+1$ vertices. Brandt and Dobson \cite{BrDo96} have proved this for graphs of girth at least $5$. Wang, Li, and Liu \cite{WLL00} have proved this for graphs whose complements have girth at least $5$. Sacl\'{e} and Woznik \cite{SaWo97} have proved this for graphs which contain no cycles of length $4$. Yi and Li \cite{YiLi04} have proved this for graphs whose complements contain no cycles of length $4$. Implies [547] and [557] . See also the entry in the graphs problem collection .
+
+
+
+
+References
+
+[BrDo96] Brandt, Stephan and Dobson, Edward, The Erd\H{o}s-S\'{o}s conjecture for graphs of girth {$5$} . Discrete Math. (1996), 411-414.
+
+[Er78] Erd\H{o}s, Paul, Problems and results in combinatorial analysis and combinatorial number theory . Proceedings of the Ninth Southeastern Conference on Combinatorics, Graph Theory, and Computing (Florida Atlantic Univ., Boca Raton, Fla., 1978) (1978), 29-40.
+
+[ErGa59] Erd\H{o}s, P. and Gallai, T., On maximal paths and circuits of graphs . Acta Math. Acad. Sci. Hungar. (1959), 337-356 (unbound insert).
+
+[SaWo97] Sacl\'{e}, Jean-Fran\cCois and Wo\'{z}niak, Mariusz, The Erd\H{o}s-S\'{o}s conjecture for graphs without {$C_4$} . J. Combin. Theory Ser. B (1997), 367-372.
+
+[WLL00] Wang, Min and Li, Guo-jun and Liu, Ai-de, A result of Erd\H{o}s-S\'{o}s conjecture . Ars Combin. (2000), 123-127.
+
+[YiLi04] Yin, Jian-hua and Li, Jiong-sheng, The Erd\H{o}s-S\'{o}s conjecture for graphs whose complements contain no {$C_4$} . Acta Math. Appl. Sin. Engl. Ser. (2004), 397-400.
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#583}
+\label{prob:583}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} none \quad|\quad \textbf{Updated:} 2025-08-31
+
+\noindent\textbf{Tags:} graph theory
+
+\medskip
+
+\noindent\textbf{Statement:}
+
+Every connected graph on $n$ vertices can be partitioned into at most $\lceil n/2\rceil$ edge-disjoint paths.
+
+
+
+
+A problem of Erd\H{o}s and Gallai. If we drop the edge-disjoint condition then this conjecture was proved by Fan \cite{Fa02}. There are many partial results towards this conjecture. We list some highlights below; $G$ is an arbitrary connected graph on $n$ vertices. {UL} {LI} Lov\'{a}sz \cite{Lo68} proved that $G$ can be partitioned into at most $\lfloor n/2\rfloor$ edge-disjoint paths and cycles, and hence into at most $n-1$ paths. This also implies the original conjecture if $G$ has at most one vertex of even degree. {/LI} {LI} Chung \cite{Ch78} proved that $G$ can be partitioned into at most $\lceil n/2\rceil$ edge-disjoint trees.{/LI} {LI} Pyber \cite{Py96} proved that $G$ can be covered by at most $n/2+O(n^{3/4})$ paths (that may not be edge-disjoint).{/LI} {LI} Pyber \cite{Py96} also proved the original conjecture if the subgraph induced by vertices of even degree is a forest.{/LI} {LI} Bonamy and Perrett \cite{BoPe19} proved the conjecture if $G$ has maximum degree $\leq 5$.{/LI} {LI} Blanch\'{e}, Bonamy, and Bonichon \cite{BBB21} proved this conjecture if $G$ is planar.{/LI} {LI} Anto and Basavaraju \cite{AnBa23} proved the conjecture if $G$ is $2$-degenerate (every subgraph has a vertex of degree $\leq 2$).{/LI} {LI} Chu, Fan, and Zhou \cite{CFZ26} proved the conjecture if the subgraph induced by vertices of even degree is $K_m$ for some $m\leq 15$ and $n$ is odd.{/LI} {LI} Dean and Kouider \cite{DeKo00} prove that $\lceil \frac{2}{3}n\rceil$ edge-disjoint paths always suffice, even for disconnected graphs (for which this bound is optimal). The same bound was independently obtained by Yan in their 1998 PhD thesis .{/LI} {/UL} Haj\'{o}s \cite{Lo68} has conjectured that if $G$ has all degrees even then $G$ can be partitioned into at most $\lfloor n/2\rfloor$ edge-disjoint cycles. See also [184] for an analogous problem decomposing into edges and cycles and [1017] for decomposing into complete graphs. See also the entry in the graphs problem collection .
+
+
+
+
+References
+
+[AnBa23] Anto, Nevil and Basavaraju, Manu, Gallai's path decomposition for 2-degenerate graphs . Discrete Math. Theor. Comput. Sci. (2023), Paper No. 16, 11.
+
+[BBB21] A. Blanch\'{e}, M. Bonamy, and N. Bonichon, Gallai's path decomposition in planar graphs . arXiv:2110.08870 (2021).
+
+[BoPe19] Bonamy, Marthe and Perrett, Thomas J., Gallai's path decomposition conjecture for graphs of small maximum degree . Discrete Math. (2019), 1293--1299.
+
+[CFZ26] Chu, Yanan and Fan, Genghua and Zhou, Chuixiang, Gallai's conjecture and the path number of odd semi-cliques . Discrete Math. (2026), Paper No. 114725, 6.
+
+[Ch78] Chung, F. R. K., On partitions of graphs into trees . Discrete Math. (1978), 23-30.
+
+[DeKo00] Dean, Nathaniel and Kouider, Mekkia, Gallai's conjecture for disconnected graphs . Discrete Math. (2000), 43--54.
+
+[Fa02] Fan, Genghua, Subgraph coverings and edge switchings . J. Combin. Theory Ser. B (2002), 54-83.
+
+[Lo68] Lov\'{a}sz, L., On covering of graphs . Theory of Graphs (Proc. Colloq., Tihany, 1966) (1968), 231-236.
+
+[Py96] Pyber, L., Covering the edges of a connected graph by paths . J. Combin. Theory Ser. B (1996), 152-159.
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#617}
+\label{prob:617}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} none \quad|\quad \textbf{Updated:} 2025-08-31
+
+\noindent\textbf{Tags:} graph theory
+
+\medskip
+
+\noindent\textbf{Statement:}
+
+Let $r\geq 3$. If the edges of $K_{r^2+1}$ are $r$-coloured then there exist $r+1$ vertices with at least one colour missing on the edges of the induced $K_{r+1}$.
+
+
+
+
+In other words, there is no balanced colouring. A conjecture of Erd\H{o}s and Gy\'{a}rf\'{a}s \cite{ErGy99}, who proved it for $r=3$ and $r=4$ (and observed it is false for $r=2$), and showed this property fails for infinitely many $r$ if we replace $r^2+1$ by $r^2$.
+
+
+
+
+References
+
+[ErGy99] Erd\H{o}s, Paul and Gy\'{a}rf\'{a}s, Andr\'{a}s, Split and balanced colorings of complete graphs . Discrete Math. (1999), 79-86.
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#628}
+\label{prob:628}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} none \quad|\quad \textbf{Updated:} 2025-08-31
+
+\noindent\textbf{Tags:} graph theory, chromatic number
+
+\medskip
+\noindent\textit{Erdős-Lovász Tihany Conjecture}
+
+
+\noindent\textbf{Statement:}
+
+Let $G$ be a graph with chromatic number $k$ containing no $K_k$. If $a,b\geq 2$ and $a+b=k+1$ then must there exist two disjoint subgraphs of $G$ with chromatic numbers $\geq a$ and $\geq b$ respectively?
+
+
+
+
+This property is sometimes called being $(a,b)$-splittable. A question of Erd\H{o}s and Lov\'{a}sz (often called the Erd\H{o}s-Lov\'{a}sz Tihany conjecture). Erd\H{o}s \cite{Er68b} originally asked about $a=b=3$ which was proved by Brown and Jung \cite{BrJu69} (who in fact prove that $G$ must contain two vertex disjoint odd cycles). Balogh, Kostochka, Prince, and Stiebitz \cite{BKPS09} have proved the full conjecture for quasi-line graphs and graphs with independence number $2$. For more partial results in this direction see the comprehensive survey of this problem by Song \cite{So22}. See also the entry in the graphs problem collection .
+
+
+
+
+References
+
+[BKPS09] Balogh, J\'{o}zsef and Kostochka, Alexandr V. and Prince, Noah and Stiebitz, Michael, The Erd\H{o}s-Lov\'{a}sz Tihany conjecture for quasi-line graphs . Discrete Math. (2009), 3985-3991.
+
+[BrJu69] Brown, W. G. and Jung, H. A., On odd circuits in chromatic graphs . Acta Math. Acad. Sci. Hungar. (1969), 129-134.
+
+[Er68b] Erd\H{o}s, P., Problem 2 . Theory of Graphs (1968), 361.
+
+[So22] Song, Zi-Xia, A survey on the {E}rd\H{o}s-{L}ov\'{a}sz Tihany conjecture . Adv. Math. (China) (2022), 259--274.
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#699}
+\label{prob:699}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} none \quad|\quad \textbf{Updated:} 2025-08-31
+
+\noindent\textbf{Tags:} number theory, binomial coefficients
+
+\medskip
+
+\noindent\textbf{Statement:}
+
+Is it true that for every $1\leq i&#60;j\leq n/2$ there exists some prime $p\geq i$ such that\[p\mid \textrm{gcd}\left(\binom{n}{i}, \binom{n}{j}\right)?\]
+
+
+
+
+A problem of Erd\H{o}s and Szekeres. A theorem of Sylvester and Schur says that for any $1\leq i\leq n/2$ there exists some prime $p&#62;i$ which divides $\binom{n}{i}$. Erd\H{o}s and Szekeres further conjectured that $p\geq i$ can be improved to $p&#62;i$ except in a few special cases. In particular this fails when $i=2$ and $n$ being some particular powers of $2$. They also found some counterexamples when $i=3$, but only one counterexample when $i\geq 4$:\[\textrm{gcd}\left(\binom{28}{5},\binom{28}{14}\right)=2^3\cdot 3^3\cdot 5.\]This is mentioned in problem B31 of Guy's collection \cite{Gu04}.
+
+
+
+
+References
+
+[Gu04] Guy, Richard K., Unsolved problems in number theory . (2004), xviii+437.
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#723}
+\label{prob:723}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} none \quad|\quad \textbf{Updated:} 2025-08-31
+
+\noindent\textbf{Tags:} combinatorics
+
+\medskip
+
+\noindent\textbf{Statement:}
+
+If there is a finite projective plane of order $n$ then must $n$ be a prime power? A finite projective plane of order $n$ is a collection of subsets of $\{1,\ldots,n^2+n+1\}$ of size $n+1$ such that every pair of elements is contained in exactly one set.
+
+
+
+
+These always exist if $n$ is a prime power. This conjecture has been proved for $n\leq 11$, but it is open whether there exists a projective plane of order $12$. Bruck and Ryser \cite{BrRy49} have proved that if $n\equiv 1\pmod{4}$ or $n\equiv 2\pmod{4}$ then $n$ must be the sum of two squares. For example, this rules out $n=6$ or $n=14$. The case $n=10$ was ruled out by computer search \cite{La97}.
+
+
+
+
+References
+
+[BrRy49] Bruck, R. H. and Ryser, H. J., The nonexistence of certain finite projective planes . Canad. J. Math. (1949), 88-93.
+
+[La97] Lam, C. W. H., The search for a finite projective plane of order {$10$} [{MR}1103185 (92b:51013)] . (1997), 335-355.
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#743}
+\label{prob:743}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} none \quad|\quad \textbf{Updated:} 2025-08-31
+
+\noindent\textbf{Tags:} graph theory
+
+\medskip
+\noindent\textit{tree packing conjecture}
+
+
+\noindent\textbf{Statement:}
+
+Let $T_2,\ldots,T_n$ be a collection of trees such that $T_k$ has $k$ vertices. Can we always write $K_n$ as the edge disjoint union of the $T_k$?
+
+
+
+
+A conjecture of Gy\'{a}rf\'{a}s, known as the tree packing conjecture. Gy\'{a}rf\'{a}s and Lehel \cite{GyLe78} proved that this holds if all but at most $2$ of the trees are stars, or if all the trees are stars or paths. Fishburn \cite{Fi83} proved this for $n\leq 9$. Bollob\'{a}s \cite{Bo83} proved that the smallest $\lfloor n/\sqrt{2}\rfloor$ many trees can always be packed greedily into $K_n$. Joos, Kim, K\"{u}hn, and Osthus \cite{JKKO19} proved that this conjecture holds when the trees have bounded maximum degree. Allen, B\"{o}ttcher, Clemens, Hladky, Piguet, and Taraz \cite{ABCHPT21} proved that this conjecture holds when all the trees have maximum degree $\leq c\frac{n}{\log n}$ for some constant $c&#62;0$. Janzer and Montgomery \cite{JaMo24} have proved that there exists some $c&#62;0$ such that the largest $cn$ trees can be packed into $K_n$.
+
+
+
+
+References
+
+[ABCHPT21] Allen, Peter and B\"ottcher, Julia and Clemens, Dennis and Hladky, J. and D. Piguet and Taraz, Anusch, The tree packing conjecture for trees of almost linear maximum degree . arXiv:2106.11720 (2021).
+
+[Bo83] Bollob\'{a}s, B\'{e}la, Some remarks on packing trees . Discrete Math. (1983), 203-204.
+
+[Fi83] Fishburn, P. C., Balanced integer arrays: a matrix packing theorem . J. Combin. Theory Ser. A (1983), 98-101.
+
+[GyLe78] Gy\'{a}rf\'{a}s, A. and Lehel, J., Packing trees of different order into {$K\sb{n}$} . (1978), 463-469.
+
+[JKKO19] Joos, Felix and Kim, Jaehoon and K\"{u}hn, Daniela and Osthus, Deryk, Optimal packings of bounded degree trees . J. Eur. Math. Soc. (JEMS) (2019), 3573-3647.
+
+[JaMo24] Janzer, B. and R. Montgomery, Packing the largest trees in the tree packing conjecture . arXiv:2403.10515 (2024).
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#779}
+\label{prob:779}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} none \quad|\quad \textbf{Updated:} 2025-08-31
+
+\noindent\textbf{Tags:} number theory, primes
+
+\medskip
+
+\noindent\textbf{Statement:}
+
+Let $n&#62; 1$ and $p_1&#60;\cdots&#60;p_n$ denote the first $n$ primes. Let $P=\prod_{1\leq i\leq n}p_i$. Does there always exist some prime $p$ with $p_n&#60;p&#60;P$ such that $P+p$ is prime?
+
+
+
+
+A problem of Deaconescu. Erd\H{o}s expects that the least such prime is much smaller than $P$, and in fact satisfies $p\leq n^{O(1)}$. Deaconescu has verified this conjecture for $n\leq 1000$. With the usual heuristic, we expect that $P+p$ is prime with 'probability' $\approx 1/\log P$, and hence the chance that this fails is $\ll (1-1/\log P)^{P-p_n}\ll \exp(-n^{-cn})$, using $P=n^{(1+o(1))n}$. As Cambie points out, 'the chances of failing are ridiculously small'.
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#982}
+\label{prob:982}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} none \quad|\quad \textbf{Updated:} 2025-08-31
+
+\noindent\textbf{Tags:} geometry, convex, distances
+
+\medskip
+
+\noindent\textbf{Statement:}
+
+If $n$ distinct points in $\mathbb{R}^2$ form a convex polygon then some vertex has at least $\lfloor \frac{n}{2}\rfloor$ different distances to other vertices.
+
+
+
+
+The regular polygon shows that $\lfloor n/2\rfloor$ is the best possible here. This would be implied if there was a vertex such that no three vertices of the polygon are equally distant to it, which was originally also conjectured by Erd\H{o}s \cite{Er46b}, but this is false (see [97] ). Let $f(n)$ be the maximal number of such distances that are guaranteed. Moser \cite{Mo52} proved that\[f(n) \geq \left\lceil\frac{n}{3}\right\rceil.\]This was improved by Erd\H{o}s and Fishburn \cite{ErFi94} to\[f(n) \geq \left\lfloor \frac{n}{3}+1\right\rfloor,\]then\[f(n) \geq \left\lceil \frac{13n-6}{36}\right\rceil\]by Dumitrescu \cite{Du06b}, and most recently\[f(n) \geq \left(\frac{13}{36}+\frac{1}{22701}\right)n-O(1)\]by Nivasch, Pach, Pinchasi, and Zerbib \cite{NPPZ13}. In \cite{Er46b} Erd\H{o}s makes the even stronger conjecture that on every convex curve there exists a point $p$ such that every circle with centre $p$ intersects the curve in at most $2$ points. B\'{a}r\'{a}ny and Rold\'{a}n-Pensado \cite{BaRo13} noted that the boundary of any acute triangle is a counterexample. B\'{a}r\'{a}ny and Rold\'{a}n-Pensado prove that, for any planar convex body, there is a point $p$ on the boundary such that every circle with centre $p$ intersects the boundary in at most $O(1)$ (where the implied constant depends on the convex body). They conjecture that there this can be bounded by an absolute constant - that is, Erd\H{o}s's conjecture is true if we replace $2$ by some larger constant $C$. See also [93] .
+
+
+
+
+References
+
+[BaRo13] B\'{a}r\'{a}ny, Imre and Rold\'{a}n-Pensado, Edgardo, A question from a famous paper of {E}rd\H{o}s . Discrete Comput. Geom. (2013), 253--261.
+
+[Du06b] Dumitrescu, Adrian, On distinct distances from a vertex of a convex polygon . Discrete Comput. Geom. (2006), 503--509.
+
+[Er46b] Erd\H{o}s, P., On sets of distances of {$n$} points . Amer. Math. Monthly (1946), 248--250.
+
+[ErFi94] Erd\H{o}s, Paul and Fishburn, Peter, A postscript on distances in convex {$n$}-gons . Discrete Comput. Geom. (1994), 111--117.
+
+[Mo52] Moser, Leo, On the different distances determined by {$n$} points . Amer. Math. Monthly (1952), 85--91.
+
+[NPPZ13] Nivasch, Gabriel and Pach, J\'{a}nos and Pinchasi, Rom and Zerbib, Shira, The number of distinct distances from a vertex of a convex polygon . J. Comput. Geom. (2013), 1--12.
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#993}
+\label{prob:993}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} none \quad|\quad \textbf{Updated:} 2025-09-07
+
+\noindent\textbf{Tags:} graph theory
+
+\medskip
+
+\noindent\textbf{Statement:}
+
+The independent set sequence of any tree or forest is unimodal. In other words, if $i_k(G)$ counts the number of independent sets of vertices of size $k$ in a graph $G$, and $T$ is any tree or forest, then for some $m\geq 0$ $$i_{0}(T)\leq i_{1}(T)\leq\cdots\leq i_{m}(T)\geq i_{m+1}(T)\geq i_{m+2}(T)\geq\cdots.$$
+
+
+
+
+A question of Alavi, Malde, Schwenk, and Erd\H{o}s \cite{AMSE87}, who showed that this is false for general graphs $G$ (in fact every possible pattern of inequalities is achieved by some graph). The sequence which counts the number of independent sets of edges of a given size was proved to be unimodal (for any graph) by Schwenk \cite{Sc81}. In \cite{AMSE87} they also ask whether every possible unimodal pattern of inequalities is achieved by some graph.
+
+
+
+
+References
+
+[AMSE87] Alavi, Yousef and Malde, Paresh J. and Schwenk, Allen J. and Erd\H{o}s, Paul, The vertex independence sequence of a graph is not constrained . Congr. Numer. (1987), 15--23.
+
+[Sc81] Schwenk, Allen J., On unimodal sequences of graphical invariants . J. Combin. Theory Ser. B (1981), 247--250.
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#1020}
+\label{prob:1020}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} none \quad|\quad \textbf{Updated:} 2025-09-12
+
+\noindent\textbf{Tags:} graph theory, hypergraphs
+
+\medskip
+\noindent\textit{Erdős matching conjecture}
+
+
+\noindent\textbf{Statement:}
+
+Let $f(n;r,k)$ be the maximal number of edges in an $r$-uniform hypergraph which contains no set of $k$ many independent edges. For all $r\geq 3$,\[f(n;r,k)=\max\left(\binom{rk-1}{r}, \binom{n}{r}-\binom{n-k+1}{r}\right).\]
+
+
+
+
+Erd\H{o}s and Gallai \cite{ErGa59} proved this is true when $r=2$ (when $r=2$ this also follows from the Erd\H{o s-Ko-Rado theorem}). The conjectured form of $f(n;r,k)$ is the best possible, as witnessed by two examples: all $r$-edges on a set of $rk-1$ many vertices, and all edges on a set of $n$ vertices which contain at least one element of a fixed set of $k-1$ vertices. Frankl \cite{Fr87} proved $f(n;r,k) \leq (k-1)\binom{n-1}{r-1}$. This is sometimes known as the Erd\H{o}s matching conjecture. Note that the second term in the maximum dominates when $n\geq (r+1)k$. There are many partial results towards this, establishing the conjecture in different ranges. These can be separated into two regimes. For small $n$: {UL} {LI}The conjecture is trivially true if $n&lt;kr$.{/LI} {LI}Kleitman \cite{Kl68} when $n=kr$.{/LI} {LI}Frankl \cite{Fr17} when\[kr \leq n\leq k\left(r+\frac{1}{2r^{2r+1}}\right).\]{/LI} {LI}Kolupaev and Kupavskii \cite{KoKu23} when $r\geq 5$, $k&gt;101r^3$, and\[kr \leq n &lt; k\left(r+\frac{1}{100r}\right).\]{/LI} {/UL} For large $n$: {UL} {LI}Erd\H{o}s \cite{Er65d} when $n&gt;kc_r$ (where $c_r$ depends on $r$ in some unspecified fashion).{/LI} {LI} Frankl and F\"{u}redi \cite{Fr87} when $n&gt;100 k^2r$.{/LI} {LI} Bollob\'{a}s, Daykin, and Erd\H{o}s \cite{BDE76} when $n\geq 2kr^3$.{/LI} {LI} Frankl, R\"{o}dl, and Ruci\'{n}ski \cite{FRR12} when $r=3$ and $n\geq 4k$.{/LI} {LI} Huang, Loh, and Sudakov \cite{HLS12} when $n\geq 3kr^2$.{/LI} {LI} Frankl, Luczak, and Mieczkowska \cite{FLM12} when $n&gt; 2k\frac{r^2}{\log r}$.{/LI} {LI} Luczak and Mieczkowska \cite{LuMi14} when $r=3$ (for all $k$).{/LI} {/UL}
+
+
+
+
+References
+
+[BDE76] Bollob\'{a}s, B. and Daykin, D. E. and Erd\H{o}s, P., Sets of independent edges of a hypergraph . Quart. J. Math. Oxford Ser. (2) (1976), 25--32.
+
+[Er65d] Erd\H{o}s, P., A problem on independent {$r$}-tuples . Ann. Univ. Sci. Budapest. E\"otv\"os Sect. Math. (1965), 93--95.
+
+[ErGa59] Erd\H{o}s, P. and Gallai, T., On maximal paths and circuits of graphs . Acta Math. Acad. Sci. Hungar. (1959), 337-356 (unbound insert).
+
+[FLM12] Frankl, Peter and \L uczak, Tomasz and Mieczkowska, Katarzyna, On matchings in hypergraphs . Electron. J. Combin. (2012), Paper 42, 5.
+
+[FRR12] Frankl, Peter and R\"odl, Vojtech and Ruci\'nski, Andrzej, On the maximum number of edges in a triple system not containing a disjoint family of a given size . Combin. Probab. Comput. (2012), 141--148.
+
+[Fr17] Frankl, Peter, Proof of the {E}rd\H{o}s matching conjecture in a new range . Israel J. Math. (2017), 421--430.
+
+[Fr87] Frankl, Peter, The shifting technique in extremal set theory . (1987), 81--110.
+
+[HLS12] Huang, Hao and Loh, Po-Shen and Sudakov, Benny, The size of a hypergraph and its matching number . Combin. Probab. Comput. (2012), 442--450.
+
+[Kl68] Kleitman, Daniel J., Maximal number of subsets of a finite set no {$k$} of which are pairwise disjoint . J. Combinatorial Theory (1968), 157--163.
+
+[KoKu23] Kolupaev, Dmitriy and Kupavskii, Andrey, Erd\H{o}s matching conjecture for almost perfect matchings . Discrete Math. (2023), Paper No. 113304, 9.
+
+[LuMi14] \L uczak, Tomasz and Mieczkowska, Katarzyna, On {E}rd\H{o}s' extremal problem on matchings in hypergraphs . J. Combin. Theory Ser. A (2014), 178--194.
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#1041}
+\label{prob:1041}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} none \quad|\quad \textbf{Updated:} 2025-09-15
+
+\noindent\textbf{Tags:} analysis
+
+\medskip
+
+\noindent\textbf{Statement:}
+
+Let $f(z)=\prod_{i=1}^n(z-z_i)\in \mathbb{C}[z]$ with $\lvert z_i\rvert &#60; 1$ for all $i$. Must there always exist a path of length less than $2$ in\[\{z: \lvert f(z)\rvert &#60; 1\}\]which connects two of the roots of $f$?
+
+
+
+
+A problem of Erd\H{o}s, Herzog, and Piranian \cite{EHP58}, who proved that this set always has a connected component containing at least two of the roots.
+
+
+
+
+References
+
+[EHP58] Erd\H{o}s, P. and Herzog, F. and Piranian, G., Metric properties of polynomials . J. Analyse Math. (1958), 125-148.
+
+\noindent\rule{\linewidth}{0.4pt}
+
+
+%% ============================================================
+\section{Problem \#1082}
+\label{prob:1082}
+
+\noindent\textbf{Status:} FALSIFIABLE \quad|\quad \textbf{Prize:} none \quad|\quad \textbf{Updated:} 2025-10-17
+
+\noindent\textbf{Tags:} geometry, distances
+
+\medskip
+
+\noindent\textbf{Statement:}
+
+Let $A\subset \mathbb{R}^2$ be a set of $n$ points with no three on a line. Does $A$ determine at least $\lfloor n/2\rfloor$ distinct distances? In fact, must there exist a single point from which there are at least $\lfloor n/2\rfloor$ distinct distances?
+
+
+
+
+A conjecture of Szemer\'{e}di, who proved this with $n/2$ replaced by $n/3$. More generally, Szemer\'{e}di gave a simple proof that if there are no $k$ points on a line then some point determines $\gg n/k$ distinct distances (a weak inverse result to the distinct distance problem [89] ). This is a stronger form of [93] . The second question is a stronger form of [982] . Szemer\'{e}di's proof is unpublished, but given in \cite{Er75f}. In \cite{Er75f} Erd\H{o}s asks whether, given $n$ points in $\mathbb{R}^3$ with no three on a line, do they determine $\gg n$ distances? Altman proved the answer is yes if the points form the vertices of a convex polyhedron (see [660] for a stronger form of this), and Szemer\'{e}di proved the answer is yes if there are no four points on a plane. The second stronger question has a negative answer: there is {IMAGE=1082,a construction} of $8$ points such that each point has exactly three distinct distances to the others. This first appeared in the literature in a paper of Erd\H{o}s and Fishburn \cite{ErFi97b}, where they credit the construction to Harborth. This configuration is studied in detail by Fishburn \cite{Fi02}. (This construction was later found by DeepMind. An earlier construction was also given by Xichuan in the comments, who gave a set of $42$ points in $\mathbb{R}^2$, with no three on a line, such that each point determines only $20$ distinct distances.)
+
+
+
+
+References
+
+[Er75f] Erd\H{o}s, Paul, On some problems of elementary and combinatorial geometry . Ann. Mat. Pura Appl. (4) (1975), 99-108.
+
+[ErFi97b] Erd\H{o}s, Paul and Fishburn, Peter, Distinct distances in finite planar sets . Discrete Math. (1997), 97--132.
+
+[Fi02] Fishburn, Peter C., A remarkable eight-point planar configuration . Discrete Math. (2002), 103--122.
+
+\noindent\rule{\linewidth}{0.4pt}
+
+\end{document}

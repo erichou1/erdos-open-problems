@@ -1,0 +1,25 @@
+{
+  "problem_number": 623,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/623",
+  "retrieved_at": "2026-07-10T23:18:03.944976+00:00",
+  "page_title": "623 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "07bf10a33c4d6aef47cb23bd23a6ce45bcf1519b1d13a5737f48e97cf2dd5409",
+  "comment_count": 3,
+  "comments": [
+    {
+      "post_id": "6828",
+      "text": "With the assistance of GPT-5.5 Pro, I have obtained an independence result for this problem. Let \\(E_{623}\\) denote the positive assertion. In \\(\\mathrm{ZFC}\\), \\(E_{623}\\) is equivalent to Koepke's free-subset property \\(\\mathrm{Fr}_\\omega(\\aleph_\\omega,\\omega)\\). Using Koepke's theorem, this gives\\[ \\operatorname{Con}(\\mathrm{ZFC}+E_{623}) \\Longleftrightarrow \\operatorname{Con}(\\mathrm{ZFC}+\\text{''there is a measurable cardinal''}), \\]while\\[ \\operatorname{Con}(\\mathrm{ZFC}+\\neg E_{623}) \\Longleftrightarrow \\operatorname{Con}(\\mathrm{ZFC}). \\]The PDF and LaTeX source are here: Github Repository I have checked the mathematical details, and would be very grateful for any comments or corrections.",
+      "meta": "Sungchul Lee — 13:39 on 04 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6840",
+      "text": "Congrats! I run standard check which finds no issues in the paper. As usual this is a screening. It appears that in set theory this result would quality as a full solution by identifying the right consistency strengths.",
+      "meta": "Nat Sothanaphan — 20:36 on 04 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "5879",
+      "text": "I have been working on this problem semi-autonomously, with GPT-5.4 mainly helping me check the proof details and formalize the writeup. I wanted to record one partial reduction that came out of the attempt. It does not solve the problem, but it gives a necessary condition for any counterexample: such a counterexample must contain a large one-point fibre. Let \\(f:[X]^{<\\omega}\\to X\\) satisfy \\(f(A)\\notin A\\) for every finite \\(A\\subseteq X\\). Call a finite set \\(S\\subseteq X\\) independent if\\[ f(B)\\notin S \\]for every finite \\(B\\subseteq S\\). Suppose \\(S\\) is finite and independent. Define\\[ \\operatorname{Bad}(S) = \\bigcup_{B\\subseteq S}\\{f(B)\\} \\cup \\bigcup_{\\substack{y\\in S\\\\ C\\subseteq S\\setminus\\{y\\}}} \\{z\\in X:f(C\\cup\\{z\\})=y\\}. \\]I claim that if\\[ z\\notin S\\cup\\operatorname{Bad}(S), \\]then \\(S\\cup\\{z\\}\\) is independent. Indeed, let \\(A\\subseteq S\\cup\\{z\\}\\) be finite. If \\(z\\notin A\\), then \\(A\\subseteq S\\). Since \\(S\\) is independent, \\(f(A)\\notin S\\). Also \\(z\\neq f(A)\\), because \\(z\\notin \\bigcup_{B\\subseteq S}\\{f(B)\\}\\). Therefore\\[ f(A)\\notin S\\cup\\{z\\}. \\]If \\(z\\in A\\), write\\[ A=C\\cup\\{z\\} \\]with \\(C\\subseteq S\\). Since \\(f(A)\\notin A\\), we have \\(f(A)\\neq z\\). If \\(f(A)=y\\in S\\), then \\(y\\notin C\\), so \\(C\\subseteq S\\setminus\\{y\\}\\). Hence\\[ z\\in \\{w\\in X:f(C\\cup\\{w\\})=y\\}, \\]contradicting \\(z\\notin\\operatorname{Bad}(S)\\). Thus \\(f(A)\\notin S\\cup\\{z\\}\\). So \\(S\\cup\\{z\\}\\) is independent. Now suppose there is no infinite independent subset of \\(X\\). Then there must be a finite independent set \\(S\\) with no one point independent extension. Otherwise, starting from \\(\\emptyset\\), we could recursively construct finite independent sets\\[ S_0\\subset S_1\\subset S_2\\subset\\cdots \\]with \\(|S_n|=n\\). Let\\[ Y=\\bigcup_{n<\\omega}S_n. \\]For any finite \\(B\\subseteq Y\\), if \\(f(B)\\in Y\\), choose \\(N\\) large enough so that\\[ B\\cup\\{f(B)\\}\\subseteq S_N. \\]Since \\(S_N\\) is independent, this contradicts \\(f(B)\\in S_N\\). Hence \\(Y\\) would be an infinite independent set, contrary to assumption. Therefore some finite independent \\(S\\) has no one point independent extension. For this \\(S\\), every \\(z\\in X\\setminus S\\) must lie in \\(\\operatorname{Bad}(S)\\). Hence\\[ X\\setminus S\\subseteq \\operatorname{Bad}(S). \\]The set\\[ \\bigcup_{B\\subseteq S}\\{f(B)\\} \\]is finite. The remaining part of \\(\\operatorname{Bad}(S)\\) is a finite union of fibres of the form\\[ E(y,C)=\\{z\\in X:f(C\\cup\\{z\\})=y\\}, \\]where \\(y\\in S\\) and \\(C\\subseteq S\\setminus\\{y\\}\\). Since \\(|X|=\\aleph_\\omega\\), the set \\(X\\setminus S\\) also has cardinality \\(\\aleph_\\omega\\). A finite union of sets of cardinality \\(<\\aleph_\\omega\\) cannot cover a set of cardinality \\(\\aleph_\\omega\\). Therefore at least one fibre \\(E(y,C)\\) must have cardinality \\(\\aleph_\\omega\\). Thus any counterexample must contain some finite \\(C\\subseteq X\\) and some \\(y\\in X\\setminus C\\) such that\\[ |\\{z\\in X:f(C\\cup\\{z\\})=y\\}|=\\aleph_\\omega. \\]Equivalently, if for every finite \\(C\\subseteq X\\) and every \\(y\\in X\\setminus C\\),\\[ |\\{z\\in X:f(C\\cup\\{z\\})=y\\}|<\\aleph_\\omega, \\]then an infinite independent set exists. So any possible counterexample must occur in the large fibre case.",
+      "meta": "Ritvik Nayak — 15:30 on 25 Apr 2026 👍 2 📝 0 🤖 0"
+    }
+  ]
+}

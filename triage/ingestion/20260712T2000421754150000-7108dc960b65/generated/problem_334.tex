@@ -1,0 +1,39 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#334}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Find the best function $f(n)$ such that every $n$ can be written as $n=a+b$ where both $a,b$ are $f(n)$-smooth (that is, are not divisible by any prime $p>f(n)$.)
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Erd\H{o}s originally asked if even $f(n)\leq n^{1/3}$ is true. This is known, and the best bound is due to Balog \cite{Ba89} who proved that\[f(n) \ll_\epsilon n^{\frac{4}{9\sqrt{e}}+\epsilon}\]for all $\epsilon>0$. (Note $\frac{4}{9\sqrt{e}}=0.2695\ldots$.)
+
+It is likely that $f(n)\leq n^{o(1)}$.
+
+See also Problem 59 on Green's open problems list.
+
+\bigskip
+\noindent\textbf{References:}
+
+[Ba89] Balog, A., On additive representation of integers. Acta Math. Hungar. (1989), 297-301.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/334}}
+\end{document}

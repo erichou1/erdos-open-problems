@@ -1,0 +1,231 @@
+{
+  "summary": "{'statement_sha256': 'd23ff4ea91f0d915bd67a828cdec2f9acc9b33169e5e84e2e4f5660875187ca1', 'status': 'No solution is claimed. The immutable wording does not presently fix the distinctness, positivity, domain, zero-square, generator, or cube-size conventions needed for a unique nondegenerate proposition. B0 is therefore the first hard gate, and every later node is conditional on B0 yielding a unique semantics derivable from the immutable text. If B0 instead yields an ambiguity certificate, the exact task terminates there.', 'report_comparison': 'The scout reports independently converge on useful linked-factor, finite-word, Boolean-cube, congruence, divisor, and curvature formulations, but their agreement is not treated as proof. Their central unresolved obligations are also consistent: no scale-independent quasi-progression bound, no fixed-width construction, no height-independent cube-dimension bound, and no dimension-lifting construction has been obtained. Computations and explicit examples are retained only as falsification evidence.', 'priority_order': [{'rank': 1, 'branch': 'B0 semantic gate', 'reason': 'Highest centrality and immediate falsifiability. Unauthorized nondegeneracy conventions would invalidate every downstream result.'}, {'rank': 2, 'branch': 'QN scale-independent linked-chain invariant', 'reason': 'Best mathematical fit to the exact square-gap equations and highest information gain. It directly targets a uniform negative theorem rather than another height-dependent estimate.'}, {'rank': 3, 'branch': 'QP explicit fixed-width construction', 'reason': 'Substantively different and highly falsifiable. A successful recurrence or parametrized family would settle the first question positively.'}, {'rank': 4, 'branch': 'HP dimension-lifting construction', 'reason': 'Clean constructive route for square cubes, independent of quasi-progressions and testable on known three-dimensional examples.'}, {'rank': 5, 'branch': 'HN height-independent cube obstruction', 'reason': 'Potentially decisive for both questions through the proved one-way transfer, but it has the largest unresolved obligation: converting growth and divisibility into a dimension bound or descent.'}], 'dependency_policy': 'Finite searches, binary-word enumeration, and bounded no-example results are optional support nodes. They may become theorem prerequisites only if accompanied by replayable certificates and an explicit theorem reducing the unbounded problem to the certified finite range.'}",
+  "bottleneck_ids": [
+    "B0",
+    "QN",
+    "QP",
+    "QR",
+    "HN",
+    "HP",
+    "HR",
+    "D1"
+  ],
+  "subgoals": [
+    {
+      "id": "B0",
+      "claim": "Resolve the semantic gate using only the immutable wording: either derive one unique formal proposition, explicitly fixing all domains, distinctness conditions, positivity conditions, treatment of zero, the index set in the cube, and the meaning of arbitrarily large; or give a human-verifiable ambiguity certificate exhibiting inequivalent admissible readings. Under the ambiguity outcome, terminate without analyzing a repaired proposition.",
+      "dependencies": [],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "Q0",
+      "claim": "Conditional on the unique-semantics outcome of B0, separate k=1 before introducing gaps. For k>=2, prove from the recorded semantics the exact equivalence between the displayed inequalities and an integer gap-diameter bound W=floor(C), including the permitted domain of d and every boundary case.",
+      "dependencies": [
+        "B0"
+      ],
+      "centrality": 4,
+      "falsifiable": true
+    },
+    {
+      "id": "Q1",
+      "claim": "Derive the exact linked-factor-chain formulation. For each edge n_i^2 to n_{i+1}^2 define h_i=n_{i+1}-n_i and p_i=n_{i+1}+n_i, prove h_i p_i lies in one common interval of W+1 consecutive integers, and prove p_{i+1}=p_i+h_i+h_{i+1}. State parity and order conditions exactly, distinguishing p_i=h_i for an edge beginning at 0^2 from p_i>h_i when zero has been excluded.",
+      "dependencies": [
+        "Q0"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "Q2",
+      "claim": "Reprove the complete local transition calculus from Q1. Establish delta_i=2n_{i+1}(h_{i+1}-h_i)+h_i^2+h_{i+1}^2, then classify increases, plateaus, decreases, all threshold equalities, and the zero-root boundary. For consecutive decreases h_i=b+r, h_{i+1}=b, h_{i+2}=b-s, derive and check the exact relation 2b^2(s-r)+6brs+rs(r-s)-delta_i s+delta_{i+1} r=0. No descent-versus-halving corollary counts as completion unless every remaining transition type is covered.",
+      "dependencies": [
+        "Q1"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "QE",
+      "claim": "Independently verify and retain the contradictory finite evidence relevant to quasi-progressions: explicit short fixed-width witnesses, the failure of width zero beyond the supplied four-square obstruction, the width-one partial obstruction, and long ternary additive-cube-free words. Label every bounded search or symbolic-word result as partial and do not infer an unbounded conclusion.",
+      "dependencies": [
+        "Q0"
+      ],
+      "centrality": 3,
+      "falsifiable": true
+    },
+    {
+      "id": "Q3",
+      "claim": "Give a complete human-verifiable recursion or replayable certificate for the binary additive-cube statement: every binary word of length 10 contains three consecutive equal-length blocks having equal sums. Deduce only the correctly indexed partial consequence for square quasi-progressions of integer width at most one.",
+      "dependencies": [
+        "Q0"
+      ],
+      "centrality": 2,
+      "falsifiable": true
+    },
+    {
+      "id": "Q4",
+      "claim": "For a fixed admissible error word e_1,...,e_l, derive the simultaneous quadratic equations for its square realizations, including all initial-root and zero cases. Identify a concrete finite-pattern finiteness theorem whose proof would imply a uniform length bound; do not replace that theorem by modular sieving or bounded computation.",
+      "dependencies": [
+        "Q0"
+      ],
+      "centrality": 3,
+      "falsifiable": true
+    },
+    {
+      "id": "QH",
+      "claim": "Build an optional exact linked-factor-chain harness that enumerates all chains under stated finite bounds, records every parity and endpoint check, and emits independently checkable witnesses or certificates. The harness remains exploratory unless a separate theorem supplies a complete finite cutoff.",
+      "dependencies": [
+        "Q1"
+      ],
+      "centrality": 2,
+      "falsifiable": true
+    },
+    {
+      "id": "QN",
+      "claim": "Prove a scale-independent negative theorem: for every admissible fixed width W, there exists B(W) bounding the length of every linked-factor chain from Q1. The proof must control arbitrarily large initial h_i, decreasing triples, plateaus, increases, halving events, omitted or repeated products in the common interval, and all zero-boundary cases. Generator size, divisor growth, or a D-dependent bound is insufficient.",
+      "dependencies": [
+        "Q2",
+        "QE"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "QP",
+      "claim": "Construct a positive fixed-width family: exhibit one admissible W and, for every k, explicit parameters satisfying the exact linked-factor and parity equations of Q1 for a chain of length k-1. The construction must preserve the same W while its scale varies and must verify all quantifiers and boundary conditions directly.",
+      "dependencies": [
+        "Q1",
+        "QE"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "QR",
+      "claim": "Obtain a decisive resolution of the first question by completing either QN or QP as a theorem under the unique semantics fixed at B0. Both branches must be examined, but only a proved uniform bound or an explicit fixed-width family qualifies; partial obstructions and computations do not.",
+      "dependencies": [
+        "QN",
+        "QP"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "H0",
+      "claim": "Conditional on the unique-semantics outcome of B0, formalize the cube question exactly: specify the finite index set, the domains of a and b_i, whether zero and negative squares are included, what distinctness or properness is required, and whether arbitrarily large refers to dimension, cardinality, or numerical size. No conventional repair may be inserted.",
+      "dependencies": [
+        "B0"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "H1",
+      "claim": "Under H0, define Y(S) to be the nonnegative integer square root of each cube vertex and prove the Boolean formulation Y(S)^2=a+sum_{i in S} b_i. Derive the exact face equations, edge factorization identities, and strict marginal monotonicity with all zero-root and repeated-vertex boundaries handled according to H0.",
+      "dependencies": [
+        "H0"
+      ],
+      "centrality": 4,
+      "falsifiable": true
+    },
+    {
+      "id": "H2",
+      "claim": "Prove self-contained mixed finite-difference sign and integrality statements for Y, including the A_S=0 boundary, without importing an unproved singular integral or limiting assertion. Derive any curvature recursion and quantitative bounds only after their hypotheses and signs have been checked for every order used later.",
+      "dependencies": [
+        "H1"
+      ],
+      "centrality": 4,
+      "falsifiable": true
+    },
+    {
+      "id": "H3",
+      "claim": "Reprove primitive normalization, congruence compression, and direction-wise difference-of-squares multiplicity from H1. Record these only as necessary conditions. Explicitly show why large generator size, many divisors, or divisibility by many primes is not by itself a dimension obstruction.",
+      "dependencies": [
+        "H1"
+      ],
+      "centrality": 3,
+      "falsifiable": true
+    },
+    {
+      "id": "HE",
+      "claim": "Independently verify explicit proper square cubes through dimension three and preserve them as counterevidence against purely local face obstructions. Treat every bounded failure to find a four-dimensional cube as a finite statement only.",
+      "dependencies": [
+        "H0"
+      ],
+      "centrality": 3,
+      "falsifiable": true
+    },
+    {
+      "id": "HH",
+      "claim": "Build an optional recursive cube-search and identity-checking harness that outputs canonical cubes and exact certificates under finite height bounds. Do not use absence under a cutoff as a global theorem without an independent finite-cutoff result.",
+      "dependencies": [
+        "H1"
+      ],
+      "centrality": 2,
+      "falsifiable": true
+    },
+    {
+      "id": "HN",
+      "claim": "Prove a height-independent negative theorem bounding cube dimension under H0. The proof must convert the curvature, face-defect, congruence, and divisor constraints into either an absolute dimension bound or a dimension-preserving descent. Growth estimates without an independent upper bound, and descents that reduce dimension, do not qualify.",
+      "dependencies": [
+        "H2",
+        "H3",
+        "HE"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "HP",
+      "claim": "Construct cubes of unbounded admissible size under H0, preferably through an explicit dimension-lifting rule: from a verified r-cube H, produce B such that H and H+B are both square sets and form an admissible (r+1)-cube. Verify positivity, integrality, distinctness, and every convention fixed by H0 at each lift.",
+      "dependencies": [
+        "H1",
+        "HE"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "C1",
+      "claim": "Prove, under the exact semantics fixed by B0, the stated implication from arbitrarily long quasi-progressions to arbitrarily large cubes using a self-contained finite-word induction. Check positivity and distinctness of the new directions and vertices, and use the implication only in this proved direction.",
+      "dependencies": [
+        "Q0",
+        "H0"
+      ],
+      "centrality": 4,
+      "falsifiable": true
+    },
+    {
+      "id": "HR",
+      "claim": "Obtain a decisive resolution of the cube question by completing either HN or HP. C1 may transfer a completed positive quasi-progression result to the cube question, but it cannot transfer a negative result or replace an incomplete cube branch.",
+      "dependencies": [
+        "HN",
+        "HP",
+        "C1"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "D1",
+      "claim": "Perform final logical synthesis only if B0 yielded unique semantics and QR and HR each contain a complete decisive theorem. Audit every quantifier, k=1 and zero boundary, imported lemma hypothesis, and direction of implication. If B0 yielded ambiguity instead, replace this synthesis by the ambiguity certificate and terminate.",
+      "dependencies": [
+        "B0",
+        "QR",
+        "HR"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    },
+    {
+      "id": "GOAL",
+      "claim": "Prove or disprove both questions in the exact immutable statement without altered quantifiers or unstated conventions; otherwise issue only the formally established ambiguity certificate. No solution is presently claimed.",
+      "dependencies": [
+        "D1"
+      ],
+      "centrality": 5,
+      "falsifiable": true
+    }
+  ]
+}

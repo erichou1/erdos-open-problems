@@ -1,0 +1,13 @@
+name = "aristotle_project"
+defaultTargets = ["AristotleProject"]
+
+# Pinned to the exact versions the Aristotle service is compatible with
+# (per the official docs: Lean v4.28.0 + Mathlib v4.28.0). The lean-toolchain
+# file pins the matching Lean release; elan installs it automatically.
+[[require]]
+name = "mathlib"
+git = "https://github.com/leanprover-community/mathlib4.git"
+rev = "v4.28.0"
+
+[[lean_lib]]
+name = "AristotleProject"

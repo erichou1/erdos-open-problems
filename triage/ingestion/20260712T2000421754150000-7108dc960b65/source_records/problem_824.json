@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 824,
+  "raw_page": {
+    "path": "raw/pages/problem_824.html",
+    "sha256": "d3bcfca06100d04fe94c2e0de298c0b8adf35242b43fd3cb6b20f8ab2489b8ca"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "1a22e98cc6471b9ccc25cbc7e8f5f8d92d427b7e1a2c2edb1756476a26b5c8f9",
+      "source_region": "div.problem-additional-text",
+      "text": "[Er74b] Erd\\H{o}s, P., Remarks on some problems in number theory. Math. Balkanica (1974), 197-202.\n \n [PoPo16] Pollack, Paul and Pomerance, Carl, Some problems of Erd\\H{o}s on the sum-of-divisors function. Trans. Amer. Math. Soc. Ser. B (2016), 1-26."
+    },
+    "remarks": {
+      "sha256": "f252465a75e29e847a220f0ce1b51f5efc07f705b29217ec5fd97397027a3986",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s \\cite{Er74b} proved that $\\limsup h(x)/x= \\infty$, and claimed a similar proof for this problem. A complete proof that $h(x)/x\\to \\infty$ was provided by Pollack and Pomerance \\cite{PoPo16}.\n\nA similar question can be asked if we replace the condition $(a,b)=1$ with the condition that $a$ and $b$ are squarefree. Weisenberg suggests another variant, with the condition that there are no proper factors $u\\mid a$ and $v\\mid b$ such that $\\sigma(u)=\\sigma(v)$ and $(u,a/u)=(v,b/v)=1$, which is the weakest restriction one can impose that is still strong enough to eliminate trivial duplicates."
+    },
+    "statement": {
+      "sha256": "caf614062ef62d00034c39fe6b7ab5eeaeae483069574272c8a2284ab817b60b",
+      "source_region": "div#content",
+      "text": "Let $h(x)$ count the number of integers $1\\leq a<b<x$ such that $(a,b)=1$ and $\\sigma(a)=\\sigma(b)$, where $\\sigma$ is the sum of divisors function.\n\nIs it true that $h(x)>x^{2-o(1)}$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/824"
+}

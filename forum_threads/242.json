@@ -1,0 +1,100 @@
+{
+  "problem_number": 242,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/242",
+  "retrieved_at": "2026-07-10T23:22:03.628771+00:00",
+  "page_title": "242 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "2050a781d5918361e3b6eba0ed026722c5fc56da9118d8baa5dc47470b287f36",
+  "comment_count": 18,
+  "comments": [
+    {
+      "post_id": "4274",
+      "text": "A solution to this conjecture has been \"claimed\" by K. Bradford in his latest preprint [Br26].",
+      "meta": "Alfaiz — 04:33 on 13 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4276",
+      "text": "The final sentence on the covering system seems to hint it is incorrect/ incomplete. Taking the first primes modulo different moduli doesnt create a covering system. In particular, none of the 6 remaining residues modulo 840 by Mordell are excluded here.",
+      "meta": "StijnC — 06:36 on 13 Feb 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4277",
+      "text": "While not *quite* as notorious as [1135], this problem also regularly attracts a large number of low-quality solution attempts. I would not give too much attention to any new preprints on this problem unless either (a) the result has been accepted for publication in a reputable journal, (b) the author has an existing track record of reputable publications in the general area of diophantine equations or analytic number theory, (c) only realistic partial results are claimed, (d) an expert is willing to vouch for the correctness (or at least plausibility) of the results, or (e) the result has been properly formalized. EDIT: For what it is worth, here is the ChatGPT Pro critique of this latest attempt.",
+      "meta": "TerenceTao — 06:46 on 13 Feb 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4034",
+      "text": "Perhaps It is easier to prove that solutions exist for almost all prime denominators?",
+      "meta": "Dogmachine — 14:31 on 01 Feb 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4037",
+      "text": "This is true, and follows e.g. from Vaughan's (much stronger) almost all result listed in the remarks.",
+      "meta": "Thomas Bloom — 15:33 on 01 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3855",
+      "text": "I've been formalizing Erdős-Straus in Lean, 531 formalized items, 484 complete, hope it might be of use to one of you to finish this off: https://github.com/leochlon/erdstrau Sorry-free lean4 proofs including: ES for $n = 420k + r$ with $k$ odd, $r \\in \\{121, 169, 289, 361\\}$; all $n \\equiv 529 \\pmod{840}$ via CRT (174 declarations, witnesses like $(133, 23460, 71764140)$ for $n=529$); 348/420 coverage; 20 conditional certificates for $n \\equiv 1 \\pmod{840}$ (reducing to divisor conditions); and a formal refutation of one proposed ED2 covering scheme. Showed the full conjecture reduces to one construction: given $q \\equiv 3 \\pmod 4$ and $s^2 + p = qk$, find $\\delta, b, c$ with $(4b-1)(4c-1) = 4p\\delta + 1$ and $\\delta \\mid bc$. Setting $b = (q+1)/4$ works for small $q$; general case open.",
+      "meta": "leonchlon — 20:25 on 27 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3907",
+      "text": "For the reduction at the end; Could you add a few quantifiers to have a clear remaining goal? We need to prove it for every k, or for one value of k of a particular parity? There is a constraint on $s$? (Or $p$ is just minus a quadratic residue mod $q$?)",
+      "meta": "StijnC — 06:32 on 29 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3909",
+      "text": "See the remarks for some well-known parametric solutions (which I assume your formalisation is using). In particular it's not too hard to prove via elementary methods that this conjecture follows from (and is in fact equivalent to) the statement that for any prime $p$, there exist integers $a,c,d\\geq 1$ such that either $p\\equiv -a/c\\pmod{4acd-1}$ or $p\\equiv -\\frac{4c^2d+1}{k}\\pmod{4cd}$ for some $k\\mid 4c^2d+1$. This might be nice, and not too hard, to formalise, see Theorem 1 of [BlEl22] for a proof of the equivalence. Using this you can prove the conjecture for many congruence classes, and can efficiently check it's true for all small primes $p$. One can certainly refine Mordell's modulo $840$ conditions for example - this was already done by Terzi in 1971 to a modulo $120120$ condition. I'm sure that by continuing computations one can forever narrow down the congruential conditions, but I don't think this is a viable path to the full conjecture.",
+      "meta": "Thomas Bloom — 07:28 on 29 Jan 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3911",
+      "text": "In case anyone is curious, this file contains the claimed proof of \"Full CRT coverage for n ≡ 529 (mod 840)\". I think a quick look at this file is highly informative as to the source and veracity of the claimed results.",
+      "meta": "BorisAlexeev — 11:59 on 29 Jan 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3912",
+      "text": "Aha, thanks for pointing that out Boris. So this isn't actually a proof of anything - it's just verifying the conjecture for a collection of small $n$, and appeals to 'periodicity' to extend this to an infinite congruence class. This does not work, since the statement is obviously not periodic, so I'm not sure what they have in mind here. I do think, however, that a genuine formalisation of the known congruence classes cases (and/or the equivalence mentioned in my earlier comment) would be valuable, and presumably quite straightforward to do automatically, since this is just messing about with elementary identities.",
+      "meta": "Thomas Bloom — 12:15 on 29 Jan 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3906",
+      "text": "[Va70] is unable to load any reference. (The site has been updated to address this comment.)",
+      "meta": "Alfaiz — 05:33 on 29 Jan 2026 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "2078",
+      "text": "Mordell in [Mo68] has shown it is true, except possibly in cases where $n$ is prime and congruent to $1^2, 11^2, 13^2, 17^2, 19^2$ or $23^2$ (mod 840) [Mo68]: Mordell, L. J. Diophantine Equations, pp. 287-290. Academic Press,1968. (The site has been updated to address this comment.)",
+      "meta": "Alfaiz — 13:47 on 07 Dec 2025 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "1814",
+      "text": "A new paper by C. Pomerance and A. Weingartner is the latest paper which deals with this problem. This paper also gives a great account of past improvements/progress on this problem. (The site has been updated to address this comment.)",
+      "meta": "Alfaiz — 11:43 on 24 Nov 2025 👍 1 📝 1 🤖 0"
+    },
+    {
+      "post_id": "1794",
+      "text": "Li Delang in his paper has proved that for any given positive integers $N$ and $k$ the number of integers $n<N$ for which the equation $4/n = 1/x + 1/y + 1/z$ is unsolvable in positive integers x, y, z is not greater than $cN/(\\log N)^k$, where $c$ is a constant depending only on $k$. Also previously, Vaughan in this paper has given the upper bound on the count of possible exceptions as $N/\\exp(c(\\log N)^{2/3})$ for a positive constant $c$. (The site has been updated to address this comment.)",
+      "meta": "Alfaiz — 12:35 on 23 Nov 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1747",
+      "text": "In the case $a = 4$, the conjecture has been verified for $n<5000$ by Straus, $n<8000$ by Bernstein here, $n<20000$ by Shapiro, $n<106128$ by Oblath in [Ob49], $n<171649$ by Rosati here, $n<400000$ by C. Ko, C. Sun and S. J. Chang in [KoSuCh64], $n<10^7$ by Yamamoto in [Ya65], $n<1.1 \\times 10^7$ by Jollensten in [Jo??] and $n \\leq 10^{17}$ by Salez here. [Ob49]: R. Oblath, \"Sur l'équation diophantienne $4/n = 1/x_1 + 1/x_2 + 1/x_3$\" , Mathesis, 59 (1949), 308-316. [KoSuCh64]: Chan Ko, Chi Sun, AND S. J. Chang, On equations $4/n = l/x + l/y + l/z$, Acta Sci. Natur. Szechuanensis 2 (1964), 21-35. [Ya65]: K. Yamamoto, \" On the diophantine equation $4/n = 1/x+1/y+1/z$\", Mem. Fac. Sci. Kyushu University Ser. A, 19 (1965), 37-47. [Jo??]: R. M. Jollensten, A note on the Egyption problem, in “Proceedings of the Seventh Southeastern Conference on Combinatorics, Graph Theory and Computing” (F. Hoffman et al., Eds.), pp. 578-589, Winnipeg Utilitas Math. Publ. Inc., Winnipeg. There is a lot of literature on this conjecture. Surprisingly, I came across a paper which claims to solve the Erdos-Straus Conjecture. Another paper claims to be an \"almost\" complete proof of the Generalized Erdos Straus Conjecture. I am highly skeptical of both these papers, but professionals can take a look at'em.",
+      "meta": "Alfaiz — 10:31 on 18 Nov 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1748",
+      "text": "Thanks! Yes, this conjecture has attracted quite a few 'proofs' over the years. Of those that I have looked at, none have seemed credible.",
+      "meta": "Thomas Bloom — 10:52 on 18 Nov 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1753",
+      "text": "The paper which claims to solve the Erdos-Straus Conjecture is again very mistaken. Just had a look at the start of page 2, and it is full of unclear/ false steps.",
+      "meta": "StijnC — 13:12 on 18 Nov 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "29",
+      "text": "This question belongs to the class of other first-order questions one might ask about whole numbers. For example, is every integer is the sum of four cubes? In general, they are algorithmically undecidable.",
+      "meta": "Dogmachine — 18:49 on 09 Aug 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

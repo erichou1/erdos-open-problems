@@ -1,0 +1,53 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#955}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let\[s(n)=\sigma(n)-n=\sum_{\substack{d\mid n\\ d&#60;n}}d\]be the sum of proper divisors function. If $A\subset \mathbb{N}$ has density $0$ then $s^{-1}(A)$ must also have density $0$.
+
+
+
+
+A conjecture of Erd\H{o}s, Granville, Pomerance, and Spiro \cite{EGPS90}. It is possible for $s(A)$ to have positive density even if $A$ has zero density (for example taking $A$ to be the product of two distinct primes). Erd\H{o}s \cite{Er73b} proved that there are sets $A$ of positive density such that $s^{-1}(A)$ is empty. Pollack \cite{Po14b} has shown that this is true if $A$ is the set of primes. Troupe \cite{Tr15} has shown that this is true if $A$ is the set of integers with unusually many prime factors. Troupe \cite{Tr20} has also shown this is true if $A$ is the set of integers which are the sum of two squares. Pollack, Pomerance, and Thompson \cite{PPT18} prove that if $\epsilon(x)=o(1)$ and $A\subset \mathbb{N}$ has size at most $x^{1/2+\epsilon(x)}$ then\[\#\{ n\leq x: s(n)\in A\} =o(x)\]as $x\to \infty$. It follows that (using $s(n)\ll n\log\log n$) if $A$ grows like $\lvert A\cap [1,x]\rvert\leq x^{1/2+o(1)}$ then $s^{-1}(A)$ has density $0$. Alanen calls $k$ such that $s(n)=k$ has no solutions untouchable. These are discussed in problem B10 of Guy's collection \cite{Gu04}.
+
+
+
+
+References
+
+[EGPS90] Erd\H{o}s, P. and Granville, A. and Pomerance, C. and Spiro, C., On the normal behavior of the iterates of some arithmetic functions . Analytic number theory (Allerton Park, IL, 1989) (1990), 165-204.
+
+[Er73b] Erd\H{o}s, P., \"{U}ber die Zahlen der Form $\sigma (n)-n$ und $n-\phi(n)$ . Elem. Math. (1973), 83-86.
+
+[Gu04] Guy, Richard K., Unsolved problems in number theory . (2004), xviii+437.
+
+[PPT18] Pollack, Paul and Pomerance, Carl and Thompson, Lola, Divisor-sum fibers . Mathematika (2018), 330--342.
+
+[Po14b] Pollack, Paul, Some arithmetic properties of the sum of proper divisors and the sum of prime divisors . Illinois J. Math. (2014), 125--147.
+
+[Tr15] Troupe, Lee, On the number of prime factors of values of the sum-of-proper-divisors function . J. Number Theory (2015), 120--135.
+
+[Tr20] Troupe, Lee, Divisor sums representable as the sum of two squares . Proc. Amer. Math. Soc. (2020), 4189--4202.
+
+\noindent\textbf{Related OEIS sequences:} possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/955}}
+\end{document}

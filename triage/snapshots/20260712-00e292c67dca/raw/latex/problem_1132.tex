@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#1132}
+\date{Last updated: 2026-01-01}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} analysis, polynomials
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+For $x_1,\ldots,x_n\in [-1,1]$ let\[l_k(x)=\frac{\prod_{i\neq k}(x-x_i)}{\prod_{i\neq k}(x_k-x_i)},\]which are such that $l_k(x_k)=1$ and $l_k(x_i)=0$ for $i\neq k$. Let $x_1,x_2,\ldots\in [-1,1]$ be an infinite sequence, and let\[L_n(x) = \sum_{1\leq k\leq n}\lvert l_k(x)\rvert,\]where each $l_k(x)$ is defined above with respect to $x_1,\ldots,x_n$. Must there exist $x\in (-1,1)$ such that\[L_n(x) &#62;\frac{2}{\pi}\log n-O(1)\]for infinitely many $n$? Is it true that\[\limsup_{n\to \infty}\frac{L_n(x)}{\log n}\geq \frac{2}{\pi}\]for almost all $x\in (-1,1)$?
+
+
+
+
+A result of Bernstein \cite{Be31} implies that the set of $x\in(-1,1)$ for which\[\limsup_{n\to \infty}\frac{L_n(x)}{\log n}\geq \frac{2}{\pi}\]is everywhere dense. Erd\H{o}s \cite{Er61c} proved that, for any fixed $x_1,\ldots,x_n\in [-1,1]$,\[\max_{x\in [-1,1]}\sum_{1\leq k\leq n}\lvert l_k(x)\rvert&gt;\frac{2}{\pi}\log n-O(1).\]Tao \cite{Ta26b} has proved that for any function $\omega(n)$ which tends to infinity with $n$ there exists a dense set of $x\in (-1,1)$ such that\[L_n(x)\geq \frac{2}{\pi}\log n-\omega(n)\]for infinitely many $n$. Tao also notes that it is unclear in the question of Erd\H{o}s whether the constant in the $O(1)$ term may depend on $x$. See also [1129] for more on $L_n(x)$, and also [1153] .
+
+
+
+
+References
+
+[Be31] S. Bernstein, Sur la limitation des valeurs d'un polynome $P_n(x)$ de degr\'{e} n sur tout un segment par ses valeurs en $(n+1)$ points du segment . Izv. Akad. Nauk. SSSR (1931), 1025-1050.
+
+[Er61c] Erd\H{o}s, P., Problems and results on the theory of interpolation. II . Acta Math. Acad. Sci. Hungar. (1961), 235-244.
+
+[Ta26b] T. Tao, Local Bernstein theory, and lower bounds for Lebesgue constants . arXiv:2603.21453 (2026).
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/1132}}
+\end{document}

@@ -1,0 +1,30 @@
+{
+  "problem_number": 730,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/730",
+  "retrieved_at": "2026-07-10T23:18:36.850589+00:00",
+  "page_title": "730 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "4989cc12ee300fab81a16b5fca8ba8069e0be12616232efa8e6daa42f94ada65",
+  "comment_count": 4,
+  "comments": [
+    {
+      "post_id": "7197",
+      "text": "GPT Pro, in fact, can show the stronger result that there are infinitely many such pairs which are consecutive. Here is the general gist of its argument: The proof begins by converting equality of prime supports into a problem about base-$p$ digits. Kummer's theorem then shows that a prime can disappear from $\\binom{2n}{n}$ or appear in $\\binom{2n+2}{n+1}$ only when a certain quotient associated with $n+1$ or $2n+1$ has all its base-$p$ digits at most $(p-1)/2$. We then construct an explicit quadratic family for which $n+1=PQ$ and $2n+1=3RS$, where $P,Q,R,S$ are pairwise separated linear forms, so that every possible obstruction is attached to exactly one of four branches. On each branch, after fixing a prime divisor and parametrising the corresponding congruence class, the relevant quotient becomes a quadratic polynomial whose linear coefficient is a $p$-adic unit. This gives strong permutation properties modulo powers of $p$. Fourier analysis and bounds for incomplete quadratic sums then show that, on blocks of length $p^r$, the proportion of values whose first $2r$ base-$p$ digits are all restricted is essentially $4^{-r}$. The proof then concludes with some case checking on some obstruction prime range sizes.",
+      "meta": "Liam Price — 21:06 on 24 Jun 2026 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "7199",
+      "text": "As an addition to Liam's provided argument, a closing derivation based on the provided reasoning traces can be found here.",
+      "meta": "Tomodovodoo — 01:08 on 25 Jun 2026 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "424",
+      "text": "Note that the pair (10_003, 10_005) can be inferred from the OEIS table at https://oeis.org/A129515/b129515.txt by transitivity (it contains both (10_003, 10_004) and (10_004, 10_005)). However examples where (n, n + 2) satisfy the property, while (n, n + 1) and (n + 1, n + 2) do not, are shown in the repo linked above by Moritz. (The site has been updated to address this comment.)",
+      "meta": "Salvatore Mercuri — 12:05 on 10 Sep 2025 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "423",
+      "text": "The last comment: \"In every known example $m=n+1$\" is not true anymore: AlphaProof found the pair (10003, 10005), see here: https://github.com/google-deepmind/formal-conjectures/pull/664 This prompted a numerical search and many more such examples can be found using this tool: https://github.com/mo271/kummer Another interesting question to ask here is: Are there example of pairs $(n, n + k)$ for every $k$? (The site has been updated to address this comment.)",
+      "meta": "Moritz Firsching — 10:04 on 10 Sep 2025 👍 0 📝 1 🤖 0"
+    }
+  ]
+}

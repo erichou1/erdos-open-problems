@@ -1,0 +1,65 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/erdos/ranking-card.schema.json",
+  "title": "Erdos Ranking Card",
+  "type": "object",
+  "required": [
+    "problem_id", "problem_number", "rank", "snapshot_id", "snapshot_date",
+    "pipeline_version", "model_portfolio", "budget", "budget_config",
+    "toolset_version", "run_contract_id", "allocation_context_id",
+    "source_snapshot_id", "source_snapshot_sha256", "statement_sha256",
+    "allocation_status", "probability", "credible_interval", "uncertainty",
+    "recommended_attack_mode", "recommended_attack_modes",
+    "research_directive", "research_directive_sha256",
+    "strongest_positive_signals", "largest_risks",
+    "statement_status", "literature_status", "lean_status",
+    "computational_status", "estimated_compute", "estimated_review_cost",
+    "reason_selected"
+  ],
+  "properties": {
+    "problem_id": {"type": "string", "pattern": "^erdos-[0-9]+$"},
+    "problem_number": {"type": "integer", "minimum": 1},
+    "rank": {"type": "integer", "minimum": 1},
+    "snapshot_id": {"type": "string"},
+    "snapshot_date": {"type": "string", "format": "date"},
+    "pipeline_version": {"type": "string"},
+    "model_portfolio": {"type": "string"},
+    "budget": {"type": "string"},
+    "budget_config": {"type": "object"},
+    "toolset_version": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "run_contract_id": {"type": ["string", "null"]},
+    "allocation_context_id": {"type": ["string", "null"]},
+    "source_snapshot_id": {"type": "string"},
+    "source_snapshot_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "statement_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "allocation_status": {"type": "string"},
+    "probability": {"type": "number", "minimum": 0, "maximum": 1},
+    "credible_interval": {
+      "type": "array", "prefixItems": [
+        {"type": "number", "minimum": 0, "maximum": 1},
+        {"type": "number", "minimum": 0, "maximum": 1}
+      ], "minItems": 2, "maxItems": 2
+    },
+    "uncertainty": {"type": "number", "minimum": 0, "maximum": 1},
+    "recommended_attack_mode": {"type": "string"},
+    "recommended_attack_modes": {
+      "type": "array", "items": {"type": "string"}, "minItems": 1
+    },
+    "research_directive": {"type": "object"},
+    "research_directive_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "strongest_positive_signals": {"type": "array", "items": {"type": "string"}},
+    "largest_risks": {"type": "array", "items": {"type": "string"}},
+    "statement_status": {"type": "string"},
+    "literature_status": {"type": "string"},
+    "lean_status": {"type": "string"},
+    "computational_status": {"type": "string"},
+    "estimated_compute": {},
+    "estimated_review_cost": {},
+    "reason_selected": {"type": "string"},
+    "model_version": {"type": "string"},
+    "calibration_status": {"type": "string"},
+    "allocation_lane": {"enum": ["exploitation", "protected_exploration"]},
+    "allocation_rank": {"type": "integer", "minimum": 1},
+    "lane_rank": {"type": "integer", "minimum": 1}
+  }
+}

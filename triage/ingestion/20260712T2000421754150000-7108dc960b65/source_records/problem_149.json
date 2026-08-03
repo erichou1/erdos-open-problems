@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 149,
+  "raw_page": {
+    "path": "raw/pages/problem_149.html",
+    "sha256": "d2c231d6884f9219be4163f02ed5d0d76e7426e2e5266818f1cc07af8ced96bc"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "6e3e2e7302731b84a3ada169461f6b8890855961c8fe9853ba1e71ec9473c464",
+      "source_region": "div.problem-additional-text",
+      "text": "[92] No reference found.\n\n [BPP22] Bonamy, Marthe and Perrett, Thomas and Postle, Luke, Colouring graphs with sparse neighbourhoods: bounds and\napplications. J. Combin. Theory Ser. B (2022), 278-317.\n \n [BrJo18] Bruhn, Henning and Joos, Felix, A stronger bound for the strong chromatic index. Combin. Probab. Comput. (2018), 21-43.\n \n [CGTT90] Chung, F. R. K. and Gy\\'{a}rf\\'{a}s, A. and Tuza, Z. and Trotter,\nW. T., The maximum number of edges in {$2K_2$}-free graphs of bounded\ndegree. Discrete Math. (1990), 129--135.\n \n [CKP20] Cames van Batenburg, Wouter and Kang, Ross J. and Pirot,\nFran\\c cois, Strong cliques and forbidden cycles. Indag. Math. (N.S.) (2020), 64--82.\n \n [FGST89] Faudree, R. J. and Gy\\'{a}rf\\'{a}s, A. and Schelp, R. H. and Tuza,\nZs., Induced matchings in bipartite graphs. Discrete Math. (1989), 83-87.\n \n [FaPo19] Faron, Maxime and Postle, Luke, On the clique number of the square of a line graph and its\nrelation to maximum degree of the line graph. J. Graph Theory (2019), 261--274.\n \n [HHT93] Hor\\'{a}k, Peter and He, Qing and Trotter, William T., Induced matchings in cubic graphs. J. Graph Theory (1993), 151--160.\n \n [HJK22] Hurley, Eoin and de Joannis de Verclos, R\\'{e}mi and Kang, Ross\nJ., An improved procedure for colouring graphs of bounded local\ndensity. Adv. Comb. (2022), Paper No. 7, 33.\n \n [HSY18] Huang, Mingfang and Santana, Michael and Yu, Gexin, Strong chromatic index of graphs with maximum degree four. Electron. J. Combin. (2018), Paper No. 3.31, 24.\n \n [MoRe97] Molloy, Michael and Reed, Bruce, A bound on the strong chromatic index of a graph. J. Combin. Theory Ser. B (1997), 103-109.\n \n [Sl16] \\'Sleszy\\'nska-Nowak, Ma\\l gorzata, Clique number of the square of a line graph. Discrete Math. (2016), 1551--1556."
+    },
+    "remarks": {
+      "sha256": "82070c84c4fade24e802154b9d0639b6855f31a69455063927549789ed425dd4",
+      "source_region": "div.problem-additional-text",
+      "text": "Asked by Erd\\H{o}s and Ne\\v{s}et\\v{r}il in 1985 (see \\cite{FGST89}). This is equivalent to asking whether the chromatic number of the square of the line graph $L(G)^2$ is at most $\\frac{5}{4}\\Delta^2$. This bound would be the best possible, as witnessed by a blowup of $C_5$, although improvements may be possible for odd $\\Delta$.\n\nIt is easy to see that $\\mathrm{sq}(G)\\leq 5$ when $\\Delta\\leq 2$: in general, the trivial bound of\\[\\mathrm{sq}(G)\\leq 2\\Delta^2-2\\Delta+1\\]follows from the observations that the number of neighbours of any edge of $G$ is $\\leq 2\\Delta^2-2\\Delta$.\n\nThis was improved to $\\mathrm{sq}(G)\\leq 1.998\\Delta^2$ (for $\\Delta$ sufficiently large) by Molloy and Reed \\cite{MoRe97}. This was improved to $1.93\\Delta^2$ by Bruhn and Joos \\cite{BrJo18} and to $1.835\\Delta^2$ by Bonamy, Perrett, and Postle \\cite{BPP22}. The best bound currently available is\\[1.772\\Delta^2,\\]proved by Hurley, de Joannis de Verclos, and Kang \\cite{HJK22}. Mahdian has, in their Masters' thesis, proved an upper bound of $(2+o(1))\\frac{\\Delta^2}{\\log \\Delta}$ under the additional assumption that $G$ is $C_4$-free.\n\nAndersen \\cite{92} and Hor\\'{a}k, He, and Trotter \\cite{HHT93} have independently shown that $\\mathrm{sq}(G)\\leq 10$ when $\\Delta\\leq 3$. (This is best possible, as shown e.g. by a $C_8$ with all four diagonals). Huang, Santana, and Yu \\cite{HSY18} proved that $\\mathrm{sq}(G)\\leq 21$ when $\\Delta\\leq 4$.\n\nErd\\H{o}s and Ne\\v{s}et\\v{r}il also asked the easier problem of whether $G$ containing at least $\\tfrac{5}{4}\\Delta^2$ many edges implies $G$ containing two strongly independent edges. This was proved by Chung, Gy\\'{a}rf\\'{a}s, Tuza, and Trotter \\cite{CGTT90}.\n\nIt is still open even whether the clique number of $L(G)^2$ at most $\\frac{5}{4}\\Delta^2$. Let $\\omega=\\omega(L(G)^2)$ be this clique number. \\'{S}leszy\\'{n}ska-Nowak \\cite{Sl16} proved $\\omega \\leq \\frac{3}{2}\\Delta^2$. Faron and Postle \\cite{FaPo19} proved $\\omega\\leq \\frac{4}{3}\\Delta^2$. Cames van Batenburg, Kang, and Pirot \\cite{CKP20} have proved $\\omega\\leq \\frac{5}{4}\\Delta^2$ under the additional assumption that $G$ is triangle-free (and $\\omega\\leq \\Delta^2$ if $G$ is $C_5$-free)."
+    },
+    "statement": {
+      "sha256": "0ac6b25363f6089b1e325e0c5508600866cc7eaa706ba7e1a8545486b9fcfd81",
+      "source_region": "div#content",
+      "text": "The strong chromatic index of a graph $G$, denoted by $\\mathrm{sq}(G)$, is the minimum $k$ such that the edges of $G$ can be partitioned into $k$ sets of 'strongly independent' edges, that is, such that the subgraph of $G$ induced by each set is the union of vertex-disjoint edges.\n\nIs it true that, for any graph $G$ with maximum degree $\\Delta$,\\[\\mathrm{sq}(G)\\leq\\frac{5}{4}\\Delta^2?\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/149"
+}

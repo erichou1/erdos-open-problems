@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 889,
+  "raw_page": {
+    "path": "raw/pages/problem_889.html",
+    "sha256": "871d426f7e934a981c0c7341f4da41a435c1c1dba3a46df80175c1604ec98984"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "0af5f9266f012a41bfbee37aa1b2bfa41e20d9522ca9606a46ecb2d2bd7f98b1",
+      "source_region": "div.problem-additional-text",
+      "text": "[ErSe67] Erd\\H{o}s, P. and Selfridge, J. L., Some problems on the prime factors of consecutive integers. Illinois J. Math. (1967), 428--430.\n \n [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437."
+    },
+    "remarks": {
+      "sha256": "aa1b12d327b2e6e2db0e84b1c1d1d8b20b250bdfd9e6868bd8b27bf3fba62998",
+      "source_region": "div.problem-additional-text",
+      "text": "A question of Erd\\H{o}s and Selfridge \\cite{ErSe67}, who could only show that $v_0(n)\\geq 2$ for $n\\geq 17$. More generally, they conjecture that\\[v_l(n)=\\max_{k\\geq l}v(n,k)\\to \\infty\\]as $n\\to \\infty$, for every fixed $l$, but could not even prove that $v_1(n)\\geq 2$ for all large $n$.\n\nThis is problem B27 of Guy's collection \\cite{Gu04}."
+    },
+    "statement": {
+      "sha256": "ff5dc76784247dd00d0a8a844ff44b03857855fce93e120e5ca1e53034a538ad",
+      "source_region": "div#content",
+      "text": "For $k\\geq 0$ and $n\\geq 1$ let $v(n,k)$ count the prime factors of $n+k$ which do not divide $n+i$ for $0\\leq i<k$. Equivalently, $v(n,k)$ counts the number of prime factors of $n+k$ which are $>k$.\n\nIs it true that\\[v_0(n)=\\max_{k\\geq 0}v(n,k)\\to \\infty\\]as $n\\to \\infty$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/889"
+}

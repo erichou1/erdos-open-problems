@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#539}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $h(n)$ be such that, for any set $A\subseteq \mathbb{N}$ of size $n$, the set\[\left\{ \frac{a}{(a,b)}: a,b\in A\right\}\]has size at least $h(n)$. Estimate $h(n)$.
+
+
+
+
+Erd\H{o}s and Szemer\'{e}di proved that\[n^{1/2} \ll h(n) \ll n^{1-c}\]for some constant $c&#62;0$. The upper bound has been improved to $h(n)\ll n^{2/3}$ by Freiman and Lev. A proof of these bounds can be found in a paper of Granville and Roesler \cite{GrRo99}. Granville and Roesler also reformulate this problem as one in combinatorial geometry: given $A\subseteq \mathbb{Z}^d$ of size $n$ what is the minimum size possible of\[\{ \delta(\mathbf{a},\mathbf{b}) : \mathbf{a},\mathbf{b}\in A\}\]where $\delta(\mathbf{a},\mathbf{b})$ has $i$th coordinate $\max(0,a_i-b_i)$. Using this formulation that obtain improved lower bounds in fixed small dimension $d$.
+
+
+
+
+References
+
+[GrRo99] Granville, Andrew and Roesler, Friedrich, The set of differences of a given set . Amer. Math. Monthly (1999), 338--344.
+
+\noindent\textbf{Related OEIS sequences:} possible
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/539}}
+\end{document}

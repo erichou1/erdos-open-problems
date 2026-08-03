@@ -1,0 +1,63 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#242}
+\date{Last updated: 2025-09-28}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} FALSIFIABLE \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, unit fractions
+
+\medskip
+\noindent\textbf{Note:} Erdős-Straus conjecture
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+For every $n&#62;2$ there exist distinct integers $1\leq x&#60;y&#60;z$ such that\[\frac{4}{n} = \frac{1}{x}+\frac{1}{y}+\frac{1}{z}.\]
+
+
+
+
+The Erd\H{o s-Straus conjecture}. Perhaps the first place it appears in the literature is in a paper of Obl\'{a}th \cite{Ob50} (submitted in 1948), which describes it as a conjecture of Erd\H{o}s. The existence of a representation of $4/n$ as the sum of at most four distinct unit fractions follows trivially from a greedy algorithm. Schinzel conjectured (see \cite{Si56}) the generalisation that, for any fixed $a$, if $n$ is sufficiently large in terms of $a$ then there exist distinct integers $1\leq x&lt;y&lt;z$ such that\[\frac{a}{n} = \frac{1}{x}+\frac{1}{y}+\frac{1}{z}.\]When $a=5$ this conjecture is due to Sierpi\'{n}ski \cite{Si56}. For more background and results on this generalisation see Pomerance and Weingartner \cite{PoWe25}. It suffices to prove this when $n$ is prime. This has been verified for all $n\leq 10^{18}$ \cite{MiDu25}. There are many partial results, some of which are listed below. {UL} {LI}Obl\'{a}th \cite{Ob50} noted it is true if $n+1$ is divisible by a prime $\equiv 3\pmod{4}$. This implies almost all $n$ have the required decomposition.{/LI} {LI} Arguing via parametric solutions, Mordell \cite{Mo69} proved it is true for all $n$ except those congruent to one of $\{1,121,169,289,361,529\}$ modulo $840$.{/LI} {LI} Terzi \cite{Te71} extended this to prove that it is true for all $n$ except those congruent to one of $198$ possible bad congruences modulo $120120$.{/LI} {LI}Vaughan \cite{Va70} proved that the number of exceptions in $[1,x]$ is\[\leq x \exp(-c(\log x)^{2/3})\]for some constant $c&gt;0$.{/LI} {LI}This conjecture is equivalent (see Theorem 1 of \cite{BlEl22}) to the statement that, for any prime $p$, there exist integers $a,c,d\geq 1$ such that either $p\equiv -a/c\pmod{4acd-1}$ or $p\equiv -\frac{4c^2d+1}{k}\pmod{4cd}$ for some $k\mid 4c^2d+1$.{/LI} {LI} Bright and Loughran \cite{BrLo20} have shown there is no Brauer-Manin obstruction to the existence of solutions.{/LI} {LI} If $f(n)$ counts the number of solutions then Elsholtz and Tao \cite{ElTa13} have proved\[\sum_{p\leq N}f(p)=N(\log N)^{2+o(1)}\]and $f(p)\leq p^{3/5+o(1)}$ for all primes $p$.{/LI} {LI} Elsholtz and Planitzer \cite{ElPl20} have proved that for almost all $n$\[f(n) \geq (\log n)^{\log 6+o(1)}.\]{/LI} {/UL}
+
+
+
+
+References
+
+[BlEl22] Bloom, Thomas F. and Elsholtz, Christian, Egyptian fractions . Nieuw Arch. Wiskd. (5) (2022), 237--245.
+
+[BrLo20] Bright, Martin and Loughran, Daniel, Brauer-{M}anin obstruction for {E}rd\H os-Straus surfaces . Bull. Lond. Math. Soc. (2020), 746--761.
+
+[ElPl20] Elsholtz, Christian and Planitzer, Stefan, The number of solutions of the {E}rd\H os-Straus equation and sums of {$k$} unit fractions . Proc. Roy. Soc. Edinburgh Sect. A (2020), 1401--1427.
+
+[ElTa13] Elsholtz, Christian and Tao, Terence, Counting the number of solutions to the {E}rd\H os-Straus equation on unit fractions . J. Aust. Math. Soc. (2013), 50--105.
+
+[MiDu25] S. Mihnea and B. C. Dumitru, Further verification and empirical evidence for the Erd\H{o}s-Straus conjecture . arXiv:2509.00128 (2025).
+
+[Mo69] Mordell, L. J., Diophantine equations . (1969), xi+312.
+
+[Ob50] Obl\'{a}th, Richard, Sur l'\'equation diophantienne {$\frac 4n=\frac1{x_1}+\frac 1{x\sb 2}+\frac 1{x_3}$} . Mathesis (1950), 308--316.
+
+[PoWe25] C. Pomerance and A. Weingartner, Exceptions to the Erd\H{o}s-Straus-Schinzel conjecture . arXiv:2511.16817 (2025).
+
+[Si56] Sierpi\'nski, W., Sur les d\'ecompositions de nombres rationnels en fractions primaires . Mathesis (1956), 16--32.
+
+[Te71] Terzi, D. G., On a conjecture by {E}rd\H os-Straus . Nordisk Tidskr. Informationsbehandling (BIT) (1971), 212--216.
+
+[Va70] Vaughan, R. C., On a problem of {E}rd\H os, Straus and Schinzel . Mathematika (1970), 193--198.
+
+\noindent\textbf{Related OEIS sequences:} A073101, A075245, A075246, A075247, A075248, A287116
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/242}}
+\end{document}

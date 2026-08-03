@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#374}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+For any $m\in \mathbb{N}$, let $F(m)$ be the minimal $k\geq 2$ (if it exists) such that there are $a_1&#60;\cdots &#60;a_k=m$ with $a_1!\cdots a_k!$ a square. Let $D_k=\{ m : F(m)=k\}$. What is the order of growth of $\lvert D_k\cap\{1,\ldots,n\}\rvert$ for $3\leq k\leq 6$? For example, is it true that $\lvert D_6\cap \{1,\ldots,n\}\rvert \gg n$?
+
+
+
+
+Studied by Erd\H{o}s and Graham \cite{ErGr76} (see also \cite{LSS14}). It is known, for example, that: {UL} {LI}no $D_k$ contains a prime,{/LI} {LI}$D_2=\{ n^2 : n&#62;1\}$,{/LI} {LI} $\lvert D_3\cap \{1,\ldots,n\}\rvert = o(\lvert D_4\cap \{1,\ldots,n\}\rvert)$,{/LI} {LI} the least element of $D_6$ is $527$, and{/LI} {LI} $D_k=\emptyset$ for $k&#62;6$.{/LI} {/UL}
+
+
+
+
+References
+
+[ErGr76] Erd\H{o}s, P. and Graham, R. L., On products of factorials . Bull. Inst. Math. Acad. Sinica (1976), 337-355.
+
+[LSS14] Luca, F. and Saradha, N. and Shorey, T. N., Squares and factorials in products of factorials . Monatsh. Math. (2014), 385-400.
+
+\noindent\textbf{Related OEIS sequences:} A388851, A387184, A389117, A389148
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/374}}
+\end{document}

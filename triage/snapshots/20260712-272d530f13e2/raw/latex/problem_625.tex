@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#625}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{Prize: \$1000}
+
+\noindent\textbf{Tags:} graph theory, chromatic number
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+The cochromatic number of $G$, denoted by $\zeta(G)$, is the minimum number of colours needed to colour the vertices of $G$ such that each colour class induces either a complete graph or empty graph. Let $\chi(G)$ denote the chromatic number. If $G$ is a random graph with $n$ vertices and each edge included independently with probability $1/2$ then is it true that almost surely\[\chi(G) - \zeta(G) \to \infty\]as $n\to \infty$?
+
+
+
+
+A problem of Erd\H{o}s and Gimbel (see also \cite{Gi16}). At a conference on random graphs in Poznan, Poland (most likely in 1989) Erd\H{o}s offered \$100 for a proof that this is true, and \$1000 for a proof that this is false (although later told Gimbel that \$1000 was perhaps too much). It is known that almost surely\[\frac{n}{2\log_2n}\leq \zeta(G)\leq \chi(G)\leq (1+o(1))\frac{n}{2\log_2n}.\](The final upper bound is due to Bollob\'{a}s \cite{Bo88}. The first inequality follows from the fact that almost surely $G$ has clique number and independence number $&lt; 2\log_2n$.) Heckel \cite{He24} and, independently, Steiner \cite{St24b} have shown that it is not the case that $\chi(G)-\zeta(G)$ is bounded with high probability, and in fact if $\chi(G)-\zeta(G) \leq f(n)$ with high probability then $f(n)\geq n^{1/2-o(1)}$ along an infinite sequence of $n$. Heckel conjectures that, with high probability,\[\chi(G)-\zeta(G) \asymp \frac{n}{(\log n)^3}.\]Heckel \cite{He24c} further proved that, for any $\epsilon&gt;0$, we have\[\chi(G) -\zeta(G) \geq n^{1-\epsilon}\]for roughly $95\%$ of all $n$.
+
+
+
+
+References
+
+[Bo88] Bollob\'{a}s, B., The chromatic number of random graphs . Combinatorica (1988), 49-55.
+
+[Gi16] J. Gimbel, Some of my favorite coloring problems for graphs and digraphs . Graph Theory: Favorite conjectures and open problems (2016), 95-108.
+
+[He24] A. Heckel, On a question of Erd\H{o}s and Gimbel on the cochromatic number . arXiv:2408.13839 (2024).
+
+[He24c] A. Heckel, The difference between the chromatic and the cochromatic number of a random graph . arXiv:2409.17614 (2024).
+
+[St24b] R. Steiner, On the difference between the chromatic and cochromatic number . arXiv:2408.02400 (2024).
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/625}}
+\end{document}

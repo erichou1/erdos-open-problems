@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 680,
+  "raw_page": {
+    "path": "raw/pages/problem_680.html",
+    "sha256": "6487072b83aceb34b4629b615de26f6bfdede083319373505a89231a6004cfc5"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "302ad667b123ba499dee2cc4f3320e7062ece283d43ae86f0449b229dbef35ea",
+      "source_region": "div.problem-additional-text",
+      "text": "[Gr95] Granville, Andrew, Harald {C}ram\\'{e}r and the distribution of prime numbers. Scand. Actuar. J. (1995), 12--28."
+    },
+    "remarks": {
+      "sha256": "6425809cb32f540a0f570806d87aa200f1b344b8c13a14241509000e35be9ce9",
+      "source_region": "div.problem-additional-text",
+      "text": "This follows from 'plausible assumptions on the distribution of primes' (as does the question with $k^2$ replaced by $k^d$ for any $d$); the challenge is to prove this unconditionally.\n\nErd\\H{o}s observed that Cramer's conjecture\\[\\limsup_{k\\to \\infty} \\frac{p_{k+1}-p_k}{(\\log k)^2}=1\\]implies that for all $\\epsilon>0$ and all sufficiently large $n$ there exists some $k$ such that\\[p(n+k)>e^{(1-\\epsilon)\\sqrt{k}}.\\]There is now evidence, however, that Cramer's conjecture is false; a more refined heuristic by Granville \\cite{Gr95} suggests this $\\limsup$ is $2e^{-\\gamma}\\approx 1.119\\cdots$, and so perhaps the $1+\\epsilon$ in the second question should be replaced by $2e^{-\\gamma}+\\epsilon$.\n\nSee also [681] and [682]."
+    },
+    "statement": {
+      "sha256": "a5b7260cae350ae86645a994b1ef98735bbb1b07b8b143d4b776feb8a9851d7e",
+      "source_region": "div#content",
+      "text": "Is it true that, for all sufficiently large $n$, there exists some $k$ such that\\[p(n+k)>k^2+1,\\]where $p(m)$ denotes the least prime factor of $m$?\n\nCan one prove this is false if we replace $k^2+1$ by $e^{(1+\\epsilon)\\sqrt{k}}+C_\\epsilon$, for all $\\epsilon>0$, where $C_\\epsilon>0$ is some constant?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/680"
+}

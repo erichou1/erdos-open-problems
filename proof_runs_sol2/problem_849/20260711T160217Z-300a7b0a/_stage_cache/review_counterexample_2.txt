@@ -1,0 +1,66 @@
+{
+"reviewer_role": "independent adversarial referee (counterexample)",
+"verdict": "fail",
+"claims_checked": 19,
+"claims_total": 19,
+"checked_claim_ids": [
+"DOMAIN_BIFURCATION",
+"SEMIDISCRETE_POSITIVE",
+"FIXED_LAYER_MONOTONICITY",
+"HALF_ROW_MONOTONICITY",
+"CENTRAL_GROWTH",
+"NORMALIZATION_FINITE",
+"FIBER_ORDERING",
+"LOW_MULTIPLICITIES",
+"DENSITY_LOW_MULTIPLICITIES",
+"T5_SPLIT",
+"DISPLACEMENT_IDENTITY",
+"SLOPE_AUDIT",
+"PELL_ADJACENT",
+"PELL_SEPARATION",
+"DIVISOR_INVARIANT",
+"LOW_LAYER_SYSTEM",
+"WORD_SYSTEM",
+"FINITE_CERTIFICATE",
+"TERMINAL_AUDIT"
+],
+"open_gaps": [
+"The exact original statement is neither proved nor disproved.",
+"The intended domains of n and k are not formally settled without modifying or interpreting the statement.",
+"No global proof excludes a value lying simultaneously in layers 2, 3, 4, and some layer k at least 5.",
+"No global theorem proves that two or more high-layer representations force total interior multiplicity at most three.",
+"No construction realizes every exact interior multiplicity q at least zero.",
+"No scalable Pell multi-lift or displacement-word construction is established.",
+"No uniform method excludes unintended representations in an infinite candidate family.",
+"No effective bound or complete decision procedure is supplied for the proposed displacement-word systems.",
+"The finite computation stops at 10^30 and has no valid finite-to-infinite extension."
+],
+"unchecked_imports": [],
+"counterexample_searches": [
+"Literal-domain test: the displayed definition D_Z uses a malformed expression resembling Z^2 with both coordinates at least 2. Under that literal reading k=1 is excluded, so M(2)=0 rather than Claim 8's M(2)=1. This exposes an internal inconsistency between Claim 1 and all subsequent normalization claims.",
+"Domain-bifurcation test at a=70: under the intended discrete interpretation the representations are (70,1) and (8,4), while under the stated semidiscrete extension there is one solution for each k=1,2,3,4. The numerical comparison is correct, conditional on accepting both definitions.",
+"Boundary tests for t=1 and the witnesses 2, 6, 120, and 3003 found no omitted admissible layers; the four stated low multiplicities are correct after repairing the discrete domain.",
+"Exhaustive generation for n at most 500 found three fibers of length at least three: 120, 210, and 3003. None violated the increasing e_i/d_i slope assertion.",
+"The first Pell terms were checked directly: (15,5) and (14,6) give 3003; (104,39) and (103,40) give 61218182743304701891431482520; the next generated pair also satisfies the claimed adjacent equality.",
+"The finite-certificate program was independently rerun with exact integers. It reproduced 3014786 occurrences, 3014784 distinct high-layer values, exactly the two listed repeated values, low-layer-2 hits 3003, 11628, and 24310, and an empty dangerous list."
+],
+"material_errors": [
+"Acceptance failure: the candidate explicitly supplies no terminal proof or disproof, so it cannot pass the immutable statement's acceptance criteria.",
+"Claim 1's discrete domain is malformed and conflicts with later use of every k=1 representation. If read coordinatewise, it immediately falsifies Claims 6 and 8.",
+"Claim 10 does not define S_j as a well-formed set: the displayed expression is a proposition rather than a set comprehension, and h(a)=#{k at least 5 in S_k} is ill-typed. The intended decomposition is understandable but is not what is formally written.",
+"Claim 11 states the correct displacement identity, but its derivation contains dangling factorial expressions and omits the equality being transformed. The proof is incomplete as written.",
+"Claim 12's reciprocal-slope display omits all comparison symbols. More seriously, the proof omits the left-hand logarithmic sum in the equality obtained from equal coefficients and later omits the decisive strict comparison sign. The theorem appears correct after reconstruction, but the submitted proof is not complete.",
+"Claim 17 omits the entire left-hand side and equality of each displacement equation. It displays only (n-k-D_i-E_i) falling-factorial (d_i+e_i), so the claimed polynomial system is not actually stated.",
+"The semidiscrete positive construction proves a result only for a newly defined generalized-binomial domain. It cannot be substituted for a resolution of the locked problem.",
+"Claim 18 is a valid bounded computational certificate after independent reproduction, but it proves only M(a) at most 4 for a at most 10^30 and contributes no global conclusion."
+],
+"completeness_score": 48,
+"proof_confidence": 0,
+"adversarial_survival_score": 72,
+"statement_sha256": "b669094e22469ade57dcca529d2ce001ede0c9bee628c97121ad1d9a7ebfb01b",
+"notes": "Most elementary conditional claims, the low-multiplicity checks, the density argument, the Pell recurrence, the divisor invariant, the low-layer algebra, and the bounded computation survive substantive testing after obvious notation repairs. The exact submitted artifact nevertheless contains several malformed or missing equations and deliberately stops before resolving either terminal route. The uploaded file is identified only as the reviewed input, not as mathematical evidence: 
+
+Pasted text
+
+"
+}

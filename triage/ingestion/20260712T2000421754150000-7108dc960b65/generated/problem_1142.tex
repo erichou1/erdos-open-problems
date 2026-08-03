@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#1142}
+\date{Last updated: 2026-01-23}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, primes
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Are there infinitely many $n$ (or any $n>105$) such that $n-2^k$ is prime for all $1<2^k<n$?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+The only known such $n$ are\[4,7,15,21,45,75,105.\]This is A039669 in the OEIS.
+
+Mientka and Weitzenkamp \cite{MiWe69} have proved there are no other such $n\leq 2^{44}$.
+
+Vaughan \cite{Va73} has proved that the number of $n\leq N$ such that $n-2^k$ is prime for all $1<2^k<n$ is\[< \exp\left(-c\frac{\log \log \log N}{\log\log N}\log N\right)N\]for some constant $c>0$.
+
+This is discussed in problem A19 of Guy's collection \cite{Gu04}. There is also further discussion on the Prime Puzzles website.
+
+Erd\H{o}s made the stronger conjecture (see [236]) that that number of $1<2^k<n$ for which $n-2^k$ is prime is $o(\log n)$.
+
+\bigskip
+\noindent\textbf{References:}
+
+[Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.
+ 
+ [MiWe69] Mientka, Walter E. and Weitzenkamp, Roger C., On {$f$}-plentiful numbers. J. Combinatorial Theory (1969), 374--377.
+ 
+ [Va73] Vaughan, R. C., Some applications of {M}ontgomery's sieve. J. Number Theory (1973), 64--79.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/1142}}
+\end{document}

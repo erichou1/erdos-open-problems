@@ -1,0 +1,43 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#324}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, powers
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Does there exist a polynomial $f(x)\in\mathbb{Z}[x]$ such that all the sums $f(a)+f(b)$ with $a&#60;b$ nonnegative integers are distinct?
+
+
+
+
+In other words, the set $\{ f(n) : n\geq 1\}$ should be a Sidon set. Erd\H{o}s and Graham describe this problem as 'very annoying'. Probably $f(x)=x^5$ should work. The Lander, Parkin, and Selfridge conjecture would imply that $f(x)=x^n$ has this property for all $n\geq 5$. Ruzsa \cite{Ru01b} has proved there exists $c\in [0,1]$ and $n_0\geq 1$ such that\[\{ n^5 +\lfloor cn^4\rfloor : n \geq n_0\}\]is a Sidon set. It is easy to check that a quadratic $f$ cannot have this property. Dubickas and Novikas \cite{DuNo21} have shown that a cubic $f$ cannot have this property. It is a classical fact that $x^4$ cannot have this property. This is discussed in problems C9, D1, and F30 of Guy's collection \cite{Gu04}.
+
+
+
+
+References
+
+[DuNo21] Dubickas, Arturas and Novikas, Aivaras, No cubic integer polynomial generates a Sidon sequence . Math. Nachr. (2021), 1859--1865.
+
+[Gu04] Guy, Richard K., Unsolved problems in number theory . (2004), xviii+437.
+
+[Ru01b] Ruzsa, I. Z., An almost polynomial Sidon sequence . Studia Sci. Math. Hungar. (2001), 367--375.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/324}}
+\end{document}

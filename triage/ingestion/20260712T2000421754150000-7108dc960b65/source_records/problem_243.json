@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 243,
+  "raw_page": {
+    "path": "raw/pages/problem_243.html",
+    "sha256": "8af432bdef0b58c25edb6872e587c771a9151994634cda822511ee06136ef3cf"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "282d467fcfa20bca32229fe1711a8a9184b268adabc3926fa36ea774e3a21487",
+      "source_region": "div.problem-additional-text",
+      "text": "[Du01] Duverney, Daniel, Irrationality of fast converging series of rational numbers. J. Math. Sci. Univ. Tokyo (2001), 275--316.\n \n [ErSt64] Erd\\H{o}s, P. and Straus, E. G., On the irrationality of certain {A}hmes series. J. Indian Math. Soc. (N.S.) (1964), 129--133."
+    },
+    "remarks": {
+      "sha256": "03cd6b6186d7797d5675f551181f6b742d213f37afa98e1991afa9e011079272",
+      "source_region": "div.problem-additional-text",
+      "text": "Erd\\H{o}s and Straus \\cite{ErSt64} proved that if $\\lim a_n/a_{n-1}^2=1$ and $\\sum \\frac{1}{a_n}$ is rational, and $a_n$ does not satisfy the recurrence, then\\[\\limsup_{n\\to \\infty} \\frac{[a_1,\\ldots,a_n]}{a_{n+1}}\\left(\\frac{a_n^2}{a_{n+1}}-1\\right)>0.\\]A sequence satisfying the reucrrence $a_n = a_{n-1}^2-a_{n-1}+1$ is known as Sylvester's sequence.\n\nDuverney \\cite{Du01} proved a weaker version of this problem: if\\[\\sum_{n\\geq 0}\\left(\\frac{a_{n+1}}{a_n^2}-1\\right)\\]converges then $\\sum \\frac{1}{a_n}$ is rational if and only if\\[a_{n}=a_{n-1}^2-a_{n-1}+1\\]for all large $n$."
+    },
+    "statement": {
+      "sha256": "c2b470170f3c17bbe769cc1742b0943e0290c8a45eae3ea0b7587fa1d8502796",
+      "source_region": "div#content",
+      "text": "Let $1\\leq a_1<a_2<\\cdots$ be a sequence of integers such that\\[\\lim_{n\\to \\infty}\\frac{a_n}{a_{n-1}^2}=1\\]and $\\sum\\frac{1}{a_n}\\in \\mathbb{Q}$. Then, for all sufficiently large $n\\geq 1$,\\[ a_n = a_{n-1}^2-a_{n-1}+1.\\]"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/243"
+}

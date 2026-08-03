@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#377}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, binomial coefficients
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Is there some absolute constant $C>0$ such that\[\sum_{p\leq n}1_{p\nmid \binom{2n}{n}}\frac{1}{p}\leq C\]for all $n$ (where the summation is restricted to primes $p\leq n$)?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+A question of Erd\H{o}s, Graham, Ruzsa, and Straus \cite{EGRS75}, who proved that if $f(n)$ is the sum in question then\[\lim_{x\to \infty}\frac{1}{x}\sum_{n\leq x}f(n) = \sum_{k=2}^\infty \frac{\log k}{2^k}=\gamma_0\]and\[\lim_{x\to \infty}\frac{1}{x}\sum_{n\leq x}f(n)^2 = \gamma_0^2,\]so that for almost all integers $f(m)=\gamma_0+o(1)$. They also prove that, for all large $n$,\[f(n) \leq c\log\log n\]for some constant $c<1$. (It is trivial from Mertens estimates that $f(n)\leq (1+o(1))\log\log n$.)
+
+A positive answer would imply that\[\sum_{p\leq n}1_{p\mid \binom{2n}{n}}\frac{1}{p}=(1-o(1))\log\log n,\]and Erd\H{o}s, Graham, Ruzsa, and Straus say there is 'no doubt' this latter claim is true.
+
+This is mentioned in problem B33 of Guy's collection \cite{Gu04}.
+
+\bigskip
+\noindent\textbf{References:}
+
+[EGRS75] Erd\H{o}s, P. and Graham, R. L. and Ruzsa, I. Z. and Straus, E. G., On the prime factors of $(\sp{2n}\sb{n})$. Math. Comp. (1975), 83-92.
+ 
+ [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/377}}
+\end{document}

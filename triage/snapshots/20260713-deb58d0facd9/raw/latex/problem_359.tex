@@ -1,0 +1,46 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#359}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+\noindent\textbf{Note:} segmented numbers
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $a_1&lt;a_2&lt;\cdots$ be an infinite sequence of integers such that $a_1=n$ and $a_{i+1}$ is the least integer which is not a sum of consecutive earlier $a_j$s. What can be said about the density of this sequence? In particular, in the case $n=1$, can one prove that $a_k/k\to \infty$ and $a_k/k^{1+c}\to 0$ for any $c&gt;0$?
+
+
+
+
+A problem of MacMahon, studied by Andrews \cite{An75}. When $n=1$ this sequence begins\[1,2,4,5,8,10,14,15,\ldots.\]This sequence is A002048 in the OEIS. Andrews conjectures\[a_k\sim \frac{k\log k}{\log\log k}.\]Porubsky \cite{Po77} proved that, for any $\epsilon&gt;0$, there are infinitely many $k$ such that\[a_k &lt; (\log k)^\epsilon \frac{k\log k}{\log\log k},\]and also that if $A(x)$ counts the number of $a_i\leq x$ then\[\limsup \frac{A(x)}{\pi(x)}\geq \frac{1}{\log 2}\]where $\pi(x)$ counts the number of primes $\leq x$. See also [839] .
+
+
+
+
+References
+
+[An75] Andrews, George E., Research Problems: Mac Mahon's Prime Numbers of Measurement . Amer. Math. Monthly (1975), 922-923.
+
+[Po77] Porubsk\'y, \v S., On {M}ac{M}ahon's segmented numbers and related sequences . Nieuw Arch. Wisk. (3) (1977), 403--408.
+
+\noindent\textbf{Related OEIS sequences:} A002048
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/359}}
+\end{document}

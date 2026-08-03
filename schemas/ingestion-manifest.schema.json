@@ -1,0 +1,153 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.invalid/erdos/ingestion-manifest.schema.json",
+  "title": "Immutable Erdős Source Ingestion Manifest",
+  "type": "object",
+  "required": [
+    "schema_version", "snapshot_id", "snapshot_time", "extractor_version",
+    "upstream_repository_url", "upstream_commit", "catalog_url",
+    "catalog_sha256", "commit_pinned_catalog_url",
+    "commit_pinned_catalog_sha256", "catalog_records", "catalog_open_records",
+    "selected_open_problems", "missing_only", "canonical", "corpus_complete",
+    "apply", "application", "records"
+  ],
+  "properties": {
+    "schema_version": {"const": 2},
+    "snapshot_id": {"type": "string", "minLength": 1},
+    "snapshot_time": {"type": "string", "format": "date-time"},
+    "extractor_version": {"type": "string", "minLength": 1},
+    "upstream_repository_url": {"const": "https://github.com/teorth/erdosproblems"},
+    "upstream_commit": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^[0-9a-f]{40}$"}
+      ]
+    },
+    "catalog_url": {"type": "string", "format": "uri"},
+    "catalog_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "commit_pinned_catalog_url": {
+      "oneOf": [{"type": "null"}, {"type": "string", "format": "uri"}]
+    },
+    "commit_pinned_catalog_sha256": {
+      "oneOf": [
+        {"type": "null"},
+        {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+      ]
+    },
+    "catalog_records": {"type": "integer", "minimum": 0},
+    "catalog_open_records": {"type": "integer", "minimum": 0},
+    "selected_open_problems": {"type": "array", "items": {"type": "integer"}},
+    "missing_only": {"type": "boolean"},
+    "canonical": {"type": "boolean"},
+    "corpus_complete": {"type": "boolean"},
+    "apply": {"type": "boolean"},
+    "application": {
+      "type": "object",
+      "required": ["requested", "status", "destination_count"],
+      "properties": {
+        "requested": {"type": "boolean"},
+        "status": {
+          "enum": ["not_requested", "skipped_source_errors", "applied", "error"]
+        },
+        "destination_count": {"type": "integer", "minimum": 0},
+        "error": {"type": "string"}
+      },
+      "additionalProperties": false
+    },
+    "records": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["problem_number", "source_state", "source_url", "status"],
+        "properties": {
+          "problem_number": {"type": "integer", "minimum": 1},
+          "source_state": {"const": "open"},
+          "source_url": {"type": "string", "format": "uri"},
+          "status": {"enum": ["generated", "applied", "error", "apply_error"]},
+          "raw_html_path": {"type": "string", "minLength": 1},
+          "raw_html_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "source_record_path": {"type": "string", "minLength": 1},
+          "source_record_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "statement_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "remarks_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "references_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "section_sha256": {
+            "type": "object",
+            "required": ["statement", "remarks", "references"],
+            "properties": {
+              "statement": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+              "remarks": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+              "references": {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+            },
+            "additionalProperties": false
+          },
+          "generated_tex_path": {"type": "string", "minLength": 1},
+          "generated_tex_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+          "applied_destinations": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "uniqueItems": true,
+            "items": {
+              "type": "object",
+              "required": ["path", "before_sha256", "after_sha256", "action"],
+              "properties": {
+                "path": {"type": "string", "minLength": 1},
+                "before_sha256": {
+                  "oneOf": [
+                    {"type": "null"},
+                    {"type": "string", "pattern": "^[0-9a-f]{64}$"}
+                  ]
+                },
+                "after_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+                "action": {"enum": ["unchanged", "replaced"]}
+              },
+              "additionalProperties": false
+            }
+          },
+          "applied_paths": {
+            "type": "array",
+            "minItems": 2,
+            "maxItems": 2,
+            "uniqueItems": true,
+            "items": {"type": "string", "minLength": 1}
+          },
+          "error": {"type": "string"}
+        },
+        "allOf": [
+          {
+            "if": {"properties": {"status": {"enum": ["generated", "applied", "apply_error"]}}},
+            "then": {
+              "required": [
+                "raw_html_path", "raw_html_sha256", "source_record_path",
+                "source_record_sha256", "section_sha256", "statement_sha256",
+                "remarks_sha256", "references_sha256", "generated_tex_path",
+                "generated_tex_sha256"
+              ]
+            }
+          },
+          {
+            "if": {"properties": {"status": {"const": "applied"}}},
+            "then": {"required": ["applied_destinations", "applied_paths"]}
+          }
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {"properties": {"canonical": {"const": true}}},
+      "then": {
+        "properties": {
+          "upstream_commit": {"type": "string", "pattern": "^[0-9a-f]{40}$"},
+          "commit_pinned_catalog_url": {"type": "string", "format": "uri"},
+          "commit_pinned_catalog_sha256": {
+            "type": "string", "pattern": "^[0-9a-f]{64}$"
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
+}

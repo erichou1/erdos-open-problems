@@ -1,0 +1,3488 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+
+<title>521 Discussion Thread | Erdős Problems</title>
+<meta property="og:title" content="521 Discussion Thread | Erdős Problems">
+<link rel="icon" href="/static/favicon.ico">
+<link rel="stylesheet" href="/static/style.css?v=733265cf">
+
+<script>
+document.addEventListener('click', (e) => {
+  // Toggle reply form
+  const toggle = e.target.closest('.reply-toggle');
+  if (toggle) {
+    const id = toggle.getAttribute('data-target');
+    const form = document.getElementById(id);
+    if (form) form.classList.toggle('hidden');
+  }
+  // Reply with quote
+  const quoteBtn = e.target.closest('.reply-quote');
+  if (quoteBtn) {
+    const id = quoteBtn.getAttribute('data-target');
+    const form = document.getElementById(id);
+    if (!form) return;
+    const ta = form.querySelector('textarea');
+    const raw = quoteBtn.getAttribute('data-raw') || '';
+    const quoted = raw.split('\n').map(l => '> ' + l).join('\n') + '\n\n';
+    ta.value = quoted;
+    form.classList.remove('hidden');
+    ta.focus();
+    const len = ta.value.length;
+    ta.setSelectionRange(len, len);
+  }
+});
+</script>
+
+<!-- This creates the reference in the bibliography box. -->
+
+<script>
+function addNewBox(key, problem_id, shouldScroll = false) {
+  const local_id = 'bib-container' + String(problem_id);
+  const container = document.getElementById(local_id);
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  fetch(`/bibs/${encodeURIComponent(key)}`)
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.text();
+    })
+    .then(html => {
+      container.innerHTML = html;
+
+      if (shouldScroll) {
+        requestAnimationFrame(() => {
+          container.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+        });
+      }
+    })
+    .catch(err => {
+      console.error("Failed to load bib:", err);
+      container.textContent = "Unable to load reference.";
+
+      if (shouldScroll) {
+        container.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+    });
+}
+</script>
+
+<script>
+const filledSVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" class="fav-icon">
+  <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+</svg>
+                `;
+const outlineSVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="black" fill="white" class="fav-icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.610l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.840-.610l1.285-5.386a.563.563 0 0 0-.182-.557L3.041 10.385a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+</svg>
+                `;
+
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest(".fav-btn");
+  if (!btn) return;
+
+  e.preventDefault();
+  const problemId = btn.dataset.problemId;
+
+  try {
+    const res = await fetch(`/forum/toggle_favourite/${problemId}`, { method: "POST" });
+    const data = await res.json();
+
+    btn.dataset.favourited = data.favourited ? "true" : "false";
+    btn.innerHTML = data.favourited ? filledSVG : outlineSVG;
+  } catch (err) {
+    console.error("Toggle failed:", err);
+  }
+});
+</script>
+
+    
+<script>
+function addImageBox(X, problem_id, shouldScroll = true) {
+  const local_id = 'image-container' + String(problem_id);
+  const container = document.getElementById(local_id);
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  const newBox = document.createElement("div");
+
+  const img = document.createElement("img");
+  img.src = `/static/${encodeURIComponent(X)}.png`;
+  img.className = "responsive-image";
+  img.alt = String(X);
+
+  newBox.appendChild(img);
+  container.appendChild(newBox);
+
+  if (shouldScroll) {
+    requestAnimationFrame(() => {
+      container.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+  }
+}
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('searchForm');
+  if (!form) return;
+  form.addEventListener('submit', function (e) {
+    const input = form.querySelector('.searchTerm');
+    if (!input) return;
+    const value = input.value.trim();
+    if (!value) return;
+    const path = '/search/' + encodeURIComponent(value);
+    const inDual = window.location.pathname.startsWith("/dual");
+    if (inDual) {
+      e.preventDefault(); 
+      const selected = document.querySelector('input[name="targetPanel"]:checked');
+      const panel = selected ? selected.value : "left";
+      const iframe = document.getElementById(`iframe-${panel}`);
+      if (iframe) {
+        const url = path.includes("?") ? path + "&embed=1" : path + "?embed=1";
+        iframe.src = url;
+        const box = document.querySelector(`#panel-${panel} input`);
+        if (box) box.value = path;
+      } else {
+        window.location.href = path;
+      }
+    } else {
+      form.action = path;
+      form.method = "GET";
+    }
+  });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.location.pathname.startsWith("/dual")) return;
+
+  var form = document.getElementById('idsearchForm');
+  if (!form) return;
+
+  form.onsubmit = function() {
+    var input = document.querySelector('.idsearchTerm').value.trim();
+    var searchUrl;
+
+    if (/^\d+$/.test(input)) {
+        searchUrl = '/' + encodeURIComponent(input);
+    } else if (/^((\d+|end)(-(\d+|end))?\s*)+(open|solved|yes|no)?$/.test(input.toLowerCase())) {
+        let parts = input.split(/\s+/).filter(Boolean);
+        searchUrl = '/range/' + parts.map(encodeURIComponent).join('/');
+    } else {
+        alert("Enter either a single integer or a space-separated list of numbers/ranges...");
+        return false;
+    }
+    window.location.href = searchUrl;
+    return false;
+  };
+});
+</script>
+
+<script>
+  window.CURRENT_USERNAME = "";
+</script>
+
+
+<script>
+document.addEventListener("click", async (ev) => {
+  const btn = ev.target.closest(".reaction-btn");
+  if (!btn) return;
+  const you = window.CURRENT_USERNAME || "";
+  const bar = btn.closest(".reaction-bar");
+  const postId = bar?.dataset.postId;
+  const rtype = btn.dataset.type;
+  const reactUrl = bar?.dataset.reactUrl; 
+  if (!postId || !rtype || !reactUrl) return;
+
+  try {
+    const res = await fetch(reactUrl, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({type: rtype})
+    });
+    const data = await res.json();
+    if (!data.ok) {
+      alert(data.error || "Could not update reaction.");
+      return;
+    }
+    const summary = data.summary;
+    
+    bar.querySelectorAll(".reaction-btn").forEach(b => {
+      const t = b.dataset.type;
+      const countSpan = bar.querySelector(`.reaction-count[data-type="${t}"]`);
+      if (countSpan && summary[t]) {
+        countSpan.textContent = summary[t].count;
+    const desc = b.dataset.desc || "";
+    const usersTitle = summary[t].users_title || "No one yet.";
+    b.title = `${desc}\n\n${usersTitle}`;
+      }
+        const iReacted = you && (summary[t].users_title || "").includes(you);
+  b.classList.toggle("active", !!iReacted);
+  b.setAttribute("aria-pressed", iReacted ? "true" : "false");
+    });
+  } catch (e) {
+    console.error(e);
+    alert("Only registered users with 5+ posts can react.");
+  }
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.body.addEventListener("click", function (e) {
+    const link = e.target.closest(".problem-reaction-link");
+    if (!link) return;
+
+    e.preventDefault();
+
+    const row = link.closest(".problem-reaction-row");
+    if (!row) return;
+
+    const form = row.querySelector(".problem-reaction-form");
+    if (!form) return;
+
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+      method: "POST",
+      body: formData,
+      headers: {
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    })
+      .then(resp => resp.json())
+      .then(data => {
+        if (!data.ok) {
+          console.error(data.error || "Problem reaction update failed");
+          return;
+        }
+
+        const summary = data.summary;
+
+        // Update users text for each reaction type
+        for (const [type, info] of Object.entries(summary)) {
+          const r = document.querySelector(
+            `.problem-reaction-row[data-reaction-type="${type}"]`
+          );
+          if (!r) continue;
+
+          const usersCell = r.querySelector(".problem-reaction-users");
+          if (usersCell) {
+            usersCell.textContent = info.users_title || "None yet";
+          }
+        }
+        link.classList.toggle("active");
+        if (link.classList.contains("active")) {
+          link.textContent = "(no)";
+        } else {
+          link.textContent = "(yes)";
+        }
+      })
+      .catch(err => {
+        console.error("Problem reaction AJAX error", err);
+      });
+  });
+});
+</script>
+
+
+
+
+
+
+</head>
+
+<body>
+
+<div class="topnav">
+
+  <div class="left">
+    <div class="logo">
+      <a class="dual-aware" href="/"><img src="/static/EPLogo.png" alt="Logo" height="50"></a>
+    </div>
+    <div class="links dual-aware desktop-nav">
+      <a href="/forum">Forum</a>
+      <a href="/dm">Inbox</a> 
+      <a href="/favourites">Favourites</a>
+      <a href="/tags">Tags</a> 
+      <div class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">More</a>
+        <div class="dropdown-content">
+          <a href="/faq">FAQ</a>
+          <a href="/prizes">Prizes</a>
+          <a href="/lists">Problem Lists</a>
+          <a href="/definitions">Definitions</a>
+          <a href="/links">Links</a>
+        </div>
+      </div> 
+    </div>
+    <div class="mobile-nav">
+    
+        <a class="forumlink" href="/forum">Forum</a>
+    <div class="dropdown">
+      <button class="dropbtn" id="mobileMenuButton">Menu</button>
+      <div class="dropdown-content">
+        <a href="/dm">Inbox</a> 
+        <a href="/favourites">Favourites</a>
+        <a href="/tags">Tags</a>  
+        <a href="/faq">FAQ</a>
+        <a href="/prizes">Prizes</a>
+        <a href="/lists">Problem Lists</a>
+        <a href="/definitions">Definitions</a>
+        <a href="/links">Links</a>
+      </div>
+     </div>
+    </div>
+  </div>
+
+  <div class = "middle">
+    <div class="button-container" style="max-width: 50%;">
+      <form id="idsearchForm">
+        <input required type="text" name="query" class="idsearchTerm" placeholder="# (or range #-#)" title="Enter either a single integer or a space-separated list of numbers/ranges, optionally ending with 'open' or 'solved'.">
+        <button type="submit" class="searchButton">Go</button>
+      </form>
+    </div>
+    <div class="button-container" style="max-width: 50%;">
+      <form id="searchForm">
+        <input required type="text" name="query" class="searchTerm" placeholder="Search" title="Search all problems.">
+        <button type="submit" class="searchButton">Go</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="right">
+    <a href="#" id="dualViewLink" class="split_all">Dual View</a>
+    <a href="/random_solved" class="split_solved dual-aware">Random Solved</a>
+    <a href="/random_open" class="split_open dual-aware">Random Open</a>
+  </div>
+
+</div>
+
+<div id="notifications-slot"></div>
+
+
+
+
+<div class="container">
+<div class="problem-box">
+
+        
+
+                    <div class="problem-text" id="open">  
+<div id="prize">
+
+<span class="tooltip">
+  OPEN
+  <span class="tooltiptext">
+    This is open, and cannot be resolved with a finite computation.
+  </span>
+</span>
+
+</div>
+
+                        <div id="content">Let $(\epsilon_k)_{k\geq 0}$ be independently uniformly chosen at random from $\{-1,1\}$. If $R_n$ counts the number of real roots of $f_n(z)=\sum_{0\leq k\leq n}\epsilon_k z^k$ then is it true that, almost surely,\[\lim_{n\to \infty}\frac{R_n}{\log n}=\frac{2}{\pi}?\]</div>
+                        <div id="problem_id"><a href="/521">#521</a>: <a href="#bib-container521" onclick="event.preventDefault();addNewBox('Er61', '521', true);return false;">[Er61,p.252]</a></div>
+                         
+                            <div id="tags">
+                            
+  <a href="/tags/analysis">analysis</a> | 
+
+  <a href="/tags/polynomials">polynomials</a> | 
+
+  <a href="/tags/probability">probability</a>
+
+                            </div>
+                        
+                    </div>  
+                    
+                    <div class="problem-text" id="disclaimer">  
+The open status of this problem reflects the current belief of the owner of this website. There may be literature on this problem that I am unaware of, which may partially or completely solve the stated problem. Please do your own literature search before expending significant effort on solving this problem. If you find any relevant literature not mentioned here, please add this in a comment.
+                    <div
+  class="problem-status-widget"
+  data-problem-id="521"
+  data-set-url="/problem-status/521"
+  data-current-status="claimed"
+  data-can-edit="0"
+  style="--status-progress: 1.0; --status-count: 3;"s
+>
+                      <div class="problem-status-heading">Comment activity that has not yet been incorporated into the remarks</div>
+
+  <div class="problem-status-scale" role="radiogroup" aria-label="Problem status">
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option"
+        data-status="open"
+        data-label="None"
+        data-description="There are no solutions, partial or complete, claimed in the comments."
+        data-progress="0.0"
+        role="radio"
+        aria-checked="false"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">None</span>
+      </button>
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option"
+        data-status="partial"
+        data-label="Partial"
+        data-description="There are claims of partial results and/or a path to a solution in the comments."
+        data-progress="0.5"
+        role="radio"
+        aria-checked="false"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">Partial</span>
+      </button>
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option is-active"
+        data-status="claimed"
+        data-label="Solution"
+        data-description="A claimed solution has been posted in the comments."
+        data-progress="1.0"
+        role="radio"
+        aria-checked="true"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">Solution</span>
+      </button>
+    
+  </div>
+
+  <div class="problem-status-explanation">
+    <span class="js-problem-status-description">
+      A claimed solution has been posted in the comments.
+    </span>
+  </div>
+  </div>
+  
+                    </div>
+                    
+                    
+
+
+                    
+
+                        <div class="problem-additional-text"> 
+                    
+                           Erdős and Offord <a href="#bib-container521" onclick="event.preventDefault();addNewBox('EO56', '521', true);return false;">[EO56]</a> showed that the number of real roots of a random degree $n$ polynomial with $\pm 1$ coefficients is $(\frac{2}{\pi}+o(1))\log n$.<br><br>It is ambiguous in <a href="#bib-container521" onclick="event.preventDefault();addNewBox('Er61', '521', true);return false;">[Er61]</a> whether Erdős intended the coefficients to be uniformly chosen from $\{-1,1\}$ or $\{0,1\}$. In the latter case, the constant $\frac{2}{\pi}$ should be $\frac{1}{\pi}$ (see the discussion in the comments).<br><br>In the case of $\{-1,1\}$ Do <a href="#bib-container521" onclick="event.preventDefault();addNewBox('Do24', '521', true);return false;">[Do24]</a> proved that, if $R_n[-1,1]$ counts the number of roots in $[-1,1]$, then, almost surely,\[\lim_{n\to \infty}\frac{R_n[-1,1]}{\log n}=\frac{1}{\pi}.\]See also <a href="/522" rel="nofollow noopener noreferrer ugc" target="_blank">[522]</a>.
+                           
+                    
+                    
+<p style="text-align: center; font-family: 'Courier New', monospace; font-size: 90%;">
+  <a href="/latex/521">View the LaTeX source</a>
+</p>
+<p style="text-align: center; font-family: 'Courier New', monospace; font-size: 90%;">
+  
+ This page was last edited 19 October 2025. <a href="/history/521">View history</a>
+</p>
+                    <div class="image-container" id="image-container521"></div>
+                        </div>
+
+                        <div class="problem-additional-text" style="text-align:center;"> 
+</div>
+
+                <div id="bib-container521"></div>
+  <div class="external">External data from <a href="https://github.com/teorth/erdosproblems">the database</a> - you can help update this</a>                
+
+
+  <br>
+  Formalised statement? 
+    
+      No (<a href="https://github.com/google-deepmind/formal-conjectures">Create a formalisation here</a>)        
+    
+  
+  
+  
+  <br>
+  
+  </div>
+
+
+<div class="problem-reactions">
+
+<div class="comment-count">
+  <a style="color: inherit;" href="/forum/discuss/521">
+    20 comments on this problem
+  </a>
+</div>
+
+<table class="problem-reactions-table">
+  <tbody>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="like">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Likes this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    
+      <a href="/forum/user/lof310" style="color:inherit; text-decoration: none;">lof310</a>, 
+    
+      <a href="/forum/user/Vjeko_Kovac" style="color:inherit; text-decoration: none;">Vjeko_Kovac</a>
+    
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="collab">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Interested in collaborating</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="working_on">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Currently working on this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    
+      <a href="/forum/user/lof310" style="color:inherit; text-decoration: none;">lof310</a>
+    
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="hard">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>This problem looks difficult</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="easy">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>This problem looks tractable</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    
+      <a href="/forum/user/TerenceTao" style="color:inherit; text-decoration: none;">TerenceTao</a>, 
+    
+      <a href="/forum/user/lof310" style="color:inherit; text-decoration: none;">lof310</a>, 
+    
+      <a href="/forum/user/MalekZ" style="color:inherit; text-decoration: none;">MalekZ</a>
+    
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="formalisable">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>The results on this problem could be formalisable</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="working_form">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>I am working on formalising the results on this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+</div>
+<br>
+
+                <div class="citationbox"> <div id="content">
+                                    
+When referring to this problem, please use the original sources of Erd&#337;s. If you wish to acknowledge this website, the recommended citation format is:
+<br><br>
+T. F. Bloom, Erd&#337;s Problem #521, https://www.erdosproblems.com/521, accessed 2026-07-10</div>
+</div>
+
+               
+
+
+<div class="problem-additional-text"> 
+
+
+
+
+<div class="thread-sort">
+Order by
+  <a href="/forum/thread/521?order=oldest"
+     class="order ">oldest first</a> or
+  <a href="/forum/thread/521?order=newest"
+     class="order active">newest first</a>. (The most recent comments are highlighted in a red border.)
+</div>
+
+
+
+
+<ul class="post-list">
+  
+    
+    
+
+
+
+
+
+
+<li id="post-5689"
+    class="post depth-0
+           
+           even">
+    <div class="post-body" id="post-5689">
+    
+
+
+
+      
+      <p>Hi Terry, Quanyu, and Vjeko. I'm effectively just stating my approach to this problem here. The ideas that the three of you contributed allowed me to paint the picture for a solution, and I would be happy to jointly work on finishing up this project. I agree that the $\lim$ should not exist, and it would be even nicer to determine the precise $\limsup$ and $\liminf$ here. The main idea is of course that if $R_n$ denotes the roots in $(-\infty -1) \cup (1, \infty)$ then one may prove\[<br>\sup_{N \le m &lt; n \le 2N} |R_n - R_m| \gg \log N.<br>\]First focus on $x &lt; 0$, writing $x = -e^{-t/n}$ for $t &gt; 0$. Then $t$ measures the distance from $1$ at the "natural" scale of $1/n$. The point of this is that if we write $O_n(t) = (-1)^n e^{-t} n^{-1/2} f_n(e^{-t/n})$ then $O_n(t)$ becomes a Laplace transform type of object as $n$ becomes super large. When $n$ becomes large, I should expect this to approach a Gaussian process for which I may then apply analytical techniques to solve the problem with ease.<br><br>Let us fix some sequence $U_n$ with $U_n \to \infty$ and $U_n = o(n)$. Then the "bucket" idea that Terry has is to look at $$B_n(U_n, c, C) = [-e^{CU_n/n}, -e^{cU_n/n}].$$ If one write $O_{n, U_n}(\tau) = \sqrt{U_n}O_n(U_n\tau)$ then this looks like a Riemann-sum in some sense. One may calculate $O_{n, U_n} \to G$ in $C^1[c, C]$ where $G$ is the centered Gaussian process with covariance $\mathbb{E}G(\tau)G(\sigma) = 1/(\tau + \sigma)$.<br><br>Why is this viewpoint interesting? Well now we can use the regularity of $G$ to understand statements about the roots of $G$, and then convert these statements back to the polynomial. There are some facts that I could assign my dog to prove: With high probability, the zeros of $G$ are simple, "well-seperated" and $G$ has derivative at these points "far" away from zero. Also, if two $C^1$ functions are sufficiently close and the first has such stable zeros, then they have the same number of zeros in $[c, C]$.<br><br>Now, I will combine this observation with the following idea/question: Which coefficients actually affect the zero count in a "bucket" as Terry defines? Let us perturb a block of reverse coefficients at some depth $R$. If we resample the coefficients in this window but impose finitely many moment constraints to that the perturbation does not create unwanted lower order effects, then after some rescaling the perturbation converges in $C^1[c, C]$ to a Gaussian field $Z$ obtained from the kernel $(\tau, \sigma) = \int_a^b e^{-x(\tau + \sigma)}~ dx$. The point is that $Z$ is independent of $G$, so we need to understand and prove something like this:\[<br>\mathbb{P}(N(G + Z; [c, C]) \neq N(G; [c, C])) &#62; 0,<br>\]where $N$ denotes the number of zeros. In other words, adding a non-trivial independent Gaussian perturbation changes the number of zeros in the bucket with positive probability. We now look at three cases. $R \ll n/U_n$, $R \gg n/U_n$, and $R \asymp n/U_n$. For the first case, if we match finitely many moments then we can use Taylor expansion ideas to show that the perturbation becomes invisible in $C^1$. For $R \gg n/U_n$ can also be dealt with ease. Therefore, we only need to worry about the reverse coefficients at depth $R \asymp n/U_n$. And this coupled with all the other ideas before should give a nice proof (after we do the same for $x &#62; 0$.<br><br>What is not so easy is determining the precise $\limsup$ and $\liminf$. I would love to know if people have further ideas. Making this a joint project would be great, because after all, the biggest idea was actually observing that this may be false (I was always trying to prove that this is true, because if one considers the Kac-Rice formula for Gaussian processes then this $G$ actually predicts $2/\pi$).</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/BraydenLetwin">BraydenLetwin</a></strong>
+      
+      — <a href="/forum/thread/521#post-5689">22:45 on 21 Apr 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="5689" data-react-url="/forum/post/5689/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Vjeko_Kovac, Kevin Barreto, Nat Sothanaphan"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">3</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-5719"
+    class="post depth-1
+           
+           odd">
+    <div class="post-body" id="post-5719">
+    
+
+
+
+      
+      <p>Hi Brayden! Thanks for the credit, but I don't think that I had nontrivial observations here. :-)<br><br>Regarding your sketch of the approach, maybe you want to write up rigorously the Gaussian Kac polynomials $\sum_{k=0}^n \xi_k x^k$ first.<br>Your suggestion to write points below $-1$ in the form $x=-\exp(U\tau/n)$, $\tau\in[c,C]$,  $U=U_n\to\infty$, $U=o(n)$ makes sense to me heuristically.  But I don't yet see that it disproves the a.e. convergence. Yes, you get the Gaussian endpoint limit of the rescaled outside-endpoint process\[ \sqrt{\frac{U}{n}} (-1)^n e^{-U\tau}f_n(-e^{U\tau/n}) \]converging in law in $C^1[c,C]$ to the centered Gaussian process $G$ with $\mathbb{E} G(\tau)G(\sigma)=\frac1{\tau+\sigma}$. Thus the zero count converges in distribution to $N_G([c,C])$. This part can be made clean for the Gaussian Kac polynomials. You prove that a coefficient block at reverse depth $R\asymp n/U$ has a nonzero probability of changing the zero count by $O(1)$ in the corresponding outside bucket<br>$[-\exp(CU/n),-\exp(cU/n)]$. This part is good, I just don't yet see how one goes beyond that single bucket. (EDIT: But now, after reading Brayden's wishes under [522], I understand that the details will be published elsewhere.)<br><br>Regarding the heuristcs for the $\liminf$ and $\limsup$: your endpoint heuristics suggests what they should be, provided that non-cancellation is present. Model the two outside endpoints by a two-endpoint zero process over time about $\log n$. Suppose that it satisfies large-deviation principle\[ \mathbb{P}\Big(\frac{N_n((-\infty,-1)\cup(1,\infty))}{\log n}\approx x\bigg) = n^{-I(x)} \]with $I(1/\pi)=0$. Then\[ \mathbb{P}\Big(\exists n\in[N,2N]:\frac{N_n((-\infty,-1)\cup(1,\infty))}{\log n}\approx x\bigg)<br>= 1-\exp(-N^{1-I(x)+o(1)}). \]Thus, the total count of zeros, in the whole $\mathbb{R}$, should satisfy\[ \mathbb{P} \Big( \limsup_{n\to\infty}\frac{N_n(\mathbb{R})}{\log n}  = \frac{1}{\pi}+\rho \Big) = 1, \]where $\rho=\sup\{x\geq0:I(x)\leq1\}$ and I am not even sure that this is computable (in some explicit way). On the other hand, I find it experimentally convincing that\[ \mathbb{P} \Big( \liminf_{n\to\infty}\frac{N_n((-\infty,-1)\cup(1,\infty))}{\log n} = 0 \Big) = 1, \quad i.e.,\quad \mathbb{P} \Big( \liminf_{n\to\infty}\frac{N_n(\mathbb{R})}{\log n} = \frac{1}{\pi} \Big) = 1. \]I guess that your dog would bet its tail on that after seeing the sample trajectory from my first post here. LOL<br><br>If one first concentrates on just disproving the a.e. convergence, could there be a more naive way, based on the $\liminf$ probably being $0$, I mean $1/\pi$ for zeros on the whole line? Instead of trying to force an excess of outside roots, to try to prove that the outside count\[ O_n:=N_n((-\infty,-1)\cup(1,\infty)) \]vanishes for infinitely many $n$. By reciprocity, this is equivalent to asking that\[ g_n(x):=x^n f_n(1/x)=\sum_{k=0}^n \epsilon_{n-k}x^k \]have no zeros in $(-1,1)$. This is not contradicted by Yen Do's theorem on $[-1,1]$, because he studied the prefix sequence $f_n(x)=\sum_{k\le n}\epsilon_k x^k$, while $g_n$ is a moving reversed prefix whose important endpoint coefficients are refreshed as $n$ varies. <br>For a single endpoint the persistence exponent for the corresponding logarithmic stationary process should be $3/16$, so for the two outside endpoints one expects (EDIT: actually, this is easy, one does have that)\[ \mathbb{P}(O_n=0)=n^{-3/8+o(1)}. \]Since\[ \sum_{n\leq N}\mathbb P(O_n=0)\sim N^{5/8+o(1)}, \]there is "enough entropy" for infinitely many such $n$. What is missing (EDIT: actually it is not missing, this is easy too) is something like\[ \mathbb P(O_n=0,O_{n+h}=0)<br>\lesssim n^{-3/8+\varepsilon}h^{-3/8+\varepsilon} , \]meaning that $g_n$ and $g_{n+h}$ share only the deeper endpoint scales. This should imply that the $\liminf$ is $1/\pi$ because of Yen Do's theorem, and then the convergence in probability to $2/\pi$ would disprove the a.e. convergence. <br>(EDIT: This is not a competing solution with Brayden's, or anything, just a trivial idea and I reserve no credits. The whole argument is still not complete anyway, and even if it can be finished, it will be inferior to the suggested stronger results. I am pursuing this just out of curiosity.)</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Vjeko_Kovac">Vjeko_Kovac</a></strong>
+      
+      — <a href="/forum/thread/521#post-5719">05:13 on 23 Apr 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="5719" data-react-url="/forum/post/5719/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Nat Sothanaphan"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-5734"
+    class="post depth-1
+           
+           even">
+    <div class="post-body" id="post-5734">
+    
+
+
+
+      
+      <p>Looks like great progress!  I won't be able to devote much further time to this problem, so feel free to complete the arguments without me (I'll be content with being acknowledged for the "buckets" idea).</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TerenceTao">TerenceTao</a></strong>
+      
+      — <a href="/forum/thread/521#post-5734">15:05 on 23 Apr 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="5734" data-react-url="/forum/post/5734/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-5867"
+    class="post depth-1
+           recent recent-3
+           odd">
+    <div class="post-body" id="post-5867">
+    
+
+
+
+      
+      <p>I am posting with Brayden's approval. I managed to get ChatGPT 5.5 Pro prove a variant of the problem for the Gaussian Kac polynomials, i.e. with the standard normal coefficients. This still doesn't solve the Erdos problem (which was stated for the random Littlewood = Rademacher Kac polynomials), but at least it's something, since it already gives a negative answer to Problem 1.2.a by Igor Pritsker, <a href="http://aimpl.org/randpolyzero/1/" rel="nofollow noopener noreferrer ugc" target="_blank">posed here</a>.<br><br><a href="https://web.math.pmf.unizg.hr/~vjekovac/files/Erdos_521_Gaussian.pdf" rel="nofollow noopener noreferrer ugc" target="_blank">The writeup is here.</a> I first prompted ChatGPT to initially judge the ideas from this forum thread, it sorted them by likelihood/simplicity, then it preferred and picked up my idea (sketched above) of estimating probabilities of single events and pairs of events of having no roots in $\mathbb{R}\setminus[-1,1]$ (but, in the end, a "log log shortened" set than that actually worked). After some guidance and a lot of proofreading and corrections from my side, it produced the above file. If you want to inspect the full (very long and thinking time consuming) chat, <a href="https://chatgpt.com/share/69ebe4bd-fc60-838c-b4bd-deed2abec4e1" rel="nofollow noopener noreferrer ugc" target="_blank">it is here</a>. I certainly do plan to rewrite this proof in a better and human way when I find time, but I first wanted to convince myself that it can be made to work.<br><br>As for the actual outline of the proof, it also combines a few things said here on the forum: Terry's idea of carefully choosing a bucket, then, most importantly, Brayden's idea of convergence to a stationary Gaussian process, and my suggestions to concentrate on the lack of outside roots. The goal is to disprove the strong law $R_n/\log n\to2/\pi$ a.s. by showing\[ \mathbb{P}\bigg(\liminf_{n\to\infty}\frac{R_n}{\log n}<br>\le \frac1\pi+\delta\Big)&gt;0 \]for any small $\delta&gt;0$. Instead of $\sum_{k=0}^n \xi_j x^j$ we study the reversed polynomial\[ Q_n(x):=\sum_{j=0}^n \xi_{n-j}x^j. \]We take, like, $L_n=4\log\log n$ and define a (reversed) "bucket"\[ I_n:=[-1+L_n/n,\,1-L_n/n]. \]We consider the events $B_n$ that $Q_n$ has no roots in $I_n$. The estimate\[ \mathbb P(B_n)\asymp (L_n/n)^{3/8} \]is obtained by the change of variables $x=\tanh(t/2)$, under which the normalized Gaussian power series converges to the stationary Gaussian process\[ Y_t=\sqrt{1-\tanh^2(t/2)}\,\sum_{j\ge0}\xi_j\tanh^j(t/2),<br>\quad  \mathbb{E} Y_sY_t=\operatorname{sech}\Big(\frac{s-t}{2}\bigg), \]and by applying the persistence asymptotics\[ \mathbb{P}(Y_t&gt;0\ \forall |t|\le T)\asymp e^{-3T/8}. \]Next, the decorrelation bound\[ \mathbb{P}(B_n\cap B_{n+h}) \ll_\varepsilon<br>(L_n/n)^{3/8}(L_h/h)^{3/8}, \qquad h\ge n^\varepsilon \]is shown using the exact decomposition $Q_{n+h}=F_h+x^h Q_n$, where the "fresh block" $F_h$ is independent of the old coefficients. Kochen-Stone then gives a positive-probability event on which $B_n$ occurs for infinitely many $n$. The remaining endpoint strips\[ [-1,-1+L_n/n]\cup[1-L_n/n,1] \]are controlled by Rolle's theorem, giving, with a large probability, that there are at most $(\delta/2)\log n$ zeros there. Thus, together,\[ \liminf_{n\to\infty}\frac{R_n(\mathbb{R}\setminus[-1,1])}{\log n}<br>\leq \delta \]with a positive probability.<br><br>Maybe someone has ideas on how to prove a result for more general Kac polynomials, including the Rademacher ones. I thought that this problem should naturally be a collaboration, since many ideas were shared already by different people. I wanted to share this writeup as a possible viable route, if you find it correct and worthwhile, but I don't mind if the approach sketched originally turns out to be a  better one, and all this gets superseded.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Vjeko_Kovac">Vjeko_Kovac</a></strong>
+      
+      — <a href="/forum/thread/521#post-5867">09:05 on 25 Apr 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="5867" data-react-url="/forum/post/5867/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Nat Sothanaphan"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-5870"
+    class="post depth-2
+           recent recent-2
+           even">
+    <div class="post-body" id="post-5870">
+    
+
+
+
+      
+      <p>Congrats. Standard <a href="https://chatgpt.com/share/69ec8f0e-4e10-839f-8ff5-ef5254eba425" rel="nofollow noopener noreferrer ugc" target="_blank">check</a> found no issues in the writeup and also did not find literature with this exact result.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/521#post-5870">09:54 on 25 Apr 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="5870" data-react-url="/forum/post/5870/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Vjeko_Kovac"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-6084"
+    class="post depth-1
+           recent recent-1
+           even">
+    <div class="post-body" id="post-6084">
+    
+
+
+
+      
+      <p>After all the comments from various people in this thread it became clear that ChatGPT 5.5 Pro can finish off the solution to this problem. Here is the <a href="https://web.math.pmf.unizg.hr/~vjekovac/files/Erdos_521_Kac.pdf" rel="nofollow noopener noreferrer ugc" target="_blank">writeup</a> generated by <a href="https://chatgpt.com/share/69f316ae-b210-8386-9a51-b2118cd925ce" rel="nofollow noopener noreferrer ugc" target="_blank">this chat</a>. It concerns slightly more general Kac polynomials, in particular claiming the solution to [521] in Corollary 1.4. It is not written very smoothly, as it pursues two approaches: one that works for normal coefficients (giving the negative answer to the question by Pritsker) and the other one that works for the Rademacher coefficients (giving the negative answer to the question by Erdős).<br><br>The only reason why I am posting this here so raw, unpolished, and undigested is because Brayden and I started receiving unsolicited ChatGPT-generated solutions to [521], from people who openly admitted (in the email) that their writeups were AI-generated, but asking us to upload their paper to the arXiv, under their name, with no AI declaration, and giving no credits to other people. I am all for progress, but this stopped making sense. It should become irrelevant who was the first to generate a solution with an AI. I actually feel bad for even facilitating that here and for jumping into Brayden's project, but I believe all of us here were simply happy to contribute with some ideas.<br><br>Once the pressure of being the first to generate the proof from other people's ideas is off, I think that Brayden (whos ideas along with Terry's were the most developed) should take any time in the world to develop the project in any way he likes, crediting anyone (or anything) he wants. PhD student projects are somewhat sacred in academia and should be protected.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Vjeko_Kovac">Vjeko_Kovac</a></strong>
+      
+      — <a href="/forum/thread/521#post-6084">09:10 on 30 Apr 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="6084" data-react-url="/forum/post/6084/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Thomas Bloom, Nat Sothanaphan, MalekZ, ykwon"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">4</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-311"
+    class="post depth-0
+           
+           odd">
+    <div class="post-body" id="post-311">
+    
+
+
+
+      
+      <p>Regarding the coefficients in $\{-1,1\}$ (the mean zero setting), there is one detail that might still be missing. Namely, (my dear bro) <a href="https://arxiv.org/abs/2403.06353" rel="nofollow noopener noreferrer ugc" target="_blank">Yen proved</a> in the paper that msawhney mentioned:\[ \frac{N_n([-1,1])}{\log n} \to \frac{1}{\pi} \ a.s., \]where $N_n(A)$ counts the number of roots in $A\subseteq\mathbb{R}$. What’s still missing is\[ \frac{N_n((-\infty,-1)\cup(1,\infty))}{\log n} \to \frac{1}{\pi} \ a.s. \]If $N_n(\mathbb{R})=(2/\pi+o(1))\log n$ was merely to be shown "with large probability" (in the sense of terminology used, say, with random graphs), which is the ancient result, and not "almost surely", then the distribution of roots for a fixed $n$ would be symmetric under the reflection $z\to1/z$, so the other convergence claim would follow automatically. However, this reflection reverses the coefficients, so (for a fixed time segment $1,\ldots,n$) it reverses time, and the joint distribution of the full latter infinite sequence of random variables is no longer related to the former one. You can notice that Yen talks about this in Section 7. In fact, v1 of the paper on the arXiv made precisely that logical mistake, incorrectly claiming the a.s. convergence of $N_n(\mathbb{R})/\log n$ and later retracting it.<br><br>I did very poor experimentation: a sample trajectory of $N_n([-1,1])/\log n$ typically <a href="https://web.math.pmf.unizg.hr/~vjekovac/images/trajectory1.gif" rel="nofollow noopener noreferrer ugc" target="_blank">looks like this</a>, while a sample trajectory of $N_n((-\infty,-1)\cup(1,\infty))/\log n$ typically <a href="https://web.math.pmf.unizg.hr/~vjekovac/images/trajectory2.gif" rel="nofollow noopener noreferrer ugc" target="_blank">looks like this</a>. The latter seems to oscillate more, raising doubt that they might not converge a.s., but $n\leq500$ are too small numbers to conclude anything meaningful.<br><br>Regarding the coefficients in $\{0,1\}$ (the nonzero mean setting), I noticed that Yen mentions a preprint titled "Real roots of non-centered random polynomials" on <a href="https://profile.virginia.edu/yqd3p" rel="nofollow noopener noreferrer ugc" target="_blank">his webpage</a>. I cannot find it online, but here are some <a href="https://app.icerm.brown.edu/assets/539/9763/9763_5485_Nguyen_080420251600_Slides.pdf" rel="nofollow noopener noreferrer ugc" target="_blank">related slides</a>.  From my understanding, the strong law (i.e., the a.s. convergence) is still an open problem mentioned on slide 28.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Vjeko_Kovac">Vjeko_Kovac</a></strong>
+      
+      — <a href="/forum/thread/521#post-311">21:04 on 04 Sep 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="311" data-react-url="/forum/post/311/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-315"
+    class="post depth-1
+           
+           even">
+    <div class="post-body" id="post-315">
+    
+
+
+
+      
+      <p>This looks like an important distinction [and Yen Do has privately communicated similar points to me in recent discussions].  Heuristically, for each $1 \leq j \leq \log_2 n$, there should be $O(1)$ zeroes of $f=f_n$ in the region $[-1+2^{-j-1}, -1+2^{-j}]$, and $O(1)$ zeroes in the region $[-1-2^{-j}, -1-2^{-j-1}]$.  In the former case it's the coefficients $\epsilon_i$ for $i \ll 2^j$ that should largely control the zero count, but in the latter case it is the $\epsilon_i$ for $n-i \ll 2^j$.  So the former is heuristically quite stable in $n$ (say for $n \in [n_0, 2n_0]$) but the latter can be quite unstable, and in particular the situation for $f_n$ and $f_{n'}$ should behave in some uncorrelated fashion for $n'-n \gg 2^j$.  Assuming that each $f_n$ has some positive probability of not having a zero in $[-1-2^{-j}, -1-2^{-j-1}]$, this should cause the zero count here to be quite unstable, almost certainly fluctuating by $O(1)$ for $n \in [n_0,2n_0]$ if say one is in the regime $n_0^{0.1} \leq 2^j \leq n_0^{0.9}$.  Heuristically, this would then predict the global zero count to then fluctuate by more than $O(1)$.  But it may be quite challenging to make this intuition precise - there could be some "global conspiracy" that makes all these fluctuations magically cancel each other even if locally they behave like a nice process such as a Gaussian process.  In particular the variance of the global count could experience some ridiculous cancellation that makes it smaller than the variance of the local zero counts.  I don't see how to prevent this sort of getting extremely accurate control of the process (with error terms better than $o(1/n)$ on various pair correlation functions).  Even the mean zero gaussian coefficient case, which is presumably the simplest model, looks a bit tough here.<br><br>EDIT: maybe a switching approach?  Generate two correlated samples $\epsilon_j, \epsilon'_j$ of the coefficients, which are largely the same but differ at some carefully chosen, well spaced locations, so that they have largely independent impacts on the zero statistics.  If one can show a lower bound on the variance of the difference of the global zero count for the $\epsilon_j$ polynomial and the global zero count for the $\epsilon_{j'}$ polynomial after taking a supremum over some suitable sequence of $n$, then one might be able to disprove the claimed strong law thanks to the (contrapositive of the) triangle inequality.  The hope here is that by carefully titrating the amount of switching, one might be able to cancel out most of the weird and hard to understand global correlation structure and work with something more like the sum of random variables with very low covariances between them, which is something we have a chance of getting variance lower bounds on. It might also be useful to design the joint distribution of the $\epsilon_j$ and $\epsilon'_j$ so that certain partial sums or moments agree, in order to damp out long range correlations.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TerenceTao">TerenceTao</a></strong>
+      
+      — <a href="/forum/thread/521#post-315">22:53 on 04 Sep 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="315" data-react-url="/forum/post/315/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-323"
+    class="post depth-2
+           
+           odd">
+    <div class="post-body" id="post-323">
+    
+
+
+
+      
+      <p>This is really a remarkably delicate question (and honestly really unexpected to me)! For the approach suggested in the previous reply; it would seem that the probability that the number of real roots deviates from the expected amount by $\epsilon \log n$ scales as $n^{-\epsilon'}$ with $\epsilon'$ to $0$ as $\epsilon$ to $0$. Here is maybe a hopelessly naive strategy that might be useful? (It is just based on this heuristic of which coefficients control the zeros in which buckets.)<br><br>Let us group indices at a dyadic scale $[n, 2n]$. Define an index to be ''great'' if it has $\epsilon \log n$ ''extra'' zeros below $-1-n^{-1/4}$. By the heuristic suggested above the events that a pair of indices are great should essentially completely decorrelate once the pair of indices under consideration differ by more than $n^{3/4}$ (say). (I am assuming here is possible to control the number of zeros relatively deep into the tail; not sure how possible this is.)<br><br>This second moment argument would then give many indices where there are too many zeros towards the endpoint. The next claim would be even conditional on these zeros (which are mostly determined by the last few coefficients) then typically the inner interval has the expected number of zero. Then using a first moment argument we don't have too many indices which are great but have the expected number of zeros. This gives with high probability that at least one index in the range does not satisfy the required number of real roots. (Then taking massively separated dyadic intervals would conclude the result.) This last part is rather sketchy (and possibly impossible to justify).</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/msawhney">msawhney</a></strong>
+      
+      — <a href="/forum/thread/521#post-323">02:26 on 05 Sep 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="323" data-react-url="/forum/post/323/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-324"
+    class="post depth-2
+           
+           even">
+    <div class="post-body" id="post-324">
+    
+
+
+
+      
+      <p>Here is some more detail on the switching strategy.  Pick a large $n$, then let $n &lt; n_1 &lt; \dots &lt; n_m &lt; 2n$ be $m \sim n^{0.7}$ "checkpoints" separated by $\sim n^{0.3}$.  We introduce intervals $I_j = [n_j - n^{0.2}, n_j - n^{0.1}]$ to the left of each checkpoint $n_j$.  If the almost sure conjecture is true, then for any fixed $\varepsilon&gt;0$ we will have<br>$$ {\bf P}( \sup_{1 \leq j \leq m} |N_{n_j}({\bf R}) - \frac{1}{\pi} \log n| \leq \varepsilon \log n ) = 1 - o(1).$$<br>Now let us condition all the $\epsilon_k$ outside of $\bigcup_{j=1}^m I_j$ to be fixed, so that only the coefficients inside $I_1,\dots,I_m$ remain random.  Let $\epsilon'_k$ be a resampling of $\epsilon_k$ subject to this fixing, so the signs of $\epsilon'_k$ agree with $\epsilon_k$ outside of the $I_1,\dots,I_m$ but are completely resampled within these intervals.  Actually we should not do a completely independent resampling; we should fix means,<br>$$ \sum_{k \in I_j} \epsilon'_k = \sum_{k \in I_j} \epsilon_k$$<br>and actually I think we should fix a few more moments,<br>$$ \sum_{k \in I_j} k^a \epsilon'_k = \sum_{k \in I_j} k^a \epsilon_k \quad (1)$$<br>for $a=0,\dots,1000$.  I believe that this should be doable with some local limit theorems - it only is costing a small amount of "entropy" - but let me ignore this issue for this sketch.<br><br>If we let $N'_{n_j}$ be the zero counting function associated to this new coefficients then by the triangle inequality we have<br>$$ {\bf P}( \sup_{1 \leq j \leq m} |N_{n_j}({\bf R}) - N'_{n_j}({\bf R})| \leq 2\varepsilon \log n ) = 1 - o(1).$$<br>The point is that the way we have constructed things, the zeroes of $f_{n_j}$ and $f'_{n_j}$ are nearly identical except at $[-1-n^{-0.21}, -1-n^{-0.09}]$: any further away from $-1$ and the only coefficients that matter are those that are between $n_j$ and $I_{j}$, and any closer to $-1$ then the moment conditions (1) and some Taylor expansion should also make the polynomials agree nearly completely.  So one should morally have<br>$$ {\bf P}( \sup_{1 \leq j \leq m} |N_{n_j}([-1-n^{-0.21}, -1-n^{-0.09}]) - N'_{n_j}([-1-n^{-0.21}, -1-n^{-0.09}])| \leq 3\varepsilon \log n ) = 1 - o(1).$$<br>Let's write this as<br>$$ {\bf P}( \bigwedge_{j=1}^m E_j ) = 1-o(1)$$<br>where $E_j$ is the event that $|N_{n_j}([-1-n^{-0.21}, -1-n^{-0.09}]) - N'_{n_j}([-1-n^{-0.21}, -1-n^{-0.09}])| \leq 3\varepsilon \log n$.  Morally, this event depends on the signs of $\epsilon_k, \epsilon'_k$ on $I_j$, but is almost completely independent of the signs at the other $I_{j'}$, because of they are so far away (at least $n^{0.3}$ away).  So, after some minor adjustments, one should be able to replace $E_j$ by completely independent events.  So now this means that<br>$$ {\bf P}( E_j ) = 1-o(1/m) = 1 - o(n^{-0.7})$$<br>for at least one of the $j$.  But hopefully some lower bound variance calculation can rule this out since $0.7$ is large compared to the exponent $0.21$ that is controlling the scale here.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TerenceTao">TerenceTao</a></strong>
+      
+      — <a href="/forum/thread/521#post-324">03:48 on 05 Sep 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="324" data-react-url="/forum/post/324/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-335"
+    class="post depth-3
+           
+           odd">
+    <div class="post-body" id="post-335">
+    
+
+
+
+      
+      <p>Reply to “I believe that this should be doable with some local limit theorems – it only is costing a small amount of entropy”<br><br>Yes — this step can be made precise using a multivariate lattice local limit theorem, and the entropy cost can be quantified explicitly.<br><br>Let $I_j$ be one of your resampling blocks, of length $\ell_j \asymp n^{0.2}$. Let $<br>\eta_k = 2\epsilon_k - 1 \in \{-1,1\}.<br>$ Fix $A \ge 0$ (e.g. $A=1000$) and set $d := A+1$. For $v_k = (k^0,\dots,k^A)^\top \in \mathbb{R}^d$ write $$<br>S_j(\epsilon) := \sum_{k\in I_j} \epsilon_k v_k, <br>\qquad S_j^{(\pm)}(\eta) := \sum_{k\in I_j} \eta_k v_k.<br>$$ If $S_j(\epsilon) = T$ for some target $T \in \mathbb{Z}^d$, this is equivalent to $$<br>S_j^{(\pm)}(\eta)  = 2T - \sum_{k\in I} v_k =: t'.<br>$$ The map $\epsilon \mapsto \eta = 2\epsilon - 1$ is a bijection $\{0,1\}^I \to \{\pm1\}^I$ which sends the $\{0,1\}$ moment constraint $S_j(\epsilon) = T$ to the $\{\pm1\}$ moment constraint $S_j^{(\pm)}(\eta) = t'$. In particular, the feasible sets $$<br>\Omega_T^{(0/1)} := \{\epsilon\in\{0,1\}^I : S_j(\epsilon) = T\}, <br>\qquad \Omega_{t'}^{(\pm)} := \{\eta\in\{\pm1\}^I : S_j^{(\pm)}(\eta) = t'\}<br>$$ satisfy $$<br>|\Omega_T^{(0/1)}| = |\Omega_{t'}^{(\pm)}|,<br>$$ so counting solutions (or entropy) in the $\{0,1\}$ model is exactly the same as in the $\{\pm1\}$ model, up to an explicit shift of the target vector.<br><br><br>The moment–matching constraint on $I_j$ is $$<br>\sum_{k\in I_j} k^a \eta_k = \sum_{k\in I_j} k^a \epsilon_k <br>\quad (a=0,\dots,A),<br>$$ i.e. $S_j(\eta) = t'_j := S_j(\epsilon)$. The feasible set $$<br>\Omega_j := \{ \eta \in \{\pm1\}^{I_j} : S_j(\eta) = t'_j \}<br>$$ has cardinality $$<br>|\Omega_j| = 2^{\ell_j} \cdot \mathbb{P}(S_j = t'_j),<br>$$ where the probability is for $\eta_k$ i.i.d. uniform $\pm 1$.<br><br>Now apply the $d$-dimensional lattice LLT for bounded independent vectors with nondegenerate covariance $$<br>\Sigma_j := \sum_{k\in I_j} v_k v_k^\top.<br>$$ Uniformly for $t'_j$ in the central region, $$<br>\mathbb{P}(S_j = t'_j) <br>= (2\pi)^{-d/2} (\det\Sigma_j)^{-1/2} e^{ -\frac12 t'_j{}^\top \Sigma_j^{-1} t'_j }<br>+ o\big((\det\Sigma_j)^{-1/2}\big).<br>$$ A Cauchy–Binet + Vandermonde computation gives $\det\Sigma_j \asymp_d \ell_j^{\,d^2}$, so $$<br>\mathbb{P}(S_j = t'_j) \asymp_d \ell_j^{-d^2/2}.<br>$$ Thus $$<br>|\Omega_j| \asymp_d 2^{\ell_j} \, \ell_j^{-d^2/2}.<br>$$ Since the conditional distribution on $\Omega_j$ is uniform, its Shannon entropy is $$<br>H(\Omega_j) = \log_2 |\Omega_j| <br>= \ell_j - \frac{d^2}{2} \log_2 \ell_j + O_d(1).<br>$$ Compared to the $\ell_j$ bits of an unconstrained block, the entropy loss is $\frac{d^2}{2} \log_2 \ell_j = O(\log n)$ per block. Over $m \asymp n^{0.7}$ blocks, the total loss is $O(n^{0.7} \log n) = o(n^{0.9})$, which is indeed “a small amount of entropy” in the sense of your switching argument.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Quanyu_Tang">Quanyu Tang</a></strong>
+      
+      — <a href="/forum/thread/521#post-335">17:15 on 05 Sep 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="335" data-react-url="/forum/post/335/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-5644"
+    class="post depth-3
+           
+           even">
+    <div class="post-body" id="post-5644">
+    
+
+
+
+      
+      <p>I tried to push this switching/moment-matching sketch into a more explicit conditional proof skeleton (not a proof announcement):<br><br><a href="https://github.com/JohnNDvorak/Research_Pre-Preprints/blob/main/erdos_521_conditional_roadmap.pdf" rel="nofollow noopener noreferrer ugc" target="_blank">Full conditional roadmap</a><br><br>The goal is to isolate the precise local inputs needed for the dyadic switching strategy suggested here. The contradiction spine is that an a.s. law \(R_n/\log n\to2/\pi\) would force every dyadic coupling of two iid Rademacher sequences \(f,f'\) to satisfy\[<br>  \sup_{N\le m\le2N}|R_m(f)-R_m(f')|=o_{\mathbb P}(\log N).<br>  \]So the skeleton tries to build iid-marginal switching couplings for which some checkpoint \(n_j\in[N,2N]\) has a \(c\log N\) discrepancy with probability \(1-o(1)\).<br><br>The coupling uses a doubly stochastic same-fiber kernel on disjoint late-coefficient blocks, preserving iid marginals. Exterior roots are analyzed through\[<br>  G_{n_j}(y)=y^{n_j}f_{n_j}(1/y)=\sum_{r=0}^{n_j}\epsilon_{n_j-r}y^r,\qquad<br>  y=\sigma e^{-t}.<br>  \]The remaining hard inputs are the two-endpoint local template, same-fiber entropy, conditional anti-concentration under the actual fiber/template law, off-core stability for the total perturbation, cross-checkpoint interference control, and pairwise checkpoint decorrelation. Do's \([-1,1]\) theorem is used only as a global dyadic good event.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/John_N._Dvorak">John N. Dvorak</a></strong>
+      
+      — <a href="/forum/thread/521#post-5644">18:10 on 20 Apr 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="5644" data-react-url="/forum/post/5644/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Nat Sothanaphan"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-352"
+    class="post depth-0
+           
+           even">
+    <div class="post-body" id="post-352">
+    
+
+
+
+      
+      <p>After looking again carefully at the problem in the original source, I think I have misunderstood the original question quite badly - in fact Erdős was most likely intending to ask whether, if $\epsilon_k\in \{-1,1\}$ is an infinite sequence chosen uniformly at random, and $R_n(f)$ counts the number of real roots of $\sum_{0\leq k\leq n}\epsilon_kz^k$, then\[\lim_{n\to \infty}\frac{R_n(f)}{\frac{2}{\pi}\log n}=1.\]In other words, a more delicate version of the Erdős and Offord [EO56] result cited above.<br><br>I apologise for the inaccuracy - but this wrongly transcribed problem seems to have generated a lot of interesting discussion! I'm therefore minded to keep the problem as it's written here, but add the caveat that this is in fact <i>not</i> a problem of Erdős strictly speaking (at least, until someone can find a source asking about this one).<br><br>If I'm understanding the literature correctly, this corrected Erdős problem is the same as the question of Pritsker raised in the 2019 AIM workshop (perhaps unaware of Erdős' original question).<br><br>Furthermore, this corrected problem is still open, although the paper of Do mentioned in the comments above is partial progress.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TFBloom">Thomas Bloom</a></strong>
+      
+      — <a href="/forum/thread/521#post-352">07:01 on 07 Sep 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="352" data-react-url="/forum/post/352/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-357"
+    class="post depth-1
+           
+           odd">
+    <div class="post-body" id="post-357">
+    
+
+
+
+      
+      <p>I've also looked at page 251 of [Er61] and I think your original formulation of the problem is basically faithful to the text (now that you have corrected $\pi/2$ to $2/\pi$), as $\epsilon_k$ is defined to be "the binary expansion of $t$" and thus {0,1}-valued rather than {-1,1}-valued.  (There is a mention of {-1,1}-valued Radamacher functions earlier in section V, but this is in reference to a different set of problems; similarly the Erdos-Kac result also assumes {-1,1}-valued coefficients, but that is (confusingly) a different use of the $\epsilon_k$ notation.)  But it is possible that Erdos himself did not formulate the problem in the way he really intended, given that all the other models discussed in this section were mean zero.  But in the absence of any further repetition of the problem in other papers I guess we have to use the literal reading of the problem.<br><br>In any case, the mean zero version of the problem is likely to be a better model problem to start with, as one can reuse more of the existing literature.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TerenceTao">TerenceTao</a></strong>
+      
+      — <a href="/forum/thread/521#post-357">15:33 on 07 Sep 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="357" data-react-url="/forum/post/357/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-360"
+    class="post depth-2
+           
+           even">
+    <div class="post-body" id="post-360">
+    
+
+
+
+      
+      <p>Yes, tricky - my evidence was the $\{-1,1\}$ formulation required only one typo/mistake (writing binary expansion of $t\in [0,1]$ rather than centred binary expansion of $t\in [-1/2,1/2)$ say), while the $\{0,1\}$ formulation is breaks both the contextual rule that $\epsilon_k\in \{-1,1\}$ for the other problems in that section, and also the constant $\frac{2}{\pi}$ is wrong.<br><br>So I'm leaning towards Erd&#337;s intending $\{-1,1\}$ as the explanation that implies fewer mistakes on his part.<br><br>But it's definitely ambiguous, and both are natural problems, so I've opted for the rephrasing in the current problem statement and description, simply mentioning both as possible interpretations.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TFBloom">Thomas Bloom</a></strong>
+      
+      — <a href="/forum/thread/521#post-360">16:39 on 07 Sep 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="360" data-react-url="/forum/post/360/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-303"
+    class="post depth-0
+           
+           odd">
+    <div class="post-body" id="post-303">
+    
+
+
+
+      
+      <p>$\pi/2$ should be $2/\pi$ in the statement of the problem.<br><br>Even in the mean zero version, I think the current concentration bounds only give a $n^{-c}$ type bound for the tail probability (see for instance the recent paper https://arxiv.org/abs/2311.15446), which is not enough for almost sure convergence unless one can somehow relate the zeroes of adjacent polynomials to each other. It seems that the exponent $c$ here is not expected to exceed $1$, so the almost sure claim may in fact be false.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TerenceTao">TerenceTao</a></strong>
+      
+      — <a href="/forum/thread/521#post-303">07:20 on 04 Sep 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="303" data-react-url="/forum/post/303/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-305"
+    class="post depth-1
+           
+           even">
+    <div class="post-body" id="post-305">
+    
+
+
+
+      
+      <p>The $2/\pi$ should actually be a $1/\pi$ due to the nonzero mean (note that one does not have roots on the positive real axis). However the stronger version suggested above is also very likely to follow from the techniques in https://arxiv.org/pdf/2403.06353v2. The key estimate is of the form suggested in the previous comment; see Lemma 2.4.<br><br>Also the statement here is slightly unclear in whether one wants probabilistically almost surely or almost surely; the version in the original paper definitely suggest the almost surely statement. (E.g. there is a sequence of $n$'s)</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/msawhney">msawhney</a></strong>
+      
+      — <a href="/forum/thread/521#post-305">11:56 on 04 Sep 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="305" data-react-url="/forum/post/305/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-307"
+    class="post depth-2
+           
+           odd">
+    <div class="post-body" id="post-307">
+    
+
+
+
+      
+      <p>(Deleted previous response which was based on a misreading of Lemma 2.4.)  <br><br>Ah, so there is a maximal function tail estimate as well; that (plus Borel-Cantelli) would indeed resolve the question positively (with the corrected constant of $1/\pi$), provided that one can adapt the arguments to the nonzero mean setting, which seems plausible.<br><br>Not sure what you mean by "probabilistically almost surely" or "almost surely".  Are you referring to the distinction between almost sure convergence and convergence in probability (strong law of large numbers vs. weak law)?</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TerenceTao">TerenceTao</a></strong>
+      
+      — <a href="/forum/thread/521#post-307">15:18 on 04 Sep 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="307" data-react-url="/forum/post/307/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-308"
+    class="post depth-3
+           
+           even">
+    <div class="post-body" id="post-308">
+    
+
+
+
+      
+      <p>Yes this what I meant for the final comment (I should have written asymptotically almost surely which is equivalent to the distinction you said).</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/msawhney">msawhney</a></strong>
+      
+      — <a href="/forum/thread/521#post-308">17:12 on 04 Sep 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="308" data-react-url="/forum/post/308/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-296"
+    class="post depth-0
+           
+           even">
+    <div class="post-body" id="post-296">
+    
+
+
+
+      
+      <p>This should certainly be known (at least implicitly). In https://arxiv.org/pdf/1507.04994v3 Theorem 1.8, one gets a very strong bound in expectation of the number of real roots. (This doesn't immediately solved the problem as a variance estimate seems difficult to locate. In the case where the coefficients are mean zero this should be known.)</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/msawhney">msawhney</a></strong>
+      
+      — <a href="/forum/thread/521#post-296">23:58 on 03 Sep 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="296" data-react-url="/forum/post/296/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+  
+</ul>
+
+
+
+
+
+<p>
+                        <div style="text-align:center;">
+<strong>All comments are the responsibility of the user. Comments appearing on this page are not verified for correctness. Please keep posts mathematical and on topic.</strong>
+</div>
+<p>
+
+
+<div style="text-align:center; margin: 1em">
+
+
+  <p><a href="/forum/login?next=%2Fforum%2Fthread%2F521">Log in</a> to add a comment.</p>
+
+
+    </div>
+<p><div style="text-align: center; margin: 1em 0;">
+<a href="/forum/">Back to the forum</a>
+</div>
+                </div>
+            </div>
+            
+
+<script>
+document.addEventListener("submit", (e) => {
+  const form = e.target.closest(".reply-form");
+  if (!form) return;
+  const btn = form.querySelector('button[type="submit"]');
+  if (btn?.dataset.submitting === "1") {
+    e.preventDefault(); // already submitted
+    return;
+  }
+  if (btn) {
+    btn.dataset.submitting = "1";
+    btn.disabled = true;
+    btn.textContent = "Posting…";
+  }
+});
+</script>
+
+<script>
+document.addEventListener("click", (ev) => {
+  const a = ev.target.closest(".thread-sort .order");
+  if (!a) return;
+});
+</script>
+
+<script>
+document.addEventListener("submit", (e) => {
+  const form = e.target.closest(".comment-form");
+  if (!form) return;
+
+  const btn = form.querySelector('button[type="submit"]');
+  if (!btn) return;
+
+  // Already submitting? Block.
+  if (btn.dataset.submitting === "1") {
+    e.preventDefault();
+    return;
+  }
+
+  // First submit: lock UI
+  btn.dataset.submitting = "1";
+  btn.disabled = true;
+  const original = btn.textContent;
+  btn.dataset.originalText = original;
+  btn.textContent = "Posting…";
+});
+</script>
+           
+
+
+
+
+<script>
+window.MathJax = {
+  output: {
+    font: 'mathjax-tex'
+  },
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+};
+</script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@4.1.2/tex-chtml-nofont.js"></script>
+
+
+<!-- Previewing forum posts -->
+<!-- Previewing forum posts -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, m => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[m]);
+  }
+
+  function normalizeHref(href) {
+    href = href.trim();
+    if (!/^https?:\/\//i.test(href) && !href.startsWith("/")) {
+      href = "https://" + href;
+    }
+
+    return href;
+  }
+
+  let mathJaxQueue = Promise.resolve();
+
+  function clearMathJax(element) {
+    if (window.MathJax && MathJax.typesetClear) {
+      MathJax.typesetClear([element]);
+    }
+  }
+
+  function typesetMath(element) {
+    if (!window.MathJax) return;
+
+    if (MathJax.typesetPromise) {
+      mathJaxQueue = mathJaxQueue
+        .then(() => {
+          if (MathJax.startup && MathJax.startup.promise) {
+            return MathJax.startup.promise;
+          }
+        })
+        .then(() => MathJax.typesetPromise([element]))
+        .catch(err => {
+          console.error("MathJax typeset failed:", err);
+        });
+
+      return;
+    }
+
+    if (MathJax.Hub) {
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, element]);
+    }
+  }
+
+  function renderPreview(textarea, preview, label) {
+    let raw = textarea.value;
+    const anchors = [];
+    let idx = 0;
+
+    raw = raw.replace(
+      /<a\s+href=("(?:[^"]*)"|'(?:[^']*)')\s*>([\s\S]*?)<\/a>/gi,
+      (match, qHref, labelText) => {
+        const href = qHref.slice(1, -1);
+        const token = `__A_TAG_${idx++}__`;
+
+        anchors.push({
+          token,
+          href: normalizeHref(href),
+          label: labelText
+        });
+
+        return token;
+      }
+    );
+
+    let safe = escapeHtml(raw);
+
+    anchors.forEach(a => {
+      const html = `<a href="${escapeHtml(a.href)}">${escapeHtml(a.label)}</a>`;
+      safe = safe.replace(a.token, html);
+    });
+
+    safe = safe.replace(/\{PROBLEM=(.+?)\}/g, (_, p1) =>
+      `<a href="/${escapeHtml(p1)}">[${escapeHtml(p1)}]</a>`
+    );
+
+    safe = safe.replace(/\n/g, "<br>");
+    clearMathJax(preview);
+
+    if (!safe.trim()) {
+      preview.innerHTML = "";
+      preview.classList.add("hidden");
+      label.classList.add("hidden");
+      return;
+    }
+
+    preview.innerHTML = safe;
+    preview.classList.remove("hidden");
+    label.classList.remove("hidden");
+
+    typesetMath(preview);
+  }
+
+  document.querySelectorAll("form textarea").forEach(textarea => {
+    const form = textarea.closest("form");
+    const preview = form && form.querySelector(".post-preview");
+    const label = form && form.querySelector(".preview-label");
+
+    if (preview && label) {
+      textarea.addEventListener("input", () => renderPreview(textarea, preview, label));
+      renderPreview(textarea, preview, label);
+    }
+  });
+});
+</script>
+
+<!-- To handle the search bar -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function setFilterLink(linkId, newFilter) {
+        const link = document.getElementById(linkId);
+        if (!link) return;
+        const pathParts = window.location.pathname.split("/");
+        // Expect: /<section>/<entry> or /<section>/<entry>/<filter>
+        if (pathParts.length >= 3) {
+            const section = pathParts[1];
+            const entry = pathParts[2];
+            // Construct base: /tags/additive, /sources_bib/BL09, etc.
+            const baseUrl = "/" + section + "/" + entry;
+            link.href = baseUrl + "/" + newFilter;
+        }
+    }
+    setFilterLink("solvedLink", "solved");
+    setFilterLink("openLink", "open");
+    setFilterLink("yesLink", "yes");
+    setFilterLink("noLink", "no");
+});
+</script>
+
+<!-- Handle the dual view link -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const dualLink = document.getElementById("dualViewLink");
+  if (!dualLink) return;
+
+  const isInDualView = window.location.pathname.startsWith("/dual");
+  dualLink.textContent = isInDualView ? "Exit Dual View" : "Dual View";
+  dualLink.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    if (isInDualView) {
+      try {
+        const leftIframe = document.getElementById("iframe-left");
+        const src = leftIframe?.src || "/";
+        let clean = src.replace(window.location.origin, "");
+        clean = clean.replace(/[?&]embed=1/, "");
+
+        window.location.href = clean;
+      } catch (err) {
+        window.location.href = "/";
+      }
+    } else {
+      const currentPath = window.location.pathname + window.location.search;
+      const rightPanelDefault = "/";
+      const hash = `#left:${encodeURIComponent(currentPath)}&right:${encodeURIComponent(rightPanelDefault)}`;
+      window.location.href = `/dual${hash}`;
+    }
+  });
+});
+</script>
+
+<!-- Redirect links and searches when in dual view mode -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  if (!window.location.pathname.startsWith("/dual")) return;
+
+  function getTargetPanel() {
+    const selected = document.querySelector('input[name="targetPanel"]:checked');
+    return selected ? selected.value : "left";
+  }
+
+  function loadInPanel(panel, path) {
+    if (!path) return;
+    const iframe = document.getElementById(`iframe-${panel}`);
+    if (!iframe) return;
+    const url = path.includes("?") ? path + "&embed=1" : path + "?embed=1";
+    iframe.src = url;
+    const inputBox = document.querySelector(`#panel-${panel} input`);
+    if (inputBox) inputBox.value = path;
+    console.log(`Loaded "${url}" into panel "${panel}"`);
+  }
+  
+  document.querySelectorAll(".dual-aware a[href^='/'], a.dual-aware[href^='/']").forEach(link => {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      const path = this.getAttribute("href");
+      loadInPanel(getTargetPanel(), path);
+    });
+  });
+
+  const idForm = document.getElementById("idsearchForm");
+  if (idForm) {
+    idForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const input = idForm.querySelector(".idsearchTerm").value.trim();
+      if (!input) return;
+
+      let path = null;
+
+      if (/^\d+$/.test(input)) {
+        path = "/go_to/" + encodeURIComponent(input);
+      } else if (/^((\d+|end)(-(\d+|end))?\s*)+(open|solved|yes|no)?$/i.test(input)) {
+        const parts = input.split(/\s+/).filter(Boolean);
+        path = "/range/" + parts.map(encodeURIComponent).join("/");
+      } else {
+        alert("Invalid input format.");
+        return;
+      }
+
+      loadInPanel(getTargetPanel(), path);
+    });
+  }
+
+  const searchForm = document.getElementById("searchForm");
+  if (searchForm) {
+    searchForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const input = searchForm.querySelector(".searchTerm").value.trim();
+      if (!input) return;
+
+      const path = "/search/" + encodeURIComponent(input);
+      loadInPanel(getTargetPanel(), path);
+    });
+  }
+});
+</script>
+
+<!-- Different menu on mobile -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const button = document.getElementById("mobileMenuButton");
+  const dropdown = document.getElementById("mobileDropdown");
+
+  if (button && dropdown) {
+    button.addEventListener("click", function () {
+      dropdown.classList.toggle("show");
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+      }
+    });
+  }
+});
+</script>
+
+<!-- For expanding threads -->
+
+<script>
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('#toggle-posts');
+  if (!link) return;
+  e.preventDefault(); 
+
+  const box = document.getElementById('more-posts');
+  const isHidden = box.classList.toggle('hidden');
+  const expanded = !isHidden;
+
+  link.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  box.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+
+  link.textContent = expanded
+    ? 'Show only the top five comments'
+    : `Show ${link.dataset.remaining} more comments`;
+});
+</script>
+
+
+<script>
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('.toggle-replies');
+  if (!link) return;
+  e.preventDefault();
+
+  const pid = link.dataset.postId;
+  const box = document.getElementById(`more-replies-${pid}`);
+  if (!box) return;
+
+  const isHidden = box.classList.toggle('hidden');
+  const expanded = !isHidden;
+
+  link.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  box.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+
+  link.textContent = expanded
+    ? 'Hide replies'
+    : `Show ${link.dataset.remaining} more replies`;
+});
+</script>
+
+
+<script>
+document.addEventListener("click", async function (event) {
+    const button = event.target.closest(".problem-status-option");
+    if (!button) return;
+
+    const widget = button.closest(".problem-status-widget");
+    if (!widget) return;
+
+    if (widget.dataset.canEdit !== "1") return;
+
+    const status = button.dataset.status;
+    const url = widget.dataset.setUrl;
+
+    widget.classList.add("is-saving");
+
+    const buttons = widget.querySelectorAll(".problem-status-option");
+    buttons.forEach(btn => btn.disabled = true);
+
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "X-Requested-With": "fetch"
+            },
+            body: JSON.stringify({ status: status })
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok || !data.ok) {
+            throw new Error(data.error || "Could not update problem status.");
+        }
+
+        widget.dataset.currentStatus = data.status;
+
+        buttons.forEach(btn => {
+            const active = btn.dataset.status === data.status;
+            btn.classList.toggle("is-active", active);
+            btn.setAttribute("aria-checked", active ? "true" : "false");
+        });
+
+        const label = widget.querySelector(".js-problem-status-label");
+        const description = widget.querySelector(".js-problem-status-description");
+
+        if (label) label.textContent = data.label || button.dataset.label;
+        if (description) description.textContent = data.description || button.dataset.description;
+          widget.style.setProperty("--status-progress", button.dataset.progress);
+
+    } catch (err) {
+        alert(err.message || "Could not update problem status.");
+    } finally {
+        widget.classList.remove("is-saving");
+
+        if (widget.dataset.canEdit === "1") {
+            buttons.forEach(btn => btn.disabled = false);
+        }
+    }
+});
+</script>
+  
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a193484959aae8d8',t:'MTc4MzcyNTQ1MQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

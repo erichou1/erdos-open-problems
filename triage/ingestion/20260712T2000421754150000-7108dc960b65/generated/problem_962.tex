@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#962}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $k(n)$ be the maximal $k$ such that there exists $m\leq n$ such that each of the integers\[m+1,\ldots,m+k\]are divisible by at least one prime $>k$. Estimate $k(n)$ - in particular, is it true that\[\log k(n) \leq (\log n)^{1/2+o(1)}?\]
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Erd\H{o}s \cite{Er65} wrote it is 'not hard to prove' that\[\log k(n)\geq (\log n)^{1/2-o(1)}\]and it 'seems likely' that $k(n)=o(n^\epsilon)$, but had no non-trivial upper bound for $k(n)$. In \cite{Er76e} he gives an argument which proves\[\log k(n) \gg \sqrt{\log n\log\log n},\]and thought that this bound was 'fairly sharp'.
+
+Tao in the comments has given a simple argument proving $k(n) \leq (1+o(1))n^{1/2}$. In \cite{Er76e} Erd\H{o}s reports he could prove that\[k(n) \leq \exp(-(\log n)^c)n^{1/2}\]for some constant $c>0$, but could not prove that $k(n) \leq n^{1/2-c}$ for a constant $c>0$, which he said 'seems a ridiculously weak result'. 
+
+Tang has proved a lower bound of\[\log k(n)\geq \left(\frac{1}{\sqrt{2}}-o(1)\right)\sqrt{\log n\log\log n}.\]
+
+\bigskip
+\noindent\textbf{References:}
+
+[Er65] Erd\H{o}s, P., Extremal problems in number theory. Proc. Sympos. Pure Math., Vol. VIII (1965), 181-189.
+ 
+ [Er76e] Erd\H{o}s, P., Problems and results on consecutive integers. Publ. Math. Debrecen (1976), 271-282.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/962}}
+\end{document}

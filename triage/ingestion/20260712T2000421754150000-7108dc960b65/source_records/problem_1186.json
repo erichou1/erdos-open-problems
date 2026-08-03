@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 1186,
+  "raw_page": {
+    "path": "raw/pages/problem_1186.html",
+    "sha256": "5303ae5f85f298f6a2fddce7794e4c35797b68c004c82e5d9e6d6cfbfcf2f1c9"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "f29357ada6081ca2f8dd1f1647e3035548c4461f3b1b586f1dc6cbc0ba62cecf",
+      "source_region": "div.problem-additional-text",
+      "text": "[CCS07] Cameron, Peter and Cilleruelo, Javier and Serra, Oriol, On monochromatic solutions of equations in groups. Rev. Mat. Iberoam. (2007), 385--395.\n \n [Er80] Erd\\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.\n \n [LuPe12] Lu, Linyuan and Peng, Xing, Monochromatic 4-term arithmetic progressions in 2-colorings of\n{$\\Bbb Z_n$}. J. Combin. Theory Ser. A (2012), 1048--1065.\n \n [PRS08] Parrilo, Pablo A. and Robertson, Aaron and Saracino, Dan, On the asymptotic minimum number of monochromatic 3-term\narithmetic progressions. J. Combin. Theory Ser. A (2008), 185--192.\n \n [Wo10] Wolf, J., The minimum number of monochromatic 4-term progressions in\n{$\\Bbb Z_p$}. J. Comb. (2010), 53--68."
+    },
+    "remarks": {
+      "sha256": "d86b890fc1144d959243e6aa3afae2835164835536af0d9ae8d20e367ffb69d4",
+      "source_region": "div.problem-additional-text",
+      "text": "In \\cite{Er80} Erd\\H{o}s said 'perhaps one can get an asymptotic formula' for $\\delta_k$, but this seems unlikely. Van der Waerden's theorem implies $\\delta_k\\gg_k 1$. The probabilistic method implies\\[\\delta_k \\leq \\frac{1}{(k-1)2^{k}}.\\]Parrilo, Robertson, and Saracino \\cite{PRS08} have proved\\[0.0511\\approx \\frac{1675}{32768}\\leq \\delta_3 \\leq \\frac{117}{2192}\\approx 0.0533,\\]and conjectured the upper bound is correct. They also report that Graham offered \\$100 for determining the value of $\\delta_3$ at a conference in 1999.\n\nIt is easier to study this quantity if we replace $\\{1,\\ldots,n\\}$ with a finite field $\\mathbb{F}_p$; let this analogue be denoted by $\\tilde{\\delta}_k$. A random colouring implies $\\tilde{\\delta}_k\\leq 1/2^{k}$.\n\nIt is straightforward to prove that $\\tilde{\\delta}_3=1/8$ (see, for example, \\cite{Wo10}). Improving on work of Cameron, Cilleruelo, and Serra \\cite{CCS07}, Wolf \\cite{Wo10} proved\\[\\frac{1}{32}\\leq \\tilde{\\delta}_4\\leq \\left(1-\\frac{1}{259200}\\right)\\frac{1}{16}.\\]These bounds were improved by Lu and Peng \\cite{LuPe12} to\\[\\frac{7}{192}\\leq \\tilde{\\delta}_4\\leq \\frac{17}{300}.\\]"
+    },
+    "statement": {
+      "sha256": "a6a6d40313f85d7ff145c2573768c2094321ae89f4ba7f96f4791cfc97fdf377",
+      "source_region": "div#content",
+      "text": "Let $\\delta_k$ be such that in any $2$-colouring of $\\{1,\\ldots,n\\}$ there exist at least $(\\delta_k+o(1))n^2$ many monochromatic $k$-term arithmetic progressions. Give reasonable bounds (or even an asymptotic formula) for $\\delta_k$."
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/1186"
+}

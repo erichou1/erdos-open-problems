@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#727}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory, factorials
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $k\geq 2$. Does\[(n+k)!^2 \mid (2n)!\]for infinitely many $n$?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+A conjecture of Erd\H{o}s, Graham, Ruzsa, and Straus \cite{EGRS75}. It is open even for $k=2$.
+
+Balakran \cite{Ba29} proved this holds for $k=1$ - that is, $(n+1)^2\mid \binom{2n}{n}$ for infinitely many $n$. It is a classical fact that $(n+1)\mid \binom{2n}{n}$ for all $n$ (see Catalan numbers). 
+
+Erd\H{o}s, Graham, Ruzsa, and Straus observe that the method of Balakran can be further used to prove that there are infinitely many $n$ such that\[(n+k)!(n+1)! \mid (2n)!\](in fact this holds whenever $k<c \log n$ for some small constant $c>0$). 
+
+Erd\H{o}s \cite{Er68c} proved that if $a!b!\mid n!$ then $a+b\leq n+O(\log n)$.
+
+\bigskip
+\noindent\textbf{References:}
+
+[Ba29] H. Balakran, On the values of $n$ which make $(2n)!/(n+1)!(n+1)!$ an integer. J. Indian Math. Soc. (1929), 97-100.
+ 
+ [EGRS75] Erd\H{o}s, P. and Graham, R. L. and Ruzsa, I. Z. and Straus, E. G., On the prime factors of $(\sp{2n}\sb{n})$. Math. Comp. (1975), 83-92.
+ 
+ [Er68c] P. Erd\H{o}s, Aufgabe 557. Elemente Math. (1968), 111-113.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/727}}
+\end{document}

@@ -1,0 +1,6652 @@
+
+<!DOCTYPE html>
+<html>
+
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+
+<title>1045 Discussion Thread | Erdős Problems</title>
+<meta property="og:title" content="1045 Discussion Thread | Erdős Problems">
+<link rel="icon" href="/static/favicon.ico">
+<link rel="stylesheet" href="/static/style.css?v=733265cf">
+
+<script>
+document.addEventListener('click', (e) => {
+  // Toggle reply form
+  const toggle = e.target.closest('.reply-toggle');
+  if (toggle) {
+    const id = toggle.getAttribute('data-target');
+    const form = document.getElementById(id);
+    if (form) form.classList.toggle('hidden');
+  }
+  // Reply with quote
+  const quoteBtn = e.target.closest('.reply-quote');
+  if (quoteBtn) {
+    const id = quoteBtn.getAttribute('data-target');
+    const form = document.getElementById(id);
+    if (!form) return;
+    const ta = form.querySelector('textarea');
+    const raw = quoteBtn.getAttribute('data-raw') || '';
+    const quoted = raw.split('\n').map(l => '> ' + l).join('\n') + '\n\n';
+    ta.value = quoted;
+    form.classList.remove('hidden');
+    ta.focus();
+    const len = ta.value.length;
+    ta.setSelectionRange(len, len);
+  }
+});
+</script>
+
+<!-- This creates the reference in the bibliography box. -->
+
+<script>
+function addNewBox(key, problem_id, shouldScroll = false) {
+  const local_id = 'bib-container' + String(problem_id);
+  const container = document.getElementById(local_id);
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  fetch(`/bibs/${encodeURIComponent(key)}`)
+    .then(res => {
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return res.text();
+    })
+    .then(html => {
+      container.innerHTML = html;
+
+      if (shouldScroll) {
+        requestAnimationFrame(() => {
+          container.scrollIntoView({
+            behavior: "smooth",
+            block: "start"
+          });
+        });
+      }
+    })
+    .catch(err => {
+      console.error("Failed to load bib:", err);
+      container.textContent = "Unable to load reference.";
+
+      if (shouldScroll) {
+        container.scrollIntoView({
+          behavior: "smooth",
+          block: "start"
+        });
+      }
+    });
+}
+</script>
+
+<script>
+const filledSVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="black" class="fav-icon">
+  <path fill-rule="evenodd" d="M10.788 3.21c.448-1.077 1.976-1.077 2.424 0l2.082 5.006 5.404.434c1.164.093 1.636 1.545.749 2.305l-4.117 3.527 1.257 5.273c.271 1.136-.964 2.033-1.96 1.425L12 18.354 7.373 21.18c-.996.608-2.231-.29-1.96-1.425l1.257-5.273-4.117-3.527c-.887-.76-.415-2.212.749-2.305l5.404-.434 2.082-5.005Z" clip-rule="evenodd" />
+</svg>
+                `;
+const outlineSVG = `
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" stroke="black" fill="white" class="fav-icon">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M11.48 3.499a.562.562 0 0 1 1.04 0l2.125 5.111a.563.563 0 0 0 .475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 0 0-.182.557l1.285 5.385a.562.562 0 0 1-.84.610l-4.725-2.885a.562.562 0 0 0-.586 0L6.982 20.54a.562.562 0 0 1-.840-.610l1.285-5.386a.563.563 0 0 0-.182-.557L3.041 10.385a.562.562 0 0 1 .321-.988l5.518-.442a.563.563 0 0 0 .475-.345L11.48 3.5Z" />
+</svg>
+                `;
+
+document.addEventListener("click", async (e) => {
+  const btn = e.target.closest(".fav-btn");
+  if (!btn) return;
+
+  e.preventDefault();
+  const problemId = btn.dataset.problemId;
+
+  try {
+    const res = await fetch(`/forum/toggle_favourite/${problemId}`, { method: "POST" });
+    const data = await res.json();
+
+    btn.dataset.favourited = data.favourited ? "true" : "false";
+    btn.innerHTML = data.favourited ? filledSVG : outlineSVG;
+  } catch (err) {
+    console.error("Toggle failed:", err);
+  }
+});
+</script>
+
+    
+<script>
+function addImageBox(X, problem_id, shouldScroll = true) {
+  const local_id = 'image-container' + String(problem_id);
+  const container = document.getElementById(local_id);
+  if (!container) return;
+
+  container.innerHTML = "";
+
+  const newBox = document.createElement("div");
+
+  const img = document.createElement("img");
+  img.src = `/static/${encodeURIComponent(X)}.png`;
+  img.className = "responsive-image";
+  img.alt = String(X);
+
+  newBox.appendChild(img);
+  container.appendChild(newBox);
+
+  if (shouldScroll) {
+    requestAnimationFrame(() => {
+      container.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+  }
+}
+</script>
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  const form = document.getElementById('searchForm');
+  if (!form) return;
+  form.addEventListener('submit', function (e) {
+    const input = form.querySelector('.searchTerm');
+    if (!input) return;
+    const value = input.value.trim();
+    if (!value) return;
+    const path = '/search/' + encodeURIComponent(value);
+    const inDual = window.location.pathname.startsWith("/dual");
+    if (inDual) {
+      e.preventDefault(); 
+      const selected = document.querySelector('input[name="targetPanel"]:checked');
+      const panel = selected ? selected.value : "left";
+      const iframe = document.getElementById(`iframe-${panel}`);
+      if (iframe) {
+        const url = path.includes("?") ? path + "&embed=1" : path + "?embed=1";
+        iframe.src = url;
+        const box = document.querySelector(`#panel-${panel} input`);
+        if (box) box.value = path;
+      } else {
+        window.location.href = path;
+      }
+    } else {
+      form.action = path;
+      form.method = "GET";
+    }
+  });
+});
+</script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+  if (window.location.pathname.startsWith("/dual")) return;
+
+  var form = document.getElementById('idsearchForm');
+  if (!form) return;
+
+  form.onsubmit = function() {
+    var input = document.querySelector('.idsearchTerm').value.trim();
+    var searchUrl;
+
+    if (/^\d+$/.test(input)) {
+        searchUrl = '/' + encodeURIComponent(input);
+    } else if (/^((\d+|end)(-(\d+|end))?\s*)+(open|solved|yes|no)?$/.test(input.toLowerCase())) {
+        let parts = input.split(/\s+/).filter(Boolean);
+        searchUrl = '/range/' + parts.map(encodeURIComponent).join('/');
+    } else {
+        alert("Enter either a single integer or a space-separated list of numbers/ranges...");
+        return false;
+    }
+    window.location.href = searchUrl;
+    return false;
+  };
+});
+</script>
+
+<script>
+  window.CURRENT_USERNAME = "";
+</script>
+
+
+<script>
+document.addEventListener("click", async (ev) => {
+  const btn = ev.target.closest(".reaction-btn");
+  if (!btn) return;
+  const you = window.CURRENT_USERNAME || "";
+  const bar = btn.closest(".reaction-bar");
+  const postId = bar?.dataset.postId;
+  const rtype = btn.dataset.type;
+  const reactUrl = bar?.dataset.reactUrl; 
+  if (!postId || !rtype || !reactUrl) return;
+
+  try {
+    const res = await fetch(reactUrl, {
+      method: "POST",
+      credentials: "same-origin",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({type: rtype})
+    });
+    const data = await res.json();
+    if (!data.ok) {
+      alert(data.error || "Could not update reaction.");
+      return;
+    }
+    const summary = data.summary;
+    
+    bar.querySelectorAll(".reaction-btn").forEach(b => {
+      const t = b.dataset.type;
+      const countSpan = bar.querySelector(`.reaction-count[data-type="${t}"]`);
+      if (countSpan && summary[t]) {
+        countSpan.textContent = summary[t].count;
+    const desc = b.dataset.desc || "";
+    const usersTitle = summary[t].users_title || "No one yet.";
+    b.title = `${desc}\n\n${usersTitle}`;
+      }
+        const iReacted = you && (summary[t].users_title || "").includes(you);
+  b.classList.toggle("active", !!iReacted);
+  b.setAttribute("aria-pressed", iReacted ? "true" : "false");
+    });
+  } catch (e) {
+    console.error(e);
+    alert("Only registered users with 5+ posts can react.");
+  }
+});
+</script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  document.body.addEventListener("click", function (e) {
+    const link = e.target.closest(".problem-reaction-link");
+    if (!link) return;
+
+    e.preventDefault();
+
+    const row = link.closest(".problem-reaction-row");
+    if (!row) return;
+
+    const form = row.querySelector(".problem-reaction-form");
+    if (!form) return;
+
+    const formData = new FormData(form);
+
+    fetch(form.action, {
+      method: "POST",
+      body: formData,
+      headers: {
+        "X-Requested-With": "XMLHttpRequest"
+      }
+    })
+      .then(resp => resp.json())
+      .then(data => {
+        if (!data.ok) {
+          console.error(data.error || "Problem reaction update failed");
+          return;
+        }
+
+        const summary = data.summary;
+
+        // Update users text for each reaction type
+        for (const [type, info] of Object.entries(summary)) {
+          const r = document.querySelector(
+            `.problem-reaction-row[data-reaction-type="${type}"]`
+          );
+          if (!r) continue;
+
+          const usersCell = r.querySelector(".problem-reaction-users");
+          if (usersCell) {
+            usersCell.textContent = info.users_title || "None yet";
+          }
+        }
+        link.classList.toggle("active");
+        if (link.classList.contains("active")) {
+          link.textContent = "(no)";
+        } else {
+          link.textContent = "(yes)";
+        }
+      })
+      .catch(err => {
+        console.error("Problem reaction AJAX error", err);
+      });
+  });
+});
+</script>
+
+
+
+
+
+
+</head>
+
+<body>
+
+<div class="topnav">
+
+  <div class="left">
+    <div class="logo">
+      <a class="dual-aware" href="/"><img src="/static/EPLogo.png" alt="Logo" height="50"></a>
+    </div>
+    <div class="links dual-aware desktop-nav">
+      <a href="/forum">Forum</a>
+      <a href="/dm">Inbox</a> 
+      <a href="/favourites">Favourites</a>
+      <a href="/tags">Tags</a> 
+      <div class="dropdown">
+        <a href="javascript:void(0)" class="dropbtn">More</a>
+        <div class="dropdown-content">
+          <a href="/faq">FAQ</a>
+          <a href="/prizes">Prizes</a>
+          <a href="/lists">Problem Lists</a>
+          <a href="/definitions">Definitions</a>
+          <a href="/links">Links</a>
+        </div>
+      </div> 
+    </div>
+    <div class="mobile-nav">
+    
+        <a class="forumlink" href="/forum">Forum</a>
+    <div class="dropdown">
+      <button class="dropbtn" id="mobileMenuButton">Menu</button>
+      <div class="dropdown-content">
+        <a href="/dm">Inbox</a> 
+        <a href="/favourites">Favourites</a>
+        <a href="/tags">Tags</a>  
+        <a href="/faq">FAQ</a>
+        <a href="/prizes">Prizes</a>
+        <a href="/lists">Problem Lists</a>
+        <a href="/definitions">Definitions</a>
+        <a href="/links">Links</a>
+      </div>
+     </div>
+    </div>
+  </div>
+
+  <div class = "middle">
+    <div class="button-container" style="max-width: 50%;">
+      <form id="idsearchForm">
+        <input required type="text" name="query" class="idsearchTerm" placeholder="# (or range #-#)" title="Enter either a single integer or a space-separated list of numbers/ranges, optionally ending with 'open' or 'solved'.">
+        <button type="submit" class="searchButton">Go</button>
+      </form>
+    </div>
+    <div class="button-container" style="max-width: 50%;">
+      <form id="searchForm">
+        <input required type="text" name="query" class="searchTerm" placeholder="Search" title="Search all problems.">
+        <button type="submit" class="searchButton">Go</button>
+      </form>
+    </div>
+  </div>
+
+  <div class="right">
+    <a href="#" id="dualViewLink" class="split_all">Dual View</a>
+    <a href="/random_solved" class="split_solved dual-aware">Random Solved</a>
+    <a href="/random_open" class="split_open dual-aware">Random Open</a>
+  </div>
+
+</div>
+
+<div id="notifications-slot"></div>
+
+
+
+
+<div class="container">
+<div class="problem-box">
+
+        
+
+                    <div class="problem-text" id="open">  
+<div id="prize">
+
+<span class="tooltip">
+  OPEN
+  <span class="tooltiptext">
+    This is open, and cannot be resolved with a finite computation.
+  </span>
+</span>
+
+</div>
+
+                        <div id="content">Let $z_1,\ldots,z_n\in \mathbb{C}$ with $\lvert z_i-z_j\rvert\leq 2$ for all $i,j$, and\[\Delta(z_1,\ldots,z_n)=\prod_{i\neq j}\lvert z_i-z_j\rvert.\]What is the maximum possible value of $\Delta$? Is it maximised by taking the $z_i$ to be the vertices of a regular polygon?</div>
+                        <div id="problem_id"><a href="/1045">#1045</a>: <a href="#bib-container1045" onclick="event.preventDefault();addNewBox('EHP58', '1045', true);return false;">[EHP58,p.143]</a></div>
+                         
+                            <div id="tags">
+                            
+  <a href="/tags/analysis">analysis</a>
+
+                            </div>
+                        
+                    </div>  
+                    
+                    <div class="problem-text" id="disclaimer">  
+The open status of this problem reflects the current belief of the owner of this website. There may be literature on this problem that I am unaware of, which may partially or completely solve the stated problem. Please do your own literature search before expending significant effort on solving this problem. If you find any relevant literature not mentioned here, please add this in a comment.
+                    <div
+  class="problem-status-widget"
+  data-problem-id="1045"
+  data-set-url="/problem-status/1045"
+  data-current-status="open"
+  data-can-edit="0"
+  style="--status-progress: 0.0; --status-count: 3;"s
+>
+                      <div class="problem-status-heading">Comment activity that has not yet been incorporated into the remarks</div>
+
+  <div class="problem-status-scale" role="radiogroup" aria-label="Problem status">
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option is-active"
+        data-status="open"
+        data-label="None"
+        data-description="There are no solutions, partial or complete, claimed in the comments."
+        data-progress="0.0"
+        role="radio"
+        aria-checked="true"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">None</span>
+      </button>
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option"
+        data-status="partial"
+        data-label="Partial"
+        data-description="There are claims of partial results and/or a path to a solution in the comments."
+        data-progress="0.5"
+        role="radio"
+        aria-checked="false"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">Partial</span>
+      </button>
+    
+      
+
+      <button
+        type="button"
+        class="problem-status-option"
+        data-status="claimed"
+        data-label="Solution"
+        data-description="A claimed solution has been posted in the comments."
+        data-progress="1.0"
+        role="radio"
+        aria-checked="false"
+        disabled
+      >
+        <span class="problem-status-dot"></span>
+        <span class="problem-status-label">Solution</span>
+      </button>
+    
+  </div>
+
+  <div class="problem-status-explanation">
+    <span class="js-problem-status-description">
+      There are no solutions, partial or complete, claimed in the comments.
+    </span>
+  </div>
+  </div>
+  
+                    </div>
+                    
+                    
+
+
+                    
+
+                        <div class="problem-additional-text"> 
+                    
+                           A problem of Erdős, Herzog, and Piranian <a href="#bib-container1045" onclick="event.preventDefault();addNewBox('EHP58', '1045', true);return false;">[EHP58]</a>, who proved that, for any monic polynomial $f$, if $\{ z: \lvert f(z)\rvert &lt;1\}$ is connected and $f$ has roots $z_1,\ldots,z_n$ then $\prod_{i\neq j}\lvert z_i-z_j\rvert &lt;n^n$.<br><br>The value of $\Delta$ when the $z_i$ are the vertices of a regular polygon is $n^n$ when $n$ is even and\[\cos(\pi/2n)^{-n(n-1)}n^n \sim e^{\pi^2/8}n^n\]when $n$ is odd.<br><br>Pommerenke <a href="#bib-container1045" onclick="event.preventDefault();addNewBox('Po61', '1045', true);return false;">[Po61]</a> proved that $\Delta \leq 2^{O(n)}n^n$ for all $z_i$ with $\lvert z_i-z_j\rvert \leq 2$.<br><br>Hu and Tang (see the comments) found examples when $n=4$ and $n=6$ that show that vertices of a regular polygon do not maximise $\Delta$. Cambie (also in the comments) showed that, in general, the vertices of a regular polygon are not a maximiser for all even $n\geq 4$.<br><br>There is a lot of discussion of this problem in the comments (see also the papers of Sothanaphan <a href="#bib-container1045" onclick="event.preventDefault();addNewBox('So25', '1045', true);return false;">[So25]</a> and Cambie, Decadt, Dong, Hu, and Tang <a href="#bib-container1045" onclick="event.preventDefault();addNewBox('CDDHT26', '1045', true);return false;">[CDDHT26]</a>). It is now known that, for even $n$,\[\liminf \frac{\max \Delta}{n^n}\geq C\]for some $C&gt;0$. The best value of $C$ available is $C\approx 1.268$, proved in <a href="#bib-container1045" onclick="event.preventDefault();addNewBox('CDDHT26', '1045', true);return false;">[CDDHT26]</a>. If we restrict to $n$ divisible by $6$ this can be improved to $C\approx 1.304$.<br><br>It remains possible that the regular polygon is a maximiser for odd $n$; this is explicitly conjectured in <a href="#bib-container1045" onclick="event.preventDefault();addNewBox('CDDHT26', '1045', true);return false;">[CDDHT26]</a>. It is not yet known whether, for odd $n$,\[\lim \frac{\max \Delta}{n^n}=e^{\pi^2/8}\approx 3.433.\]The paper <a href="#bib-container1045" onclick="event.preventDefault();addNewBox('CDDHT26', '1045', true);return false;">[CDDHT26]</a> also contains a number of structural results about the form of an extremal set of points.
+                           
+                    
+                    
+<p style="text-align: center; font-family: 'Courier New', monospace; font-size: 90%;">
+  <a href="/latex/1045">View the LaTeX source</a>
+</p>
+<p style="text-align: center; font-family: 'Courier New', monospace; font-size: 90%;">
+  
+ This page was last edited 02 April 2026. <a href="/history/1045">View history</a>
+</p>
+                    <div class="image-container" id="image-container1045"></div>
+                        </div>
+
+                        <div class="problem-additional-text" style="text-align:center;"> 
+</div>
+
+                <div id="bib-container1045"></div>
+  <div class="external">External data from <a href="https://github.com/teorth/erdosproblems">the database</a> - you can help update this</a>                
+
+
+  <br>
+  Formalised statement? 
+    
+      No (<a href="https://github.com/google-deepmind/formal-conjectures">Create a formalisation here</a>)        
+    
+  
+  
+  
+  <br>
+  
+  </div>
+
+
+<div class="problem-reactions">
+
+<div class="comment-count">
+  <a style="color: inherit;" href="/forum/discuss/1045">
+    47 comments on this problem
+  </a>
+</div>
+
+<table class="problem-reactions-table">
+  <tbody>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="like">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Likes this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    
+      <a href="/forum/user/StijnC" style="color:inherit; text-decoration: none;">StijnC</a>, 
+    
+      <a href="/forum/user/Quanyu_Tang" style="color:inherit; text-decoration: none;">Quanyu_Tang</a>, 
+    
+      <a href="/forum/user/epistemologist" style="color:inherit; text-decoration: none;">epistemologist</a>, 
+    
+      <a href="/forum/user/Dogmachine" style="color:inherit; text-decoration: none;">Dogmachine</a>
+    
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="collab">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Interested in collaborating</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    
+      <a href="/forum/user/StijnC" style="color:inherit; text-decoration: none;">StijnC</a>, 
+    
+      <a href="/forum/user/epistemologist" style="color:inherit; text-decoration: none;">epistemologist</a>
+    
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="working_on">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>Currently working on this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    
+      <a href="/forum/user/epistemologist" style="color:inherit; text-decoration: none;">epistemologist</a>
+    
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="hard">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>This problem looks difficult</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="easy">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>This problem looks tractable</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="formalisable">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>The results on this problem could be formalisable</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+      
+
+      <tr class="problem-reaction-row"
+          data-reaction-type="working_form">
+        <td class="problem-reaction-label-cell" 
+            style="padding-right: 2rem;">
+          <strong>I am working on formalising the results on this problem</strong>
+        </td>
+        <td class="problem-reaction-main-cell"><span class="problem-reaction-users">
+  
+    None
+  
+</span>
+          
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+</div>
+<br>
+
+                <div class="citationbox"> <div id="content">
+                                    
+                           <b>Additional thanks to</b>: Stijn Cambie, Nat Sothanaphan, and Quanyu Tang          <br> <br>
+                    
+When referring to this problem, please use the original sources of Erd&#337;s. If you wish to acknowledge this website, the recommended citation format is:
+<br><br>
+T. F. Bloom, Erd&#337;s Problem #1045, https://www.erdosproblems.com/1045, accessed 2026-07-10</div>
+</div>
+
+               
+
+
+<div class="problem-additional-text"> 
+
+
+
+
+<div class="thread-sort">
+Order by
+  <a href="/forum/thread/1045?order=oldest"
+     class="order ">oldest first</a> or
+  <a href="/forum/thread/1045?order=newest"
+     class="order active">newest first</a>. (The most recent comments are highlighted in a red border.)
+</div>
+
+
+
+
+<ul class="post-list">
+  
+    
+    
+
+
+
+
+
+
+<li id="post-5199"
+    class="post depth-0
+           recent recent-2
+           even">
+    <div class="post-body" id="post-5199">
+    
+
+
+
+      
+      <p>My understanding is that for upper bounds for $\Delta$ the result of Pommerenke [Po61] of $\Delta \ll 2^{O(n)}n^n$ has not been improved. Is this correct?<br><br>For those who have been thinking a lot about this problem, do you have an intuition why this is so hard to improve if so? It seems almost certainly true that $\Delta \ll n^n$ (i.e. we lose at most an absolute constant over $n^n$). How difficult does it seem to get an improvement of Pommerenke's bound to something like $\Delta \ll n^{O(1)}n^n$, say?</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TFBloom">Thomas Bloom</a></strong>
+      
+      — <a href="/forum/thread/1045#post-5199">10:42 on 02 Apr 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="5199" data-react-url="/forum/post/5199/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Nat Sothanaphan"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-5203"
+    class="post depth-1
+           recent recent-1
+           odd">
+    <div class="post-body" id="post-5203">
+    
+
+
+
+      
+      <p>I think this is correct.<br><br>From what I've been thinking about, the reason this seems hard is that the regular polygon is *not* always optimal here. If it's optimal you'd expect some kind of symmetry argument to do the job. But now we don't know what *shape* the optimal one has in some cases.<br><br>Now it's more intuitive to think about $\log \Delta$. This is a sum of $\Theta(n^2)$ log-distances. But due to symmetry, these distances tend to cancel out. So it's nontrivial even to get $C &#62; 1$ there, which means the *sum* of these log-distances increases by $\Omega(1)$ without canceling out too much. This seems like it should be easy, but simple examples cancel out extraordinarily and do not give this bound.<br><br>On the other hand, there is no easy reason why we can't arrange for something that cancels out very little! The Pommerenke's bound there says that you can't increase the average log-distance by more than $O(1/n)$, which is nontrivial. The proof is very clever and uses a polynomial mapping which is uniformly bounded on the convex hull of the points. With this technique, you probably can't go below $O(1/n)$. Hence the answer is that the bound is a natural limit of Pommerenke's technique.<br><br>I do not have intuition on whether you'd expect $\max \Delta \asymp n^n$. That'd correspond to average log-distance increasing from the regular polygon case by $\Theta(1/n^2)$. But why should this be the right order? I don't have a clear reason either way.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/1045#post-5203">13:45 on 02 Apr 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="5203" data-react-url="/forum/post/5203/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-2369"
+    class="post depth-0
+           
+           odd">
+    <div class="post-body" id="post-2369">
+    
+
+
+
+      
+      <p>Minor remark:<br>the liminf may be different from the bound obtained for $6 \mid n$.<br>Restricting to $2 \nmid n$, we conjecture $\exp(\pi^2/8)$ is correct.<br>For $2 \mid n, 6 \nmid n$ the constant might be slightly different from the one for $6 \mid n$.<br>The exact constant for the latter is not even guessed at the moment.<br>The best lower bounds for $C$ obtained in restricted regimes, are<br>for $2 ,4 \pmod 6$: $\exp\left(\frac{7}{24}\zeta(3)-\frac{\pi^4}{864}\right) \sim 1.26853$<br>$6 \mid n$: $\frac{3^{9/4}}{2^3}\exp \left( \frac{\pi^2-2 \sqrt 3 \pi}{8} \right) \sim 1.304457$<br>$2 \nmid n$: $\exp(\pi^2/8)\sim 3.43391$<br><br>A paper (5 people: Cambie, Decadt, Dong, Hu and Tang) with all progress should appear in a decent amount of time.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/StijnC">StijnC</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2369">13:34 on 22 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2369" data-react-url="/forum/post/2369/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: TerenceTao, Quanyu Tang"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">2</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-4702"
+    class="post depth-1
+           
+           even">
+    <div class="post-body" id="post-4702">
+    
+
+
+
+      
+      <p>The paper appeared, see <a href="https://arxiv.org/abs/2603.07088" rel="nofollow noopener noreferrer ugc" target="_blank">[Arxiv: Cambie, Decadt, Dong, Hu &amp; Tang '26]</a></p>
+      
+      
+      <div class="fixed-post">
+(The site has been updated to address this comment.)
+      </div>
+
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/StijnC">StijnC</a></strong>
+      
+      — <a href="/forum/thread/1045#post-4702">07:22 on 10 Mar 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="4702" data-react-url="/forum/post/4702/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Woett, Quanyu Tang, Alfaiz, old-bielefelder"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">4</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: TerenceTao"
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-4704"
+    class="post depth-2
+           recent recent-3
+           odd">
+    <div class="post-body" id="post-4704">
+    
+
+
+
+      
+      <p>Congrats!</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/1045#post-4704">11:40 on 10 Mar 2026</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="4704" data-react-url="/forum/post/4704/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Quanyu Tang"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-2402"
+    class="post depth-0
+           
+           even">
+    <div class="post-body" id="post-2402">
+    
+
+
+
+      
+      <p>The description below the problem says that for even $n$, we can take $C$ to be about $1.304457$ from the work in the comments, but that is only for multiples of 6. It should say $1.26853$.</p>
+      
+      
+      <div class="fixed-post">
+(The site has been updated to address this comment.)
+      </div>
+
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Adenwalla">Adenwalla</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2402">23:31 on 24 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2402" data-react-url="/forum/post/2402/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Quanyu Tang, Nat Sothanaphan"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">2</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: Quanyu Tang, Nat Sothanaphan"
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">2</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-2172"
+    class="post depth-0
+           
+           odd">
+    <div class="post-body" id="post-2172">
+    
+
+
+
+      
+      <p>I finally succeeded in proving that there is $C &#62; 1$ such that for all sufficiently large even $n$, $\Delta \geq C n^n$ !<br><br>The proof is as follows:<br><br>Consider the "new diameter construction" in my comment at [11:17 on 10 Dec 2025]. But instead of having a single $\delta_k$, I'm having $\delta_k(t) = (1 - 4k/n) t$.<br><br>In other words, these are "velocity vectors", and I'm increasing from $t=0$ to $t=O(1/n)$.<br><br>Formally, we're looking at $z_k(t) = z_k + v_k t$, where $z_k$ here are the original vertices of the regular polygon, and $v_k$ is some velocity vector.<br><br>So we must differentiate<br>$$ \log |(z_i-z_j) + (v_i-v_j)t| = \text{const} + \log |1 + \rho_{ij} t|, \quad \rho_{ij} = \frac{v_i-v_j}{z_i-z_j}. $$<br><br>With help of Wolframalpha, I found that<br>$$ \left( \log \sqrt{(1 + ax)^2 + (bx)^2)} \right)'(0) = a. $$<br>However, by symmetry of the construction, the same $v_i,v_j$ will match with all four of $\pm z_i, \pm z_j$. So the sum of the first derivative is zero. We must look at the second derivative.<br>$$ \left( \log \sqrt{(1 + ax)^2 + (bx)^2)} \right)''(0) = b^2 - a^2. $$<br>This one doesn't trivially cancel. Plugging in, if $\rho = a + bi$, I simplify this to $- \text{Re} (\rho^2)$. So we must show that<br>$$ \sum_{0 \leq i,j &#60; n/2} \frac{(v_i-v_j)^2}{(\pm z_i \pm z_j)^2} $$<br>has negative real part with magnitude at least $O(n^2)$. Why $O(n^2)$: this is the second derivative and the distance to move is $O(1/n)$, so that will cancel out out to $O(1)$.<br><br>Now I'm getting rid of the $\pm$'s:<br>$$ \sum_{0 \leq i,j &#60; n/2} \frac{(v_i-v_j)^2(z_i^2 + z_j^2)}{(z_i^2 - z_j^2)^2}. $$<br><br>Now here's the magic. I have $v_j = (1 - 4j/n)z_j$. Now $z_j^2$ here are the $n/2$th roots of unity. If its angle is $\theta$, actually $4j/n = \theta/\pi$. So what I'm looking at is actually a Riemann sum of a double integral involving $\theta$! To say the sum has negative real part with $O(n^2)$ is equivalent to saying the integral has negative real part (since we have $O(n^2)$ terms).<br><br>Writing everything out correctly, I must show that<br>$$ \text{Re} \int_0^{2\pi} \int_0^{2\pi} \frac{((1 - \frac{x}{\pi})e^{ix/2} - (1 - \frac{y}{\pi})e^{iy/2})^2 (e^{ix} + e^{iy})}{(e^{ix} - e^{iy})^2} \, dx \, dy &#60; 0. $$<br><br>By Wolframalpha, this integral seems to be a real number with value<br>$$ -0.481436 &#60; 0. $$<br><br>This completes the proof!<br><br>Note: sadly this proof as written doesn't give explicit $C$ or the sufficiently large threshold for $n$. But it works.<br><br>It's also not something of the form I would "expect"...</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2172">19:48 on 13 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2172" data-react-url="/forum/post/2172/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2185"
+    class="post depth-1
+           
+           even">
+    <div class="post-body" id="post-2185">
+    
+
+
+
+      
+      <p>With the other approach, Yanni Dong observed there is an integral estimate for a certain factor.<br>For 3 out of 4 regimes, the conclusion follows as such.<br><br>Quanyu checked that Mathematica cannot evaluate the limits symbolically. <br><br>By rewriting in such a way that an integral can approximate the value, one conclude the numerical C&#62;1.304 verification actually is a valid estimate.<br>So up to annoying details, C&#62;1.304 should be true.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/StijnC">StijnC</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2185">15:31 on 14 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2185" data-react-url="/forum/post/2185/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Nat Sothanaphan"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2187"
+    class="post depth-2
+           
+           odd">
+    <div class="post-body" id="post-2187">
+    
+
+
+
+      
+      <p>Can you show/link to such estimates?<br><br>Note we already know we should get $Cn^n$, but evaluating growth of certain complicated sums can be open problems in itself, so don't brush those off as "details".<br><br>Also see my observation in [11:17 on 10 Dec 2025] ("trouble with delicateness") which shows that the configuration of the points matter in very precise ways - so this is one case where you really need a proof and can't handwave things...</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2187">16:13 on 14 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2187" data-react-url="/forum/post/2187/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2211"
+    class="post depth-3
+           
+           even">
+    <div class="post-body" id="post-2211">
+    
+
+
+
+      
+      <p>Your remark on delicateness was that it converges to $1$, while here it is to $1.3+$, so the issue is not there.<br><br>For the sums; perturbing $6$ angles by $\delta= \frac{\pi}{n}$ implies that distances between two vertices (initially at distance dist) change into <br>$dist+  f_1* \delta+f_2*\delta^2+...$ for $\delta \to 0,$ where $dist, f_1, f_2...$ are functions of just a few angles that can be expressed in term of their location on the polygon (relative to the perturbed vertices).<br>Combining these in symmetric pairs, we get a product equal to $dist^2-g1 *\delta^2+O( \delta^3)$.<br><br><br>This implies that the ratio behaves like $1- \frac{g_1}{dist^2} \delta^2+O(\delta^3) \sim \exp \left( - \frac{g_1}{dist^2} \delta^2+O(\delta^3) \right)$.<br><br><br>Now $\prod ratio \sim \exp \left( \sum  - \frac{g_1}{dist^2} \delta^2 \right).$<br><br>Here $\sum  \frac{g_1}{dist^2} \delta^2$ has to be partitioned in $3$ different sums, each converging to some integral.<br>This by the number of edited angles in between (which is a number between $0$ and $3$, but $0$ changes implies that the ratio was just 1 =&#62; does not have to be considered)<br><br>One of those integrals (when there is one angle in between) should be <br>$$\int_{0}^{ \frac \pi 6} \int_{0}^{ \frac \pi 6} \frac{2(\sin^2(x)+\sin^2(y))\sin(x)\sin(y)\cos(x+y)}{\left( \sin^2(x)+\sin^2(y)+2\sin(x)\sin(y)\cos(x+y) \right)^2} dx dy$$<br>$$+ \int_{0}^{ \frac \pi 6} \int_{0}^{ \frac \pi 6} \frac{8\sin^2(x)\sin^2(y)\cos(x+y)}{\left( \sin^2(x)+\sin^2(y)+2\sin(x)\sin(y)\cos(x+y) \right)^2} dx dy.$$<br><br><br>So the details would be just to do all the computations exactly and check how the function $\frac{g_1}{dist^2}$ look like and over which region we are integrating.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/StijnC">StijnC</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2211">09:14 on 16 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2211" data-react-url="/forum/post/2211/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2212"
+    class="post depth-4
+           
+           odd">
+    <div class="post-body" id="post-2212">
+    
+
+
+
+      
+      <p>Sorry, I wasn't clear. The remark about delicateness means that the exact configuration seems to matter for the growth of $\Delta/n^n$. For example, in your case, perhaps if these are not precisely circular arcs or if the points are not spaced on the arcs in this exact way, we may not have $C := \lim_{n\to\infty} \Delta/n^n &#62; 1$.<br><br>It would be reassuring if the proof gives an exact $C$ that matches the numerics. I too wasn't fully confident in the proof until I obtained this!</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2212">10:04 on 16 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2212" data-react-url="/forum/post/2212/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2217"
+    class="post depth-5
+           
+           even">
+    <div class="post-body" id="post-2217">
+    
+
+
+
+      
+      <p>When restricting to $6 \mid n$, the limit for the specific construction would be a constant that can be expressed by exponentiation of integrals.<br>If $\Delta$ denotes the maximum value over all possible diameter 2 configurations, it indeed might be slightly larger.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/StijnC">StijnC</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2217">15:42 on 16 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2217" data-react-url="/forum/post/2217/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2290"
+    class="post depth-5
+           
+           odd">
+    <div class="post-body" id="post-2290">
+    
+
+
+
+      
+      <p>The constant for this construction is $$ C= \frac{3^{9/4}}{2^3}\exp \left( \frac{\pi^2-2 \sqrt 3 \pi}{8} \right) \sim 1.304457.$$</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/StijnC">StijnC</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2290">18:05 on 19 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2290" data-react-url="/forum/post/2290/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Quanyu Tang"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2186"
+    class="post depth-1
+           
+           odd">
+    <div class="post-body" id="post-2186">
+    
+
+
+
+      
+      <p>Follow up:<br><br>1) About the value of $C = \lim_{n\to\infty} \Delta/n^n$ in this construction.<br><br>Calculating back, we should expect, if $I \approx -0.481436$ is the value of that integral,<br>$$ C = \lim_{n\to\infty} \frac{\Delta}{n^n} = \exp\left( -I \frac{\pi^2}{128} \right) \approx 1.0378. $$<br><br>This checks out perfectly with the numerics (which came out as $1.037...$)! Hence, this bolsters the confidence that the proof is correct.<br><br>2) How fast does it converge?<br><br>Numerically seems to be $\Delta/n^n = C(1 + O(1/n))$.<br><br>I will also prove this below, again to strengthen the confidence of the argument.<br><br>3) Is the integral singular (dividing by $0$)?<br><br>No. There is factor of $(x-y)^2$ in the denominator, which also appears in the numerator. In fact the integrand is bounded! Thus, convergence of the Riemann sum to the integral is assured.<br><br>4) There is a gap: I calculated the second derivative at $t=0$; but we need all the way to $t=O(1/n)$.<br><br>Yes. I will now patch that as follows.<br><br>First, notice<br>$$ \log |1 + \rho t| = \text{Re} \log(1 + \rho t) = \text{Re} \left( \rho t - \frac{\rho^2 t^2}{2} + \frac{\rho^3 t^3}{3} - \frac{\rho^4 t^4}{4} + \dots \right). $$<br>(This means I actually don't need those Wolframalpha's calculations; the Taylor expansion is explicit.) By symmetry, the odd powers will cancel. So the error term is the $t^4$ term. Also, I must consider nonzero $t=O(1/n)$. (Explictly: we're using the Lagrange form of the remainder in Taylor's theorem.) Hence we must estimate<br>$$ \sum_{0 \leq i,j &lt; n/2} \frac{(v_i-v_j)^4}{((\pm z_i \pm z_j) + (v_i-v_j)t)^4} = \sum_{0 \leq i,j &lt; n} \frac{\rho_{ij}^4}{(1 + \rho_{ij} t)^4}. $$<br>Here<br>$$ \rho_{ij} = \frac{v_i - v_j}{z_i-z_j}. $$<br>(Note on summing $n/2$ or $n$ terms: $z_{n/2+i} = -z_i$ but $v_{n/2+i} = v_i$.)<br><br>Now here's the key point: $\rho_{ij}$ is in fact bounded (independent of $n$). So<br>$$ \sum |\rho_{ij}^4| = O(n^2). $$<br>(This is like we're doing that integral, but put the absolute value in the integrand instead i.e. we're using that the integrand is absolutely integrable.)<br><br>This means that if I can get $|\rho_{ij} t| &lt; \varepsilon$, the estimate will work:<br>$$ |\text{fourth derivative}| = \text{const} \left| \text{Re} \sum_{0 \leq i,j &lt; n} \frac{\rho_{ij}^4}{(1 + \rho_{ij} t)^4} \right| \leq \text{const} \sum_{0 \leq i,j &lt; n} \frac{|\rho_{ij}^4|}{(1 - \varepsilon)^4} = O(n^2). $$<br>And then the contribution in log-space of the error term will be<br>$$ O(n^2)t^4 = O(1/n^2). $$<br>(We only need $o(1)$ so this is stronger.)<br><br>But: $\rho_{ij}$ is bounded and $t=O(1/n)$, so actually $|\rho_{ij} t| &lt; \varepsilon$ is obtained easily.<br><br>This fixes the gap and proves that the error does not derail the desired growth rate.<br><br>5) Now, let's prove $\Delta/n^n = C(1 + O(1/n))$.<br><br>We must notice there are three error terms:<br><br>1. The fourth derivative: already shown to contribute $O(1/n^2)$.<br><br>2. The Riemann sum. The error is $O(1/n)$ per term, so the integral $I$ can be off by a factor of $O(1/n)$. From the $C$'s expression in terms of $I$, it contributes error of $O(1/n)$.<br><br>3. The $t=O(1/n)$, distance to move. It is not difficult (see below) to show<br>$$ t = \frac{\pi^2}{4n} \left(1 + O(1/n)\right) $$<br>is the maximum you can go to maintain diameter of $2$. Since we're going $(\text{second derivative}) t^2/2$, this comes out to $O(1/n)$ error as well.<br><br>Together this shows $\log (\Delta/n^n) - \log C = O(1/n)$, which gives the claim.<br><br>How to estimate $t$: there are probably many ways. Here is one way. We solve<br>$$ |(z_i-z_j) + (v_i-v_j)t| = 2 $$<br>Now I pull factor of $z_i-z_j$ out, rewriting to $\rho$ and rearranging to get<br>$$ t = -\log |(z_i-z_j)/2|(1 + O(t))/\text{Re}(\rho). $$<br>By explicit calculation $\text{Re}(\rho) = 1 - (\text{angle between } z_i,z_j)/\pi$. It's most restrictive if you take that angle to be $\pi - 2\pi/n$ (almost-diameter). Also $O(t) = O(1/n)$. Now use all that and it comes out right in the end.<br><br>6) Conclusion. What was proved?<br><br>There is a construction for all even $n$ in which one has<br>$$ \lim_{n\to\infty} \frac{\Delta}{n^n} = C \approx 1.0378 &gt; 1. $$<br>More specifically, for this construction, $\Delta = Cn^n (1 + O(1/n))$.<br><br>This implies that for even $n$, $\liminf_{n\to\infty} \Delta_{\max}/n^n \geq C &#62; 1$.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2186">15:40 on 14 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2186" data-react-url="/forum/post/2186/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Quanyu Tang"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2198"
+    class="post depth-2
+           
+           even">
+    <div class="post-body" id="post-2198">
+    
+
+
+
+      
+      <p>I'm in the process of writing this up as a pdf so we have a better reference to this argument.<br><br>As for Stijn/Quanyu/Yanni's $n=6k$ "circular arcs" construction, maybe this would help:<br><br>What I'm doing with that argument is that we define a fixed vector field<br>$$ z' = v(z) := \left(1 - \frac{2}{\pi}|\arg z|\right) \frac{z}{|z|}, \quad \arg z \in [-\pi, \pi). $$<br>Note this is independent of $n$; that's important to get an integrand that's independent of $n$.<br><br>Then I move the unit circle along this vector field ("flow"). In reality, it's a discrete version of this where we take the $n$th roots of unity and move them by $O(1/n)$.<br><br>But it turns out that the "continuous" version is a good enough approximation, allowing us to even calculate $C$ exactly as stated above.<br><br>It could be that the "circular arcs" construction can also be defined as flows along a fixed vector field. Then we may able to get similar results. But I'm not working on this at the moment.<br><br>In any case, this is an interesting and unexpected technique (from differential geometry) which initially seemed to have nothing to do with this "combinatorial" problem!</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2198">11:08 on 15 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2198" data-react-url="/forum/post/2198/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Quanyu Tang"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2203"
+    class="post depth-1
+           
+           even">
+    <div class="post-body" id="post-2203">
+    
+
+
+
+      
+      <p>FWIW, in case you are interested in the exact value for the integral, it's $$\frac{4\pi^2}{3}-\frac{112}{\pi^2}\zeta(3).$$ One only needs to use $\frac{1}{(e^{ix}-e^{iy})^2}=e^{-i(x+y)}\sum_{n\geq 0}n e^{-i n(x-y)}.$ This then gives your $C$ explicitly as $$C=\exp\left(\frac{7}{8}\zeta(3)-\frac{\pi^4}{96}\right).$$ Was fun to put my integration MSE skills to use here haha ;) It might be interesting to note that we can express this as $C=\exp(\lambda(3)-\lambda(4))$, where $\lambda(s):=\sum_{n\geq 0}(2n+1)^{-s}=(1-2^{-s})\zeta(s)$ is the Dirichlet $\lambda$ function.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/KStar">Kevin Barreto</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2203">15:16 on 15 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2203" data-react-url="/forum/post/2203/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Quanyu Tang, Nat Sothanaphan"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">2</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2207"
+    class="post depth-2
+           
+           odd">
+    <div class="post-body" id="post-2207">
+    
+
+
+
+      
+      <p>Oh wow, did not expect that it has a closed form! I definitely do not have integration MSE skills, so it's great that you do.<br><br>I should note that this is probably not the best $C$ (so others may prove better $C$ shortly after), so the value here will probably not be significant in the long run. (Note also: this doesn't diminish your practice!)<br><br>Except if this closed form reveals something about the construction, but I'm not seeing anything yet.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2207">20:49 on 15 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2207" data-react-url="/forum/post/2207/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Quanyu Tang"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+    
+    
+
+
+
+
+
+
+<li id="post-2262"
+    class="post depth-0
+           
+           even">
+    <div class="post-body" id="post-2262">
+    
+
+
+
+      
+      <p>Building on ideas in Nat Sothanaphan's recent note (arXiv:2512.14251), and motivated by Stijn's conjectures on extremal configurations for $6\mid n$ and for general even $n$, we can significantly improve the proven lower bound along even $n$. More precisely, we construct an explicit family of diameter-$2$ configurations for which\[<br>\liminf_{\substack{n\to\infty\\ n\ \mathrm{even}}}<br>\frac{\Delta(z_1,\dots,z_n)}{n^n}<br>\;\ge\;<br>\exp\!\left(\frac{7}{24}\zeta(3)-\frac{\pi^4}{864}\right)<br>\;\approx\;1.26853,<br>\]improving the previously proven constant $C\approx 1.0378$ from Sothanaphan's note.<br><br>I wrote up the details as a short note and uploaded the PDF (and tex) to my GitHub page (<a href="https://github.com/QuanyuTang/counterexamples-problem-1045/blob/main/Another_improved_lower_bound_for_even_n.pdf" rel="nofollow noopener noreferrer ugc" target="_blank">here</a>). With Stijn Cambie, Arne Decadt, Yanni Dong, and Tao Hu, we are preparing a full paper; this result will appear there in expanded form.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Quanyu_Tang">Quanyu Tang</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2262">18:46 on 18 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2262" data-react-url="/forum/post/2262/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: KoishiChan, Kevin Barreto, Nat Sothanaphan"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">3</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2267"
+    class="post depth-1
+           
+           odd">
+    <div class="post-body" id="post-2267">
+    
+
+
+
+      
+      <p>Wow, that was fast.<br><br>From a quick skim, it seems that Fourier methods are actually relevant to evaluating this integral of this kind, which comes out to be a form similar to KStar's evaluation.<br><br>So, surprisingly, my comment which has the word "Fourier" is relevant by accident...<br><br>KStar asked whether the closed form reveals something about such constructions. Surprisingly, this seems to give some form of answer.<br><br>Unexpectedly many questions are answered at once!</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2267">20:25 on 18 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2267" data-react-url="/forum/post/2267/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Quanyu Tang"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+  
+</ul>
+
+
+  <div id="more-posts" class="post-list hidden" aria-hidden="true">
+    <ul class="post-list">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2227"
+    class="post depth-0
+           
+           odd">
+    <div class="post-body" id="post-2227">
+    
+
+
+
+      
+      <p>I have written up the $\Delta \geq Cn^n$ for even $n$ argument based on vector flow as an arxiv: <a href="https://arxiv.org/abs/2512.14251" rel="nofollow noopener noreferrer ugc" target="_blank">https://arxiv.org/abs/2512.14251</a>.<br><br>To recap: the result obtained is that: $\liminf_{n\to\infty} \Delta_{\max}/n^n \geq C$ for even $n$, where $C \approx 1.037 &gt; 1$.<br><br>Stijn/Quanyu/Yanni are working on better bounds, so I expect this to be improved soon!</p>
+      
+      
+      <div class="fixed-post">
+(The site has been updated to address this comment.)
+      </div>
+
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2227">11:52 on 17 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2227" data-react-url="/forum/post/2227/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Quanyu Tang, Kevin Barreto"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">2</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: Nat Sothanaphan"
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2170"
+    class="post depth-0
+           
+           even">
+    <div class="post-body" id="post-2170">
+    
+
+
+
+      
+      <p>Here's a record of another of my failed attempt, for other (at least 3?) people working on this problem.<br><br>In the original [EHP58] paper, it was shown<br>$$ \frac{\Delta}{n^n} = \prod_{z \in \{\text{roots of f'}\}} |f(z)|. $$<br>Here $f$ is monic polynomial with roots $z_i$ and $f'$ is the derivative.<br><br>This is directly used in their proof that if $\bar{E} = \{z: |f(z)| \leq1\}$ is connected then $\Delta \leq n^n$. It's a really short proof so I'll reproduce it.<br><br>$\textbf{Proof}$ ([EHP58]). It suffices to show $|f(z)| \leq 1$ when $z$ is root of $f'$. We consider the lemniscates $\{z: |f(z)| = B\}$ and increase $B$ starting from $0$. A lemniscate has a multiple point iff $f'$ vanishes at that point. So if $\bar{E}$ is connected, there is no multiple point for $B &#62; 1$. Hence a root of $f'$ cannot satisfy $|f(z)| &#62; 1$. $\blacksquare$<br><br>So the attempt is to find a polynomial $f$ that is close to $z^n - 1$ but has easy explicit coefficients. Then that formula should allow for easy computation.<br><br>However, I have been trying polynomials such as $z^n \pm \varepsilon z^m - 1$ and $z^n \pm \varepsilon (z^{n-1} + \dots + z) - 1$. All of these that I tried are worse than the original $z^n - 1$ (the regular polygon). Note when computing we must scale like so: $\Delta / (n^n \text{diam}^{n(n-1)})$.<br><br>This presents a conundrum: the polynomial description (via coefficients) is easy to compute, but I can't perturb it to get a good one. In contrast, the geometric description (via roots) has explicit constructions that are good, but I can't compute with them. It seems I can't do "explicit construction" and "easy to compute" together currently! It's also known that there is no simple way to translate between the two descriptions: even though there is continuous dependence, the problem can be ill-conditioned see e.g. Wilkinson's polynomial.<br><br>The thought process still continues...</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2170">14:06 on 13 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2170" data-react-url="/forum/post/2170/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2137"
+    class="post depth-0
+           
+           odd">
+    <div class="post-body" id="post-2137">
+    
+
+
+
+      
+      <p>I have been making progress towards proving $\Delta \geq Cn^n$ for large $n$ even and some fixed $C&#62;1$. This has proven to be more challenging than expected. In particular, I have discovered some Fourier-type(?) phenomenon that may illustrate where the difficulty lies:<br><br>$\textbf{A new "diameter" construction}$. First, following my heuristic (which will later shown to be flawed) that we should get $(1 + O(1/n))^{O(n)}$, I devised the following arrangement for even $n$ that is hopefully easier to get a closed form.<br>$$ \delta_k = c \left(\frac{1}{n} - \frac{4k}{n^2}\right), z_k = \left(1 + \delta_k \right) e^{\frac{2\pi i k}{n}}, z_{k+n/2} = -\left(1 - \delta_k \right) e^{\frac{2\pi i k}{n}}, \quad k=0,1,\dots,\frac{n}{2}-1. $$<br>Here $c = c_{\max}(n)$ is the maximum quantity that maintains the diameter of $2$. It is found numerically that $c_{\max}(n) \to \pi^2/4$ for $n$ large (probably not hard to prove).<br><br>The idea here is that I'm moving diameters radially by $\delta_k$. I want $O(1/n)$ perturbation, but to maintain max distance of $2$ the consecutive $\delta_k$ can only differ by $O(1/n^2)$. Finally, $c/n$ has to become $-c/n$ on the other side to maintain consistency - this forces that we must decrease by $4c/n^2$ each time if we want linear interpolation of $\delta_k$.<br><br>So far so good. Also, numerical evidence suggests $\Delta/n^n \to 1.037...$ for large even $n$. That's promising. I still can't prove that, though.<br><br>$\textbf{Trouble with delicateness}$. However, here lies the trouble. I naively thought that any $\delta_k$ that is $O(1/n)$ and decreases by $O(1/n^2)$ should work, so I now observe that we can take<br>$$ \delta_k = \frac{c}{n} \cos \left(\frac{2\pi k}{n}\right), $$<br>which satisfies those conditions and also interpolates from $c/n$ to $-c/n$. The advantage is that if we let $\omega = e^{2\pi i/n}$, then<br>$$ z_k = \left(1 + \frac{c}{n} \left(\frac{\omega^k + \omega^{-k}}{2}\right) \right) \omega^k $$<br>is polynomial in $\omega^k$. This simplifies calculations. We also have numerically $c_{\max}(n) \to \pi/2$. Nevertheless, it is found $\Delta/n^n \to 1$ (very rapidly in fact), destroying any hoped-for gain.<br><br>This shows that the manner in which the radii interpolate matters in delicate details...<br><br>$\textbf{Refined intuition?}$. At first, I thought that we can perhaps make "local" estimates and combine them piece by piece; my $(1 + O(1/n))^{O(n)} \geq C$ heuristic reflects that. But the new construction and the "bad" variant show that the "global" arrangement of the whole configuration matters in ways that may be difficult to understand.<br><br>In particular, this seems reminiscent of the phenomenon that convergence of sums can depend very much on how we choose to "space" points. I'm reminded of the Clenshaw–Curtis quadrature, which is a numerical integration method where we make a change of variable $x = \cos \theta$, and how that becomes more accurate and stable than Newton-Cotes simply by spacing points differently.<br><br>Note this perspective is not so alien because we're actually looking at a quadrature of<br>$$ \int_{z(s),z(t) \in \text{ curve}} \log |z(s) - z(t)| \, ds dt, $$<br>where both the curve and sampling points change with each $n$. (I don't think viewing it this way helps with the calculations, though.)<br><br>So: any proof/approach that ignores the global spacing won't work - that's at least useful to know.<br><br>$\textbf{Conclusion (for now)}$. There are now at least two candidates for $\Delta \geq Cn^n$ for $n$ even.<br><br>1. Stijn's construction for $n=6k$ based on $6$ circular arcs in my description above. We now see that the "circular" part probably matters; I didn't think it matters before.<br><br>2. The diameter construction in this comment where we interpolate radii "smoothly". We also know that the exact interpolation matters.<br><br>Still, no proof :( !<br><br>Credit: ChatGPT for these numerical investigations.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2137">11:17 on 10 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2137" data-react-url="/forum/post/2137/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2061"
+    class="post depth-0
+           
+           even">
+    <div class="post-body" id="post-2061">
+    
+
+
+
+      
+      <p>Here are some counterexamples with improved asymptotics. First we look at Stijn's "yanking a diameter" construction for even $n$:<br><br>$\textbf{Claim}$. Let $n$ be even. From a regular $n$-gon, take any diameter and translate that radially as far as possible so as to still retain the same diameter of the set. Then $\Delta/n^n = 1 + O(1/n^2)$.<br><br>So, contrary to TFBloom's expectation, the improvement to regular polygons is extremely modest.<br><br>$\textbf{Proof}$. Let $1,\omega,\dots,\omega^{n-1}$ be the roots of unity. We're looking at<br>$$ f(z) := \prod_{k \neq 0, n/2} |z - \omega^k| = \frac{|z^n - 1|}{|z^2-1|}. $$<br>Now<br>$$ f(1+\varepsilon)f(1-\varepsilon) = \frac{n^2}{4} + \frac{n^2(n^2-6n+8)}{48} \varepsilon^2 + O(\varepsilon^4) $$<br>(via Wolframalpha). So if we're yanking out by $\varepsilon$, the improvement is $1 + O(n^2\varepsilon^2)$. Direct calculation shows we can take at most $\varepsilon = O(1/n^2)$. That gives the claim. $\blacksquare$<br><br>Of course, the question is: can this be improved? It turns out the answer is "yes" - why not yank out all diameters at the same time? If we do that, we can optimistically expect improvement of<br>$$ (1 + O(1/n^2))^{O(n)} = 1 + O(1/n). $$<br>Here's one way that seems "good". We alternate between pushing and pulling consecutive diameters. To make this consistent we must have $n = 4k+2$ (not just $n$ even). This turns out to be "Reuleaux polygon plus arc midpoints". Incidentally, this is also Quanyu's construction for $n=6$ - so it's one of the strongest candidates for that case.<br><br>$\textbf{Claim}$. Let $n = 4k+2$. Consider a Reuleaux $(2k+1)$-gon with arc midpoints. Then $\Delta/n^n = 1 + O(1/n)$.<br><br>$\textbf{Proof}$. Let $z_1,\dots,z_{2k+1}$ be the polygon vertices on the unit circle and $w_1,\dots,w_{2k+1}$ the arc midpoints. Let the diameter be $2(1 - \varepsilon)$. We have $\varepsilon = O(1/n^2)$. Note $|w_i| = 1 - 2\varepsilon$. Then<br>$$ \begin{align}<br>\Delta_{z_i \text{ only}} &amp;= (2k+1)^{2k+1} \\<br>\Delta_{w_i \text{ only}} &amp;= (1-2\varepsilon)^{2k(2k+1)} (2k+1)^{2k+1} \\<br>\Delta_{z_i \text{ to } w_j} &amp;= \prod |w_i^{2k+1} - 1|^2 = ((1-2\varepsilon)^{2k+1}+1)^{4k+2}<br>\end{align} $$<br>(Note $w_i^{2k+1} = - |w_i|^{2k+1}$.) Hence the ratio is<br>$$ \frac{\text{prod of those three}}{(1 - \varepsilon)^{(4k+1)(4k+2)} (4k+2)^{4k+2}} = 1 + 4k^2(2k+1) \varepsilon^2 + O(\varepsilon^3) $$<br>(again by Wolframalpha). For $\varepsilon = O(1/n^2)$, we get $1 + O(1/n)$. $\blacksquare$<br><br>It could be that this asymptotics is optimal. Otherwise, the heuristic above suggests we need constructions that differ substantially from "yanking diameters"; so far all constructions (even the kite for $n=4$) are of this form.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2061">12:10 on 06 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2061" data-react-url="/forum/post/2061/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2065"
+    class="post depth-1
+           
+           odd">
+    <div class="post-body" id="post-2065">
+    
+
+
+
+      
+      <p>In fact, in my earlier comment at ''14:55 on 03 Oct 2025'' (''[Post deleted]''), I had already made essentially the same conjecture: I conjectured that when $n = 4k+2$, the maximum of $\Delta / n^n$ is attained at the $n$ points constructed as follows. Take a regular Reuleaux $(2k+1)$--gon of constant width $2$ obtained from a regular $(2k+1)$--gon, and choose the $2k+1$ vertices together with the $2k+1$ arc midpoints. In this case one can even compute the value of $\Delta$ in closed form:\[<br>\Delta_n<br>=\Bigl(\frac{n}{2}\Bigr)^{\!n}<br>\Bigl(\, \sec\!\frac{\pi}{n}\,\bigl(2-\sec\!\tfrac{\pi}{n}\bigr)\Bigr)^{\frac{n(n-2)}{4}}<br>\Bigl(\, \sec^{\,\frac{n}{2}}\!\frac{\pi}{n}<br>+\bigl(2-\sec\!\tfrac{\pi}{n}\bigr)^{\frac{n}{2}}\Bigr)^{\!n}.<br>\]However, Stijn and Yanni later found counterexamples; for instance, when $n=10$ this configuration is no longer optimal.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Quanyu_Tang">Quanyu Tang</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2065">16:11 on 06 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2065" data-react-url="/forum/post/2065/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2066"
+    class="post depth-2
+           
+           even">
+    <div class="post-body" id="post-2066">
+    
+
+
+
+      
+      <p>Cool! What is the most recent progress? Even if the Reuleaux configuration isn’t maximizing, there are still related questions about them: 1) is it optimal in the asymptotics (which could be good enough for a “solution” to the problem if the exact value is messy)?, 2) are we still moving diameters slightly as I seem to suggest, or are we looking at different ways entirely?</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2066">17:13 on 06 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2066" data-react-url="/forum/post/2066/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2075"
+    class="post depth-3
+           
+           odd">
+    <div class="post-body" id="post-2075">
+    
+
+
+
+      
+      <p>1) Seems it is not, and it indeed gets messy.<br>For $6 \mid n$, thus $n=6k$ for some integer $k$, we have the following construction that should prove that there is no $(1+o(1))n^n$ upper bound. (it is not the optimal construction for $n \ge 12$)<br>Take a regular $n$-gon with diameter $2/cos(\pi/2n)$, $A_1 A_2 \ldots A_{6k}$<br>(so all angles are $\pi- 2\pi/n$ initially, it attains the maximum perimeter, and since $n$ is even the diameter is too large at this point, but it is the analogue of the odd $n$-gon)<br><br>Now increasing the angles in $A_k,A_{3k}$ and $A_{5k}$ by $\pi/n$<br>while decreasing the angles in $A_{2k},A_{4k}$ and $A_{6k}$ by $\pi/n$.<br><br>But so it is still a challenge at this point to formally prove it is $&#62;C n^n$ for some fixed $C&#62;1$.<br><br>2) No. (The moving diameters idea is now one out of three arguments that shows that the regular $n$-gon is not extremal for $2 \mid n$)</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/StijnC">StijnC</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2075">07:48 on 07 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2075" data-react-url="/forum/post/2075/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2076"
+    class="post depth-3
+           
+           even">
+    <div class="post-body" id="post-2076">
+    
+
+
+
+      
+      <p>As a follow-up, I have translated the construction in part 1) of Stijn’s comment (07:48 on 07 Dec 2025) into Mathematica code. Based on extensive numerical experiments, it seems that the limit of $\Delta/n^n$ is greater than 1.3 (although it is still possible that there are issues with my implementation or with numerical precision). For example, when $n=600000$, the code gives $\Delta/n^n &gt; 1.304$.<br><br>The Mathematica code is available on my GitHub page (see <a href="https://github.com/QuanyuTang/counterexamples-problem-1045/blob/main/stijn_n_equals_6k_construction.nb" rel="nofollow noopener noreferrer ugc" target="_blank">here</a>) for reference. However, it appears quite difficult to compute the limit directly from the description implemented in the Mathematica code, and a new perspective may be needed to handle the case $6|n$.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Quanyu_Tang">Quanyu Tang</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2076">08:27 on 07 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2076" data-react-url="/forum/post/2076/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2102"
+    class="post depth-3
+           
+           odd">
+    <div class="post-body" id="post-2102">
+    
+
+
+
+      
+      <p>Thanks both Stijn and Quanyu. I've been investigating this Stijn's $n=6k$ construction following Quanyu's code. I haven't been able to show that $\Delta$ should be large, though. But I have empirically confirmed $\Delta / n^n \approx 1.30$ for $n$ large.<br><br>For future reference, since the parameterization is a bit messy and difficult to do calculations, I (also credit: ChatGPT) derived the following parametrization which is hopefully cleaner:<br><br>$\textbf{Description.}$ This configuration consists of $6$ congruent circular arcs and has a $D_3$ symmetry. In the coordinates where the center of the symmetry is $0$ and the reflection is conjugation, a canonical fundamental domain, consisting of $\arg z \in [0, \pi/3]$, is precisely one such circular arc given by:<br>$$ \tan \frac{\pi}{2n} \left(i-\frac{1}{\sqrt{3}}\right) + \sec \frac{\pi}{2n} \exp \left(i \left(2j-\frac{1}{2}\right) \frac{\pi}{n}\right), \quad j = 0,1,\dots,\frac{n}{6}. $$<br>Some notes: there are only $3$ circles - the opposite arcs belong to the same circle. There are two kinds of orbits.<br>1. The "edge" points corresponding to $j=0$ and $j=n/6$ are special. Their orbits have size $3$ (corresponding to $C_3$ action) and each is a (differently sized) equilateral triangle.<br>2. The remaining $n/6-1$ points have orbits of size $6$.<br>The orbits of the edge points are also precisely the $6$ intersections of the $3$ circles. $\blacksquare$<br><br>This can give us preliminary insight into why we should expect $\Delta \geq Cn^n$. In my Reuleaux-based config, the modulus of each $z$ is $1 + O(1/n^2)$. This makes each diameter contribute roughly $1 + O(1/n^2)$, resulting in $(1 + O(1/n^2))^{O(n)} = 1 + O(1/n)$. But this new config is a union of circles with centers displaced by $O(1/n)$ and radius $1 + O(1/n^2)$ - so the modulus is actually $1 + O(1/n)$! Of course there are cancellations, but we might think heuristically as follows.<br><br>Utilizing $C_3$ symmetry ($120$ deg rotation), we might expect each equilateral triangle here to contribute $1 + O(1/n)$, analogous to the "diameter", due to roots-of-unity style grouping/cancellation. (Note: I don't have proof.) Then we have $(1 + O(1/n))^{O(n)} \geq C$.<br><br>But since we don't have closed-form expressions in this case, I don't know how to show this if it is true. Nevertheless, it may be possible to construct other configs that amount to $(1 + O(1/n))^{O(n)}$ that could be easier to handle.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/natso26">Nat Sothanaphan</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2102">12:37 on 08 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2102" data-react-url="/forum/post/2102/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-856"
+    class="post depth-0
+           
+           odd">
+    <div class="post-body" id="post-856">
+    
+
+
+
+      
+      <p>The question should be phrased a little different, see <a href="https://www.renyi.hu/~p_erdos/1958-05.pdf" rel="nofollow noopener noreferrer ugc" target="_blank">[EHP58]</a>.<br><br>They ask about the maximum, and in particular ask if the vertices of a regular polygon is a maximizer;<br><br>For a fixed $n$, what is the maximum value of $\Delta(z_i)= \prod_{1 \le i &lt;j \le n} |z_j-z_i|^2$ when all $z_i \in \mathbb C$ and $|z_j-z_i| \le 2$ for every $1 \le i,j \le n.$<br>Is the maximum achieved if the $z$, are the vertices of a regular $n$-gon <br>whose greatest diagonal has length $2$?</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/StijnC">StijnC</a></strong>
+      
+      — <a href="/forum/thread/1045#post-856">07:19 on 03 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="856" data-react-url="/forum/post/856/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-858"
+    class="post depth-1
+           
+           even">
+    <div class="post-body" id="post-858">
+    
+
+
+
+      
+      <p>Is your point that the problem should ask more generally what the maximum actually is? With the conjecture of what the maximiser is being a secondary question? If so, I agree, and will amend the problem statement.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TFBloom">Thomas Bloom</a></strong>
+      
+      — <a href="/forum/thread/1045#post-858">07:32 on 03 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="858" data-react-url="/forum/post/858/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-859"
+    class="post depth-2
+           
+           odd">
+    <div class="post-body" id="post-859">
+    
+
+
+
+      
+      <p>I am not sure if one should call that a conjecture, but it is a suggestion of a plausible answer (which turns out to be at least sometimes not the correct one).</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/StijnC">StijnC</a></strong>
+      
+      — <a href="/forum/thread/1045#post-859">07:45 on 03 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="859" data-react-url="/forum/post/859/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-2038"
+    class="post depth-2
+           
+           even">
+    <div class="post-body" id="post-2038">
+    
+
+
+
+      
+      <p>Related to the new forum feature and this question.<br>I think it is good to have the problem phrased the way it was posed.<br><br>On the other hand, to answer "This problem looks tractable?", I guess not in full generality since this seems infeasible for large even $n$. (it is one of the things we are working on to come with convincing evidence for that)<br>Nevertheless, one cannot answer no (and thus does not know the ratio of votes).</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/StijnC">StijnC</a></strong>
+      
+      — <a href="/forum/thread/1045#post-2038">10:37 on 05 Dec 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="2038" data-react-url="/forum/post/2038/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-1395"
+    class="post depth-0
+           
+           even">
+    <div class="post-body" id="post-1395">
+    
+
+
+
+      
+      <p>I ran some simulations and found the same optimal configurations for even $n$ and for odd $n$ the regular polygons seemed to be optimal.<br>For even $n$, there was always some symmetry in the final result that I obtained so that it can be moved to a position where the complex conjugate is also in the optimal set of $z_k$'s and one of them is 0 and another one is 2. Here I will present some conjectured optimal configurations for higher values of $n$. The positions that I obtained do not seem to be as nice as those for $n=4$ and $n=6$; or at least I do not see a closed-form expression for them.<br><br>$n=8$ <br>Max Δ  = 2.0979583149743754e7<br>Upper-half representatives:<br>  1:  0.186337 +0.842987i<br>  2:  0.000000 +0.000000i<br>  3:  2.000000 +0.000000i<br>  4:  1.579157 +0.592302i<br>  5:  0.963125 +1.000000i<br><br>$n=10$ <br>Max Δ = 1.2520185629077658e10<br>Upper-half representatives:<br>  1:  1.134126 +0.896770i<br>  2:  1.703425 +0.597338i<br>  3:  0.000000 +0.000000i<br>  4:  0.085427 +0.578283i<br>  5:  2.000000 +0.000000i<br>  6:  0.499883 +1.000000i<br><br>$n=12$ <br>Max Δ = 1.1503193686041115e13<br>Upper-half representatives:<br>  1:  1.386022 +0.800220i<br>  2:  0.903740 +1.000000i<br>  3:  0.068127 +0.517559i<br>  4:  0.386022 +0.931830i<br>  5:  1.800178 +0.482441i<br>  6:  0.000000 +0.000000i<br>  7:  2.000000 +0.000000i<br><br>$n=14$ <br>Max Δ  = 1.4068525169579732e16<br>Upper-half representatives:<br>  1:  1.171602 +0.949920i<br>  2:  1.542593 +0.717515i<br>  3:  1.855052 +0.408827i<br>  4:  0.053613 +0.459977i<br>  5:  0.000000 +0.000000i<br>  6:  2.000000 +0.000000i<br>  7:  0.301718 +0.850997i<br>  8:  0.726843 +1.000000i<br><br>... I could go on if someone is interested in a specific $n$. <br><br>$n=40$ <br>Max Δ = 1.5492592141201622e64<br>Upper-half representatives:<br>  1:  1.033002 +1.000000i<br>  2:  0.061245 +0.308340i<br>  3:  0.214882 +0.582815i<br>  4:  1.491034 +0.908896i<br>  5:  1.909338 +0.456221i<br>  6:  1.993908 +0.155989i<br>  7:  0.000000 +0.000000i<br>  8:  0.876834 +0.981499i<br>  9:  0.018462 +0.156442i<br> 10:  0.725394 +0.938750i<br> 11:  1.832890 +0.592791i<br> 12:  1.190028 +0.993826i<br> 13:  0.445609 +0.796122i<br> 14:  0.582602 +0.872887i<br> 15:  2.000000 +0.000000i<br> 16:  1.735972 +0.715755i<br> 17:  0.127270 +0.451651i<br> 18:  1.963450 +0.309411i<br> 19:  1.344030 +0.963168i<br> 20:  0.321892 +0.698592i<br> 21:  1.620974 +0.822061i</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/ArneD">ArneD</a></strong>
+      
+      — <a href="/forum/thread/1045#post-1395">12:58 on 23 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="1395" data-react-url="/forum/post/1395/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-1400"
+    class="post depth-1
+           
+           odd">
+    <div class="post-body" id="post-1400">
+    
+
+
+
+      
+      <p>With how much precision did you compute?<br>I just checked n=8, where I actually got the same construction before:<br>$\{(2, 0),<br> (0, 0),<br> (0.18633718598416538, 0.8429870681429009),<br> (0.18633718598416538, -0.8429870681429009),<br> (1.5791566824634438, -0.5923017007907968),<br> (1.5791566824634438, 0.5923017007907968),<br> (0.9631245871809369, 1),<br> (0.9631245871809369, -1)\}$<br><br>This resulted in $\Delta=20979436.333023693$ (the construction above had even a higher precision, as otherwise the last 2 digits are 45 instead of 93)<br><br>Also for $n=10,12,14$ I was slightly lower than you, but it may be because of the precision.<br><br>[With Quanyu, Tao Hu and Yanni Dong, we were still thinking on this, feel free to send a mail to me/us]</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/StijnC">StijnC</a></strong>
+      
+      — <a href="/forum/thread/1045#post-1400">18:06 on 23 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="1400" data-react-url="/forum/post/1400/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Quanyu Tang"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-1406"
+    class="post depth-2
+           
+           even">
+    <div class="post-body" id="post-1406">
+    
+
+
+
+      
+      <p>I have made a <a href="https://github.com/epistemologist/erdos1045" rel="nofollow noopener noreferrer ugc" target="_blank">Github repository</a> if people want to share code / collaborate on ideas regarding this problem.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/epistemologist">epistemologist</a></strong>
+      
+      — <a href="/forum/thread/1045#post-1406">05:05 on 24 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="1406" data-react-url="/forum/post/1406/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-1410"
+    class="post depth-2
+           
+           odd">
+    <div class="post-body" id="post-1410">
+    
+
+
+
+      
+      <p>Yeah, I think it's because of precision. Even though I was using double precision floats, there were multiple tolerances that I had set to 1e-7 approximately. I'll send you more details. Recalculating for $n=8$ with 15 digits of precision, I get $\Delta = 20979436.333024442$, much closer to your value with $\{(0,0),(2,0),(0.186337187409931,0.842987071210393),$ $(0.963124581328843,1),(1.579156724291186,0.592301658516795)\}$ and their conjugates.<br>The new $\Delta$-values for other $n$ are all slightly lower so yes I think we have the same solution:<br>$\begin{array} {|r|r|}\hline n &amp; \Delta \\ \hline 10 &amp; 1.2520044495237709\cdot 10^{10} \\ \hline 12 &amp; 1.150300323581618\cdot 10^{13} \\ \hline 14 &amp; 1.4068203682041522 \cdot 10^{16} \\ \hline  \end{array}$</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/ArneD">ArneD</a></strong>
+      
+      — <a href="/forum/thread/1045#post-1410">07:04 on 24 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="1410" data-react-url="/forum/post/1410/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-1299"
+    class="post depth-0
+           
+           odd">
+    <div class="post-body" id="post-1299">
+    
+
+
+
+      
+      <p>Using scipy's implementation of differential evolution, a set of complex numbers $(z_1, \cdots, z_5) \in \mathbb{C}^5$ was found such that $\Delta^2(z) = \prod_{i \ne j} |z_i - z_j|^2 \approx 8513.25$ (compared to $\Delta(\text{pentagon}) \approx 8525.57$), yielding further numerical evidence that in the case $n=5$, the pentagon is optimal. <br><br>Source code can be located <a href="https://gist.github.com/epistemologist/20070f5caf595632e9dde55266c169d5" rel="nofollow noopener noreferrer ugc" target="_blank">here</a>.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/epistemologist">epistemologist</a></strong>
+      
+      — <a href="/forum/thread/1045#post-1299">05:10 on 20 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="1299" data-react-url="/forum/post/1299/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-1301"
+    class="post depth-1
+           
+           even">
+    <div class="post-body" id="post-1301">
+    
+
+
+
+      
+      <p>The n=5 case is the easiest one.<br>(Edit: thought Quanyu had mentioned before n=4,5 was verified, but it was 4,6 which is numerically verified)<br>Since the perimeter is optimized by the regular 5-gon, all sides have equal length (thus AM-GM says the product od side lengths is maximized), and all diagonals have maximal length.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/StijnC">StijnC</a></strong>
+      
+      — <a href="/forum/thread/1045#post-1301">08:17 on 20 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="1301" data-react-url="/forum/post/1301/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Quanyu Tang"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-1249"
+    class="post depth-0
+           
+           even">
+    <div class="post-body" id="post-1249">
+    
+
+
+
+      
+      <p>Hereby some related literature, since the problem has been considered in some other settings (these may be considered more natural). Here one usually considers diameter $1$, equivalent with $|z_i-z_j| \le 1$ (thus just a rescaling of Erdos' condition)<br><br>For maximum area, width, perimeter and sum of diagonals, it turns out that for particular values of $n$, the best polygon is also an approximation or behaves complex (so one only has a numeric approximation)<br><br>$\underline{General\ background}$<br><br>The diameter graph of a polygon with diameter $1$, has vertex set equal ot the vertices of the polygon, and edges equal ot the pairs of vertices at distance $1.$<br><br>It is known that a diameter graph $G$ satisfies $|V(G)| \ge |E(G)|.$ <br><br>$\textbf{Area}$<br><a href="https://www.sciencedirect.com/science/article/pii/S0097316507000428?" rel="nofollow noopener noreferrer ugc" target="_blank">[ Foster, Szabo '07]</a><br><a href="https://link.springer.com/article/10.1007/s10898-020-00908-w " rel="nofollow noopener noreferrer ugc" target="_blank">[Audet, Hansen,Svrtan '21]</a> (even $n$ starting from $6$ are already hard)<br><br>$\textbf{Perimeter}$<br><a href="https://link.springer.com/article/10.1023/A:1004997002327" rel="nofollow noopener noreferrer ugc" target="_blank">[Datta95 ]</a> (classical work that shows the maximum perimeter is known if $n$ has an odd divisor)<br><a href="https://optimization-online.org/wp-content/uploads/2021/06/8430.pdf " rel="nofollow noopener noreferrer ugc" target="_blank">[ Bingane21]</a> (on both perimeter and width)<br><a href="https://www.sciencedirect.com/science/article/pii/S0097316506000537 " rel="nofollow noopener noreferrer ugc" target="_blank">[Audet, Hansen, Messine ]</a> (even for $n=8$, max perimeter is hard)<br><br>$\textbf{Sum of all diagonals}$<br><a href="https://link.springer.com/article/10.1007/s10898-010-9572-2" rel="nofollow noopener noreferrer ugc" target="_blank">[Audet, Guillou, Hansen, Messine, Perron '10]</a> (the sum of diagonals for odd $n&gt;5$ is not maximised by a regular $n$-gon)<br><br>***<br><i>This is an update, indicating the problem cannot be expected to be easy.</i><br>The thought process with multiple people still continues...</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/StijnC">StijnC</a></strong>
+      
+      — <a href="/forum/thread/1045#post-1249">07:47 on 19 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="1249" data-react-url="/forum/post/1249/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Quanyu Tang"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-860"
+    class="post depth-0
+           
+           odd">
+    <div class="post-body" id="post-860">
+    
+
+
+
+      
+      <p>The additional question can be answered in the negative for every even $n \ge 4$.<br><br>For this, consider a regular $n$-gon, with $A=(-1,0)$ and $B=(1,0)$ as two oppositive vertices.<br><br>Now if one replaces these two points with $A'=(-1+ \epsilon)$ and $B'=(1+ \epsilon)$ for $\epsilon&#62;0$ (sufficiently small such that the diameter of the construction is still $2$), we can check that the discriminant of the construction $\Delta$ increases.<br><br>To see this; a simple computation shows that for every $1\ge x&#62;0$, the vertices $C=(1-x, \sqrt{2x-x^2})$ and $D=(-(1-x), \sqrt{2x-x^2})$ satisfy<br>$d(A,C)d(A,D)d(B,C)d(B,D)&#60;d(A',C)d(A',D)d(B',C)d(B',D)$.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/StijnC">StijnC</a></strong>
+      
+      — <a href="/forum/thread/1045#post-860">09:42 on 03 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="860" data-react-url="/forum/post/860/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: Quanyu Tang"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-862"
+    class="post depth-1
+           
+           even">
+    <div class="post-body" id="post-862">
+    
+
+
+
+      
+      <p>Great! I still have not found any counterexample when $n$ is odd. Perhaps the next step is to try to prove that in the odd case the regular $n$-gon indeed maximizes $\Delta$. Besides, it may also be interesting to determine the extremal configurations for even $n$ where the maximum is attained.<br><br>PS. I feel that this problem is quite similar to <a href="/974" rel="nofollow noopener noreferrer ugc" target="_blank">[974]</a>. At that time, we first found counterexamples for even $n$, and then proved all the odd-$n$ cases. I have carefully searched the literature and have not found this problem resolved; I hope it is not, as with <a href="/974" rel="nofollow noopener noreferrer ugc" target="_blank">[974]</a>, already settled by earlier work.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Quanyu_Tang">Quanyu Tang</a></strong>
+      
+      — <a href="/forum/thread/1045#post-862">10:33 on 03 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="862" data-react-url="/forum/post/862/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-863"
+    class="post depth-2
+           
+           odd">
+    <div class="post-body" id="post-863">
+    
+
+
+
+      
+      <p>For the case \(n=4\), Stijn and I also conjecture that the kite-shaped configuration I found is indeed the extremal one, although at the moment we do not yet have a proof.<br>For the case \(n=6\), I guess that the extremal configuration is the following:\[<br>z_1=(-1,0),\quad z_2=(1,0),\quad z_3=(0,\sqrt{3}),\quad z_4=(0,-(2-\sqrt{3})),\quad z_5=(\sqrt{3}-1,1),\quad z_6=(-(\sqrt{3}-1),1).<br>\]These six points lie evenly on a Reuleaux triangle.<br><br>EDIT: We have already been able to prove the case where \(n=4\).</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Quanyu_Tang">Quanyu Tang</a></strong>
+      
+      — <a href="/forum/thread/1045#post-863">13:43 on 03 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="863" data-react-url="/forum/post/863/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-864"
+    class="post depth-2
+           
+           even">
+    <div class="post-body" id="post-864">
+    
+
+
+
+      
+      <p>Very nice! I suppose this configuration still satisfies $\Delta_n \ll n^n$, so that Pommerenke's bound of $\ll 2^{O(n)}n^{n}$ can probably be improved. It would be interesting if there was a construction where $\Delta_n/n^n\to \infty$ as $n\to \infty$. Perhaps your construction already has this property if you can find many candidates $C$ and $D$ where the relevant part of the discriminant to $A'$ and $B'$ grows?<br><br>I have looked carefully but couldn't find anything else in the literature - of course there may be papers which don't cite Erd&#337;s or Pommerenke's paper, and are lacking obvious key words, in which case it's difficult for a search to uncover them.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TFBloom">Thomas Bloom</a></strong>
+      
+      — <a href="/forum/thread/1045#post-864">13:57 on 03 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="864" data-react-url="/forum/post/864/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-865"
+    class="post depth-3
+           
+           odd">
+    <div class="post-body" id="post-865">
+    
+
+
+
+      
+      <p>[Post deleted]</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Quanyu_Tang">Quanyu Tang</a></strong>
+      
+      — <a href="/forum/thread/1045#post-865">14:55 on 03 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="865" data-react-url="/forum/post/865/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+  
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-855"
+    class="post depth-0
+           
+           even">
+    <div class="post-body" id="post-855">
+    
+
+
+
+      
+      <p>Tao Hu and I found counterexamples for this Problem.<br><br>In particular, when $n=4$ the following four points form a counterexample:\[<br>z_1=(0,0),\quad z_2=(\sqrt{3},1),\quad z_3=(\sqrt{3},-1),\quad z_4=(2,0).<br>\]All pairwise distances are $\le 2$, and we compute\[<br>\Delta(z_1,z_2,z_3,z_4)\approx 294.08 \;&gt;\; 256=\Delta(\text{square}),<br>\]so the regular quadrilateral is not maximal.<br><br>We also constructed a counterexample for $n=6$. However, we did not find any counterexample for $n=5$, which suggests that the problem might still hold for odd $n$. Details can be found on my GitHub page <a href="https://github.com/QuanyuTang/counterexamples-problem-1045/blob/main/Counterexamples_for_Erdos_Problem_1045.pdf" rel="nofollow noopener noreferrer ugc" target="_blank">here</a>.</p>
+      
+      
+      <div class="fixed-post">
+(The site has been updated to address this comment.)
+      </div>
+
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Quanyu_Tang">Quanyu Tang</a></strong>
+      
+      — <a href="/forum/thread/1045#post-855">06:55 on 03 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="855" data-react-url="/forum/post/855/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: old-bielefelder"
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">1</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+  
+    
+
+    <ul class="replies">
+      
+        
+        
+
+
+
+
+
+
+<li id="post-857"
+    class="post depth-1
+           
+           odd">
+    <div class="post-body" id="post-857">
+    
+
+
+
+      
+      <p>Interesting, thanks Quanyu. This is probably one of those problems where there might be errant examples for small $n$, but things settle down eventually. <br><br>It would be great if you could find an infinite sequence of counterexamples.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/TFBloom">Thomas Bloom</a></strong>
+      
+      — <a href="/forum/thread/1045#post-857">07:31 on 03 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="857" data-react-url="/forum/post/857/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+
+    
+  
+
+
+  </li>
+
+      
+        
+        
+
+
+
+
+
+
+<li id="post-854"
+    class="post depth-0
+           
+           odd">
+    <div class="post-body" id="post-854">
+    
+
+
+
+      
+      <p>It seems that there is a small typo in the statement for odd $n$. If the $z_i$ are vertices of a regular $n$-gon, then\[<br>\Delta = \cos(\pi/2n)^{-n(n-1)}n^{n}  \sim e^{\pi^2/8}n^n,<br>\]not $\cos(\pi/2n)^{-\frac{n}{n-1}}$.</p>
+      
+      
+
+    </div>
+
+    <div class="post-meta">
+    
+
+
+      
+      <strong><a href="/forum/user/Quanyu_Tang">Quanyu Tang</a></strong>
+      
+      — <a href="/forum/thread/1045#post-854">05:17 on 03 Oct 2025</a>
+
+      
+      
+      
+
+      
+      
+
+
+
+
+      
+      
+
+
+<div class="reaction-bar" data-post-id="854" data-react-url="/forum/post/854/react">
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="like"
+  data-desc="I like this post." 
+  title="I like this post.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">👍</span>
+  <span class="reaction-count" data-type="like">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="needs_update"
+  data-desc="The main problem discussion needs to be updated based on this comment." 
+  title="The main problem discussion needs to be updated based on this comment.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">📝</span>
+  <span class="reaction-count" data-type="needs_update">0</span>
+</button>
+
+   
+  
+
+    
+<button
+  type="button"
+    class="reaction-btn"
+    aria-pressed="false"
+  data-type="flag"
+  data-desc="This post looks like it contains undisclosed AI." 
+  title="This post looks like it contains undisclosed AI.&#10;&#10;Users: No one yet."
+>
+  <span class="reaction-icon">🤖</span>
+  <span class="reaction-count" data-type="flag">0</span>
+</button>
+
+  
+  
+  
+</div>
+    </div>
+    
+    
+
+
+
+
+
+
+  </li>
+
+      
+    </ul>
+  </div>
+
+<div class="post-list-actions" style="text-align: center;">
+  <a href="#"
+     id="toggle-posts"
+     class="show-more-link"
+     aria-expanded="false"
+     aria-controls="more-posts"
+     data-remaining="11">
+    Show 11 more comments
+  </a>
+</div>
+
+
+
+
+
+<p>
+                        <div style="text-align:center;">
+<strong>All comments are the responsibility of the user. Comments appearing on this page are not verified for correctness. Please keep posts mathematical and on topic.</strong>
+</div>
+<p>
+
+
+<div style="text-align:center; margin: 1em">
+
+
+  <p><a href="/forum/login?next=%2Fforum%2Fthread%2F1045">Log in</a> to add a comment.</p>
+
+
+    </div>
+<p><div style="text-align: center; margin: 1em 0;">
+<a href="/forum/">Back to the forum</a>
+</div>
+                </div>
+            </div>
+            
+
+<script>
+document.addEventListener("submit", (e) => {
+  const form = e.target.closest(".reply-form");
+  if (!form) return;
+  const btn = form.querySelector('button[type="submit"]');
+  if (btn?.dataset.submitting === "1") {
+    e.preventDefault(); // already submitted
+    return;
+  }
+  if (btn) {
+    btn.dataset.submitting = "1";
+    btn.disabled = true;
+    btn.textContent = "Posting…";
+  }
+});
+</script>
+
+<script>
+document.addEventListener("click", (ev) => {
+  const a = ev.target.closest(".thread-sort .order");
+  if (!a) return;
+});
+</script>
+
+<script>
+document.addEventListener("submit", (e) => {
+  const form = e.target.closest(".comment-form");
+  if (!form) return;
+
+  const btn = form.querySelector('button[type="submit"]');
+  if (!btn) return;
+
+  // Already submitting? Block.
+  if (btn.dataset.submitting === "1") {
+    e.preventDefault();
+    return;
+  }
+
+  // First submit: lock UI
+  btn.dataset.submitting = "1";
+  btn.disabled = true;
+  const original = btn.textContent;
+  btn.dataset.originalText = original;
+  btn.textContent = "Posting…";
+});
+</script>
+           
+
+
+
+
+<script>
+window.MathJax = {
+  output: {
+    font: 'mathjax-tex'
+  },
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+};
+</script>
+
+<script defer src="https://cdn.jsdelivr.net/npm/mathjax@4.1.2/tex-chtml-nofont.js"></script>
+
+
+<!-- Previewing forum posts -->
+<!-- Previewing forum posts -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  function escapeHtml(str) {
+    return String(str).replace(/[&<>"']/g, m => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[m]);
+  }
+
+  function normalizeHref(href) {
+    href = href.trim();
+    if (!/^https?:\/\//i.test(href) && !href.startsWith("/")) {
+      href = "https://" + href;
+    }
+
+    return href;
+  }
+
+  let mathJaxQueue = Promise.resolve();
+
+  function clearMathJax(element) {
+    if (window.MathJax && MathJax.typesetClear) {
+      MathJax.typesetClear([element]);
+    }
+  }
+
+  function typesetMath(element) {
+    if (!window.MathJax) return;
+
+    if (MathJax.typesetPromise) {
+      mathJaxQueue = mathJaxQueue
+        .then(() => {
+          if (MathJax.startup && MathJax.startup.promise) {
+            return MathJax.startup.promise;
+          }
+        })
+        .then(() => MathJax.typesetPromise([element]))
+        .catch(err => {
+          console.error("MathJax typeset failed:", err);
+        });
+
+      return;
+    }
+
+    if (MathJax.Hub) {
+      MathJax.Hub.Queue(["Typeset", MathJax.Hub, element]);
+    }
+  }
+
+  function renderPreview(textarea, preview, label) {
+    let raw = textarea.value;
+    const anchors = [];
+    let idx = 0;
+
+    raw = raw.replace(
+      /<a\s+href=("(?:[^"]*)"|'(?:[^']*)')\s*>([\s\S]*?)<\/a>/gi,
+      (match, qHref, labelText) => {
+        const href = qHref.slice(1, -1);
+        const token = `__A_TAG_${idx++}__`;
+
+        anchors.push({
+          token,
+          href: normalizeHref(href),
+          label: labelText
+        });
+
+        return token;
+      }
+    );
+
+    let safe = escapeHtml(raw);
+
+    anchors.forEach(a => {
+      const html = `<a href="${escapeHtml(a.href)}">${escapeHtml(a.label)}</a>`;
+      safe = safe.replace(a.token, html);
+    });
+
+    safe = safe.replace(/\{PROBLEM=(.+?)\}/g, (_, p1) =>
+      `<a href="/${escapeHtml(p1)}">[${escapeHtml(p1)}]</a>`
+    );
+
+    safe = safe.replace(/\n/g, "<br>");
+    clearMathJax(preview);
+
+    if (!safe.trim()) {
+      preview.innerHTML = "";
+      preview.classList.add("hidden");
+      label.classList.add("hidden");
+      return;
+    }
+
+    preview.innerHTML = safe;
+    preview.classList.remove("hidden");
+    label.classList.remove("hidden");
+
+    typesetMath(preview);
+  }
+
+  document.querySelectorAll("form textarea").forEach(textarea => {
+    const form = textarea.closest("form");
+    const preview = form && form.querySelector(".post-preview");
+    const label = form && form.querySelector(".preview-label");
+
+    if (preview && label) {
+      textarea.addEventListener("input", () => renderPreview(textarea, preview, label));
+      renderPreview(textarea, preview, label);
+    }
+  });
+});
+</script>
+
+<!-- To handle the search bar -->
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    function setFilterLink(linkId, newFilter) {
+        const link = document.getElementById(linkId);
+        if (!link) return;
+        const pathParts = window.location.pathname.split("/");
+        // Expect: /<section>/<entry> or /<section>/<entry>/<filter>
+        if (pathParts.length >= 3) {
+            const section = pathParts[1];
+            const entry = pathParts[2];
+            // Construct base: /tags/additive, /sources_bib/BL09, etc.
+            const baseUrl = "/" + section + "/" + entry;
+            link.href = baseUrl + "/" + newFilter;
+        }
+    }
+    setFilterLink("solvedLink", "solved");
+    setFilterLink("openLink", "open");
+    setFilterLink("yesLink", "yes");
+    setFilterLink("noLink", "no");
+});
+</script>
+
+<!-- Handle the dual view link -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const dualLink = document.getElementById("dualViewLink");
+  if (!dualLink) return;
+
+  const isInDualView = window.location.pathname.startsWith("/dual");
+  dualLink.textContent = isInDualView ? "Exit Dual View" : "Dual View";
+  dualLink.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    if (isInDualView) {
+      try {
+        const leftIframe = document.getElementById("iframe-left");
+        const src = leftIframe?.src || "/";
+        let clean = src.replace(window.location.origin, "");
+        clean = clean.replace(/[?&]embed=1/, "");
+
+        window.location.href = clean;
+      } catch (err) {
+        window.location.href = "/";
+      }
+    } else {
+      const currentPath = window.location.pathname + window.location.search;
+      const rightPanelDefault = "/";
+      const hash = `#left:${encodeURIComponent(currentPath)}&right:${encodeURIComponent(rightPanelDefault)}`;
+      window.location.href = `/dual${hash}`;
+    }
+  });
+});
+</script>
+
+<!-- Redirect links and searches when in dual view mode -->
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  if (!window.location.pathname.startsWith("/dual")) return;
+
+  function getTargetPanel() {
+    const selected = document.querySelector('input[name="targetPanel"]:checked');
+    return selected ? selected.value : "left";
+  }
+
+  function loadInPanel(panel, path) {
+    if (!path) return;
+    const iframe = document.getElementById(`iframe-${panel}`);
+    if (!iframe) return;
+    const url = path.includes("?") ? path + "&embed=1" : path + "?embed=1";
+    iframe.src = url;
+    const inputBox = document.querySelector(`#panel-${panel} input`);
+    if (inputBox) inputBox.value = path;
+    console.log(`Loaded "${url}" into panel "${panel}"`);
+  }
+  
+  document.querySelectorAll(".dual-aware a[href^='/'], a.dual-aware[href^='/']").forEach(link => {
+    link.addEventListener("click", function (e) {
+      e.preventDefault();
+      const path = this.getAttribute("href");
+      loadInPanel(getTargetPanel(), path);
+    });
+  });
+
+  const idForm = document.getElementById("idsearchForm");
+  if (idForm) {
+    idForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const input = idForm.querySelector(".idsearchTerm").value.trim();
+      if (!input) return;
+
+      let path = null;
+
+      if (/^\d+$/.test(input)) {
+        path = "/go_to/" + encodeURIComponent(input);
+      } else if (/^((\d+|end)(-(\d+|end))?\s*)+(open|solved|yes|no)?$/i.test(input)) {
+        const parts = input.split(/\s+/).filter(Boolean);
+        path = "/range/" + parts.map(encodeURIComponent).join("/");
+      } else {
+        alert("Invalid input format.");
+        return;
+      }
+
+      loadInPanel(getTargetPanel(), path);
+    });
+  }
+
+  const searchForm = document.getElementById("searchForm");
+  if (searchForm) {
+    searchForm.addEventListener("submit", function (e) {
+      e.preventDefault();
+      const input = searchForm.querySelector(".searchTerm").value.trim();
+      if (!input) return;
+
+      const path = "/search/" + encodeURIComponent(input);
+      loadInPanel(getTargetPanel(), path);
+    });
+  }
+});
+</script>
+
+<!-- Different menu on mobile -->
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const button = document.getElementById("mobileMenuButton");
+  const dropdown = document.getElementById("mobileDropdown");
+
+  if (button && dropdown) {
+    button.addEventListener("click", function () {
+      dropdown.classList.toggle("show");
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!button.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove("show");
+      }
+    });
+  }
+});
+</script>
+
+<!-- For expanding threads -->
+
+<script>
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('#toggle-posts');
+  if (!link) return;
+  e.preventDefault(); 
+
+  const box = document.getElementById('more-posts');
+  const isHidden = box.classList.toggle('hidden');
+  const expanded = !isHidden;
+
+  link.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  box.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+
+  link.textContent = expanded
+    ? 'Show only the top five comments'
+    : `Show ${link.dataset.remaining} more comments`;
+});
+</script>
+
+
+<script>
+document.addEventListener('click', (e) => {
+  const link = e.target.closest('.toggle-replies');
+  if (!link) return;
+  e.preventDefault();
+
+  const pid = link.dataset.postId;
+  const box = document.getElementById(`more-replies-${pid}`);
+  if (!box) return;
+
+  const isHidden = box.classList.toggle('hidden');
+  const expanded = !isHidden;
+
+  link.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+  box.setAttribute('aria-hidden', expanded ? 'false' : 'true');
+
+  link.textContent = expanded
+    ? 'Hide replies'
+    : `Show ${link.dataset.remaining} more replies`;
+});
+</script>
+
+
+<script>
+document.addEventListener("click", async function (event) {
+    const button = event.target.closest(".problem-status-option");
+    if (!button) return;
+
+    const widget = button.closest(".problem-status-widget");
+    if (!widget) return;
+
+    if (widget.dataset.canEdit !== "1") return;
+
+    const status = button.dataset.status;
+    const url = widget.dataset.setUrl;
+
+    widget.classList.add("is-saving");
+
+    const buttons = widget.querySelectorAll(".problem-status-option");
+    buttons.forEach(btn => btn.disabled = true);
+
+    try {
+        const response = await fetch(url, {
+            method: "POST",
+            credentials: "same-origin",
+            headers: {
+                "Content-Type": "application/json",
+                "X-Requested-With": "fetch"
+            },
+            body: JSON.stringify({ status: status })
+        });
+
+        const data = await response.json().catch(() => ({}));
+
+        if (!response.ok || !data.ok) {
+            throw new Error(data.error || "Could not update problem status.");
+        }
+
+        widget.dataset.currentStatus = data.status;
+
+        buttons.forEach(btn => {
+            const active = btn.dataset.status === data.status;
+            btn.classList.toggle("is-active", active);
+            btn.setAttribute("aria-checked", active ? "true" : "false");
+        });
+
+        const label = widget.querySelector(".js-problem-status-label");
+        const description = widget.querySelector(".js-problem-status-description");
+
+        if (label) label.textContent = data.label || button.dataset.label;
+        if (description) description.textContent = data.description || button.dataset.description;
+          widget.style.setProperty("--status-progress", button.dataset.progress);
+
+    } catch (err) {
+        alert(err.message || "Could not update problem status.");
+    } finally {
+        widget.classList.remove("is-saving");
+
+        if (widget.dataset.canEdit === "1") {
+            buttons.forEach(btn => btn.disabled = false);
+        }
+    }
+});
+</script>
+  
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a1934bf09b98e8d8',t:'MTc4MzcyNTYwMQ=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>

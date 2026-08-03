@@ -1,0 +1,703 @@
+{
+  "statement_lock": {
+    "original_statement": "For which limit ordinals $\\alpha$ is it true that if $G$ is a graph with vertex set $\\alpha$ then $G$ must have either an infinite path or independent set on a set of vertices with order type $\\alpha$?\n\n\n\n\nA problem of Erd\\H{o}s, Hajnal, and Milner \\cite{EHM70}, who proved this is true for $\\alpha &lt; \\omega_1^{\\omega+2}$. In \\cite{Er82e} Erd\\H{o}s offers \\$250 for showing what happens when $\\alpha=\\omega_1^{\\omega+2}$ and \\$500 for settling the general case. Larson \\cite{La90} proved this is true for all $\\alpha&lt;2^{\\aleph_0}$ assuming Martin's axiom .\n\n\n\n\nReferences\n\n[EHM70] Erd\\H{o}s, P. and Hajnal, A. and Milner, E. C., Set mappings and polarized partition relations . Combinatorial theory and its applications, I-III (Proc. Colloq., Balatonf\\\"{u}red, 1969) (1970), 327-363.\n\n[Er82e] Erd\\H{o}s, Paul, Some of my favourite problems which recently have been solved . (1982), 59--79.\n\n[La90] Larson, Jean A., Martin's axiom and ordinal graphs: large independent sets or infinite paths . Ann. Pure Appl. Logic (1990), 31-39.",
+    "sha256": "d6cba89b3fc36877f79ee1c44e20fd3658f8cec907cc5f2d0cc46caca89a4cdd",
+    "acceptance_criteria": [
+      "Prove or disprove the exact original statement without changing quantifiers.",
+      "Do not add hypotheses, restrict domains, weaken conclusions, or omit subproblems.",
+      "Resolve every boundary case and every explicitly numbered task.",
+      "Treat ambiguity as a blocking defect rather than choosing a convenient interpretation."
+    ]
+  },
+  "subgoal_graph": {
+    "summary": "No solution is claimed. The scouts independently converge on the finite-separator and branchless-forest framework for the one-way-ray interpretation, but their agreement is not evidence; the load-bearing rank and forest lemmas must be reconstructed with strict ordinal bounds. The strongest reusable conclusions are the full-cardinality antichain theorem, its initial-ordinal corollary, and finite-depth exclusions. Claims involving countable or transfinite profile gluing, including the reported low-countable range, remain conditional until the schedulers are proved. The portfolio ranks four tracks: first, a new order-sensitive profile and finite-separator gluing theorem, because it has the best mathematical fit and highest information gain; second, an explicit finite-class or recursively interleaved forest counterexample, because it is highly falsifiable and would directly settle a negative branch; third, the logically separate double-ray interpretation, for which rayless rank is inapplicable; and fourth, the induced-path and repeated-walk interpretations, which admit immediate conditional classifications. The semantic ambiguity is a hard gate: GOAL requires either a convention derivable from the immutable statement or completion of every materially distinct interpretation branch.",
+    "bottleneck_ids": [
+      "S0",
+      "S2",
+      "Q1",
+      "Q3",
+      "G2",
+      "E1",
+      "R1",
+      "D2",
+      "GOAL"
+    ],
+    "subgoals": [
+      {
+        "id": "S0",
+        "claim": "[UNRESOLVED SEMANTIC GATE] Determine from the immutable statement whether graph means simple undirected graph, whether infinite path means a one-way ray, a two-way double ray, an induced infinite path, or a walk permitting repeated vertices, and whether 0 is a limit ordinal. If the statement alone does not determine these conventions, retain all materially distinct branches through GOAL rather than silently selecting one.",
+        "dependencies": [],
+        "centrality": 5,
+        "falsifiable": false
+      },
+      {
+        "id": "S1",
+        "claim": "[PROVED CONDITIONAL BRANCH] Under either induced-ray or induced-double-ray semantics, the assertion is false for every infinite limit ordinal alpha: the complete graph on alpha has no induced infinite path and has no independent set of order type alpha.",
+        "dependencies": [
+          "S0"
+        ],
+        "centrality": 2,
+        "falsifiable": true
+      },
+      {
+        "id": "S4",
+        "claim": "[PROVED CONDITIONAL BRANCH] Under semantics permitting repeated vertices in an infinite path, the assertion is true for every limit ordinal alpha in the simple-undirected convention: any edge yields an infinite alternating walk, so a graph with no such walk is edgeless and its entire vertex set is independent of type alpha.",
+        "dependencies": [
+          "S0"
+        ],
+        "centrality": 2,
+        "falsifiable": true
+      },
+      {
+        "id": "S5",
+        "claim": "[PROVED BOUNDARY CASE] If 0 is admitted as a limit ordinal, it satisfies the assertion: the unique graph on the empty vertex set has the empty independent set, whose order type is 0.",
+        "dependencies": [
+          "S0"
+        ],
+        "centrality": 1,
+        "falsifiable": true
+      },
+      {
+        "id": "S3",
+        "claim": "[CONDITIONAL FORMALIZATION] Define the ray branch using simple undirected graphs and one-way simple paths v_0,v_1,... with distinct vertices and consecutive adjacency. Define P_ray(alpha) to require that every rayless graph on alpha have an independent subset of inherited order type alpha.",
+        "dependencies": [
+          "S0"
+        ],
+        "centrality": 5,
+        "falsifiable": false
+      },
+      {
+        "id": "S2",
+        "claim": "[CONDITIONAL FORMALIZATION] Define the double-ray branch using a two-way simple path indexed by the integers. Record explicitly that absence of a double ray does not imply raylessness, so none of C1-C3 may be imported into this branch without a new proof.",
+        "dependencies": [
+          "S0"
+        ],
+        "centrality": 5,
+        "falsifiable": false
+      },
+      {
+        "id": "C1",
+        "claim": "[REUSABLE LEMMA TO REPROVE] Prove that a graph is rayless exactly when it has finite-separator rank. In the reverse direction, if all components have ranks r(C), use the strict bound rho = sup_C(r(C)+1); after deleting a vertex, use the same component-rank-plus-one bound. Verify that every component rank is strictly below rho at each invocation.",
+        "dependencies": [
+          "S3"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "C2",
+        "claim": "[REUSABLE LEMMA TO REPROVE] From C1 construct a rooted forest on the same vertices such that every graph edge joins comparable forest vertices and every predecessor chain is finite. Prove finiteness along each branch by observing that separator stages produce a strictly descending sequence of ordinal graph ranks; do not infer it merely from the finiteness of each separator bag.",
+        "dependencies": [
+          "C1"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "C3",
+        "claim": "[REUSABLE EXACT REDUCTION] Prove that the comparability graph of a rooted forest with no infinite branch is rayless, using induction on well-founded subtree rank and the fact that deleting a root separates its child subtrees. Deduce the exact equivalence between P_ray(alpha) and the statement that every branchless rooted forest on alpha has an antichain of order type alpha.",
+        "dependencies": [
+          "C2"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "P1",
+        "claim": "[REUSABLE CARDINAL LEMMA] In ZFC, prove that every infinite branchless rooted forest has an antichain of the same cardinality as its vertex set. State the dependent-choice step used to obtain a branch from a node with no leaf descendant, prove that each chosen-leaf fiber is finite, and state the cardinal-arithmetic fact that a union of |L| finite fibers has size at most |L| times aleph_0 = |L| for infinite |L|.",
+        "dependencies": [
+          "C3"
+        ],
+        "centrality": 3,
+        "falsifiable": true
+      },
+      {
+        "id": "P2",
+        "claim": "[PROVED AFTER P1] Deduce P_ray(kappa) for every infinite initial ordinal kappa, including singular initial ordinals, because a subset of kappa of cardinality kappa must have inherited order type kappa.",
+        "dependencies": [
+          "P1"
+        ],
+        "centrality": 2,
+        "falsifiable": true
+      },
+      {
+        "id": "P3",
+        "claim": "[REPAIR REQUIRED] For an infinite regular cardinal kappa and finitely many kappa-sized vertex sets A_i in a rayless graph, prove the existence of one independent set meeting every A_i in kappa points. State and prove: a union of fewer than kappa sets of size below kappa has size below kappa; every finite family of kappa-sized support sets has pairwise disjoint kappa-sized refinements; and the rank induction preserves all requirements assigned to the same component.",
+        "dependencies": [
+          "C1",
+          "P1"
+        ],
+        "centrality": 3,
+        "falsifiable": true
+      },
+      {
+        "id": "P4",
+        "claim": "[CONDITIONAL COROLLARY] From P3 derive P_ray(kappa times m) for every infinite regular initial ordinal kappa and positive finite m by applying P3 to the consecutive kappa-blocks.",
+        "dependencies": [
+          "P3"
+        ],
+        "centrality": 2,
+        "falsifiable": true
+      },
+      {
+        "id": "P5",
+        "claim": "[REPAIR REQUIRED] For regular infinite cardinals lambda <= kappa and a lambda-indexed family of kappa-sized sets, prove that one independent set meets kappa points in lambda many of the sets. Give the full transfinite recursion producing disjoint refinements, prove that fewer than lambda previously used components cover fewer than lambda concentrated indices, and check regularity of both lambda and kappa in every case.",
+        "dependencies": [
+          "C1",
+          "P1",
+          "P3"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "P6",
+        "claim": "[CONDITIONAL COROLLARY] If P5 is proved, derive P_ray(kappa times lambda) for regular infinite lambda <= kappa by partitioning into lambda consecutive kappa-blocks and using that a lambda-sized subset of the initial ordinal lambda has order type lambda.",
+        "dependencies": [
+          "P5"
+        ],
+        "centrality": 2,
+        "falsifiable": true
+      },
+      {
+        "id": "F1",
+        "claim": "[REUSABLE FINITE-DEPTH LEMMA] Prove by induction on beta that every finite coloring of omega^beta has a color class of order type omega^beta. Deduce that a branchless forest of uniformly bounded finite depth on omega^beta has an antichain of type omega^beta, and that any counterexample there must have unbounded finite branch lengths and full-order-type depth tails.",
+        "dependencies": [
+          "C3"
+        ],
+        "centrality": 3,
+        "falsifiable": true
+      },
+      {
+        "id": "Q1",
+        "claim": "[CONDITIONAL ONE-LEVEL SEPARATION THEOREM] Rebuild the finite-pattern separation lemma for finitely many mandatory infinite sets and finitely many sequences of infinite sets. Give an explicit fair scheduler under which every nonconcentrated mandatory set, every diffuse row job, and every atomic sequence receives infinitely many allocations, while global disjointness of assigned components is maintained as an invariant. Invoke P3 only after its exact hypotheses have been checked.",
+        "dependencies": [
+          "C1",
+          "P3"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "Q2",
+        "claim": "[CONDITIONAL COUNTABLE PROFILE LEMMA] From Q1 and P1 prove that for every countable family of infinite vertex sets A_n in a rayless graph, some independent set meets infinitely many A_n in infinite sets. Do not claim simultaneous infinitude for every n, which is refuted by disjoint-star examples.",
+        "dependencies": [
+          "Q1",
+          "P1"
+        ],
+        "centrality": 3,
+        "falsifiable": true
+      },
+      {
+        "id": "Q3",
+        "claim": "[UNRESOLVED TWO-LEVEL SEPARATION DECISION] Prove or refute the following: for a pairwise disjoint array of infinite sets A_{n,m}, there are infinitely many outer indices n, infinitely many selected rows m for each such n, and infinite subsets B_{n,m} that are pairwise anticomplete. Before invoking Q1, explicitly restrict to infinite component intersections and reindex them. Supply a formal diagonal scheduler proving fairness simultaneously for all retained outer indices and rows.",
+        "dependencies": [
+          "Q1",
+          "P3"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "B4",
+        "claim": "[CONDITIONAL LOW-RANGE PACKAGE, NOT A THEOREM YET] If Q1 and Q2 are proved, derive P_ray(alpha) for the exact nonzero limit range alpha < omega^3. If Q3 is additionally proved, derive P_ray(omega^3). Do not state a result for all alpha <= omega^3 unless every dependency has been discharged.",
+        "dependencies": [
+          "Q1",
+          "Q2",
+          "Q3",
+          "P1"
+        ],
+        "centrality": 3,
+        "falsifiable": true
+      },
+      {
+        "id": "G1",
+        "claim": "[POSITIVE CONSTRUCTION BRANCH] Construct an ordinal demand profile for subsets of arbitrary limit ordinals. It must detect containment of a copy of the target ordinal, encode nested block survival rather than cardinality alone, reproduce Q1 and Q3 as low-complexity cases, and remain meaningful under arbitrary interleavings of finite-separator components.",
+        "dependencies": [
+          "F1",
+          "Q1",
+          "Q3"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "G2",
+        "claim": "[CENTRAL POSITIVE-BRANCH DECISION] Prove or refute a finite-separator gluing theorem for the G1 profile: from lower-rank independent pieces, select mutually anticomplete replacements whose union retains the full target profile. The theorem must handle the highlighted ordinal omega_1^(omega+2) and be formulated strongly enough to iterate through arbitrary limit ordinals. Cardinal support alone, predetermined full blocks, and componentwise preservation of local order type are forbidden substitutes.",
+        "dependencies": [
+          "C1",
+          "P5",
+          "Q1",
+          "Q3",
+          "G1"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "E0",
+        "claim": "[NEGATIVE CONSTRUCTION BRANCH A] Decide the finite-transversal property FT(alpha): whether every partition of alpha into finite classes has a transversal of order type alpha. Begin with matchings. A negative instance must be converted into a disjoint union of finite cliques and proved to have no independent subset of type alpha; a positive theorem eliminates only this lowest-rank obstruction.",
+        "dependencies": [
+          "C3"
+        ],
+        "centrality": 4,
+        "falsifiable": true
+      },
+      {
+        "id": "E2",
+        "claim": "[FINITE FALSIFICATION SUPPORT] Implement or reason through exact dynamic programming for antichain block profiles in finite rooted forests, discarding dominated profiles. Use it only to falsify candidate G1 gluing laws or to identify scalable finite-class, star, or recursively nested-star patterns; isolated finite failures are not transfinite counterexamples.",
+        "dependencies": [
+          "E0",
+          "G1"
+        ],
+        "centrality": 2,
+        "falsifiable": true
+      },
+      {
+        "id": "E1",
+        "claim": "[NEGATIVE CONSTRUCTION BRANCH B] Using any explicit failure certificate for G2, attempt to realize the failed profile as an ordinally labeled branchless forest of unbounded finite depth. Prove both that the forest has no infinite branch and that every antichain has order type below the target. Test finite classes and height-one stars first, then recursively interleaved stars; do not infer an ordinal counterexample merely from a finite profile obstruction.",
+        "dependencies": [
+          "G2",
+          "E0",
+          "E2"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "R1",
+        "claim": "[UNRESOLVED RAY CLASSIFICATION] Combine the proved structural lemmas and the completed decisions in G2 and E1 to classify exactly those limit ordinals alpha satisfying P_ray(alpha). For each alpha, supply either a proof for every rayless graph on alpha or an explicitly verified rayless counterexample. Include the 0 convention separately and do not extrapolate from initial ordinals, finite powers, or low-countable cases.",
+        "dependencies": [
+          "P2",
+          "P4",
+          "P6",
+          "F1",
+          "B4",
+          "G2",
+          "E1"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "D1",
+        "claim": "[DOUBLE-RAY STRUCTURE BRANCH] Develop and verify a structural invariant or decomposition equivalent to absence of a double ray. It must allow components containing one-way rays and must not assume finite-separator rank. A candidate decomposition should be aggressively tested against one-ended ray graphs, stars, comb-like graphs, and graphs containing two disjoint rays joined by a finite path.",
+        "dependencies": [
+          "S2"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "D2",
+        "claim": "[UNRESOLVED DOUBLE-RAY CLASSIFICATION] Using D1, classify exactly those limit ordinals alpha for which every graph on alpha has either a double ray or an independent set of order type alpha. Pursue both a positive decomposition argument and explicit counterexamples; conclusions from the rayless branch may be imported only when their hypotheses are independently verified.",
+        "dependencies": [
+          "D1",
+          "E0"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      },
+      {
+        "id": "GOAL",
+        "claim": "[FINAL, UNRESOLVED] Resolve the immutable original question without changing its quantifiers. Either derive the governing meaning of infinite path from the statement and use the corresponding completed classification, or report the exact classifications for every materially distinct semantic branch. Resolve the 0 boundary convention and include both the one-way-ray and double-ray branches. This node cannot be completed while S0, R1, or D2 remains open.",
+        "dependencies": [
+          "S0",
+          "S1",
+          "S4",
+          "S5",
+          "R1",
+          "D2"
+        ],
+        "centrality": 5,
+        "falsifiable": true
+      }
+    ]
+  },
+  "attempts": [
+    {
+      "attempt": 1,
+      "candidate_outcome": "candidate_unclassified",
+      "candidate_sha256": "051ec1911bd67c9f42b5f4989842503e58559e3878c2d374569f9d76c43293cc",
+      "gate_status": "candidate_rejected",
+      "gate_reasons": [
+        "candidate has no proof or disproof claim",
+        "candidate result contract is incomplete or internally inconsistent",
+        "no trusted external or mechanical verification evidence",
+        "missing independent review roles: adjudicator, counterexample, global_synthesis, logic, mechanical_evidence, statement_integrity, structural_dependency, theorem_hypotheses",
+        "one or more reviews lack context provenance",
+        "review contexts are not unique",
+        "review statement_integrity-1 is not independent",
+        "review statement_integrity-1 did not pass",
+        "review statement_integrity-1 did not check every claim",
+        "review statement_integrity-1 used a claim count inconsistent with the candidate",
+        "review statement_integrity-1 reports material errors",
+        "review statement_integrity-1 did not attest to the immutable statement",
+        "review statement_integrity-1 completeness below 98",
+        "review statement_integrity-1 confidence below 95",
+        "review statement_integrity-1 adversarial survival below 95",
+        "review structural_dependency-1 is not independent",
+        "review structural_dependency-1 did not pass",
+        "review structural_dependency-1 did not check every claim",
+        "review structural_dependency-1 used a claim count inconsistent with the candidate",
+        "review structural_dependency-1 reports material errors",
+        "review structural_dependency-1 did not attest to the immutable statement",
+        "review structural_dependency-1 completeness below 98",
+        "review structural_dependency-1 confidence below 95",
+        "review structural_dependency-1 adversarial survival below 95",
+        "review logic-1 is not independent",
+        "review logic-1 did not pass",
+        "review logic-1 did not check every claim",
+        "review logic-1 used a claim count inconsistent with the candidate",
+        "review logic-1 reports material errors",
+        "review logic-1 did not attest to the immutable statement",
+        "review logic-1 completeness below 98",
+        "review logic-1 confidence below 95",
+        "review logic-1 adversarial survival below 95",
+        "review counterexample-1 is not independent",
+        "review counterexample-1 did not pass",
+        "review counterexample-1 did not check every claim",
+        "review counterexample-1 used a claim count inconsistent with the candidate",
+        "review counterexample-1 reports material errors",
+        "review counterexample-1 did not attest to the immutable statement",
+        "review counterexample-1 completeness below 98",
+        "review counterexample-1 confidence below 95",
+        "review counterexample-1 adversarial survival below 95",
+        "review theorem_hypotheses-1 is not independent",
+        "review theorem_hypotheses-1 did not pass",
+        "review theorem_hypotheses-1 did not check every claim",
+        "review theorem_hypotheses-1 used a claim count inconsistent with the candidate",
+        "review theorem_hypotheses-1 reports material errors",
+        "review theorem_hypotheses-1 did not attest to the immutable statement",
+        "review theorem_hypotheses-1 completeness below 98",
+        "review theorem_hypotheses-1 confidence below 95",
+        "review theorem_hypotheses-1 adversarial survival below 95",
+        "review mechanical_evidence-1 is not independent",
+        "review mechanical_evidence-1 did not pass",
+        "review mechanical_evidence-1 did not check every claim",
+        "review mechanical_evidence-1 used a claim count inconsistent with the candidate",
+        "review mechanical_evidence-1 reports material errors",
+        "review mechanical_evidence-1 did not attest to the immutable statement",
+        "review mechanical_evidence-1 completeness below 98",
+        "review mechanical_evidence-1 confidence below 95",
+        "review mechanical_evidence-1 adversarial survival below 95",
+        "review global_synthesis-1 is not independent",
+        "review global_synthesis-1 did not pass",
+        "review global_synthesis-1 did not check every claim",
+        "review global_synthesis-1 used a claim count inconsistent with the candidate",
+        "review global_synthesis-1 reports material errors",
+        "review global_synthesis-1 did not attest to the immutable statement",
+        "review global_synthesis-1 completeness below 98",
+        "review global_synthesis-1 confidence below 95",
+        "review global_synthesis-1 adversarial survival below 95",
+        "review adjudicator-1 is not independent",
+        "review adjudicator-1 did not pass",
+        "review adjudicator-1 did not check every claim",
+        "review adjudicator-1 used a claim count inconsistent with the candidate",
+        "review adjudicator-1 reports material errors",
+        "review adjudicator-1 did not attest to the immutable statement",
+        "review adjudicator-1 completeness below 98",
+        "review adjudicator-1 confidence below 95",
+        "review adjudicator-1 adversarial survival below 95",
+        "review adjudicator-1 outcome does not match the candidate"
+      ],
+      "regulator": {
+        "decision": "REWRITE",
+        "rationale": "The rejection is caused by fatal artifact-level truncation, not by an identified local proof gap or a demonstrated defect in the validated subgoal graph. The candidate ends before completing its first normalization, contains no substantive mathematical claim, and supplies no dependency chain that can be patched. REVISE_PROOF is therefore insufficient because there is no proof body to repair. REVISE_PLAN is not justified because the reviews do not show that any validated dependency is false, circular, or structurally inadequate. The cheapest valid recovery is to regenerate the candidate from the beginning using the existing DAG, without extrapolating from the missing continuation. \n\nPasted text\n\n",
+        "broken_node_ids": [
+          "S0",
+          "S1",
+          "S2",
+          "S3",
+          "S4",
+          "S5",
+          "C1",
+          "C2",
+          "C3",
+          "P1",
+          "P2",
+          "P3",
+          "P4",
+          "B1",
+          "B2",
+          "G1",
+          "GOAL"
+        ],
+        "new_constraints": [
+          "Discard the truncated candidate completely; do not preserve or reconstruct any unstated intended argument.",
+          "Begin by discharging S0 explicitly: separate the ray, double-ray, induced-path, and repeat-allowed infinite-walk interpretations; specify the graph convention; and treat the status of 0 separately.",
+          "Do not select a preferred interpretation and present it as the answer to the immutable statement.",
+          "Under each nontrivial interpretation, state every definition and imported theorem with exact hypotheses before use.",
+          "Follow the validated dependency graph in order and label which nodes are proved, refuted, or remain open.",
+          "Do not claim S2 until both directions of the forest equivalence and preservation of inherited ordinal order type are proved.",
+          "Do not infer order type from cardinality; every gluing or refinement argument must verify ordinal type in the inherited ordering.",
+          "Stress-test all proposed positive principles against finite clique partitions, matchings, height-two stars, nested stars, interleaved components, singular cofinalities, and limit exponents.",
+          "Resolve the specified boundary cases, including 0 when applicable, omega, initial ordinals, omega cubed, and omega_1^(omega+2).",
+          "The rewritten artifact must end with an explicit classification or an honest statement that the GOAL remains unresolved; it must not present a partial reduction as a solution."
+        ]
+      }
+    },
+    {
+      "attempt": 2,
+      "candidate_outcome": "candidate_unclassified",
+      "candidate_sha256": "a37fd665a0a2b37758dd580dde9296ea31bd49234f4a28a56c4875c163ff4101",
+      "gate_status": "candidate_rejected",
+      "gate_reasons": [
+        "candidate has no proof or disproof claim",
+        "candidate result contract is incomplete or internally inconsistent",
+        "no trusted external or mechanical verification evidence",
+        "review statement_integrity-2 did not pass",
+        "review statement_integrity-2 did not check every claim",
+        "review statement_integrity-2 used a claim count inconsistent with the candidate",
+        "review statement_integrity-2 reports material errors",
+        "review statement_integrity-2 did not attest to the immutable statement",
+        "review statement_integrity-2 completeness below 98",
+        "review statement_integrity-2 confidence below 95",
+        "review statement_integrity-2 adversarial survival below 95",
+        "review structural_dependency-2 did not pass",
+        "review structural_dependency-2 did not check every claim",
+        "review structural_dependency-2 used a claim count inconsistent with the candidate",
+        "review structural_dependency-2 reports material errors",
+        "review structural_dependency-2 did not attest to the immutable statement",
+        "review structural_dependency-2 completeness below 98",
+        "review structural_dependency-2 confidence below 95",
+        "review structural_dependency-2 adversarial survival below 95",
+        "review logic-2 did not pass",
+        "review logic-2 did not check every claim",
+        "review logic-2 used a claim count inconsistent with the candidate",
+        "review logic-2 reports material errors",
+        "review logic-2 did not attest to the immutable statement",
+        "review logic-2 completeness below 98",
+        "review logic-2 confidence below 95",
+        "review logic-2 adversarial survival below 95",
+        "review counterexample-2 did not pass",
+        "review counterexample-2 did not check every claim",
+        "review counterexample-2 used a claim count inconsistent with the candidate",
+        "review counterexample-2 reports material errors",
+        "review counterexample-2 did not attest to the immutable statement",
+        "review counterexample-2 completeness below 98",
+        "review counterexample-2 confidence below 95",
+        "review counterexample-2 adversarial survival below 95",
+        "review theorem_hypotheses-2 did not pass",
+        "review theorem_hypotheses-2 did not check every claim",
+        "review theorem_hypotheses-2 used a claim count inconsistent with the candidate",
+        "review theorem_hypotheses-2 reports material errors",
+        "review theorem_hypotheses-2 did not attest to the immutable statement",
+        "review theorem_hypotheses-2 completeness below 98",
+        "review theorem_hypotheses-2 confidence below 95",
+        "review theorem_hypotheses-2 adversarial survival below 95",
+        "review mechanical_evidence-2 did not pass",
+        "review mechanical_evidence-2 did not check every claim",
+        "review mechanical_evidence-2 used a claim count inconsistent with the candidate",
+        "review mechanical_evidence-2 reports material errors",
+        "review mechanical_evidence-2 did not attest to the immutable statement",
+        "review mechanical_evidence-2 completeness below 98",
+        "review mechanical_evidence-2 confidence below 95",
+        "review mechanical_evidence-2 adversarial survival below 95",
+        "review global_synthesis-2 did not pass",
+        "review global_synthesis-2 did not check every claim",
+        "review global_synthesis-2 used a claim count inconsistent with the candidate",
+        "review global_synthesis-2 reports material errors",
+        "review global_synthesis-2 did not attest to the immutable statement",
+        "review global_synthesis-2 completeness below 98",
+        "review global_synthesis-2 confidence below 95",
+        "review global_synthesis-2 adversarial survival below 95",
+        "review adjudicator-2 did not pass",
+        "review adjudicator-2 did not check every claim",
+        "review adjudicator-2 used a claim count inconsistent with the candidate",
+        "review adjudicator-2 reports material errors",
+        "review adjudicator-2 did not attest to the immutable statement",
+        "review adjudicator-2 completeness below 98",
+        "review adjudicator-2 confidence below 95",
+        "review adjudicator-2 adversarial survival below 95",
+        "review adjudicator-2 outcome does not match the candidate"
+      ],
+      "regulator": {
+        "decision": "REVISE_PLAN",
+        "rationale": "The failure is not a collection of merely local proof omissions. The current dependency graph contains a false assertion at B4, incomplete load-bearing arguments at C1, C2, P5, Q1, and Q3, and missing dependency edges throughout the Q, G, and E branches. More decisively, S0 and S3 remain unresolved and neither G2 nor E1 supplies the new ingredient needed to discharge GOAL. Thus repairing prose in the existing execution would preserve a plan that does not imply the required classification. A full rewrite is unnecessarily expensive because the finite-separator and forest-antichain framework, together with several cardinal and finite-depth consequences, remains reusable. The cheapest valid recovery is to rebuild the subgoal graph around the unresolved semantic checkpoint and the genuine transfinite bottleneck, while demoting all presently incomplete conclusions to conditional lemmas. This diagnosis is based only on the supplied candidate and rejection record, not on external mathematical evidence. \n\nPasted text\n\n",
+        "broken_node_ids": [
+          "S0",
+          "S3",
+          "C1",
+          "C2",
+          "P5",
+          "B4",
+          "Q1",
+          "Q2",
+          "Q3",
+          "G1",
+          "G2",
+          "E1",
+          "GOAL"
+        ],
+        "new_constraints": [
+          "Treat S0 as a hard gate. Do not continue to GOAL under a silently selected meaning of infinite path. Either derive the governing convention from the immutable statement itself or maintain separate branches and require every materially distinct branch to be completed.",
+          "Delete B4's assertion that all branchless-forest obstructions are ruled out for every ordinal at most omega cubed. Any repaired conclusion must be restricted to the exact limit-ordinal range actually proved and must depend explicitly on repaired versions of Q2 and Q3.",
+          "Repair C1 by using a strict rank bound such as the supremum of component-rank-plus-one, both for components of the whole graph and after deleting a vertex.",
+          "Repair C2 by proving that each fixed vertex encounters only finitely many separator stages, using the impossibility of an infinite strictly descending sequence of ordinals. Merely saying that each individual separator chain is finite is insufficient.",
+          "State and prove the exact choice, regular-union, cardinal-arithmetic, and transfinite-recursion lemmas used in P1, P3, and P5. Every hypothesis must be checked where the lemma is invoked.",
+          "Rebuild Q1 with an explicit fair scheduler in which every nonconcentrated mandatory set, every diffuse row job, and every atomic sequence receives infinitely many allocations. Record global component disjointness as an invariant.",
+          "Rebuild Q3 with explicit restriction and reindexing to infinite row intersections before invoking Q1, and give a formal diagonal scheduler proving fairness simultaneously for all selected outer indices and rows.",
+          "Add the missing dependency edges: Q1 depends on P3; Q3 depends on Q1 and P3; B4 depends on Q2 and Q3 for any low-range exclusion claim; G1 depends on Q1 and Q3 if it uses their profiles; G2 depends on P5, Q1, and Q3 when crediting those gluing cases; E1 depends on G2 when it is triggered by failure of G2.",
+          "Downgrade Q2, Q3, P6, and every downstream claim relying on them to conditional status until their repaired prerequisites are fully proved.",
+          "Do not count an open node as a checked theorem. Separate proved, refuted, conditional, and unresolved nodes in the status record.",
+          "Make the next central milestone one genuinely new result: either a transfinite order-sensitive profile with a valid finite-separator gluing theorem sufficient for the highlighted boundary and arbitrary limit ordinals, or an explicit ordinally labeled rayless counterexample whose lack of a full-type independent set is proved.",
+          "Do not spend further effort polishing finite-depth consequences unless they directly establish the new transfinite profile, produce a scalable obstruction, or eliminate a live branch of GOAL.",
+          "GOAL may not be marked complete, and no passing candidate may be emitted, until the exact ray classification, the required double-ray branch, and the semantic issue at S0 are all resolved rather than reported as open."
+        ]
+      }
+    },
+    {
+      "attempt": 3,
+      "candidate_outcome": "candidate_unclassified",
+      "candidate_sha256": "12dde8a8f2866cc8e184990821f9e2168d0ed2a4aeaa720a36361907fd1d918c",
+      "gate_status": "candidate_rejected",
+      "gate_reasons": [
+        "candidate has no proof or disproof claim",
+        "candidate result contract is incomplete or internally inconsistent",
+        "no trusted external or mechanical verification evidence",
+        "review statement_integrity-3 did not pass",
+        "review statement_integrity-3 did not check every claim",
+        "review statement_integrity-3 used a claim count inconsistent with the candidate",
+        "review statement_integrity-3 reports material errors",
+        "review statement_integrity-3 did not attest to the immutable statement",
+        "review statement_integrity-3 completeness below 98",
+        "review statement_integrity-3 confidence below 95",
+        "review statement_integrity-3 adversarial survival below 95",
+        "review structural_dependency-3 did not pass",
+        "review structural_dependency-3 did not check every claim",
+        "review structural_dependency-3 used a claim count inconsistent with the candidate",
+        "review structural_dependency-3 reports material errors",
+        "review structural_dependency-3 did not attest to the immutable statement",
+        "review structural_dependency-3 completeness below 98",
+        "review structural_dependency-3 confidence below 95",
+        "review structural_dependency-3 adversarial survival below 95",
+        "review logic-3 did not pass",
+        "review logic-3 did not check every claim",
+        "review logic-3 used a claim count inconsistent with the candidate",
+        "review logic-3 reports material errors",
+        "review logic-3 did not attest to the immutable statement",
+        "review logic-3 completeness below 98",
+        "review logic-3 confidence below 95",
+        "review logic-3 adversarial survival below 95",
+        "review counterexample-3 did not pass",
+        "review counterexample-3 did not check every claim",
+        "review counterexample-3 used a claim count inconsistent with the candidate",
+        "review counterexample-3 reports material errors",
+        "review counterexample-3 did not attest to the immutable statement",
+        "review counterexample-3 completeness below 98",
+        "review counterexample-3 confidence below 95",
+        "review counterexample-3 adversarial survival below 95",
+        "review theorem_hypotheses-3 did not pass",
+        "review theorem_hypotheses-3 did not check every claim",
+        "review theorem_hypotheses-3 used a claim count inconsistent with the candidate",
+        "review theorem_hypotheses-3 reports material errors",
+        "review theorem_hypotheses-3 did not attest to the immutable statement",
+        "review theorem_hypotheses-3 completeness below 98",
+        "review theorem_hypotheses-3 confidence below 95",
+        "review theorem_hypotheses-3 adversarial survival below 95",
+        "review mechanical_evidence-3 did not pass",
+        "review mechanical_evidence-3 did not check every claim",
+        "review mechanical_evidence-3 used a claim count inconsistent with the candidate",
+        "review mechanical_evidence-3 reports material errors",
+        "review mechanical_evidence-3 did not attest to the immutable statement",
+        "review mechanical_evidence-3 completeness below 98",
+        "review mechanical_evidence-3 confidence below 95",
+        "review mechanical_evidence-3 adversarial survival below 95",
+        "review global_synthesis-3 did not pass",
+        "review global_synthesis-3 did not check every claim",
+        "review global_synthesis-3 used a claim count inconsistent with the candidate",
+        "review global_synthesis-3 reports material errors",
+        "review global_synthesis-3 did not attest to the immutable statement",
+        "review global_synthesis-3 completeness below 98",
+        "review global_synthesis-3 confidence below 95",
+        "review global_synthesis-3 adversarial survival below 95",
+        "review adjudicator-3 did not pass",
+        "review adjudicator-3 used a claim count inconsistent with the candidate",
+        "review adjudicator-3 did not attest to the complete claim ledger",
+        "review adjudicator-3 reports open gaps",
+        "review adjudicator-3 reports unchecked imports",
+        "review adjudicator-3 reports material errors",
+        "review adjudicator-3 completeness below 98",
+        "review adjudicator-3 confidence below 95",
+        "review adjudicator-3 adversarial survival below 95",
+        "review adjudicator-3 outcome does not match the candidate"
+      ]
+    }
+  ],
+  "verified_lemmas": [],
+  "failed_approaches": [
+    {
+      "attempt": 1,
+      "candidate_sha256": "051ec1911bd67c9f42b5f4989842503e58559e3878c2d374569f9d76c43293cc",
+      "obstructions": [
+        "malformed reviewer output: Expecting ',' delimiter: line 10 column 24 (char 203)",
+        "malformed reviewer output: Expecting ',' delimiter: line 10 column 51 (char 216)",
+        "malformed reviewer output: Expecting ',' delimiter: line 18 column 14 (char 1440)",
+        "malformed reviewer output: Expecting ',' delimiter: line 27 column 51 (char 311)",
+        "malformed reviewer output: reviewer role mismatch: expected counterexample, got independent adversarial referee (counterexample)",
+        "malformed reviewer output: reviewer role mismatch: expected mechanical_evidence, got independent adversarial referee (mechanical_evidence)",
+        "malformed reviewer output: reviewer role mismatch: expected structural_dependency, got independent adversarial referee (structural_dependency)",
+        "malformed reviewer output: reviewer role mismatch: expected theorem_hypotheses, got independent adversarial referee (theorem_hypotheses)"
+      ],
+      "reusable_lesson": "Do not repeat this proof path without a new ingredient that resolves every listed obstruction."
+    },
+    {
+      "attempt": 2,
+      "candidate_sha256": "a37fd665a0a2b37758dd580dde9296ea31bd49234f4a28a56c4875c163ff4101",
+      "obstructions": [
+        "malformed reviewer output: Expecting ',' delimiter: line 42 column 18 (char 458)",
+        "malformed reviewer output: reviewer role mismatch: expected counterexample, got independent adversarial referee (counterexample)",
+        "malformed reviewer output: reviewer role mismatch: expected global_synthesis, got independent adversarial referee (global_synthesis)",
+        "malformed reviewer output: reviewer role mismatch: expected logic, got independent adversarial referee (logic)",
+        "malformed reviewer output: reviewer role mismatch: expected mechanical_evidence, got independent adversarial referee (mechanical_evidence)",
+        "malformed reviewer output: reviewer role mismatch: expected statement_integrity, got independent adversarial referee (statement_integrity)",
+        "malformed reviewer output: reviewer role mismatch: expected structural_dependency, got independent adversarial referee (structural_dependency)",
+        "malformed reviewer output: reviewer role mismatch: expected theorem_hypotheses, got independent adversarial referee (theorem_hypotheses)"
+      ],
+      "reusable_lesson": "Do not repeat this proof path without a new ingredient that resolves every listed obstruction."
+    },
+    {
+      "attempt": 3,
+      "candidate_sha256": "12dde8a8f2866cc8e184990821f9e2168d0ed2a4aeaa720a36361907fd1d918c",
+      "obstructions": [
+        "Candidate D1 is a useful ray-removal lemma, but it is not the equivalent structural decomposition required by validated D1.",
+        "Candidate D2 omits the cardinal-sum argument needed to show that the union of componentwise independent sets has the cardinality of the whole graph, including when infinitely many components are finite.",
+        "Candidate D3 imports the A4 argument by analogy without reconstructing the concentrated and diffuse cases for graphs with no double ray.",
+        "Candidate D3's regular-demand and ordinal-product extensions are proof sketches by analogy rather than complete proofs with every deletion, concentration, allocation, and regularity hypothesis checked.",
+        "Candidate G1 is only a description of an obstruction and an open higher-profile proposition; it does not construct the required order-sensitive profile.",
+        "Candidate Q1 applies A3 with kappa = omega to a component intersection known only to be infinite; an infinite intersection may be uncountable, so a countably infinite subset must first be selected.",
+        "Candidate Q1 asserts a scheduler from omega onto the residual job set without treating the case in which that job set is empty.",
+        "Candidate R2's exclusion of an infinite forest branch omits the explicit alternative that a branch may remain inside one recursively constructed lower-rank forest; that case requires the induction hypothesis.",
+        "Dependent Choice and other choice principles are used in the rank, leaf-selection, and transfinite allocation arguments without a consistently stated ambient foundational hypothesis.",
+        "F2 supplies only necessary depth conditions at omega_1^(omega+2); it neither proves the desired conclusion nor constructs a counterexample.",
+        "FT(alpha) in E0 is only conditionally reduced to a graph obstruction and is not decided.",
+        "Fatal completeness failure: the candidate expressly states that the exact immutable classification is not derived. The acceptance criteria require a proof or disproof of the exact original statement.",
+        "Infinite-cardinal multiplication, regular-union bounds, and cardinal-sum facts are invoked without complete theorem statements and hypothesis checks.",
+        "No arbitrary-ordinal demand profile satisfying G1 is constructed.",
+        "No branchless ordinally labelled forest counterexample satisfying E1 is constructed.",
+        "The candidate reports 27 of 27 self-numbered claims, but the validated graph has 29 nodes. Its identifiers are reassigned: for example, candidate S2, S3, and R1 do not denote validated S2, S3, and R1. The reported coverage therefore does not establish completion of the validated dependencies.",
+        "The candidate's declaration that there are no unchecked imports is false.",
+        "The countable homogeneous-set argument in candidate D2 is abbreviated and does not fully prove the nested-set invariant and homogeneous-subsequence conclusion.",
+        "The exact classification of limit ordinals under the one-way simple-path interpretation is not obtained.",
+        "The exact classification under the double-ray interpretation is not obtained.",
+        "The final ray-classification node R1, double-ray-classification node D2, and final node GOAL remain unresolved.",
+        "The finite falsification task E2 is absent.",
+        "The finite-separator gluing decision G2 is neither proved nor refuted.",
+        "The highlighted case alpha = omega_1^(omega+2) is not proved or disproved.",
+        "The induced-path and repeated-walk side branches do not compensate for leaving both principal simple-path branches incomplete.",
+        "The ordinal-sum step used to derive the product conclusions in A5 is asserted without a complete lemma covering the selected and skipped blocks.",
+        "The same unchecked cardinality hypothesis occurs in the atomic case of candidate Q3.",
+        "The semantic gate S0 remains open: the statement's intended conventions are not derived, while the materially distinct principal branches are not all completed.",
+        "malformed reviewer output: reviewer role mismatch: expected counterexample, got independent adversarial referee (counterexample)",
+        "malformed reviewer output: reviewer role mismatch: expected global_synthesis, got independent adversarial referee (global_synthesis)",
+        "malformed reviewer output: reviewer role mismatch: expected logic, got independent adversarial referee (logic)",
+        "malformed reviewer output: reviewer role mismatch: expected mechanical_evidence, got independent_adversarial_referee_mechanical_evidence",
+        "malformed reviewer output: reviewer role mismatch: expected statement_integrity, got independent adversarial referee (statement_integrity)",
+        "malformed reviewer output: reviewer role mismatch: expected structural_dependency, got independent adversarial referee (structural_dependency)",
+        "malformed reviewer output: reviewer role mismatch: expected theorem_hypotheses, got independent adversarial referee (theorem_hypotheses)"
+      ],
+      "reusable_lesson": "Do not repeat this proof path without a new ingredient that resolves every listed obstruction."
+    }
+  ]
+}

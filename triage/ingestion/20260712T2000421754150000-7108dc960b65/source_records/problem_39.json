@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 39,
+  "raw_page": {
+    "path": "raw/pages/problem_39.html",
+    "sha256": "fe28934463e236528b4f5d00a8dac1b08a7b6a1e65b6ed3c90745a450c3714ea"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "70168cd828de9cc6302348f41258897ece019566531d657069938c62e8cbc41b",
+      "source_region": "div.problem-additional-text",
+      "text": "[AKS81b] Ajtai, Mikl\\'os and Koml\\'os, J\\'{a}nos and Szemer\\'{e}di, Endre, A dense infinite Sidon sequence. European J. Combin. (1981), 1--11.\n \n [Er73] Erd\\H{o}s, P., Problems and results on combinatorial number theory. A survey of combinatorial theory (Proc. Internat. Sympos., Colorado State Univ., Fort Collins, Colo., 1971) (1973), 117-138.\n \n [Er77c] Erd\\H{o}s, Paul, Problems and results on combinatorial number theory. III. Number theory day (Proc. Conf., Rockefeller Univ.,\nNew York, 1976) (1977), 43-72.\n \n [Er80] Erd\\H{o}s, Paul, A survey of problems in combinatorial number theory. Ann. Discrete Math. (1980), 89-115.\n \n [Gu04] Guy, Richard K., Unsolved problems in number theory. (2004), xviii+437.\n \n [Ru98] Ruzsa, Imre Z., An infinite Sidon sequence. J. Number Theory (1998), 63-71."
+    },
+    "remarks": {
+      "sha256": "1c3867e99b5e40f7da99b0a1527a22413a23c6f3ef72085e19924b23ef701460",
+      "source_region": "div.problem-additional-text",
+      "text": "The trivial greedy construction achieves $\\gg N^{1/3}$. The first improvement on this was achieved by Ajtai, Koml\\'{o}s, and Szemer\\'{e}di \\cite{AKS81b}, who found an infinite Sidon set with growth rate $\\gg (N\\log N)^{1/3}$. The current best bound of $\\gg N^{\\sqrt{2}-1+o(1)}$ is due to Ruzsa \\cite{Ru98}. \n\nErd\\H{o}s \\cite{Er73} had offered \\$25 for any construction which achieves $N^{c}$ for some $c>1/3$. Later he (\\cite{Er77c} and \\cite{Er80}) offered \\$100 for a construction which achieves $\\omega(N)N^{1/3}$ for some $\\omega(N)\\to \\infty$.\n\nErd\\H{o}s proved that for every infinite Sidon set $A$ we have\\[\\liminf \\frac{\\lvert A\\cap \\{1,\\ldots,N\\}\\rvert}{N^{1/2}}=0.\\]Erd\\H{o}s and R\\'{e}nyi have constructed, for any $\\epsilon>0$, a set $A$ such that\\[\\lvert A\\cap \\{1\\ldots,N\\}\\rvert \\gg_\\epsilon N^{1/2-\\epsilon}\\]for all large $N$ and $1_A\\ast 1_A(n)\\ll_\\epsilon 1$ for all $n$.\n\nThis is discussed in problem C9 of Guy's collection \\cite{Gu04}."
+    },
+    "statement": {
+      "sha256": "c4bfa730d37abe09ba0bbac502965c5335b1232628817727ff60f6b29d9e6485",
+      "source_region": "div#content",
+      "text": "Is there an infinite Sidon set $A\\subset \\mathbb{N}$ such that\\[\\lvert A\\cap \\{1\\ldots,N\\}\\rvert \\gg_\\epsilon N^{1/2-\\epsilon}\\]for all $\\epsilon>0$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/39"
+}

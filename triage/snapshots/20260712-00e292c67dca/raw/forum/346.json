@@ -1,0 +1,45 @@
+{
+  "problem_number": 346,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/346",
+  "retrieved_at": "2026-07-10T23:16:43.739278+00:00",
+  "page_title": "346 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "88ef1b781c94b87e5d0b1ef12155e2797e8e50422b70d8fecc89486d43686b66",
+  "comment_count": 7,
+  "comments": [
+    {
+      "post_id": "7088",
+      "text": "GPT Pro produces a disproof of the problem here. The argument has also been formalised in Lean using Codex here.",
+      "meta": "Liam Price — 23:31 on 19 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7090",
+      "text": "Perhaps one can interpret from the question that the limit is already assumed to exist (and is greater than one). This excludes pathological sequences.",
+      "meta": "Dogmachine — 23:52 on 19 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7099",
+      "text": "I agree that the question likely assumes the limit exists. However, the [ErGr80] phrasing is unclear on this. One has to go to [Gr64], last page, where it asks whether you can have \"$\\lim_{n \\to \\infty} t_{n+1}/t_n \\neq (1 + \\sqrt{5})/2$\". That said, what Price constructs is not a cheap pathological sequence either. This Burr-Erdos' 1981 paper studies completeness of \"perturbed\" sequences and has results similar to Price's. It's similar enough that Price should cite this paper as a precursor of ideas, although the paper's results do not by itself give Price's results. This shows that such constructions are of interest and Price can be regarded as solving a variant problem. Also, from Burr-Erdos we also know that if the limit exists, it cannot be greater than $\\varphi$. The remaining case where the limit is less than $\\varphi$ is probably still open. I have run a screening check. The Lean appears correct and corresponds to the paper. The paper has a typo in the proof of Lemma 3 where \"$j \\ge 3$\" should be \"$j \\ge 4$\", but no other issue is found. From this evidence, I think the result is correct.",
+      "meta": "Nat Sothanaphan — 20:59 on 20 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7106",
+      "text": "I think there are two possible interpretations of Problem 346. $\\textbf{First, convergence-from-hypotheses interpretation:}$ The original hypotheses are asked to imply both that the quotient sequence $a_{n+1}/a_n$ converges and that its limit is $\\varphi$. Liam Price's answer appears to address this interpretation. $\\textbf{Second, limit-exists interpretation:}$ The quotient limit is assumed to exist, and the question is whether the hypotheses force that limit to be $\\varphi$. Dogmachine suggested this as a possible intended reading. For the $\\textbf{second, limit-exists interpretation}$, I have an attempted Lean 4 formalization giving an $\\textbf{affirmative answer}$. In informal terms, the formalized statement is: If the two deletion hypotheses hold, the sequence has a uniform ratio gap, and there exists $L>1$ such that $a_{n+1}/a_n \\to L$, then $a_{n+1}/a_n \\to \\varphi$. Lean4Web: open the Lean4Web check GitHub: KitaKen1/erdos346-ratio-limit-lean The Lean file includes '#check' and '#print axioms' commands. The relevant final theorems report only the standard Lean/mathlib axioms '[propext, Classical.choice, Quot.sound]', with no 'sorryAx'. AI usage disclosure: the Lean formalization and this writeup were prepared with assistance from Codex and ChatGPT.",
+      "meta": "KentaKitamura — 02:21 on 21 Jun 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "7115",
+      "text": "Congrats. This Lean proof correctly shows that $\\lim_{n \\to \\infty} a_{n+1}/a_n = L \\neq \\varphi$ is impossible. The case $L > \\varphi$ is handled in Burr-Erdos as above. It remains to rule out the case $L < \\varphi$. Choose $L < \\rho < \\varphi$. Eventually $a_{n+1}/a_n < \\rho$. The key is $$ \\sum_{j=2}^\\infty \\rho^{-j} = \\frac{1}{\\rho(\\rho - 1)} > 1. $$ Choose $m \\ge 1$ so that $\\sum_{j=2}^{m+1} \\rho^{-j} > 1$. So eventually, $$ a_{n+1} < a_{n-m} + \\dots + a_{n-1}. $$ Choose $H$ so every integer at least $H$ is representable. There is $M$ large enough so that $a_1, \\dots, a_M$ can represent every integer in the interval $[H, T]$ where $T = 2a_M - 1$. (Proof: for $M$ large, $a_M + H < a_{M+1}$. So if $H \\leq t \\leq a_M + H$, $t$ can be represented by terms up to $a_M$. Otherwise if $a_M + H < t < 2a_M$, $t - a_M$ can be represented by terms up to $a_{M-1}$, and then we add $a_M$.) We now delete the indices $$ D = \\{ M + m + 1 + k(m + 2): k \\ge 0 \\} $$ and show the resulting sequence is still complete. $\\textbf{Interval lemma}$. If a collection of terms can represent the interval $[a, b]$, and a new term $x \\leq b - a + 1$, then the old terms and $x$ together can represent the interval $[a, b + x]$. (Proof: if $b < t \\leq b + x$, represent $t - x$ and add $x$.) We can show inductively that, for $n \\ge M$, the terms $a_i$ for $i \\leq n$ and $i \\notin D$ can represent the interval $[H, T + \\sum_{M < i \\leq n, i \\notin D} a_i]$. This is by using the interval lemma and the key inequality stated above. I think there may be some technicalities, which can solved by making $M$ larger if necessary. Credit to GPT-5.5 Thinking for check and discussion.",
+      "meta": "Nat Sothanaphan — 15:22 on 21 Jun 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2083",
+      "text": "[Post deleted]",
+      "meta": "Unknown — 17:38 on 07 Dec 2025 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "2085",
+      "text": "I am confused by this - you are deleting the elements $a_{n-k+1},\\ldots,a_{n}$ where $n$ is fixed? But then you have fixed $n$, so you cannot later take $n$ arbitrarily large. Note that the 'threshold of completeness', past which we can represent all integers, is allowed to depend on which finite set of elements we deleted - in particular there is nothing saying Brown's criterion has to be applicable around $s_{n-k}$, since $n$ is fixed, and perhaps the completeness of the new modified sequence only bites much later on. (Regarding the first point, I think it is assumed from context that we are just talking about natural numbers, as in most problems regarding completeness, so all $a_n\\geq 1$. I'll add a remark for clarity.) EDIT: Perhaps your confusion comes from the two definitions of 'complete' that are out there. On this site (following Erdős' own convention) complete just means all sufficiently large integers are representable, not all integers. I'll add a remark clarifying this.",
+      "meta": "Thomas Bloom — 18:10 on 07 Dec 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

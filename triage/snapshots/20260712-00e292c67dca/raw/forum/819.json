@@ -1,0 +1,20 @@
+{
+  "problem_number": 819,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/819",
+  "retrieved_at": "2026-07-10T23:18:56.588886+00:00",
+  "page_title": "819 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "7f04b56b79e05b6e0127b9a6545501d1b2df64eed7031d7b74b2d7fa73cd51e8",
+  "comment_count": 2,
+  "comments": [
+    {
+      "post_id": "6474",
+      "text": "We obtain $\\liminf_{N \\to \\infty} f(N)/N \\geq (16\\sqrt{2} - 17)/12 \\approx 0.469$. This improves the Erdős–Freud 1991 lower bound of $3/8$ and closes most of the gap to the upper bound of $1/2$. Writeup at https://leon2k2k2k.github.io/erdos819.pdf. The construction is a reflected two-copy of a maximum Sidon set with random shifts, taken along the subsequence $N = 4q^2$: $A = B \\cup C$ with $B = a + S$ and $C = N/2 + \\lfloor uN/2 \\rfloor - b - S$, where $S \\subset [0,M]$ is an asymptotically maximum Sidon set of size $q$ and $a, b$ are uniform in a small interval. The overlap of the Sidon set and its reflected copy is controlled by Pikhurko's uniformity lemma (Lemma 10 of his 2006 paper), which is the core technical input. Random-shift optimization then gives a closed-form expected score $F(u) = 1 - 2u^2 - (1 - 2u)^3/12$, maximized at $u^* = 3/2 - \\sqrt{2}$. An interpolation argument lifts from the subsequence $N = 4q^2$ to all sufficiently large $N$. The construction and strategy are inspired by Pikhurko's Lemma 12. Found with the help of GPT-5.5 + Rethlas; verified by hand.",
+      "meta": "leon2k2k2k — 15:40 on 15 May 2026 👍 2 📝 0 🤖 0"
+    },
+    {
+      "post_id": "6500",
+      "text": "I ran standard check which found no issue.",
+      "meta": "Nat Sothanaphan — 15:53 on 17 May 2026 👍 2 📝 0 🤖 0"
+    }
+  ]
+}

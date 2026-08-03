@@ -1,0 +1,42 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#81}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} graph theory
+
+\medskip
+\noindent\textbf{Problem Statement:}
+
+Let $G$ be a chordal graph on $n$ vertices - that is, $G$ has no induced cycles of length greater than $3$. Can the edges of $G$ be partitioned into $n^2/6+O(n)$ many cliques?
+
+\bigskip
+\noindent\textbf{Remarks:}
+
+Asked by Erd\H{o}s, Ordman, and Zalcstein \cite{EOZ93}, who proved an upper bound of $(1/4-\epsilon)n^2$ many cliques (for some very small $\epsilon>0$). The example of all edges between a complete graph on $n/3$ vertices and an empty graph on $2n/3$ vertices show that $n^2/6+O(n)$ is sometimes necessary.
+
+A split graph is one where the vertices can be split into a clique and an independent set. Every split graph is chordal. Chen, Erd\H{o}s, and Ordman \cite{CEO94} have shown that any split graph can be partitioned into $\frac{3}{16}n^2+O(n)$ many cliques.
+
+See also [1017].
+
+\bigskip
+\noindent\textbf{References:}
+
+[CEO94] Chen, Guan-Tao and Erd\H{o}s, Paul and Ordman, Edward T., Clique partitions of split graphs. Combinatorics, graph theory, algorithms and applications
+(Beijing, 1993) (1994), 21-30.
+ 
+ [EOZ93] Erd\H{o}s, Paul and Ordman, Edward T. and Zalcstein, Yechezkel, Clique partitions of chordal graphs. Combin. Probab. Comput. (1993), 409-415.
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/81}}
+\end{document}

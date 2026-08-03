@@ -1,0 +1,33 @@
+{
+  "extraction": {
+    "additional_text_region": "div.problem-additional-text",
+    "extractor_version": "canonical-sections-v2",
+    "html_entities_decoded": true,
+    "statement_region": "div#content"
+  },
+  "problem_number": 929,
+  "raw_page": {
+    "path": "raw/pages/problem_929.html",
+    "sha256": "0a1a4999cd5f3b03db051367202ce16a617f91fa5922a2fbb3b5b47c7486f3fc"
+  },
+  "retrieved_at": "2026-07-12T20:00:42.175415+00:00",
+  "schema_version": 1,
+  "sections": {
+    "references": {
+      "sha256": "9e57609ca3496864c624fade7a7fa9789c46f3dbb6528406b4679f932e918189",
+      "source_region": "div.problem-additional-text",
+      "text": "[FGKMT18] Ford, Kevin and Green, Ben and Konyagin, Sergei and Maynard, James and Tao, Terence, Long gaps between primes. J. Amer. Math. Soc. (2018), 65-105."
+    },
+    "remarks": {
+      "sha256": "ea1e33d9ade7e790b6a619e200798564d997a443f1e4a6afc3b995482d10e8be",
+      "source_region": "div.problem-additional-text",
+      "text": "It follows from Rosser's sieve that $S(k)> k^{1/2-o(1)}$.\n\nIt is trivial that $S(k)\\leq k+1$ since, for example, one can take $n\\equiv 1\\pmod{(k+1)!}$. The best bound on large gaps between primes due to Ford, Green, Konyagin, Maynard, and Tao \\cite{FGKMT18} (see [4]) implies\\[S(k) \\ll k \\frac{\\log\\log\\log k}{\\log\\log k\\log\\log\\log\\log k}.\\]"
+    },
+    "statement": {
+      "sha256": "2bef2d831b882fe4d4d39c0c4242f965a1d8c3d685b21a35745e6fa414122534",
+      "source_region": "div#content",
+      "text": "Let $k\\geq 2$ be large and let $S(k)$ be the minimal $x$ such that there is a positive density set of $n$ where\\[n+1,n+2,\\ldots,n+k\\]are all divisible by primes $\\leq x$.\n\nEstimate $S(k)$ - in particular, is it true that $S(k)\\geq k^{1-o(1)}$?"
+    }
+  },
+  "source_url": "https://www.erdosproblems.com/latex/929"
+}

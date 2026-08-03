@@ -1,0 +1,35 @@
+{
+  "problem_number": 1003,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/1003",
+  "retrieved_at": "2026-07-10T23:19:52.957692+00:00",
+  "page_title": "1003 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "0847d56205c25ad7fb8d1b3018a744d8cd7d561ab85ab568349f2c5612da68ac",
+  "comment_count": 5,
+  "comments": [
+    {
+      "post_id": "4412",
+      "text": "It may also be interesting to see how much the upper bound in [Theorem 2, EPS87] can be improved. Almost trivially, by taking instead \\begin{align*} l&=\\exp\\left(c_0((\\log x)(\\log\\log x)(\\log\\log\\log x))^{1/3}\\right),\\\\ L&=\\exp\\left(c_1((\\log x)(\\log\\log x))^{2/3}(\\log\\log\\log x)^{-1/3}\\right), \\end{align*} with suitable constants $c_0,c_1>0$ in their proof, and using Theorem 1.1 in this paper by Banks et al. (2018) to handle (iv), one can show that the number of $n\\le x$ with $\\phi(n)=\\phi(n+1)$ is at most\\[x\\exp\\left(-c_0((\\log x)(\\log\\log x)(\\log\\log\\log x))^{1/3}\\right).\\]",
+      "meta": "Steve Fan — 02:00 on 23 Feb 2026 👍 0 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4406",
+      "text": "There's a good amount of literature on $\\phi(n)=\\phi(n+k)$, where $k$ is a fixed positive integer. See, for instance, this paper by K. Ford.",
+      "meta": "Alfaiz — 14:57 on 22 Feb 2026 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "1608",
+      "text": "As noted as far back as Schinzel, the problem is a lot easier (though still non-trivial) if one replaces the shift by 1 by larger shifts. For instance, if $p$ and $2p-1$ are both prime then we have $\\phi(n+2)=\\phi(n)$ for $n = 2(2p-1)$, so $n+2 = 4p$. See this paper by Ford for further explorations of this idea. Unfortunately, for the unit shift problem here, no such ansatz involving products of a small number of primes can work. If $\\phi(n)=\\phi(n+1)$ for a large $n$ then $\\frac{\\phi(n)}{n} = \\prod_{p|n} \\frac{p-1}{p}$ has to be very close, but not equal to, $\\frac{\\phi(n+1)}{n+1} = \\prod_{p|n+1} \\frac{p-1}{p}$. On the other hand, one of the $n,n+1$ has to be even, so one of these products involves $\\frac{1}{2}$ and the other does not. As these products are all distinct (mostly due to the denominators being distinct primes), this forces larger and larger numbers of factors to show up for at least one of these products as $n$ increases.",
+      "meta": "TerenceTao — 21:54 on 30 Oct 2025 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "1604",
+      "text": "I think the result of Erdős, Pomerance, and Sárközy mentioned here was actually proved as Theorem 2 in P. Erdős, C. Pomerance, A. Sárközy, On locally repeated values of certain arithmetic functions, II., Acta Math. Hungar. 49 (1--2) (1987), 251--259. (The site has been updated to address this comment.)",
+      "meta": "Steve Fan — 19:41 on 30 Oct 2025 👍 0 📝 1 🤖 0"
+    },
+    {
+      "post_id": "1605",
+      "text": "Theorem 2 in [EPS87] seems indeed correct, but there is even not a constant there. Related to this, they explicitly state \"We cannot prove, however, that there are even infinitely many solutions for either equation.\". (The site has been updated to address this comment.)",
+      "meta": "StijnC — 20:42 on 30 Oct 2025 👍 0 📝 0 🤖 0"
+    }
+  ]
+}

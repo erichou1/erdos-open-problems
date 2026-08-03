@@ -1,0 +1,34 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#768}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $A\subset\mathbb{N}$ be the set of $n$ such that for every prime $p\mid n$ there exists some $d\mid n$ with $d&#62;1$ such that $d\equiv 1\pmod{p}$. Is it true that there exists some constant $c&#62;0$ such that for all large $N$\[\frac{\lvert A\cap [1,N]\rvert}{N}=\exp(-(c+o(1))\sqrt{\log N}\log\log N).\]
+
+
+
+
+Erd\H{o}s could prove that there exists some constant $c&#62;0$ such that for all large $N$\[\exp(-c\sqrt{\log N}\log\log N)\leq \frac{\lvert A\cap [1,N]\rvert}{N}\]and\[\frac{\lvert A\cap [1,N]\rvert}{N}\leq \exp(-(1+o(1))\sqrt{\log N\log\log N}).\]Erd\H{o}s asked about this because $\lvert A\cap [1,N]\rvert$ provides an upper bound for the number of integers $n\leq N$ for which there is a non-cyclic simple group of order $n$.
+
+\noindent\textbf{Related OEIS sequences:} A001034, A352287
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/768}}
+\end{document}

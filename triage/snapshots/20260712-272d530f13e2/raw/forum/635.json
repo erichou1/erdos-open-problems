@@ -1,0 +1,40 @@
+{
+  "problem_number": 635,
+  "thread_url": "https://www.erdosproblems.com/forum/thread/635",
+  "retrieved_at": "2026-07-10T23:18:08.112003+00:00",
+  "page_title": "635 Discussion Thread | Erdős Problems",
+  "source_html_sha256": "35ab5706ad1a5ada8f4b215ee357ea1bba5dc755d7deb1878d8283a3f7a72bb5",
+  "comment_count": 6,
+  "comments": [
+    {
+      "post_id": "3958",
+      "text": "GPT-5.2 Pro gives a proof, formalised in Lean by Aristotle. Here's the human readable version. Kevin assisted with cleaning up the Lean.",
+      "meta": "Liam Price — 14:37 on 30 Jan 2026 👍 4 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3960",
+      "text": "For Proposition 2, you do not need the condition that $2^{k_0} \\ge t$. Also a construction for $t=2$ is automatically valid for larger $t$ as well, and the $+O_t(1)$ which can be interpretted as $-O_t(1)$ can be removed. (In particular, this proposition is slightly weaker than Erdos' remark, but essentially equivalent.) The proof for the last case can also be written down in a simpler form: noting that $b-a \\mid b \\Leftrightarrow b-a \\mid a$, we notice that if $b-a>1$ is odd, it is not a divisor of $a$. (So one can also do it with one case distinction less)",
+      "meta": "StijnC — 15:37 on 30 Jan 2026 👍 3 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3962",
+      "text": "I+ChatGPT judged the Lean file correct. The informal version corresponds to the Lean file with reasonable confidence, but a thorough check was not performed.",
+      "meta": "Nat Sothanaphan — 16:12 on 30 Jan 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3964",
+      "text": "Nice! Incidentally, the deduction of Theorem 1 from Lemma 4 actually follows immediately from an inequality of Elliott (see, e.g., Exercise 8 of these lecture notes of mine, or Lemma 4.7 of P. D. T. A. Elliott. Probabilistic number theory. I, volume 239 of Grundlehren der Mathematischen Wissenschaften. Springer-Verlag, New York-Berlin, 1979. Mean-value theorems.). Graphs in which one connects $a$ with $b$ when the difference $b-a$ divides $b$ (or $a$) actually play an important role in the modern theory of pair correlations between multiplicative functions, usually after constraining $b-a$ to be prime or almost prime. Recent work includes Matomaki-Radziwil-T., T., Helfgott-Ubis, Helfgott-Radziwill, and Pilatte. Erdos's question basically concerns the largest independent set in such a graph. It is interesting that Erdos had the foresight to anticipate the relevance of this graph. On the other hand, independent sets have not been studied in the above literature, which instead focuses on connectivity and expansion type properties. However, given that the solution can be deduced in short order from Elliott's inequality, which is contemporaneous with the posing of the question, there is a non-negligible possibility that this question may already be addressed in the literature.",
+      "meta": "TerenceTao — 16:14 on 30 Jan 2026 👍 6 📝 0 🤖 0"
+    },
+    {
+      "post_id": "3984",
+      "text": "On closer inspection of the problem I would actually only mark the second part of the problem as solved (and am reverting the classification on the repository). The Elliott-type arguments would give an $o_t(1)$ term that decays slowly - something like $O(1/\\log\\log N)$ - but given the discussion of Erdos mentioned in the commentary, probably an accuracy more like $O(\\log N/N)$ is actually sought, and this is well beyond what the Elliott-style methods here can give.",
+      "meta": "TerenceTao — 20:55 on 30 Jan 2026 👍 1 📝 0 🤖 0"
+    },
+    {
+      "post_id": "4008",
+      "text": "I have now placed this result in Section 1(b). The second moment arguments used in the AI proof are nearly identical to that used by Elliott, but the proof does not cite any references and it is unclear to what extent the AI was drawing from this reference. I think that it would be good practice going forward to make efforts to have AI-generated solutions provide their sources to the extent that they can identify them, and/or to have a literature review be part of the solution generating process. Having such solutions presented without references, when the AI was trained on the literature, can convey a misleading picture as to how independent or original the AI solution actually was.",
+      "meta": "TerenceTao — 18:20 on 31 Jan 2026 👍 3 📝 0 🤖 0"
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#1063}
+\date{Last updated: 2025-10-01}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} number theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+Let $k\geq 2$ and define $n_k\geq 2k$ to be the least value of $n$ such that $n-i$ divides $\binom{n}{k}$ for all but one $0\leq i&#60;k$. Estimate $n_k$.
+
+
+
+
+A problem of Erd\H{o}s and Selfridge posed in \cite{ErSe83}. Erd\H{o}s and Selfridge noted (and a proof can be found in \cite{Mo85}) that if $n\geq 2k$ then there must exist at least one $0\leq i&#60;k$ such that $n-i$ does not divide $\binom{n}{k}$. We have $n_2=4$, $n_3=6$, $n_4=9$, and $n_5=12$. Monier \cite{Mo85} observed that $n_k\leq k!$ for $k\geq 3$, since $\binom{k!}{k}$ is divisible by $k!-i$ for $1\leq i&#60;k$. Cambie observes in the comments that this can be improved to\[n_k\leq k[2,3,\ldots,k-1]\leq e^{(1+o(1))k},\]where $[\cdots]$ is the least common multiple. This is discussed in problem B31 of Guy's collection \cite{Gu04}.
+
+
+
+
+References
+
+[ErSe83] Erdos, P. and Selfridge, J. L., Problem 6447 . Amer. Math. Monthly (1983), 710.
+
+[Gu04] Guy, Richard K., Unsolved problems in number theory . (2004), xviii+437.
+
+[Mo85] Monier, Jean-Marie, Problems and Solutions: Solutions of {A}dvanced {P}roblems: 6447 . Amer. Math. Monthly (1985), 435--436.
+
+\noindent\textbf{Related OEIS sequences:} A389360
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/1063}}
+\end{document}

@@ -1,0 +1,41 @@
+\documentclass{article}
+\usepackage{amsmath, amssymb, amsthm}
+\usepackage{hyperref}
+\usepackage{geometry}
+\geometry{margin=1in}
+
+\title{Erd\H{o}s Problem \#188}
+\date{Last updated: 2025-08-31}
+\author{Source: erdosproblems.com}
+
+\begin{document}
+\maketitle
+
+\noindent\textbf{Status:} OPEN \quad \textbf{No prize}
+
+\noindent\textbf{Tags:} geometry, ramsey theory
+
+\medskip
+
+\noindent\textbf{Problem Statement:}
+
+What is the smallest $k$ such that $\mathbb{R}^2$ can be red/blue coloured with no pair of red points unit distance apart, and no $k$-term arithmetic progression of blue points with distance $1$?
+
+
+
+
+Erd\H{o}s, Graham, Montgomery, Rothschild, Spencer, and Straus \cite{EGMRSS75} proved $k\geq 5$. Tsaturian \cite{Ts17} improved this to $k\geq 6$. Erd\H{o}s and Graham claim that $k\leq 10000000$ ('more or less'), but give no proof. Erd\H{o}s and Graham asked this with just any $k$-term arithmetic progression in blue (not necessarily with distance $1$), but Alon has pointed out that in fact no such $k$ exists: in any red/blue colouring of the integer points on a line either there are two red points distance $1$ apart, or else the set of blue points and the same set shifted by $1$ cover all integers, and hence by van der Waerden's theorem there are arbitrarily long blue arithmetic progressions. It seems most likely, from context, that Erd\H{o}s and Graham intended to restrict the blue arithmetic progression to have distance $1$ (although they do not write this restriction in their papers).
+
+
+
+
+References
+
+[EGMRSS75] Erd\H{o}s, P. and Graham, R. L. and Montgomery, P. and Rothschild, B. L. and Spencer, J. and Straus, E. G., Euclidean {R}amsey theorems. {II} . (1975), 529--557.
+
+[Ts17] Tsaturian, Sergei, A {E}uclidean {R}amsey result in the plane . Electron. J. Combin. (2017), Paper No. 4.35, 9.
+
+
+\bigskip
+\noindent\small{Source: \url{https://www.erdosproblems.com/188}}
+\end{document}
